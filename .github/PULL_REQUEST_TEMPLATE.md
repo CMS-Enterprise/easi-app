@@ -10,6 +10,11 @@
 - Change 1
 - Change 2
 
+<!--
+    Please add/remove/edit any of the template below to fit the needs
+    of this specific PR
+--->
+
 ## Reviewer Notes
 
 <!--
@@ -28,12 +33,40 @@
 
 ## Code Review Verification Steps
 
-- [ ] User-facing changes have been tested with voice-over
-- [ ] User-facing changes have been reviewed by design
-- [ ] Acceptance criteria has been met, or will be met by a future PR
-- Any new migrations/schema changes:
-  - [ ] Follow guidelines for zero-downtime deploys
-  - [ ] Have been deployed to the remote dev environment via CI
+### As the original developer, I have
+
+- [ ] Tested user-facing changes with voice-over
+- [ ] Checked for landmarks, page heading structure and links using rotor menu
+- [ ] Requested a design review for user-facing changes
+- [ ] Met the acceptance criteria, or will meet them in a subsequent PR
+- For any new migrations/schema changes:
+  - [ ] Followed guidelines for zero-downtime deploys
+  - [ ] Deployed this branch to the remote dev environment via CI
+
+### As the code reviewer, I have
+
+- [ ] Pulled this branch locally and tested it
+- [ ] Reviwed this code and left comments
+- [ ] Made it clear which comments need to be addressed before this work is merged
+- [ ] Considered marking this as accepted even if there are small changes needed
+
+### As a designer, I have
+
+- [ ] Checked in the design translated visually
+- [ ] Checked behavior
+- [ ] Checked different states (empty, one, some, error)
+- [ ] Checked a11y against criteria
+- [ ] Checked for landmarks, page heading structure, and links
+- [ ] Tried to break the intended flow
+
+## How-to rotor menu
+
+1. Turn voice over on `cmd + F5`
+1. Open rotor menu `ctrl + option + U` (you’ll see a panel appear)
+1. Use :arrow_left: and :arrow_right: to cycle through the rotor menu
+1. Use :arrow_up: and :arrow_down: to move down that rotor view
+1. When you are done you can dismiss the rotor menu by hitting Esc
+1. Turn voice over off `cmd + F5`
 
 ## Screenshots
 
