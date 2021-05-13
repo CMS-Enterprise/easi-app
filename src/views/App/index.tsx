@@ -22,6 +22,7 @@ import GovernanceTaskList from 'views/GovernanceTaskList';
 import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
 import Home from 'views/Home';
 import Login from 'views/Login';
+import MyRequests from 'views/MyRequests';
 import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
@@ -52,6 +53,7 @@ const AppRoutes = () => {
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
       <SecureRoute path="/user-diagnostics" component={UserInfo} />
+      <SecureRoute path="/my-requests" component={MyRequests} />
 
       {/* 508 / Accessibility Team Routes */}
       <SecureRoute path="/508" component={Accessibility} />
