@@ -196,6 +196,14 @@ const AccessibilityRequestDetailPage = () => {
                   <dd className="margin-0 margin-bottom-3">{lcid}</dd>
                 </dl>
               </div>
+              <UswdsLink
+                className="display-inline-block margin-top-3"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="/508/testing-overview"
+              >
+                {t('requestDetails.testingSteps')}
+              </UswdsLink>
               {userEuaId === requestOwnerEuaId && (
                 <button
                   type="button"
