@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 
 type TabPanelProps = {
   id: string;
@@ -13,26 +14,21 @@ type TabPanelProps = {
  * from the Tabs render from the React.Children cloneElement.
  */
 const TabPanel = ({ id, tabName, isActive, children }: TabPanelProps) => {
-  if (isActive) {
-    return (
-      <div
-        id={id}
-        className="easi-tabs__tab-panel"
-        role="tabpanel"
-        data-tabname={tabName}
-      >
-        {children}
-      </div>
-    );
-  }
+  const classes = classnames('easi-tabs__tab-panel', {
+    'easi-only-print': !isActive
+  });
+
   return (
-    <div
+    <section
       id={id}
-      className="easi-tabs__tab-panel easi-only-print"
+      role="tabpanel"
+      className={classes}
+      aria-labelledby={`${id}-tab-btn`}
       data-tabname={tabName}
+      tabIndex={0}
     >
       {children}
-    </div>
+    </section>
   );
 };
 

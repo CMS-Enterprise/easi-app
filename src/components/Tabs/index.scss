@@ -1,12 +1,9 @@
 .easi-tabs {
-  overflow: hidden;
-
-  &__navigation {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    border-bottom: 1px solid color($theme-color-base-lighter);
-  }
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
+  border-bottom: 1px solid color($theme-color-base-lighter);
 
   &__tab-list {
     display: inline-block;
@@ -70,6 +67,5 @@
   &__tab-panel {
     overflow: auto;
     border: 1px solid color($theme-color-base-lighter);
-    border-top: none;
   }
 }
