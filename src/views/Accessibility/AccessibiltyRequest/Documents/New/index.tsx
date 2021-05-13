@@ -207,7 +207,7 @@ const New = () => {
                       className="sr-only"
                       tabIndex={-1}
                     >
-                      Activate to select a file.
+                      Select a file.
                     </div>
                   </FieldGroup>
                   {values.file && (
