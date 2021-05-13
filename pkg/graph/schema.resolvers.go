@@ -722,6 +722,10 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
+func (r *queryResolver) Requests(ctx context.Context, after *string, first int) (*model.RequestConnection, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
 	if err != nil {
