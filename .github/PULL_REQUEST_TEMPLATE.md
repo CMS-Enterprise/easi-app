@@ -55,7 +55,7 @@
 - [ ] Checked in the design translated visually
 - [ ] Checked behavior
 - [ ] Checked different states (empty, one, some, error)
-- [ ] Checked a11y against criteria
+- [ ] Checked accessibility against criteria
 - [ ] Checked for landmarks, page heading structure, and links
 - [ ] Tried to break the intended flow
 
