@@ -55,7 +55,7 @@ func NewStore(
 	if err != nil {
 		return nil, err
 	}
-	db.SetMaxOpenConns(90)
+	db.SetMaxOpenConns(20)
 
 	return &Store{
 		db:        db,
