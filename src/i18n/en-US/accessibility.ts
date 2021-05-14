@@ -43,7 +43,7 @@ const accessibility = {
     other: 'Other request details',
     remove: 'Remove this request from EASi',
     modal: {
-      header: 'Confirm you want to remove {{-requestName}}?',
+      header: 'Confirm you want to remove {{-requestName}}',
       subhead:
         'You will not be able to access this request and its documents after it is removed.',
       confirm: 'Remove request',
