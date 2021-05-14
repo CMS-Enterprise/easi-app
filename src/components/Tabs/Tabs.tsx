@@ -37,13 +37,25 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
 
   const handleKeyup = (e: KeyboardEvent) => {
     const targetTabIndex = [].indexOf.call(tabEls, e.target);
-    let newActiveTab;
+    let newActiveTab = tabEls[targetTabIndex + DIRECTION[e.key]] as HTMLElement;
 
     switch (e.key) {
       case KEYS.ARROW_LEFT:
-      case KEYS.ARROW_RIGHT:
-        newActiveTab = tabEls[targetTabIndex + DIRECTION[e.key]];
         if (newActiveTab) {
+          newActiveTab.focus();
+          setActiveTab(newActiveTab.textContent);
+        } else {
+          newActiveTab = tabEls[tabEls.length - 1] as HTMLElement;
+          newActiveTab.focus();
+          setActiveTab(newActiveTab.textContent);
+        }
+        break;
+      case KEYS.ARROW_RIGHT:
+        if (newActiveTab) {
+          newActiveTab.focus();
+          setActiveTab(newActiveTab.textContent);
+        } else {
+          newActiveTab = tabEls[0] as HTMLElement;
           newActiveTab.focus();
           setActiveTab(newActiveTab.textContent);
         }
