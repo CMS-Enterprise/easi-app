@@ -115,6 +115,7 @@ jobs:
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
           GRT_EMAIL: success@simulator.amazonses.com
+          ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
