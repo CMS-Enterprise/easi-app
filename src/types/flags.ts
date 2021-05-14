@@ -7,6 +7,7 @@ export type Flags = {
   downgradeGovTeam: Boolean;
   downgrade508User: Boolean;
   downgrade508Tester: Boolean;
+  add508Request: Boolean;
 };
 
 export type FlagsState = {
