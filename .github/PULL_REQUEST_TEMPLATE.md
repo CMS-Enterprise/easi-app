@@ -46,7 +46,7 @@
 ### As the code reviewer, I have
 
 - [ ] Pulled this branch locally and tested it
-- [ ] Reviwed this code and left comments
+- [ ] Reviewed this code and left comments
 - [ ] Made it clear which comments need to be addressed before this work is merged
 - [ ] Considered marking this as accepted even if there are small changes needed
 
