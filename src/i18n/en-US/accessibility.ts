@@ -192,19 +192,23 @@ const accessibility = {
             'For each row in the table, indicate the conformance level. There are 5 levels:',
           levels: [
             {
-              'Supports:':
+              name: 'Supports:',
+              description:
                 'The functionality of the product has at least one method that meets the criterion without known defects or meets with equivalent facilitation.',
             },
             {
-              'Partially Supports:':
+              name: 'Partially Supports:',
+              description:
                 'Some functionality of the product does not meet the criterion.',
             },
             {
-              'Does Not Support:':
+              name: 'Does Not Support:',
+              description:
                 'The majority of product functionality does not meet the criterion.',
             },
             {
-              'Not Evaluated:':
+              name: 'Not Evaluated:',
+              description:
                 'The product has not been evaluated against the criterion. This can be used only in WCAG 2.0 Level AAA.',
             },
           ],
@@ -213,6 +217,10 @@ const accessibility = {
           text:
             'After indicating the conformance level, provide a detailed explanation in the ‘Remarks and Evaluation’ column.',
         },
+        downloadVPAT: {
+          heading: 'Download VPAT template',
+
+        }
       },
     },
     testPlanSection: {
