@@ -19,6 +19,13 @@ const TestingTemplates = () => {
     }
   );
 
+  const remediationPlanList: string[] = t(
+    'testingTemplates.remediationPlanSection.itemsToProvide',
+    {
+      returnObjects: true
+    }
+  );
+
   return (
     <div className="grid-container">
       <div className="tablet:grid-col-10">
@@ -68,13 +75,31 @@ const TestingTemplates = () => {
             )}
           </p>
         </div>
-        <h2>{t('testingTemplates.testPlanSection.heading')}</h2>
-        <p>{t('testingTemplates.testPlanSection.description')}</p>
-        <ul>
-          {testPlanList.map(item => (
-            <li>{item}</li>
-          ))}
-        </ul>
+        <div>
+          <h2>{t('testingTemplates.testPlanSection.heading')}</h2>
+          <p>{t('testingTemplates.testPlanSection.description')}</p>
+          <ul>
+            {testPlanList.map(item => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <h2>{t('testingTemplates.testPlanSection.heading')}</h2>
+          <p>{t('testingTemplates.testPlanSection.description')}</p>
+          <ul>
+            {testPlanList.map(item => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2>{t('testingTemplates.remediationPlanSection.heading')}</h2>
+          <p>{t('testingTemplates.remediationPlanSection.description')}</p>
+          <ul>
+            {remediationPlanList.map(item => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
