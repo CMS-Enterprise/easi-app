@@ -6,7 +6,8 @@
     list-style-type: none;
     li {
       &:before {
-          content: "- ";
+          content: "-";
+          padding-right: 8px;
       }
     }
   }

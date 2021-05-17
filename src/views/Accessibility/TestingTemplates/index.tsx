@@ -73,10 +73,12 @@ const TestingTemplates = () => {
         </li>
         <li>Templates for 508 testing</li>
       </BreadcrumbNav>
-      <div className="grid-row grid-gap-lg">
+      <div className="grid-row grid-gap-lg margin-top-6">
         <div className="grid-col-9 line-height-body-4">
           <div className="tablet:grid-col-10">
-            <PageHeading>{t('testingTemplates.heading')}</PageHeading>
+            <PageHeading className="margin-top-0">
+              {t('testingTemplates.heading')}
+            </PageHeading>
             {tableOfContents}
             <h2
               id={`testingTemplates_${t(
@@ -107,6 +109,7 @@ const TestingTemplates = () => {
                 <Link
                   href="https://www.itic.org/policy/accessibility/vpat"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   {t(
                     'testingTemplates.vpatSection.subSection.downloadVPAT.line1.linkText'
@@ -128,6 +131,7 @@ const TestingTemplates = () => {
                 <Link
                   href="https://www.youtube.com/watch?v=kAkSV9xiJ1A"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   {t(
                     'testingTemplates.vpatSection.subSection.downloadVPAT.line3.linkText'
