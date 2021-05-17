@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -17,6 +16,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -780,8 +780,18 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 	return conn, nil
 }
 
-func (r *queryResolver) UserInfo(ctx context.Context) (*models.UserInfo, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, error) {
+	principal := appcontext.Principal(ctx)
+
+	ldUser := flags.Principal(ctx)
+	userKey := flags.UserKeyForID(principal.ID())
+	signedHash := r.ldClient.SecureModeHash(ldUser)
+
+	currentUser := model.CurrentUser{
+		UserKey:    userKey,
+		SignedHash: signedHash,
+	}
+	return &currentUser, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
@@ -1066,14 +1076,6 @@ func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *mod
 	return obj.TRBCollaboratorName.Ptr(), nil
 }
 
-func (r *userInfoResolver) UserKey(ctx context.Context, obj *models.UserInfo) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userInfoResolver) SignedHash(ctx context.Context, obj *models.UserInfo) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
 func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
 	return &accessibilityRequestResolver{r}
@@ -1096,23 +1098,9 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
-// UserInfo returns generated.UserInfoResolver implementation.
-func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
-
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
-type userInfoResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *accessibilityRequestResolver) EuaID(ctx context.Context, obj *models.AccessibilityRequest) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}

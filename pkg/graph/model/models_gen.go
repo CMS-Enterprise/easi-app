@@ -115,6 +115,11 @@ type CreateTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+type CurrentUser struct {
+	UserKey    string `json:"userKey"`
+	SignedHash string `json:"signedHash"`
+}
+
 type DeleteAccessibilityRequestDocumentInput struct {
 	ID uuid.UUID `json:"id"`
 }
