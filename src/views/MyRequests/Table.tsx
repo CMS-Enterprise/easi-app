@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests } from 'queries/types/GetRequests';
 
@@ -24,9 +26,17 @@ const Table = () => {
       return edge.node;
     });
 
-  console.log(requests);
-
-  return <p>Table goes here</p>;
+  return (
+    <ul>
+      {requests?.map(request => (
+        <li key={request.id}>
+          <UswdsLink asCustom={Link} to={`/508/requests/${request.id}`}>
+            {request.name}
+          </UswdsLink>
+        </li>
+      ))}
+    </ul>
+  );
 };
 
 export default Table;
