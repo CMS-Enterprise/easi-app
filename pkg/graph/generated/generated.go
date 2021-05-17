@@ -2354,9 +2354,6 @@ enum AccessibilityRequestDeletionReason {
   INCORRECT_APPLICATION_AND_LIFECYCLE_ID
   NO_TESTING_NEEDED
   OTHER
-
-  " For 508 requests that predate collecting this field "
-  UNKNOWN
 }
 
 input DeleteAccessibilityRequestInput {

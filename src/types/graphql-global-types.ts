@@ -11,7 +11,6 @@ export enum AccessibilityRequestDeletionReason {
   INCORRECT_APPLICATION_AND_LIFECYCLE_ID = "INCORRECT_APPLICATION_AND_LIFECYCLE_ID",
   NO_TESTING_NEEDED = "NO_TESTING_NEEDED",
   OTHER = "OTHER",
-  UNKNOWN = "UNKNOWN",
 }
 
 export enum AccessibilityRequestDocumentCommonType {
