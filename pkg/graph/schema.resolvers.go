@@ -780,6 +780,10 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 	return conn, nil
 }
 
+func (r *queryResolver) UserInfo(ctx context.Context) (*models.UserInfo, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
 	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
 	if actionsErr != nil {
@@ -1062,6 +1066,14 @@ func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *mod
 	return obj.TRBCollaboratorName.Ptr(), nil
 }
 
+func (r *userInfoResolver) UserKey(ctx context.Context, obj *models.UserInfo) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *userInfoResolver) SignedHash(ctx context.Context, obj *models.UserInfo) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
 func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
 	return &accessibilityRequestResolver{r}
@@ -1084,12 +1096,16 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
+// UserInfo returns generated.UserInfoResolver implementation.
+func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
+
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+type userInfoResolver struct{ *Resolver }
 
 // !!! WARNING !!!
 // The code below was going to be deleted when updating resolvers. It has been copied here so you have

@@ -544,6 +544,11 @@ type DeleteAccessibilityRequestPayload {
   id: UUID
 }
 
+type UserInfo {
+  userKey: String!
+  signedHash: String!
+}
+
 type Mutation {
   addGRTFeedbackAndKeepBusinessCaseInDraft(
     input: AddGRTFeedbackInput!
@@ -601,6 +606,7 @@ type Query {
   ): AccessibilityRequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
+  userInfo: UserInfo
 }
 
 """
