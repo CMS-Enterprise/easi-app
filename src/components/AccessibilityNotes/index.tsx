@@ -7,6 +7,7 @@ type AccessibilityNote = {
   content: string;
   author: string;
   createdAt: string;
+  id: string;
 };
 
 export const AccessibilityNoteListItem = ({
@@ -15,7 +16,7 @@ export const AccessibilityNoteListItem = ({
   note: AccessibilityNote;
 }) => {
   return (
-    <div className="accessibility-note__note-item">
+    <div className="accessibility-note__note-item" id={note.id}>
       <div className="margin-bottom-2">
         <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
           {note.content}
@@ -31,9 +32,16 @@ export const AccessibilityNoteListItem = ({
 };
 
 export const AccessibilityNotesList = ({
-  children
+  notes
 }: {
-  children: React.ReactNodeArray;
+  notes: AccessibilityNote[];
 }) => {
-  return <div>{children}</div>;
+  return (
+    <div>
+      <caption className="usa-sr-only">{`${notes.length} existing notes`}</caption>
+      {notes.map(note => (
+        <AccessibilityNoteListItem note={note} />
+      ))}
+    </div>
+  );
 };
