@@ -73,7 +73,7 @@ const TestingTemplates = () => {
       <p>{t('testingTemplates.testPlanSection.description')}</p>
       <ul className="accessibility-testing-templates__test-plan-list">
         {testPlanList.map(item => (
-          <li>{item}</li>
+          <li key={item}>{item}</li>
         ))}
       </ul>
     </div>
@@ -90,7 +90,7 @@ const TestingTemplates = () => {
       <p>{t('testingTemplates.remediationPlanSection.description')}</p>
       <ul className="accessibility-testing-templates__remediation-plan-list">
         {remediationPlanList.map(item => (
-          <li>{item}</li>
+          <li key={item}>{item}</li>
         ))}
       </ul>
     </div>
@@ -149,7 +149,7 @@ const TestingTemplates = () => {
       <ul className="accessibility-testing-templates__vpat-list">
         <li>{t('testingTemplates.vpatSection.subSection.item1.text')}</li>
         {vpatConformanceLevels.map(level => (
-          <p>
+          <p key={level.name}>
             <span className="text-bold">{level.name}</span> {level.description}
           </p>
         ))}
