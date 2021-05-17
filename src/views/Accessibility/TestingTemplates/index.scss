@@ -1,11 +1,23 @@
 
 
 .accessibility-testing-templates {
+  &__table-of-contents {
+    padding-left: 0;
+    list-style-type: none;
+    li {
+      &:before {
+          content: "- ";
+      }
+    }
+  }
+  &__vpat-list, &__test-plan-list, &__remediation-plan-list {
+    padding-left: 20px;
+  }
   &__downloadBox {
     background: color($theme-color-info-lighter);
     padding: 24px 18px;
-    h3 {
-    padding-top: 0;
-    }
+  }
+  &__side-col {
+  border-top: 4px solid $easi-bright-blue;
   }
 }
