@@ -27,6 +27,11 @@ export enum GRTFeedbackType {
   GRB = "GRB",
 }
 
+export enum RequestType {
+  ACCESSIBILITY_REQUEST = "ACCESSIBILITY_REQUEST",
+  GOVERNANCE_REQUEST = "GOVERNANCE_REQUEST",
+}
+
 export enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES = "BIZ_CASE_NEEDS_CHANGES",
   CREATE_BIZ_CASE = "CREATE_BIZ_CASE",

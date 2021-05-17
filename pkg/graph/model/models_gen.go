@@ -168,19 +168,20 @@ type RejectIntakeInput struct {
 }
 
 type Request struct {
+	ID          uuid.UUID   `json:"id"`
 	Name        *string     `json:"name"`
 	SubmittedAt *time.Time  `json:"submittedAt"`
 	Type        RequestType `json:"type"`
 }
 
-type RequestConnection struct {
-	Edges      []*RequestEdge `json:"edges"`
-	TotalCount int            `json:"totalCount"`
-}
-
 type RequestEdge struct {
 	Cursor string   `json:"cursor"`
 	Node   *Request `json:"node"`
+}
+
+type RequestsConnection struct {
+	Edges      []*RequestEdge `json:"edges"`
+	TotalCount int            `json:"totalCount"`
 }
 
 type SystemConnection struct {

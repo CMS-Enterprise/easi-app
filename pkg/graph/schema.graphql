@@ -13,12 +13,13 @@ enum RequestType {
 }
 
 type Request {
+  id: UUID!
   name: String
   submittedAt: Time
   type: RequestType!
 }
 
-type RequestConnection {
+type RequestsConnection {
   edges: [RequestEdge!]!
   totalCount: Int!
 }
@@ -623,7 +624,7 @@ type Query {
   requests(
     after: String
     first: Int!
-  ): RequestConnection
+  ): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
 }
