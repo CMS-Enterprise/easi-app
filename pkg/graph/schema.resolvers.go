@@ -723,7 +723,7 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 }
 
 func (r *queryResolver) Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error) {
-	requests, queryErr := r.store.FetchMyAccessibilityRequests(ctx)
+	requests, queryErr := r.store.FetchMyRequests(ctx)
 	if queryErr != nil {
 		return nil, gqlerror.Errorf("query error: %s", queryErr)
 	}
