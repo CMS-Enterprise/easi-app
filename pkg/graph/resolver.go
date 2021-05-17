@@ -3,6 +3,7 @@ package graph
 import (
 	"context"
 
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -18,9 +19,10 @@ import (
 
 // Resolver is a resolver.
 type Resolver struct {
-	store    *storage.Store
-	service  ResolverService
-	s3Client *upload.S3Client
+	store       *storage.Store
+	service     ResolverService
+	s3Client    *upload.S3Client
+	emailClient *email.Client
 }
 
 // ResolverService holds service methods for use in resolvers
@@ -32,6 +34,7 @@ type ResolverService struct {
 	CreateActionUpdateStatus                   func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool) (*models.SystemIntake, error)
 	IssueLifecycleID                           func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	RejectIntake                               func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
+	FetchUserInfo                              func(context.Context, string) (*models.UserInfo, error)
 }
 
 // NewResolver constructs a resolver
@@ -39,6 +42,7 @@ func NewResolver(
 	store *storage.Store,
 	service ResolverService,
 	s3Client *upload.S3Client,
+	emailClient *email.Client,
 ) *Resolver {
-	return &Resolver{store: store, service: service, s3Client: s3Client}
+	return &Resolver{store: store, service: service, s3Client: s3Client, emailClient: emailClient}
 }

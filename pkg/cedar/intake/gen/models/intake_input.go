@@ -42,7 +42,7 @@ type IntakeInput struct {
 
 	// The name and version of the corresponding schema
 	// Required: true
-	// Enum: [EASIActionV01 EASIBizCaseV01 EASIGrtFeedbackV01 EASIIntakeV01 EASILifecycleCostV01 EASINoteV01]
+	// Enum: [EASIActionV01 EASIBizCaseV01 EASIGrtFeedbackV01 EASIIntakeV01 EASINoteV01]
 	Schema *string `json:"schema"`
 
 	// Customer status for the record being transmitted, i.e. Initiated, Final, etc.
@@ -52,7 +52,7 @@ type IntakeInput struct {
 
 	// The type of record being transmitted, i.e.
 	// Required: true
-	// Enum: [EASIAction EASIBizCase EASIGrtFeedback EASIIntake EASILifecycleCost EASINote]
+	// Enum: [EASIAction EASIBizCase EASIGrtFeedback EASIIntake EASINote]
 	Type *string `json:"type"`
 }
 
@@ -178,7 +178,7 @@ var intakeInputTypeSchemaPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["EASIActionV01","EASIBizCaseV01","EASIGrtFeedbackV01","EASIIntakeV01","EASILifecycleCostV01","EASINoteV01"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["EASIActionV01","EASIBizCaseV01","EASIGrtFeedbackV01","EASIIntakeV01","EASINoteV01"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -199,9 +199,6 @@ const (
 
 	// IntakeInputSchemaEASIIntakeV01 captures enum value "EASIIntakeV01"
 	IntakeInputSchemaEASIIntakeV01 string = "EASIIntakeV01"
-
-	// IntakeInputSchemaEASILifecycleCostV01 captures enum value "EASILifecycleCostV01"
-	IntakeInputSchemaEASILifecycleCostV01 string = "EASILifecycleCostV01"
 
 	// IntakeInputSchemaEASINoteV01 captures enum value "EASINoteV01"
 	IntakeInputSchemaEASINoteV01 string = "EASINoteV01"
@@ -276,7 +273,7 @@ var intakeInputTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["EASIAction","EASIBizCase","EASIGrtFeedback","EASIIntake","EASILifecycleCost","EASINote"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["EASIAction","EASIBizCase","EASIGrtFeedback","EASIIntake","EASINote"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -297,9 +294,6 @@ const (
 
 	// IntakeInputTypeEASIIntake captures enum value "EASIIntake"
 	IntakeInputTypeEASIIntake string = "EASIIntake"
-
-	// IntakeInputTypeEASILifecycleCost captures enum value "EASILifecycleCost"
-	IntakeInputTypeEASILifecycleCost string = "EASILifecycleCost"
 
 	// IntakeInputTypeEASINote captures enum value "EASINote"
 	IntakeInputTypeEASINote string = "EASINote"
