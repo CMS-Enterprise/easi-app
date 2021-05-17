@@ -1,0 +1,11 @@
+
+
+.accessibility-testing-templates {
+  &__downloadBox {
+    background: color($theme-color-info-lighter);
+    padding: 24px 18px;
+    h3 {
+    padding-top: 0;
+    }
+  }
+}
