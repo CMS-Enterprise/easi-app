@@ -239,19 +239,20 @@ type ComplexityRoot struct {
 	}
 
 	Request struct {
+		ID          func(childComplexity int) int
 		Name        func(childComplexity int) int
 		SubmittedAt func(childComplexity int) int
 		Type        func(childComplexity int) int
 	}
 
-	RequestConnection struct {
-		Edges      func(childComplexity int) int
-		TotalCount func(childComplexity int) int
-	}
-
 	RequestEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
+	}
+
+	RequestsConnection struct {
+		Edges      func(childComplexity int) int
+		TotalCount func(childComplexity int) int
 	}
 
 	System struct {
@@ -479,7 +480,7 @@ type MutationResolver interface {
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
 	AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error)
-	Requests(ctx context.Context, after *string, first int) (*model.RequestConnection, error)
+	Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error)
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 }
@@ -1528,6 +1529,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Systems(childComplexity, args["after"].(*string), args["first"].(int)), true
 
+	case "Request.id":
+		if e.complexity.Request.ID == nil {
+			break
+		}
+
+		return e.complexity.Request.ID(childComplexity), true
+
 	case "Request.name":
 		if e.complexity.Request.Name == nil {
 			break
@@ -1549,20 +1557,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Request.Type(childComplexity), true
 
-	case "RequestConnection.edges":
-		if e.complexity.RequestConnection.Edges == nil {
-			break
-		}
-
-		return e.complexity.RequestConnection.Edges(childComplexity), true
-
-	case "RequestConnection.totalCount":
-		if e.complexity.RequestConnection.TotalCount == nil {
-			break
-		}
-
-		return e.complexity.RequestConnection.TotalCount(childComplexity), true
-
 	case "RequestEdge.cursor":
 		if e.complexity.RequestEdge.Cursor == nil {
 			break
@@ -1576,6 +1570,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.RequestEdge.Node(childComplexity), true
+
+	case "RequestsConnection.edges":
+		if e.complexity.RequestsConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.RequestsConnection.Edges(childComplexity), true
+
+	case "RequestsConnection.totalCount":
+		if e.complexity.RequestsConnection.TotalCount == nil {
+			break
+		}
+
+		return e.complexity.RequestsConnection.TotalCount(childComplexity), true
 
 	case "System.businessOwner":
 		if e.complexity.System.BusinessOwner == nil {
@@ -2342,12 +2350,13 @@ enum RequestType {
 }
 
 type Request {
+  id: UUID!
   name: String
   submittedAt: Time
   type: RequestType!
 }
 
-type RequestConnection {
+type RequestsConnection {
   edges: [RequestEdge!]!
   totalCount: Int!
 }
@@ -2952,7 +2961,7 @@ type Query {
   requests(
     after: String
     first: Int!
-  ): RequestConnection
+  ): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
 }
@@ -8091,9 +8100,9 @@ func (ec *executionContext) _Query_requests(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.RequestConnection)
+	res := resTmp.(*model.RequestsConnection)
 	fc.Result = res
-	return ec.marshalORequestConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestConnection(ctx, field.Selections, res)
+	return ec.marshalORequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestsConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_systemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8245,6 +8254,41 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Request_id(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Request_name(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8344,76 +8388,6 @@ func (ec *executionContext) _Request_type(ctx context.Context, field graphql.Col
 	return ec.marshalNRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestType(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _RequestConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.RequestConnection) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "RequestConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Edges, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*model.RequestEdge)
-	fc.Result = res
-	return ec.marshalNRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestEdgeᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _RequestConnection_totalCount(ctx context.Context, field graphql.CollectedField, obj *model.RequestConnection) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "RequestConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TotalCount, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _RequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.RequestEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8482,6 +8456,76 @@ func (ec *executionContext) _RequestEdge_node(ctx context.Context, field graphql
 	res := resTmp.(*model.Request)
 	fc.Result = res
 	return ec.marshalNRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequest(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _RequestsConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.RequestsConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RequestsConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.RequestEdge)
+	fc.Result = res
+	return ec.marshalNRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _RequestsConnection_totalCount(ctx context.Context, field graphql.CollectedField, obj *model.RequestsConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RequestsConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_businessOwner(ctx context.Context, field graphql.CollectedField, obj *models.System) (ret graphql.Marshaler) {
@@ -14448,44 +14492,17 @@ func (ec *executionContext) _Request(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Request")
+		case "id":
+			out.Values[i] = ec._Request_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "name":
 			out.Values[i] = ec._Request_name(ctx, field, obj)
 		case "submittedAt":
 			out.Values[i] = ec._Request_submittedAt(ctx, field, obj)
 		case "type":
 			out.Values[i] = ec._Request_type(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var requestConnectionImplementors = []string{"RequestConnection"}
-
-func (ec *executionContext) _RequestConnection(ctx context.Context, sel ast.SelectionSet, obj *model.RequestConnection) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, requestConnectionImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("RequestConnection")
-		case "edges":
-			out.Values[i] = ec._RequestConnection_edges(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "totalCount":
-			out.Values[i] = ec._RequestConnection_totalCount(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -14518,6 +14535,38 @@ func (ec *executionContext) _RequestEdge(ctx context.Context, sel ast.SelectionS
 			}
 		case "node":
 			out.Values[i] = ec._RequestEdge_node(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var requestsConnectionImplementors = []string{"RequestsConnection"}
+
+func (ec *executionContext) _RequestsConnection(ctx context.Context, sel ast.SelectionSet, obj *model.RequestsConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, requestsConnectionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RequestsConnection")
+		case "edges":
+			out.Values[i] = ec._RequestsConnection_edges(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totalCount":
+			out.Values[i] = ec._RequestsConnection_totalCount(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -17108,11 +17157,11 @@ func (ec *executionContext) marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋea
 	return graphql.MarshalString(string(v))
 }
 
-func (ec *executionContext) marshalORequestConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestConnection(ctx context.Context, sel ast.SelectionSet, v *model.RequestConnection) graphql.Marshaler {
+func (ec *executionContext) marshalORequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestsConnection(ctx context.Context, sel ast.SelectionSet, v *model.RequestsConnection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return ec._RequestConnection(ctx, sel, v)
+	return ec._RequestsConnection(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
