@@ -1,0 +1,9 @@
+.accessibility-note {
+  &__note-item {
+    display: flex;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid #979797;
+      margin-bottom: 1rem;
+    }
+  }
+}
