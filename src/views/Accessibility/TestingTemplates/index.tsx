@@ -4,6 +4,8 @@ import { Link } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 
+import './index.scss';
+
 const TestingTemplates = () => {
   const { t } = useTranslation('accessibility');
   const vpatConformanceLevels: { name: string; description: string }[] = t(
@@ -27,7 +29,7 @@ const TestingTemplates = () => {
   );
 
   return (
-    <div className="grid-container">
+    <div className="grid-container accessibility-testing-templates">
       <div className="tablet:grid-col-10">
         <PageHeading>{t('testingTemplates.heading')}</PageHeading>
         <h2>{t('testingTemplates.vpatSection.heading')}</h2>
@@ -43,7 +45,7 @@ const TestingTemplates = () => {
           ))}
           <li>{t('testingTemplates.vpatSection.subSection.item2.text')}</li>
         </ul>
-        <div>
+        <div className="accessibility-testing-templates__downloadBox">
           <h3>
             {t('testingTemplates.vpatSection.subSection.downloadVPAT.heading')}
           </h3>
