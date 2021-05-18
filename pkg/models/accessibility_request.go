@@ -6,13 +6,28 @@ import (
 	"github.com/google/uuid"
 )
 
+// AccessibilityRequestDeletionReason is why an accessibility request was marked as deleted
+type AccessibilityRequestDeletionReason string
+
+const (
+	// AccessibilityRequestDeletionReasonIncorrectApplicationAndLifecycleID ...
+	AccessibilityRequestDeletionReasonIncorrectApplicationAndLifecycleID AccessibilityRequestDeletionReason = "INCORRECT_APPLICATION_AND_LIFECYCLE_ID"
+	// AccessibilityRequestDeletionReasonNoTestingNeeded ...
+	AccessibilityRequestDeletionReasonNoTestingNeeded AccessibilityRequestDeletionReason = "NO_TESTING_NEEDED"
+	// AccessibilityRequestDeletionReasonOther ...
+	AccessibilityRequestDeletionReasonOther AccessibilityRequestDeletionReason = "OTHER"
+	// AccessibilityRequestDeletionReasonUnknown ...
+	AccessibilityRequestDeletionReasonUnknown AccessibilityRequestDeletionReason = "UNKNOWN"
+)
+
 // AccessibilityRequest models a 508 request
 type AccessibilityRequest struct {
-	ID        uuid.UUID  `json:"id"`
-	Name      string     `json:"name"`
-	IntakeID  uuid.UUID  `db:"intake_id"`
-	CreatedAt *time.Time `db:"created_at" gqlgen:"submittedAt"`
-	UpdatedAt *time.Time `db:"updated_at"`
-	EUAUserID string     `json:"euaUserId" db:"eua_user_id"`
-	DeletedAt *time.Time `db:"deleted_at" json:"deletedAt"`
+	ID             uuid.UUID                           `json:"id"`
+	Name           string                              `json:"name"`
+	IntakeID       uuid.UUID                           `db:"intake_id"`
+	CreatedAt      *time.Time                          `db:"created_at" gqlgen:"submittedAt"`
+	UpdatedAt      *time.Time                          `db:"updated_at"`
+	EUAUserID      string                              `json:"euaUserId" db:"eua_user_id"`
+	DeletedAt      *time.Time                          `db:"deleted_at" json:"deletedAt"`
+	DeletionReason *AccessibilityRequestDeletionReason `db:"deletion_reason"`
 }

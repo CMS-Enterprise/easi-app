@@ -25,6 +25,10 @@ type EASILifecycleCost struct {
 	// Required: true
 	Cost *string `json:"cost"`
 
+	// id
+	// Required: true
+	ID *string `json:"id"`
+
 	// phase
 	// Required: true
 	Phase *string `json:"phase"`
@@ -47,6 +51,10 @@ func (m *EASILifecycleCost) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCost(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -80,6 +88,15 @@ func (m *EASILifecycleCost) validateBusinessCaseID(formats strfmt.Registry) erro
 func (m *EASILifecycleCost) validateCost(formats strfmt.Registry) error {
 
 	if err := validate.Required("cost", "body", m.Cost); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *EASILifecycleCost) validateID(formats strfmt.Registry) error {
+
+	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
 	}
 
