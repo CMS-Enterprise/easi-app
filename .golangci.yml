@@ -38,11 +38,6 @@ linters:
 issues:
   exclude-use-default: false
 
-  exclude:
-    #TODO: remove this exclusion after https://github.com/golang/lint/issues/381
-    # is fixed by https://github.com/golang/lint/pull/380 or something else
-    - "should have a package comment, unless it's in another file for this package"
-
 run:
   # timeout for analysis, e.g. 30s, 5m, default is 1m
   deadline: 8m
