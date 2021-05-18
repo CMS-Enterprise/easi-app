@@ -24,46 +24,54 @@ func (s StoreTestSuite) TestMyRequests() {
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
-		accessibilityRequestThatIsMine := testhelpers.NewAccessibilityRequestForUser(intake.ID, requesterID)
+		newRequest := testhelpers.NewAccessibilityRequestForUser(intake.ID, requesterID)
 		createdAt, _ := time.Parse("2006-1-2", "2015-1-1")
-		accessibilityRequestThatIsMine.CreatedAt = &createdAt
-		_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequestThatIsMine)
+		newRequest.CreatedAt = &createdAt
+		newRequest.Name = "My Accessibility Request"
+		accessibilityRequestThatIsMine, err := s.store.CreateAccessibilityRequest(ctx, &newRequest)
 		s.NoError(err)
 
-		accessibilityRequestThatIsDeleted := testhelpers.NewAccessibilityRequestForUser(intake.ID, requesterID)
+		newRequest = testhelpers.NewAccessibilityRequestForUser(intake.ID, requesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-2-1")
-		accessibilityRequestThatIsDeleted.CreatedAt = &createdAt
-		_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequestThatIsDeleted)
+		newRequest.CreatedAt = &createdAt
+		accessibilityRequestThatIsDeleted, err := s.store.CreateAccessibilityRequest(ctx, &newRequest)
 		s.NoError(err)
 
 		err = s.store.DeleteAccessibilityRequest(ctx, accessibilityRequestThatIsDeleted.ID, models.AccessibilityRequestDeletionReasonOther)
 		s.NoError(err)
 
-		accessibilityRequestThatIsNotMine := testhelpers.NewAccessibilityRequestForUser(intake.ID, notRequesterID)
+		newRequest = testhelpers.NewAccessibilityRequestForUser(intake.ID, notRequesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-3-1")
-		accessibilityRequestThatIsNotMine.CreatedAt = &createdAt
-		_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequestThatIsNotMine)
+		newRequest.CreatedAt = &createdAt
+		_, err = s.store.CreateAccessibilityRequest(ctx, &newRequest)
 		s.NoError(err)
 
-		intakeThatIsMine := testhelpers.NewSystemIntake()
-		intakeThatIsMine.EUAUserID = null.StringFrom(requesterID)
+		newIntake := testhelpers.NewSystemIntake()
+		newIntake.EUAUserID = null.StringFrom(requesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-4-1")
-		intakeThatIsMine.CreatedAt = &createdAt
-		_, err = s.store.CreateSystemIntake(ctx, &intakeThatIsMine)
+		newIntake.CreatedAt = &createdAt
+		newIntake.ProjectName = null.StringFrom("My Intake")
+		createdIntake, err := s.store.CreateSystemIntake(ctx, &newIntake)
 		s.NoError(err)
 
-		intakeThatIsWithdrawn := testhelpers.NewSystemIntake()
-		intakeThatIsWithdrawn.EUAUserID = null.StringFrom(requesterID)
+		submittedAt, _ := time.Parse("2006-1-2", "2015-4-1")
+		createdIntake.SubmittedAt = &submittedAt
+		intakeThatIsMine, err := s.store.UpdateSystemIntake(ctx, createdIntake)
+		s.NoError(err)
+
+		newIntake = testhelpers.NewSystemIntake()
+		newIntake.EUAUserID = null.StringFrom(requesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-5-1")
-		intakeThatIsWithdrawn.CreatedAt = &createdAt
-		_, err = s.store.CreateSystemIntake(ctx, &intakeThatIsWithdrawn)
+		newIntake.CreatedAt = &createdAt
+		newIntake.ProjectName = null.StringFrom("My Withdrawn Intake")
+		intakeThatIsWithdrawn, err := s.store.CreateSystemIntake(ctx, &newIntake)
 		s.NoError(err)
 
-		intakeThatIsNotMine := testhelpers.NewSystemIntake()
-		intakeThatIsNotMine.EUAUserID = null.StringFrom(notRequesterID)
+		newIntake = testhelpers.NewSystemIntake()
+		newIntake.EUAUserID = null.StringFrom(notRequesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-6-1")
-		intakeThatIsNotMine.CreatedAt = &createdAt
-		_, err = s.store.CreateSystemIntake(ctx, &intakeThatIsNotMine)
+		newIntake.CreatedAt = &createdAt
+		_, err = s.store.CreateSystemIntake(ctx, &newIntake)
 		s.NoError(err)
 
 		myRequests, err := s.store.FetchMyRequests(ctx)
@@ -72,11 +80,17 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.Len(myRequests, 3)
 		s.Equal(myRequests[0].ID, intakeThatIsWithdrawn.ID)
 		s.Equal(myRequests[0].Type, model.RequestType("GOVERNANCE_REQUEST"))
+		s.Equal(myRequests[0].Name, null.StringFrom("My Withdrawn Intake"))
+		s.Nil(myRequests[0].SubmittedAt)
 
 		s.Equal(myRequests[1].ID, intakeThatIsMine.ID)
 		s.Equal(myRequests[1].Type, model.RequestType("GOVERNANCE_REQUEST"))
+		s.Equal(myRequests[1].Name, null.StringFrom("My Intake"))
+		s.Equal(myRequests[1].SubmittedAt, intakeThatIsMine.SubmittedAt)
 
 		s.Equal(myRequests[2].ID, accessibilityRequestThatIsMine.ID)
 		s.Equal(myRequests[2].Type, model.RequestType("ACCESSIBILITY_REQUEST"))
+		s.Equal(myRequests[2].Name, null.StringFrom("My Accessibility Request"))
+		s.Equal(myRequests[2].SubmittedAt, accessibilityRequestThatIsMine.CreatedAt)
 	})
 }
