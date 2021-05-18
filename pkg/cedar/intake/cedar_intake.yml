@@ -162,7 +162,7 @@ definitions:
       - alternativeBPros
       - alternativeBCons
       - alternativeBCostSavings
-      # - lifecycleCostLines
+      - lifecycleCostLines
       - submittedAt
       - archivedAt
       - initialSubmittedAt
@@ -293,10 +293,10 @@ definitions:
         type: string
       alternativeBCostSavings:
         type: string
-      # lifecycleCostLines:
-      #   type: array
-      #   items:
-      #     $ref: '#/definitions/EASILifecycleCost'
+      lifecycleCostLines:
+        type: array
+        items:
+          $ref: '#/definitions/EASILifecycleCost'
       submittedAt:
         type: string
         # format: date-time
@@ -496,15 +496,15 @@ definitions:
   EASILifecycleCost:
     type: object
     required:
-      # - id
+      - id
       - businessCaseId
       - solution
       - phase
       - year
       - cost
     properties:
-      # id:
-      #   type: string
+      id:
+        type: string
       businessCaseId:
         type: string
       solution:
@@ -571,7 +571,6 @@ definitions:
           - EASIBizCaseV01
           - EASIGrtFeedbackV01
           - EASIIntakeV01
-          - EASILifecycleCostV01
           - EASINoteV01
       createdDate:
         type: string
@@ -591,7 +590,6 @@ definitions:
           - EASIBizCase
           - EASIGrtFeedback
           - EASIIntake
-          - EASILifecycleCost
           - EASINote
         description: 'The type of record being transmitted, i.e. '
       bodyFormat:

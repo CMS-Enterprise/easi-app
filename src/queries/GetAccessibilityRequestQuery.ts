@@ -4,6 +4,7 @@ export default gql`
   query GetAccessibilityRequest($id: UUID!) {
     accessibilityRequest(id: $id) {
       id
+      euaUserId
       submittedAt
       name
       system {

@@ -9,7 +9,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
-import useConfirmationText from 'hooks/useConfirmationText';
+import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
@@ -23,7 +23,8 @@ const Home = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
-  const confirmationText = useConfirmationText();
+
+  const { message } = useMessage();
 
   const renderView = () => {
     if (isUserSet) {
@@ -32,6 +33,13 @@ const Home = () => {
           // Changed GRT table from grid-container to just slight margins. This is take up
           // entire screen to better fit the more expansive data in the table.
           <div className="padding-x-4">
+            {message && (
+              <div className="grid-container margin-top-6">
+                <Alert type="success" slim role="alert">
+                  {message}
+                </Alert>
+              </div>
+            )}
             <RequestRepository />
           </div>
         );
@@ -44,6 +52,13 @@ const Home = () => {
       if (user.isBasicUser(userGroups)) {
         return (
           <div className="grid-container">
+            {message && (
+              <div className="grid-container margin-top-6">
+                <Alert type="success" slim role="alert">
+                  {message}
+                </Alert>
+              </div>
+            )}
             <div className="margin-y-6">
               <SystemIntakeBanners />
             </div>
@@ -62,16 +77,7 @@ const Home = () => {
   return (
     <PageWrapper>
       <Header />
-      <MainContent className="margin-bottom-5">
-        {confirmationText && (
-          <div className="grid-container margin-top-6">
-            <Alert type="success" slim role="alert">
-              {confirmationText}
-            </Alert>
-          </div>
-        )}
-        {renderView()}
-      </MainContent>
+      <MainContent className="margin-bottom-5">{renderView()}</MainContent>
       <Footer />
     </PageWrapper>
   );

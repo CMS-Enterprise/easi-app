@@ -69,11 +69,18 @@ func translateSystemIntake(_ context.Context, si *models.SystemIntake) (*wire.In
 		return nil, err
 	}
 
+	closedStatuses, err := models.GetStatusesByFilter(models.SystemIntakeStatusFilterCLOSED)
+	if err != nil {
+		return nil, err
+	}
+
 	status := wire.IntakeInputStatusInitiated
-	// if true {
-	// 	// TODO: need to figure out when to say the SystemIntake is "Final"
-	// 	return nil, fmt.Errorf("not yet implemented")
-	// }
+	for _, stat := range closedStatuses {
+		if si.Status == stat {
+			status = wire.IntakeInputStatusFinal
+			break
+		}
+	}
 
 	result := wire.IntakeInput{
 		ID:     pStr(si.ID.String()),

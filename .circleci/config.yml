@@ -3,7 +3,7 @@ version: 2
 
 references:
   circleci_docker_primary: &circleci_docker_primary ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-circleci:easi-app-41d6969ae6511fc7076af6646be6f44b4a9c599b
-  postgres: &postgres postgres:11.6
+  postgres: &postgres postgres:11.10
   db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}
 jobs:
   restart_impl_ecs_app_service:
@@ -115,6 +115,7 @@ jobs:
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
           GRT_EMAIL: success@simulator.amazonses.com
+          ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres

@@ -8,6 +8,10 @@ export type AccessibilityRequestForm = {
   requestName: string;
 };
 
+export type DeleteAccessibilityRequestForm = {
+  deletionReason: string;
+};
+
 // Form for reviewer to add dates
 export type TestDateFormType = {
   testType: 'INITIAL' | 'REMEDIATION' | null;

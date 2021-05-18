@@ -48,6 +48,7 @@ export interface GetAccessibilityRequest_accessibilityRequest_testDates {
 export interface GetAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
   id: UUID;
+  euaUserId: string;
   submittedAt: Time;
   name: string;
   system: GetAccessibilityRequest_accessibilityRequest_system;
