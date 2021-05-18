@@ -120,7 +120,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	store, err := storage.NewStore(logger, dbConfig, ldClient)
 	if err != nil {
 		fmt.Printf("Failed to get new database: %v", err)
-		t.Fail()
+		t.FailNow()
 	}
 
 	s3Config := upload.Config{Bucket: "easi-test-bucket", Region: "us-west", IsLocal: false}
@@ -138,7 +138,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	localSender := local.NewSender()
 	emailClient, err := email.NewClient(emailConfig, localSender)
 	if err != nil {
-		t.Fail()
+		t.FailNow()
 	}
 
 	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
@@ -161,6 +161,8 @@ func TestGraphQLTestSuite(t *testing.T) {
 	}
 	resolverService.AuthorizeUserIsReviewTeamOrIntakeRequester = authorizeIntake
 	resolverService.AuthorizeUserIs508TeamOrRequestOwner = authorize508
+	cedarLdapClient := local.NewCedarLdapClient(logger)
+	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
 
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client, &emailClient), Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))

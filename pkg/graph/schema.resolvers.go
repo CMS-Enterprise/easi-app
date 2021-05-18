@@ -351,6 +351,12 @@ func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
+	removerEUAID := appcontext.Principal(ctx).ID()
+	removerInfo, err := r.service.FetchUserInfo(ctx, removerEUAID)
+	if err != nil {
+		return nil, err
+	}
+
 	ok, err := services.AuthorizeUserIs508RequestOwner(ctx, request)
 	if err != nil {
 		return nil, err
@@ -360,6 +366,11 @@ func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input
 	}
 
 	err = r.store.DeleteAccessibilityRequest(ctx, input.ID, input.Reason)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendRemovedAccessibilityRequestEmail(ctx, request.Name, removerInfo.CommonName, input.Reason, removerInfo.Email)
 	if err != nil {
 		return nil, err
 	}
