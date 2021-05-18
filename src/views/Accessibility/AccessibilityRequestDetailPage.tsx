@@ -4,9 +4,10 @@ import { useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Alert, Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Field, Form, Formik, FormikProps } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
-import { DeleteAccessibilityRequestQuery } from 'queries/AccessibilityRequestQueries';
+import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
 import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
@@ -23,12 +24,20 @@ import {
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
+import { RadioField } from 'components/shared/RadioField';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TestDateCard from 'components/TestDateCard';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
+import { DeleteAccessibilityRequestForm } from 'types/accessibility';
+import { AccessibilityRequestDeletionReason } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
+import flattenErrors from 'utils/flattenErrors';
 import user from 'utils/user';
+import accessibilitySchema from 'validations/accessibilitySchema';
 import { NotFoundPartial } from 'views/NotFound';
 
 import './index.scss';
@@ -54,13 +63,15 @@ const AccessibilityRequestDetailPage = () => {
     DeleteAccessibilityRequest,
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
+
   const userEuaId = useSelector((state: AppState) => state.auth.euaId);
 
-  const removeRequest = () => {
+  const removeRequest = (values: DeleteAccessibilityRequestForm) => {
     mutate({
       variables: {
         input: {
-          id: accessibilityRequestId
+          id: accessibilityRequestId,
+          reason: values.deletionReason as AccessibilityRequestDeletionReason
         }
       }
     }).then(response => {
@@ -253,22 +264,94 @@ const AccessibilityRequestDetailPage = () => {
                   })}
                 </PageHeading>
                 <span>{t('requestDetails.modal.subhead')}</span>
-                <div className="display-flex margin-top-2">
-                  <Button
-                    type="button"
-                    className="margin-right-5"
-                    onClick={removeRequest}
-                  >
-                    {t('requestDetails.modal.confirm')}
-                  </Button>
-                  <Button
-                    type="button"
-                    unstyled
-                    onClick={() => setModalOpen(false)}
-                  >
-                    {t('requestDetails.modal.cancel')}
-                  </Button>
-                </div>
+
+                <Formik
+                  initialValues={{
+                    deletionReason: ''
+                  }}
+                  onSubmit={removeRequest}
+                  validationSchema={accessibilitySchema.deleteForm}
+                  validateOnBlur={false}
+                  validateOnChange={false}
+                  validateOnMount={false}
+                >
+                  {(
+                    formikProps: FormikProps<DeleteAccessibilityRequestForm>
+                  ) => {
+                    const { errors, values } = formikProps;
+                    const flatErrors = flattenErrors(errors);
+                    return (
+                      <>
+                        {Object.keys(errors).length > 0 && (
+                          <ErrorAlert
+                            testId="remove-accessibility-request-errors"
+                            classNames="margin-bottom-4 margin-top-4"
+                            heading="There is a problem"
+                          >
+                            {Object.keys(flatErrors).map(key => {
+                              return (
+                                <ErrorAlertMessage
+                                  key={`Error.${key}`}
+                                  errorKey={key}
+                                  message={flatErrors[key]}
+                                />
+                              );
+                            })}
+                          </ErrorAlert>
+                        )}
+                        <Form className="usa-form usa-form--large">
+                          <FieldGroup
+                            scrollElement="deletionReason"
+                            error={!!flatErrors.deletionReason}
+                          >
+                            <fieldset className="usa-fieldset margin-top-4">
+                              <legend className="usa-label margin-bottom-1">
+                                {t('removeAccessibilityRequest.reason')}
+                              </legend>
+                              <FieldErrorMsg>
+                                {flatErrors.deletionReason}
+                              </FieldErrorMsg>
+                              {([
+                                'INCORRECT_APPLICATION_AND_LIFECYCLE_ID',
+                                'NO_TESTING_NEEDED',
+                                'OTHER'
+                              ] as AccessibilityRequestDeletionReason[]).map(
+                                reason => {
+                                  return (
+                                    <Field
+                                      key={`RemoveAccessibilityRequest-${reason}`}
+                                      as={RadioField}
+                                      checked={values.deletionReason === reason}
+                                      id={`RemoveAccessibilityRequest-${reason}`}
+                                      name="deletionReason"
+                                      label={t(
+                                        `removeAccessibilityRequest.${reason}`
+                                      )}
+                                      value={reason}
+                                    />
+                                  );
+                                }
+                              )}
+                            </fieldset>
+                          </FieldGroup>
+
+                          <div className="display-flex margin-top-2">
+                            <Button type="submit" className="margin-right-5">
+                              {t('requestDetails.modal.confirm')}
+                            </Button>
+                            <Button
+                              type="button"
+                              unstyled
+                              onClick={() => setModalOpen(false)}
+                            >
+                              {t('requestDetails.modal.cancel')}
+                            </Button>
+                          </div>
+                        </Form>
+                      </>
+                    );
+                  }}
+                </Formik>
               </Modal>
             </div>
           </div>
