@@ -97,65 +97,67 @@ exports[`TestingTemplates matches the snapshot 1`] = `
           >
             <li>
               For each row in the table, indicate the conformance level. There are 5 levels:
+              <div
+                className="padding-left-2"
+              >
+                <dl
+                  title="Conformance levels"
+                >
+                  <div>
+                    <dt
+                      className="text-bold display-inline"
+                    >
+                      Supports:
+                    </dt>
+                     
+                    <dd
+                      className="margin-left-0 display-inline"
+                    >
+                      The functionality of the product has at least one method that meets the criterion without known defects or meets with equivalent facilitation.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt
+                      className="text-bold display-inline"
+                    >
+                      Partially Supports:
+                    </dt>
+                     
+                    <dd
+                      className="margin-left-0 display-inline"
+                    >
+                      Some functionality of the product does not meet the criterion.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt
+                      className="text-bold display-inline"
+                    >
+                      Does Not Support:
+                    </dt>
+                     
+                    <dd
+                      className="margin-left-0 display-inline"
+                    >
+                      The majority of product functionality does not meet the criterion.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt
+                      className="text-bold display-inline"
+                    >
+                      Not Evaluated:
+                    </dt>
+                     
+                    <dd
+                      className="margin-left-0 display-inline"
+                    >
+                      The product has not been evaluated against the criterion. This can be used only in WCAG 2.0 Level AAA.
+                    </dd>
+                  </div>
+                </dl>
+              </div>
             </li>
-            <div
-              className="padding-left-2"
-            >
-              <dl>
-                <div>
-                  <dt
-                    className="text-bold display-inline"
-                  >
-                    Supports:
-                  </dt>
-                   
-                  <dd
-                    className="margin-left-0 display-inline"
-                  >
-                    The functionality of the product has at least one method that meets the criterion without known defects or meets with equivalent facilitation.
-                  </dd>
-                </div>
-                <div>
-                  <dt
-                    className="text-bold display-inline"
-                  >
-                    Partially Supports:
-                  </dt>
-                   
-                  <dd
-                    className="margin-left-0 display-inline"
-                  >
-                    Some functionality of the product does not meet the criterion.
-                  </dd>
-                </div>
-                <div>
-                  <dt
-                    className="text-bold display-inline"
-                  >
-                    Does Not Support:
-                  </dt>
-                   
-                  <dd
-                    className="margin-left-0 display-inline"
-                  >
-                    The majority of product functionality does not meet the criterion.
-                  </dd>
-                </div>
-                <div>
-                  <dt
-                    className="text-bold display-inline"
-                  >
-                    Not Evaluated:
-                  </dt>
-                   
-                  <dd
-                    className="margin-left-0 display-inline"
-                  >
-                    The product has not been evaluated against the criterion. This can be used only in WCAG 2.0 Level AAA.
-                  </dd>
-                </div>
-              </dl>
-            </div>
             <li>
               After indicating the conformance level, provide a detailed explanation in the ‘Remarks and Evaluation’ column.
             </li>

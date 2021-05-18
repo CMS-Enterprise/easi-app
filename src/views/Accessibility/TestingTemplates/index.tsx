@@ -124,19 +124,21 @@ const TestingTemplates = () => {
       <p>{t('testingTemplates.vpatSection.description')}</p>
       <h3>{t('testingTemplates.vpatSection.subSection.heading')}</h3>
       <ul className="accessibility-testing-templates__vpat-list">
-        <li>{t('testingTemplates.vpatSection.subSection.item1.text')}</li>
-        <div className="padding-left-2">
-          <dl>
-            {vpatConformanceLevels.map(level => (
-              <div key={level.name}>
-                <dt className="text-bold display-inline">{level.name}</dt>{' '}
-                <dd className="margin-left-0 display-inline">
-                  {level.description}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
+        <li>
+          {t('testingTemplates.vpatSection.subSection.item1.text')}
+          <div className="padding-left-2">
+            <dl title="Conformance levels">
+              {vpatConformanceLevels.map(level => (
+                <div key={level.name}>
+                  <dt className="text-bold display-inline">{level.name}</dt>{' '}
+                  <dd className="margin-left-0 display-inline">
+                    {level.description}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </li>
         <li>{t('testingTemplates.vpatSection.subSection.item2.text')}</li>
       </ul>
       {downloadVPAT}
