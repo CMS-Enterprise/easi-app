@@ -16,8 +16,6 @@ const (
 	AccessibilityRequestDeletionReasonNoTestingNeeded AccessibilityRequestDeletionReason = "NO_TESTING_NEEDED"
 	// AccessibilityRequestDeletionReasonOther ...
 	AccessibilityRequestDeletionReasonOther AccessibilityRequestDeletionReason = "OTHER"
-	// AccessibilityRequestDeletionReasonUnknown ...
-	AccessibilityRequestDeletionReasonUnknown AccessibilityRequestDeletionReason = "UNKNOWN"
 )
 
 // AccessibilityRequest models a 508 request
