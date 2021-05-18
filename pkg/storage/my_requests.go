@@ -17,7 +17,8 @@ import (
 type Request struct {
 	ID          uuid.UUID
 	Name        string
-	SubmittedAt time.Time `db:"submitted_at"`
+	SubmittedAt *time.Time `db:"submitted_at"`
+	CreatedAt   time.Time  `db:"created_at"`
 }
 
 // FetchMyRequests queries the DB for an accessibility requests.
@@ -32,10 +33,20 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		SELECT 
 			id,
 			name,
-			created_at AS submitted_at
+			created_at AS submitted_at,
+			created_at
 		FROM accessibility_requests
-		WHERE deleted_at IS NULL
-		AND eua_user_id = $1
+			WHERE deleted_at IS NULL
+			AND eua_user_id = $1
+		UNION
+		SELECT
+			id,
+			project_name AS name,
+			submitted_at,
+			created_at
+		FROM system_intakes
+			WHERE eua_user_id = $1
+		ORDER BY created_at desc
 	`
 
 	err := s.db.Select(&requests, requestsSQL, EUAUserID)
