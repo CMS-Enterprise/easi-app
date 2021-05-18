@@ -6,6 +6,7 @@ import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests } from 'queries/types/GetRequests';
 
 import { RequestType } from 'types/graphql-global-types';
+import { formatDate } from 'utils/date';
 
 const Table = () => {
   const { loading, error, data } = useQuery<GetRequests>(GetRequestsQuery, {
@@ -48,6 +49,11 @@ const Table = () => {
             <UswdsLink asCustom={Link} to={link}>
               {request.name || 'Unnamed Request'}
             </UswdsLink>
+            ,{' '}
+            {request.submittedAt
+              ? formatDate(request.submittedAt)
+              : 'Not Submitted'}
+            , {request.type}
           </li>
         );
       })}
