@@ -30,33 +30,19 @@ const TestingTemplates = () => {
   );
 
   const tableOfContents = (
-    <div className=".accessibility-testing-templates__tableOfContents">
+    <div className="accessibility-testing-templates">
       <p>Page contents</p>
       <ul className="accessibility-testing-templates__table-of-contents">
         <li>
-          <Link
-            href={`#testingTemplates_${t(
-              'testingTemplates.vpatSection.heading'
-            )}`}
-          >
-            {t('testingTemplates.vpatSection.heading')}
-          </Link>
+          <Link href="#vpat">{t('testingTemplates.vpatSection.heading')}</Link>
         </li>
         <li>
-          <Link
-            href={`#testingTemplates_${t(
-              'testingTemplates.testPlanSection.heading'
-            )}`}
-          >
+          <Link href="#test-plan">
             {t('testingTemplates.testPlanSection.heading')}
           </Link>
         </li>
         <li>
-          <Link
-            href={`#testingTemplates_${t(
-              'testingTemplates.remediationPlanSection.heading'
-            )}`}
-          >
+          <Link href="#remediation-plan">
             {t('testingTemplates.remediationPlanSection.heading')}
           </Link>
         </li>
@@ -65,11 +51,7 @@ const TestingTemplates = () => {
   );
   const testPlanSection = (
     <div>
-      <h2
-        id={`testingTemplates_${t('testingTemplates.testPlanSection.heading')}`}
-      >
-        {t('testingTemplates.testPlanSection.heading')}
-      </h2>
+      <h2 id="#test-plan">{t('testingTemplates.testPlanSection.heading')}</h2>
       <p>{t('testingTemplates.testPlanSection.description')}</p>
       <ul className="accessibility-testing-templates__test-plan-list">
         {testPlanList.map(item => (
@@ -80,11 +62,7 @@ const TestingTemplates = () => {
   );
   const remediationPlanSection = (
     <div>
-      <h2
-        id={`testingTemplates_${t(
-          'testingTemplates.remediationPlanSection.heading'
-        )}`}
-      >
+      <h2 id="remediation-plan">
         {t('testingTemplates.remediationPlanSection.heading')}
       </h2>
       <p>{t('testingTemplates.remediationPlanSection.description')}</p>
@@ -141,18 +119,21 @@ const TestingTemplates = () => {
 
   const vpatSection = (
     <div>
-      <h2 id={`testingTemplates_${t('testingTemplates.vpatSection.heading')}`}>
-        {t('testingTemplates.vpatSection.heading')}
-      </h2>
+      <h2 id="vpat">{t('testingTemplates.vpatSection.heading')}</h2>
       <p>{t('testingTemplates.vpatSection.description')}</p>
       <h3>{t('testingTemplates.vpatSection.subSection.heading')}</h3>
       <ul className="accessibility-testing-templates__vpat-list">
         <li>{t('testingTemplates.vpatSection.subSection.item1.text')}</li>
-        {vpatConformanceLevels.map(level => (
-          <p key={level.name}>
-            <span className="text-bold">{level.name}</span> {level.description}
-          </p>
-        ))}
+        <dl>
+          {vpatConformanceLevels.map(level => (
+            <>
+              <dt className="text-bold display-inline-block">{level.name}</dt>{' '}
+              <dd className="margin-left-0 display-inline">
+                {level.description}
+              </dd>
+            </>
+          ))}
+        </dl>
         <li>{t('testingTemplates.vpatSection.subSection.item2.text')}</li>
       </ul>
       {downloadVPAT}
@@ -182,9 +163,7 @@ const TestingTemplates = () => {
         </div>
         <div className="grid-col-3 accessibility-testing-templates__sidebar">
           <div>
-            <h4 className="text-bold">
-              Need help? Contact the Section 508 team
-            </h4>
+            <h4>Need help? Contact the Section 508 team</h4>
             <Link href="mailto:CMS_Section508@cms.hhs.gov">
               CMS_Section508@cms.hhs.gov
             </Link>
