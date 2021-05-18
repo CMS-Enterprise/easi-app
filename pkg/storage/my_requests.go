@@ -4,23 +4,36 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
 )
+
+// Request defines the generic request object pulled from multiple db tables
+type Request struct {
+	ID          uuid.UUID
+	Name        string
+	SubmittedAt time.Time `db:"submitted_at"`
+}
 
 // FetchMyRequests queries the DB for an accessibility requests.
 // TODO implement cursor pagination
-func (s *Store) FetchMyRequests(ctx context.Context) ([]models.AccessibilityRequest, error) {
+func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 	principal := appcontext.Principal(ctx)
 	EUAUserID := principal.ID()
 
-	requests := []models.AccessibilityRequest{}
+	requests := []Request{}
 
-	requestsSQL := `SELECT * FROM accessibility_requests
+	requestsSQL := `
+		SELECT 
+			id,
+			name,
+			created_at AS submitted_at
+		FROM accessibility_requests
 		WHERE deleted_at IS NULL
 		AND eua_user_id = $1
 	`
