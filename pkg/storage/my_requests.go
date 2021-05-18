@@ -7,18 +7,21 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 )
 
 // Request defines the generic request object pulled from multiple db tables
 type Request struct {
 	ID          uuid.UUID
-	Name        string
-	SubmittedAt *time.Time `db:"submitted_at"`
-	CreatedAt   time.Time  `db:"created_at"`
+	Name        null.String
+	SubmittedAt *time.Time        `db:"submitted_at"`
+	CreatedAt   time.Time         `db:"created_at"`
+	Type        model.RequestType `db:"record_type"`
 }
 
 // FetchMyRequests queries the DB for an accessibility requests.
@@ -34,6 +37,7 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 			id,
 			name,
 			created_at AS submitted_at,
+			'ACCESSIBILITY_REQUEST' record_type,
 			created_at
 		FROM accessibility_requests
 			WHERE deleted_at IS NULL
@@ -43,6 +47,7 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 			id,
 			project_name AS name,
 			submitted_at,
+			'GOVERNANCE_REQUEST' record_type,
 			created_at
 		FROM system_intakes
 			WHERE eua_user_id = $1
