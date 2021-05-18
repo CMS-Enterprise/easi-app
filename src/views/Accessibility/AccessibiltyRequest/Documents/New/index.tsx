@@ -157,7 +157,13 @@ const New = () => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<FileUploadForm>) => {
-            const { errors, setFieldValue, values, handleSubmit } = formikProps;
+            const {
+              errors,
+              setFieldValue,
+              values,
+              handleSubmit,
+              isSubmitting
+            } = formikProps;
             const flatErrors = flattenErrors(errors);
             return (
               <>
@@ -309,6 +315,7 @@ const New = () => {
                       <Button
                         type="submit"
                         disabled={
+                          isSubmitting ||
                           generateURLStatus.loading ||
                           createDocumentStatus.loading
                         }
