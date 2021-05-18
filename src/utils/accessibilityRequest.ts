@@ -1,11 +1,13 @@
 import i18next from 'i18next';
 
-import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
+import {
+  AccessibilityRequestDocumentCommonType,
+  TestDateTestType
+} from 'types/graphql-global-types';
 
 /**
- * Translate the API enum to a human readable string
+ * Translate the document type API enum to a human readable string
  */
-// eslint-disable-next-line import/prefer-default-export
 export const translateDocumentType = (
   commonDocumentType: AccessibilityRequestDocumentCommonType
 ) => {
@@ -22,6 +24,20 @@ export const translateDocumentType = (
       return i18next.t('accessibility:documentType.testingVpat');
     case 'OTHER':
       return i18next.t('accessibility:documentType.other');
+    default:
+      return '';
+  }
+};
+
+/**
+ * Translate the test date type API enum to a human readable string
+ */
+export const translateTestType = (testType: TestDateTestType) => {
+  switch (testType) {
+    case 'INITIAL':
+      return i18next.t('accessibility:testDateForm.inital');
+    case 'REMEDIATION':
+      return i18next.t('accessibility:testDateForm.remediation');
     default:
       return '';
   }

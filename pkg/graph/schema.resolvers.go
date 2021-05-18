@@ -308,11 +308,33 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 }
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
+	requesterEUAID := appcontext.Principal(ctx).ID()
+	requesterInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.IntakeID)
+	if err != nil {
+		return nil, err
+	}
+
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
-		EUAUserID: appcontext.Principal(ctx).ID(),
+		EUAUserID: requesterEUAID,
 		Name:      input.Name,
 		IntakeID:  input.IntakeID,
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendNewAccessibilityRequestEmail(
+		ctx,
+		requesterInfo.CommonName,
+		request.Name,
+		intake.ProjectName.String,
+		request.ID,
+	)
 	if err != nil {
 		return nil, err
 	}

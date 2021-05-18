@@ -13,10 +13,11 @@ import (
 
 // Config holds EASi application specific configs for SES
 type Config struct {
-	GRTEmail          models.EmailAddress
-	URLHost           string
-	URLScheme         string
-	TemplateDirectory string
+	GRTEmail               models.EmailAddress
+	AccessibilityTeamEmail models.EmailAddress
+	URLHost                string
+	URLScheme              string
+	TemplateDirectory      string
 }
 
 // templateCaller is an interface to helping with testing template dependencies
@@ -27,13 +28,14 @@ type templateCaller interface {
 // templates stores typed templates
 // since the template.Template uses string access
 type templates struct {
-	systemIntakeSubmissionTemplate templateCaller
-	businessCaseSubmissionTemplate templateCaller
-	intakeReviewTemplate           templateCaller
-	namedRequestWithdrawTemplate   templateCaller
-	unnamedRequestWithdrawTemplate templateCaller
-	issueLCIDTemplate              templateCaller
-	rejectRequestTemplate          templateCaller
+	systemIntakeSubmissionTemplate  templateCaller
+	businessCaseSubmissionTemplate  templateCaller
+	intakeReviewTemplate            templateCaller
+	namedRequestWithdrawTemplate    templateCaller
+	unnamedRequestWithdrawTemplate  templateCaller
+	issueLCIDTemplate               templateCaller
+	rejectRequestTemplate           templateCaller
+	newAccessibilityRequestTemplate templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -109,6 +111,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(rejectRequestTemplateName)
 	}
 	appTemplates.rejectRequestTemplate = rejectRequestTemplate
+
+	newAccessibilityRequestTemplateName := "new_508_request.gohtml"
+	newAccessibilityRequestTemplate := rawTemplates.Lookup(newAccessibilityRequestTemplateName)
+	if newAccessibilityRequestTemplate == nil {
+		return Client{}, templateError(newAccessibilityRequestTemplateName)
+	}
+	appTemplates.newAccessibilityRequestTemplate = newAccessibilityRequestTemplate
 
 	client := Client{
 		config:    config,
