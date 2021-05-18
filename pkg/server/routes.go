@@ -199,8 +199,10 @@ func (s *Server) routes(
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendRejectRequestEmail,
 			),
+			FetchUserInfo: cedarLDAPClient.FetchUserInfo,
 		},
 		&s3Client,
+		&emailClient,
 	)
 	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
 		hasRole, err := services.HasRole(ctx, role)

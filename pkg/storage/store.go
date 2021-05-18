@@ -43,17 +43,20 @@ func NewStore(
 
 	dataSourceName := fmt.Sprintf(
 		"host=%s port=%s user=%s "+
-			"password=%s dbname=%s sslmode=disable",
+			"password=%s dbname=%s sslmode=%s",
 		config.Host,
 		config.Port,
 		config.Username,
 		config.Password,
 		config.Database,
+		config.SSLMode,
 	)
 	db, err := sqlx.Connect("postgres", dataSourceName)
 	if err != nil {
 		return nil, err
 	}
+	db.SetMaxOpenConns(20)
+
 	return &Store{
 		db:        db,
 		logger:    logger,

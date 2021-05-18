@@ -138,6 +138,9 @@ const AWSSESSourceKey = "AWS_SES_SOURCE"
 // GRTEmailKey is the key for the receiving email for the GRT
 const GRTEmailKey = "GRT_EMAIL"
 
+// AccessibilityTeamEmailKey is the key for the receiving email for the 508 team
+const AccessibilityTeamEmailKey = "ACCESSIBILITY_TEAM_EMAIL"
+
 // ClientHostKey is the key for getting the client's domain name
 const ClientHostKey = "CLIENT_HOSTNAME"
 

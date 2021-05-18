@@ -30,12 +30,7 @@ export const StepHeading = ({
   headingLevel,
   ...props
 }: StepHeadingProps) => {
-  const classes = classnames(
-    'text-bold',
-    'margin-top-0',
-    'margin-bottom-05',
-    className
-  );
+  const classes = classnames('margin-top-0', 'margin-bottom-1', className);
   const Component = headingLevel || 'h3';
   return (
     <Component className={classes} {...props}>
