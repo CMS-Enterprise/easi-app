@@ -17,11 +17,24 @@ type removedAccessibilityRequest struct {
 	RemoverEmail string
 }
 
-func (c Client) removedAccessibilityRequestBody(requestName, removerName, reason string, removerEmail models.EmailAddress) (string, error) {
+func convertRemovalReasonToReadableString(reason models.AccessibilityRequestDeletionReason) string {
+	switch reason {
+	case models.AccessibilityRequestDeletionReasonIncorrectApplicationAndLifecycleID:
+		return "Incorrect application and Lifecycle ID selected"
+	case models.AccessibilityRequestDeletionReasonNoTestingNeeded:
+		return "No testing needed"
+	case models.AccessibilityRequestDeletionReasonOther:
+		return "Other"
+	default:
+		return ""
+	}
+}
+
+func (c Client) removedAccessibilityRequestBody(requestName, removerName string, reason models.AccessibilityRequestDeletionReason, removerEmail models.EmailAddress) (string, error) {
 	data := removedAccessibilityRequest{
 		RemoverName:  removerName,
 		RequestName:  requestName,
-		Reason:       reason,
+		Reason:       convertRemovalReasonToReadableString(reason),
 		RemoverEmail: removerEmail.String(),
 	}
 	var b bytes.Buffer
@@ -36,7 +49,13 @@ func (c Client) removedAccessibilityRequestBody(requestName, removerName, reason
 }
 
 // SendRemovedAccessibilityRequestEmail sends an email for a removed 508 request
-func (c Client) SendRemovedAccessibilityRequestEmail(ctx context.Context, requestName, removerName, reason string, removerEmail models.EmailAddress) error {
+func (c Client) SendRemovedAccessibilityRequestEmail(
+	ctx context.Context,
+	requestName,
+	removerName string,
+	reason models.AccessibilityRequestDeletionReason,
+	removerEmail models.EmailAddress,
+) error {
 	subject := fmt.Sprintf("%s request removed by %s", requestName, removerName)
 	body, err := c.removedAccessibilityRequestBody(requestName, removerName, reason, removerEmail)
 	if err != nil {
