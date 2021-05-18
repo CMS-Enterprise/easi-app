@@ -33,18 +33,17 @@ type DocumentsListProps = {
   documents: Document[];
   requestName: string;
   refetchRequest: () => any;
+  setConfirmationText: (text: string) => void;
 };
 
 const AccessibilityDocumentsList = ({
   documents,
   requestName,
-  refetchRequest
+  refetchRequest,
+  setConfirmationText
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
-  const [
-    documentWithModalOpen,
-    setDocumentWithModalOpen
-  ] = useState<Document | null>(null);
+  const [document, setDocument] = useState<Document | null>(null);
 
   const getDocType = (documentType: {
     commonType: AccessibilityRequestDocumentCommonType;
@@ -70,8 +69,15 @@ const AccessibilityDocumentsList = ({
           id
         }
       }
-    }).then(refetchRequest);
-    setDocumentWithModalOpen(null);
+    }).then(() => {
+      refetchRequest();
+      if (document) {
+        setConfirmationText(
+          `${getDocType(document.documentType)} removed from ${requestName}`
+        );
+      }
+      setDocument(null);
+    });
   };
 
   const columns = useMemo<Column<Document>[]>(() => {
@@ -116,17 +122,17 @@ const AccessibilityDocumentsList = ({
                   aria-label={`Remove ${getDocType(row.original.documentType)}`}
                   type="button"
                   unstyled
-                  onClick={() => setDocumentWithModalOpen(row.original)}
+                  onClick={() => setDocument(row.original)}
                 >
                   {t('documentTable.remove')}
                 </Button>
                 <Modal
-                  isOpen={documentWithModalOpen === row.original}
-                  closeModal={() => setDocumentWithModalOpen(null)}
+                  isOpen={document === row.original}
+                  closeModal={() => setDocument(null)}
                 >
                   <PageHeading
-                    headingLevel="h1"
-                    className="line-height-heading-2 margin-bottom-2"
+                    headingLevel="h2"
+                    className="margin-top-0 line-height-heading-2 margin-bottom-2"
                   >
                     {t('documentTable.modal.header', {
                       name: getDocType(row.original.documentType)
@@ -144,7 +150,7 @@ const AccessibilityDocumentsList = ({
                     <Button
                       type="button"
                       unstyled
-                      onClick={() => setDocumentWithModalOpen(null)}
+                      onClick={() => setDocument(null)}
                     >
                       {t('documentTable.modal.declineButton')}
                     </Button>
@@ -158,16 +164,12 @@ const AccessibilityDocumentsList = ({
                 Document failed virus scan
               </>
             )}
-            {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
-              {t('documentTable.remove')}
-            </UswdsLink>
-            <span className="usa-sr-only">{row.original.name}</span> */}
           </>
         )
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [documentWithModalOpen]);
+  }, []);
 
   const {
     getTableProps,
@@ -189,53 +191,82 @@ const AccessibilityDocumentsList = ({
   }
 
   return (
-    <Table bordered={false} {...getTableProps()} fullWidth>
-      <caption className="usa-sr-only">
-        {`${t('documentTable.caption')} ${requestName}`}
-      </caption>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th
-                {...column.getHeaderProps()}
-                style={{ whiteSpace: 'nowrap', width: column.width }}
-                scope="col"
-              >
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell, i) => {
-                if (i === 0) {
-                  return (
-                    <th
-                      {...cell.getCellProps()}
-                      scope="row"
-                      style={{ maxWidth: '16rem' }}
-                    >
-                      {cell.render('Cell')}
-                    </th>
-                  );
-                }
-                return (
-                  <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
-                    {cell.render('Cell')}
-                  </td>
-                );
-              })}
+    <>
+      <Table bordered={false} {...getTableProps()} fullWidth>
+        <caption className="usa-sr-only">
+          {`${t('documentTable.caption')} ${requestName}`}
+        </caption>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th
+                  {...column.getHeaderProps()}
+                  style={{ whiteSpace: 'nowrap', width: column.width }}
+                  scope="col"
+                >
+                  {column.render('Header')}
+                </th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </Table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell, i) => {
+                  if (i === 0) {
+                    return (
+                      <th
+                        {...cell.getCellProps()}
+                        scope="row"
+                        style={{ maxWidth: '16rem' }}
+                      >
+                        {cell.render('Cell')}
+                      </th>
+                    );
+                  }
+                  return (
+                    <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+      <Modal isOpen={!!document} closeModal={() => setDocument(null)}>
+        {document && (
+          <>
+            <PageHeading
+              headingLevel="h2"
+              className="margin-top-0 line-height-heading-2 margin-bottom-2"
+            >
+              {t('documentTable.modal.header', {
+                name: getDocType(document.documentType)
+              })}
+            </PageHeading>
+            <span>{t('documentTable.modal.warning')}</span>
+            <div className="display-flex margin-top-2">
+              <Button
+                type="button"
+                className="margin-right-5"
+                onClick={() => submitDelete(document.id)}
+              >
+                {t('documentTable.modal.proceedButton')}
+              </Button>
+              <Button type="button" unstyled onClick={() => setDocument(null)}>
+                {t('documentTable.modal.declineButton')}
+              </Button>
+            </div>
+          </>
+        )}
+      </Modal>
+    </>
   );
 };
 

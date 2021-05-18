@@ -11,15 +11,19 @@ import {
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import { useMessage } from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
-import Form from './Form';
+import TestDateForm from './Form';
 
 import './styles.scss';
 
 const TestDate = () => {
   const { t } = useTranslation('accessibility');
+  const { showMessageOnNextPage } = useMessage();
+
   const { accessibilityRequestId, testDateId } = useParams<{
     accessibilityRequestId: string;
     testDateId: string;
@@ -40,9 +44,16 @@ const TestDate = () => {
   );
   const history = useHistory();
 
-  const test: TestDateType = data?.accessibilityRequest?.testDates.find(
+  const test:
+    | TestDateType
+    | undefined = data?.accessibilityRequest?.testDates.find(
     date => date.id === testDateId
   );
+
+  if (!test) {
+    throw new TypeError('TypeError: test does not exist');
+  }
+
   const testDate = DateTime.fromISO(test?.date);
   const initialValues: TestDateFormType = {
     dateMonth: String(testDate.month),
@@ -80,9 +91,8 @@ const TestDate = () => {
         }
       }
     }).then(() => {
-      history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText
-      });
+      showMessageOnNextPage(confirmationText);
+      history.push(`/508/requests/${accessibilityRequestId}`);
     });
   };
 
@@ -91,14 +101,21 @@ const TestDate = () => {
   }
 
   return (
-    <Form
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      error={mutateResult.error}
-      requestName={data?.accessibilityRequest?.name}
-      requestId={accessibilityRequestId}
-      formType="update"
-    />
+    <>
+      <SecondaryNav>
+        <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
+      </SecondaryNav>
+      <div className="grid-container">
+        <TestDateForm
+          initialValues={initialValues}
+          onSubmit={onSubmit}
+          error={mutateResult.error}
+          requestName={data?.accessibilityRequest?.name || ''}
+          requestId={accessibilityRequestId}
+          formType="update"
+        />
+      </div>
+    </>
   );
 };
 

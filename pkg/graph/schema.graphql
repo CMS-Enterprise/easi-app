@@ -19,6 +19,7 @@ type AccessibilityRequest {
   submittedAt: Time!
   system: System!
   testDates: [TestDate!]!
+  euaUserId: String!
 }
 
 """
@@ -88,6 +89,21 @@ input CreateAccessibilityRequestInput {
 
 type CreateAccessibilityRequestPayload {
   accessibilityRequest: AccessibilityRequest
+  userErrors: [UserError!]
+}
+
+enum AccessibilityRequestDeletionReason {
+  INCORRECT_APPLICATION_AND_LIFECYCLE_ID
+  NO_TESTING_NEEDED
+  OTHER
+}
+
+input DeleteAccessibilityRequestInput {
+  id: UUID!
+  reason: AccessibilityRequestDeletionReason!
+}
+type DeleteAccessibilityRequestPayload {
+  id: UUID
   userErrors: [UserError!]
 }
 
@@ -174,6 +190,14 @@ type CreateAccessibilityRequestDocumentPayload {
   accessibilityRequestDocument: AccessibilityRequestDocument
   userErrors: [UserError!]
 }
+
+input DeleteAccessibilityRequestDocumentInput {
+  id: UUID!
+}
+type DeleteAccessibilityRequestDocumentPayload {
+  id: UUID
+}
+
 
 """
 A solution proposal within a business case
@@ -529,20 +553,6 @@ input BasicActionInput {
   intakeId: UUID!
 }
 
-input DeleteAccessibilityRequestDocumentInput {
-  id: UUID!
-}
-type DeleteAccessibilityRequestDocumentPayload {
-  id: UUID
-}
-
-input DeleteAccessibilityRequestInput {
-  id: UUID!
-}
-type DeleteAccessibilityRequestPayload {
-  id: UUID
-}
-
 type Mutation {
   addGRTFeedbackAndKeepBusinessCaseInDraft(
     input: AddGRTFeedbackInput!
@@ -556,9 +566,11 @@ type Mutation {
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
+  deleteAccessibilityRequest(input: DeleteAccessibilityRequestInput!) : DeleteAccessibilityRequestPayload
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
+  deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
   createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionGuideReceievedClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -569,6 +581,10 @@ type Mutation {
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
+    @hasRole(role: EASI_508_TESTER_OR_USER)
+  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
+    @hasRole(role: EASI_508_TESTER_OR_USER)
+  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
     @hasRole(role: EASI_508_TESTER_OR_USER)
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
@@ -584,12 +600,6 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
-  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
-  deleteAccessibilityRequest(input: DeleteAccessibilityRequestInput!) : DeleteAccessibilityRequestPayload
 }
 
 type Query {

@@ -1,0 +1,176 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The accessibility testing overview matches the snapshot 1`] = `
+<div
+  className="grid-container"
+>
+  <div
+    className="tablet:grid-col-10"
+  >
+    <h1
+      aria-live="polite"
+      className="easi-h1"
+      tabIndex={-1}
+    >
+      Steps involved in 508 testing
+    </h1>
+    <p
+      className="accessibility-testing-overview__description"
+    >
+      Here is an overview of the 508 process for testing your application.
+    </p>
+  </div>
+  <div
+    className="tablet:grid-col-6 margin-top-6"
+  >
+    <ol
+      className="easi-step-list"
+    >
+      <li
+        className="easi-step"
+      >
+        <div
+          className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+        >
+          <h3
+            className="margin-top-0 margin-bottom-1"
+          >
+            Fill the request form in EASi
+          </h3>
+          <div
+            className="line-height-body-4"
+          >
+            <p
+              className="margin-0"
+            >
+              Tell the 508 team which application you plan to test.
+            </p>
+          </div>
+        </div>
+      </li>
+      <li
+        className="easi-step"
+      >
+        <div
+          className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+        >
+          <h3
+            className="margin-top-0 margin-bottom-1"
+          >
+            Prepare and upload the VPAT and Test plan
+          </h3>
+          <div
+            className="line-height-body-4"
+          >
+            <p
+              className="margin-0"
+            >
+              Download and fill the VPAT and Test plan from the templates page. These documents will help the 508 team prepare for testing. Uploaded your completed documents to EASi for the 508 team to review.
+            </p>
+            <p
+              className="margin-bottom-0"
+            >
+              The 508 team will get back to you via email about any changes needed prior to testing.
+            </p>
+          </div>
+        </div>
+      </li>
+      <li
+        className="easi-step"
+      >
+        <div
+          className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+        >
+          <h3
+            className="margin-top-0 margin-bottom-1"
+          >
+            Attend the testing session
+          </h3>
+          <div
+            className="line-height-body-4"
+          >
+            <p
+              className="margin-0"
+            >
+              The 508 team will work with you to schedule a testing session and you will test your application together. Depending on the results, you may need to address any issues and retest.
+            </p>
+          </div>
+        </div>
+      </li>
+      <li
+        className="easi-step"
+      >
+        <div
+          className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+        >
+          <h3
+            className="margin-top-0 margin-bottom-1"
+          >
+            Receive results
+          </h3>
+          <div
+            className="line-height-body-4"
+          >
+            <p
+              className="margin-0"
+            >
+              Your test score will determine your next steps:
+            </p>
+            <dl
+              title="508 test scores"
+            >
+              <dt
+                className="text-bold margin-bottom-1"
+              >
+                99% and above
+              </dt>
+              <dd
+                className="margin-left-0 margin-bottom-2"
+              >
+                508 testing is complete and you can release your application.
+              </dd>
+              <dt
+                className="text-bold margin-bottom-1"
+              >
+                Between 99% and 75%
+              </dt>
+              <dd
+                className="margin-left-0 margin-bottom-2"
+              >
+                You can release your application but you will need fix the issues and retest within a year. You need to submit a remediation plan as a part of retesting.
+              </dd>
+              <dt
+                className="text-bold margin-bottom-1"
+              >
+                75% and below
+              </dt>
+              <dd
+                className="margin-left-0"
+              >
+                You cannot release your application. You need to fix all issues right away and retest.
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </li>
+    </ol>
+    <div
+      className="easi-collapsable-link"
+    >
+      <button
+        aria-controls="easi-508-testing-exception"
+        aria-expanded={false}
+        className="usa-button usa-button--unstyled"
+        data-testid="button"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="fa easi-collapsable-link__square fa-caret-right"
+        />
+        What if I need an exception from 508 testing?
+      </button>
+    </div>
+  </div>
+</div>
+`;

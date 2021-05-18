@@ -7,6 +7,7 @@ import configureMockStore from 'redux-mock-store';
 
 import ActionBanner from 'components/shared/ActionBanner';
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import { MessageProvider } from 'hooks/useMessage';
 
 import Home from './index';
 
@@ -41,7 +42,9 @@ describe('The home page', () => {
         shallow(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <Home />
+              <MessageProvider>
+                <Home />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -66,7 +69,9 @@ describe('The home page', () => {
           component = mount(
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <Provider store={store}>
-                <Home />
+                <MessageProvider>
+                  <Home />
+                </MessageProvider>
               </Provider>
             </MemoryRouter>
           );
@@ -113,7 +118,9 @@ describe('The home page', () => {
           component = mount(
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <Provider store={store}>
-                <Home />
+                <MessageProvider>
+                  <Home />
+                </MessageProvider>
               </Provider>
             </MemoryRouter>
           );
@@ -159,7 +166,9 @@ describe('The home page', () => {
       return mount(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <Provider store={store}>
-            <Home />
+            <MessageProvider>
+              <Home />
+            </MessageProvider>
           </Provider>
         </MemoryRouter>
       );
@@ -175,7 +184,9 @@ describe('The home page', () => {
         shallow(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <Home />
+              <MessageProvider>
+                <Home />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );

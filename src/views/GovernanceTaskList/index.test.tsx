@@ -7,6 +7,7 @@ import { mount, ReactWrapper, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import { MessageProvider } from 'hooks/useMessage';
 
 import GovernanceTaskList from './index';
 
@@ -34,7 +35,9 @@ describe('The Goveranance Task List', () => {
     shallow(
       <MemoryRouter initialEntries={['/']} initialIndex={0}>
         <Provider store={store}>
-          <GovernanceTaskList />
+          <MessageProvider>
+            <GovernanceTaskList />
+          </MessageProvider>
         </Provider>
       </MemoryRouter>
     );
@@ -52,7 +55,9 @@ describe('The Goveranance Task List', () => {
       component = mount(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <Provider store={store}>
-            <GovernanceTaskList />
+            <MessageProvider>
+              <GovernanceTaskList />
+            </MessageProvider>
           </Provider>
         </MemoryRouter>
       );
@@ -82,7 +87,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -112,7 +119,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -167,7 +176,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -234,7 +245,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -256,7 +269,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -277,7 +292,9 @@ describe('The Goveranance Task List', () => {
       component = mount(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <Provider store={store}>
-            <GovernanceTaskList />
+            <MessageProvider>
+              <GovernanceTaskList />
+            </MessageProvider>
           </Provider>
         </MemoryRouter>
       );
@@ -305,7 +322,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -347,7 +366,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -396,7 +417,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -449,7 +472,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -503,7 +528,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -556,7 +583,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -609,7 +638,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -687,7 +718,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -750,7 +783,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -813,7 +848,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -880,7 +917,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -954,7 +993,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -1013,7 +1054,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
