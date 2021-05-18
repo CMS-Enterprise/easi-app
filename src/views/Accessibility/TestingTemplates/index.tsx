@@ -128,7 +128,7 @@ const TestingTemplates = () => {
         <div className="padding-left-2">
           <dl>
             {vpatConformanceLevels.map(level => (
-              <div>
+              <div key={level.name}>
                 <dt className="text-bold display-inline">{level.name}</dt>{' '}
                 <dd className="margin-left-0 display-inline">
                   {level.description}

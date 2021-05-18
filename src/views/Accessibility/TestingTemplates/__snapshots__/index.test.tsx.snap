@@ -44,9 +44,11 @@ exports[`TestingTemplates matches the snapshot 1`] = `
           Templates for 508 testing
         </h1>
         <div
-          className=".accessibility-testing-templates__tableOfContents"
+          className="accessibility-testing-templates"
         >
-          <p>
+          <p
+            className="margin-bottom-1"
+          >
             Page contents
           </p>
           <ul
@@ -55,7 +57,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
             <li>
               <a
                 className="usa-link"
-                href="#testingTemplates_Voluntary Product Assessment Template (VPAT)"
+                href="#vpat"
               >
                 Voluntary Product Assessment Template (VPAT)
               </a>
@@ -63,7 +65,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
             <li>
               <a
                 className="usa-link"
-                href="#testingTemplates_Test Plan"
+                href="#test-plan"
               >
                 Test Plan
               </a>
@@ -71,7 +73,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
             <li>
               <a
                 className="usa-link"
-                href="#testingTemplates_Remediation Plan"
+                href="#remediation-plan"
               >
                 Remediation Plan
               </a>
@@ -80,12 +82,12 @@ exports[`TestingTemplates matches the snapshot 1`] = `
         </div>
         <div>
           <h2
-            id="testingTemplates_Voluntary Product Assessment Template (VPAT)"
+            id="vpat"
           >
             Voluntary Product Assessment Template (VPAT)
           </h2>
           <p>
-            A VPAT s a document that helps CMS and other government agencxies understand how you will meet the 508 Standards for IT accessibility.
+            A VPAT s a document that helps CMS and other government agencies understand how you will meet the 508 Standards for IT accessibility.
           </p>
           <h3>
             Tips to complete a VPAT
@@ -96,42 +98,64 @@ exports[`TestingTemplates matches the snapshot 1`] = `
             <li>
               For each row in the table, indicate the conformance level. There are 5 levels:
             </li>
-            <p>
-              <span
-                className="text-bold"
-              >
-                Supports:
-              </span>
-               
-              The functionality of the product has at least one method that meets the criterion without known defects or meets with equivalent facilitation.
-            </p>
-            <p>
-              <span
-                className="text-bold"
-              >
-                Partially Supports:
-              </span>
-               
-              Some functionality of the product does not meet the criterion.
-            </p>
-            <p>
-              <span
-                className="text-bold"
-              >
-                Does Not Support:
-              </span>
-               
-              The majority of product functionality does not meet the criterion.
-            </p>
-            <p>
-              <span
-                className="text-bold"
-              >
-                Not Evaluated:
-              </span>
-               
-              The product has not been evaluated against the criterion. This can be used only in WCAG 2.0 Level AAA.
-            </p>
+            <div
+              className="padding-left-2"
+            >
+              <dl>
+                <div>
+                  <dt
+                    className="text-bold display-inline"
+                  >
+                    Supports:
+                  </dt>
+                   
+                  <dd
+                    className="margin-left-0 display-inline"
+                  >
+                    The functionality of the product has at least one method that meets the criterion without known defects or meets with equivalent facilitation.
+                  </dd>
+                </div>
+                <div>
+                  <dt
+                    className="text-bold display-inline"
+                  >
+                    Partially Supports:
+                  </dt>
+                   
+                  <dd
+                    className="margin-left-0 display-inline"
+                  >
+                    Some functionality of the product does not meet the criterion.
+                  </dd>
+                </div>
+                <div>
+                  <dt
+                    className="text-bold display-inline"
+                  >
+                    Does Not Support:
+                  </dt>
+                   
+                  <dd
+                    className="margin-left-0 display-inline"
+                  >
+                    The majority of product functionality does not meet the criterion.
+                  </dd>
+                </div>
+                <div>
+                  <dt
+                    className="text-bold display-inline"
+                  >
+                    Not Evaluated:
+                  </dt>
+                   
+                  <dd
+                    className="margin-left-0 display-inline"
+                  >
+                    The product has not been evaluated against the criterion. This can be used only in WCAG 2.0 Level AAA.
+                  </dd>
+                </div>
+              </dl>
+            </div>
             <li>
               After indicating the conformance level, provide a detailed explanation in the ‘Remarks and Evaluation’ column.
             </li>
@@ -156,9 +180,11 @@ exports[`TestingTemplates matches the snapshot 1`] = `
                
               from the Information Technology Industry Council (ITI) website.
             </p>
-            <p>
+            <p
+              className="display-flex flex-row flex-align-center accessibility-testing-templates__alert-note"
+            >
               <i
-                className="fa fa-exclamation-circle fa-2x"
+                className="fa fa-exclamation-circle margin-right-1"
               />
                
               Do not skip any row in the document. This will result in delays.
@@ -179,7 +205,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
         </div>
         <div>
           <h2
-            id="testingTemplates_Test Plan"
+            id="test-plan"
           >
             Test Plan
           </h2>
@@ -205,7 +231,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
         </div>
         <div>
           <h2
-            id="testingTemplates_Remediation Plan"
+            id="remediation-plan"
           >
             Remediation Plan
           </h2>
@@ -229,9 +255,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
       className="grid-col-3 accessibility-testing-templates__sidebar"
     >
       <div>
-        <h4
-          className="text-bold"
-        >
+        <h4>
           Need help? Contact the Section 508 team
         </h4>
         <a
