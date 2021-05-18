@@ -31,7 +31,7 @@ const TestingTemplates = () => {
 
   const tableOfContents = (
     <div className="accessibility-testing-templates">
-      <p>Page contents</p>
+      <p className="margin-bottom-1">Page contents</p>
       <ul className="accessibility-testing-templates__table-of-contents">
         <li>
           <Link href="#vpat">{t('testingTemplates.vpatSection.heading')}</Link>
@@ -49,9 +49,10 @@ const TestingTemplates = () => {
       </ul>
     </div>
   );
+
   const testPlanSection = (
     <div>
-      <h2 id="#test-plan">{t('testingTemplates.testPlanSection.heading')}</h2>
+      <h2 id="test-plan">{t('testingTemplates.testPlanSection.heading')}</h2>
       <p>{t('testingTemplates.testPlanSection.description')}</p>
       <ul className="accessibility-testing-templates__test-plan-list">
         {testPlanList.map(item => (
@@ -94,8 +95,8 @@ const TestingTemplates = () => {
           'testingTemplates.vpatSection.subSection.downloadVPAT.line1.otherText'
         )}
       </p>
-      <p>
-        <i className="fa fa-exclamation-circle fa-2x" />
+      <p className="display-flex flex-row flex-align-center accessibility-testing-templates__alert-note">
+        <i className="fa fa-exclamation-circle margin-right-1" />
         {` `}
         {t('testingTemplates.vpatSection.subSection.downloadVPAT.line2.text')}
       </p>
@@ -126,12 +127,12 @@ const TestingTemplates = () => {
         <li>{t('testingTemplates.vpatSection.subSection.item1.text')}</li>
         <dl>
           {vpatConformanceLevels.map(level => (
-            <>
-              <dt className="text-bold display-inline-block">{level.name}</dt>{' '}
+            <div>
+              <dt className="text-bold display-inline">{level.name}</dt>{' '}
               <dd className="margin-left-0 display-inline">
                 {level.description}
               </dd>
-            </>
+            </div>
           ))}
         </dl>
         <li>{t('testingTemplates.vpatSection.subSection.item2.text')}</li>
