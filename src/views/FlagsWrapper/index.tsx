@@ -16,7 +16,7 @@ const FlagsWrapper = ({ children }: FlagsWrapperProps) => {
   );
 
   const { data } = useQuery<GetCurrentUser>(GetCurrentUserQuery);
-  let key = process.env.REACT_APP_LD_ENV_USER;
+  let key = process.env.REACT_APP_LD_ENV;
   let anonymous = true;
   let hash: string | undefined;
 
@@ -31,8 +31,8 @@ const FlagsWrapper = ({ children }: FlagsWrapperProps) => {
       const provider = await asyncWithLDProvider({
         clientSideID: process.env.REACT_APP_LD_CLIENT_ID as string,
         user: {
-          anonymous,
-          key
+          key,
+          anonymous
         },
         options: {
           hash
