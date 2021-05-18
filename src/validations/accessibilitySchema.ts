@@ -8,6 +8,19 @@ const accessibilitySchema = {
       'Select the project this request belongs to'
     ),
     requestName: Yup.string().required('Enter a name for this request')
+  }),
+
+  deleteForm: Yup.object().shape({
+    deletionReason: Yup.string()
+      .required('Choose the reason for removing this request')
+      .oneOf(
+        [
+          'INCORRECT_APPLICATION_AND_LIFECYCLE_ID',
+          'NO_TESTING_NEEDED',
+          'OTHER'
+        ],
+        'Choose the reason for removing this request'
+      )
   })
 };
 
