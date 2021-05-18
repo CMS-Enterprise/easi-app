@@ -767,7 +767,7 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 	for _, request := range requests {
 		node := model.Request{
 			ID:          request.ID,
-			SubmittedAt: request.CreatedAt,
+			SubmittedAt: &request.SubmittedAt,
 			Name:        &request.Name,
 			Type:        "ACCESSIBILITY_REQUEST",
 		}
