@@ -1,5 +1,6 @@
 import React from 'react';
-import { DateTime } from 'luxon';
+
+import { formatDate } from 'utils/date';
 
 import './index.scss';
 
@@ -16,18 +17,16 @@ export const AccessibilityNoteListItem = ({
   note: AccessibilityNote;
 }) => {
   return (
-    <div className="accessibility-note__note-item" id={note.id}>
+    <li className="accessibility-note__note-item">
       <div className="margin-bottom-2">
         <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
           {note.content}
         </p>
         <span className="text-base-dark font-body-2xs">{`by ${
           note.author
-        } | ${DateTime.fromISO(note.createdAt).toLocaleString(
-          DateTime.DATE_FULL
-        )}`}</span>
+        } | ${formatDate(note.createdAt)}`}</span>
       </div>
-    </div>
+    </li>
   );
 };
 
@@ -37,11 +36,10 @@ export const AccessibilityNotesList = ({
   notes: AccessibilityNote[];
 }) => {
   return (
-    <div>
-      <caption className="usa-sr-only">{`${notes.length} existing notes`}</caption>
+    <ol aria-label={`${notes.length} existing notes`}>
       {notes.map(note => (
-        <AccessibilityNoteListItem note={note} />
+        <AccessibilityNoteListItem note={note} key={note.id} />
       ))}
-    </div>
+    </ol>
   );
 };
