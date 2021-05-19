@@ -3,16 +3,19 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
-import { GetRequests } from 'queries/types/GetRequests';
+import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 
 import { RequestType } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
 
 const Table = () => {
-  const { loading, error, data } = useQuery<GetRequests>(GetRequestsQuery, {
-    variables: { first: 20 },
-    fetchPolicy: 'cache-and-network'
-  });
+  const { loading, error, data } = useQuery<GetRequests, GetRequestsVariables>(
+    GetRequestsQuery,
+    {
+      variables: { first: 20 },
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
   if (loading) {
     return <div>Loading</div>;
