@@ -110,10 +110,6 @@ const TestingTemplates = () => {
             'testingTemplates.vpatSection.subSection.downloadVPAT.line3.linkText'
           )}
         </Link>
-        {` `}
-        {t(
-          'testingTemplates.vpatSection.subSection.downloadVPAT.line3.otherText'
-        )}
       </p>
     </div>
   );

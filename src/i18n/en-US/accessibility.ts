@@ -236,8 +236,8 @@ const accessibility = {
               'Do not skip any row in the document. This will result in delays.'
           },
           line3: {
-            linkText: 'Watch the tutorial (opens link in a new tab)',
-            otherText: 'on how to fill out a VPAT.'
+            linkText:
+              'Watch tutorial on how to fill out a VPAT (opens link a new tab).'
           }
         }
       }
