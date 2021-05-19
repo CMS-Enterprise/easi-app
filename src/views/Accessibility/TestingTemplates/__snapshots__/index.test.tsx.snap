@@ -198,10 +198,8 @@ exports[`TestingTemplates matches the snapshot 1`] = `
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Watch the tutorial (opens link in a new tab)
+                Watch tutorial on how to fill out a VPAT (opens link a new tab).
               </a>
-               
-              on how to fill out a VPAT.
             </p>
           </div>
         </div>
