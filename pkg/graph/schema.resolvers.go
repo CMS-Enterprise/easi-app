@@ -756,6 +756,29 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
+func (r *queryResolver) Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error) {
+	requests, queryErr := r.store.FetchMyRequests(ctx)
+	if queryErr != nil {
+		return nil, gqlerror.Errorf("query error: %s", queryErr)
+	}
+
+	edges := []*model.RequestEdge{}
+
+	for _, request := range requests {
+		node := model.Request{
+			ID:          request.ID,
+			SubmittedAt: request.CreatedAt,
+			Name:        &request.Name,
+			Type:        "ACCESSIBILITY_REQUEST",
+		}
+		edges = append(edges, &model.RequestEdge{
+			Node: &node,
+		})
+	}
+
+	return &model.RequestsConnection{Edges: edges}, nil
+}
+
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
 	if err != nil {
