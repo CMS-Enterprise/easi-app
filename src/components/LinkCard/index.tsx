@@ -1,7 +1,19 @@
 import React from 'react';
 
-const LinkCard = () => {
-  return <div>I am a LinkCard</div>;
+type LinkCardProps = {
+  children: React.ReactNode;
+  className?: string;
+  link: string;
+  heading: React.ReactNode | string;
+};
+
+const LinkCard = ({ children, className, link, heading }: LinkCardProps) => {
+  return (
+    <div className={className}>
+      <h2>{heading}</h2>
+      {children}
+    </div>
+  );
 };
 
 export default LinkCard;
