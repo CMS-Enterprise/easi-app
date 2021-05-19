@@ -64,7 +64,12 @@ func (s StoreTestSuite) TestMyRequests() {
 		createdAt, _ = time.Parse("2006-1-2", "2015-5-1")
 		newIntake.CreatedAt = &createdAt
 		newIntake.ProjectName = null.StringFrom("My Withdrawn Intake")
-		intakeThatIsWithdrawn, err := s.store.CreateSystemIntake(ctx, &newIntake)
+		createdIntake, err = s.store.CreateSystemIntake(ctx, &newIntake)
+		s.NoError(err)
+
+		archivedAt, _ := time.Parse("2006-1-2", "2015-4-1")
+		createdIntake.ArchivedAt = &archivedAt
+		intakeThatIsArchived, err := s.store.UpdateSystemIntake(ctx, createdIntake)
 		s.NoError(err)
 
 		newIntake = testhelpers.NewSystemIntake()
@@ -78,7 +83,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.NoError(err)
 
 		s.Len(myRequests, 3)
-		s.Equal(myRequests[0].ID, intakeThatIsWithdrawn.ID)
+		s.Equal(myRequests[0].ID, intakeThatIsArchived.ID)
 		s.Equal(myRequests[0].Type, model.RequestType("GOVERNANCE_REQUEST"))
 		s.Equal(myRequests[0].Name, null.StringFrom("My Withdrawn Intake"))
 		s.Nil(myRequests[0].SubmittedAt)
