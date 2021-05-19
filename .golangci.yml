@@ -31,8 +31,8 @@ linters:
      - ineffassign
      - revive
   disable:
-    - unused #deprecated https://github.com/dominikh/go-tools/tree/master/cmd/unused
-    - gosimple #deprecated https://github.com/golangci/golangci-lint/issues/357
+    - unused #deprecated in favor of staticcheck https://github.com/dominikh/go-tools/tree/master/cmd/unused
+    - gosimple #deprecated in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
     - errcheck #requires patching code
     - staticcheck # 30+files need to be patched
 issues:
