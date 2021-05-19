@@ -271,8 +271,8 @@ const GovernanceTaskList = () => {
                 <TaskListDescription>
                   <p className="margin-top-0">
                     If your Business Case is approved you will receive a unique
-                    Lifecycle ID. If it is not approved, you would need address
-                    the concerns to proceed.
+                    Lifecycle ID. If it is not approved, you would need to
+                    address the concerns to proceed.
                   </p>
                 </TaskListDescription>
                 <DecisionCta intake={systemIntake} />
