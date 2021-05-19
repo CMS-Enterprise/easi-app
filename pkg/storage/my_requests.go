@@ -50,7 +50,8 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 			'GOVERNANCE_REQUEST' record_type,
 			created_at
 		FROM system_intakes
-			WHERE eua_user_id = $1
+			WHERE archived_at IS NULL
+			AND eua_user_id = $1
 		ORDER BY created_at desc
 	`
 
