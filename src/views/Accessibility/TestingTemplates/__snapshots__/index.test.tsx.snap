@@ -1,0 +1,271 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TestingTemplates matches the snapshot 1`] = `
+<div
+  className="grid-container accessibility-testing-templates"
+>
+  <nav
+    aria-label="breadcrumbs"
+    className="easi-breadcrumb-nav margin-y-2"
+    role="navigation"
+  >
+    <ol>
+      <li>
+        <a
+          className="usa-link"
+          href="/"
+        >
+          Home
+        </a>
+        <i
+          aria-hidden={true}
+          className="fa fa-angle-right margin-x-05"
+        />
+      </li>
+      <li>
+        Templates for 508 testing
+      </li>
+    </ol>
+  </nav>
+  <div
+    className="grid-row grid-gap-lg margin-top-6"
+  >
+    <div
+      className="grid-col-9 line-height-body-4"
+    >
+      <div
+        className="tablet:grid-col-10"
+      >
+        <h1
+          aria-live="polite"
+          className="easi-h1 margin-top-0"
+          tabIndex={-1}
+        >
+          Templates for 508 testing
+        </h1>
+        <div
+          className="accessibility-testing-templates"
+        >
+          <p
+            className="margin-bottom-1"
+          >
+            Page contents
+          </p>
+          <ul
+            className="accessibility-testing-templates__table-of-contents"
+          >
+            <li>
+              <a
+                className="usa-link"
+                href="#vpat"
+              >
+                Voluntary Product Assessment Template (VPAT)
+              </a>
+            </li>
+            <li>
+              <a
+                className="usa-link"
+                href="#test-plan"
+              >
+                Test Plan
+              </a>
+            </li>
+            <li>
+              <a
+                className="usa-link"
+                href="#remediation-plan"
+              >
+                Remediation Plan
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h2
+            id="vpat"
+          >
+            Voluntary Product Assessment Template (VPAT)
+          </h2>
+          <p>
+            A VPAT s a document that helps CMS and other government agencies understand how you will meet the 508 Standards for IT accessibility.
+          </p>
+          <h3>
+            Tips to complete a VPAT
+          </h3>
+          <ul
+            className="accessibility-testing-templates__vpat-list"
+          >
+            <li>
+              For each row in the table, indicate the conformance level. There are 5 levels:
+              <div
+                className="padding-left-2"
+              >
+                <dl
+                  title="Conformance levels"
+                >
+                  <div>
+                    <dt
+                      className="text-bold display-inline"
+                    >
+                      Supports:
+                    </dt>
+                     
+                    <dd
+                      className="margin-left-0 display-inline"
+                    >
+                      The functionality of the product has at least one method that meets the criterion without known defects or meets with equivalent facilitation.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt
+                      className="text-bold display-inline"
+                    >
+                      Partially Supports:
+                    </dt>
+                     
+                    <dd
+                      className="margin-left-0 display-inline"
+                    >
+                      Some functionality of the product does not meet the criterion.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt
+                      className="text-bold display-inline"
+                    >
+                      Does Not Support:
+                    </dt>
+                     
+                    <dd
+                      className="margin-left-0 display-inline"
+                    >
+                      The majority of product functionality does not meet the criterion.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt
+                      className="text-bold display-inline"
+                    >
+                      Not Evaluated:
+                    </dt>
+                     
+                    <dd
+                      className="margin-left-0 display-inline"
+                    >
+                      The product has not been evaluated against the criterion. This can be used only in WCAG 2.0 Level AAA.
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </li>
+            <li>
+              After indicating the conformance level, provide a detailed explanation in the ‘Remarks and Evaluation’ column.
+            </li>
+          </ul>
+          <div
+            className="accessibility-testing-templates__downloadBox"
+          >
+            <h3
+              className="margin-top-0"
+            >
+              Download VPAT template
+            </h3>
+            <p>
+              <a
+                className="usa-link"
+                href="https://www.itic.org/policy/accessibility/vpat"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Download the current VPAT template (opens link in new tab)
+              </a>
+               
+              from the Information Technology Industry Council (ITI) website.
+            </p>
+            <p
+              className="display-flex flex-row flex-align-center accessibility-testing-templates__alert-note"
+            >
+              <i
+                className="fa fa-exclamation-circle margin-right-1"
+              />
+               
+              Do not skip any row in the document. This will result in delays.
+            </p>
+            <p>
+              <a
+                className="usa-link"
+                href="https://www.youtube.com/watch?v=kAkSV9xiJ1A"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Watch tutorial on how to fill out a VPAT (opens link a new tab).
+              </a>
+            </p>
+          </div>
+        </div>
+        <div>
+          <h2
+            id="test-plan"
+          >
+            Test Plan
+          </h2>
+          <p>
+            The Test Plan is a document that helps the Section 508 team understand your system and know what areas of your system to test before it goes live. In this document you will provide:
+          </p>
+          <ul
+            className="accessibility-testing-templates__test-plan-list"
+          >
+            <li>
+              a description of your system
+            </li>
+            <li>
+              information on how to set up and access it
+            </li>
+            <li>
+              user scenarios and steps taken to perform actions
+            </li>
+            <li>
+              and any other constraints, assumptions or risks
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h2
+            id="remediation-plan"
+          >
+            Remediation Plan
+          </h2>
+          <p>
+            The Remediation Plan is a document that helps the Section 508 team understand how you plan to fix the issues that were identified from the 508 test. In this document you will provide:
+          </p>
+          <ul
+            className="accessibility-testing-templates__remediation-plan-list"
+          >
+            <li>
+              solutions for each issue
+            </li>
+            <li>
+              when and how you plan to schedule these changes into your project
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      className="grid-col-3 accessibility-testing-templates__sidebar"
+    >
+      <div>
+        <h4>
+          Need help? Contact the Section 508 team
+        </h4>
+        <a
+          className="usa-link"
+          href="mailto:CMS_Section508@cms.hhs.gov"
+        >
+          CMS_Section508@cms.hhs.gov
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
