@@ -43,9 +43,20 @@ const AccessibilityTestingStepsOverview = () => {
               {t('testingStepsOverview.prepareVPAT.heading')}
             </StepHeading>
             <StepBody>
-              <p className="margin-0">
-                {t('testingStepsOverview.prepareVPAT.fillOutVPAT')}
-              </p>
+              <Trans
+                i18nKey="accessibility:testingStepsOverview.prepareVPAT.fillOutVPAT"
+                className="margin-0"
+              >
+                indexZero
+                <Link
+                  href="/508/templates"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  templatesLink
+                </Link>
+                indexTwo
+              </Trans>
               <p className="margin-bottom-0">
                 {t('testingStepsOverview.prepareVPAT.changesVPAT')}
               </p>
