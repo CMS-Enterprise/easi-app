@@ -351,6 +351,12 @@ func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
+	removerEUAID := appcontext.Principal(ctx).ID()
+	removerInfo, err := r.service.FetchUserInfo(ctx, removerEUAID)
+	if err != nil {
+		return nil, err
+	}
+
 	ok, err := services.AuthorizeUserIs508RequestOwner(ctx, request)
 	if err != nil {
 		return nil, err
@@ -360,6 +366,11 @@ func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input
 	}
 
 	err = r.store.DeleteAccessibilityRequest(ctx, input.ID, input.Reason)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendRemovedAccessibilityRequestEmail(ctx, request.Name, removerInfo.CommonName, input.Reason, removerInfo.Email)
 	if err != nil {
 		return nil, err
 	}
@@ -743,6 +754,29 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	}
 
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
+}
+
+func (r *queryResolver) Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error) {
+	requests, queryErr := r.store.FetchMyRequests(ctx)
+	if queryErr != nil {
+		return nil, gqlerror.Errorf("query error: %s", queryErr)
+	}
+
+	edges := []*model.RequestEdge{}
+
+	for _, request := range requests {
+		node := model.Request{
+			ID:          request.ID,
+			SubmittedAt: request.CreatedAt,
+			Name:        &request.Name,
+			Type:        "ACCESSIBILITY_REQUEST",
+		}
+		edges = append(edges, &model.RequestEdge{
+			Node: &node,
+		})
+	}
+
+	return &model.RequestsConnection{Edges: edges}, nil
 }
 
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
