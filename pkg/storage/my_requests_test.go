@@ -5,6 +5,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -27,7 +28,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequestThatIsDeleted)
 		s.NoError(err)
 
-		err = s.store.DeleteAccessibilityRequest(ctx, accessibilityRequestThatIsDeleted.ID)
+		err = s.store.DeleteAccessibilityRequest(ctx, accessibilityRequestThatIsDeleted.ID, models.AccessibilityRequestDeletionReasonOther)
 		s.NoError(err)
 
 		accessibilityRequestThatIsNotMine := testhelpers.NewAccessibilityRequestForUser(intake.ID, notRequesterID)
