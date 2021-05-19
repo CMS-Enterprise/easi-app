@@ -24,6 +24,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
+		// add an accessbility request belonging to the user
 		newRequest := testhelpers.NewAccessibilityRequestForUser(intake.ID, requesterID)
 		createdAt, _ := time.Parse("2006-1-2", "2015-1-1")
 		newRequest.CreatedAt = &createdAt
@@ -31,21 +32,24 @@ func (s StoreTestSuite) TestMyRequests() {
 		accessibilityRequestThatIsMine, err := s.store.CreateAccessibilityRequest(ctx, &newRequest)
 		s.NoError(err)
 
+		// add an accessbility request belonging to the user, and then delete it
 		newRequest = testhelpers.NewAccessibilityRequestForUser(intake.ID, requesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-2-1")
 		newRequest.CreatedAt = &createdAt
-		accessibilityRequestThatIsDeleted, err := s.store.CreateAccessibilityRequest(ctx, &newRequest)
+		createdRequest, err := s.store.CreateAccessibilityRequest(ctx, &newRequest)
 		s.NoError(err)
 
-		err = s.store.DeleteAccessibilityRequest(ctx, accessibilityRequestThatIsDeleted.ID, models.AccessibilityRequestDeletionReasonOther)
+		err = s.store.DeleteAccessibilityRequest(ctx, createdRequest.ID, models.AccessibilityRequestDeletionReasonOther)
 		s.NoError(err)
 
+		// add an accessbility request that does not belong to the user
 		newRequest = testhelpers.NewAccessibilityRequestForUser(intake.ID, notRequesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-3-1")
 		newRequest.CreatedAt = &createdAt
 		_, err = s.store.CreateAccessibilityRequest(ctx, &newRequest)
 		s.NoError(err)
 
+		// add an intake belonging to the user
 		newIntake := testhelpers.NewSystemIntake()
 		newIntake.EUAUserID = null.StringFrom(requesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-4-1")
@@ -59,6 +63,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		intakeThatIsMine, err := s.store.UpdateSystemIntake(ctx, createdIntake)
 		s.NoError(err)
 
+		// add an intake belonging to the user, and then archive it
 		newIntake = testhelpers.NewSystemIntake()
 		newIntake.EUAUserID = null.StringFrom(requesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-5-1")
@@ -69,9 +74,10 @@ func (s StoreTestSuite) TestMyRequests() {
 
 		archivedAt, _ := time.Parse("2006-1-2", "2015-4-1")
 		createdIntake.ArchivedAt = &archivedAt
-		intakeThatIsArchived, err := s.store.UpdateSystemIntake(ctx, createdIntake)
+		_, err = s.store.UpdateSystemIntake(ctx, createdIntake)
 		s.NoError(err)
 
+		// add an intake that does not belong to the user
 		newIntake = testhelpers.NewSystemIntake()
 		newIntake.EUAUserID = null.StringFrom(notRequesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-6-1")
@@ -82,20 +88,15 @@ func (s StoreTestSuite) TestMyRequests() {
 		myRequests, err := s.store.FetchMyRequests(ctx)
 		s.NoError(err)
 
-		s.Len(myRequests, 3)
-		s.Equal(myRequests[0].ID, intakeThatIsArchived.ID)
+		s.Len(myRequests, 2)
+		s.Equal(myRequests[0].ID, intakeThatIsMine.ID)
 		s.Equal(myRequests[0].Type, model.RequestType("GOVERNANCE_REQUEST"))
-		s.Equal(myRequests[0].Name, null.StringFrom("My Withdrawn Intake"))
-		s.Nil(myRequests[0].SubmittedAt)
+		s.Equal(myRequests[0].Name, null.StringFrom("My Intake"))
+		s.Equal(myRequests[0].SubmittedAt, intakeThatIsMine.SubmittedAt)
 
-		s.Equal(myRequests[1].ID, intakeThatIsMine.ID)
-		s.Equal(myRequests[1].Type, model.RequestType("GOVERNANCE_REQUEST"))
-		s.Equal(myRequests[1].Name, null.StringFrom("My Intake"))
-		s.Equal(myRequests[1].SubmittedAt, intakeThatIsMine.SubmittedAt)
-
-		s.Equal(myRequests[2].ID, accessibilityRequestThatIsMine.ID)
-		s.Equal(myRequests[2].Type, model.RequestType("ACCESSIBILITY_REQUEST"))
-		s.Equal(myRequests[2].Name, null.StringFrom("My Accessibility Request"))
-		s.Equal(myRequests[2].SubmittedAt, accessibilityRequestThatIsMine.CreatedAt)
+		s.Equal(myRequests[1].ID, accessibilityRequestThatIsMine.ID)
+		s.Equal(myRequests[1].Type, model.RequestType("ACCESSIBILITY_REQUEST"))
+		s.Equal(myRequests[1].Name, null.StringFrom("My Accessibility Request"))
+		s.Equal(myRequests[1].SubmittedAt, accessibilityRequestThatIsMine.CreatedAt)
 	})
 }
