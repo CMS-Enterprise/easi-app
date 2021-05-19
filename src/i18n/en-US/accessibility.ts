@@ -184,6 +184,84 @@ const accessibility = {
       contact:
         'To apply for an exception or for more information, contact the CMS Section 508 team at <1>CMS_Section508@cms.hhs.gov<1/>.'
     }
+  },
+  testingTemplates: {
+    heading: 'Templates for 508 testing',
+    vpatSection: {
+      heading: 'Voluntary Product Assessment Template (VPAT)',
+      description:
+        'A VPAT s a document that helps CMS and other government agencies understand how you will meet the 508 Standards for IT accessibility.',
+      subSection: {
+        heading: 'Tips to complete a VPAT',
+        item1: {
+          text:
+            'For each row in the table, indicate the conformance level. There are 5 levels:',
+          levels: [
+            {
+              name: 'Supports:',
+              description:
+                'The functionality of the product has at least one method that meets the criterion without known defects or meets with equivalent facilitation.'
+            },
+            {
+              name: 'Partially Supports:',
+              description:
+                'Some functionality of the product does not meet the criterion.'
+            },
+            {
+              name: 'Does Not Support:',
+              description:
+                'The majority of product functionality does not meet the criterion.'
+            },
+            {
+              name: 'Not Evaluated:',
+              description:
+                'The product has not been evaluated against the criterion. This can be used only in WCAG 2.0 Level AAA.'
+            }
+          ]
+        },
+        item2: {
+          text:
+            'After indicating the conformance level, provide a detailed explanation in the ‘Remarks and Evaluation’ column.'
+        },
+        downloadVPAT: {
+          heading: 'Download VPAT template',
+          line1: {
+            linkText:
+              'Download the current VPAT template (opens link in new tab)',
+            otherText:
+              'from the Information Technology Industry Council (ITI) website.'
+          },
+          line2: {
+            text:
+              'Do not skip any row in the document. This will result in delays.'
+          },
+          line3: {
+            linkText:
+              'Watch tutorial on how to fill out a VPAT (opens link a new tab).'
+          }
+        }
+      }
+    },
+    testPlanSection: {
+      heading: 'Test Plan',
+      description:
+        'The Test Plan is a document that helps the Section 508 team understand your system and know what areas of your system to test before it goes live. In this document you will provide:',
+      itemsToProvide: [
+        'a description of your system',
+        'information on how to set up and access it',
+        'user scenarios and steps taken to perform actions',
+        'and any other constraints, assumptions or risks'
+      ]
+    },
+    remediationPlanSection: {
+      heading: 'Remediation Plan',
+      description:
+        'The Remediation Plan is a document that helps the Section 508 team understand how you plan to fix the issues that were identified from the 508 test. In this document you will provide:',
+      itemsToProvide: [
+        'solutions for each issue',
+        'when and how you plan to schedule these changes into your project'
+      ]
+    }
   }
 };
 
