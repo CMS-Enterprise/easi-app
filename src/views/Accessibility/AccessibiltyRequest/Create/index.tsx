@@ -10,7 +10,7 @@ import {
   Formik,
   FormikProps
 } from 'formik';
-import { CreateAccessibilityRequestQuery } from 'queries/AccessibilityRequestQueries';
+import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
 import GetSystemsQuery from 'queries/GetSystems';
 import {
   GetSystems,

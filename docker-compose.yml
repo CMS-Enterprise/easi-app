@@ -3,7 +3,7 @@ version: '3.7'
 services:
   db:
     image: postgres:11.10
-    command: ['postgres', '-c', 'log_statement=all']
+    command: ['postgres', '-c', 'log_statement=all', '-c', 'max_connections=15']
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
   db_migrate:
@@ -29,6 +29,7 @@ services:
       - OKTA_CLIENT_ID=0oa2e913coDQeG19S297
       - OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
       - GRT_EMAIL=success@simulator.amazonses.com
+      - ACCESSIBILITY_TEAM_EMAIL=success@simluator.amazonses.com
       - EMAIL_TEMPLATE_DIR=./pkg/email/templates
       - AWS_REGION=us-west-2
       - AWS_SES_SOURCE=no-reply-$APP_ENV@info.easi.cms.gov

@@ -44,7 +44,7 @@ const accessibility = {
     testingSteps: 'Steps involved in 508 testing (opens in a new tab)',
     remove: 'Remove this request from EASi',
     modal: {
-      header: 'Confirm you want to remove {{-requestName}}?',
+      header: 'Confirm you want to remove {{-requestName}}',
       subhead:
         'You will not be able to access this request and its documents after it is removed.',
       confirm: 'Remove request',
@@ -112,6 +112,13 @@ const accessibility = {
       'A request for 508 testing will be added to the list of 508 requests. An email will be sent to the Business Owner and the 508 team stating that a request has been added to the system.',
     submitBtn: 'Add a new request',
     confirmation: '{{-requestName}} was added to the 508 requests page'
+  },
+  removeAccessibilityRequest: {
+    reason: 'Reason for removal',
+    INCORRECT_APPLICATION_AND_LIFECYCLE_ID:
+      'Incorrect application and Lifecycle ID selected',
+    NO_TESTING_NEEDED: 'No testing needed',
+    OTHER: 'Other'
   },
   documentType: {
     awardedVpat: 'Awarded VPAT',
