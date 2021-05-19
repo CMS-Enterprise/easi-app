@@ -70,7 +70,10 @@ const AppRoutes = () => {
         path="/system/request-type"
         component={RequestTypeForm}
       />
-      <Route path="/governance-overview" exact component={GovernanceOverview} />
+      <Route
+        path="/governance-overview/:systemId?"
+        component={GovernanceOverview}
+      />
       <SecureRoute
         path="/governance-task-list/:systemId"
         exact
