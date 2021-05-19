@@ -191,7 +191,7 @@ const accessibility = {
     vpatSection: {
       heading: 'Voluntary Product Assessment Template (VPAT)',
       description:
-        'A VPAT s a document that helps CMS and other government agencies understand how you will meet the 508 Standards for IT accessibility.',
+        'A VPAT is a document that helps CMS and other government agencies understand how you will meet the 508 Standards for IT accessibility.',
       subSection: {
         heading: 'Tips to complete a VPAT',
         item1: {
@@ -212,6 +212,10 @@ const accessibility = {
               name: 'Does Not Support:',
               description:
                 'The majority of product functionality does not meet the criterion.'
+            },
+            {
+              name: 'Not Applicable:',
+              description: 'The criterion is not relevant to the product.'
             },
             {
               name: 'Not Evaluated:',
