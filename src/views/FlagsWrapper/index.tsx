@@ -16,9 +16,9 @@ const FlagsWrapper = ({ children }: FlagsWrapperProps) => {
   );
 
   const { data } = useQuery<GetCurrentUser>(GetCurrentUserQuery);
-  let key = process.env.REACT_APP_LD_ENV;
+  let key = process.env.REACT_APP_LD_ENV_USER;
+  let hash = process.env.REACT_APP_LD_USER_HASH;
   let anonymous = true;
-  let hash: string | undefined;
 
   if (data) {
     key = data.currentUser?.userKey;
