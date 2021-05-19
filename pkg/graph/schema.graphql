@@ -576,9 +576,13 @@ input BasicActionInput {
   intakeId: UUID!
 }
 
-type CurrentUser {
+type LaunchDarklySettings {
   userKey: String!
   signedHash: String!
+}
+
+type CurrentUser {
+  launchDarkly: LaunchDarklySettings!
 }
 
 type Mutation {

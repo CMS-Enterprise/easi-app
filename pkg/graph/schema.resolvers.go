@@ -823,8 +823,10 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 	signedHash := r.ldClient.SecureModeHash(ldUser)
 
 	currentUser := model.CurrentUser{
-		UserKey:    userKey,
-		SignedHash: signedHash,
+		LaunchDarkly: &model.LaunchDarklySettings{
+			UserKey:    userKey,
+			SignedHash: signedHash,
+		},
 	}
 	return &currentUser, nil
 }

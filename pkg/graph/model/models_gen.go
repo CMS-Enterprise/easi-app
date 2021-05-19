@@ -116,8 +116,7 @@ type CreateTestDatePayload struct {
 }
 
 type CurrentUser struct {
-	UserKey    string `json:"userKey"`
-	SignedHash string `json:"signedHash"`
+	LaunchDarkly *LaunchDarklySettings `json:"launchDarkly"`
 }
 
 type DeleteAccessibilityRequestDocumentInput struct {
@@ -165,6 +164,11 @@ type IssueLifecycleIDInput struct {
 	Lcid      *string   `json:"lcid"`
 	NextSteps *string   `json:"nextSteps"`
 	Scope     string    `json:"scope"`
+}
+
+type LaunchDarklySettings struct {
+	UserKey    string `json:"userKey"`
+	SignedHash string `json:"signedHash"`
 }
 
 type RejectIntakeInput struct {

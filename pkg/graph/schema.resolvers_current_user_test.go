@@ -13,16 +13,20 @@ import (
 func (s GraphQLTestSuite) TestCurrentUserQuery() {
 	var resp struct {
 		CurrentUser struct {
-			UserKey    string
-			SignedHash string
+			LaunchDarkly struct {
+				UserKey    string
+				SignedHash string
+			}
 		}
 	}
 
 	s.client.MustPost(
 		`query {
 			currentUser {
-				userKey
-				signedHash
+				launchDarkly {
+					userKey
+					signedHash
+				}
 			}
 		}`, &resp,
 		func(request *client.Request) {
@@ -32,6 +36,6 @@ func (s GraphQLTestSuite) TestCurrentUserQuery() {
 		},
 	)
 
-	s.Equal("e12e115acf4552b2568b55e93cbd39394c4ef81c82447fafc997882a02d23677", resp.CurrentUser.UserKey)
-	s.Equal("38d78a3eb69707e32038eaa04a9f0966712c53f44b650ba6079e0a69e8cb9425", resp.CurrentUser.SignedHash)
+	s.Equal("e12e115acf4552b2568b55e93cbd39394c4ef81c82447fafc997882a02d23677", resp.CurrentUser.LaunchDarkly.UserKey)
+	s.Equal("38d78a3eb69707e32038eaa04a9f0966712c53f44b650ba6079e0a69e8cb9425", resp.CurrentUser.LaunchDarkly.SignedHash)
 }
