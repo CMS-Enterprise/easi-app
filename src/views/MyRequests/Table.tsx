@@ -50,12 +50,12 @@ const Table = () => {
         return (
           <li key={request.id}>
             <UswdsLink asCustom={Link} to={link}>
-              {request.name || 'Unnamed Request'}
+              {request.name || 'Draft'}
             </UswdsLink>
             ,{' '}
             {request.submittedAt
               ? formatDate(request.submittedAt)
-              : 'Not Submitted'}
+              : 'Not submitted yet'}
             , {request.type}
           </li>
         );
