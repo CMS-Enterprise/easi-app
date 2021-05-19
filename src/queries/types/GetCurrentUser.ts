@@ -7,10 +7,15 @@
 // GraphQL query operation: GetCurrentUser
 // ====================================================
 
-export interface GetCurrentUser_currentUser {
-  __typename: "CurrentUser";
+export interface GetCurrentUser_currentUser_launchDarkly {
+  __typename: "LaunchDarklySettings";
   userKey: string;
   signedHash: string;
+}
+
+export interface GetCurrentUser_currentUser {
+  __typename: "CurrentUser";
+  launchDarkly: GetCurrentUser_currentUser_launchDarkly;
 }
 
 export interface GetCurrentUser {

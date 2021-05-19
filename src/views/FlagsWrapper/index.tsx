@@ -21,8 +21,8 @@ const FlagsWrapper = ({ children }: FlagsWrapperProps) => {
   let anonymous = true;
 
   if (data) {
-    key = data.currentUser?.userKey;
-    hash = data.currentUser?.signedHash;
+    key = data.currentUser?.launchDarkly.userKey;
+    hash = data.currentUser?.launchDarkly.signedHash;
     anonymous = false;
   }
 
