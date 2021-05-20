@@ -4,7 +4,7 @@ import { useOktaAuth } from '@okta/okta-react';
 
 import { localAuthStorageKey } from 'constants/localAuth';
 import { setUser } from 'reducers/authReducer';
-import { isLocalEnvironment } from 'utils/local';
+import { isLocalAuthEnabled } from 'utils/auth';
 
 type UserInfoWrapperProps = {
   children: React.ReactNode;
@@ -16,7 +16,7 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
 
   const storeUserInfo = async () => {
     if (
-      isLocalEnvironment() &&
+      isLocalAuthEnabled() &&
       window.localStorage[localAuthStorageKey] &&
       JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
     ) {
