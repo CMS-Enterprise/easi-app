@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -12,7 +12,7 @@ import (
 func (s StoreTestSuite) TestMyRequests() {
 	notRequesterID := "NOPE"
 	requesterID := "BZOW"
-	requester := &authn.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
+	requester := &authentication.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
 	ctx := appcontext.WithPrincipal(context.Background(), requester)
 
 	s.Run("returns only 508 requests tied to the current user", func() {

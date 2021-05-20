@@ -11,7 +11,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 )
 
@@ -59,7 +59,7 @@ func jwtGroupsContainsJobCode(jwt *jwtverifier.Jwt, jobCode string) bool {
 	return false
 }
 
-func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPrincipal, error) {
+func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authentication.EUAPrincipal, error) {
 	euaID := jwt.Claims["sub"].(string)
 	if euaID == "" {
 		return nil, errors.New("unable to retrieve EUA ID from JWT")
@@ -75,7 +75,7 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPri
 	jc508Tester := jwtGroupsContainsJobCode(jwt, f.code508Tester)
 	jc508User := jwtGroupsContainsJobCode(jwt, f.code508User)
 
-	return &authn.EUAPrincipal{
+	return &authentication.EUAPrincipal{
 			EUAID:            euaID,
 			JobCodeEASi:      jcEASi,
 			JobCodeGRT:       jcGRT,

@@ -6,7 +6,7 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -16,7 +16,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 
 	s.Run("No EASi job code fails auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{JobCodeEASi: false})
+		ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{JobCodeEASi: false})
 
 		ok, err := authorizeSaveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -26,7 +26,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 
 	s.Run("Mismatched EUA ID fails auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
+		ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
 
 		intake := models.SystemIntake{
 			EUAUserID: null.StringFrom("ABCD"),
@@ -40,7 +40,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 
 	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
+		ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
 
 		intake := models.SystemIntake{
 			EUAUserID: null.StringFrom("ABCD"),
@@ -58,7 +58,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
 
 	s.Run("No EASi job code fails auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{JobCodeEASi: false})
+		ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{JobCodeEASi: false})
 
 		ok, err := authorizeSaveBizCase(ctx, &models.BusinessCase{})
 
@@ -68,7 +68,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
 
 	s.Run("Mismatched EUA ID fails auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
+		ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
 
 		bizCase := models.BusinessCase{
 			EUAUserID: "ABCD",
@@ -82,7 +82,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
 
 	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
+		ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
 
 		bizCase := models.BusinessCase{
 			EUAUserID: "ABCD",
@@ -97,8 +97,8 @@ func (s ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
 
 func (s ServicesTestSuite) TestHasRole() {
 	fnAuth := HasRole
-	nonGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
-	yesGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
+	nonGRT := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
+	yesGRT := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
 
 	testCases := map[string]struct {
 		ctx     context.Context
@@ -129,9 +129,9 @@ func (s ServicesTestSuite) TestHasRole() {
 
 func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequesterOrHasGRTJobCode() {
 	fnAuth := AuthorizeUserIsIntakeRequesterOrHasGRTJobCode
-	nonEASI := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: false, JobCodeGRT: false}
-	nonGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
-	yesGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
+	nonEASI := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: false, JobCodeGRT: false}
+	nonGRT := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
+	yesGRT := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
 
 	testCases := map[string]struct {
 		ctx     context.Context
@@ -176,9 +176,9 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequesterOrHasGRTJobCode() {
 
 func (s ServicesTestSuite) TestAuthorizeUserIsRequestOwnerOr508Team() {
 	fnAuth := AuthorizeUserIsRequestOwnerOr508Team
-	nonEASI := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: false, JobCodeGRT: false}
-	non508 := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCode508Tester: false, JobCode508User: false}
-	yes508tester := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCode508Tester: true, JobCode508User: false}
+	nonEASI := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: false, JobCodeGRT: false}
+	non508 := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCode508Tester: false, JobCode508User: false}
+	yes508tester := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCode508Tester: true, JobCode508User: false}
 
 	testCases := map[string]struct {
 		ctx     context.Context

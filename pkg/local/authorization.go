@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
 // If you're developing interfaces with CEDAR LDAP and you want to use Okta login on the frontend,
@@ -53,7 +53,7 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, testEUAID string
 				euaID = testEUAID
 			}
 			logger.Info("Using local authorization middleware with Okta frontend login")
-			ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{
+			ctx := appcontext.WithPrincipal(r.Context(), &authentication.EUAPrincipal{
 				EUAID:            euaID,
 				JobCodeEASi:      true,
 				JobCodeGRT:       true,
@@ -65,7 +65,7 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, testEUAID string
 		}
 
 		logger.Info("Using local authorization middleware and populating EUA ID and job codes")
-		ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{
+		ctx := appcontext.WithPrincipal(r.Context(), &authentication.EUAPrincipal{
 			EUAID:            config.EUA,
 			JobCodeEASi:      true,
 			JobCodeGRT:       swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
