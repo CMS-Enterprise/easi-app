@@ -186,6 +186,9 @@ const LambdaEndpoint = "LAMBDA_ENDPOINT"
 // LambdaFunctionPrince is the name of the prince lambda function
 const LambdaFunctionPrince = "LAMBDA_FUNCTION_PRINCE"
 
+// LocalAuth is whether local auth should be enabled
+const LocalAuth = "LOCAL_AUTH"
+
 // FlagSourceOption represents an environment
 type FlagSourceOption string
 
