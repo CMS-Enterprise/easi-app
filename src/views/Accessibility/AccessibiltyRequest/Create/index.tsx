@@ -53,10 +53,13 @@ const Create = () => {
           intakeID: values.intakeId
         }
       }
-    }).then(res => {
-      const uuid = res.data.createAccessibilityRequest.accessibilityRequest.id;
-      showMessageOnNextPage(t('newRequestForm.confirmation'));
-      history.push(`/508/requests/${uuid}`);
+    }).then(response => {
+      if (!response.errors) {
+        const uuid =
+          response.data.createAccessibilityRequest.accessibilityRequest.id;
+        showMessageOnNextPage(t('newRequestForm.confirmation'));
+        history.push(`/508/requests/${uuid}`);
+      }
     });
   };
 
