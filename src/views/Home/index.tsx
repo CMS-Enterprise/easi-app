@@ -52,7 +52,7 @@ const Home = () => {
         return <List />;
       }
 
-      if (user.isBasicUser(userGroups)) {
+      if (user.isBasicUser(userGroups, flags)) {
         return (
           <div className="grid-container">
             {message && (
@@ -74,13 +74,14 @@ const Home = () => {
               >
                 {t('home:actions.itg.body')}
               </LinkCard>
-
-              <LinkCard
-                link="/508/requests/new"
-                heading={t('home:actions.508.heading')}
-              >
-                {t('home:actions.508.body')}
-              </LinkCard>
+              {flags.access508Flow && (
+                <LinkCard
+                  link="/508/requests/new"
+                  heading={t('home:actions.508.heading')}
+                >
+                  {t('home:actions.508.body')}
+                </LinkCard>
+              )}
             </div>
           </div>
         );

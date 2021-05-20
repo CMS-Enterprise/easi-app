@@ -52,7 +52,7 @@ describe('The home page', () => {
     });
 
     describe('User is logged in', () => {
-      it('displays login button', async () => {
+      it('displays process options', async () => {
         const mockStore = configureMockStore();
         const store = mockStore({
           auth: mockAuthReducer,
@@ -77,10 +77,13 @@ describe('The home page', () => {
           );
 
           component.update();
-
-          expect(component.find('a[children="Start now"]').exists()).toEqual(
-            true
-          );
+          expect(
+            component.find('a[children="IT Governance"]').exists()
+          ).toEqual(true);
+          // Uncomment below when access508Flow feature flag can be turned on (true)
+          // expect(
+          //   component.find('a[children="Section 508 compliance"]').exists()
+          // ).toEqual(true);
         });
       });
 
