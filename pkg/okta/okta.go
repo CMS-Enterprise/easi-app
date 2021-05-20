@@ -85,16 +85,12 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authenticati
 		nil
 }
 
-func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Handler {
+func (f oktaMiddlewareFactory) newAuthenticationMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger := appcontext.ZLogger(r.Context())
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			f.WriteErrorResponse(
-				r.Context(),
-				w,
-				&apperrors.UnauthorizedError{Err: errors.New("empty authorization header")},
-			)
+		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer") {
+			next.ServeHTTP(w, r)
 			return
 		}
 
@@ -147,8 +143,8 @@ type oktaMiddlewareFactory struct {
 	code508User   string
 }
 
-// NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issuer string, useTestJobCodes bool) func(http.Handler) http.Handler {
+// NewOktaAuthenticationMiddleware returns a wrapper for HandlerFunc to authorize with Okta
+func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, clientID string, issuer string, useTestJobCodes bool) func(http.Handler) http.Handler {
 	verifier := newJwtVerifier(clientID, issuer)
 
 	// by default we want to use the PROD job codes, and only in
@@ -171,6 +167,6 @@ func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issu
 		code508User:   jobCode508User,
 	}
 	return func(next http.Handler) http.Handler {
-		return middlewareFactory.newAuthorizeMiddleware(next)
+		return middlewareFactory.newAuthenticationMiddleware(next)
 	}
 }

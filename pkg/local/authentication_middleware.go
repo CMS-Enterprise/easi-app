@@ -22,22 +22,28 @@ type DevUserConfig struct {
 	JobCodes []string `json:"jobCodes"`
 }
 
-func authorizeMiddleware(logger *zap.Logger, next http.Handler, testEUAID string) http.Handler {
+func authenticateMiddleware(logger *zap.Logger, next http.Handler, testEUAID string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger.Info("Using local authorization middleware")
 
 		if len(r.Header["Authorization"]) == 0 {
-			logger.Info("No Authentication header present")
 			next.ServeHTTP(w, r)
-			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		tokenParts := strings.Split(r.Header["Authorization"][0], "Bearer ")
+
+		// don't attempt to handle local auth if the Authorization Header doesn't start with "Local"
+		if !strings.HasPrefix(r.Header["Authorization"][0], "Local") {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		tokenParts := strings.Split(r.Header["Authorization"][0], "Local ")
 		if len(tokenParts) < 2 {
-			logger.Error("invalid Bearer in auth header")
+			logger.Error("invalid local auth header")
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
+
 		devUserConfigJSON := tokenParts[1]
 		if devUserConfigJSON == "" {
 			logger.Error("empty dev user config JSON")
@@ -76,9 +82,9 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, testEUAID string
 	})
 }
 
-// NewLocalAuthorizeMiddleware stubs out context info while ignoring remote authorization
-func NewLocalAuthorizeMiddleware(logger *zap.Logger, testEUAID string) func(http.Handler) http.Handler {
+// NewLocalAuthenticationMiddleware stubs out context info for local (non-Okta) authentication
+func NewLocalAuthenticationMiddleware(logger *zap.Logger, testEUAID string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-		return authorizeMiddleware(logger, next, testEUAID)
+		return authenticateMiddleware(logger, next, testEUAID)
 	}
 }

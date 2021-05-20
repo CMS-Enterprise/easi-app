@@ -48,7 +48,7 @@ function getAuthHeader(targetUrl: string) {
     window.localStorage[localAuthStorageKey] &&
     JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
   ) {
-    return `Bearer ${window.localStorage[localAuthStorageKey]}`;
+    return `Local ${window.localStorage[localAuthStorageKey]}`;
   }
 
   if (window.localStorage['okta-token-storage']) {
