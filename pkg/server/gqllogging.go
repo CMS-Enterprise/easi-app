@@ -17,7 +17,7 @@ func NewGQLResponseMiddleware() graphql.ResponseMiddleware {
 		logger := appcontext.ZLogger(ctx)
 		result := next(ctx)
 
-		requestContext := graphql.GetRequestContext(ctx)
+		requestContext := graphql.GetOperationContext(ctx)
 		errorList := graphql.GetErrors(ctx)
 
 		duration := time.Now().Sub(requestContext.Stats.OperationStart)
