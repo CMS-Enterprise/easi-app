@@ -13,7 +13,7 @@ type LinkCardProps = {
 const LinkCard = ({ children, className, link, heading }: LinkCardProps) => {
   return (
     <div
-      className={`padding-2 line-height-body-4 link-card-container ${className}`}
+      className={`padding-2 line-height-body-4 link-card-container bg-base-lightest ${className}`}
     >
       <h2 className="margin-top-0 margin-bottom-1">
         <Link href={link}>{heading}</Link>

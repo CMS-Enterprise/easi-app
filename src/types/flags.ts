@@ -8,7 +8,6 @@ export type Flags = {
   downgrade508User: Boolean;
   downgrade508Tester: Boolean;
   add508Request: Boolean;
-  access508Flow: Boolean;
 };
 
 export type FlagsState = {
