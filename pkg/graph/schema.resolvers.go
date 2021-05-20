@@ -339,6 +339,16 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
+	err = r.emailClient.SendNewAccessibilityRequestEmailToRequester(
+		ctx,
+		request.Name,
+		request.ID,
+		requesterInfo.Email,
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	return &model.CreateAccessibilityRequestPayload{
 		AccessibilityRequest: request,
 		UserErrors:           nil,
