@@ -28,8 +28,6 @@ const Home = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
-  console.log(flags);
-
   const { message } = useMessage();
 
   const renderView = () => {
