@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from '@trussworks/react-uswds';
 
+import './index.scss';
+
 type LinkCardProps = {
   children: React.ReactNode;
   className?: string;
@@ -10,11 +12,13 @@ type LinkCardProps = {
 
 const LinkCard = ({ children, className, link, heading }: LinkCardProps) => {
   return (
-    <div className={`padding-top-2 padding-left-1 ${className}`}>
-      <h2>
+    <div
+      className={`padding-2 line-height-body-4 link-card-container ${className}`}
+    >
+      <h2 className="margin-top-0 margin-bottom-1">
         <Link href={link}>{heading}</Link>
       </h2>
-      {children}
+      <div className="margin-top-1">{children}</div>
     </div>
   );
 };
