@@ -13,7 +13,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	ctx := context.Background()
 	recipient := models.NewEmailAddress("fake@fake.com")
 	lcid := "123456"
-	expiresAt, _ := time.Parse("2020-12-25", "2021-12-25")
+	expiresAt, _ := time.Parse("2006-01-02", "2021-12-25")
 	scope := "scope"
 	nextSteps := "nextSteps"
 	feedback := "feedback"
