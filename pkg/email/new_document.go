@@ -54,7 +54,7 @@ func (c Client) newDocumentBody(
 	if c.templates.newAccessibilityRequestTemplate == nil {
 		return "", errors.New("email template is nil")
 	}
-	err := c.templates.newAccessibilityRequestTemplate.Execute(&b, data)
+	err := c.templates.newDocumentTemplate.Execute(&b, data)
 	if err != nil {
 		return "", err
 	}
