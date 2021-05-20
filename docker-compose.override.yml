@@ -43,6 +43,7 @@ services:
       - REACT_APP_LD_USER_HASH
       - REACT_APP_LD_CLIENT_ID
       - CHOKIDAR_USEPOLLING=true
+      - ESLINT_NO_DEV_ERRORS=true
     entrypoint: ['yarn', 'start']
     volumes:
       - .:/app
