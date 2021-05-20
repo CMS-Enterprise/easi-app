@@ -23,6 +23,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
+	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -33,23 +34,39 @@ import (
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/okta"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 func (s *Server) routes(
-	authorizationMiddleware func(handler http.Handler) http.Handler,
 	corsMiddleware func(handler http.Handler) http.Handler,
 	traceMiddleware func(handler http.Handler) http.Handler,
 	loggerMiddleware func(handler http.Handler) http.Handler) {
+
+	// TODO: We should add some sort of config verifier to make sure these configs exist
+	// They may live in /cmd, but should fail quick on startup
+	oktaAuthenticationMiddleware := okta.NewOktaAuthenticationMiddleware(
+		handlers.NewHandlerBase(s.logger),
+		s.Config.GetString("OKTA_CLIENT_ID"),
+		s.Config.GetString("OKTA_ISSUER"),
+		s.Config.GetBool("ALT_JOB_CODES"),
+	)
 
 	s.router.Use(
 		traceMiddleware, // trace all requests with an ID
 		loggerMiddleware,
 		corsMiddleware,
-		// authorizationMiddleware, // is supposed to be authN, not authZ; TODO: those responsibilities should be split out
+		oktaAuthenticationMiddleware,
 	)
+
+	if s.Config.GetString(appconfig.LocalAuth) == "enabled" {
+		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(s.logger, s.Config.GetString(appconfig.LocalAuth))
+		s.router.Use(localAuthenticationMiddleware)
+	}
+
+	requirePrincipalMiddleware := authorization.NewRequirePrincipalMiddleware(s.logger)
 
 	// set up handler base
 	base := handlers.NewHandlerBase(s.logger)
@@ -142,7 +159,8 @@ func (s *Server) routes(
 
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
-	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
+
+	gql.Use(requirePrincipalMiddleware)
 
 	saveAction := services.NewSaveAction(
 		store.CreateAction,
@@ -223,7 +241,7 @@ func (s *Server) routes(
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
-	api.Use(authorizationMiddleware) // TODO: see comment at top-level router
+	api.Use(requirePrincipalMiddleware)
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,
