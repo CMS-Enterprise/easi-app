@@ -9,7 +9,7 @@ import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
 import { localAuthStorageKey } from 'constants/localAuth';
-import { isLocalEnvironment } from 'utils/local';
+import { isLocalAuthEnabled } from 'utils/auth';
 import DevLogin from 'views/AuthenticationWrapper/DevLogin';
 
 const Login = () => {
@@ -17,7 +17,7 @@ const Login = () => {
   const { oktaAuth, authState } = useOktaAuth();
   const history = useHistory();
 
-  if (isLocalEnvironment() && window.localStorage[localAuthStorageKey]) {
+  if (isLocalAuthEnabled() && window.localStorage[localAuthStorageKey]) {
     defaultAuth = JSON.parse(window.localStorage[localAuthStorageKey])
       .favorLocalAuth;
   }
@@ -42,7 +42,7 @@ const Login = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState.isAuthenticated]);
 
-  if (isLocalEnvironment() && isLocalAuth) {
+  if (isLocalAuthEnabled() && isLocalAuth) {
     return (
       <PageWrapper>
         <MainContent className="grid-container margin-top-4">
@@ -56,7 +56,7 @@ const Login = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container">
-        {isLocalEnvironment() && (
+        {isLocalAuthEnabled() && (
           <div>
             <button type="button" onClick={handleUseLocalAuth}>
               Use Local Auth
