@@ -37,6 +37,7 @@ type templates struct {
 	rejectRequestTemplate               templateCaller
 	newAccessibilityRequestTemplate     templateCaller
 	removedAccessibilityRequestTemplate templateCaller
+	newDocumentTemplate                 templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -126,6 +127,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(removedAccessibilityRequestTemplateName)
 	}
 	appTemplates.removedAccessibilityRequestTemplate = removedAccessibilityRequestTemplate
+
+	newDocumentTemplateName := "new_document.gohtml"
+	newDocumentTemplate := rawTemplates.Lookup(newDocumentTemplateName)
+	if newDocumentTemplate == nil {
+		return Client{}, templateError(newDocumentTemplateName)
+	}
+	appTemplates.newDocumentTemplate = newDocumentTemplate
 
 	client := Client{
 		config:    config,
