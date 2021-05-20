@@ -694,7 +694,7 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 		&models.SystemIntake{
 			ID:                input.IntakeID,
 			DecisionNextSteps: null.StringFrom(*input.NextSteps),
-			RejectionReason:   null.StringFrom(*&input.Reason),
+			RejectionReason:   null.StringFrom(input.Reason),
 		},
 		&models.Action{
 			IntakeID: &input.IntakeID,
