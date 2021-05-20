@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Alert } from '@trussworks/react-uswds';
@@ -21,6 +22,7 @@ import WelcomeText from './WelcomeText';
 import './index.scss';
 
 const Home = () => {
+  const { t } = useTranslation();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
@@ -66,18 +68,19 @@ const Home = () => {
             <WelcomeText />
             <div className="display-flex flex-row">
               <div className="margin-right-2">
-                <LinkCard link="/system/request-type" heading="IT Governance">
-                  Includes applying for a lifecycle ID, recompetes and
-                  decommissioning a system
+                <LinkCard
+                  link="/system/request-type"
+                  heading={t('home:actions.itg.heading')}
+                >
+                  {t('home:actions.itg.body')}
                 </LinkCard>
               </div>
               <div>
                 <LinkCard
                   link="/508/requests/new"
-                  heading="Section 508 compliance"
+                  heading={t('home:actions.508.heading')}
                 >
-                  Learn about the process and make a request for 508 testing of
-                  your application
+                  {t('home:actions.508.body')}
                 </LinkCard>
               </div>
             </div>

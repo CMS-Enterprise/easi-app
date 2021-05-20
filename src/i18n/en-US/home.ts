@@ -7,6 +7,18 @@ const home = {
   accessibility: {
     heading: '508 Requests',
     newRequest: 'Add a new request'
+  },
+  actions: {
+    itg: {
+      heading: 'IT Governance',
+      body:
+        'Includes applying for a lifecycle ID, recompetes and decommissioning a system'
+    },
+    '508': {
+      heading: 'Section 508 compliance',
+      body:
+        'Learn about the process and make a request for 508 testing of your application'
+    }
   }
 };
 
