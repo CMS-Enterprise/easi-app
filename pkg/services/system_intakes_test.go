@@ -14,16 +14,16 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s ServicesTestSuite) TestFetchSystemIntakes() {
 	requesterID := "REQ"
-	requester := &authn.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
+	requester := &authentication.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
 	reviewerID := "GRT"
-	reviewer := &authn.EUAPrincipal{EUAID: reviewerID, JobCodeEASi: true, JobCodeGRT: true}
+	reviewer := &authentication.EUAPrincipal{EUAID: reviewerID, JobCodeEASi: true, JobCodeGRT: true}
 	serviceConfig := NewConfig(nil, nil)
 
 	fnAuth := AuthorizeHasEASiRole
@@ -131,7 +131,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	ctx := context.Background()
-	ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: fakeEuaID, JobCodeEASi: true})
+	ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{EUAID: fakeEuaID, JobCodeEASi: true})
 
 	s.Run("successfully creates a system intake without an error", func() {
 		create := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
