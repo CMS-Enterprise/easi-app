@@ -67,22 +67,20 @@ const Home = () => {
             </div>
             <WelcomeText />
             <div className="display-flex flex-row">
-              <div className="margin-right-2">
-                <LinkCard
-                  link="/system/request-type"
-                  heading={t('home:actions.itg.heading')}
-                >
-                  {t('home:actions.itg.body')}
-                </LinkCard>
-              </div>
-              <div>
-                <LinkCard
-                  link="/508/requests/new"
-                  heading={t('home:actions.508.heading')}
-                >
-                  {t('home:actions.508.body')}
-                </LinkCard>
-              </div>
+              <LinkCard
+                link="/system/request-type"
+                heading={t('home:actions.itg.heading')}
+                className="margin-right-2"
+              >
+                {t('home:actions.itg.body')}
+              </LinkCard>
+
+              <LinkCard
+                link="/508/requests/new"
+                heading={t('home:actions.508.heading')}
+              >
+                {t('home:actions.508.body')}
+              </LinkCard>
             </div>
           </div>
         );
