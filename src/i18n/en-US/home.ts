@@ -21,6 +21,7 @@ const home = {
     }
   },
   requestsTable: {
+    heading: 'My governance requests',
     headers: {
       name: 'Request name',
       type: 'Governance',
