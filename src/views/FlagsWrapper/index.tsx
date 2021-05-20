@@ -32,7 +32,8 @@ const FlagsWrapper = ({ children }: FlagsWrapperProps) => {
           downgradeGovTeam: false,
           downgrade508User: false,
           downgrade508Tester: false,
-          add508Request: false
+          add508Request: false,
+          access508Flow: false
         }
       });
       setLDProvider(() => provider);
