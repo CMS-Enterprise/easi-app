@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
@@ -31,6 +31,9 @@ const GovernanceStep = ({ header, body }: NumberedListItemProps) => {
 };
 
 const GovernanceOverview = () => {
+  const { systemId } = useParams<{
+    systemId: string;
+  }>();
   return (
     <PageWrapper className="easi-governance-overview">
       <Header />
@@ -125,14 +128,17 @@ const GovernanceOverview = () => {
             </>
           </CollapsableLink>
         </div>
-        <UswdsLink
-          className="usa-button"
-          asCustom={Link}
-          variant="unstyled"
-          to="/system/request-type"
-        >
-          Get started
-        </UswdsLink>
+
+        {systemId && (
+          <UswdsLink
+            className="usa-button"
+            asCustom={Link}
+            variant="unstyled"
+            to={`/governance-task-list/${systemId}`}
+          >
+            Get started
+          </UswdsLink>
+        )}
       </MainContent>
       <Footer />
     </PageWrapper>
