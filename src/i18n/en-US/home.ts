@@ -19,6 +19,19 @@ const home = {
       body:
         'Learn about the process and make a request for 508 testing of your application'
     }
+  },
+  requestsTable: {
+    headers: {
+      name: 'Request name',
+      type: 'Governance',
+      submittedAt: 'Submission date'
+    },
+    types: {
+      ACCESSIBILITY_REQUEST: 'Section 508',
+      GOVERNANCE_REQUEST: 'IT Governance'
+    },
+    defaultName: 'Draft',
+    defaultSubmittedAt: 'Not submitted'
   }
 };
 

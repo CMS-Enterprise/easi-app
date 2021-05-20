@@ -16,7 +16,7 @@ import { RequestType } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
 
 const Table = () => {
-  const { t } = useTranslation('myRequests');
+  const { t } = useTranslation('home');
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
     GetRequestsVariables
@@ -28,7 +28,7 @@ const Table = () => {
   const columns: any = useMemo(() => {
     return [
       {
-        Header: 'Name', // t('table.header.requestName'),
+        Header: t('requestsTable.headers.name'),
         accessor: 'name',
         Cell: ({ row, value }: any) => {
           let link: string;
@@ -44,38 +44,27 @@ const Table = () => {
           }
           return (
             <UswdsLink asCustom={Link} to={link}>
-              {value || 'Draft'}
+              {value || t('requestsTable.defaultName')}
             </UswdsLink>
           );
         },
         maxWidth: 350
       },
       {
-        Header: 'Type', // t('requestTable.header.businessOwner'),
+        Header: t('requestsTable.headers.type'),
         accessor: 'type',
-        Cell: ({ row, value }: any) => {
-          let typeName: string;
-          switch (row.original.type) {
-            case RequestType.ACCESSIBILITY_REQUEST:
-              typeName = 'Accessibility Request';
-              break;
-            case RequestType.GOVERNANCE_REQUEST:
-              typeName = 'Governance Request';
-              break;
-            default:
-              typeName = 'Unknown';
-          }
-          return typeName;
+        Cell: ({ value }: any) => {
+          return t(`requestsTable.types.${value}`);
         }
       },
       {
-        Header: 'Submitted on', // t('requestTable.header.submissionDate'),
+        Header: t('requestsTable.headers.submittedAt'),
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
             return formatDate(value);
           }
-          return 'Not submitted';
+          return t('requestsTable.defaultSubmittedAt');
         }
       }
     ];
