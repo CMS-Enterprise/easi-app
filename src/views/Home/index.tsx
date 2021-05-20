@@ -6,6 +6,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
+import LinkCard from 'components/LinkCard';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
@@ -63,6 +64,23 @@ const Home = () => {
               <SystemIntakeBanners />
             </div>
             <WelcomeText />
+            <div className="display-flex flex-row">
+              <div className="margin-right-2">
+                <LinkCard link="/system/request-type" heading="IT Governance">
+                  Includes applying for a lifecycle ID, recompetes and
+                  decommissioning a system
+                </LinkCard>
+              </div>
+              <div>
+                <LinkCard
+                  link="/508/requests/new"
+                  heading="Section 508 compliance"
+                >
+                  Learn about the process and make a request for 508 testing of
+                  your application
+                </LinkCard>
+              </div>
+            </div>
           </div>
         );
       }
