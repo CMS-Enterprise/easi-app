@@ -80,7 +80,7 @@ describe('The home page', () => {
           expect(
             component.find('a[children="IT Governance"]').exists()
           ).toEqual(true);
-          // Uncomment below when access508Flow feature flag can be turned on (true)
+          // Uncomment below when feature flag can be turned on (true)
           // expect(
           //   component.find('a[children="Section 508 compliance"]').exists()
           // ).toEqual(true);

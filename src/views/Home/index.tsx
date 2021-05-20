@@ -16,6 +16,8 @@ import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
 
+import PageHeading from '../../components/PageHeading';
+
 import SystemIntakeBanners from './SystemIntakeBanners';
 import WelcomeText from './WelcomeText';
 
@@ -26,6 +28,7 @@ const Home = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
+  console.log(flags);
 
   const { message } = useMessage();
 
@@ -53,6 +56,40 @@ const Home = () => {
       }
 
       if (user.isBasicUser(userGroups, flags)) {
+        if (flags.add508Request) {
+          return (
+            <div className="grid-container">
+              {message && (
+                <div className="grid-container margin-top-6">
+                  <Alert type="success" slim role="alert">
+                    {message}
+                  </Alert>
+                </div>
+              )}
+              <div className="tablet:grid-col-9">
+                <PageHeading>{t('home:title')}</PageHeading>
+                <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
+                  {t('home:subtitle')}
+                </p>
+                <div className="display-flex flex-row">
+                  <LinkCard
+                    link="/system/request-type"
+                    heading={t('home:actions.itg.heading')}
+                    className="margin-right-2"
+                  >
+                    {t('home:actions.itg.body')}
+                  </LinkCard>
+                  <LinkCard
+                    link="/508/requests/new"
+                    heading={t('home:actions.508.heading')}
+                  >
+                    {t('home:actions.508.body')}
+                  </LinkCard>
+                </div>
+              </div>
+            </div>
+          );
+        }
         return (
           <div className="grid-container">
             {message && (
@@ -66,23 +103,6 @@ const Home = () => {
               <SystemIntakeBanners />
             </div>
             <WelcomeText />
-            <div className="display-flex flex-row">
-              <LinkCard
-                link="/system/request-type"
-                heading={t('home:actions.itg.heading')}
-                className="margin-right-2"
-              >
-                {t('home:actions.itg.body')}
-              </LinkCard>
-              {flags.access508Flow && (
-                <LinkCard
-                  link="/508/requests/new"
-                  heading={t('home:actions.508.heading')}
-                >
-                  {t('home:actions.508.body')}
-                </LinkCard>
-              )}
-            </div>
           </div>
         );
       }
