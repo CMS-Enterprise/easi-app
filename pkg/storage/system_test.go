@@ -17,6 +17,7 @@ func (s StoreTestSuite) TestListSystems() {
 	// random-based signatures, just so multiple runs of this test don't collide
 	now := time.Now()
 	later := now.AddDate(0, 1, 0)
+	// #nosec G404
 	rnd := rand.New(rand.NewSource(now.Unix()))
 	base := make([]byte, 8)
 	_, err := rnd.Read(base)
