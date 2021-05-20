@@ -16,16 +16,7 @@ const WelcomeText = () => {
       <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
         {t('home:subtitle')}
       </p>
-      {authState.isAuthenticated ? (
-        <UswdsLink
-          className="usa-button"
-          asCustom={Link}
-          variant="unstyled"
-          to="/system/request-type"
-        >
-          {t('home:startNow')}
-        </UswdsLink>
-      ) : (
+      {!authState.isAuthenticated && (
         <UswdsLink
           className="usa-button"
           asCustom={Link}
