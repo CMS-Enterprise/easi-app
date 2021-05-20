@@ -14,9 +14,6 @@ linters-settings:
     local-prefixes: github.com/cmsgov/easi-app
   revive:
     confidence: 0
-  gosec:
-    excludes:
-      - G404
 
 linters:
   enable:
