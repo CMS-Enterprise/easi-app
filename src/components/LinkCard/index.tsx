@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from '@trussworks/react-uswds';
-
-import './index.scss';
+import classnames from 'classnames';
 
 type LinkCardProps = {
   children: React.ReactNode;
@@ -10,10 +9,23 @@ type LinkCardProps = {
   heading: React.ReactNode | string;
 } & JSX.IntrinsicElements['div']; // what does this mean?
 
-const LinkCard = ({ children, className, link, heading }: LinkCardProps) => {
+const LinkCard = ({
+  children,
+  className,
+  link,
+  heading,
+  ...props
+}: LinkCardProps) => {
   return (
     <div
-      className={`padding-2 line-height-body-4 link-card-container bg-base-lightest ${className}`}
+      className={classnames(
+        'padding-2',
+        'line-height-body-4',
+        'link-card-container',
+        'bg-base-lightest',
+        className
+      )}
+      {...props}
     >
       <h2 className="margin-top-0 margin-bottom-1">
         <Link href={link}>{heading}</Link>
