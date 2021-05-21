@@ -33,7 +33,8 @@ const home = {
     },
     defaultName: 'Draft',
     defaultSubmittedAt: 'Not submitted',
-    caption: 'List of governance requests'
+    caption:
+      'Below is a list of governance requests that are in draft or submitted.'
   }
 };
 
