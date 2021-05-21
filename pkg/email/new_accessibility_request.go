@@ -21,9 +21,10 @@ type newAccessibilityRequest struct {
 }
 
 type newAccessibilityRequestEmailToRequester struct {
-	RequestName   string
-	RequestLink   string
-	TemplatesLink string
+	RequestName            string
+	RequestLink            string
+	TemplatesLink          string
+	AccessibilityTeamEmail models.EmailAddress
 }
 
 func (c Client) newAccessibilityRequestBody(requesterName, requestName, applicationName string, requestID uuid.UUID) (string, error) {
@@ -49,9 +50,10 @@ func (c Client) newAccessibilityRequestToRequesterBody(requestName string, reque
 	requestPath := path.Join("508", "requests", requestID.String())
 	templatesPath := path.Join("508", "templates")
 	data := newAccessibilityRequestEmailToRequester{
-		RequestName:   requestName,
-		RequestLink:   c.urlFromPath(requestPath),
-		TemplatesLink: c.urlFromPath(templatesPath),
+		RequestName:            requestName,
+		RequestLink:            c.urlFromPath(requestPath),
+		TemplatesLink:          c.urlFromPath(templatesPath),
+		AccessibilityTeamEmail: c.config.AccessibilityTeamEmail,
 	}
 	var b bytes.Buffer
 	if c.templates.newAccessibilityRequestToRequesterTemplate == nil {

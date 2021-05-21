@@ -15,7 +15,6 @@ import (
 type Config struct {
 	GRTEmail               models.EmailAddress
 	AccessibilityTeamEmail models.EmailAddress
-	RequesterEmail         models.EmailAddress
 	URLHost                string
 	URLScheme              string
 	TemplateDirectory      string
