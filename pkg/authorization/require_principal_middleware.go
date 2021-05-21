@@ -19,7 +19,10 @@ func requirePrincipalMiddleware(logger *zap.Logger, next http.Handler) http.Hand
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusUnauthorized)
-			w.Write([]byte(`{"error": "Unauthorized"}`))
+			_, writeErr := w.Write([]byte(`{"errors": [{"message": "Unauthorized"}]}`))
+			if writeErr != nil {
+				logger.Error("failed to write response body")
+			}
 			return
 		}
 
