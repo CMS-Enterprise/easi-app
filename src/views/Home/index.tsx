@@ -12,7 +12,7 @@ import RequestRepository from 'components/RequestRepository';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
-import List from 'views/Accessibility/AccessibiltyRequest/List';
+import List from 'views/Accessibility/AccessibilityRequest/List';
 
 import SystemIntakeBanners from './SystemIntakeBanners';
 import WelcomeText from './WelcomeText';
