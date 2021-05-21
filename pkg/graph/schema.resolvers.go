@@ -777,9 +777,9 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 	for _, request := range requests {
 		node := model.Request{
 			ID:          request.ID,
-			SubmittedAt: request.CreatedAt,
-			Name:        &request.Name,
-			Type:        "ACCESSIBILITY_REQUEST",
+			SubmittedAt: request.SubmittedAt,
+			Name:        request.Name.Ptr(),
+			Type:        request.Type,
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,
