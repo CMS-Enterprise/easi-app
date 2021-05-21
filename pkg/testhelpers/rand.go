@@ -15,6 +15,7 @@ func RandomEUAID() string {
 
 	b := make([]rune, euaLength)
 	for i := range b {
+		// #nosec G404
 		b[i] = letter[rand.Intn(len(letter))]
 	}
 	return string(b)

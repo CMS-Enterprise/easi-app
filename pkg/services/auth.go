@@ -160,17 +160,12 @@ func AuthorizeUserIsRequestOwnerOr508Team(ctx context.Context, request *models.A
 		return false, err
 	}
 
-	userIs508Tester, err := HasRole(ctx, model.RoleEasi508Tester)
+	userIs508Team, err := HasRole(ctx, model.RoleEasi508TesterOrUser)
 	if err != nil {
 		return false, err
 	}
 
-	userIs508User, err := HasRole(ctx, model.RoleEasi508User)
-	if err != nil {
-		return false, err
-	}
-
-	if !userIsIntakeRequester && !userIs508User && !userIs508Tester {
+	if !userIsIntakeRequester && !userIs508Team {
 		return false, nil
 	}
 
