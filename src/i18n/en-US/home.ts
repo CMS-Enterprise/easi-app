@@ -32,7 +32,8 @@ const home = {
       GOVERNANCE_REQUEST: 'IT Governance'
     },
     defaultName: 'Draft',
-    defaultSubmittedAt: 'Not submitted'
+    defaultSubmittedAt: 'Not submitted',
+    caption: 'List of governance requests'
   }
 };
 
