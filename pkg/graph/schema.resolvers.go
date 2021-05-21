@@ -339,6 +339,16 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
+	err = r.emailClient.SendNewAccessibilityRequestEmailToRequester(
+		ctx,
+		request.Name,
+		request.ID,
+		requesterInfo.Email,
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	return &model.CreateAccessibilityRequestPayload{
 		AccessibilityRequest: request,
 		UserErrors:           nil,
@@ -694,7 +704,7 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 		&models.SystemIntake{
 			ID:                input.IntakeID,
 			DecisionNextSteps: null.StringFrom(*input.NextSteps),
-			RejectionReason:   null.StringFrom(*&input.Reason),
+			RejectionReason:   null.StringFrom(input.Reason),
 		},
 		&models.Action{
 			IntakeID: &input.IntakeID,
@@ -767,9 +777,9 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 	for _, request := range requests {
 		node := model.Request{
 			ID:          request.ID,
-			SubmittedAt: request.CreatedAt,
-			Name:        &request.Name,
-			Type:        "ACCESSIBILITY_REQUEST",
+			SubmittedAt: request.SubmittedAt,
+			Name:        request.Name.Ptr(),
+			Type:        request.Type,
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,

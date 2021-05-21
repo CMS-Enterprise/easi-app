@@ -103,7 +103,8 @@ func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCas
 			:cost
 		)
 	`
-	for _, cost := range businessCase.LifecycleCostLines {
+	for i := range businessCase.LifecycleCostLines {
+		cost := businessCase.LifecycleCostLines[i]
 		cost.ID = uuid.New()
 		cost.BusinessCaseID = businessCase.ID
 		_, err := tx.NamedExec(createEstimatedLifecycleCostSQL, &cost)
