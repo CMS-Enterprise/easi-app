@@ -7,7 +7,7 @@ type LinkCardProps = {
   className?: string;
   link: string;
   heading: React.ReactNode | string;
-} & JSX.IntrinsicElements['div']; // what does this mean?
+} & JSX.IntrinsicElements['div'];
 
 const LinkCard = ({
   children,
