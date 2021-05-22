@@ -22,6 +22,7 @@ import {
 } from 'queries/types/GetAccessibilityRequest';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
+import AccessibilityRequestNextStep from 'components/AccessibilityRequestNextStep';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -158,9 +159,14 @@ const AccessibilityRequestDetailPage = () => {
         <PageHeading>{requestName}</PageHeading>
         <div className="grid-row grid-gap-lg">
           <div className="grid-col-9">
-            <h2 className="margin-top-0">
-              {t('requestDetails.documents.label')}
-            </h2>
+            {documents.length === 0 ? (
+              <AccessibilityRequestNextStep />
+            ) : (
+              <h2 className="margin-top-0">
+                {t('requestDetails.documents.label')}
+              </h2>
+            )}
+
             <UswdsLink
               className="usa-button"
               variant="unstyled"
@@ -170,12 +176,14 @@ const AccessibilityRequestDetailPage = () => {
               {t('requestDetails.documentUpload')}
             </UswdsLink>
             <div className="margin-top-6">
-              <AccessibilityDocumentsList
-                documents={documents}
-                requestName={requestName}
-                refetchRequest={refetch}
-                setConfirmationText={showMessage}
-              />
+              {documents.length !== 0 && (
+                <AccessibilityDocumentsList
+                  documents={documents}
+                  requestName={requestName}
+                  refetchRequest={refetch}
+                  setConfirmationText={showMessage}
+                />
+              )}
             </div>
           </div>
           <div className="grid-col-3">
