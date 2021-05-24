@@ -126,6 +126,40 @@ const AccessibilityRequestDetailPage = () => {
 
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
+  const hasDocuments = documents.length !== 0;
+
+  const uploadDocumentLink = (
+    <UswdsLink
+      className="usa-button"
+      variant="unstyled"
+      asCustom={Link}
+      to={`/508/requests/${accessibilityRequestId}/documents/new`}
+    >
+      {t('requestDetails.documentUpload')}
+    </UswdsLink>
+  );
+
+  const bodyWithDocuments = (
+    <>
+      <h2 className="margin-top-0">{t('requestDetails.documents.label')}</h2>
+      {uploadDocumentLink}
+      <div className="margin-top-6">
+        <AccessibilityDocumentsList
+          documents={documents}
+          requestName={requestName}
+          refetchRequest={refetch}
+          setConfirmationText={showMessage}
+        />
+      </div>
+    </>
+  );
+
+  const bodyNoDocuments = (
+    <>
+      <AccessibilityRequestNextStep />
+      {uploadDocumentLink}
+    </>
+  );
 
   if (loading) {
     return <div>Loading</div>;
@@ -159,32 +193,7 @@ const AccessibilityRequestDetailPage = () => {
         <PageHeading>{requestName}</PageHeading>
         <div className="grid-row grid-gap-lg">
           <div className="grid-col-9">
-            {documents.length === 0 ? (
-              <AccessibilityRequestNextStep />
-            ) : (
-              <h2 className="margin-top-0">
-                {t('requestDetails.documents.label')}
-              </h2>
-            )}
-
-            <UswdsLink
-              className="usa-button"
-              variant="unstyled"
-              asCustom={Link}
-              to={`/508/requests/${accessibilityRequestId}/documents/new`}
-            >
-              {t('requestDetails.documentUpload')}
-            </UswdsLink>
-            <div className="margin-top-6">
-              {documents.length !== 0 && (
-                <AccessibilityDocumentsList
-                  documents={documents}
-                  requestName={requestName}
-                  refetchRequest={refetch}
-                  setConfirmationText={showMessage}
-                />
-              )}
-            </div>
+            {hasDocuments ? bodyWithDocuments : bodyNoDocuments}
           </div>
           <div className="grid-col-3">
             <div className="accessibility-request__side-nav">
