@@ -9,12 +9,14 @@ services:
       - EMAIL_TEMPLATE_DIR=/easi/templates
       - SERVER_CERT
       - SERVER_KEY
+      - LOCAL_AUTH=enabled
   easi_client:
     build:
       context: .
       dockerfile: Dockerfile.client_circleci
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
+      - REACT_APP_LOCAL_AUTH=enabled
     entrypoint: ['serve', '-s', '-l', '3000']
   cypress:
     build:
