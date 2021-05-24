@@ -32,8 +32,8 @@ const home = {
       submittedAt: 'Submission date'
     },
     types: {
-      ACCESSIBILITY_REQUEST: 'Section 508',
-      GOVERNANCE_REQUEST: 'IT Governance'
+      accessibilityRequest: 'Section 508',
+      governanceRequest: 'IT Governance'
     },
     defaultName: 'Draft',
     defaultSubmittedAt: 'Not submitted',

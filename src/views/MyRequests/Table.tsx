@@ -14,6 +14,7 @@ import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 
 import { RequestType } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
+import toCamelCase from 'utils/toCamelCase';
 
 const Table = () => {
   const { t } = useTranslation('home');
@@ -54,7 +55,7 @@ const Table = () => {
         Header: t('requestsTable.headers.type'),
         accessor: 'type',
         Cell: ({ value }: any) => {
-          return t(`requestsTable.types.${value}`);
+          return t(`requestsTable.types.${toCamelCase(value)}`);
         }
       },
       {
