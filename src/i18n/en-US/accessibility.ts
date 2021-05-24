@@ -112,7 +112,8 @@ const accessibility = {
     info:
       'A request for 508 testing will be added to the list of 508 requests. An email will be sent to the Business Owner and the 508 team stating that a request has been added to the system.',
     submitBtn: 'Add a new request',
-    confirmation: '{{-requestName}} was added to the 508 requests page'
+    confirmation:
+      '508 testing request created. We have sent you a confirmation email.'
   },
   removeAccessibilityRequest: {
     reason: 'Reason for removal',
@@ -191,7 +192,7 @@ const accessibility = {
     vpatSection: {
       heading: 'Voluntary Product Assessment Template (VPAT)',
       description:
-        'A VPAT s a document that helps CMS and other government agencies understand how you will meet the 508 Standards for IT accessibility.',
+        'A VPAT is a document that helps CMS and other government agencies understand how you will meet the 508 Standards for IT accessibility.',
       subSection: {
         heading: 'Tips to complete a VPAT',
         item1: {
@@ -212,6 +213,10 @@ const accessibility = {
               name: 'Does Not Support:',
               description:
                 'The majority of product functionality does not meet the criterion.'
+            },
+            {
+              name: 'Not Applicable:',
+              description: 'The criterion is not relevant to the product.'
             },
             {
               name: 'Not Evaluated:',

@@ -87,7 +87,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
             Voluntary Product Assessment Template (VPAT)
           </h2>
           <p>
-            A VPAT s a document that helps CMS and other government agencies understand how you will meet the 508 Standards for IT accessibility.
+            A VPAT is a document that helps CMS and other government agencies understand how you will meet the 508 Standards for IT accessibility.
           </p>
           <h3>
             Tips to complete a VPAT
@@ -140,6 +140,19 @@ exports[`TestingTemplates matches the snapshot 1`] = `
                       className="margin-left-0 display-inline"
                     >
                       The majority of product functionality does not meet the criterion.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt
+                      className="text-bold display-inline"
+                    >
+                      Not Applicable:
+                    </dt>
+                     
+                    <dd
+                      className="margin-left-0 display-inline"
+                    >
+                      The criterion is not relevant to the product.
                     </dd>
                   </div>
                   <div>
