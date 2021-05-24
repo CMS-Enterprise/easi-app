@@ -119,7 +119,7 @@ func NewCreateBusinessCase(
 
 		intake.Status = models.SystemIntakeStatusBIZCASEDRAFT
 		intake.UpdatedAt = &now
-		if intake, err = updateIntake(ctx, intake); err != nil {
+		if _, err = updateIntake(ctx, intake); err != nil {
 			return &models.BusinessCase{}, err
 		}
 
