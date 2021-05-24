@@ -86,7 +86,7 @@ const Home = () => {
                     {t('home:actions.508.body')}
                   </LinkCard>
                 </div>
-                <hr className="home__hr margin-top-4" />
+                <hr className="home__hr margin-top-4" aria-hidden />
                 <h2 className="margin-top-4">
                   {t('home:requestsTable.heading')}
                 </h2>
