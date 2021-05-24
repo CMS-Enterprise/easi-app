@@ -14,6 +14,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -33,7 +34,7 @@ func TestOktaTestSuite(t *testing.T) {
 		config: config,
 	}
 
-	if false && !testing.Short() {
+	if !testing.Short() {
 		suite.Run(t, testSuite)
 	}
 }
@@ -49,13 +50,17 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		false,
 	)
 
-	s.Run("a valid token executes the handler", func() {
+	s.Run("a valid token sets the principal", func() {
 		req := httptest.NewRequest("GET", "/systems/", nil)
 		req.Header.Set("AUTHORIZATION", fmt.Sprintf("Bearer %s", accessToken))
 		rr := httptest.NewRecorder()
 		handlerRun := false
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			handlerRun = true
+			principal := appcontext.Principal(r.Context())
+			s.NotEqual(authentication.ANON, principal)
+			s.Equal("1234", principal.ID)
+
+			panic("crap")
 		})
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)

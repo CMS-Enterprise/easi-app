@@ -89,7 +89,7 @@ func (f oktaMiddlewareFactory) newAuthenticationMiddleware(next http.Handler) ht
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger := appcontext.ZLogger(r.Context())
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer") {
+		if !strings.HasPrefix(authHeader, "Bearer") {
 			next.ServeHTTP(w, r)
 			return
 		}
