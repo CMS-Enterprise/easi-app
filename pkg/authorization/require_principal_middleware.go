@@ -31,7 +31,7 @@ func requirePrincipalMiddleware(logger *zap.Logger, next http.Handler) http.Hand
 }
 
 // NewRequirePrincipalMiddleware returns a wrapper for HandlerFunc that
-// ensures that a principal has bee authorized
+// ensures that a principal has been authenticated
 func NewRequirePrincipalMiddleware(logger *zap.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return requirePrincipalMiddleware(logger, next)
