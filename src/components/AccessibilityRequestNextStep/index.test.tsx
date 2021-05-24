@@ -11,7 +11,7 @@ describe('AccessibilityRequestNextStep', () => {
 
   it('has expected contents', () => {
     expect(
-      wrapper.find('h3').contains('Next step: Provide your documents')
+      wrapper.find('h2').contains('Next step: Provide your documents')
     ).toEqual(true);
   });
 });
