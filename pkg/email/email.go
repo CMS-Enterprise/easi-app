@@ -38,7 +38,7 @@ type templates struct {
 	newAccessibilityRequestTemplate            templateCaller
 	newAccessibilityRequestToRequesterTemplate templateCaller
 	removedAccessibilityRequestTemplate        templateCaller
-  newDocumentTemplate                        templateCaller
+	newDocumentTemplate                        templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
