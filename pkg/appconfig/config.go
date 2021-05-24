@@ -59,42 +59,27 @@ func (e Environment) String() string {
 
 // Local returns true if the environment is local
 func (e Environment) Local() bool {
-	if e == localEnv {
-		return true
-	}
-	return false
+	return e == localEnv
 }
 
 // Test returns true if the environment is local
 func (e Environment) Test() bool {
-	if e == testEnv {
-		return true
-	}
-	return false
+	return e == testEnv
 }
 
 // Dev returns true if the environment is local
 func (e Environment) Dev() bool {
-	if e == devEnv {
-		return true
-	}
-	return false
+	return e == devEnv
 }
 
 // Impl returns true if the environment is local
 func (e Environment) Impl() bool {
-	if e == implEnv {
-		return true
-	}
-	return false
+	return e == implEnv
 }
 
 // Prod returns true if the environment is local
 func (e Environment) Prod() bool {
-	if e == prodEnv {
-		return true
-	}
-	return false
+	return e == prodEnv
 }
 
 // Deployed returns true if in a deployed environment
