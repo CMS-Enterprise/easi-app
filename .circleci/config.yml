@@ -164,6 +164,8 @@ jobs:
           APP_ENV: test
           AWS_DEFAULT_REGION: us-west-2
           FLAG_SOURCE: LOCAL
+          LOCAL_AUTH: enabled
+          REACT_APP_LOCAL_AUTH: enabled
     steps:
       - checkout
       - setup_remote_docker:

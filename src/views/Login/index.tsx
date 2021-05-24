@@ -58,7 +58,11 @@ const Login = () => {
       <MainContent className="grid-container">
         {isLocalAuthEnabled() && (
           <div>
-            <button type="button" onClick={handleUseLocalAuth}>
+            <button
+              type="button"
+              onClick={handleUseLocalAuth}
+              data-testid="LocalAuth-Visit"
+            >
               Use Local Auth
             </button>
           </div>
