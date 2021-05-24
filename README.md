@@ -519,7 +519,7 @@ following the standard
 Once your developer environment is setup,
 you can run tests with the `easi test` command.
 
-If you run into into various `(typecheck)` errors when
+If you run into various `(typecheck)` errors when
 running `easi test` follow the directions for [installing
 golangci-lint](https://github.com/golangci/golangci-lint#install)
 to upgrade golangci-lint.
