@@ -28,16 +28,17 @@ type templateCaller interface {
 // templates stores typed templates
 // since the template.Template uses string access
 type templates struct {
-	systemIntakeSubmissionTemplate      templateCaller
-	businessCaseSubmissionTemplate      templateCaller
-	intakeReviewTemplate                templateCaller
-	namedRequestWithdrawTemplate        templateCaller
-	unnamedRequestWithdrawTemplate      templateCaller
-	issueLCIDTemplate                   templateCaller
-	rejectRequestTemplate               templateCaller
-	newAccessibilityRequestTemplate     templateCaller
-	removedAccessibilityRequestTemplate templateCaller
-	newDocumentTemplate                 templateCaller
+	systemIntakeSubmissionTemplate             templateCaller
+	businessCaseSubmissionTemplate             templateCaller
+	intakeReviewTemplate                       templateCaller
+	namedRequestWithdrawTemplate               templateCaller
+	unnamedRequestWithdrawTemplate             templateCaller
+	issueLCIDTemplate                          templateCaller
+	rejectRequestTemplate                      templateCaller
+	newAccessibilityRequestTemplate            templateCaller
+	newAccessibilityRequestToRequesterTemplate templateCaller
+	removedAccessibilityRequestTemplate        templateCaller
+  newDocumentTemplate                        templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -120,6 +121,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(newAccessibilityRequestTemplateName)
 	}
 	appTemplates.newAccessibilityRequestTemplate = newAccessibilityRequestTemplate
+
+	newAccessibilityRequestToRequesterTemplateName := "new_508_request_to_requester.gohtml"
+	newAccessibilityRequestToRequesterTemplate := rawTemplates.Lookup(newAccessibilityRequestToRequesterTemplateName)
+	if newAccessibilityRequestToRequesterTemplate == nil {
+		return Client{}, templateError(newAccessibilityRequestToRequesterTemplateName)
+	}
+	appTemplates.newAccessibilityRequestToRequesterTemplate = newAccessibilityRequestToRequesterTemplate
 
 	removedAccessibilityRequestTemplateName := "removed_508_request.gohtml"
 	removedAccessibilityRequestTemplate := rawTemplates.Lookup(removedAccessibilityRequestTemplateName)
