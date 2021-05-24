@@ -21,6 +21,10 @@ const home = {
     }
   },
   requestsTable: {
+    breadcrumb: {
+      home: 'Home',
+      table: 'My governance requests'
+    },
     heading: 'My governance requests',
     headers: {
       name: 'Request name',
