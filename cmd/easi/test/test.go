@@ -21,6 +21,7 @@ func Server() {
 	c := exec.Command(
 		"go",
 		"test",
+		"-cover",
 		"./pkg/...")
 	// Replace with some sort of configured writer
 	c.Stdout = os.Stdout
