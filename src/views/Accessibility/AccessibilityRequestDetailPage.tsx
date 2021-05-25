@@ -23,13 +23,13 @@ import {
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import AccessibilityRequestNextStep from 'components/AccessibilityRequestNextStep';
+import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import { RadioField } from 'components/shared/RadioField';
-import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TestDateCard from 'components/TestDateCard';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
@@ -180,210 +180,207 @@ const AccessibilityRequestDetailPage = () => {
   }
 
   return (
-    <>
-      <SecondaryNav>
-        <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
-      </SecondaryNav>
-      <div className="grid-container">
-        {message && (
-          <Alert className="margin-top-4" type="success" role="alert">
-            {message}
-          </Alert>
-        )}
-        <PageHeading>{requestName}</PageHeading>
-        <div className="grid-row grid-gap-lg">
-          <div className="grid-col-8">
-            {hasDocuments ? bodyWithDocuments : bodyNoDocuments}
-          </div>
-          <div className="grid-col-1" />
-          <div className="grid-col-3">
-            <div className="accessibility-request__side-nav">
-              <div>
-                <h2 className="margin-top-2 margin-bottom-3">
-                  Test Dates and Scores
-                </h2>
-                {[...testDates]
-                  .sort(
-                    (a, b) =>
-                      DateTime.fromISO(a.date).toMillis() -
-                      DateTime.fromISO(b.date).toMillis()
-                  )
-                  .map((testDate, index) => (
-                    <TestDateCard
-                      key={testDate.id}
-                      testDate={testDate}
-                      testIndex={index + 1}
-                      requestName={requestName}
-                      requestId={accessibilityRequestId}
-                      isEditableDeletable={isAccessibilityTeam}
-                      handleDeleteTestDate={deleteTestDate}
-                    />
-                  ))}
-                {isAccessibilityTeam && (
-                  <Link
-                    to={`/508/requests/${accessibilityRequestId}/test-date`}
-                    className="margin-bottom-3 display-block"
-                    aria-label="Add a test date"
-                  >
-                    Add a date
-                  </Link>
-                )}
-              </div>
-              <div className="accessibility-request__other-details">
-                <h3>{t('requestDetails.other')}</h3>
-                <dl>
-                  <dt className="margin-bottom-1">
-                    {t('intake:fields.submissionDate')}
-                  </dt>
-                  <dd className="margin-0 margin-bottom-2">
-                    {formatDate(submittedAt)}
-                  </dd>
-                  <dt className="margin-bottom-1">
-                    {t('intake:fields.businessOwner')}
-                  </dt>
-                  <dd className="margin-0 margin-bottom-2">
-                    {businessOwnerName}, {businessOwnerComponent}
-                  </dd>
-                  <dt className="margin-bottom-1">
-                    {t('intake:fields:projectName')}
-                  </dt>
-                  <dd className="margin-0 margin-bottom-3">{systemName}</dd>
-                  <dt className="margin-bottom-1">{t('intake:lifecycleId')}</dt>
-                  <dd className="margin-0 margin-bottom-3">{lcid}</dd>
-                </dl>
-              </div>
-              <UswdsLink
-                className="display-inline-block margin-top-3"
-                target="_blank"
-                rel="noopener noreferrer"
-                href="/508/templates"
-              >
-                {t('requestDetails.testingTemplates')}
-              </UswdsLink>
-              <UswdsLink
-                className="display-inline-block margin-top-3"
-                target="_blank"
-                rel="noopener noreferrer"
-                href="/508/testing-overview"
-              >
-                {t('requestDetails.testingSteps')}
-              </UswdsLink>
-              {userEuaId === requestOwnerEuaId && (
-                <button
-                  type="button"
-                  className="accessibility-request__remove-request"
-                  onClick={() => setModalOpen(true)}
+    <div className="grid-container margin-top-2">
+      <BreadcrumbNav>
+        <li>
+          <Link to="/">Home</Link>
+          <i className="fa fa-angle-right margin-x-05" aria-hidden />
+        </li>
+        <li>{requestName}</li>
+      </BreadcrumbNav>
+      {message && (
+        <Alert className="margin-top-4" type="success" role="alert">
+          {message}
+        </Alert>
+      )}
+      <PageHeading>{requestName}</PageHeading>
+      <div className="grid-row grid-gap-lg">
+        <div className="grid-col-8">
+          {hasDocuments ? bodyWithDocuments : bodyNoDocuments}
+        </div>
+        <div className="grid-col-1" />
+        <div className="grid-col-3">
+          <div className="accessibility-request__side-nav">
+            <div>
+              <h2 className="margin-top-2 margin-bottom-3">
+                Test Dates and Scores
+              </h2>
+              {[...testDates]
+                .sort(
+                  (a, b) =>
+                    DateTime.fromISO(a.date).toMillis() -
+                    DateTime.fromISO(b.date).toMillis()
+                )
+                .map((testDate, index) => (
+                  <TestDateCard
+                    key={testDate.id}
+                    testDate={testDate}
+                    testIndex={index + 1}
+                    requestName={requestName}
+                    requestId={accessibilityRequestId}
+                    isEditableDeletable={isAccessibilityTeam}
+                    handleDeleteTestDate={deleteTestDate}
+                  />
+                ))}
+              {isAccessibilityTeam && (
+                <Link
+                  to={`/508/requests/${accessibilityRequestId}/test-date`}
+                  className="margin-bottom-3 display-block"
+                  aria-label="Add a test date"
                 >
-                  {t('requestDetails.remove')}
-                </button>
+                  Add a date
+                </Link>
               )}
-              <Modal
-                isOpen={isModalOpen}
-                closeModal={() => setModalOpen(false)}
-              >
-                <PageHeading
-                  headingLevel="h2"
-                  className="margin-top-0 line-height-heading-2 margin-bottom-2"
-                >
-                  {t('requestDetails.modal.header', {
-                    requestName
-                  })}
-                </PageHeading>
-                <span>{t('requestDetails.modal.subhead')}</span>
-
-                <Formik
-                  initialValues={{
-                    deletionReason: ''
-                  }}
-                  onSubmit={removeRequest}
-                  validationSchema={accessibilitySchema.deleteForm}
-                  validateOnBlur={false}
-                  validateOnChange={false}
-                  validateOnMount={false}
-                >
-                  {(
-                    formikProps: FormikProps<DeleteAccessibilityRequestForm>
-                  ) => {
-                    const { errors, values } = formikProps;
-                    const flatErrors = flattenErrors(errors);
-                    return (
-                      <>
-                        {Object.keys(errors).length > 0 && (
-                          <ErrorAlert
-                            testId="remove-accessibility-request-errors"
-                            classNames="margin-bottom-4 margin-top-4"
-                            heading="There is a problem"
-                          >
-                            {Object.keys(flatErrors).map(key => {
-                              return (
-                                <ErrorAlertMessage
-                                  key={`Error.${key}`}
-                                  errorKey={key}
-                                  message={flatErrors[key]}
-                                />
-                              );
-                            })}
-                          </ErrorAlert>
-                        )}
-                        <Form className="usa-form usa-form--large">
-                          <FieldGroup
-                            scrollElement="deletionReason"
-                            error={!!flatErrors.deletionReason}
-                          >
-                            <fieldset className="usa-fieldset margin-top-4">
-                              <legend className="usa-label margin-bottom-1">
-                                {t('removeAccessibilityRequest.reason')}
-                              </legend>
-                              <FieldErrorMsg>
-                                {flatErrors.deletionReason}
-                              </FieldErrorMsg>
-                              {([
-                                'INCORRECT_APPLICATION_AND_LIFECYCLE_ID',
-                                'NO_TESTING_NEEDED',
-                                'OTHER'
-                              ] as AccessibilityRequestDeletionReason[]).map(
-                                reason => {
-                                  return (
-                                    <Field
-                                      key={`RemoveAccessibilityRequest-${reason}`}
-                                      as={RadioField}
-                                      checked={values.deletionReason === reason}
-                                      id={`RemoveAccessibilityRequest-${reason}`}
-                                      name="deletionReason"
-                                      label={t(
-                                        `removeAccessibilityRequest.${reason}`
-                                      )}
-                                      value={reason}
-                                    />
-                                  );
-                                }
-                              )}
-                            </fieldset>
-                          </FieldGroup>
-
-                          <div className="display-flex margin-top-2">
-                            <Button type="submit" className="margin-right-5">
-                              {t('requestDetails.modal.confirm')}
-                            </Button>
-                            <Button
-                              type="button"
-                              unstyled
-                              onClick={() => setModalOpen(false)}
-                            >
-                              {t('requestDetails.modal.cancel')}
-                            </Button>
-                          </div>
-                        </Form>
-                      </>
-                    );
-                  }}
-                </Formik>
-              </Modal>
             </div>
+            <div className="accessibility-request__other-details">
+              <h3>{t('requestDetails.other')}</h3>
+              <dl>
+                <dt className="margin-bottom-1">
+                  {t('intake:fields.submissionDate')}
+                </dt>
+                <dd className="margin-0 margin-bottom-2">
+                  {formatDate(submittedAt)}
+                </dd>
+                <dt className="margin-bottom-1">
+                  {t('intake:fields.businessOwner')}
+                </dt>
+                <dd className="margin-0 margin-bottom-2">
+                  {businessOwnerName}, {businessOwnerComponent}
+                </dd>
+                <dt className="margin-bottom-1">
+                  {t('intake:fields:projectName')}
+                </dt>
+                <dd className="margin-0 margin-bottom-3">{systemName}</dd>
+                <dt className="margin-bottom-1">{t('intake:lifecycleId')}</dt>
+                <dd className="margin-0 margin-bottom-3">{lcid}</dd>
+              </dl>
+            </div>
+            <UswdsLink
+              className="display-inline-block margin-top-3"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="/508/templates"
+            >
+              {t('requestDetails.testingTemplates')}
+            </UswdsLink>
+            <UswdsLink
+              className="display-inline-block margin-top-3"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="/508/testing-overview"
+            >
+              {t('requestDetails.testingSteps')}
+            </UswdsLink>
+            {userEuaId === requestOwnerEuaId && (
+              <button
+                type="button"
+                className="accessibility-request__remove-request"
+                onClick={() => setModalOpen(true)}
+              >
+                {t('requestDetails.remove')}
+              </button>
+            )}
+            <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
+              <PageHeading
+                headingLevel="h2"
+                className="margin-top-0 line-height-heading-2 margin-bottom-2"
+              >
+                {t('requestDetails.modal.header', {
+                  requestName
+                })}
+              </PageHeading>
+              <span>{t('requestDetails.modal.subhead')}</span>
+
+              <Formik
+                initialValues={{
+                  deletionReason: ''
+                }}
+                onSubmit={removeRequest}
+                validationSchema={accessibilitySchema.deleteForm}
+                validateOnBlur={false}
+                validateOnChange={false}
+                validateOnMount={false}
+              >
+                {(formikProps: FormikProps<DeleteAccessibilityRequestForm>) => {
+                  const { errors, values } = formikProps;
+                  const flatErrors = flattenErrors(errors);
+                  return (
+                    <>
+                      {Object.keys(errors).length > 0 && (
+                        <ErrorAlert
+                          testId="remove-accessibility-request-errors"
+                          classNames="margin-bottom-4 margin-top-4"
+                          heading="There is a problem"
+                        >
+                          {Object.keys(flatErrors).map(key => {
+                            return (
+                              <ErrorAlertMessage
+                                key={`Error.${key}`}
+                                errorKey={key}
+                                message={flatErrors[key]}
+                              />
+                            );
+                          })}
+                        </ErrorAlert>
+                      )}
+                      <Form className="usa-form usa-form--large">
+                        <FieldGroup
+                          scrollElement="deletionReason"
+                          error={!!flatErrors.deletionReason}
+                        >
+                          <fieldset className="usa-fieldset margin-top-4">
+                            <legend className="usa-label margin-bottom-1">
+                              {t('removeAccessibilityRequest.reason')}
+                            </legend>
+                            <FieldErrorMsg>
+                              {flatErrors.deletionReason}
+                            </FieldErrorMsg>
+                            {([
+                              'INCORRECT_APPLICATION_AND_LIFECYCLE_ID',
+                              'NO_TESTING_NEEDED',
+                              'OTHER'
+                            ] as AccessibilityRequestDeletionReason[]).map(
+                              reason => {
+                                return (
+                                  <Field
+                                    key={`RemoveAccessibilityRequest-${reason}`}
+                                    as={RadioField}
+                                    checked={values.deletionReason === reason}
+                                    id={`RemoveAccessibilityRequest-${reason}`}
+                                    name="deletionReason"
+                                    label={t(
+                                      `removeAccessibilityRequest.${reason}`
+                                    )}
+                                    value={reason}
+                                  />
+                                );
+                              }
+                            )}
+                          </fieldset>
+                        </FieldGroup>
+
+                        <div className="display-flex margin-top-2">
+                          <Button type="submit" className="margin-right-5">
+                            {t('requestDetails.modal.confirm')}
+                          </Button>
+                          <Button
+                            type="button"
+                            unstyled
+                            onClick={() => setModalOpen(false)}
+                          >
+                            {t('requestDetails.modal.cancel')}
+                          </Button>
+                        </div>
+                      </Form>
+                    </>
+                  );
+                }}
+              </Formik>
+            </Modal>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

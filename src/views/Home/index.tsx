@@ -15,6 +15,7 @@ import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
+import Table from 'views/MyRequests/Table';
 
 import PageHeading from '../../components/PageHeading';
 
@@ -85,6 +86,11 @@ const Home = () => {
                     {t('home:actions.508.body')}
                   </LinkCard>
                 </div>
+                <hr className="home__hr margin-top-4" aria-hidden />
+                <h2 className="margin-top-4">
+                  {t('home:requestsTable.heading')}
+                </h2>
+                <Table />
               </div>
             </div>
           );
