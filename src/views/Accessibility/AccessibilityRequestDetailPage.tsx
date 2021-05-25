@@ -192,9 +192,10 @@ const AccessibilityRequestDetailPage = () => {
         )}
         <PageHeading>{requestName}</PageHeading>
         <div className="grid-row grid-gap-lg">
-          <div className="grid-col-9">
+          <div className="grid-col-8">
             {hasDocuments ? bodyWithDocuments : bodyNoDocuments}
           </div>
+          <div className="grid-col-1" />
           <div className="grid-col-3">
             <div className="accessibility-request__side-nav">
               <div>
