@@ -56,11 +56,11 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		rr := httptest.NewRecorder()
 		handlerRun := false
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			handlerRun = true
+
 			principal := appcontext.Principal(r.Context())
 			s.NotEqual(authentication.ANON, principal)
-			s.Equal("1234", principal.ID)
-
-			panic("crap")
+			s.Equal("EASI", principal.ID())
 		})
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)
@@ -82,7 +82,7 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		s.False(handlerRun)
 	})
 
-	s.Run("an empty token does not execute the handler", func() {
+	s.Run("allows requests without a token to be executed", func() {
 		req := httptest.NewRequest("GET", "/systems/", nil)
 		rr := httptest.NewRecorder()
 		handlerRun := false
@@ -92,7 +92,7 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)
 
-		s.False(handlerRun)
+		s.True(handlerRun)
 	})
 
 	s.Run("valid token has an EUA ID in context", func() {
