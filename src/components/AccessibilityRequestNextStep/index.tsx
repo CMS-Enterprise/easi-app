@@ -2,8 +2,6 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from '@trussworks/react-uswds';
 
-// import './index.scss';
-
 const AccessibilityRequestNextStep = () => {
   const { t } = useTranslation('accessibility');
 
