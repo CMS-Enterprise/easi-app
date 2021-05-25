@@ -19,30 +19,32 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
   const { data } = useQuery<GetCurrentUser>(GetCurrentUserQuery);
 
   useEffect(() => {
-    (async () => {
-      const provider = await asyncWithLDProvider({
-        clientSideID: process.env.REACT_APP_LD_CLIENT_ID as string,
-        user: {
-          key: data?.currentUser?.launchDarkly.userKey
-        },
-        options: {
-          hash: data?.currentUser?.launchDarkly.signedHash
-        },
-        flags: {
-          sandbox: true,
-          pdfExport: true,
-          prototype508: true,
-          fileUploads: true,
-          prototypeTRB: true,
-          downgradeGovTeam: false,
-          downgrade508User: false,
-          downgrade508Tester: false,
-          add508Request: false
-        }
-      });
+    if (data) {
+      (async () => {
+        const provider = await asyncWithLDProvider({
+          clientSideID: process.env.REACT_APP_LD_CLIENT_ID as string,
+          user: {
+            key: data?.currentUser?.launchDarkly.userKey
+          },
+          options: {
+            hash: data?.currentUser?.launchDarkly.signedHash
+          },
+          flags: {
+            sandbox: true,
+            pdfExport: true,
+            prototype508: true,
+            fileUploads: true,
+            prototypeTRB: true,
+            downgradeGovTeam: false,
+            downgrade508User: false,
+            downgrade508Tester: false,
+            add508Request: false
+          }
+        });
 
-      setLDProvider(() => provider);
-    })();
+        setLDProvider(() => provider);
+      })();
+    }
   }, [data]);
 
   return <LDProvider>{children}</LDProvider>;
