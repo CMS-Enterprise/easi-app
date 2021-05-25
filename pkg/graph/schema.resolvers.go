@@ -826,10 +826,8 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 }
 
 func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, error) {
-	principal := appcontext.Principal(ctx)
-
 	ldUser := flags.Principal(ctx)
-	userKey := flags.UserKeyForID(principal.ID())
+	userKey := ldUser.GetKey()
 	signedHash := r.ldClient.SecureModeHash(ldUser)
 
 	currentUser := model.CurrentUser{
