@@ -11,6 +11,7 @@ import configureMockStore from 'redux-mock-store';
 import ActionBanner from 'components/shared/ActionBanner';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import Table from 'views/MyRequests/Table';
 
 import Home from './index';
 
@@ -146,6 +147,8 @@ describe('The home page', () => {
             expect(
               component.find('a[children="Section 508 compliance"]').exists()
             ).toEqual(true);
+            expect(component.find('hr').exists()).toBeTruthy();
+            expect(component.find(Table).exists()).toBeTruthy();
           });
         });
       });
