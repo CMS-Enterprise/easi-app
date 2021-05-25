@@ -166,7 +166,5 @@ func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, clientID string,
 		code508Tester: jobCode508Tester,
 		code508User:   jobCode508User,
 	}
-	return func(next http.Handler) http.Handler {
-		return middlewareFactory.newAuthenticationMiddleware(next)
-	}
+	return middlewareFactory.newAuthenticationMiddleware
 }
