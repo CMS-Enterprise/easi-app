@@ -174,6 +174,15 @@ const LambdaFunctionPrince = "LAMBDA_FUNCTION_PRINCE"
 // LocalAuth is whether local auth should be enabled
 const LocalAuth = "LOCAL_AUTH"
 
+// OktaClientID is the okta client id
+const OktaClientID = "OKTA_CLIENT_ID"
+
+// OktaIssuer is the okta issuer
+const OktaIssuer = "OKTA_ISSUER"
+
+// AltJobCodes are alternate job codes
+const AltJobCodes = "ALT_JOB_CODES"
+
 // FlagSourceOption represents an environment
 type FlagSourceOption string
 

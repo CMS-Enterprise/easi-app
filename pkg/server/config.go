@@ -87,6 +87,31 @@ func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
 }
 
+// OktaClientConfig is the okta client configuration
+type OktaClientConfig struct {
+	AltJobCodes  bool
+	OktaClientID string
+	OktaIssuer   string
+}
+
+// NewOktaClientConfig returns the okta client config
+func (s Server) NewOktaClientConfig() OktaClientConfig {
+	s.checkRequiredConfig(appconfig.OktaClientID)
+	s.checkRequiredConfig(appconfig.OktaIssuer)
+	s.checkRequiredConfig(appconfig.AltJobCodes)
+
+	return OktaClientConfig{
+		OktaClientID: s.Config.GetString(appconfig.OktaClientID),
+		OktaIssuer:   s.Config.GetString(appconfig.OktaIssuer),
+		AltJobCodes:  s.Config.GetBool(appconfig.AltJobCodes),
+	}
+}
+
+// NewLocalAuthIsEnabled returns if local auth is enabled
+func (s Server) NewLocalAuthIsEnabled() bool {
+	return s.Config.GetString(appconfig.LocalAuth) == "enabled"
+}
+
 // LambdaConfig is the config to call a lambda func
 type LambdaConfig struct {
 	Endpoint     string
