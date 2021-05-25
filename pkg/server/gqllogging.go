@@ -20,7 +20,7 @@ func NewGQLResponseMiddleware() graphql.ResponseMiddleware {
 		requestContext := graphql.GetOperationContext(ctx)
 		errorList := graphql.GetErrors(ctx)
 
-		duration := time.Now().Sub(requestContext.Stats.OperationStart)
+		duration := time.Since(requestContext.Stats.OperationStart)
 		complexityStats := extension.GetComplexityStats(ctx)
 
 		errored := len(errorList) > 0

@@ -65,7 +65,7 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 
 	s.Run("a invalid token does not execute the handler", func() {
 		req := httptest.NewRequest("GET", "/systems/", nil)
-		req.Header.Set("AUTHORIZATION", fmt.Sprintf("Bearer isNotABear"))
+		req.Header.Set("AUTHORIZATION", "Bearer isNotABear")
 		rr := httptest.NewRecorder()
 		handlerRun := false
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
