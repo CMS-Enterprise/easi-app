@@ -19,16 +19,16 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-type OktaTestSuite struct {
+type AuthenticationMiddlewareTestSuite struct {
 	suite.Suite
 	logger *zap.Logger
 	config *viper.Viper
 }
 
-func TestOktaTestSuite(t *testing.T) {
+func TestAuthenticationMiddlewareTestSuite(t *testing.T) {
 	config := testhelpers.NewConfig()
 
-	testSuite := &OktaTestSuite{
+	testSuite := &AuthenticationMiddlewareTestSuite{
 		Suite:  suite.Suite{},
 		logger: zap.NewNop(),
 		config: config,
@@ -39,7 +39,7 @@ func TestOktaTestSuite(t *testing.T) {
 	}
 }
 
-func (s OktaTestSuite) TestAuthorizeMiddleware() {
+func (s AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
 	accessToken, err := testhelpers.OktaAccessToken(s.config)
 	s.NoError(err, "couldn't get access token")
 	s.NotEmpty(accessToken, "empty access token")
