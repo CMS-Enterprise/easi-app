@@ -37,7 +37,7 @@ func (s ConfigTestSuite) TestNewEnvironment() {
 		})
 	}
 
-	s.Run(fmt.Sprintf("Fails with unknown environment"), func() {
+	s.Run("Fails with unknown environment", func() {
 		env, err := NewEnvironment("Unknown")
 
 		s.Error(err)

@@ -12,13 +12,12 @@ linters-settings:
     # put imports beginning with prefix after 3rd-party packages;
     # it's a comma-separated list of prefixes
     local-prefixes: github.com/cmsgov/easi-app
-  golint:
-    min-confidence: 0
+  revive:
+    confidence: 0
 
 linters:
   enable:
      - gosec
-     - golint
      - gofmt
      - goimports
      - govet
@@ -27,18 +26,14 @@ linters:
      - structcheck
      - deadcode
      - ineffassign
+     - revive
+     - staticcheck
+     - gosimple #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
+     - unused #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
   disable:
-    - unused #deprecated https://github.com/dominikh/go-tools/tree/master/cmd/unused
-    - gosimple #deprecated https://github.com/golangci/golangci-lint/issues/357
     - errcheck #requires patching code
-    - staticcheck # 30+files need to be patched
 issues:
   exclude-use-default: false
-
-  exclude:
-    #TODO: remove this exclusion after https://github.com/golang/lint/issues/381
-    # is fixed by https://github.com/golang/lint/pull/380 or something else
-    - "should have a package comment, unless it's in another file for this package"
 
 run:
   # timeout for analysis, e.g. 30s, 5m, default is 1m

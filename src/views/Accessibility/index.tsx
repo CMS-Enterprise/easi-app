@@ -10,11 +10,12 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
+import Create from 'views/Accessibility/AccessibilityRequest/Create';
+import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibilityRequest/Documents/New';
+import List from 'views/Accessibility/AccessibilityRequest/List';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 import AccessibilityTestingStepsOverview from 'views/Accessibility/AccessibilityTestingStepsOverview';
-import Create from 'views/Accessibility/AccessibiltyRequest/Create';
-import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibiltyRequest/Documents/New';
-import List from 'views/Accessibility/AccessibiltyRequest/List';
+import TestingTemplates from 'views/Accessibility/TestingTemplates';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 import NewTestDateView from 'views/TestDate/NewTestDate';
 import UpdateTestDateView from 'views/TestDate/UpdateTestDate';
@@ -42,6 +43,15 @@ const AccessibilityTestingOverview = (
     path="/508/testing-overview"
     exact
     component={AccessibilityTestingStepsOverview}
+  />
+);
+
+const AccessibilityTestingTemplates = (
+  <SecureRoute
+    key="508-testing-templates"
+    path="/508/templates"
+    exact
+    component={TestingTemplates}
   />
 );
 
@@ -108,6 +118,7 @@ const Accessibility = () => {
             NewRequest,
             AllRequests,
             AccessibilityTestingOverview,
+            AccessibilityTestingTemplates,
             NewDocument,
             UpdateTestDate,
             NewTestDate,
@@ -122,6 +133,7 @@ const Accessibility = () => {
         {[
           NewRequest,
           AccessibilityTestingOverview,
+          AccessibilityTestingTemplates,
           NewDocument,
           RequestDetails,
           Default

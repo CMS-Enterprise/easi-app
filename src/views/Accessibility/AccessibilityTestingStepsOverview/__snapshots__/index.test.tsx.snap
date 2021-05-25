@@ -62,11 +62,16 @@ exports[`The accessibility testing overview matches the snapshot 1`] = `
           <div
             className="line-height-body-4"
           >
-            <p
-              className="margin-0"
+            Download and fill the VPAT and Test plan from the 
+            <a
+              className="usa-link"
+              href="/508/templates"
+              rel="noopener noreferrer"
+              target="_blank"
             >
-              Download and fill the VPAT and Test plan from the templates page. These documents will help the 508 team prepare for testing. Uploaded your completed documents to EASi for the 508 team to review.
-            </p>
+              templates page (opens in a new tab)
+            </a>
+            . These documents will help the 508 team prepare for testing. Uploaded your completed documents to EASi for the 508 team to review.
             <p
               className="margin-bottom-0"
             >

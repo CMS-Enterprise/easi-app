@@ -238,6 +238,14 @@ const AccessibilityRequestDetailPage = () => {
                 className="display-inline-block margin-top-3"
                 target="_blank"
                 rel="noopener noreferrer"
+                href="/508/templates"
+              >
+                {t('requestDetails.testingTemplates')}
+              </UswdsLink>
+              <UswdsLink
+                className="display-inline-block margin-top-3"
+                target="_blank"
+                rel="noopener noreferrer"
                 href="/508/testing-overview"
               >
                 {t('requestDetails.testingSteps')}
