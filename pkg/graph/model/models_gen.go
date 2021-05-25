@@ -115,6 +115,10 @@ type CreateTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+type CurrentUser struct {
+	LaunchDarkly *LaunchDarklySettings `json:"launchDarkly"`
+}
+
 type DeleteAccessibilityRequestDocumentInput struct {
 	ID uuid.UUID `json:"id"`
 }
@@ -160,6 +164,11 @@ type IssueLifecycleIDInput struct {
 	Lcid      *string   `json:"lcid"`
 	NextSteps *string   `json:"nextSteps"`
 	Scope     string    `json:"scope"`
+}
+
+type LaunchDarklySettings struct {
+	UserKey    string `json:"userKey"`
+	SignedHash string `json:"signedHash"`
 }
 
 type RejectIntakeInput struct {
