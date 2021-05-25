@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -339,6 +338,16 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
+	err = r.emailClient.SendNewAccessibilityRequestEmailToRequester(
+		ctx,
+		request.Name,
+		request.ID,
+		requesterInfo.Email,
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	return &model.CreateAccessibilityRequestPayload{
 		AccessibilityRequest: request,
 		UserErrors:           nil,
@@ -379,12 +388,12 @@ func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error) {
-	url, urlErr := url.Parse(input.URL)
+	parsedURL, urlErr := url.Parse(input.URL)
 	if urlErr != nil {
 		return nil, urlErr
 	}
 
-	key, keyErr := r.s3Client.KeyFromURL(url)
+	key, keyErr := r.s3Client.KeyFromURL(parsedURL)
 	if keyErr != nil {
 		return nil, keyErr
 	}
@@ -401,6 +410,11 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("request with the given id not found"), Resource: models.AccessibilityRequest{}}
 	}
 
+	requesterInfo, err := r.service.FetchUserInfo(ctx, accessibilityRequest.EUAUserID)
+	if err != nil {
+		return nil, err
+	}
+
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		Name:               input.Name,
 		FileType:           input.MimeType,
@@ -414,8 +428,20 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	if docErr != nil {
 		return nil, docErr
 	}
-	if url, urlErr := r.s3Client.NewGetPresignedURL(key); urlErr == nil {
-		doc.URL = url.URL
+	if presignedURL, urlErr := r.s3Client.NewGetPresignedURL(key); urlErr == nil {
+		doc.URL = presignedURL.URL
+	}
+
+	err = r.emailClient.SendNewDocumentEmailsToReviewTeamAndRequester(
+		ctx,
+		doc.CommonDocumentType,
+		doc.OtherType,
+		accessibilityRequest.Name,
+		accessibilityRequest.ID,
+		requesterInfo.Email,
+	)
+	if err != nil {
+		return nil, err
 	}
 
 	return &model.CreateAccessibilityRequestDocumentPayload{
@@ -694,7 +720,7 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 		&models.SystemIntake{
 			ID:                input.IntakeID,
 			DecisionNextSteps: null.StringFrom(*input.NextSteps),
-			RejectionReason:   null.StringFrom(*&input.Reason),
+			RejectionReason:   null.StringFrom(input.Reason),
 		},
 		&models.Action{
 			IntakeID: &input.IntakeID,
@@ -754,6 +780,29 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	}
 
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
+}
+
+func (r *queryResolver) Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error) {
+	requests, queryErr := r.store.FetchMyRequests(ctx)
+	if queryErr != nil {
+		return nil, gqlerror.Errorf("query error: %s", queryErr)
+	}
+
+	edges := []*model.RequestEdge{}
+
+	for _, request := range requests {
+		node := model.Request{
+			ID:          request.ID,
+			SubmittedAt: request.SubmittedAt,
+			Name:        request.Name.Ptr(),
+			Type:        request.Type,
+		}
+		edges = append(edges, &model.RequestEdge{
+			Node: &node,
+		})
+	}
+
+	return &model.RequestsConnection{Edges: edges}, nil
 }
 
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -1102,13 +1151,3 @@ type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *accessibilityRequestResolver) EuaID(ctx context.Context, obj *models.AccessibilityRequest) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}

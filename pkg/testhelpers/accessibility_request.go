@@ -14,3 +14,12 @@ func NewAccessibilityRequest(intakeID uuid.UUID) models.AccessibilityRequest {
 		EUAUserID: RandomEUAID(),
 	}
 }
+
+// NewAccessibilityRequestForUser generates an test date to use in tests
+func NewAccessibilityRequestForUser(intakeID uuid.UUID, euaID string) models.AccessibilityRequest {
+	return models.AccessibilityRequest{
+		IntakeID:  intakeID,
+		Name:      "My Accessibility Request",
+		EUAUserID: euaID,
+	}
+}
