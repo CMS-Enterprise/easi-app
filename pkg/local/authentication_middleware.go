@@ -12,10 +12,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
-// If you're developing interfaces with CEDAR LDAP and you want to use Okta login on the frontend,
-// you may need to set the LOCAL_TEST_EUAID variable to your a valid EUAID (such as your own)
-const defaultTestEUAID = "ABCD"
-
 // DevUserConfig is the set of values that can be passed in a request header
 type DevUserConfig struct {
 	EUA      string   `json:"euaId"`
@@ -27,6 +23,7 @@ func authenticateMiddleware(logger *zap.Logger, next http.Handler, testEUAID str
 		logger.Info("Using local authorization middleware")
 
 		if len(r.Header["Authorization"]) == 0 {
+			logger.Info("No local auth header present")
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -39,34 +36,23 @@ func authenticateMiddleware(logger *zap.Logger, next http.Handler, testEUAID str
 
 		tokenParts := strings.Split(r.Header["Authorization"][0], "Local ")
 		if len(tokenParts) < 2 {
-			logger.Error("invalid local auth header")
+			logger.Error("Invalid local auth header")
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		devUserConfigJSON := tokenParts[1]
 		if devUserConfigJSON == "" {
-			logger.Error("empty dev user config JSON")
+			logger.Error("Empty dev user config JSON")
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		config := DevUserConfig{}
+
 		if parseErr := json.Unmarshal([]byte(devUserConfigJSON), &config); parseErr != nil {
-			// Assume at this point that we've opted for Okta login on the frontend.
-			euaID := defaultTestEUAID
-			if testEUAID != "" {
-				euaID = testEUAID
-			}
-			logger.Info("Using local authorization middleware with Okta frontend login")
-			ctx := appcontext.WithPrincipal(r.Context(), &authentication.EUAPrincipal{
-				EUAID:            euaID,
-				JobCodeEASi:      true,
-				JobCodeGRT:       true,
-				JobCode508Tester: true,
-				JobCode508User:   true,
-			})
-			next.ServeHTTP(w, r.WithContext(ctx))
+			logger.Error("Could not parse local auth JSON")
+			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
