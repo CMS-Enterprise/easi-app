@@ -126,7 +126,7 @@ const AccessibilityRequestDetailPage = () => {
 
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
-  const hasDocuments = documents.length !== 0;
+  const hasDocuments = documents.length > 0;
 
   const uploadDocumentLink = (
     <UswdsLink
