@@ -45,13 +45,12 @@ func (s *Server) routes(
 	traceMiddleware func(handler http.Handler) http.Handler,
 	loggerMiddleware func(handler http.Handler) http.Handler) {
 
-	// TODO: We should add some sort of config verifier to make sure these configs exist
-	// They may live in /cmd, but should fail quick on startup
+	oktaConfig := s.NewOktaClientConfig()
 	oktaAuthenticationMiddleware := okta.NewOktaAuthenticationMiddleware(
 		handlers.NewHandlerBase(s.logger),
-		s.Config.GetString("OKTA_CLIENT_ID"),
-		s.Config.GetString("OKTA_ISSUER"),
-		s.Config.GetBool("ALT_JOB_CODES"),
+		oktaConfig.OktaClientID,
+		oktaConfig.OktaIssuer,
+		oktaConfig.AltJobCodes,
 	)
 
 	s.router.Use(
@@ -61,8 +60,8 @@ func (s *Server) routes(
 		oktaAuthenticationMiddleware,
 	)
 
-	if s.Config.GetString(appconfig.LocalAuth) == "enabled" {
-		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(s.logger, s.Config.GetString(appconfig.LocalAuth))
+	if s.NewLocalAuthIsEnabled() {
+		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(s.logger)
 		s.router.Use(localAuthenticationMiddleware)
 	}
 
