@@ -153,6 +153,10 @@ const Table = () => {
     return <div>{JSON.stringify(error)}</div>;
   }
 
+  if (data.length === 0) {
+    return <p>{t('requestsTable.empty')}</p>;
+  }
+
   return (
     <div className="accessibility-requests-table">
       <UswdsTable bordered={false} {...getTableProps()} fullWidth>
