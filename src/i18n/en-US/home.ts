@@ -19,6 +19,26 @@ const home = {
       body:
         'Learn about the process and make a request for 508 testing of your application'
     }
+  },
+  requestsTable: {
+    breadcrumb: {
+      home: 'Home',
+      table: 'My governance requests'
+    },
+    heading: 'My governance requests',
+    headers: {
+      name: 'Request name',
+      type: 'Governance',
+      submittedAt: 'Submission date'
+    },
+    types: {
+      ACCESSIBILITY_REQUEST: 'Section 508',
+      GOVERNANCE_REQUEST: 'IT Governance'
+    },
+    defaultName: 'Draft',
+    defaultSubmittedAt: 'Not submitted',
+    caption:
+      'Below is a list of governance requests that are in draft or submitted.'
   }
 };
 
