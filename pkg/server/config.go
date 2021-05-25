@@ -98,7 +98,6 @@ type OktaClientConfig struct {
 func (s Server) NewOktaClientConfig() OktaClientConfig {
 	s.checkRequiredConfig(appconfig.OktaClientID)
 	s.checkRequiredConfig(appconfig.OktaIssuer)
-	s.checkRequiredConfig(appconfig.AltJobCodes)
 
 	return OktaClientConfig{
 		OktaClientID: s.Config.GetString(appconfig.OktaClientID),
@@ -109,7 +108,7 @@ func (s Server) NewOktaClientConfig() OktaClientConfig {
 
 // NewLocalAuthIsEnabled returns if local auth is enabled
 func (s Server) NewLocalAuthIsEnabled() bool {
-	return s.Config.GetString(appconfig.LocalAuth) == "enabled"
+	return s.Config.GetBool(appconfig.LocalAuthEnabled)
 }
 
 // LambdaConfig is the config to call a lambda func

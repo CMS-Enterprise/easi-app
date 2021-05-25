@@ -171,8 +171,8 @@ const LambdaEndpoint = "LAMBDA_ENDPOINT"
 // LambdaFunctionPrince is the name of the prince lambda function
 const LambdaFunctionPrince = "LAMBDA_FUNCTION_PRINCE"
 
-// LocalAuth is whether local auth should be enabled
-const LocalAuth = "LOCAL_AUTH"
+// LocalAuthEnabled is whether local auth should be enabled
+const LocalAuthEnabled = "LOCAL_AUTH_ENABLED"
 
 // OktaClientID is the okta client id
 const OktaClientID = "OKTA_CLIENT_ID"
