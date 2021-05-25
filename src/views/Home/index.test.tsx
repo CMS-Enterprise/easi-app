@@ -2,13 +2,16 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper, shallow } from 'enzyme';
 import { mockFlags, resetLDMocks } from 'jest-launchdarkly-mock';
+import GetRequestsQuery from 'queries/GetRequestsQuery';
 import configureMockStore from 'redux-mock-store';
 
 import ActionBanner from 'components/shared/ActionBanner';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import Table from 'views/MyRequests/Table';
 
 import Home from './index';
 
@@ -113,14 +116,25 @@ describe('The home page', () => {
             }
           });
           let component: any;
+          const mocks = [
+            {
+              request: {
+                query: GetRequestsQuery,
+                variables: { first: 20 }
+              },
+              result: {}
+            }
+          ];
           await act(async () => {
             component = mount(
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <Provider store={store}>
-                  <MessageProvider>
-                    <Home />
-                  </MessageProvider>
-                </Provider>
+                <MockedProvider mocks={mocks}>
+                  <Provider store={store}>
+                    <MessageProvider>
+                      <Home />
+                    </MessageProvider>
+                  </Provider>
+                </MockedProvider>
               </MemoryRouter>
             );
             component.update();
@@ -133,6 +147,8 @@ describe('The home page', () => {
             expect(
               component.find('a[children="Section 508 compliance"]').exists()
             ).toEqual(true);
+            expect(component.find('hr').exists()).toBeTruthy();
+            expect(component.find(Table).exists()).toBeTruthy();
           });
         });
       });

@@ -28,9 +28,9 @@ linters:
      - ineffassign
      - revive
      - staticcheck
+     - gosimple #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
+     - unused #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
   disable:
-    - unused #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
-    - gosimple #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
     - errcheck #requires patching code
 issues:
   exclude-use-default: false
