@@ -3,6 +3,8 @@ package graph
 import (
 	"context"
 
+	ldclient "gopkg.in/launchdarkly/go-server-sdk.v5"
+
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -23,6 +25,7 @@ type Resolver struct {
 	service     ResolverService
 	s3Client    *upload.S3Client
 	emailClient *email.Client
+	ldClient    *ldclient.LDClient
 }
 
 // ResolverService holds service methods for use in resolvers
@@ -43,6 +46,7 @@ func NewResolver(
 	service ResolverService,
 	s3Client *upload.S3Client,
 	emailClient *email.Client,
+	ldClient *ldclient.LDClient,
 ) *Resolver {
-	return &Resolver{store: store, service: service, s3Client: s3Client, emailClient: emailClient}
+	return &Resolver{store: store, service: service, s3Client: s3Client, emailClient: emailClient, ldClient: ldClient}
 }

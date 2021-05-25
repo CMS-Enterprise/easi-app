@@ -35,13 +35,7 @@ func NewLaunchDarklyClient(config Config) (*ld.LDClient, error) {
 // currently authenticated principal.
 func Principal(ctx context.Context) lduser.User {
 	p := appcontext.Principal(ctx)
-
-	// we should not be using bare EUA IDs as identifiers to
-	// LaunchDarkly (per Jimil/ISSO), so we use a cryptographically
-	// secure one-way hash of the EUA ID as "key" for the LD User object.
-	h := sha256.New()
-	_, _ = h.Write([]byte(p.ID()))
-	key := fmt.Sprintf("%x", h.Sum(nil))
+	key := UserKeyForID(p.ID())
 
 	// this is a bit of a loose inference, assuming a user w/o Job Codes
 	// is an Anonymous user. Over time, may want to consider adding
@@ -53,4 +47,14 @@ func Principal(ctx context.Context) lduser.User {
 		NewUserBuilder(key).
 		Anonymous(!authed).
 		Build()
+}
+
+// UserKeyForID generates a user key from an ID
+// we should not be using bare EUA IDs as identifiers to
+// LaunchDarkly (per Jimil/ISSO), so we use a cryptographically
+// secure one-way hash of the EUA ID as "key" for the LD User object.
+func UserKeyForID(id string) string {
+	h := sha256.New()
+	_, _ = h.Write([]byte(id))
+	return fmt.Sprintf("%x", h.Sum(nil))
 }

@@ -168,6 +168,10 @@ type ComplexityRoot struct {
 		UserErrors func(childComplexity int) int
 	}
 
+	CurrentUser struct {
+		LaunchDarkly func(childComplexity int) int
+	}
+
 	DeleteAccessibilityRequestDocumentPayload struct {
 		ID func(childComplexity int) int
 	}
@@ -203,6 +207,11 @@ type ComplexityRoot struct {
 		UserErrors func(childComplexity int) int
 	}
 
+	LaunchDarklySettings struct {
+		SignedHash func(childComplexity int) int
+		UserKey    func(childComplexity int) int
+	}
+
 	Mutation struct {
 		AddGRTFeedbackAndKeepBusinessCaseInDraft         func(childComplexity int, input model.AddGRTFeedbackInput) int
 		AddGRTFeedbackAndProgressToFinalBusinessCase     func(childComplexity int, input model.AddGRTFeedbackInput) int
@@ -234,6 +243,7 @@ type ComplexityRoot struct {
 	Query struct {
 		AccessibilityRequest  func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests func(childComplexity int, after *string, first int) int
+		CurrentUser           func(childComplexity int) int
 		Requests              func(childComplexity int, after *string, first int) int
 		SystemIntake          func(childComplexity int, id uuid.UUID) int
 		Systems               func(childComplexity int, after *string, first int) int
@@ -484,6 +494,7 @@ type QueryResolver interface {
 	Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error)
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
+	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error)
@@ -1058,6 +1069,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateTestDatePayload.UserErrors(childComplexity), true
 
+	case "CurrentUser.launchDarkly":
+		if e.complexity.CurrentUser.LaunchDarkly == nil {
+			break
+		}
+
+		return e.complexity.CurrentUser.LaunchDarkly(childComplexity), true
+
 	case "DeleteAccessibilityRequestDocumentPayload.id":
 		if e.complexity.DeleteAccessibilityRequestDocumentPayload.ID == nil {
 			break
@@ -1176,6 +1194,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
+
+	case "LaunchDarklySettings.signedHash":
+		if e.complexity.LaunchDarklySettings.SignedHash == nil {
+			break
+		}
+
+		return e.complexity.LaunchDarklySettings.SignedHash(childComplexity), true
+
+	case "LaunchDarklySettings.userKey":
+		if e.complexity.LaunchDarklySettings.UserKey == nil {
+			break
+		}
+
+		return e.complexity.LaunchDarklySettings.UserKey(childComplexity), true
 
 	case "Mutation.addGRTFeedbackAndKeepBusinessCaseInDraft":
 		if e.complexity.Mutation.AddGRTFeedbackAndKeepBusinessCaseInDraft == nil {
@@ -1500,6 +1532,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.AccessibilityRequests(childComplexity, args["after"].(*string), args["first"].(int)), true
+
+	case "Query.currentUser":
+		if e.complexity.Query.CurrentUser == nil {
+			break
+		}
+
+		return e.complexity.Query.CurrentUser(childComplexity), true
 
 	case "Query.requests":
 		if e.complexity.Query.Requests == nil {
@@ -2915,9 +2954,19 @@ type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
+
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
+}
+
+type LaunchDarklySettings {
+  userKey: String!
+  signedHash: String!
+}
+
+type CurrentUser {
+  launchDarkly: LaunchDarklySettings!
 }
 
 type Mutation {
@@ -2981,6 +3030,7 @@ type Query {
   ): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
+  currentUser: CurrentUser
 }
 
 """
@@ -6032,6 +6082,41 @@ func (ec *executionContext) _CreateTestDatePayload_userErrors(ctx context.Contex
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CurrentUser_launchDarkly(ctx context.Context, field graphql.CollectedField, obj *model.CurrentUser) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentUser",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LaunchDarkly, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.LaunchDarklySettings)
+	fc.Result = res
+	return ec.marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLaunchDarklySettings(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _DeleteAccessibilityRequestDocumentPayload_id(ctx context.Context, field graphql.CollectedField, obj *model.DeleteAccessibilityRequestDocumentPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6580,6 +6665,76 @@ func (ec *executionContext) _GeneratePresignedUploadURLPayload_userErrors(ctx co
 	res := resTmp.([]*model.UserError)
 	fc.Result = res
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _LaunchDarklySettings_userKey(ctx context.Context, field graphql.CollectedField, obj *model.LaunchDarklySettings) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LaunchDarklySettings",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserKey, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _LaunchDarklySettings_signedHash(ctx context.Context, field graphql.CollectedField, obj *model.LaunchDarklySettings) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LaunchDarklySettings",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SignedHash, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_addGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8230,6 +8385,38 @@ func (ec *executionContext) _Query_systems(ctx context.Context, field graphql.Co
 	res := resTmp.(*model.SystemConnection)
 	fc.Result = res
 	return ec.marshalOSystemConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_currentUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CurrentUser(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CurrentUser)
+	fc.Result = res
+	return ec.marshalOCurrentUser2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCurrentUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -14207,6 +14394,33 @@ func (ec *executionContext) _CreateTestDatePayload(ctx context.Context, sel ast.
 	return out
 }
 
+var currentUserImplementors = []string{"CurrentUser"}
+
+func (ec *executionContext) _CurrentUser(ctx context.Context, sel ast.SelectionSet, obj *model.CurrentUser) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, currentUserImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CurrentUser")
+		case "launchDarkly":
+			out.Values[i] = ec._CurrentUser_launchDarkly(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var deleteAccessibilityRequestDocumentPayloadImplementors = []string{"DeleteAccessibilityRequestDocumentPayload"}
 
 func (ec *executionContext) _DeleteAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteAccessibilityRequestDocumentPayload) graphql.Marshaler {
@@ -14379,6 +14593,38 @@ func (ec *executionContext) _GeneratePresignedUploadURLPayload(ctx context.Conte
 	return out
 }
 
+var launchDarklySettingsImplementors = []string{"LaunchDarklySettings"}
+
+func (ec *executionContext) _LaunchDarklySettings(ctx context.Context, sel ast.SelectionSet, obj *model.LaunchDarklySettings) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, launchDarklySettingsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("LaunchDarklySettings")
+		case "userKey":
+			out.Values[i] = ec._LaunchDarklySettings_userKey(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "signedHash":
+			out.Values[i] = ec._LaunchDarklySettings_signedHash(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -14523,6 +14769,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_systems(ctx, field)
+				return res
+			})
+		case "currentUser":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_currentUser(ctx, field)
 				return res
 			})
 		case "__type":
@@ -16252,6 +16509,16 @@ func (ec *executionContext) unmarshalNIssueLifecycleIdInput2githubᚗcomᚋcmsgo
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLaunchDarklySettings(ctx context.Context, sel ast.SelectionSet, v *model.LaunchDarklySettings) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._LaunchDarklySettings(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNRejectIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRejectIntakeInput(ctx context.Context, v interface{}) (model.RejectIntakeInput, error) {
 	res, err := ec.unmarshalInputRejectIntakeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -17101,6 +17368,13 @@ func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._CreateTestDatePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCurrentUser2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCurrentUser(ctx context.Context, sel ast.SelectionSet, v *model.CurrentUser) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CurrentUser(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODeleteAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteAccessibilityRequestDocumentPayload) graphql.Marshaler {
