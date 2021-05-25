@@ -570,9 +570,19 @@ type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
+
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
+}
+
+type LaunchDarklySettings {
+  userKey: String!
+  signedHash: String!
+}
+
+type CurrentUser {
+  launchDarkly: LaunchDarklySettings!
 }
 
 type Mutation {
@@ -636,6 +646,7 @@ type Query {
   ): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
+  currentUser: CurrentUser
 }
 
 """
