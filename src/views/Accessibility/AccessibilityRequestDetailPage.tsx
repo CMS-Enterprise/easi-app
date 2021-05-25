@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
@@ -22,7 +22,6 @@ import {
 } from 'queries/types/GetAccessibilityRequest';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
-import AccessibilityRequestNextStep from 'components/AccessibilityRequestNextStep';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -156,7 +155,25 @@ const AccessibilityRequestDetailPage = () => {
 
   const bodyNoDocuments = (
     <>
-      <AccessibilityRequestNextStep />
+      <div className="margin-bottom-3">
+        <h2 className="margin-y-0 font-heading-lg">
+          {t('requestDetails.documents.noDocs.heading')}
+        </h2>
+        <p className="line-height-body-4">
+          <Trans i18nKey="accessibility:requestDetails.documents.noDocs.description">
+            indexZero
+            <UswdsLink
+              className="display-inline-block"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="/508/templates"
+            >
+              linkText
+            </UswdsLink>
+            indexOne
+          </Trans>
+        </p>
+      </div>
       {uploadDocumentLink}
     </>
   );

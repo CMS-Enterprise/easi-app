@@ -78,7 +78,13 @@ describe('AccessibilityRequestDetailPage', () => {
       wrapper.update();
     });
 
-    expect(wrapper.find('AccessibilityRequestNextStep').exists()).toBe(true);
+    expect(
+      wrapper
+        .find('h2')
+        .children()
+        .first()
+        .contains('Next step: Provide your documents')
+    ).toBe(true);
   });
 
   it('renders the AccessibilityDocumentList when documents exist', async () => {
