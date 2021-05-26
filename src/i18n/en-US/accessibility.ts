@@ -37,7 +37,11 @@ const accessibility = {
   requestDetails: {
     documents: {
       label: 'Documents',
-      none: 'No documents added to this request yet.'
+      noDocs: {
+        heading: 'Next step: Provide your documents',
+        description:
+          'Download and fill the VPAT and Test plan from the <1>templates page (opens in a new tab)</1>. The documents will help the 508 team know what to test and what criteria they should be looking for when testing.'
+      }
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
