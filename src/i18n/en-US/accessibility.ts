@@ -92,17 +92,17 @@ const accessibility = {
     confirmation: '{{date}} test date was removed from {{-requestName}} page'
   },
   newRequestForm: {
-    heading: 'Add a new request',
+    heading: 'Request 508 testing',
     fields: {
       project: {
         label: 'Choose the project this request will belong to',
-        header: 'Which system is this request for?',
+        header: "Choose the application you'd like to test",
         helpText: 'Start typing the name of the application or the Lifecycle ID'
       }
     },
     info:
-      'A request for 508 testing will be added to the list of 508 requests. An email will be sent to the Business Owner and the 508 team stating that a request has been added to the system.',
-    submitBtn: 'Add a new request',
+      'A confirmation emil will be sent to you. After you send this request, you can upload your documents.',
+    submitBtn: 'Send 508 testing request',
     confirmation:
       '508 testing request created. We have sent you a confirmation email.',
     surveyLink: 'Tell us what you think of this service (opens in a new tab)',
