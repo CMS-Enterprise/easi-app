@@ -27,3 +27,11 @@ percent=$(grep '(statements)' "go-coverage.txt" | awk '{print substr($NF, 1, len
     # commenting out the build failure line since we don't want to fail the build yet until we've had further discussions
     #exit 1
 #fi
+
+if [ -d "results" ] 
+then
+    mv go-coverage.* results/
+else
+    mkdir -p results
+    mv go-coverage.* results/
+fi
