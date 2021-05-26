@@ -25,7 +25,7 @@ services:
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_ADDRESS=http://minio:9000
-      - LOCAL_AUTH
+      - LOCAL_AUTH_ENABLED
   easi_client:
     build:
       context: .
@@ -43,7 +43,7 @@ services:
       - REACT_APP_LD_ENV_USER
       - REACT_APP_LD_USER_HASH
       - REACT_APP_LD_CLIENT_ID
-      - REACT_APP_LOCAL_AUTH
+      - REACT_APP_LOCAL_AUTH_ENABLED
       - CHOKIDAR_USEPOLLING=true
       - ESLINT_NO_DEV_ERRORS=true
     entrypoint: ['yarn', 'start']
