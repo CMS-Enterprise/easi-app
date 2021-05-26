@@ -187,25 +187,59 @@ describe('user', () => {
   });
 
   describe('isBasicUser', () => {
-    const flags = {};
+    const defaultFlags = {};
     describe('prod user job code exists in groups', () => {
       const groups = [BASIC_USER_PROD];
       it('returns true', () => {
-        expect(isBasicUser(groups, flags)).toBe(true);
+        expect(isBasicUser(groups, defaultFlags)).toBe(true);
       });
     });
 
     describe('no job code exists in groups', () => {
       const groups = [];
       it('returns true', () => {
-        expect(isBasicUser(groups, flags)).toBe(true);
+        expect(isBasicUser(groups, defaultFlags)).toBe(true);
       });
     });
 
     describe('other job codes exist in groups', () => {
       const groups = [ACCESSIBILITY_ADMIN_DEV];
       it('returns false', () => {
-        expect(isBasicUser(groups, flags)).toBe(false);
+        expect(isBasicUser(groups, defaultFlags)).toBe(false);
+      });
+    });
+
+    describe('other job codes exist in groups, but they have been downgraded with flags', () => {
+      it('returns true if 508 admin is downgraded', () => {
+        const flags = { downgrade508User: true };
+        const groups = [ACCESSIBILITY_ADMIN_DEV];
+        expect(isBasicUser(groups, flags)).toBe(true);
+      });
+
+      it('returns true if 508 tester is downgraded', () => {
+        const flags = { downgrade508Tester: true };
+        const groups = [ACCESSIBILITY_TESTER_DEV];
+        expect(isBasicUser(groups, flags)).toBe(true);
+      });
+
+      it('returns true if GRT admin is downgraded', () => {
+        const flags = { downgradeGovTeam: true };
+        const groups = [GOVTEAM_DEV];
+        expect(isBasicUser(groups, flags)).toBe(true);
+      });
+
+      it('returns true if everything is downgraded', () => {
+        const flags = {
+          downgradeGovTeam: true,
+          downgrade508User: true,
+          downgrade508Tester: true
+        };
+        const groups = [
+          ACCESSIBILITY_ADMIN_DEV,
+          ACCESSIBILITY_TESTER_DEV,
+          GOVTEAM_DEV
+        ];
+        expect(isBasicUser(groups, flags)).toBe(true);
       });
     });
   });
