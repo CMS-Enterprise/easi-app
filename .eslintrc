@@ -58,7 +58,7 @@
           ["^react", "^@?\\w"],
           // Internal packages.
           [
-            "^(components|constants|contexts|data|hooks|i18n|images|reducers|sagas|types|utils|validations|views)(/.*|$)"
+            "^(assets|components|constants|contexts|data|hooks|i18n|images|reducers|sagas|types|utils|validations|views)(/.*|$)"
           ],
           // Side effect imports.
           ["^\\u0000"],

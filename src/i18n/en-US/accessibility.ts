@@ -37,7 +37,11 @@ const accessibility = {
   requestDetails: {
     documents: {
       label: 'Documents',
-      none: 'No documents added to this request yet.'
+      noDocs: {
+        heading: 'Next step: Provide your documents',
+        description:
+          'Download and fill the VPAT and Test plan from the <1>templates page (opens in a new tab)</1>. The documents will help the 508 team know what to test and what criteria they should be looking for when testing.'
+      }
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
@@ -257,7 +261,11 @@ const accessibility = {
         'information on how to set up and access it',
         'user scenarios and steps taken to perform actions',
         'and any other constraints, assumptions or risks'
-      ]
+      ],
+      download: {
+        heading: 'Download Test Plan template',
+        link: 'Download the Test Plan template as a MS Word doc'
+      }
     },
     remediationPlanSection: {
       heading: 'Remediation Plan',
@@ -266,7 +274,11 @@ const accessibility = {
       itemsToProvide: [
         'solutions for each issue',
         'when and how you plan to schedule these changes into your project'
-      ]
+      ],
+      download: {
+        heading: 'Download Remediation Plan template',
+        link: 'Download the Remediation Plan template as a MS Word doc'
+      }
     }
   }
 };

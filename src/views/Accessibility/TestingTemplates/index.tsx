@@ -2,6 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@trussworks/react-uswds';
 
+import TestPlanDoc from 'assets/files/147732_TestPlan.docx';
+import RemediationPlanDoc from 'assets/files/CMS Section 508 Remediation Plan Template.revisedOctober2018.doc';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import PageHeading from 'components/PageHeading';
 
@@ -59,6 +61,14 @@ const TestingTemplates = () => {
           <li key={item}>{item}</li>
         ))}
       </ul>
+      <div className="accessibility-testing-templates__downloadBox">
+        <h3 className="margin-top-0">
+          {t('testingTemplates.testPlanSection.download.heading')}
+        </h3>
+        <Link href={TestPlanDoc}>
+          {t('testingTemplates.testPlanSection.download.link')}
+        </Link>
+      </div>
     </div>
   );
   const remediationPlanSection = (
@@ -72,6 +82,14 @@ const TestingTemplates = () => {
           <li key={item}>{item}</li>
         ))}
       </ul>
+      <div className="accessibility-testing-templates__downloadBox">
+        <h3 className="margin-top-0">
+          {t('testingTemplates.remediationPlanSection.download.heading')}
+        </h3>
+        <Link href={RemediationPlanDoc}>
+          {t('testingTemplates.remediationPlanSection.download.link')}
+        </Link>
+      </div>
     </div>
   );
 

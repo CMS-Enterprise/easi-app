@@ -105,12 +105,12 @@ def up(*args)
   environment = {
     "COMPOSE_HTTP_TIMEOUT" => "120"
   }
-  command = "docker-compose up"
-  
+  command = "docker-compose up --build"
+
   if args.any?
     command = "#{command} #{args.join(' ')}"
   end
-  
+
   sh(environment, command, verbose: true)
 
   # Avoid open file limits
