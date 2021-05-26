@@ -186,10 +186,6 @@ const AccessibilityDocumentsList = ({
     }
   });
 
-  if (documents.length === 0) {
-    return <span>{t('requestDetails.documents.none')}</span>;
-  }
-
   return (
     <>
       <Table bordered={false} {...getTableProps()} fullWidth>

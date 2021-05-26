@@ -241,6 +241,21 @@ exports[`TestingTemplates matches the snapshot 1`] = `
               and any other constraints, assumptions or risks
             </li>
           </ul>
+          <div
+            className="accessibility-testing-templates__downloadBox"
+          >
+            <h3
+              className="margin-top-0"
+            >
+              Download Test Plan template
+            </h3>
+            <a
+              className="usa-link"
+              href="147732_TestPlan.docx"
+            >
+              Download the Test Plan template as a MS Word doc
+            </a>
+          </div>
         </div>
         <div>
           <h2
@@ -261,6 +276,21 @@ exports[`TestingTemplates matches the snapshot 1`] = `
               when and how you plan to schedule these changes into your project
             </li>
           </ul>
+          <div
+            className="accessibility-testing-templates__downloadBox"
+          >
+            <h3
+              className="margin-top-0"
+            >
+              Download Remediation Plan template
+            </h3>
+            <a
+              className="usa-link"
+              href="CMS Section 508 Remediation Plan Template.revisedOctober2018.doc"
+            >
+              Download the Remediation Plan template as a MS Word doc
+            </a>
+          </div>
         </div>
       </div>
     </div>

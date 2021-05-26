@@ -164,7 +164,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	cedarLdapClient := local.NewCedarLdapClient(logger)
 	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
 
-	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client, &emailClient), Directives: directives})
+	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client, &emailClient, ldClient), Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
 	storeTestSuite := &GraphQLTestSuite{

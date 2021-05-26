@@ -147,7 +147,7 @@ const App = () => {
   };
 
   return (
-    <FlagsWrapper>
+    <>
       <div className="usa-overlay" />
       <button type="button" className="skipnav" onClick={handleSkipNav}>
         Skip to main content
@@ -155,15 +155,17 @@ const App = () => {
       <BrowserRouter>
         <MessageProvider>
           <AuthenticationWrapper>
-            <UserInfoWrapper>
-              <TimeOutWrapper>
-                <AppRoutes />
-              </TimeOutWrapper>
-            </UserInfoWrapper>
+            <FlagsWrapper>
+              <UserInfoWrapper>
+                <TimeOutWrapper>
+                  <AppRoutes />
+                </TimeOutWrapper>
+              </UserInfoWrapper>
+            </FlagsWrapper>
           </AuthenticationWrapper>
         </MessageProvider>
       </BrowserRouter>
-    </FlagsWrapper>
+    </>
   );
 };
 

@@ -16,6 +16,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -839,6 +840,20 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 		})
 	}
 	return conn, nil
+}
+
+func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, error) {
+	ldUser := flags.Principal(ctx)
+	userKey := ldUser.GetKey()
+	signedHash := r.ldClient.SecureModeHash(ldUser)
+
+	currentUser := model.CurrentUser{
+		LaunchDarkly: &model.LaunchDarklySettings{
+			UserKey:    userKey,
+			SignedHash: signedHash,
+		},
+	}
+	return &currentUser, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {

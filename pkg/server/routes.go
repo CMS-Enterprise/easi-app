@@ -203,6 +203,7 @@ func (s *Server) routes(
 		},
 		&s3Client,
 		&emailClient,
+		ldClient,
 	)
 	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
 		hasRole, err := services.HasRole(ctx, role)
