@@ -95,22 +95,9 @@ const accessibility = {
     heading: 'Add a new request',
     fields: {
       project: {
-        label: 'Choose the project this request will belong to'
-      },
-      businessOwnerName: {
-        label: 'Business Owner Name',
-        help:
-          'The business owner name field will be automatically filled based on the project you choose'
-      },
-      businessOwnerComponent: {
-        label: 'Business Owner Component',
-        help:
-          'The business owner component field will be automatically filled based on the project you choose'
-      },
-      requestName: {
-        label: 'Request Name',
-        help:
-          'This name will be shown on the Active requests page. For example, ACME 1.3'
+        label: 'Choose the project this request will belong to',
+        header: 'Which system is this request for?',
+        helpText: 'Start typing the name of the application or the Lifecycle ID'
       }
     },
     info:
