@@ -148,7 +148,7 @@ jobs:
             ./scripts/build_app
             ./scripts/testsuite
       - store_artifacts:
-          path: go-coverage.*
+          path: results
           destination: results
       - save_cache:
           key: v2-go-mod-sources-{{ checksum "go.sum" }}
