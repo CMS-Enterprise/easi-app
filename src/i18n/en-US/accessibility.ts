@@ -101,16 +101,16 @@ const accessibility = {
       }
     },
     info:
-      'A confirmation emil will be sent to you. After you send this request, you can upload your documents.',
+      'A confirmation email will be sent to you. After you send this request, you can upload your documents.',
     submitBtn: 'Send 508 testing request',
     confirmation:
       '508 testing request created. We have sent you a confirmation email.',
     surveyLink: 'Tell us what you think of this service (opens in a new tab)',
     helpAndGuidance: {
       lifecycleIdAccordion: {
-        header: "What if I don't have a Lifecycle ID?",
+        header: 'What if I cannot find my Lifecycle ID?',
         para:
-          'A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at ITgovernanceteam@cms.hhs.gov with information about your system.'
+          'Your application might not have a Lifecycle ID. A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at ITgovernanceteam@cms.hhs.gov with information about your application.'
       }
     }
   },
