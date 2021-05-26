@@ -15,6 +15,7 @@ import {
 import PageHeading from 'components/PageHeading';
 import PlainInfo from 'components/PlainInfo';
 import { AlertText } from 'components/shared/Alert';
+import CollapsibleLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -186,7 +187,23 @@ const Create = () => {
                       </FieldGroup>
                     )}
                     <div className="tablet:grid-col-8">
-                      <div className="margin-top-6 margin-bottom-2">
+                      <div className="margin-top-4">
+                        <CollapsibleLink
+                          id="LifecycleIdAccordion"
+                          label={t(
+                            'newRequestForm.helpAndGuidance.lifecycleIdAccordion.header'
+                          )}
+                        >
+                          <p>
+                            {t(
+                              'newRequestForm.helpAndGuidance.lifecycleIdAccordion.para'
+                            )}
+                          </p>
+                        </CollapsibleLink>
+                      </div>
+                    </div>
+                    <div className="tablet:grid-col-8">
+                      <div className="margin-top-2 margin-bottom-2">
                         <PlainInfo>{t('newRequestForm.info')}</PlainInfo>
                       </div>
                     </div>

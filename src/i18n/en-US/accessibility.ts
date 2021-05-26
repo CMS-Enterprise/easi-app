@@ -105,7 +105,14 @@ const accessibility = {
     submitBtn: 'Add a new request',
     confirmation:
       '508 testing request created. We have sent you a confirmation email.',
-    surveyLink: 'Tell us what you think of this service (opens in a new tab)'
+    surveyLink: 'Tell us what you think of this service (opens in a new tab)',
+    helpAndGuidance: {
+      lifecycleIdAccordion: {
+        header: "What if I don't have a Lifecycle ID?",
+        para:
+          'A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at ITgovernanceteam@cms.hhs.gov with information about your system.'
+      }
+    }
   },
   removeAccessibilityRequest: {
     reason: 'Reason for removal',
