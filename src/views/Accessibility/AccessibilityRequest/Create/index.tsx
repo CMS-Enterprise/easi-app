@@ -67,7 +67,7 @@ const Create = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Tell us what you think of this service (opens in a new tab)
+              {t('newRequestForm.surveyLink')}
             </Link>
           </>
         );
