@@ -51,7 +51,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 	accessToken, err := testhelpers.OktaAccessToken(config)
 	if err != nil {
 		fmt.Printf("Failed to get access token for integration testing with error: %s", err)
-		t.Fail()
+		t.FailNow()
 	}
 
 	logger := zap.NewNop()
