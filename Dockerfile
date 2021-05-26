@@ -16,7 +16,7 @@ COPY pkg ./pkg
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
 
 COPY config/tls/rds-ca-2019-root.pem /usr/local/share/ca-certificates/rds-ca-2019-root.crt
-COPY config/tls/hhs-fpki-intermediate-ca.pem /usr/local/share/ca-certificates/hhs-fpki-intermediate-ca.crt
+# COPY config/tls/hhs-fpki-intermediate-ca.pem /usr/local/share/ca-certificates/hhs-fpki-intermediate-ca.crt
 RUN update-ca-certificates
 
 FROM modules AS dev
