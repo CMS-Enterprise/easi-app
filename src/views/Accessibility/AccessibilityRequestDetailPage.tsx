@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
@@ -125,6 +125,58 @@ const AccessibilityRequestDetailPage = () => {
 
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
+  const hasDocuments = documents.length > 0;
+
+  const UploadDocumentLink = () => (
+    <UswdsLink
+      className="usa-button"
+      variant="unstyled"
+      asCustom={Link}
+      to={`/508/requests/${accessibilityRequestId}/documents/new`}
+    >
+      {t('requestDetails.documentUpload')}
+    </UswdsLink>
+  );
+
+  const BodyWithDocuments = () => (
+    <>
+      <h2 className="margin-top-0">{t('requestDetails.documents.label')}</h2>
+      <UploadDocumentLink />
+      <div className="margin-top-6">
+        <AccessibilityDocumentsList
+          documents={documents}
+          requestName={requestName}
+          refetchRequest={refetch}
+          setConfirmationText={showMessage}
+        />
+      </div>
+    </>
+  );
+
+  const BodyNoDocuments = () => (
+    <>
+      <div className="margin-bottom-3">
+        <h2 className="margin-y-0 font-heading-lg">
+          {t('requestDetails.documents.noDocs.heading')}
+        </h2>
+        <p className="line-height-body-4">
+          <Trans i18nKey="accessibility:requestDetails.documents.noDocs.description">
+            indexZero
+            <UswdsLink
+              className="display-inline-block"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="/508/templates"
+            >
+              linkText
+            </UswdsLink>
+            indexOne
+          </Trans>
+        </p>
+      </div>
+      <UploadDocumentLink />
+    </>
+  );
 
   if (loading) {
     return <div>Loading</div>;
@@ -160,27 +212,10 @@ const AccessibilityRequestDetailPage = () => {
       )}
       <PageHeading>{requestName}</PageHeading>
       <div className="grid-row grid-gap-lg">
-        <div className="grid-col-9">
-          <h2 className="margin-top-0">
-            {t('requestDetails.documents.label')}
-          </h2>
-          <UswdsLink
-            className="usa-button"
-            variant="unstyled"
-            asCustom={Link}
-            to={`/508/requests/${accessibilityRequestId}/documents/new`}
-          >
-            {t('requestDetails.documentUpload')}
-          </UswdsLink>
-          <div className="margin-top-6">
-            <AccessibilityDocumentsList
-              documents={documents}
-              requestName={requestName}
-              refetchRequest={refetch}
-              setConfirmationText={showMessage}
-            />
-          </div>
+        <div className="grid-col-8">
+          {hasDocuments ? <BodyWithDocuments /> : <BodyNoDocuments />}
         </div>
+        <div className="grid-col-1" />
         <div className="grid-col-3">
           <div className="accessibility-request__side-nav">
             <div>
