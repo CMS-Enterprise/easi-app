@@ -10,6 +10,22 @@ interface AlertProps {
   inline?: boolean;
 }
 
+type AlertTextProps = {
+  className?: string;
+  children: React.ReactNode;
+} & JSX.IntrinsicElements['p'];
+
+export const AlertText = ({
+  className,
+  children,
+  ...props
+}: AlertTextProps) => {
+  return (
+    <p className={classnames('usa-alert__text', className)} {...props}>
+      {children}
+    </p>
+  );
+};
 export const Alert = ({
   type,
   heading,
@@ -33,11 +49,21 @@ export const Alert = ({
     className
   );
 
+  const renderChildren = () => {
+    if (children) {
+      if (typeof children === 'string') {
+        return <AlertText>{children}</AlertText>;
+      }
+      return children;
+    }
+    return <></>;
+  };
+
   return (
     <div className={classes} data-testid="alert">
       <div className="usa-alert__body">
         {heading && <h3 className="usa-alert__heading">{heading}</h3>}
-        {children && <p className="usa-alert__text">{children}</p>}
+        {renderChildren()}
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Button, ComboBox } from '@trussworks/react-uswds';
+import { Button, ComboBox, Link } from '@trussworks/react-uswds';
 import {
   Field as FormikField,
   Form as FormikForm,
@@ -19,6 +19,7 @@ import {
 
 import PageHeading from 'components/PageHeading';
 import PlainInfo from 'components/PlainInfo';
+import { AlertText } from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -57,7 +58,19 @@ const Create = () => {
       if (!response.errors) {
         const uuid =
           response.data.createAccessibilityRequest.accessibilityRequest.id;
-        showMessageOnNextPage(t('newRequestForm.confirmation'));
+        showMessageOnNextPage(
+          <>
+            <AlertText>{t('newRequestForm.confirmation')}</AlertText>
+            <br />
+            <Link
+              href="https://www.surveymonkey.com/r/3R6MXSW"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Tell us what you think of this service (opens in a new tab)
+            </Link>
+          </>
+        );
         history.push(`/508/requests/${uuid}`);
       }
     });
