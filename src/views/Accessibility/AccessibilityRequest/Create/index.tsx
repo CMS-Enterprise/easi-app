@@ -149,8 +149,7 @@ const Create = () => {
                         error={!!flatErrors.intakeId}
                       >
                         <HelpText>
-                          Start typing the name of the application or the
-                          Lifecycle ID
+                          {t('newRequestForm.fields.project.helpText')}
                         </HelpText>
                         <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
                         <ComboBox
