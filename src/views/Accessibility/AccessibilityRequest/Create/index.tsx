@@ -20,7 +20,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import { initialAccessibilityRequestFormData } from 'data/accessibility';
 import useMessage from 'hooks/useMessage';
 import { AccessibilityRequestForm } from 'types/accessibility';
@@ -96,9 +95,6 @@ const Create = () => {
 
   return (
     <>
-      <SecondaryNav>
-        <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
-      </SecondaryNav>
       <div className="grid-container">
         <PageHeading>{t('newRequestForm.heading')}</PageHeading>
         <Formik
