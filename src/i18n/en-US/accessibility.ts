@@ -261,7 +261,11 @@ const accessibility = {
         'information on how to set up and access it',
         'user scenarios and steps taken to perform actions',
         'and any other constraints, assumptions or risks'
-      ]
+      ],
+      download: {
+        heading: 'Download Test Plan template',
+        link: 'Download the Test Plan template as a MS Word doc'
+      }
     },
     remediationPlanSection: {
       heading: 'Remediation Plan',
@@ -270,7 +274,11 @@ const accessibility = {
       itemsToProvide: [
         'solutions for each issue',
         'when and how you plan to schedule these changes into your project'
-      ]
+      ],
+      download: {
+        heading: 'Download Remediation Plan template',
+        link: 'Download the Remediation Plan template as a MS Word doc'
+      }
     }
   }
 };
