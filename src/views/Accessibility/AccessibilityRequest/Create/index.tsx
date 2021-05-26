@@ -18,7 +18,7 @@ import { AlertText } from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
-import Label from 'components/shared/Label';
+import HelpText from 'components/shared/HelpText';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import { initialAccessibilityRequestFormData } from 'data/accessibility';
 import useMessage from 'hooks/useMessage';
@@ -138,6 +138,7 @@ const Create = () => {
                     })}
                   </ErrorAlert>
                 )}
+                <h2>{t('newRequestForm.fields.project.header')}</h2>
                 <div className="margin-bottom-7">
                   <FormikForm
                     onSubmit={e => {
@@ -150,16 +151,20 @@ const Create = () => {
                         scrollElement="intakeId"
                         error={!!flatErrors.intakeId}
                       >
-                        <Label htmlFor="508Request-IntakeId">
-                          {t('newRequestForm.fields.project.label')}
-                        </Label>
+                        <HelpText>
+                          Start typing the name of the application or the
+                          Lifecycle ID
+                        </HelpText>
                         <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
                         <ComboBox
                           id="508Request-IntakeComboBox"
                           name="intakeComboBox"
                           inputProps={{
                             id: '508Request-IntakeId',
-                            name: 'intakeId'
+                            name: 'intakeId',
+                            'aria-label': t(
+                              'newRequestForm.fields.project.label'
+                            )
                           }}
                           options={projectComboBoxOptions}
                           onChange={(intakeId: any) => {
