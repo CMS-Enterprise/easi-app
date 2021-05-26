@@ -122,7 +122,8 @@ func (f oktaMiddlewareFactory) newAuthenticationMiddleware(next http.Handler) ht
 	})
 }
 
-func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
+// NewJwtVerifier returns a new JWT verifier with some minimal config
+func NewJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	toValidate := map[string]string{}
 	toValidate["cid"] = clientID
 	toValidate["aud"] = "EASi"
@@ -135,18 +136,21 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	return jwtVerifierSetup.New()
 }
 
+// JwtVerifier collects the methods we call on a JWT verifier
+type JwtVerifier interface {
+	VerifyAccessToken(jwt string) (*jwtverifier.Jwt, error)
+}
+
 type oktaMiddlewareFactory struct {
 	handlers.HandlerBase
-	verifier      *jwtverifier.JwtVerifier
+	verifier      JwtVerifier
 	codeGRT       string
 	code508Tester string
 	code508User   string
 }
 
 // NewOktaAuthenticationMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, clientID string, issuer string, useTestJobCodes bool) func(http.Handler) http.Handler {
-	verifier := newJwtVerifier(clientID, issuer)
-
+func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, jwtVerifier JwtVerifier, useTestJobCodes bool) func(http.Handler) http.Handler {
 	// by default we want to use the PROD job codes, and only in
 	// pre-PROD environments do we want to empower the
 	// alternate job codes.
@@ -161,7 +165,7 @@ func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, clientID string,
 
 	middlewareFactory := oktaMiddlewareFactory{
 		HandlerBase:   base,
-		verifier:      verifier,
+		verifier:      jwtVerifier,
 		codeGRT:       jobCodeGRT,
 		code508Tester: jobCode508Tester,
 		code508User:   jobCode508User,

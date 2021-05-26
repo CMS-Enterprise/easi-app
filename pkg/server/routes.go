@@ -46,10 +46,11 @@ func (s *Server) routes(
 	loggerMiddleware func(handler http.Handler) http.Handler) {
 
 	oktaConfig := s.NewOktaClientConfig()
+	jwtVerifier := okta.NewJwtVerifier(oktaConfig.OktaClientID, oktaConfig.OktaIssuer)
+
 	oktaAuthenticationMiddleware := okta.NewOktaAuthenticationMiddleware(
 		handlers.NewHandlerBase(s.logger),
-		oktaConfig.OktaClientID,
-		oktaConfig.OktaIssuer,
+		jwtVerifier,
 		oktaConfig.AltJobCodes,
 	)
 
