@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
+import { Link } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
@@ -93,6 +94,21 @@ const NotFound = () => (
 
 const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 
+const A11yTeamPageTemplate = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <PageWrapper>
+      <Header />
+      <MainContent className="margin-bottom-5">
+        <Switch>{children}</Switch>
+      </MainContent>
+      <Link href="https://docs.google.com/forms/d/e/1FAIpQLSfRJIddKkcffFWXB4AVG_ibYgShu1t-HcKuXov06mZDDxwjLw/viewform">
+        Report a problem (a11y team)
+      </Link>
+      <Footer />
+    </PageWrapper>
+  );
+};
+
 const PageTemplate = ({ children }: { children: React.ReactNode }) => {
   return (
     <PageWrapper>
@@ -100,6 +116,13 @@ const PageTemplate = ({ children }: { children: React.ReactNode }) => {
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
+      <div className="grid-container margin-0">
+        <div className="grid-row padding-y-2">
+          <Link href="https://www.surveymonkey.com/r/GCYMVY8">
+            Report a problem (reg user)
+          </Link>
+        </div>
+      </div>
       <Footer />
     </PageWrapper>
   );
@@ -113,7 +136,7 @@ const Accessibility = () => {
   if (isUserSet) {
     if (user.isAccessibilityTeam(userGroups, flags)) {
       return (
-        <PageTemplate>
+        <A11yTeamPageTemplate>
           {[
             NewRequest,
             AllRequests,
@@ -125,7 +148,7 @@ const Accessibility = () => {
             RequestDetails,
             Default
           ]}
-        </PageTemplate>
+        </A11yTeamPageTemplate>
       );
     }
     return (
