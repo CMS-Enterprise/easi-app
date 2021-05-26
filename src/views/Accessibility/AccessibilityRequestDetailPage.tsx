@@ -127,7 +127,7 @@ const AccessibilityRequestDetailPage = () => {
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
   const hasDocuments = documents.length > 0;
 
-  const uploadDocumentLink = (
+  const UploadDocumentLink = () => (
     <UswdsLink
       className="usa-button"
       variant="unstyled"
@@ -138,10 +138,10 @@ const AccessibilityRequestDetailPage = () => {
     </UswdsLink>
   );
 
-  const bodyWithDocuments = (
+  const BodyWithDocuments = () => (
     <>
       <h2 className="margin-top-0">{t('requestDetails.documents.label')}</h2>
-      {uploadDocumentLink}
+      <UploadDocumentLink />
       <div className="margin-top-6">
         <AccessibilityDocumentsList
           documents={documents}
@@ -153,7 +153,7 @@ const AccessibilityRequestDetailPage = () => {
     </>
   );
 
-  const bodyNoDocuments = (
+  const BodyNoDocuments = () => (
     <>
       <div className="margin-bottom-3">
         <h2 className="margin-y-0 font-heading-lg">
@@ -174,7 +174,7 @@ const AccessibilityRequestDetailPage = () => {
           </Trans>
         </p>
       </div>
-      {uploadDocumentLink}
+      <UploadDocumentLink />
     </>
   );
 
@@ -213,7 +213,7 @@ const AccessibilityRequestDetailPage = () => {
       <PageHeading>{requestName}</PageHeading>
       <div className="grid-row grid-gap-lg">
         <div className="grid-col-8">
-          {hasDocuments ? bodyWithDocuments : bodyNoDocuments}
+          {hasDocuments ? <BodyWithDocuments /> : <BodyNoDocuments />}
         </div>
         <div className="grid-col-1" />
         <div className="grid-col-3">
