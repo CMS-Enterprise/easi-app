@@ -1,14 +1,14 @@
 import React from 'react';
 import classnames from 'classnames';
 
-interface AlertProps {
+type AlertProps = {
   type: 'success' | 'warning' | 'error' | 'info';
   heading?: React.ReactNode;
   children?: React.ReactNode;
   slim?: boolean;
   noIcon?: boolean;
   inline?: boolean;
-}
+} & JSX.IntrinsicElements['div'];
 
 type AlertTextProps = {
   className?: string;
@@ -33,7 +33,8 @@ export const Alert = ({
   slim,
   noIcon,
   className,
-  inline
+  inline,
+  ...props
 }: AlertProps & React.HTMLAttributes<HTMLDivElement>): React.ReactElement => {
   const classes = classnames(
     'usa-alert',
@@ -60,7 +61,7 @@ export const Alert = ({
   };
 
   return (
-    <div className={classes} data-testid="alert">
+    <div className={classes} data-testid="alert" {...props}>
       <div className="usa-alert__body">
         {heading && <h3 className="usa-alert__heading">{heading}</h3>}
         {renderChildren()}
