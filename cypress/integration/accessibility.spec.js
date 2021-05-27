@@ -50,7 +50,56 @@ describe('The System Intake Form', () => {
 
       cy.contains('a', '508 testing templates (opens in a new tab)')
       cy.contains('a', 'Steps involved in 508 testing (opens in a new tab)')
-      // cy.contains('button', 'Remove this request from EASi')
+      cy.contains('button', 'Remove this request from EASi')
     })
+    cy.visit('/')
+  });
+
+  it('sees information for an existing request on the homepage', () => {
+    // Contact Details
+    cy.visit('/');
+    cy.contains('h1', 'Welcome to EASi')
+    cy.contains('h2', 'My governance requests')
+    cy.get('table').within(() => {
+      cy.get('thead').within(() => {
+        cy.contains('th', 'Request name')
+        cy.contains('th', 'Governance')
+        cy.contains('th', 'Submission date')
+      })
+
+      cy.get('tbody').within(() => {
+        cy.contains('th', 'TACO')
+        const dateString = formatDate(new Date().toISOString())
+        cy.contains('td', 'Section 508')
+        cy.contains('td', dateString)
+      })
+    })
+  });
+
+  it('can remove a request', () => {
+    // Contact Details
+    cy.visit('/');
+    cy.contains('a', 'TACO').click()
+    cy.contains('button', 'Remove this request from EASi').click()
+    cy.contains('h2', 'Confirm you want to remove TACO')
+    cy.contains('button', 'Keep request').click()
+    cy.contains('Confirm you want to remove TACO').should('not.exist')
+
+    cy.contains('button', 'Remove this request from EASi').click()
+    cy.contains('h2', 'Confirm you want to remove TACO')
+    cy.contains('span', 'You will not be able to access this request and its documents after it is removed.')
+    cy.get('form').within(() => {
+      cy.contains('legend', 'Reason for removal')
+      cy.contains('.usa-radio', 'Incorrect application and Lifecycle ID selected')
+      cy.contains('.usa-radio', 'No testing needed')
+      cy.contains('.usa-radio', 'Other').click()
+      cy.contains('button', 'Remove request').click()
+    })
+    cy.location().should(loc => {
+      expect(loc.pathname).to.eq('/')
+    })
+    cy.contains('.usa-alert--success', 'TACO successfully removed')
+    cy.contains('Requests will display in a table once you add them')
+    cy.get('table').should('not.exist')
   });
 });
