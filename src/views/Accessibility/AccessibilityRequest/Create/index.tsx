@@ -60,8 +60,9 @@ const Create = () => {
           response.data.createAccessibilityRequest.accessibilityRequest.id;
         showMessageOnNextPage(
           <>
-            <AlertText>{t('newRequestForm.confirmation')}</AlertText>
-            <br />
+            <AlertText className="margin-bottom-2">
+              {t('newRequestForm.confirmation')}
+            </AlertText>
             <Link
               href="https://www.surveymonkey.com/r/3R6MXSW"
               target="_blank"
