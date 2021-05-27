@@ -1,11 +1,16 @@
 import { formatDate } from '../../src/utils/date';
 
 describe('Accessibility Requests', () => {
-  beforeEach(() => {
+  before(() => {
     cy.login();
     // TODO HACK
     cy.wait(1000);
     cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.server();
+    cy.restoreLocalStorage();
   });
 
   it('can create a request and see its details', () => {
@@ -46,7 +51,6 @@ describe('Accessibility Requests', () => {
       cy.contains('a', 'Steps involved in 508 testing (opens in a new tab)')
       cy.contains('button', 'Remove this request from EASi')
     })
-    cy.visit('/')
   });
 
   it('sees information for an existing request on the homepage', () => {
