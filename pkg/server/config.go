@@ -27,17 +27,19 @@ func (s Server) NewDBConfig() storage.DBConfig {
 	s.checkRequiredConfig(appconfig.DBPortConfigKey)
 	s.checkRequiredConfig(appconfig.DBNameConfigKey)
 	s.checkRequiredConfig(appconfig.DBUsernameConfigKey)
+	s.checkRequiredConfig(appconfig.DBMaxConnections)
 	if s.environment.Deployed() {
 		s.checkRequiredConfig(appconfig.DBPasswordConfigKey)
 	}
 	s.checkRequiredConfig(appconfig.DBSSLModeConfigKey)
 	return storage.DBConfig{
-		Host:     s.Config.GetString(appconfig.DBHostConfigKey),
-		Port:     s.Config.GetString(appconfig.DBPortConfigKey),
-		Database: s.Config.GetString(appconfig.DBNameConfigKey),
-		Username: s.Config.GetString(appconfig.DBUsernameConfigKey),
-		Password: s.Config.GetString(appconfig.DBPasswordConfigKey),
-		SSLMode:  s.Config.GetString(appconfig.DBSSLModeConfigKey),
+		Host:           s.Config.GetString(appconfig.DBHostConfigKey),
+		Port:           s.Config.GetString(appconfig.DBPortConfigKey),
+		Database:       s.Config.GetString(appconfig.DBNameConfigKey),
+		Username:       s.Config.GetString(appconfig.DBUsernameConfigKey),
+		Password:       s.Config.GetString(appconfig.DBPasswordConfigKey),
+		SSLMode:        s.Config.GetString(appconfig.DBSSLModeConfigKey),
+		MaxConnections: s.Config.GetInt(appconfig.DBMaxConnections),
 	}
 }
 
