@@ -11,7 +11,7 @@ describe('Accessibility Requests', () => {
   it('can create a request and see its details', () => {
     cy.visit('/508/requests/new');
     cy.contains('h1', 'Request 508 testing')
-    cy.contains('h2', "Choose the application you'd like to test")
+    cy.contains('label', "Choose the application you'd like to test")
     cy.get('#508Request-IntakeId')
       .type('TACO - 000000{enter}')
       .should('have.value', 'TACO - 000000');
