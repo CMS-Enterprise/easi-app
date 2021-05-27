@@ -1,7 +1,7 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
-import Alert from './index';
+import Alert, { AlertText } from './index';
 
 describe('The Alert component', () => {
   it('renders without crashing', () => {
@@ -15,10 +15,47 @@ describe('The Alert component', () => {
     expect(component.find('h3').text()).toEqual('Hello');
   });
 
-  it('renders children', () => {
-    const component = shallow(<Alert type="success">Hello</Alert>);
+  describe('children', () => {
+    it('renders string children', () => {
+      const component = mount(<Alert type="success">Hello</Alert>);
 
-    expect(component.find('p').exists()).toEqual(true);
-    expect(component.find('p').text()).toEqual('Hello');
+      expect(component.find('p').exists()).toEqual(true);
+      expect(component.find('p').text()).toEqual('Hello');
+    });
+  });
+
+  it('renders JSX children', () => {
+    const component = shallow(
+      <Alert type="success">
+        <div data-testid="test-child">Hello</div>
+      </Alert>
+    );
+
+    expect(component.find('p').exists()).toEqual(false);
+    expect(component.find('[data-testid="test-child"]').text()).toEqual(
+      'Hello'
+    );
+  });
+});
+
+describe('The AlertText component', () => {
+  it('renders without crashing', () => {
+    shallow(<AlertText>Hello</AlertText>);
+  });
+
+  it('renders custom class name', () => {
+    const component = shallow(
+      <AlertText className="test-class">Hello</AlertText>
+    );
+
+    expect(component.find('.test-class').exists()).toEqual(true);
+  });
+
+  it('renders custom HTML attributes', () => {
+    const component = shallow(
+      <AlertText aria-label="I am aria label">Hello</AlertText>
+    );
+
+    expect(component.props()['aria-label']).toEqual('I am aria label');
   });
 });

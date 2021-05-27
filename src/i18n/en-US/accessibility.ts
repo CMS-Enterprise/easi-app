@@ -117,7 +117,8 @@ const accessibility = {
       'A request for 508 testing will be added to the list of 508 requests. An email will be sent to the Business Owner and the 508 team stating that a request has been added to the system.',
     submitBtn: 'Add a new request',
     confirmation:
-      '508 testing request created. We have sent you a confirmation email.'
+      '508 testing request created. We have sent you a confirmation email.',
+    surveyLink: 'Tell us what you think of this service (opens in a new tab)'
   },
   removeAccessibilityRequest: {
     reason: 'Reason for removal',
