@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
@@ -95,13 +96,14 @@ const NotFound = () => (
 const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 
 const ReportProblemLinkArea = ({ url }: { url: string }) => {
+  const { t } = useTranslation('accessibility');
   return (
     <div className="width-full report-problem-link-area">
       <div className="grid-container">
         <div className="grid-row padding-bottom-2">
           <div className="grid-col-3">
             <Link href={url} target="_blank" rel="noopener noreferrer">
-              Report a problem (opens in a new tab)
+              {t('reportProblem')}
             </Link>
           </div>
           <div className="grid-col-9" />
