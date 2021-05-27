@@ -96,9 +96,9 @@ const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 
 const ReportProblemLinkArea = ({ url }: { url: string }) => {
   return (
-    <div className="width-full">
+    <div className="width-full report-problem-link-area">
       <div className="grid-container">
-        <div className="grid-row padding-bottom-2 padding-top-9">
+        <div className="grid-row padding-bottom-2">
           <div className="grid-col-3">
             <Link href={url} target="_blank" rel="noopener noreferrer">
               Report a problem (opens in a new tab)
