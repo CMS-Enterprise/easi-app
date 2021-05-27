@@ -95,8 +95,7 @@ const accessibility = {
     heading: 'Request 508 testing',
     fields: {
       project: {
-        label: 'Choose the project this request will belong to',
-        header: "Choose the application you'd like to test",
+        label: "Choose the application you'd like to test",
         helpText: 'Start typing the name of the application or the Lifecycle ID'
       }
     },
@@ -108,7 +107,7 @@ const accessibility = {
     surveyLink: 'Tell us what you think of this service (opens in a new tab)',
     helpAndGuidance: {
       lifecycleIdAccordion: {
-        header: 'What if I cannot find my Lifecycle ID?',
+        header: 'What if I cannot find my application or Lifecycle ID?',
         para:
           'Your application might not have a Lifecycle ID. A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at ITgovernanceteam@cms.hhs.gov with information about your application.'
       }

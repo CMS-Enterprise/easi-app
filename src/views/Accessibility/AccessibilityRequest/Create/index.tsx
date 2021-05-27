@@ -149,7 +149,7 @@ const Create = () => {
                         error={!!flatErrors.intakeId}
                       >
                         <Label htmlFor="508Request-IntakeId">
-                          <h2>{t('newRequestForm.fields.project.header')}</h2>
+                          <h2>{t('newRequestForm.fields.project.label')}</h2>
                         </Label>
                         <HelpText id="508Request-IntakeId-HelpText">
                           {t('newRequestForm.fields.project.helpText')}
