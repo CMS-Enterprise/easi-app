@@ -21,12 +21,13 @@ type Store struct {
 
 // DBConfig holds the configurations for a database connection
 type DBConfig struct {
-	Host     string
-	Port     string
-	Database string
-	Username string
-	Password string
-	SSLMode  string
+	Host           string
+	Port           string
+	Database       string
+	Username       string
+	Password       string
+	SSLMode        string
+	MaxConnections int
 }
 
 // NewStore is a constructor for a store
@@ -43,13 +44,14 @@ func NewStore(
 
 	dataSourceName := fmt.Sprintf(
 		"host=%s port=%s user=%s "+
-			"password=%s dbname=%s sslmode=%s",
+			"password=%s dbname=%s sslmode=%s maxconnections=%d",
 		config.Host,
 		config.Port,
 		config.Username,
 		config.Password,
 		config.Database,
 		config.SSLMode,
+		config.MaxConnections,
 	)
 	db, err := sqlx.Connect("postgres", dataSourceName)
 	if err != nil {
