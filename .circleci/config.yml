@@ -164,8 +164,6 @@ jobs:
           APP_ENV: test
           AWS_DEFAULT_REGION: us-west-2
           FLAG_SOURCE: LOCAL
-          LOCAL_AUTH: enabled
-          REACT_APP_LOCAL_AUTH: enabled
     steps:
       - checkout
       - setup_remote_docker:
@@ -286,6 +284,7 @@ jobs:
           REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
           REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
           REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+          REACT_APP_LOCAL_AUTH_ENABLED: true
     steps:
       - checkout
       - restore_cache:
