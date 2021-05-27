@@ -36,7 +36,7 @@
 ### As the original developer, I have
 
 - [ ] Tested user-facing changes with voice-over
-- [ ] Checked for landmarks, page heading structure and links using rotor menu
+- [ ] Checked for landmarks, page heading structure and links using [rotor menu](https://github.com/trussworks/accessibility/blob/master/README.md#how-to-use-the-rotor-menu)
 - [ ] Requested a design review for user-facing changes
 - [ ] Met the acceptance criteria, or will meet them in a subsequent PR
 - For any new migrations/schema changes:
@@ -58,15 +58,6 @@
 - [ ] Checked accessibility against criteria
 - [ ] Checked for landmarks, page heading structure, and links
 - [ ] Tried to break the intended flow
-
-## How-to rotor menu
-
-1. Turn voice over on `cmd + F5`
-1. Open rotor menu `ctrl + option + U` (you’ll see a panel appear)
-1. Use :arrow_left: and :arrow_right: to cycle through the rotor menu
-1. Use :arrow_up: and :arrow_down: to move down that rotor view
-1. When you are done you can dismiss the rotor menu by hitting Esc
-1. Turn voice over off `cmd + F5`
 
 ## Screenshots
 
