@@ -94,6 +94,23 @@ const NotFound = () => (
 
 const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 
+const ReportProblemLinkArea = ({ url }: { url: string }) => {
+  return (
+    <div className="width-full">
+      <div className="grid-container">
+        <div className="grid-row padding-bottom-2 padding-top-9">
+          <div className="grid-col-3">
+            <Link href={url} target="_blank" rel="noopener noreferrer">
+              Report a problem (opens in a new tab)
+            </Link>
+          </div>
+          <div className="grid-col-9" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const A11yTeamPageTemplate = ({ children }: { children: React.ReactNode }) => {
   return (
     <PageWrapper>
@@ -101,9 +118,7 @@ const A11yTeamPageTemplate = ({ children }: { children: React.ReactNode }) => {
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
-      <Link href="https://docs.google.com/forms/d/e/1FAIpQLSfRJIddKkcffFWXB4AVG_ibYgShu1t-HcKuXov06mZDDxwjLw/viewform">
-        Report a problem (a11y team)
-      </Link>
+      <ReportProblemLinkArea url="https://docs.google.com/forms/d/e/1FAIpQLSfRJIddKkcffFWXB4AVG_ibYgShu1t-HcKuXov06mZDDxwjLw/viewform" />
       <Footer />
     </PageWrapper>
   );
@@ -116,13 +131,7 @@ const PageTemplate = ({ children }: { children: React.ReactNode }) => {
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
-      <div className="grid-container margin-0">
-        <div className="grid-row padding-y-2">
-          <Link href="https://www.surveymonkey.com/r/GCYMVY8">
-            Report a problem (reg user)
-          </Link>
-        </div>
-      </div>
+      <ReportProblemLinkArea url="https://www.surveymonkey.com/r/GCYMVY8" />
       <Footer />
     </PageWrapper>
   );
