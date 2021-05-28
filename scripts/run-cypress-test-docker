@@ -24,6 +24,7 @@ if [[ -n "${CIRCLECI+x}" ]]; then
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up -d db
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up --exit-code-from db_migrate db_migrate
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up -d easi easi_client
+    go run cmd/devdata/main.go
 
     EASI_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${EASI_CONTAINER}")
 
