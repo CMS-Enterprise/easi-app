@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
 func TestPrincipal(t *testing.T) {
@@ -23,21 +23,21 @@ func TestPrincipal(t *testing.T) {
 		"disempowered": {
 			appcontext.WithPrincipal(
 				context.Background(),
-				&authn.EUAPrincipal{EUAID: "WEAK"},
+				&authentication.EUAPrincipal{EUAID: "WEAK"},
 			),
 			true,
 		},
 		"submitter": {
 			appcontext.WithPrincipal(
 				context.Background(),
-				&authn.EUAPrincipal{EUAID: "EASi", JobCodeEASi: true},
+				&authentication.EUAPrincipal{EUAID: "EASi", JobCodeEASi: true},
 			),
 			false,
 		},
 		"reviewer": {
 			appcontext.WithPrincipal(
 				context.Background(),
-				&authn.EUAPrincipal{EUAID: "BOSS", JobCodeGRT: true},
+				&authentication.EUAPrincipal{EUAID: "BOSS", JobCodeGRT: true},
 			),
 			false,
 		},
