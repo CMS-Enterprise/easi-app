@@ -41,7 +41,7 @@ services:
       - PGUSER=postgres
       - PGPASS=mysecretpassword
       - PGSSLMODE=disable
-      - MAX_DB_CONNECTIONS=20
+      - DB_MAX_CONNECTIONS=20
       - FLAG_SOURCE
       - LD_SDK_KEY
       - LD_TIMEOUT_SECONDS=30
