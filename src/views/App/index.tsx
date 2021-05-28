@@ -22,6 +22,7 @@ import GovernanceTaskList from 'views/GovernanceTaskList';
 import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
 import Home from 'views/Home';
 import Login from 'views/Login';
+import MakingARequest from 'views/MakingARequest';
 import MyRequests from 'views/MyRequests';
 import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
@@ -65,6 +66,7 @@ const AppRoutes = () => {
       />
 
       {/* Requester / Business Owner Routes */}
+      <SecureRoute path="/system/making-a-request" component={MakingARequest} />
       <SecureRoute
         exact
         path="/system/request-type"
