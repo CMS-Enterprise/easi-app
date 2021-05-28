@@ -10,7 +10,7 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -24,7 +24,7 @@ func (s HandlerTestSuite) TestSystemIntakesHandler() {
 	s.Run("golden path FETCH passes", func() {
 		rr := httptest.NewRecorder()
 		requestContext := context.Background()
-		requestContext = appcontext.WithPrincipal(requestContext, &authn.EUAPrincipal{EUAID: "EUAID", JobCodeEASi: true})
+		requestContext = appcontext.WithPrincipal(requestContext, &authentication.EUAPrincipal{EUAID: "EUAID", JobCodeEASi: true})
 		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intakes/", bytes.NewBufferString("{}"))
 		s.NoError(err)
 		SystemIntakesHandler{
