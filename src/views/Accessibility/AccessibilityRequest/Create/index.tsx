@@ -160,6 +160,7 @@ const Create = () => {
                           name="intakeComboBox"
                           inputProps={{
                             id: '508Request-IntakeId',
+                            name: 'intakeId',
                             'aria-describedby': '508Request-IntakeId-HelpText'
                           }}
                           options={projectComboBoxOptions}
