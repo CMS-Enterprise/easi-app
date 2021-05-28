@@ -5,7 +5,7 @@ describe('Accessibility Requests', () => {
     cy.login();
     // TODO HACK
     cy.wait(1000);
-    cy.saveLocalStorage();
+    cy.saveLocalStorage()
   });
 
   beforeEach(() => {
@@ -75,7 +75,6 @@ describe('Accessibility Requests', () => {
   });
 
   it('can remove a request', () => {
-    // Contact Details
     cy.visit('/');
     cy.contains('a', 'TACO').click()
     cy.contains('button', 'Remove this request from EASi').click()
