@@ -148,5 +148,15 @@
     "start-server-and-test": "^1.11.0",
     "text-encoding": "^0.7.0",
     "ts-loader": "^7.0.5"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 30,
+        "functions": 20,
+        "lines": 30,
+        "statements": 30
+      }
+    }
   }
 }
