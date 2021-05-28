@@ -24,7 +24,7 @@ const AccessibilityTestingStepsOverview = () => {
   return (
     <div className="grid-container">
       <div className="tablet:grid-col-10">
-        <BreadcrumbNav>
+        <BreadcrumbNav className="margin-top-2">
           <li>
             <Link to="/">Home</Link>
             <i className="fa fa-angle-right margin-x-05" aria-hidden />
@@ -149,7 +149,7 @@ const AccessibilityTestingStepsOverview = () => {
             to="/508/requests/new"
             data-testid="continue-link"
           >
-            Get started with Step 1
+            {t('testingStepsOverview.start')}
           </UswdsLink>
         )}
       </div>
