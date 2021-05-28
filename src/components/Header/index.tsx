@@ -133,7 +133,7 @@ export const Header = ({ children }: HeaderProps) => {
               </button>
               {displayDropdown && (
                 <UserActionList id="Header-UserActionsList">
-                  <UserAction link="/system/request-type">
+                  <UserAction link="/system/making-a-request">
                     {t('header:addSystem')}
                   </UserAction>
                   {flags.add508Request && (
