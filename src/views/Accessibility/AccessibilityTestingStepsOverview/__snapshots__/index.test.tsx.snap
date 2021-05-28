@@ -7,6 +7,29 @@ exports[`The accessibility testing overview matches the snapshot 1`] = `
   <div
     className="tablet:grid-col-10"
   >
+    <nav
+      aria-label="breadcrumbs"
+      className="easi-breadcrumb-nav"
+      role="navigation"
+    >
+      <ol>
+        <li>
+          <a
+            href="/"
+            onClick={[Function]}
+          >
+            Home
+          </a>
+          <i
+            aria-hidden={true}
+            className="fa fa-angle-right margin-x-05"
+          />
+        </li>
+        <li>
+          Steps Involved in 508 testing
+        </li>
+      </ol>
+    </nav>
     <h1
       aria-live="polite"
       className="easi-h1"
