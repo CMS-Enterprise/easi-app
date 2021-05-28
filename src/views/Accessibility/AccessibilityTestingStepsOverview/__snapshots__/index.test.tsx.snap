@@ -9,7 +9,7 @@ exports[`The accessibility testing overview matches the snapshot 1`] = `
   >
     <nav
       aria-label="breadcrumbs"
-      className="easi-breadcrumb-nav"
+      className="easi-breadcrumb-nav margin-top-2"
       role="navigation"
     >
       <ol>
