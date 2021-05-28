@@ -122,6 +122,7 @@ jobs:
           PGUSER: postgres
           PGPASS: easirox
           PGSSLMODE: disable
+          MAX_DB_CONNECTIONS: 20
           FLAG_SOURCE: LOCAL
       - image: *postgres
         auth:
