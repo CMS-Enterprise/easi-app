@@ -5,6 +5,12 @@ import { MemoryRouter } from 'react-router-dom';
 import { mount, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
+import { ACCESSIBILITY_TESTER_DEV } from 'constants/jobCodes';
+import {
+  REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY,
+  REPORT_PROBLEM_BASIC_USER_SURVEY
+} from 'constants/surveys';
+
 import Accessibility from './index';
 
 jest.mock('@okta/okta-react', () => ({
@@ -27,6 +33,7 @@ jest.mock('@okta/okta-react', () => ({
 describe('Accessibility wrapper', () => {
   const mockStore = configureMockStore();
   const store = mockStore({ auth: { groups: [], isUserSet: true } });
+
   it('renders without crashing', () => {
     const wrapper = shallow(
       <Provider store={store}>
@@ -51,7 +58,7 @@ describe('Accessibility wrapper', () => {
     expect(wrapper.find('ReportProblemLinkArea').exists()).toBe(true);
   });
 
-  it('uses the right href value for the report problem link for a 508 tester or user', async () => {
+  it('uses the right url value for the "report problem" link for a basic user', async () => {
     let wrapper: any;
     await act(async () => {
       wrapper = mount(
@@ -65,6 +72,45 @@ describe('Accessibility wrapper', () => {
     });
     expect(
       wrapper.find('ReportProblemLinkArea').find('a').props().href
-    ).toEqual('https://www.surveymonkey.com/r/GCYMVY8');
+    ).toEqual(REPORT_PROBLEM_BASIC_USER_SURVEY);
+  });
+
+  it('uses the right url value for the "report problem" link for a 508 tester', async () => {
+    const testerStore = mockStore({
+      auth: { groups: [ACCESSIBILITY_TESTER_DEV], isUserSet: true }
+    });
+    let wrapper: any;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <Provider store={testerStore}>
+            <Accessibility />
+          </Provider>
+        </MemoryRouter>
+      );
+      wrapper.update();
+    });
+    expect(
+      wrapper.find('ReportProblemLinkArea').find('a').props().href
+    ).toEqual(REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY);
+  });
+  it('uses the right url value for the "report problem" link for a 508 user', async () => {
+    const testerStore = mockStore({
+      auth: { groups: [ACCESSIBILITY_TESTER_DEV], isUserSet: true }
+    });
+    let wrapper: any;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <Provider store={testerStore}>
+            <Accessibility />
+          </Provider>
+        </MemoryRouter>
+      );
+      wrapper.update();
+    });
+    expect(
+      wrapper.find('ReportProblemLinkArea').find('a').props().href
+    ).toEqual(REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY);
   });
 });
