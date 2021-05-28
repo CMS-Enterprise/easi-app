@@ -18,7 +18,8 @@ const makingARequest = {
     message:
       'For all other questions, you can reach the CMS IT Governance team at: ',
     email: 'ITgovernance@cms.hhs.gov'
-  }
+  },
+  nextStep: 'Start a new request'
 };
 
 export default makingARequest;
