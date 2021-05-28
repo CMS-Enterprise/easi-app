@@ -10,6 +10,10 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import {
+  REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY,
+  REPORT_PROBLEM_BASIC_USER_SURVEY
+} from 'constants/surveys';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import Create from 'views/Accessibility/AccessibilityRequest/Create';
@@ -120,7 +124,7 @@ const A11yTeamPageTemplate = ({ children }: { children: React.ReactNode }) => {
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
-      <ReportProblemLinkArea url="https://docs.google.com/forms/d/e/1FAIpQLSfRJIddKkcffFWXB4AVG_ibYgShu1t-HcKuXov06mZDDxwjLw/viewform" />
+      <ReportProblemLinkArea url={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY} />
       <Footer />
     </PageWrapper>
   );
@@ -133,7 +137,7 @@ const PageTemplate = ({ children }: { children: React.ReactNode }) => {
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
-      <ReportProblemLinkArea url="https://www.surveymonkey.com/r/GCYMVY8" />
+      <ReportProblemLinkArea url={REPORT_PROBLEM_BASIC_USER_SURVEY} />
       <Footer />
     </PageWrapper>
   );
