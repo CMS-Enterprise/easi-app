@@ -1,5 +1,4 @@
-// Package authn holds EASi authentication related primitives
-package authn
+package authentication
 
 import "fmt"
 

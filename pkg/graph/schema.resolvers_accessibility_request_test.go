@@ -9,7 +9,7 @@ import (
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -352,7 +352,7 @@ func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 					}
 			}
 		}`, accessibilityRequest.ID.String()), &resp, func(request *client.Request) {
-		principal := authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true, JobCode508User: true}
+		principal := authentication.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true, JobCode508User: true}
 		ctx := appcontext.WithPrincipal(context.Background(), &principal)
 		request.HTTP = request.HTTP.WithContext(ctx)
 	})
