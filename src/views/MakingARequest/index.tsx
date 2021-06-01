@@ -32,7 +32,7 @@ const MakingARequest = () => {
         <p>{t('reasonList.intro')}</p>
         <ul>
           {reasons.map(option => (
-            <li>{option}</li>
+            <li key={option}>{option}</li>
           ))}
         </ul>
         <p>
