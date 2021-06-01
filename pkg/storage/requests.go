@@ -20,7 +20,6 @@ type Request struct {
 	ID          uuid.UUID
 	Name        null.String
 	SubmittedAt *time.Time        `db:"submitted_at"`
-	CreatedAt   time.Time         `db:"created_at"`
 	Type        model.RequestType `db:"record_type"`
 }
 
@@ -37,8 +36,7 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 			id,
 			name,
 			created_at AS submitted_at,
-			'ACCESSIBILITY_REQUEST' record_type,
-			created_at
+			'ACCESSIBILITY_REQUEST' record_type
 		FROM accessibility_requests
 			WHERE deleted_at IS NULL
 			AND eua_user_id = $1
@@ -47,12 +45,11 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 			id,
 			project_name AS name,
 			submitted_at,
-			'GOVERNANCE_REQUEST' record_type,
-			created_at
+			'GOVERNANCE_REQUEST' record_type
 		FROM system_intakes
 			WHERE archived_at IS NULL
 			AND eua_user_id = $1
-		ORDER BY created_at desc
+		ORDER BY submitted_at desc
 	`
 
 	err := s.db.Select(&requests, requestsSQL, EUAUserID)
