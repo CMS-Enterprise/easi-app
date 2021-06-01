@@ -49,7 +49,7 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		FROM system_intakes
 			WHERE archived_at IS NULL
 			AND eua_user_id = $1
-		ORDER BY submitted_at desc
+		ORDER BY submitted_at desc nulls first
 	`
 
 	err := s.db.Select(&requests, requestsSQL, EUAUserID)
