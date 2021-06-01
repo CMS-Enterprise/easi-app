@@ -4,7 +4,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
 import { Security } from '@okta/okta-react';
 
 import { localAuthStorageKey } from 'constants/localAuth';
-import { isLocalEnvironment } from 'utils/local';
+import { isLocalAuthEnabled } from 'utils/auth';
 
 import DevSecurity from './DevSecurity';
 
@@ -18,7 +18,7 @@ const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
   const handleAuthRequiredRedirect = () => {
     history.push('/signin');
   };
-  return isLocalEnvironment() &&
+  return isLocalAuthEnabled() &&
     window.localStorage[localAuthStorageKey] &&
     JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth ? (
     <DevSecurity>{children}</DevSecurity>

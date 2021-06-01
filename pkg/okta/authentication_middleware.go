@@ -11,7 +11,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 )
 
@@ -59,7 +59,7 @@ func jwtGroupsContainsJobCode(jwt *jwtverifier.Jwt, jobCode string) bool {
 	return false
 }
 
-func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPrincipal, error) {
+func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authentication.EUAPrincipal, error) {
 	euaID := jwt.Claims["sub"].(string)
 	if euaID == "" {
 		return nil, errors.New("unable to retrieve EUA ID from JWT")
@@ -75,7 +75,7 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPri
 	jc508Tester := jwtGroupsContainsJobCode(jwt, f.code508Tester)
 	jc508User := jwtGroupsContainsJobCode(jwt, f.code508User)
 
-	return &authn.EUAPrincipal{
+	return &authentication.EUAPrincipal{
 			EUAID:            euaID,
 			JobCodeEASi:      jcEASi,
 			JobCodeGRT:       jcGRT,
@@ -85,16 +85,12 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPri
 		nil
 }
 
-func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Handler {
+func (f oktaMiddlewareFactory) newAuthenticationMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger := appcontext.ZLogger(r.Context())
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			f.WriteErrorResponse(
-				r.Context(),
-				w,
-				&apperrors.UnauthorizedError{Err: errors.New("empty authorization header")},
-			)
+		if !strings.HasPrefix(authHeader, "Bearer") {
+			next.ServeHTTP(w, r)
 			return
 		}
 
@@ -126,7 +122,8 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 	})
 }
 
-func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
+// NewJwtVerifier returns a new JWT verifier with some minimal config
+func NewJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	toValidate := map[string]string{}
 	toValidate["cid"] = clientID
 	toValidate["aud"] = "EASi"
@@ -139,18 +136,21 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	return jwtVerifierSetup.New()
 }
 
+// JwtVerifier collects the methods we call on a JWT verifier
+type JwtVerifier interface {
+	VerifyAccessToken(jwt string) (*jwtverifier.Jwt, error)
+}
+
 type oktaMiddlewareFactory struct {
 	handlers.HandlerBase
-	verifier      *jwtverifier.JwtVerifier
+	verifier      JwtVerifier
 	codeGRT       string
 	code508Tester string
 	code508User   string
 }
 
-// NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issuer string, useTestJobCodes bool) func(http.Handler) http.Handler {
-	verifier := newJwtVerifier(clientID, issuer)
-
+// NewOktaAuthenticationMiddleware returns a wrapper for HandlerFunc to authorize with Okta
+func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, jwtVerifier JwtVerifier, useTestJobCodes bool) func(http.Handler) http.Handler {
 	// by default we want to use the PROD job codes, and only in
 	// pre-PROD environments do we want to empower the
 	// alternate job codes.
@@ -165,12 +165,10 @@ func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issu
 
 	middlewareFactory := oktaMiddlewareFactory{
 		HandlerBase:   base,
-		verifier:      verifier,
+		verifier:      jwtVerifier,
 		codeGRT:       jobCodeGRT,
 		code508Tester: jobCode508Tester,
 		code508User:   jobCode508User,
 	}
-	return func(next http.Handler) http.Handler {
-		return middlewareFactory.newAuthorizeMiddleware(next)
-	}
+	return middlewareFactory.newAuthenticationMiddleware
 }
