@@ -26,7 +26,7 @@ exports[`The accessibility testing overview matches the snapshot 1`] = `
           />
         </li>
         <li>
-          Steps Involved in 508 testing
+          Steps involved in 508 testing
         </li>
       </ol>
     </nav>
