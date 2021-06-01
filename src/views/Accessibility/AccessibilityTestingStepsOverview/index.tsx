@@ -29,7 +29,7 @@ const AccessibilityTestingStepsOverview = () => {
             <Link to="/">Home</Link>
             <i className="fa fa-angle-right margin-x-05" aria-hidden />
           </li>
-          <li>Steps Involved in 508 testing</li>
+          <li>Steps involved in 508 testing</li>
         </BreadcrumbNav>
         <PageHeading>{t('testingStepsOverview.heading')}</PageHeading>
         <p className="accessibility-testing-overview__description">
