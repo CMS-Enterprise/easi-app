@@ -17,7 +17,7 @@ const MakingARequest = () => {
   return (
     <PageWrapper>
       <Header />
-      <MainContent className="grid-container line-height-body-5">
+      <MainContent className="grid-container line-height-body-5 margin-bottom-5">
         <BreadcrumbNav className="margin-y-2">
           <li>
             <Link to="/">Home</Link>
@@ -26,7 +26,9 @@ const MakingARequest = () => {
           <li>IT Governance</li>
         </BreadcrumbNav>
 
-        <PageHeading>{t('heading')}</PageHeading>
+        <PageHeading className="margin-bottom-4 margin-top-5">
+          {t('heading')}
+        </PageHeading>
         <p>{t('reasonList.intro')}</p>
         <ul>
           {reasons.map(option => (
@@ -42,7 +44,7 @@ const MakingARequest = () => {
           </UswdsLink>
           .
         </p>
-        <p>
+        <p className="margin-bottom-3">
           {t('forOtherQuestions.message')}&nbsp;
           <UswdsLink href={`mailto:${t('forOtherQuestions.email')}`}>
             {t('forOtherQuestions.email')}
