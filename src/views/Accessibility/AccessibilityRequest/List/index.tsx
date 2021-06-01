@@ -59,7 +59,7 @@ const List = () => {
             asCustom={Link}
             className="usa-button flex-align-self-center"
             variant="unstyled"
-            to="/508/requests/new"
+            to="/508/testing-overview?continue=true"
           >
             {t('accessibility.newRequest')}
           </UswdsLink>

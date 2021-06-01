@@ -183,7 +183,8 @@ const accessibility = {
         'Exceptions are only valid for one release. Future releases will be re-evaluated for additional exceptions.',
       contact:
         'To apply for an exception or for more information, contact the CMS Section 508 team at <1>CMS_Section508@cms.hhs.gov<1/>.'
-    }
+    },
+    start: 'Get started with Step 1'
   },
   testingTemplates: {
     heading: 'Templates for 508 testing',
