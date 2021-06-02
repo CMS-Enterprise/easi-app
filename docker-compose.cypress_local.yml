@@ -10,6 +10,18 @@ services:
       dockerfile: Dockerfile.db_migrations
     volumes:
       - ./migrations:/flyway/sql
+  db_seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.db_seed
+    environment:
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASS=mysecretpassword
+      - PGSSLMODE=disable
+      - DB_MAX_CONNECTIONS=20
   easi:
     build:
       context: .
