@@ -26,3 +26,16 @@ Cypress.Commands.add('login', () => {
   });
   cy.url().should('eq', 'http://localhost:3000/');
 });
+
+Cypress.Commands.add('localLogin', ({name, role}) => {
+  cy.server();
+
+  cy.visit('/login');
+
+  cy.get('[data-testid="LocalAuth-Visit"]').click();
+  cy.get('[data-testid="LocalAuth-EUA"]').type(name);
+  cy.get(`input[value="${role}"]`).check();
+  cy.get('[data-testid="LocalAuth-Submit"]').click();
+
+  cy.url().should('eq', 'http://localhost:3000/');
+});
