@@ -13,7 +13,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -25,7 +25,7 @@ func newMockCreateAction(err error) createAction {
 
 func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 	requestContext := context.Background()
-	requestContext = appcontext.WithPrincipal(requestContext, &authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
+	requestContext = appcontext.WithPrincipal(requestContext, &authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
 	id, _ := uuid.NewUUID()
 
 	s.Run("golden path POST passes", func() {

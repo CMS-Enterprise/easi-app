@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
 type contextKey int
@@ -55,15 +55,15 @@ func Trace(ctx context.Context) (uuid.UUID, bool) {
 }
 
 // WithPrincipal decorates the context with the given security principal
-func WithPrincipal(c context.Context, p authn.Principal) context.Context {
+func WithPrincipal(c context.Context, p authentication.Principal) context.Context {
 	return context.WithValue(c, principalKey, p)
 }
 
 // Principal returns the security principal, defaulting to
 // an Anonymous user if not assigned.
-func Principal(c context.Context) authn.Principal {
-	if p, ok := c.Value(principalKey).(authn.Principal); ok {
+func Principal(c context.Context) authentication.Principal {
+	if p, ok := c.Value(principalKey).(authentication.Principal); ok {
 		return p
 	}
-	return authn.ANON
+	return authentication.ANON
 }
