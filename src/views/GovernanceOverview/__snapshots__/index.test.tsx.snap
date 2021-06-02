@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The governance overview page matches the snapshot 1`] = `
+exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
 <div
   className="easi-page-wrapper easi-governance-overview"
 >
@@ -506,11 +506,609 @@ exports[`The governance overview page matches the snapshot 1`] = `
     </div>
     <a
       className="usa-button"
-      href="/system/request-type"
+      href="/governance-task-list/test-intake-guid"
       onClick={[Function]}
     >
       Get started
     </a>
+  </main>
+  <footer
+    className="usa-footer usa-footer--slim"
+  >
+    <div
+      className="usa-footer__primary-section"
+    >
+      <div
+        className="usa-footer__primary-container grid-row"
+      >
+        <div
+          className="mobile-lg:grid-col-8"
+        >
+          <nav
+            className="usa-footer__nav"
+          >
+            <ul
+              className="grid-row grid-gap"
+            >
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/privacy-policy"
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/cookies"
+                >
+                  Cookies
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/terms-and-conditions"
+                >
+                  Terms and Conditions
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/accessibility-statement"
+                >
+                  Accessibility Statement
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-footer__secondary-section"
+    >
+      <div
+        className="grid-container"
+      >
+        <div>
+          <div
+            className="easi-footer__secondary-logo-wrap"
+          >
+            <img
+              alt="CMS.gov Logo"
+              src="cmsGovLogo.png"
+            />
+            <img
+              alt="Department of Health and Human Services USA"
+              className="margin-left-1"
+              src="hhsLogo.png"
+            />
+          </div>
+          <span>
+            A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 21244
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+`;
+
+exports[`The governance overview page matches the snapshot (w/o id param) 1`] = `
+<div
+  className="easi-page-wrapper easi-governance-overview"
+>
+  <header
+    className="usa-header easi-header"
+    role="banner"
+  >
+    <section
+      aria-label="Official government website"
+      className="usa-banner"
+    >
+      <div
+        className="usa-accordion"
+      >
+        <header
+          className="usa-banner__header"
+        >
+          <div
+            className="usa-banner__inner"
+          >
+            <div
+              className="grid-col-auto"
+            >
+              <img
+                alt="U.S. flag"
+                className="usa-banner__header-flag"
+                src="us_flag_small.png"
+              />
+            </div>
+            <div
+              className="grid-col-fill tablet:grid-col-auto"
+            >
+              <p
+                className="usa-banner__header-text"
+              >
+                An official website of the United States government
+              </p>
+              <p
+                aria-hidden="true"
+                className="usa-banner__header-action"
+              >
+                Here’s how you know
+              </p>
+            </div>
+            <button
+              aria-controls="gov-banner"
+              aria-expanded={false}
+              className="usa-accordion__button usa-banner__button"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="usa-banner__button-text"
+              >
+                Here’s how you know
+              </span>
+            </button>
+          </div>
+        </header>
+        <div
+          className="usa-banner__content usa-accordion__content"
+          hidden={true}
+          id="gov-banner"
+        >
+          <div
+            className="grid-row grid-gap-lg"
+          >
+            <div
+              className="usa-banner__guidance tablet:grid-col-6"
+            >
+              <img
+                alt="Dot gov"
+                className="usa-banner__icon usa-media-block__img"
+                src="icon-dot-gov.svg"
+              />
+              <div
+                className="usa-media-block__body"
+              >
+                <p>
+                  <strong>
+                    Official websites use .gov
+                  </strong>
+                  <br />
+                  A 
+                  <strong>
+                    .gov
+                  </strong>
+                   website belongs to an official government organization in the United States.
+                </p>
+              </div>
+            </div>
+            <div
+              className="usa-banner__guidance tablet:grid-col-6"
+            >
+              <img
+                alt="Https"
+                className="usa-banner__icon usa-media-block__img"
+                src="icon-https.svg"
+              />
+              <div
+                className="usa-media-block__body"
+              >
+                <p>
+                  <strong>
+                    Secure .gov websites use HTTPS
+                  </strong>
+                  <br />
+                  A 
+                  <strong>
+                    lock
+                  </strong>
+                   (
+                  <span
+                    className="icon-lock"
+                  >
+                    <svg
+                      aria-labelledby="banner-lock-title banner-lock-description"
+                      className="usa-banner__lock-image"
+                      height="64"
+                      role="img"
+                      viewBox="0 0 52 64"
+                      width="52"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title
+                        id="banner-lock-title"
+                      >
+                        Lock
+                      </title>
+                      <desc
+                        id="banner-lock-description"
+                      >
+                        A locked padlock
+                      </desc>
+                      <path
+                        d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"
+                        fill="#000000"
+                        fillRule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  ) or 
+                  <strong>
+                    https://
+                  </strong>
+                   means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div
+      className="grid-container easi-header__basic"
+    >
+      <div
+        className="usa-logo site-logo"
+        id="logo"
+      >
+        <a
+          href="/"
+          onClick={[Function]}
+        >
+          <em
+            aria-label="EASi home"
+            className="usa-logo__text"
+          >
+            EASi
+          </em>
+        </a>
+      </div>
+      <button
+        className="usa-menu-btn"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="fa fa-bars"
+        />
+      </button>
+      <div
+        className="navbar--container"
+      >
+        <div
+          className="easi-header__dropdown-wrapper"
+        >
+          <button
+            aria-controls="Header-UserActionsList"
+            aria-expanded={false}
+            aria-label="Expand User Menu"
+            className="easi-header__username"
+            onClick={[Function]}
+            type="button"
+          >
+            
+            <i
+              className="fa fa-angle-down easi-header__caret"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="grid-container easi-header--desktop "
+    />
+    <div
+      className="usa-overlay"
+    />
+    <div
+      className="usa-nav sidenav-mobile"
+    >
+      <button
+        aria-label="Close"
+        className="usa-nav__close"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="fa fa-close"
+        />
+      </button>
+      <div
+        className="usa-nav__inner"
+      >
+        <button
+          className="easi-header__nav-link"
+          onClick={[Function]}
+          type="button"
+        >
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </header>
+  <main
+    className="easi-main-content grid-container margin-bottom-5"
+    id="main-content"
+    role="main"
+    tabIndex={-1}
+  >
+    <nav
+      aria-label="breadcrumbs"
+      className="easi-breadcrumb-nav margin-y-2"
+      role="navigation"
+    >
+      <ol>
+        <li>
+          <a
+            href="/"
+            onClick={[Function]}
+          >
+            Home
+          </a>
+          <i
+            aria-hidden={true}
+            className="fa fa-angle-right margin-x-05"
+          />
+        </li>
+        <li
+          aria-current="location"
+        >
+          Add a new system or service
+        </li>
+      </ol>
+    </nav>
+    <a
+      href="/"
+      onClick={[Function]}
+    >
+      <i
+        className="fa fa-angle-left margin-right-05 text-no-underline"
+      />
+      <span>
+        Back
+      </span>
+    </a>
+    <h1
+      aria-live="polite"
+      className="easi-h1"
+      tabIndex={-1}
+    >
+      Add a new system or service
+    </h1>
+    <p
+      className="line-height-body-5 font-body-lg text-light"
+    >
+      To add a new system or service, you need to go through a set of steps and get approved by the Governance Review Board (GRB).
+    </p>
+    <div
+      className="easi-governance-overview__indented-wrapper"
+    >
+      <p
+        className="easi-governance-overview__indented-body"
+      >
+        Use this process only if you'd like to add a new system, service or make major changes and upgrades to an existing one.
+      </p>
+    </div>
+    <span>
+      This step by step process will help you:
+    </span>
+    <ul
+      className="margin-top-1 padding-left-205 line-height-body-5"
+    >
+      <li>
+        work with Subject Matter Experts (SMEs) to refine your business case
+      </li>
+      <li>
+        get a Lifecycle ID
+      </li>
+      <li>
+        get approval for your request to then seek funding
+      </li>
+    </ul>
+    <span>
+      It can take between 4 to 6 weeks to go through all the steps and get a decision.
+    </span>
+    <div
+      className="tablet:grid-col-6"
+    >
+      <h2
+        className="font-heading-xl"
+      >
+        Steps in the governance process
+      </h2>
+      <ol
+        className="easi-governance-overview__governance-steps"
+      >
+        <li
+          className="easi-governance-overview__governance-step"
+        >
+          <div
+            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          >
+            <h3
+              className="text-bold margin-top-0 margin-bottom-05"
+            >
+              Fill the intake request form
+            </h3>
+            <p
+              className="margin-bottom-0 line-height-body-4 margin-top-2px"
+            >
+              Tell the Governance admin team about your project/idea.
+            </p>
+          </div>
+        </li>
+        <li
+          className="easi-governance-overview__governance-step"
+        >
+          <div
+            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          >
+            <h3
+              className="text-bold margin-top-0 margin-bottom-05"
+            >
+              Feedback from initial review
+            </h3>
+            <p
+              className="margin-bottom-0 line-height-body-4 margin-top-2px"
+            >
+              The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they’ll direct you to go through the remaining steps.
+            </p>
+          </div>
+        </li>
+      </ol>
+      <hr
+        className="margin-y-3"
+      />
+      <ol
+        className="easi-governance-overview__governance-steps"
+        start={3}
+      >
+        <li
+          className="easi-governance-overview__governance-step"
+        >
+          <div
+            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          >
+            <h3
+              className="text-bold margin-top-0 margin-bottom-05"
+            >
+              Prepare your business case
+            </h3>
+            <p
+              className="margin-bottom-0 line-height-body-4 margin-top-2px"
+            >
+              Draft different solutions and the corresponding costs involved.
+            </p>
+          </div>
+        </li>
+        <li
+          className="easi-governance-overview__governance-step"
+        >
+          <div
+            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          >
+            <h3
+              className="text-bold margin-top-0 margin-bottom-05"
+            >
+              Attend the Governance Review Team meeting
+            </h3>
+            <p
+              className="margin-bottom-0 line-height-body-4 margin-top-2px"
+            >
+              Discuss your draft business case with Governance Review Team. They will help you refine your business case into the best shape possible.
+            </p>
+          </div>
+        </li>
+        <li
+          className="easi-governance-overview__governance-step"
+        >
+          <div
+            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          >
+            <h3
+              className="text-bold margin-top-0 margin-bottom-05"
+            >
+              Feedback from the Governance Review Team
+            </h3>
+            <p
+              className="margin-bottom-0 line-height-body-4 margin-top-2px"
+            >
+              If the Governance Review Team has any additional comments, they will ask you to update your business case before it’s submitted to the Governance Review Board.
+            </p>
+          </div>
+        </li>
+        <li
+          className="easi-governance-overview__governance-step"
+        >
+          <div
+            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          >
+            <h3
+              className="text-bold margin-top-0 margin-bottom-05"
+            >
+              Submit the business case for final approval
+            </h3>
+            <p
+              className="margin-bottom-0 line-height-body-4 margin-top-2px"
+            >
+              Update the business case based on feedback from the review meeting and submit it to the Governance Review Board.
+            </p>
+          </div>
+        </li>
+        <li
+          className="easi-governance-overview__governance-step"
+        >
+          <div
+            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          >
+            <h3
+              className="text-bold margin-top-0 margin-bottom-05"
+            >
+              Attend the Governance Review Board Meeting
+            </h3>
+            <p
+              className="margin-bottom-0 line-height-body-4 margin-top-2px"
+            >
+              The Governance Review Board will discuss and make decisions based on the business case and recommendations from the Governance Review Team.
+            </p>
+          </div>
+        </li>
+        <li
+          className="easi-governance-overview__governance-step"
+        >
+          <div
+            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          >
+            <h3
+              className="text-bold margin-top-0 margin-bottom-05"
+            >
+              Decision and next steps
+            </h3>
+            <p
+              className="margin-bottom-0 line-height-body-4 margin-top-2px"
+            >
+              If your business case is approved you will receive a unique Lifecycle ID. If it is not approved, you would need address the concerns to proceed.
+            </p>
+          </div>
+        </li>
+      </ol>
+    </div>
+    <div
+      className="margin-top-6 margin-bottom-7"
+    >
+      <div
+        className="easi-collapsable-link"
+      >
+        <button
+          aria-controls="GovernanceOverview-WhyGovernanceExists"
+          aria-expanded={false}
+          className="usa-button usa-button--unstyled"
+          data-testid="button"
+          onClick={[Function]}
+          type="button"
+        >
+          <span
+            className="fa easi-collapsable-link__square fa-caret-right"
+          />
+          Why does the governance process exist?
+        </button>
+      </div>
+    </div>
   </main>
   <footer
     className="usa-footer usa-footer--slim"

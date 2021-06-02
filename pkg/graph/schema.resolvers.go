@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -17,6 +16,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -308,11 +308,43 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 }
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
+	requesterEUAID := appcontext.Principal(ctx).ID()
+	requesterInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.IntakeID)
+	if err != nil {
+		return nil, err
+	}
+
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
-		EUAUserID: appcontext.Principal(ctx).ID(),
+		EUAUserID: requesterEUAID,
 		Name:      input.Name,
 		IntakeID:  input.IntakeID,
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendNewAccessibilityRequestEmail(
+		ctx,
+		requesterInfo.CommonName,
+		request.Name,
+		intake.ProjectName.String,
+		request.ID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendNewAccessibilityRequestEmailToRequester(
+		ctx,
+		request.Name,
+		request.ID,
+		requesterInfo.Email,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -323,13 +355,46 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error) {
+	request, err := r.store.FetchAccessibilityRequestByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	removerEUAID := appcontext.Principal(ctx).ID()
+	removerInfo, err := r.service.FetchUserInfo(ctx, removerEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	ok, err := services.AuthorizeUserIs508RequestOwner(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
+	}
+
+	err = r.store.DeleteAccessibilityRequest(ctx, input.ID, input.Reason)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendRemovedAccessibilityRequestEmail(ctx, request.Name, removerInfo.CommonName, input.Reason, removerInfo.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteAccessibilityRequestPayload{ID: &input.ID}, nil
+}
+
 func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error) {
-	url, urlErr := url.Parse(input.URL)
+	parsedURL, urlErr := url.Parse(input.URL)
 	if urlErr != nil {
 		return nil, urlErr
 	}
 
-	key, keyErr := r.s3Client.KeyFromURL(url)
+	key, keyErr := r.s3Client.KeyFromURL(parsedURL)
 	if keyErr != nil {
 		return nil, keyErr
 	}
@@ -346,6 +411,11 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("request with the given id not found"), Resource: models.AccessibilityRequest{}}
 	}
 
+	requesterInfo, err := r.service.FetchUserInfo(ctx, accessibilityRequest.EUAUserID)
+	if err != nil {
+		return nil, err
+	}
+
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		Name:               input.Name,
 		FileType:           input.MimeType,
@@ -359,13 +429,50 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	if docErr != nil {
 		return nil, docErr
 	}
-	if url, urlErr := r.s3Client.NewGetPresignedURL(key); urlErr == nil {
-		doc.URL = url.URL
+	if presignedURL, urlErr := r.s3Client.NewGetPresignedURL(key); urlErr == nil {
+		doc.URL = presignedURL.URL
+	}
+
+	err = r.emailClient.SendNewDocumentEmailsToReviewTeamAndRequester(
+		ctx,
+		doc.CommonDocumentType,
+		doc.OtherType,
+		accessibilityRequest.Name,
+		accessibilityRequest.ID,
+		requesterInfo.Email,
+	)
+	if err != nil {
+		return nil, err
 	}
 
 	return &model.CreateAccessibilityRequestDocumentPayload{
 		AccessibilityRequestDocument: doc,
 	}, nil
+}
+
+func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {
+	accessibilityRequestDocument, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, accessibilityRequestDocument.RequestID)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
+	}
+	err = r.store.DeleteAccessibilityRequestDocument(ctx, input.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
 }
 
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
@@ -535,6 +642,29 @@ func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.Creat
 	return &model.CreateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
 }
 
+func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
+	testDate, err := r.store.UpdateTestDate(ctx, &models.TestDate{
+		TestType: input.TestType,
+		Date:     input.Date,
+		Score:    input.Score,
+		ID:       input.ID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.UpdateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
+func (r *mutationResolver) DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error) {
+	testDate, err := r.store.DeleteTestDate(ctx, &models.TestDate{
+		ID: input.ID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.DeleteTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
 func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
 	url, err := r.s3Client.NewPutPresignedURL(input.MimeType)
 	if err != nil {
@@ -591,7 +721,7 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 		&models.SystemIntake{
 			ID:                input.IntakeID,
 			DecisionNextSteps: null.StringFrom(*input.NextSteps),
-			RejectionReason:   null.StringFrom(*&input.Reason),
+			RejectionReason:   null.StringFrom(input.Reason),
 		},
 		&models.Action{
 			IntakeID: &input.IntakeID,
@@ -618,75 +748,6 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
-}
-
-func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
-	testDate, err := r.store.UpdateTestDate(ctx, &models.TestDate{
-		TestType: input.TestType,
-		Date:     input.Date,
-		Score:    input.Score,
-		ID:       input.ID,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &model.UpdateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
-}
-
-func (r *mutationResolver) DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error) {
-	testDate, err := r.store.DeleteTestDate(ctx, &models.TestDate{
-		ID: input.ID,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &model.DeleteTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
-}
-
-func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {
-	accessibilityRequestDocument, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, accessibilityRequestDocument.RequestID)
-	if err != nil {
-		return nil, err
-	}
-	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
-	}
-	err = r.store.DeleteAccessibilityRequestDocument(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
-}
-
-func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error) {
-	request, err := r.store.FetchAccessibilityRequestByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	ok, err := services.AuthorizeUserIs508RequestOwner(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
-	}
-
-	err = r.store.DeleteAccessibilityRequest(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.DeleteAccessibilityRequestPayload{ID: &input.ID}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
@@ -720,6 +781,29 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	}
 
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
+}
+
+func (r *queryResolver) Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error) {
+	requests, queryErr := r.store.FetchMyRequests(ctx)
+	if queryErr != nil {
+		return nil, gqlerror.Errorf("query error: %s", queryErr)
+	}
+
+	edges := []*model.RequestEdge{}
+
+	for _, request := range requests {
+		node := model.Request{
+			ID:          request.ID,
+			SubmittedAt: request.SubmittedAt,
+			Name:        request.Name.Ptr(),
+			Type:        request.Type,
+		}
+		edges = append(edges, &model.RequestEdge{
+			Node: &node,
+		})
+	}
+
+	return &model.RequestsConnection{Edges: edges}, nil
 }
 
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -756,6 +840,20 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 		})
 	}
 	return conn, nil
+}
+
+func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, error) {
+	ldUser := flags.Principal(ctx)
+	userKey := ldUser.GetKey()
+	signedHash := r.ldClient.SecureModeHash(ldUser)
+
+	currentUser := model.CurrentUser{
+		LaunchDarkly: &model.LaunchDarklySettings{
+			UserKey:    userKey,
+			SignedHash: signedHash,
+		},
+	}
+	return &currentUser, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
@@ -1068,13 +1166,3 @@ type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *accessibilityRequestResolver) EuaID(ctx context.Context, obj *models.AccessibilityRequest) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}

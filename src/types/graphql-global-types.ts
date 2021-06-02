@@ -7,6 +7,12 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum AccessibilityRequestDeletionReason {
+  INCORRECT_APPLICATION_AND_LIFECYCLE_ID = "INCORRECT_APPLICATION_AND_LIFECYCLE_ID",
+  NO_TESTING_NEEDED = "NO_TESTING_NEEDED",
+  OTHER = "OTHER",
+}
+
 export enum AccessibilityRequestDocumentCommonType {
   AWARDED_VPAT = "AWARDED_VPAT",
   OTHER = "OTHER",
@@ -25,6 +31,11 @@ export enum AccessibilityRequestDocumentStatus {
 export enum GRTFeedbackType {
   BUSINESS_OWNER = "BUSINESS_OWNER",
   GRB = "GRB",
+}
+
+export enum RequestType {
+  ACCESSIBILITY_REQUEST = "ACCESSIBILITY_REQUEST",
+  GOVERNANCE_REQUEST = "GOVERNANCE_REQUEST",
 }
 
 export enum SystemIntakeActionType {
@@ -125,6 +136,7 @@ export interface DeleteAccessibilityRequestDocumentInput {
 
 export interface DeleteAccessibilityRequestInput {
   id: UUID;
+  reason: AccessibilityRequestDeletionReason;
 }
 
 export interface DeleteTestDateInput {

@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
 type ContextTestSuite struct {
@@ -95,7 +95,7 @@ func TestContextPrincipal(t *testing.T) {
 			expectGRT:  false,
 		},
 		"regular user": {
-			ctx: WithPrincipal(context.Background(), &authn.EUAPrincipal{
+			ctx: WithPrincipal(context.Background(), &authentication.EUAPrincipal{
 				EUAID:       submitterID,
 				JobCodeEASi: true,
 				JobCodeGRT:  false,
@@ -105,7 +105,7 @@ func TestContextPrincipal(t *testing.T) {
 			expectGRT:  false,
 		},
 		"GRT reviewer": {
-			ctx: WithPrincipal(context.Background(), &authn.EUAPrincipal{
+			ctx: WithPrincipal(context.Background(), &authentication.EUAPrincipal{
 				EUAID:       reviewerID,
 				JobCodeEASi: true,
 				JobCodeGRT:  true,

@@ -168,12 +168,17 @@ type ComplexityRoot struct {
 		UserErrors func(childComplexity int) int
 	}
 
+	CurrentUser struct {
+		LaunchDarkly func(childComplexity int) int
+	}
+
 	DeleteAccessibilityRequestDocumentPayload struct {
 		ID func(childComplexity int) int
 	}
 
 	DeleteAccessibilityRequestPayload struct {
-		ID func(childComplexity int) int
+		ID         func(childComplexity int) int
+		UserErrors func(childComplexity int) int
 	}
 
 	DeleteTestDatePayload struct {
@@ -200,6 +205,11 @@ type ComplexityRoot struct {
 	GeneratePresignedUploadURLPayload struct {
 		URL        func(childComplexity int) int
 		UserErrors func(childComplexity int) int
+	}
+
+	LaunchDarklySettings struct {
+		SignedHash func(childComplexity int) int
+		UserKey    func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -233,8 +243,27 @@ type ComplexityRoot struct {
 	Query struct {
 		AccessibilityRequest  func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests func(childComplexity int, after *string, first int) int
+		CurrentUser           func(childComplexity int) int
+		Requests              func(childComplexity int, after *string, first int) int
 		SystemIntake          func(childComplexity int, id uuid.UUID) int
 		Systems               func(childComplexity int, after *string, first int) int
+	}
+
+	Request struct {
+		ID          func(childComplexity int) int
+		Name        func(childComplexity int) int
+		SubmittedAt func(childComplexity int) int
+		Type        func(childComplexity int) int
+	}
+
+	RequestEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
+	}
+
+	RequestsConnection struct {
+		Edges      func(childComplexity int) int
+		TotalCount func(childComplexity int) int
 	}
 
 	System struct {
@@ -437,7 +466,9 @@ type MutationResolver interface {
 	AddGRTFeedbackAndProgressToFinalBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	AddGRTFeedbackAndRequestBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
+	DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error)
 	CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error)
+	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
 	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
@@ -448,22 +479,22 @@ type MutationResolver interface {
 	CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
+	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
+	DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error)
 	GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
 	IssueLifecycleID(ctx context.Context, input model.IssueLifecycleIDInput) (*model.UpdateSystemIntakePayload, error)
 	MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	RejectIntake(ctx context.Context, input model.RejectIntakeInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error)
-	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
-	DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error)
-	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
-	DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
 	AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error)
+	Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error)
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
+	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error)
@@ -1038,6 +1069,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateTestDatePayload.UserErrors(childComplexity), true
 
+	case "CurrentUser.launchDarkly":
+		if e.complexity.CurrentUser.LaunchDarkly == nil {
+			break
+		}
+
+		return e.complexity.CurrentUser.LaunchDarkly(childComplexity), true
+
 	case "DeleteAccessibilityRequestDocumentPayload.id":
 		if e.complexity.DeleteAccessibilityRequestDocumentPayload.ID == nil {
 			break
@@ -1051,6 +1089,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.DeleteAccessibilityRequestPayload.ID(childComplexity), true
+
+	case "DeleteAccessibilityRequestPayload.userErrors":
+		if e.complexity.DeleteAccessibilityRequestPayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.DeleteAccessibilityRequestPayload.UserErrors(childComplexity), true
 
 	case "DeleteTestDatePayload.testDate":
 		if e.complexity.DeleteTestDatePayload.TestDate == nil {
@@ -1149,6 +1194,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
+
+	case "LaunchDarklySettings.signedHash":
+		if e.complexity.LaunchDarklySettings.SignedHash == nil {
+			break
+		}
+
+		return e.complexity.LaunchDarklySettings.SignedHash(childComplexity), true
+
+	case "LaunchDarklySettings.userKey":
+		if e.complexity.LaunchDarklySettings.UserKey == nil {
+			break
+		}
+
+		return e.complexity.LaunchDarklySettings.UserKey(childComplexity), true
 
 	case "Mutation.addGRTFeedbackAndKeepBusinessCaseInDraft":
 		if e.complexity.Mutation.AddGRTFeedbackAndKeepBusinessCaseInDraft == nil {
@@ -1474,6 +1533,25 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AccessibilityRequests(childComplexity, args["after"].(*string), args["first"].(int)), true
 
+	case "Query.currentUser":
+		if e.complexity.Query.CurrentUser == nil {
+			break
+		}
+
+		return e.complexity.Query.CurrentUser(childComplexity), true
+
+	case "Query.requests":
+		if e.complexity.Query.Requests == nil {
+			break
+		}
+
+		args, err := ec.field_Query_requests_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Requests(childComplexity, args["after"].(*string), args["first"].(int)), true
+
 	case "Query.systemIntake":
 		if e.complexity.Query.SystemIntake == nil {
 			break
@@ -1497,6 +1575,62 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Systems(childComplexity, args["after"].(*string), args["first"].(int)), true
+
+	case "Request.id":
+		if e.complexity.Request.ID == nil {
+			break
+		}
+
+		return e.complexity.Request.ID(childComplexity), true
+
+	case "Request.name":
+		if e.complexity.Request.Name == nil {
+			break
+		}
+
+		return e.complexity.Request.Name(childComplexity), true
+
+	case "Request.submittedAt":
+		if e.complexity.Request.SubmittedAt == nil {
+			break
+		}
+
+		return e.complexity.Request.SubmittedAt(childComplexity), true
+
+	case "Request.type":
+		if e.complexity.Request.Type == nil {
+			break
+		}
+
+		return e.complexity.Request.Type(childComplexity), true
+
+	case "RequestEdge.cursor":
+		if e.complexity.RequestEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.RequestEdge.Cursor(childComplexity), true
+
+	case "RequestEdge.node":
+		if e.complexity.RequestEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.RequestEdge.Node(childComplexity), true
+
+	case "RequestsConnection.edges":
+		if e.complexity.RequestsConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.RequestsConnection.Edges(childComplexity), true
+
+	case "RequestsConnection.totalCount":
+		if e.complexity.RequestsConnection.TotalCount == nil {
+			break
+		}
+
+		return e.complexity.RequestsConnection.TotalCount(childComplexity), true
 
 	case "System.businessOwner":
 		if e.complexity.System.BusinessOwner == nil {
@@ -2257,6 +2391,28 @@ type UserError {
   path: [String!]!
 }
 
+enum RequestType {
+  ACCESSIBILITY_REQUEST
+  GOVERNANCE_REQUEST
+}
+
+type Request {
+  id: UUID!
+  name: String
+  submittedAt: Time
+  type: RequestType!
+}
+
+type RequestsConnection {
+  edges: [RequestEdge!]!
+  totalCount: Int!
+}
+
+type RequestEdge {
+  cursor: String!
+  node: Request!
+}
+
 """
 An accessibility request represents a system that needs to go through
 the 508 process.
@@ -2339,6 +2495,21 @@ input CreateAccessibilityRequestInput {
 
 type CreateAccessibilityRequestPayload {
   accessibilityRequest: AccessibilityRequest
+  userErrors: [UserError!]
+}
+
+enum AccessibilityRequestDeletionReason {
+  INCORRECT_APPLICATION_AND_LIFECYCLE_ID
+  NO_TESTING_NEEDED
+  OTHER
+}
+
+input DeleteAccessibilityRequestInput {
+  id: UUID!
+  reason: AccessibilityRequestDeletionReason!
+}
+type DeleteAccessibilityRequestPayload {
+  id: UUID
   userErrors: [UserError!]
 }
 
@@ -2425,6 +2596,14 @@ type CreateAccessibilityRequestDocumentPayload {
   accessibilityRequestDocument: AccessibilityRequestDocument
   userErrors: [UserError!]
 }
+
+input DeleteAccessibilityRequestDocumentInput {
+  id: UUID!
+}
+type DeleteAccessibilityRequestDocumentPayload {
+  id: UUID
+}
+
 
 """
 A solution proposal within a business case
@@ -2775,23 +2954,19 @@ type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
+
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
 }
 
-input DeleteAccessibilityRequestDocumentInput {
-  id: UUID!
-}
-type DeleteAccessibilityRequestDocumentPayload {
-  id: UUID
+type LaunchDarklySettings {
+  userKey: String!
+  signedHash: String!
 }
 
-input DeleteAccessibilityRequestInput {
-  id: UUID!
-}
-type DeleteAccessibilityRequestPayload {
-  id: UUID
+type CurrentUser {
+  launchDarkly: LaunchDarklySettings!
 }
 
 type Mutation {
@@ -2807,9 +2982,11 @@ type Mutation {
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
+  deleteAccessibilityRequest(input: DeleteAccessibilityRequestInput!) : DeleteAccessibilityRequestPayload
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
+  deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
   createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionGuideReceievedClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -2820,6 +2997,10 @@ type Mutation {
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
+    @hasRole(role: EASI_508_TESTER_OR_USER)
+  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
+    @hasRole(role: EASI_508_TESTER_OR_USER)
+  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
     @hasRole(role: EASI_508_TESTER_OR_USER)
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
@@ -2835,12 +3016,6 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
-  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
-  deleteAccessibilityRequest(input: DeleteAccessibilityRequestInput!) : DeleteAccessibilityRequestPayload
 }
 
 type Query {
@@ -2849,8 +3024,13 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
+  requests(
+    after: String
+    first: Int!
+  ): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
+  currentUser: CurrentUser
 }
 
 """
@@ -3323,6 +3503,30 @@ func (ec *executionContext) field_Query_accessibilityRequest_args(ctx context.Co
 }
 
 func (ec *executionContext) field_Query_accessibilityRequests_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_requests_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *string
@@ -5878,6 +6082,41 @@ func (ec *executionContext) _CreateTestDatePayload_userErrors(ctx context.Contex
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CurrentUser_launchDarkly(ctx context.Context, field graphql.CollectedField, obj *model.CurrentUser) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentUser",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LaunchDarkly, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.LaunchDarklySettings)
+	fc.Result = res
+	return ec.marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLaunchDarklySettings(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _DeleteAccessibilityRequestDocumentPayload_id(ctx context.Context, field graphql.CollectedField, obj *model.DeleteAccessibilityRequestDocumentPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5940,6 +6179,38 @@ func (ec *executionContext) _DeleteAccessibilityRequestPayload_id(ctx context.Co
 	res := resTmp.(*uuid.UUID)
 	fc.Result = res
 	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DeleteAccessibilityRequestPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.DeleteAccessibilityRequestPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DeleteAccessibilityRequestPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _DeleteTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.DeleteTestDatePayload) (ret graphql.Marshaler) {
@@ -6396,6 +6667,76 @@ func (ec *executionContext) _GeneratePresignedUploadURLPayload_userErrors(ctx co
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _LaunchDarklySettings_userKey(ctx context.Context, field graphql.CollectedField, obj *model.LaunchDarklySettings) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LaunchDarklySettings",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserKey, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _LaunchDarklySettings_signedHash(ctx context.Context, field graphql.CollectedField, obj *model.LaunchDarklySettings) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LaunchDarklySettings",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SignedHash, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_addGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6624,6 +6965,45 @@ func (ec *executionContext) _Mutation_createAccessibilityRequest(ctx context.Con
 	return ec.marshalOCreateAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_deleteAccessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteAccessibilityRequest_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteAccessibilityRequest(rctx, args["input"].(model.DeleteAccessibilityRequestInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DeleteAccessibilityRequestPayload)
+	fc.Result = res
+	return ec.marshalODeleteAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_createAccessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6661,6 +7041,45 @@ func (ec *executionContext) _Mutation_createAccessibilityRequestDocument(ctx con
 	res := resTmp.(*model.CreateAccessibilityRequestDocumentPayload)
 	fc.Result = res
 	return ec.marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteAccessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteAccessibilityRequestDocument_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteAccessibilityRequestDocument(rctx, args["input"].(model.DeleteAccessibilityRequestDocumentInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DeleteAccessibilityRequestDocumentPayload)
+	fc.Result = res
+	return ec.marshalODeleteAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createSystemIntakeActionBusinessCaseNeeded(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7293,6 +7712,132 @@ func (ec *executionContext) _Mutation_createTestDate(ctx context.Context, field 
 	return ec.marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDatePayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateTestDate_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateTestDate(rctx, args["input"].(model.UpdateTestDateInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.UpdateTestDatePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateTestDatePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateTestDatePayload)
+	fc.Result = res
+	return ec.marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteTestDate_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteTestDate(rctx, args["input"].(model.DeleteTestDateInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.DeleteTestDatePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.DeleteTestDatePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DeleteTestDatePayload)
+	fc.Result = res
+	return ec.marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDatePayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_generatePresignedUploadURL(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7647,210 +8192,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeReviewDates(ctx context.
 	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_updateTestDate_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTestDate(rctx, args["input"].(model.UpdateTestDateInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*model.UpdateTestDatePayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateTestDatePayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.UpdateTestDatePayload)
-	fc.Result = res
-	return ec.marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_deleteTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_deleteTestDate_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteTestDate(rctx, args["input"].(model.DeleteTestDateInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*model.DeleteTestDatePayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.DeleteTestDatePayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.DeleteTestDatePayload)
-	fc.Result = res
-	return ec.marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDatePayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_deleteAccessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_deleteAccessibilityRequestDocument_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteAccessibilityRequestDocument(rctx, args["input"].(model.DeleteAccessibilityRequestDocumentInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.DeleteAccessibilityRequestDocumentPayload)
-	fc.Result = res
-	return ec.marshalODeleteAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_deleteAccessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_deleteAccessibilityRequest_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteAccessibilityRequest(rctx, args["input"].(model.DeleteAccessibilityRequestInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.DeleteAccessibilityRequestPayload)
-	fc.Result = res
-	return ec.marshalODeleteAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestPayload(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7927,6 +8268,45 @@ func (ec *executionContext) _Query_accessibilityRequests(ctx context.Context, fi
 	res := resTmp.(*model.AccessibilityRequestsConnection)
 	fc.Result = res
 	return ec.marshalOAccessibilityRequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestsConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_requests(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_requests_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Requests(rctx, args["after"].(*string), args["first"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.RequestsConnection)
+	fc.Result = res
+	return ec.marshalORequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestsConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_systemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8007,6 +8387,38 @@ func (ec *executionContext) _Query_systems(ctx context.Context, field graphql.Co
 	return ec.marshalOSystemConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemConnection(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_currentUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CurrentUser(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CurrentUser)
+	fc.Result = res
+	return ec.marshalOCurrentUser2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCurrentUser(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8076,6 +8488,280 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Request_id(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Request_name(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Request_submittedAt(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubmittedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Request_type(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.RequestType)
+	fc.Result = res
+	return ec.marshalNRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _RequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.RequestEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RequestEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _RequestEdge_node(ctx context.Context, field graphql.CollectedField, obj *model.RequestEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RequestEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Request)
+	fc.Result = res
+	return ec.marshalNRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequest(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _RequestsConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.RequestsConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RequestsConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.RequestEdge)
+	fc.Result = res
+	return ec.marshalNRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _RequestsConnection_totalCount(ctx context.Context, field graphql.CollectedField, obj *model.RequestsConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RequestsConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_businessOwner(ctx context.Context, field graphql.CollectedField, obj *models.System) (ret graphql.Marshaler) {
@@ -12686,6 +13372,14 @@ func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestInput(ctx co
 			if err != nil {
 				return it, err
 			}
+		case "reason":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
+			it.Reason, err = ec.unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDeletionReason(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -13700,6 +14394,33 @@ func (ec *executionContext) _CreateTestDatePayload(ctx context.Context, sel ast.
 	return out
 }
 
+var currentUserImplementors = []string{"CurrentUser"}
+
+func (ec *executionContext) _CurrentUser(ctx context.Context, sel ast.SelectionSet, obj *model.CurrentUser) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, currentUserImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CurrentUser")
+		case "launchDarkly":
+			out.Values[i] = ec._CurrentUser_launchDarkly(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var deleteAccessibilityRequestDocumentPayloadImplementors = []string{"DeleteAccessibilityRequestDocumentPayload"}
 
 func (ec *executionContext) _DeleteAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteAccessibilityRequestDocumentPayload) graphql.Marshaler {
@@ -13737,6 +14458,8 @@ func (ec *executionContext) _DeleteAccessibilityRequestPayload(ctx context.Conte
 			out.Values[i] = graphql.MarshalString("DeleteAccessibilityRequestPayload")
 		case "id":
 			out.Values[i] = ec._DeleteAccessibilityRequestPayload_id(ctx, field, obj)
+		case "userErrors":
+			out.Values[i] = ec._DeleteAccessibilityRequestPayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13870,6 +14593,38 @@ func (ec *executionContext) _GeneratePresignedUploadURLPayload(ctx context.Conte
 	return out
 }
 
+var launchDarklySettingsImplementors = []string{"LaunchDarklySettings"}
+
+func (ec *executionContext) _LaunchDarklySettings(ctx context.Context, sel ast.SelectionSet, obj *model.LaunchDarklySettings) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, launchDarklySettingsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("LaunchDarklySettings")
+		case "userKey":
+			out.Values[i] = ec._LaunchDarklySettings_userKey(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "signedHash":
+			out.Values[i] = ec._LaunchDarklySettings_signedHash(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -13893,8 +14648,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_addGRTFeedbackAndRequestBusinessCase(ctx, field)
 		case "createAccessibilityRequest":
 			out.Values[i] = ec._Mutation_createAccessibilityRequest(ctx, field)
+		case "deleteAccessibilityRequest":
+			out.Values[i] = ec._Mutation_deleteAccessibilityRequest(ctx, field)
 		case "createAccessibilityRequestDocument":
 			out.Values[i] = ec._Mutation_createAccessibilityRequestDocument(ctx, field)
+		case "deleteAccessibilityRequestDocument":
+			out.Values[i] = ec._Mutation_deleteAccessibilityRequestDocument(ctx, field)
 		case "createSystemIntakeActionBusinessCaseNeeded":
 			out.Values[i] = ec._Mutation_createSystemIntakeActionBusinessCaseNeeded(ctx, field)
 		case "createSystemIntakeActionBusinessCaseNeedsChanges":
@@ -13915,6 +14674,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createSystemIntakeNote(ctx, field)
 		case "createTestDate":
 			out.Values[i] = ec._Mutation_createTestDate(ctx, field)
+		case "updateTestDate":
+			out.Values[i] = ec._Mutation_updateTestDate(ctx, field)
+		case "deleteTestDate":
+			out.Values[i] = ec._Mutation_deleteTestDate(ctx, field)
 		case "generatePresignedUploadURL":
 			out.Values[i] = ec._Mutation_generatePresignedUploadURL(ctx, field)
 		case "issueLifecycleId":
@@ -13927,14 +14690,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_updateSystemIntakeAdminLead(ctx, field)
 		case "updateSystemIntakeReviewDates":
 			out.Values[i] = ec._Mutation_updateSystemIntakeReviewDates(ctx, field)
-		case "updateTestDate":
-			out.Values[i] = ec._Mutation_updateTestDate(ctx, field)
-		case "deleteTestDate":
-			out.Values[i] = ec._Mutation_deleteTestDate(ctx, field)
-		case "deleteAccessibilityRequestDocument":
-			out.Values[i] = ec._Mutation_deleteAccessibilityRequestDocument(ctx, field)
-		case "deleteAccessibilityRequest":
-			out.Values[i] = ec._Mutation_deleteAccessibilityRequest(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13983,6 +14738,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_accessibilityRequests(ctx, field)
 				return res
 			})
+		case "requests":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_requests(ctx, field)
+				return res
+			})
 		case "systemIntake":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -14005,10 +14771,121 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_systems(ctx, field)
 				return res
 			})
+		case "currentUser":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_currentUser(ctx, field)
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var requestImplementors = []string{"Request"}
+
+func (ec *executionContext) _Request(ctx context.Context, sel ast.SelectionSet, obj *model.Request) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, requestImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Request")
+		case "id":
+			out.Values[i] = ec._Request_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+			out.Values[i] = ec._Request_name(ctx, field, obj)
+		case "submittedAt":
+			out.Values[i] = ec._Request_submittedAt(ctx, field, obj)
+		case "type":
+			out.Values[i] = ec._Request_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var requestEdgeImplementors = []string{"RequestEdge"}
+
+func (ec *executionContext) _RequestEdge(ctx context.Context, sel ast.SelectionSet, obj *model.RequestEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, requestEdgeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RequestEdge")
+		case "cursor":
+			out.Values[i] = ec._RequestEdge_cursor(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "node":
+			out.Values[i] = ec._RequestEdge_node(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var requestsConnectionImplementors = []string{"RequestsConnection"}
+
+func (ec *executionContext) _RequestsConnection(ctx context.Context, sel ast.SelectionSet, obj *model.RequestsConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, requestsConnectionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RequestsConnection")
+		case "edges":
+			out.Values[i] = ec._RequestsConnection_edges(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totalCount":
+			out.Values[i] = ec._RequestsConnection_totalCount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -15314,6 +16191,22 @@ func (ec *executionContext) marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgo
 	return ec._AccessibilityRequest(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDeletionReason(ctx context.Context, v interface{}) (models.AccessibilityRequestDeletionReason, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.AccessibilityRequestDeletionReason(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDeletionReason(ctx context.Context, sel ast.SelectionSet, v models.AccessibilityRequestDeletionReason) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.AccessibilityRequestDocument) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -15616,9 +16509,86 @@ func (ec *executionContext) unmarshalNIssueLifecycleIdInput2githubᚗcomᚋcmsgo
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLaunchDarklySettings(ctx context.Context, sel ast.SelectionSet, v *model.LaunchDarklySettings) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._LaunchDarklySettings(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNRejectIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRejectIntakeInput(ctx context.Context, v interface{}) (model.RejectIntakeInput, error) {
 	res, err := ec.unmarshalInputRejectIntakeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequest(ctx context.Context, sel ast.SelectionSet, v *model.Request) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Request(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.RequestEdge) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNRequestEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNRequestEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestEdge(ctx context.Context, sel ast.SelectionSet, v *model.RequestEdge) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._RequestEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestType(ctx context.Context, v interface{}) (model.RequestType, error) {
+	var res model.RequestType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestType(ctx context.Context, sel ast.SelectionSet, v model.RequestType) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx context.Context, v interface{}) (model.Role, error) {
@@ -16400,6 +17370,13 @@ func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsg
 	return ec._CreateTestDatePayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCurrentUser2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCurrentUser(ctx context.Context, sel ast.SelectionSet, v *model.CurrentUser) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CurrentUser(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalODeleteAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteAccessibilityRequestDocumentPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -16527,6 +17504,13 @@ func (ec *executionContext) unmarshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋ
 
 func (ec *executionContext) marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx context.Context, sel ast.SelectionSet, v models.LifecycleCostYear) graphql.Marshaler {
 	return graphql.MarshalString(string(v))
+}
+
+func (ec *executionContext) marshalORequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestsConnection(ctx context.Context, sel ast.SelectionSet, v *model.RequestsConnection) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RequestsConnection(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

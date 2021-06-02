@@ -2,12 +2,16 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper, shallow } from 'enzyme';
+import { mockFlags, resetLDMocks } from 'jest-launchdarkly-mock';
+import GetRequestsQuery from 'queries/GetRequestsQuery';
 import configureMockStore from 'redux-mock-store';
 
 import ActionBanner from 'components/shared/ActionBanner';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import Table from 'views/MyRequests/Table';
 
 import Home from './index';
 
@@ -28,7 +32,22 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
+const defaultFlags = {
+  add508Request: false,
+  downgrade508Tester: false,
+  downgrade508User: false,
+  downgradeGovTeam: false,
+  fileUploads: true,
+  pdfExport: true,
+  prototype508: true,
+  prototypeTrb: true,
+  sandbox: true
+};
+
 describe('The home page', () => {
+  beforeEach(() => {
+    resetLDMocks();
+  });
   describe('not a grt review user', () => {
     const mockAuthReducer = {
       isUserSet: true,
@@ -52,81 +71,85 @@ describe('The home page', () => {
     });
 
     describe('User is logged in', () => {
-      it('displays login button', async () => {
-        const mockStore = configureMockStore();
-        const store = mockStore({
-          auth: mockAuthReducer,
-          systemIntakes: {
-            systemIntakes: []
-          },
-          businessCases: {
-            businessCases: []
-          }
-        });
-        let component: any;
-
-        await act(async () => {
-          component = mount(
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Home />
-                </MessageProvider>
-              </Provider>
-            </MemoryRouter>
-          );
-
-          component.update();
-
-          expect(component.find('a[children="Start now"]').exists()).toEqual(
-            true
-          );
+      describe('add508FeatureFlag is false', () => {
+        it('displays login button', async () => {
+          mockFlags(defaultFlags);
+          const mockStore = configureMockStore();
+          const store = mockStore({
+            auth: mockAuthReducer,
+            systemIntakes: {
+              systemIntakes: []
+            },
+            businessCases: {
+              businessCases: []
+            }
+          });
+          let component: any;
+          await act(async () => {
+            component = mount(
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <Provider store={store}>
+                  <MessageProvider>
+                    <Home />
+                  </MessageProvider>
+                </Provider>
+              </MemoryRouter>
+            );
+            component.update();
+            expect(component.find('a[children="Start now"]').exists()).toEqual(
+              true
+            );
+          });
         });
       });
-
-      it('displays banners for intakes', async () => {
-        const mockStore = configureMockStore();
-        const store = mockStore({
-          auth: mockAuthReducer,
-          systemIntakes: {
-            systemIntakes: [
-              {
-                ...initialSystemIntakeForm,
-                id: '1'
+      describe('add508FeatureFlag is true', () => {
+        it('displays process options', async () => {
+          mockFlags({ ...defaultFlags, add508Request: true });
+          const mockStore = configureMockStore();
+          const store = mockStore({
+            auth: mockAuthReducer,
+            systemIntakes: {
+              systemIntakes: []
+            },
+            businessCases: {
+              businessCases: []
+            }
+          });
+          let component: any;
+          const mocks = [
+            {
+              request: {
+                query: GetRequestsQuery,
+                variables: { first: 20 }
               },
-              {
-                ...initialSystemIntakeForm,
-                id: '2',
-                status: 'NEED_BIZ_CASE'
-              },
-              {
-                ...initialSystemIntakeForm,
-                id: '3'
-              },
-              {
-                ...initialSystemIntakeForm,
-                id: '4',
-                status: 'NEED_BIZ_CASE',
-                businessCaseId: '1'
-              }
-            ]
-          }
-        });
-        let component: any;
-
-        await act(async () => {
-          component = mount(
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Home />
-                </MessageProvider>
-              </Provider>
-            </MemoryRouter>
-          );
-
-          component.update();
-          expect(component.find(ActionBanner).length).toEqual(4);
+              result: {}
+            }
+          ];
+          await act(async () => {
+            component = mount(
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <MockedProvider mocks={mocks}>
+                  <Provider store={store}>
+                    <MessageProvider>
+                      <Home />
+                    </MessageProvider>
+                  </Provider>
+                </MockedProvider>
+              </MemoryRouter>
+            );
+            component.update();
+            expect(component.find('a[children="Start now"]').exists()).toEqual(
+              false
+            );
+            expect(
+              component.find('a[children="IT Governance"]').exists()
+            ).toEqual(true);
+            expect(
+              component.find('a[children="Section 508 compliance"]').exists()
+            ).toEqual(true);
+            expect(component.find('hr').exists()).toBeTruthy();
+            expect(component.find(Table).exists()).toBeTruthy();
+          });
         });
       });
     });
@@ -194,6 +217,7 @@ describe('The home page', () => {
     });
 
     it('renders the open requests table', async () => {
+      mockFlags(defaultFlags);
       const homePage = mountComponent({
         auth: mockAuthReducer,
         systemIntakes: {
@@ -211,6 +235,7 @@ describe('The home page', () => {
     });
 
     it('renders the closed requests table', async () => {
+      mockFlags(defaultFlags);
       const homePage = mountComponent({
         auth: mockAuthReducer,
         systemIntakes: {
@@ -231,6 +256,7 @@ describe('The home page', () => {
     });
 
     it('does not render any banners', async () => {
+      mockFlags(defaultFlags);
       const homePage = mountComponent({
         auth: mockAuthReducer,
         systemIntakes: {

@@ -66,8 +66,17 @@ export const isAccessibilityTeam = (
   );
 };
 
-export const isBasicUser = (groups: Array<String> = []) => {
-  return groups.includes(BASIC_USER_PROD) || groups.length === 0;
+export const isBasicUser = (groups: Array<String> = [], flags: Flags) => {
+  if (groups.includes(BASIC_USER_PROD)) {
+    return true;
+  }
+  if (groups.length === 0) {
+    return true;
+  }
+  if (!isAccessibilityTeam(groups, flags) && !isGrtReviewer(groups, flags)) {
+    return true;
+  }
+  return false;
 };
 
 const user = {

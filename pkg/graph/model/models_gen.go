@@ -115,6 +115,10 @@ type CreateTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+type CurrentUser struct {
+	LaunchDarkly *LaunchDarklySettings `json:"launchDarkly"`
+}
+
 type DeleteAccessibilityRequestDocumentInput struct {
 	ID uuid.UUID `json:"id"`
 }
@@ -124,11 +128,13 @@ type DeleteAccessibilityRequestDocumentPayload struct {
 }
 
 type DeleteAccessibilityRequestInput struct {
-	ID uuid.UUID `json:"id"`
+	ID     uuid.UUID                                 `json:"id"`
+	Reason models.AccessibilityRequestDeletionReason `json:"reason"`
 }
 
 type DeleteAccessibilityRequestPayload struct {
-	ID *uuid.UUID `json:"id"`
+	ID         *uuid.UUID   `json:"id"`
+	UserErrors []*UserError `json:"userErrors"`
 }
 
 type DeleteTestDateInput struct {
@@ -160,11 +166,33 @@ type IssueLifecycleIDInput struct {
 	Scope     string    `json:"scope"`
 }
 
+type LaunchDarklySettings struct {
+	UserKey    string `json:"userKey"`
+	SignedHash string `json:"signedHash"`
+}
+
 type RejectIntakeInput struct {
 	Feedback  string    `json:"feedback"`
 	IntakeID  uuid.UUID `json:"intakeId"`
 	NextSteps *string   `json:"nextSteps"`
 	Reason    string    `json:"reason"`
+}
+
+type Request struct {
+	ID          uuid.UUID   `json:"id"`
+	Name        *string     `json:"name"`
+	SubmittedAt *time.Time  `json:"submittedAt"`
+	Type        RequestType `json:"type"`
+}
+
+type RequestEdge struct {
+	Cursor string   `json:"cursor"`
+	Node   *Request `json:"node"`
+}
+
+type RequestsConnection struct {
+	Edges      []*RequestEdge `json:"edges"`
+	TotalCount int            `json:"totalCount"`
 }
 
 type SystemConnection struct {
@@ -290,6 +318,47 @@ type UpdateTestDatePayload struct {
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+type RequestType string
+
+const (
+	RequestTypeAccessibilityRequest RequestType = "ACCESSIBILITY_REQUEST"
+	RequestTypeGovernanceRequest    RequestType = "GOVERNANCE_REQUEST"
+)
+
+var AllRequestType = []RequestType{
+	RequestTypeAccessibilityRequest,
+	RequestTypeGovernanceRequest,
+}
+
+func (e RequestType) IsValid() bool {
+	switch e {
+	case RequestTypeAccessibilityRequest, RequestTypeGovernanceRequest:
+		return true
+	}
+	return false
+}
+
+func (e RequestType) String() string {
+	return string(e)
+}
+
+func (e *RequestType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = RequestType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid RequestType", str)
+	}
+	return nil
+}
+
+func (e RequestType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 // A user role associated with a job code

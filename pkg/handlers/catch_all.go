@@ -20,6 +20,5 @@ type CatchAllHandler struct {
 func (h CatchAllHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		h.WriteErrorResponse(r.Context(), w, &apperrors.UnknownRouteError{Path: r.URL.Path})
-		return
 	}
 }
