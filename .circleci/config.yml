@@ -122,6 +122,7 @@ jobs:
           PGUSER: postgres
           PGPASS: easirox
           PGSSLMODE: disable
+          DB_MAX_CONNECTIONS: 20
           FLAG_SOURCE: LOCAL
       - image: *postgres
         auth:
@@ -147,6 +148,9 @@ jobs:
           command: |
             ./scripts/build_app
             ./scripts/testsuite
+      - store_artifacts:
+          path: results
+          destination: results
       - save_cache:
           key: v2-go-mod-sources-{{ checksum "go.sum" }}
           paths:
@@ -284,6 +288,7 @@ jobs:
           REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
           REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
           REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+          REACT_APP_LOCAL_AUTH_ENABLED: true
     steps:
       - checkout
       - restore_cache:

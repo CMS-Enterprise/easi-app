@@ -7,7 +7,7 @@ import (
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
 func (s GraphQLTestSuite) TestCurrentUserQuery() {
@@ -30,7 +30,7 @@ func (s GraphQLTestSuite) TestCurrentUserQuery() {
 			}
 		}`, &resp,
 		func(request *client.Request) {
-			principal := authn.EUAPrincipal{EUAID: "ABCD"}
+			principal := authentication.EUAPrincipal{EUAID: "ABCD"}
 			ctx := appcontext.WithPrincipal(context.Background(), &principal)
 			request.HTTP = request.HTTP.WithContext(ctx)
 		},

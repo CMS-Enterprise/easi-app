@@ -12,9 +12,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/handlers"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/okta"
 )
 
 // Server holds dependencies for running the EASi server
@@ -51,20 +48,6 @@ func NewServer(config *viper.Viper) *Server {
 	// Set the router
 	r := mux.NewRouter()
 
-	// TODO: We should add some sort of config verifier to make sure these configs exist
-	// They may live in /cmd, but should fail quick on startup
-	authMiddleware := okta.NewOktaAuthorizeMiddleware(
-		handlers.NewHandlerBase(zapLogger),
-		config.GetString("OKTA_CLIENT_ID"),
-		config.GetString("OKTA_ISSUER"),
-		config.GetBool("ALT_JOB_CODES"),
-	)
-
-	// If we're local use override with local auth middleware
-	if environment.Local() {
-		authMiddleware = local.NewLocalAuthorizeMiddleware(zapLogger, config.GetString("LOCAL_TEST_EUAID"))
-	}
-
 	// set up server dependencies
 	clientAddress := config.GetString("CLIENT_ADDRESS")
 
@@ -77,7 +60,6 @@ func NewServer(config *viper.Viper) *Server {
 
 	// set up routes
 	s.routes(
-		authMiddleware,
 		newCORSMiddleware(clientAddress),
 		NewTraceMiddleware(zapLogger),
 		NewLoggerMiddleware(zapLogger))

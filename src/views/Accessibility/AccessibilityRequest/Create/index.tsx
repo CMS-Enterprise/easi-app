@@ -3,13 +3,8 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Button, ComboBox } from '@trussworks/react-uswds';
-import {
-  Field as FormikField,
-  Form as FormikForm,
-  Formik,
-  FormikProps
-} from 'formik';
+import { Button, ComboBox, Link } from '@trussworks/react-uswds';
+import { Form as FormikForm, Formik, FormikProps } from 'formik';
 import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
 import GetSystemsQuery from 'queries/GetSystems';
 import {
@@ -19,13 +14,13 @@ import {
 
 import PageHeading from 'components/PageHeading';
 import PlainInfo from 'components/PlainInfo';
+import { AlertText } from 'components/shared/Alert';
+import CollapsibleLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
-import TextField from 'components/shared/TextField';
 import { initialAccessibilityRequestFormData } from 'data/accessibility';
 import useMessage from 'hooks/useMessage';
 import { AccessibilityRequestForm } from 'types/accessibility';
@@ -57,7 +52,20 @@ const Create = () => {
       if (!response.errors) {
         const uuid =
           response.data.createAccessibilityRequest.accessibilityRequest.id;
-        showMessageOnNextPage(t('newRequestForm.confirmation'));
+        showMessageOnNextPage(
+          <>
+            <AlertText className="margin-bottom-2">
+              {t('newRequestForm.confirmation')}
+            </AlertText>
+            <Link
+              href="https://www.surveymonkey.com/r/3R6MXSW"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('newRequestForm.surveyLink')}
+            </Link>
+          </>
+        );
         history.push(`/508/requests/${uuid}`);
       }
     });
@@ -88,9 +96,6 @@ const Create = () => {
 
   return (
     <>
-      <SecondaryNav>
-        <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
-      </SecondaryNav>
       <div className="grid-container">
         <PageHeading>{t('newRequestForm.heading')}</PageHeading>
         <Formik
@@ -146,13 +151,17 @@ const Create = () => {
                         <Label htmlFor="508Request-IntakeId">
                           {t('newRequestForm.fields.project.label')}
                         </Label>
+                        <HelpText id="508Request-IntakeId-HelpText">
+                          {t('newRequestForm.fields.project.helpText')}
+                        </HelpText>
                         <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
                         <ComboBox
                           id="508Request-IntakeComboBox"
                           name="intakeComboBox"
                           inputProps={{
                             id: '508Request-IntakeId',
-                            name: 'intakeId'
+                            name: 'intakeId',
+                            'aria-describedby': '508Request-IntakeId-HelpText'
                           }}
                           options={projectComboBoxOptions}
                           onChange={(intakeId: any) => {
@@ -167,77 +176,30 @@ const Create = () => {
                                 'businessOwner.component',
                                 selectedSystem.businessOwner.component || ''
                               );
+                              setFieldValue('requestName', selectedSystem.name);
                             }
                           }}
                         />
                       </FieldGroup>
                     )}
-
-                    <FieldGroup scrollElement="requester.name">
-                      <Label htmlFor="508Request-BusinessOwnerName">
-                        {t('newRequestForm.fields.businessOwnerName.label')}
-                      </Label>
-                      <HelpText
-                        id="508Request-BusinessOwnerNameHelp"
-                        className="usa-sr-only"
-                      >
-                        {t('newRequestForm.fields.businessOwnerName.help')}
-                      </HelpText>
-                      <FormikField
-                        as={TextField}
-                        id="508Request-BusinessOwnerName"
-                        name="businessOwner.name"
-                        aria-describedby="508Request-BusinessOwnerNameHelp"
-                        disabled
-                      />
-                    </FieldGroup>
-
-                    <FieldGroup scrollElement="businessOwner.component">
-                      <Label htmlFor="508Form-BusinessOwnerComponent">
-                        {t(
-                          'newRequestForm.fields.businessOwnerComponent.label'
-                        )}
-                      </Label>
-                      <HelpText
-                        id="508Request-BusinessOwnerComponentHelp"
-                        className="usa-sr-only"
-                      >
-                        {t('newRequestForm.fields.businessOwnerComponent.help')}
-                      </HelpText>
-                      <FormikField
-                        as={TextField}
-                        id="508Form-BusinessOwnerComponent"
-                        name="businessOwner.component"
-                        aria-describedby="508Request-BusinessOwnerComponentHelp"
-                        disabled
-                      />
-                    </FieldGroup>
-                    <FieldGroup
-                      scrollElement="requestName"
-                      error={!!flatErrors.requestName}
-                    >
-                      <Label htmlFor="508Request-RequestName">
-                        {t('newRequestForm.fields.requestName.label')}
-                      </Label>
-                      <HelpText
-                        id="508Request-RequestNameHelp"
-                        className="margin-top-1"
-                      >
-                        {t('newRequestForm.fields.requestName.help')}
-                      </HelpText>
-                      <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
-                      <FormikField
-                        as={TextField}
-                        error={!!flatErrors.requestName}
-                        id="508Request-RequestName"
-                        maxLength={50}
-                        name="requestName"
-                        aria-describedby="508Request-RequestNameHelp"
-                      />
-                    </FieldGroup>
-
                     <div className="tablet:grid-col-8">
-                      <div className="margin-top-6 margin-bottom-2">
+                      <div className="margin-top-4">
+                        <CollapsibleLink
+                          id="LifecycleIdAccordion"
+                          label={t(
+                            'newRequestForm.helpAndGuidance.lifecycleIdAccordion.header'
+                          )}
+                        >
+                          <p>
+                            {t(
+                              'newRequestForm.helpAndGuidance.lifecycleIdAccordion.para'
+                            )}
+                          </p>
+                        </CollapsibleLink>
+                      </div>
+                    </div>
+                    <div className="tablet:grid-col-8">
+                      <div className="margin-top-2 margin-bottom-2">
                         <PlainInfo>{t('newRequestForm.info')}</PlainInfo>
                       </div>
                     </div>
