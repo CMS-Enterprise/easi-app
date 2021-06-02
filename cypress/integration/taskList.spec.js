@@ -1,7 +1,9 @@
+import { BASIC_USER_PROD } from '../../src/constants/jobCodes'
+
 describe('The Task List', () => {
   beforeEach(() => {
     cy.server();
-    cy.localLogin({name: 'TEST', role: 'EASI_P_USER'});
+    cy.localLogin({name: 'TEST', role: BASIC_USER_PROD});
     cy.route('POST', '/api/v1/system_intake').as('postSystemIntake');
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
     cy.visit('/governance-task-list/new');
