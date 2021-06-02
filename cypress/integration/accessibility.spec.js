@@ -2,14 +2,16 @@ import { formatDate } from '../../src/utils/date';
 
 describe('Accessibility Requests', () => {
   before(() => {
-    cy.login();
-    // TODO HACK
-    cy.wait(1000);
+    cy.visit('/login');
+
+    cy.get('[data-testid="LocalAuth-Visit"]').click();
+    cy.get('[data-testid="LocalAuth-EUA"]').type('TEST');
+    cy.get('input[value="EASI_P_USER"]').check();
+    cy.get('[data-testid="LocalAuth-Submit"]').click();
     cy.saveLocalStorage()
   });
 
   beforeEach(() => {
-    cy.server();
     cy.restoreLocalStorage();
   });
 
@@ -54,7 +56,6 @@ describe('Accessibility Requests', () => {
   });
 
   it('sees information for an existing request on the homepage', () => {
-    // Contact Details
     cy.visit('/');
     cy.contains('h1', 'Welcome to EASi')
     cy.contains('h2', 'My governance requests')
