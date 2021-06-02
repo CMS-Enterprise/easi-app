@@ -9,9 +9,9 @@ import { useLocation } from 'react-router-dom';
 
 const MessageContext = createContext<
   | {
-      message: string | undefined;
-      showMessage: (message: string) => void;
-      showMessageOnNextPage: (message: string) => void;
+      message: string | React.ReactNode | undefined;
+      showMessage: (message: string | React.ReactNode) => void;
+      showMessageOnNextPage: (message: string | React.ReactNode) => void;
     }
   | undefined
 >(undefined);
@@ -19,8 +19,10 @@ const MessageContext = createContext<
 // MessageProvider manages the state necessary for child components to
 // use the useMessage hook.
 const MessageProvider = ({ children }: { children: ReactNode }) => {
-  const [queuedMessage, setQueuedMessage] = useState<string>();
-  const [message, setMessage] = useState<string>();
+  const [queuedMessage, setQueuedMessage] = useState<
+    string | React.ReactNode
+  >();
+  const [message, setMessage] = useState<string | React.ReactNode>();
   const location = useLocation();
 
   const [lastPathname, setLastPathname] = useState(location.pathname);

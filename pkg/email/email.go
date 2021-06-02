@@ -13,10 +13,11 @@ import (
 
 // Config holds EASi application specific configs for SES
 type Config struct {
-	GRTEmail          models.EmailAddress
-	URLHost           string
-	URLScheme         string
-	TemplateDirectory string
+	GRTEmail               models.EmailAddress
+	AccessibilityTeamEmail models.EmailAddress
+	URLHost                string
+	URLScheme              string
+	TemplateDirectory      string
 }
 
 // templateCaller is an interface to helping with testing template dependencies
@@ -27,13 +28,17 @@ type templateCaller interface {
 // templates stores typed templates
 // since the template.Template uses string access
 type templates struct {
-	systemIntakeSubmissionTemplate templateCaller
-	businessCaseSubmissionTemplate templateCaller
-	intakeReviewTemplate           templateCaller
-	namedRequestWithdrawTemplate   templateCaller
-	unnamedRequestWithdrawTemplate templateCaller
-	issueLCIDTemplate              templateCaller
-	rejectRequestTemplate          templateCaller
+	systemIntakeSubmissionTemplate             templateCaller
+	businessCaseSubmissionTemplate             templateCaller
+	intakeReviewTemplate                       templateCaller
+	namedRequestWithdrawTemplate               templateCaller
+	unnamedRequestWithdrawTemplate             templateCaller
+	issueLCIDTemplate                          templateCaller
+	rejectRequestTemplate                      templateCaller
+	newAccessibilityRequestTemplate            templateCaller
+	newAccessibilityRequestToRequesterTemplate templateCaller
+	removedAccessibilityRequestTemplate        templateCaller
+	newDocumentTemplate                        templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -109,6 +114,34 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(rejectRequestTemplateName)
 	}
 	appTemplates.rejectRequestTemplate = rejectRequestTemplate
+
+	newAccessibilityRequestTemplateName := "new_508_request.gohtml"
+	newAccessibilityRequestTemplate := rawTemplates.Lookup(newAccessibilityRequestTemplateName)
+	if newAccessibilityRequestTemplate == nil {
+		return Client{}, templateError(newAccessibilityRequestTemplateName)
+	}
+	appTemplates.newAccessibilityRequestTemplate = newAccessibilityRequestTemplate
+
+	newAccessibilityRequestToRequesterTemplateName := "new_508_request_to_requester.gohtml"
+	newAccessibilityRequestToRequesterTemplate := rawTemplates.Lookup(newAccessibilityRequestToRequesterTemplateName)
+	if newAccessibilityRequestToRequesterTemplate == nil {
+		return Client{}, templateError(newAccessibilityRequestToRequesterTemplateName)
+	}
+	appTemplates.newAccessibilityRequestToRequesterTemplate = newAccessibilityRequestToRequesterTemplate
+
+	removedAccessibilityRequestTemplateName := "removed_508_request.gohtml"
+	removedAccessibilityRequestTemplate := rawTemplates.Lookup(removedAccessibilityRequestTemplateName)
+	if removedAccessibilityRequestTemplate == nil {
+		return Client{}, templateError(removedAccessibilityRequestTemplateName)
+	}
+	appTemplates.removedAccessibilityRequestTemplate = removedAccessibilityRequestTemplate
+
+	newDocumentTemplateName := "new_document.gohtml"
+	newDocumentTemplate := rawTemplates.Lookup(newDocumentTemplateName)
+	if newDocumentTemplate == nil {
+		return Client{}, templateError(newDocumentTemplateName)
+	}
+	appTemplates.newDocumentTemplate = newDocumentTemplate
 
 	client := Client{
 		config:    config,

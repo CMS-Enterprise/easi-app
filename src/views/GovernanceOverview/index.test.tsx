@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
 
@@ -21,14 +21,38 @@ jest.mock('@okta/okta-react', () => ({
 
 describe('The governance overview page', () => {
   it('renders without crashing', () => {
-    shallow(<GovernanceOverview />);
+    shallow(
+      <MemoryRouter>
+        <GovernanceOverview />
+      </MemoryRouter>
+    );
   });
 
-  it('matches the snapshot', () => {
+  it('matches the snapshot (w/o id param)', () => {
     const tree = renderer
       .create(
-        <MemoryRouter>
-          <GovernanceOverview />
+        <MemoryRouter initialEntries={['/governance-overview']}>
+          <Route
+            path="/governance-overview/:systemId?"
+            component={GovernanceOverview}
+          />
+        </MemoryRouter>
+      )
+      .toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('matches the snapshot (w/ id param)', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter
+          initialEntries={['/governance-overview/test-intake-guid']}
+        >
+          <Route
+            path="/governance-overview/:systemId?"
+            component={GovernanceOverview}
+          />
         </MemoryRouter>
       )
       .toJSON();

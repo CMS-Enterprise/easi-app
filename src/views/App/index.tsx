@@ -22,6 +22,7 @@ import GovernanceTaskList from 'views/GovernanceTaskList';
 import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
 import Home from 'views/Home';
 import Login from 'views/Login';
+import MyRequests from 'views/MyRequests';
 import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
@@ -52,6 +53,7 @@ const AppRoutes = () => {
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
       <SecureRoute path="/user-diagnostics" component={UserInfo} />
+      <SecureRoute path="/my-requests" component={MyRequests} />
 
       {/* 508 / Accessibility Team Routes */}
       <SecureRoute path="/508" component={Accessibility} />
@@ -68,7 +70,10 @@ const AppRoutes = () => {
         path="/system/request-type"
         component={RequestTypeForm}
       />
-      <Route path="/governance-overview" exact component={GovernanceOverview} />
+      <Route
+        path="/governance-overview/:systemId?"
+        component={GovernanceOverview}
+      />
       <SecureRoute
         path="/governance-task-list/:systemId"
         exact
@@ -142,7 +147,7 @@ const App = () => {
   };
 
   return (
-    <FlagsWrapper>
+    <>
       <div className="usa-overlay" />
       <button type="button" className="skipnav" onClick={handleSkipNav}>
         Skip to main content
@@ -150,15 +155,17 @@ const App = () => {
       <BrowserRouter>
         <MessageProvider>
           <AuthenticationWrapper>
-            <UserInfoWrapper>
-              <TimeOutWrapper>
-                <AppRoutes />
-              </TimeOutWrapper>
-            </UserInfoWrapper>
+            <FlagsWrapper>
+              <UserInfoWrapper>
+                <TimeOutWrapper>
+                  <AppRoutes />
+                </TimeOutWrapper>
+              </UserInfoWrapper>
+            </FlagsWrapper>
           </AuthenticationWrapper>
         </MessageProvider>
       </BrowserRouter>
-    </FlagsWrapper>
+    </>
   );
 };
 

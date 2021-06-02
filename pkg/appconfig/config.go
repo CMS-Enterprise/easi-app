@@ -59,42 +59,27 @@ func (e Environment) String() string {
 
 // Local returns true if the environment is local
 func (e Environment) Local() bool {
-	if e == localEnv {
-		return true
-	}
-	return false
+	return e == localEnv
 }
 
 // Test returns true if the environment is local
 func (e Environment) Test() bool {
-	if e == testEnv {
-		return true
-	}
-	return false
+	return e == testEnv
 }
 
 // Dev returns true if the environment is local
 func (e Environment) Dev() bool {
-	if e == devEnv {
-		return true
-	}
-	return false
+	return e == devEnv
 }
 
 // Impl returns true if the environment is local
 func (e Environment) Impl() bool {
-	if e == implEnv {
-		return true
-	}
-	return false
+	return e == implEnv
 }
 
 // Prod returns true if the environment is local
 func (e Environment) Prod() bool {
-	if e == prodEnv {
-		return true
-	}
-	return false
+	return e == prodEnv
 }
 
 // Deployed returns true if in a deployed environment
@@ -129,6 +114,9 @@ const DBPasswordConfigKey = "PGPASS"
 // DBSSLModeConfigKey is the Postgres SSL mode config key
 const DBSSLModeConfigKey = "PGSSLMODE"
 
+// DBMaxConnections is the maximum number of connections to the database
+const DBMaxConnections = "DB_MAX_CONNECTIONS"
+
 // AWSSESSourceARNKey is the key for the ARN for sending email
 const AWSSESSourceARNKey = "AWS_SES_SOURCE_ARN"
 
@@ -137,6 +125,9 @@ const AWSSESSourceKey = "AWS_SES_SOURCE"
 
 // GRTEmailKey is the key for the receiving email for the GRT
 const GRTEmailKey = "GRT_EMAIL"
+
+// AccessibilityTeamEmailKey is the key for the receiving email for the 508 team
+const AccessibilityTeamEmailKey = "ACCESSIBILITY_TEAM_EMAIL"
 
 // ClientHostKey is the key for getting the client's domain name
 const ClientHostKey = "CLIENT_HOSTNAME"
@@ -182,6 +173,18 @@ const LambdaEndpoint = "LAMBDA_ENDPOINT"
 
 // LambdaFunctionPrince is the name of the prince lambda function
 const LambdaFunctionPrince = "LAMBDA_FUNCTION_PRINCE"
+
+// LocalAuthEnabled is whether local auth should be enabled
+const LocalAuthEnabled = "LOCAL_AUTH_ENABLED"
+
+// OktaClientID is the okta client id
+const OktaClientID = "OKTA_CLIENT_ID"
+
+// OktaIssuer is the okta issuer
+const OktaIssuer = "OKTA_ISSUER"
+
+// AltJobCodes are alternate job codes
+const AltJobCodes = "ALT_JOB_CODES"
 
 // FlagSourceOption represents an environment
 type FlagSourceOption string

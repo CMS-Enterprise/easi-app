@@ -26,12 +26,13 @@ func main() {
 	}
 
 	dbConfig := storage.DBConfig{
-		Host:     config.GetString(appconfig.DBHostConfigKey),
-		Port:     config.GetString(appconfig.DBPortConfigKey),
-		Database: config.GetString(appconfig.DBNameConfigKey),
-		Username: config.GetString(appconfig.DBUsernameConfigKey),
-		Password: config.GetString(appconfig.DBPasswordConfigKey),
-		SSLMode:  config.GetString(appconfig.DBSSLModeConfigKey),
+		Host:           config.GetString(appconfig.DBHostConfigKey),
+		Port:           config.GetString(appconfig.DBPortConfigKey),
+		Database:       config.GetString(appconfig.DBNameConfigKey),
+		Username:       config.GetString(appconfig.DBUsernameConfigKey),
+		Password:       config.GetString(appconfig.DBPasswordConfigKey),
+		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
+		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
 	}
 
 	ldClient, ldErr := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
@@ -44,8 +45,10 @@ func main() {
 		panic(storeErr)
 	}
 
-	makeAccessibilityRequest("TACO", store)
-	makeAccessibilityRequest("Big Project", store)
+	for i := 0; i < 20; i++ {
+		makeAccessibilityRequest("TACO", store)
+		makeAccessibilityRequest("Big Project", store)
+	}
 
 	makeSystemIntake("A Completed Intake Form", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
@@ -227,8 +230,13 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 	must(store.CreateBusinessCase(ctx, &businessCase))
 }
 
+var lcid = 0
+
 func makeAccessibilityRequest(name string, store *storage.Store) {
 	ctx := context.Background()
+
+	lifecycleID := fmt.Sprintf("%06d", lcid)
+	lcid = lcid + 1
 
 	intake := models.SystemIntake{
 		Status:                 models.SystemIntakeStatusLCIDISSUED,
@@ -236,7 +244,7 @@ func makeAccessibilityRequest(name string, store *storage.Store) {
 		ProjectName:            null.StringFrom(name),
 		BusinessOwner:          null.StringFrom("Shane Clark"),
 		BusinessOwnerComponent: null.StringFrom("OIT"),
-		LifecycleID:            null.StringFrom("123456"),
+		LifecycleID:            null.StringFrom(lifecycleID),
 	}
 	must(store.CreateSystemIntake(ctx, &intake))
 	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id

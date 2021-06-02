@@ -65,7 +65,7 @@ const RequestTypeForm = () => {
       const navigationLink = `/governance-task-list/${systemIntake.id}`;
       switch (systemIntake.requestType) {
         case 'NEW':
-          history.push(navigationLink);
+          history.push(`/governance-overview/${systemIntake.id}`);
           break;
         case 'MAJOR_CHANGES':
           history.push(navigationLink);

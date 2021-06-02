@@ -59,6 +59,7 @@ const DevLogin = () => {
               setEuaId(e.target.value.toUpperCase())
             }
             style={{ border: 'solid 1px orangered' }}
+            data-testid="LocalAuth-EUA"
           />
         </label>
       </p>
@@ -93,6 +94,7 @@ const DevLogin = () => {
             borderRadius: '3px',
             cursor: 'pointer'
           }}
+          data-testid="LocalAuth-Submit"
         >
           Login
         </button>

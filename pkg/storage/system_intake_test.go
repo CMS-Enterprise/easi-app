@@ -719,6 +719,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 	// create a random year to avoid test collisions
 	// uses postgres max year minus 1000000
 	rand.Seed(time.Now().UnixNano())
+	// #nosec G404
 	endYear := rand.Intn(294276)
 	endDate := time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
 	startDate := endDate.AddDate(0, -1, 0)
@@ -747,6 +748,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 		})
 	}
 
+	// #nosec G404
 	endYear = rand.Intn(294276)
 	endDate = time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
 	startDate = endDate.AddDate(0, -1, 0)
@@ -792,6 +794,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 		})
 	}
 
+	// #nosec G404
 	endYear = rand.Intn(294276)
 	endDate = time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
 	startDate = endDate.AddDate(0, -1, 0)
