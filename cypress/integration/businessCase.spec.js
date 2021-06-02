@@ -6,11 +6,12 @@ describe('The Business Case Form', () => {
 
   beforeEach(() => {
     cy.localLogin({name: 'TEST', role: BASIC_USER_PROD});
-    cy.visit(`/governance-task-list/${intakeId}`);
-    cy.get('[data-testid="start-biz-case-btn"]').click();
   });
 
   it('fills out all business case fields', () => {
+    cy.visit(`/governance-task-list/${intakeId}`);
+    cy.get('[data-testid="start-biz-case-btn"]').click();
+
     // General Request Information
     // Autofilled Fields from System Intake
     cy.get('#BusinessCase-RequestName').should(
