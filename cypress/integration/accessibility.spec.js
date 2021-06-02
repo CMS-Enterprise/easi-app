@@ -1,18 +1,8 @@
 import { formatDate } from '../../src/utils/date';
 
 describe('Accessibility Requests', () => {
-  before(() => {
-    cy.visit('/login');
-
-    cy.get('[data-testid="LocalAuth-Visit"]').click();
-    cy.get('[data-testid="LocalAuth-EUA"]').type('TEST');
-    cy.get('input[value="EASI_P_USER"]').check();
-    cy.get('[data-testid="LocalAuth-Submit"]').click();
-    cy.saveLocalStorage()
-  });
-
   beforeEach(() => {
-    cy.restoreLocalStorage();
+    cy.localLogin({name: 'ACES', role: 'EASI_P_USER'});
   });
 
   it('can create a request and see its details', () => {
