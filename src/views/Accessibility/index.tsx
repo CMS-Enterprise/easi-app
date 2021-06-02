@@ -102,16 +102,11 @@ const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 const ReportProblemLinkArea = ({ url }: { url: string }) => {
   const { t } = useTranslation('accessibility');
   return (
-    <div className="width-full report-problem-link-area">
+    <div className="width-full padding-bottom-2 report-problem-link-area">
       <div className="grid-container">
-        <div className="grid-row padding-bottom-2">
-          <div className="grid-col-3">
-            <Link href={url} target="_blank" rel="noopener noreferrer">
-              {t('reportProblem')}
-            </Link>
-          </div>
-          <div className="grid-col-9" />
-        </div>
+        <Link href={url} target="_blank" rel="noopener noreferrer">
+          {t('reportProblem')}
+        </Link>
       </div>
     </div>
   );
