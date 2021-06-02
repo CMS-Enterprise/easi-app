@@ -26,9 +26,7 @@ const MakingARequest = () => {
           <li>IT Governance</li>
         </BreadcrumbNav>
 
-        <PageHeading className="margin-bottom-4 margin-top-5">
-          {t('heading')}
-        </PageHeading>
+        <PageHeading>{t('heading')}</PageHeading>
         <p>{t('reasonList.intro')}</p>
         <ul>
           {reasons.map(option => (
