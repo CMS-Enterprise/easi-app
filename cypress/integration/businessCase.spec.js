@@ -1,9 +1,11 @@
+import { BASIC_USER_PROD } from '../../src/constants/jobCodes'
+
 describe('The Business Case Form', () => {
   // Data for this intake is set up in cmd/devdata/main.go
   const intakeId = "cd79738d-d453-4e26-a27d-9d2a303e0262"
 
   beforeEach(() => {
-    cy.localLogin({name: 'TEST', role: 'EASI_P_USER'});
+    cy.localLogin({name: 'TEST', role: BASIC_USER_PROD});
     cy.visit(`/governance-task-list/${intakeId}`);
     cy.get('[data-testid="start-biz-case-btn"]').click();
   });
