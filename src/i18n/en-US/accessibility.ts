@@ -1,6 +1,7 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
+  reportProblem: 'Report a problem (opens in a new tab)',
   documentTable: {
     caption: 'Documents uploaded for',
     header: {
