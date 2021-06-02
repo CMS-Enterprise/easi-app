@@ -5,11 +5,11 @@ import { MemoryRouter } from 'react-router-dom';
 import { mount, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
-import { ACCESSIBILITY_TESTER_DEV } from 'constants/jobCodes';
 import {
   REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY,
   REPORT_PROBLEM_BASIC_USER_SURVEY
-} from 'constants/surveys';
+} from 'constants/externalUrls';
+import { ACCESSIBILITY_TESTER_DEV } from 'constants/jobCodes';
 
 import Accessibility from './index';
 
