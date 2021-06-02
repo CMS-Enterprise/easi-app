@@ -267,7 +267,7 @@ exports[`The making a request page matches the snapshot 1`] = `
     </nav>
     <h1
       aria-live="polite"
-      className="easi-h1 margin-bottom-4 margin-top-5"
+      className="easi-h1"
       tabIndex={-1}
     >
       IT Governance
