@@ -1,52 +1,9 @@
 describe('The Business Case Form', () => {
-  let intakeId;
-  const systemIntake = {
-    status: 'NEED_BIZ_CASE',
-    requestType: 'NEW',
-    requester: 'John Requester',
-    component: 'Center for Consumer Information and Insurance Oversight',
-    businessOwner: 'John BusinessOwner',
-    businessOwnerComponent:
-      'Center for Consumer Information and Insurance Oversight',
-    productManager: 'John ProductManager',
-    productManagerComponent:
-      'Center for Consumer Information and Insurance Oversight',
-    isso: '',
-    trbCollaborator: '',
-    oitSecurityCollaborator: '',
-    eaCollaborator: '',
-    projectName: 'Easy Access to System Information',
-    existingFunding: false,
-    fundingNumber: '',
-    businessNeed: 'Business Need: The quick brown fox jumps over the lazy dog.',
-    solution: 'The quick brown fox jumps over the lazy dog.',
-    processStatus: 'The project is already funded',
-    eaSupportRequest: false,
-    existingContract: 'No',
-    grtReviewEmailBody: ''
-  };
-  before(() => {
-    cy.login();
-    cy.wait(1000);
-    cy.saveLocalStorage().then(() => {
-      cy.getAccessToken().then(accessToken => {
-        cy.request({
-          method: 'POST',
-          url: Cypress.env('systemIntakeApi'),
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          body: systemIntake
-        }).then(response => {
-          intakeId = response.body.id;
-        });
-      });
-    });
-  });
+  // Data for this intake is set up in cmd/devdata/main.go
+  const intakeId = "cd79738d-d453-4e26-a27d-9d2a303e0262"
 
   beforeEach(() => {
-    cy.restoreLocalStorage();
-
+    cy.localLogin({name: 'TEST', role: 'EASI_P_USER'});
     cy.visit(`/governance-task-list/${intakeId}`);
     cy.get('[data-testid="start-biz-case-btn"]').click();
   });
@@ -56,17 +13,17 @@ describe('The Business Case Form', () => {
     // Autofilled Fields from System Intake
     cy.get('#BusinessCase-RequestName').should(
       'have.value',
-      systemIntake.projectName
+      'Easy Access to System Information'
     );
 
     cy.get('#BusinessCase-RequesterName').should(
       'have.value',
-      systemIntake.requester
+      'John Requester'
     );
 
     cy.get('#BusinessCase-BusinessOwnerName').should(
       'have.value',
-      systemIntake.businessOwner
+      'John BusinessOwner'
     );
 
     cy.get('#BusinessCase-RequesterPhoneNumber')
@@ -79,7 +36,7 @@ describe('The Business Case Form', () => {
     // Autofilled Field from System Intake
     cy.get('#BusinessCase-BusinessNeed').should(
       'have.value',
-      systemIntake.businessNeed
+      'Business Need: The quick brown fox jumps over the lazy dog.'
     );
 
     cy.get('#BusinessCase-CmsBenefit')
