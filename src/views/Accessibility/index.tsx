@@ -13,7 +13,7 @@ import PageWrapper from 'components/PageWrapper';
 import {
   REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY,
   REPORT_PROBLEM_BASIC_USER_SURVEY
-} from 'constants/surveys';
+} from 'constants/externalUrls';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import Create from 'views/Accessibility/AccessibilityRequest/Create';
@@ -110,27 +110,20 @@ const ReportProblemLinkArea = ({ url }: { url: string }) => {
   );
 };
 
-const A11yTeamPageTemplate = ({ children }: { children: React.ReactNode }) => {
+const PageTemplate = ({
+  children,
+  surveyUrl
+}: {
+  children: React.ReactNode;
+  surveyUrl: string;
+}) => {
   return (
     <PageWrapper>
       <Header />
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
-      <ReportProblemLinkArea url={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY} />
-      <Footer />
-    </PageWrapper>
-  );
-};
-
-const PageTemplate = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <PageWrapper>
-      <Header />
-      <MainContent className="margin-bottom-5">
-        <Switch>{children}</Switch>
-      </MainContent>
-      <ReportProblemLinkArea url={REPORT_PROBLEM_BASIC_USER_SURVEY} />
+      <ReportProblemLinkArea url={surveyUrl} />
       <Footer />
     </PageWrapper>
   );
@@ -144,7 +137,7 @@ const Accessibility = () => {
   if (isUserSet) {
     if (user.isAccessibilityTeam(userGroups, flags)) {
       return (
-        <A11yTeamPageTemplate>
+        <PageTemplate surveyUrl={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY}>
           {[
             NewRequest,
             AllRequests,
@@ -156,11 +149,11 @@ const Accessibility = () => {
             RequestDetails,
             Default
           ]}
-        </A11yTeamPageTemplate>
+        </PageTemplate>
       );
     }
     return (
-      <PageTemplate>
+      <PageTemplate surveyUrl={REPORT_PROBLEM_BASIC_USER_SURVEY}>
         {[
           NewRequest,
           AccessibilityTestingOverview,
