@@ -1,18 +1,11 @@
 import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
 
 describe('The System Intake Form', () => {
-  before(() => {
-    cy.login();
-    // TODO HACK
-    cy.wait(1000);
-    cy.saveLocalStorage();
-  });
-
   beforeEach(() => {
     cy.server();
+    cy.localLogin({name: 'TEST', role: 'EASI_P_USER'});
     cy.route('POST', '/api/v1/system_intake').as('postSystemIntake');
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
-    cy.restoreLocalStorage();
     cy.visit('/system/new');
   });
 
@@ -69,7 +62,7 @@ describe('The System Intake Form', () => {
       .should('deep.include', {
         requestName: 'Test Request Name',
         requester: {
-          name: 'EASi Testing',
+          name: 'User TEST',
           component: 'Center for Medicare',
           email: ''
         },
@@ -227,7 +220,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', /^Requester$/)
       .siblings('dd')
-      .contains('EASi Testing');
+      .contains('User TEST');
 
     cy.contains('.easi-review-row dt', 'Requester Component')
       .siblings('dd')
