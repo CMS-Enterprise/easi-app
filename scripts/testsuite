@@ -8,7 +8,7 @@ set -eu -o pipefail
 builddir="$(git rev-parse --show-toplevel)"
 export EMAIL_TEMPLATE_DIR=$builddir/pkg/email/templates
 
-go test -count=1 -coverprofile=go-coverage.out ./...
+"$builddir"/bin/easi test
 
 # Convert go-coverage.out to txt and html
 go tool cover -func=go-coverage.out -o "go-coverage.txt"
