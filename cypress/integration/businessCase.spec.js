@@ -2,7 +2,7 @@ import { BASIC_USER_PROD } from '../../src/constants/jobCodes'
 
 describe('The Business Case Form', () => {
   beforeEach(() => {
-    cy.localLogin({name: 'TEST', role: BASIC_USER_PROD});
+    cy.localLogin({name: 'TEST'});
   });
 
   it('fills out all business case fields', () => {
