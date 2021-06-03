@@ -74,24 +74,28 @@ const PropsedBusinessCaseSolutionReview = ({
         </div>
       </ReviewRow>
       {['cloud', 'dataCenter'].includes(solution.hosting.type) && (
-        <ReviewRow>
-          <div className="line-height-body-3">
-            <DescriptionTerm term="Where are you planning to host?" />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={solution.hosting.location}
-            />
-          </div>
-          {solution.hosting.cloudServiceType && (
+        <div>
+          <ReviewRow>
             <div className="line-height-body-3">
-              <DescriptionTerm term="What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?" />
+              <DescriptionTerm term="Where are you planning to host?" />
               <DescriptionDefinition
                 className="text-pre-wrap"
-                definition={solution.hosting.cloudServiceType}
+                definition={solution.hosting.location}
               />
             </div>
+          </ReviewRow>
+          {solution.hosting.cloudServiceType && (
+            <ReviewRow>
+              <div className="line-height-body-3">
+                <DescriptionTerm term="What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?" />
+                <DescriptionDefinition
+                  className="text-pre-wrap"
+                  definition={solution.hosting.cloudServiceType}
+                />
+              </div>
+            </ReviewRow>
           )}
-        </ReviewRow>
+        </div>
       )}
       <ReviewRow>
         <div className="line-height-body-3">
