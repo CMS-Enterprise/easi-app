@@ -28,8 +28,7 @@ else
     exit 1
 fi
 
-if [ -d "results" ]
-then
+if [[ -d "results" ]]; then
     mv go-coverage.* results/
 else
     mkdir -p results
