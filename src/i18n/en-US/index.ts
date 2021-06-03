@@ -14,6 +14,7 @@ import governanceReviewTeam from './governanceReviewTeam';
 import header from './header';
 import home from './home';
 import intake from './intake';
+import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
 import termsAndConditions from './termsAndConditions';
 
@@ -32,6 +33,7 @@ const enUS = {
   header,
   home,
   intake,
+  makingARequest,
   privacyPolicy,
   taskList,
   termsAndConditions
