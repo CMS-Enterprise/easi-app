@@ -68,6 +68,7 @@ const Home = () => {
               )}
               <div className="tablet:grid-col-9">
                 <PageHeading>{t('home:title')}</PageHeading>
+                <h1>{localStorage.getItem('dev-user-config')}</h1>
                 <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
                   {t('home:subtitle')}
                 </p>
