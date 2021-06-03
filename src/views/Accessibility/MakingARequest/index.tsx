@@ -1,7 +1,7 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Link as USWDSLink } from '@trussworks/react-uswds';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import PageHeading from 'components/PageHeading';
@@ -21,7 +21,15 @@ const MakingARequest = () => {
         <li>{t('makingARequest.breadcrumb')}</li>
       </BreadcrumbNav>
       <div className="tablet:grid-col-10">
-        <Alert type="info">{t('makingARequest.info')}</Alert>
+        <Alert type="info">
+          <Trans i18nKey="accessibility:makingARequest.info">
+            indexZero
+            <UswdsLink href="mailto:CMS_Section508@cms.hhs.gov">
+              email
+            </UswdsLink>
+            indexTwo
+          </Trans>
+        </Alert>
         <PageHeading>{t('makingARequest.heading')}</PageHeading>
         <p>{t('makingARequest.useThisService')}</p>
         <ul className="margin-top-3">
@@ -32,23 +40,39 @@ const MakingARequest = () => {
             {t('makingARequest.uploadDocumentsBullet')}
           </li>
         </ul>
-        <p className="line-height-body-5">{t('makingARequest.email508Team')}</p>
+        <p className="line-height-body-5">
+          <Trans i18nKey="accessibility:makingARequest.email508Team">
+            indexZero
+            <UswdsLink href="mailto:CMS_Section508@cms.hhs.gov">
+              email
+            </UswdsLink>
+            indexTwo
+          </Trans>
+        </p>
         <h2>{t('makingARequest.beforeYouStart')}</h2>
         <p>{t('makingARequest.needLcid')}</p>
         <p>{t('makingARequest.onceYouMakeRequest')}</p>
-        <USWDSLink
+        <UswdsLink
           className="usa-button margin-bottom-3"
           to="/508/testing-overview?continue=true"
           asCustom={Link}
           variant="unstyled"
         >
           {t('makingARequest.continueButton')}
-        </USWDSLink>
+        </UswdsLink>
         <CollapsableLink
           id="easi-508-no-lcid"
           label={t('makingARequest.noLcidHeader')}
         >
-          <p className="line-height-body-5">{t('makingARequest.noLcidBody')}</p>
+          <p className="line-height-body-5">
+            <Trans i18nKey="accessibility:makingARequest.noLcidBody">
+              indexZero
+              <UswdsLink href="mailto:ITgovernanceteam@cms.hhs.gov">
+                email
+              </UswdsLink>
+              indexTwo
+            </Trans>
+          </p>
         </CollapsableLink>
       </div>
     </div>
