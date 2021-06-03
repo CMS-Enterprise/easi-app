@@ -480,36 +480,42 @@ Array [
                   </dd>
                 </div>
               </div>
-              <div
-                className="easi-review-row"
-              >
+              <div>
                 <div
-                  className="line-height-body-3"
+                  className="easi-review-row"
                 >
-                  <dt
-                    className="text-bold margin-bottom-05"
+                  <div
+                    className="line-height-body-3"
                   >
-                    Where are you planning to host?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test location
-                  </dd>
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      Where are you planning to host?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test location
+                    </dd>
+                  </div>
                 </div>
                 <div
-                  className="line-height-body-3"
+                  className="easi-review-row"
                 >
-                  <dt
-                    className="text-bold margin-bottom-05"
+                  <div
+                    className="line-height-body-3"
                   >
-                    What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test cloud service
-                  </dd>
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test cloud service
+                    </dd>
+                  </div>
                 </div>
               </div>
               <div
@@ -734,36 +740,42 @@ Array [
                   </dd>
                 </div>
               </div>
-              <div
-                className="easi-review-row"
-              >
+              <div>
                 <div
-                  className="line-height-body-3"
+                  className="easi-review-row"
                 >
-                  <dt
-                    className="text-bold margin-bottom-05"
+                  <div
+                    className="line-height-body-3"
                   >
-                    Where are you planning to host?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test location
-                  </dd>
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      Where are you planning to host?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test location
+                    </dd>
+                  </div>
                 </div>
                 <div
-                  className="line-height-body-3"
+                  className="easi-review-row"
                 >
-                  <dt
-                    className="text-bold margin-bottom-05"
+                  <div
+                    className="line-height-body-3"
                   >
-                    What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test cloud service
-                  </dd>
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test cloud service
+                    </dd>
+                  </div>
                 </div>
               </div>
               <div
@@ -988,36 +1000,42 @@ Array [
                   </dd>
                 </div>
               </div>
-              <div
-                className="easi-review-row"
-              >
+              <div>
                 <div
-                  className="line-height-body-3"
+                  className="easi-review-row"
                 >
-                  <dt
-                    className="text-bold margin-bottom-05"
+                  <div
+                    className="line-height-body-3"
                   >
-                    Where are you planning to host?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test location
-                  </dd>
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      Where are you planning to host?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test location
+                    </dd>
+                  </div>
                 </div>
                 <div
-                  className="line-height-body-3"
+                  className="easi-review-row"
                 >
-                  <dt
-                    className="text-bold margin-bottom-05"
+                  <div
+                    className="line-height-body-3"
                   >
-                    What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test cloud service
-                  </dd>
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test cloud service
+                    </dd>
+                  </div>
                 </div>
               </div>
               <div
