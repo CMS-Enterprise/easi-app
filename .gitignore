@@ -11,6 +11,8 @@
 cypress.env.json
 /cypress/videos
 /cypress/screenshots
+go-coverage.*
+/results
 
 # production
 /build
