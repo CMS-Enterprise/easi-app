@@ -34,7 +34,9 @@ Cypress.Commands.add('localLogin', ({name, role}) => {
 
   cy.get('[data-testid="LocalAuth-Visit"]').click();
   cy.get('[data-testid="LocalAuth-EUA"]').type(name);
-  cy.get(`input[value="${role}"]`).check();
+  if (role) {
+    cy.get(`input[value="${role}"]`).check();
+  }
   cy.get('[data-testid="LocalAuth-Submit"]').click();
 
   cy.url().should('eq', 'http://localhost:3000/');
