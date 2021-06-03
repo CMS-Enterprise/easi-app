@@ -1,2 +1,3 @@
 rules:
+  latest_tag: off
   missing_tag: off

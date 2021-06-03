@@ -3,6 +3,18 @@ version: '3.7'
 services:
   db_migrate:
     image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}'
+  db_seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.db_seed
+    environment:
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASS=mysecretpassword
+      - PGSSLMODE=disable
+      - DB_MAX_CONNECTIONS=20
   easi:
     image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}'
     environment:
