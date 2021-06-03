@@ -19,7 +19,7 @@ if [[ -n "${CIRCLECI+x}" ]]; then
 
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml pull db_migrate easi
 
-    docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml build --parallel easi_client cypress
+    docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml build --parallel easi_client cypress db_seed
 
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up -d db
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up --exit-code-from db_migrate db_migrate
