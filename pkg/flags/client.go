@@ -39,7 +39,7 @@ func Principal(ctx context.Context) lduser.User {
 
 	// this is a bit of a loose inference, assuming a user w/o Job Codes
 	// is an Anonymous user. Over time, may want to consider adding
-	// a `func Anonymous() bool` accessor to the authn.Principal interface
+	// a `func Anonymous() bool` accessor to the authorizaion.Principal interface
 	// definition instead of doing this inference
 	authed := (p.AllowEASi() || p.AllowGRT())
 

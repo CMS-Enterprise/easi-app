@@ -1,13 +1,19 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
+import { Link } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import {
+  REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY,
+  REPORT_PROBLEM_BASIC_USER_SURVEY
+} from 'constants/externalUrls';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import Create from 'views/Accessibility/AccessibilityRequest/Create';
@@ -93,13 +99,31 @@ const NotFound = () => (
 
 const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 
-const PageTemplate = ({ children }: { children: React.ReactNode }) => {
+const ReportProblemLinkArea = ({ url }: { url: string }) => {
+  const { t } = useTranslation('accessibility');
+  return (
+    <div className="grid-container width-full padding-bottom-2 report-problem-link-area">
+      <Link href={url} target="_blank" rel="noopener noreferrer">
+        {t('reportProblem')}
+      </Link>
+    </div>
+  );
+};
+
+const PageTemplate = ({
+  children,
+  surveyUrl
+}: {
+  children: React.ReactNode;
+  surveyUrl: string;
+}) => {
   return (
     <PageWrapper>
       <Header />
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
+      <ReportProblemLinkArea url={surveyUrl} />
       <Footer />
     </PageWrapper>
   );
@@ -113,7 +137,7 @@ const Accessibility = () => {
   if (isUserSet) {
     if (user.isAccessibilityTeam(userGroups, flags)) {
       return (
-        <PageTemplate>
+        <PageTemplate surveyUrl={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY}>
           {[
             NewRequest,
             AllRequests,
@@ -129,7 +153,7 @@ const Accessibility = () => {
       );
     }
     return (
-      <PageTemplate>
+      <PageTemplate surveyUrl={REPORT_PROBLEM_BASIC_USER_SURVEY}>
         {[
           NewRequest,
           AccessibilityTestingOverview,

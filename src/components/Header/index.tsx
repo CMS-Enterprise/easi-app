@@ -137,7 +137,7 @@ export const Header = ({ children }: HeaderProps) => {
                     {t('header:addSystem')}
                   </UserAction>
                   {flags.add508Request && (
-                    <UserAction link="/508/requests/new">
+                    <UserAction link="/508/testing-overview?continue=true">
                       {t('header:add508Request')}
                     </UserAction>
                   )}
