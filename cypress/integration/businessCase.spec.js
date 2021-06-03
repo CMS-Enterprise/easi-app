@@ -1,8 +1,8 @@
-import { BASIC_USER_PROD } from '../../src/constants/jobCodes'
+import { GOVTEAM_DEV } from '../../src/constants/jobCodes'
 
 describe('The Business Case Form', () => {
   beforeEach(() => {
-    cy.localLogin({name: 'TEST'});
+    cy.localLogin({name: 'TEST', role: GOVTEAM_DEV});
   });
 
   it('fills out all business case fields', () => {
