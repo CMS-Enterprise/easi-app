@@ -73,7 +73,7 @@ const Home = () => {
                 </p>
                 <div className="display-flex flex-row">
                   <LinkCard
-                    link="/system/request-type"
+                    link="/system/making-a-request"
                     heading={t('home:actions.itg.heading')}
                     className="margin-right-2"
                   >
