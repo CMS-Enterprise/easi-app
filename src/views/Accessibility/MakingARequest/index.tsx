@@ -29,7 +29,7 @@ const MakingARequest = () => {
             {t('makingARequest.request508TestingBullet')}
           </li>
           <li className="margin-bottom-3">
-            {t('makingARequest.uploadDocumentNamespace')}
+            {t('makingARequest.uploadDocumentsBullet')}
           </li>
         </ul>
         <p className="line-height-body-5">{t('makingARequest.email508Team')}</p>
