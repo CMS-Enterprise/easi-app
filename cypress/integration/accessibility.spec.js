@@ -2,7 +2,7 @@ import { formatDate } from '../../src/utils/date';
 
 describe('Accessibility Requests', () => {
   beforeEach(() => {
-    cy.localLogin({name: 'ACES'});
+    cy.localLogin({name: 'A11Y'});
   });
 
   it('can create a request and see its details', () => {
