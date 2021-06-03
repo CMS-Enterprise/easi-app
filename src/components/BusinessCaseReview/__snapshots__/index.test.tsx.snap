@@ -521,6 +521,42 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
+                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                  </dt>
+                  <dd
+                    className="description-definition margin-0 text-pre-wrap"
+                  >
+                    No
+                  </dd>
+                </div>
+              </div>
+              <div
+                className="easi-review-row"
+              >
+                <div
+                  className="line-height-body-3"
+                >
+                  <dt
+                    className="text-bold margin-bottom-05"
+                  >
+                    Is your solution in the process of CMS IT Security approval?
+                  </dt>
+                  <dd
+                    className="description-definition margin-0 text-pre-wrap"
+                  >
+                    Yes
+                  </dd>
+                </div>
+              </div>
+              <div
+                className="easi-review-row"
+              >
+                <div
+                  className="line-height-body-3"
+                >
+                  <dt
+                    className="text-bold margin-bottom-05"
+                  >
                     Will your solution have a User Interface?
                   </dt>
                   <dd
@@ -739,6 +775,42 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
+                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                  </dt>
+                  <dd
+                    className="description-definition margin-0 text-pre-wrap"
+                  >
+                    No
+                  </dd>
+                </div>
+              </div>
+              <div
+                className="easi-review-row"
+              >
+                <div
+                  className="line-height-body-3"
+                >
+                  <dt
+                    className="text-bold margin-bottom-05"
+                  >
+                    Is your solution in the process of CMS IT Security approval?
+                  </dt>
+                  <dd
+                    className="description-definition margin-0 text-pre-wrap"
+                  >
+                    Yes
+                  </dd>
+                </div>
+              </div>
+              <div
+                className="easi-review-row"
+              >
+                <div
+                  className="line-height-body-3"
+                >
+                  <dt
+                    className="text-bold margin-bottom-05"
+                  >
                     Will your solution have a User Interface?
                   </dt>
                   <dd
@@ -945,6 +1017,42 @@ Array [
                     className="description-definition margin-0 text-pre-wrap"
                   >
                     Test cloud service
+                  </dd>
+                </div>
+              </div>
+              <div
+                className="easi-review-row"
+              >
+                <div
+                  className="line-height-body-3"
+                >
+                  <dt
+                    className="text-bold margin-bottom-05"
+                  >
+                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                  </dt>
+                  <dd
+                    className="description-definition margin-0 text-pre-wrap"
+                  >
+                    No
+                  </dd>
+                </div>
+              </div>
+              <div
+                className="easi-review-row"
+              >
+                <div
+                  className="line-height-body-3"
+                >
+                  <dt
+                    className="text-bold margin-bottom-05"
+                  >
+                    Is your solution in the process of CMS IT Security approval?
+                  </dt>
+                  <dd
+                    className="description-definition margin-0 text-pre-wrap"
+                  >
+                    Yes
                   </dd>
                 </div>
               </div>

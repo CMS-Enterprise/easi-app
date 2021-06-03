@@ -10,6 +10,7 @@ import {
 import { hostingTypeMap } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { ProposedBusinessCaseSolution } from 'types/businessCase';
+import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
 /**
  * Title
@@ -90,6 +91,26 @@ const PropsedBusinessCaseSolutionReview = ({
               />
             </div>
           )}
+        </ReviewRow>
+      )}
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={convertBoolToYesNo(solution.security.isApproved)}
+          />
+        </div>
+      </ReviewRow>
+      {!solution.security.isApproved && (
+        <ReviewRow>
+          <div className="line-height-body-3">
+            <DescriptionTerm term="Is your solution in the process of CMS IT Security approval?" />
+            <DescriptionDefinition
+              className="text-pre-wrap"
+              definition={yesNoMap[solution.security.isBeingReviewed]}
+            />
+          </div>
         </ReviewRow>
       )}
       <ReviewRow>
