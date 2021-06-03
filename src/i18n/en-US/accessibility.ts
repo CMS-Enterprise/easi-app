@@ -206,7 +206,7 @@ const accessibility = {
     continueButton: 'Continue to steps involved',
     noLcidHeader: 'What if I don’t have a Lifecycle ID?',
     noLcidBody:
-      'A Lifecycle ID is your unique reference number that lets you [operate] your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>ITgovernanceteam@cms.hhs.gov</1> with information about your system.'
+      'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>ITgovernanceteam@cms.hhs.gov</1> with information about your system.'
   },
   testingTemplates: {
     heading: 'Templates for 508 testing',

@@ -49,7 +49,7 @@ const MakingARequest = () => {
             indexTwo
           </Trans>
         </p>
-        <h2>{t('makingARequest.beforeYouStart')}</h2>
+        <h2 className="margin-top-5">{t('makingARequest.beforeYouStart')}</h2>
         <p>{t('makingARequest.needLcid')}</p>
         <p>{t('makingARequest.onceYouMakeRequest')}</p>
         <UswdsLink
