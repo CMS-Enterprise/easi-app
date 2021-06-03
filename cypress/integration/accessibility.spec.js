@@ -1,9 +1,8 @@
 import { formatDate } from '../../src/utils/date';
-import { BASIC_USER_PROD } from '../../src/constants/jobCodes'
 
 describe('Accessibility Requests', () => {
   beforeEach(() => {
-    cy.localLogin({name: 'ACES', role: BASIC_USER_PROD});
+    cy.localLogin({name: 'ACES'});
   });
 
   it('can create a request and see its details', () => {

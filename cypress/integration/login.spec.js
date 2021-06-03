@@ -1,3 +1,5 @@
+import { ACCESSIBILITY_ADMIN_DEV } from '../../src/constants/jobCodes'
+
 describe('Logging in', () => {
   it('logs in with okta', () => {
     cy.login();
@@ -5,12 +7,7 @@ describe('Logging in', () => {
   });
 
   it('logs in with local auth', () => {
-    cy.visit('/login');
-
-    cy.get('[data-testid="LocalAuth-Visit"]').click();
-    cy.get('[data-testid="LocalAuth-EUA"]').type('TEST');
-    cy.get('input[value="EASI_D_508_USER"]').check();
-    cy.get('[data-testid="LocalAuth-Submit"]').click();
+    cy.localLogin({name: 'TEST', role: ACCESSIBILITY_ADMIN_DEV});
 
     cy.get('h1', { timeout: 20000 }).should('have.text', '508 Requests');
   });
