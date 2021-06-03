@@ -80,7 +80,7 @@ const Home = () => {
                     {t('home:actions.itg.body')}
                   </LinkCard>
                   <LinkCard
-                    link="/508/requests/new"
+                    link="/508/testing-overview?continue=true"
                     heading={t('home:actions.508.heading')}
                   >
                     {t('home:actions.508.body')}
