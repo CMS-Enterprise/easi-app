@@ -8,7 +8,7 @@ type TabsProps = {
   children: React.ReactElement[];
 };
 
-const DIRECTION = {
+const DIRECTION: { [key: string]: number } = {
   ArrowLeft: -1,
   ArrowUp: -1,
   ArrowRight: 1,
@@ -24,9 +24,14 @@ const KEYS = {
   END: 'End'
 };
 
+// TODO: Responsive Design
+// Need to stack tabs and tab panels
+// Disable left/right arrows and use up down
+// Need to use aria-direction
+
 const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
-  const tabsRef = useRef<HTMLDivElement>();
-  const [tabEls, setTabEls] = useState<NodeList>();
+  const tabsRef = useRef<HTMLUListElement>(null);
+  const [tabEls = [], setTabEls] = useState<NodeList>();
   const tabObjs = children.map(child => ({
     id: child.props.id,
     name: child.props.tabName
@@ -68,14 +73,10 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
     let newActiveTab;
 
     switch (e.key) {
-      case KEYS.ARROW_UP:
-      case KEYS.ARROW_DOWN:
-        e.preventDefault();
-        break;
       case KEYS.HOME:
         e.preventDefault();
         // eslint-disable-next-line prefer-destructuring
-        newActiveTab = tabEls[0];
+        newActiveTab = tabEls[0] as HTMLElement;
         if (newActiveTab) {
           newActiveTab.focus();
           setActiveTab(newActiveTab.textContent);
@@ -84,7 +85,7 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
       case KEYS.END:
         e.preventDefault();
         // eslint-disable-next-line prefer-destructuring
-        newActiveTab = tabEls[tabEls.length - 1];
+        newActiveTab = tabEls[tabEls.length - 1] as HTMLElement;
         if (newActiveTab) {
           newActiveTab.focus();
           setActiveTab(newActiveTab.textContent);
@@ -103,10 +104,10 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
 
   useEffect(() => {
     const tabsEl = tabsRef.current;
-    tabsEl.addEventListener('keyup', handleKeyup);
+    tabsEl?.addEventListener('keyup', handleKeyup);
 
     return () => {
-      tabsEl.removeEventListener('keyup', handleKeyup);
+      tabsEl?.removeEventListener('keyup', handleKeyup);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,17 +115,17 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
 
   useEffect(() => {
     const tabsEl = tabsRef.current;
-    tabsEl.addEventListener('keydown', handleKeydown);
+    tabsEl?.addEventListener('keydown', handleKeydown);
 
     return () => {
-      tabsEl.removeEventListener('keydown', handleKeydown);
+      tabsEl?.removeEventListener('keydown', handleKeydown);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabEls]);
 
   return (
-    <div className={classnames('easi-tabs')} ref={tabsRef}>
-      <ul className="easi-tabs__tab-list" role="tablist">
+    <div className={classnames('easi-tabs')} data-testid="easi-tabs">
+      <ul className="easi-tabs__tab-list" role="tablist" ref={tabsRef}>
         {tabObjs.map(tab => {
           const { id, name } = tab;
           return (
@@ -134,6 +135,7 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
                 'easi-tabs__tab--selected': activeTab === name
               })}
               role="presentation"
+              data-testid={`${id}-tab`}
             >
               <button
                 id={`${id}-tab-btn`}
@@ -144,6 +146,7 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
                 tabIndex={activeTab === name ? undefined : -1}
                 aria-controls={id}
                 onClick={() => setActiveTab(name)}
+                data-testid={`${id}-tab-btn`}
               >
                 <span className="easi-tabs__tab-text">{name}</span>
               </button>
