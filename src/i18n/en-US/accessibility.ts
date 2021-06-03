@@ -1,6 +1,7 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
+  reportProblem: 'Report a problem (opens in a new tab)',
   documentTable: {
     caption: 'Documents uploaded for',
     header: {
@@ -92,33 +93,26 @@ const accessibility = {
     confirmation: '{{date}} test date was removed from {{-requestName}} page'
   },
   newRequestForm: {
-    heading: 'Add a new request',
+    heading: 'Request 508 testing',
     fields: {
       project: {
-        label: 'Choose the project this request will belong to'
-      },
-      businessOwnerName: {
-        label: 'Business Owner Name',
-        help:
-          'The business owner name field will be automatically filled based on the project you choose'
-      },
-      businessOwnerComponent: {
-        label: 'Business Owner Component',
-        help:
-          'The business owner component field will be automatically filled based on the project you choose'
-      },
-      requestName: {
-        label: 'Request Name',
-        help:
-          'This name will be shown on the Active requests page. For example, ACME 1.3'
+        label: "Choose the application you'd like to test",
+        helpText: 'Start typing the name of the application or the Lifecycle ID'
       }
     },
     info:
-      'A request for 508 testing will be added to the list of 508 requests. An email will be sent to the Business Owner and the 508 team stating that a request has been added to the system.',
-    submitBtn: 'Add a new request',
+      'A confirmation email will be sent to you. After you send this request, you can upload your documents.',
+    submitBtn: 'Send 508 testing request',
     confirmation:
       '508 testing request created. We have sent you a confirmation email.',
-    surveyLink: 'Tell us what you think of this service (opens in a new tab)'
+    surveyLink: 'Tell us what you think of this service (opens in a new tab)',
+    helpAndGuidance: {
+      lifecycleIdAccordion: {
+        header: 'What if I cannot find my application or Lifecycle ID?',
+        para:
+          'Your application might not have a Lifecycle ID. A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at ITgovernanceteam@cms.hhs.gov with information about your application.'
+      }
+    }
   },
   removeAccessibilityRequest: {
     reason: 'Reason for removal',
@@ -190,7 +184,8 @@ const accessibility = {
         'Exceptions are only valid for one release. Future releases will be re-evaluated for additional exceptions.',
       contact:
         'To apply for an exception or for more information, contact the CMS Section 508 team at <1>CMS_Section508@cms.hhs.gov<1/>.'
-    }
+    },
+    start: 'Get started with Step 1'
   },
   testingTemplates: {
     heading: 'Templates for 508 testing',

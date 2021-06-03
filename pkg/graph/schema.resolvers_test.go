@@ -106,12 +106,13 @@ func TestGraphQLTestSuite(t *testing.T) {
 	}
 
 	dbConfig := storage.DBConfig{
-		Host:     config.GetString(appconfig.DBHostConfigKey),
-		Port:     config.GetString(appconfig.DBPortConfigKey),
-		Database: config.GetString(appconfig.DBNameConfigKey),
-		Username: config.GetString(appconfig.DBUsernameConfigKey),
-		Password: config.GetString(appconfig.DBPasswordConfigKey),
-		SSLMode:  config.GetString(appconfig.DBSSLModeConfigKey),
+		Host:           config.GetString(appconfig.DBHostConfigKey),
+		Port:           config.GetString(appconfig.DBPortConfigKey),
+		Database:       config.GetString(appconfig.DBNameConfigKey),
+		Username:       config.GetString(appconfig.DBUsernameConfigKey),
+		Password:       config.GetString(appconfig.DBPasswordConfigKey),
+		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
+		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
 	}
 
 	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)

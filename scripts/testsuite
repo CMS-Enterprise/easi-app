@@ -3,10 +3,12 @@
 # run `easi` app tests
 #
 
+set -eu -o pipefail
+
 builddir="$(git rev-parse --show-toplevel)"
 export EMAIL_TEMPLATE_DIR=$builddir/pkg/email/templates
 
-( set -x -u ; exec "$builddir"/bin/easi test )
+go test -count=1 -coverprofile=go-coverage.out ./...
 
 # Convert go-coverage.out to txt and html
 go tool cover -func=go-coverage.out -o "go-coverage.txt"
@@ -26,7 +28,7 @@ else
     exit 1
 fi
 
-if [ -d "results" ] 
+if [ -d "results" ]
 then
     mv go-coverage.* results/
 else

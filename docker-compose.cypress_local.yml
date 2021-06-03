@@ -10,6 +10,18 @@ services:
       dockerfile: Dockerfile.db_migrations
     volumes:
       - ./migrations:/flyway/sql
+  db_seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.db_seed
+    environment:
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASS=mysecretpassword
+      - PGSSLMODE=disable
+      - DB_MAX_CONNECTIONS=20
   easi:
     build:
       context: .
@@ -18,6 +30,7 @@ services:
     environment:
       - APP_ENV=test
       - EMAIL_TEMPLATE_DIR=/easi/templates
+      - FLAG_SOURCE=LOCAL
       - LOCAL_AUTH_ENABLED=true
     ports:
       - 8080:8080
