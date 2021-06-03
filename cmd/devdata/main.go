@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -45,42 +44,42 @@ func main() {
 		panic(storeErr)
 	}
 
-	for i := 0; i < 20; i++ {
-		makeAccessibilityRequest("TACO", store)
-		makeAccessibilityRequest("Big Project", store)
-	}
+	// for i := 0; i < 20; i++ {
+	// 	makeAccessibilityRequest("TACO", store)
+	// 	makeAccessibilityRequest("Big Project", store)
+	// }
 
-	makeSystemIntake("A Completed Intake Form", logger, store, func(i *models.SystemIntake) {
-		i.ID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
-	})
+	// makeSystemIntake("A Completed Intake Form", logger, store, func(i *models.SystemIntake) {
+	// 	i.ID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
+	// })
 
-	makeSystemIntake("With Contract Month and Year", logger, store, func(i *models.SystemIntake) {
-		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
-		i.ContractStartMonth = null.StringFrom("10")
-		i.ContractStartYear = null.StringFrom("2021")
-		i.ContractEndMonth = null.StringFrom("10")
-		i.ContractEndYear = null.StringFrom("2022")
-	})
+	// makeSystemIntake("With Contract Month and Year", logger, store, func(i *models.SystemIntake) {
+	// 	i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+	// 	i.ContractStartMonth = null.StringFrom("10")
+	// 	i.ContractStartYear = null.StringFrom("2021")
+	// 	i.ContractEndMonth = null.StringFrom("10")
+	// 	i.ContractEndYear = null.StringFrom("2022")
+	// })
 
-	makeSystemIntake("With Contract Dates", logger, store, func(i *models.SystemIntake) {
-		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
-		i.ContractStartDate = date(2021, 4, 5)
-		i.ContractEndDate = date(2022, 4, 5)
-	})
+	// makeSystemIntake("With Contract Dates", logger, store, func(i *models.SystemIntake) {
+	// 	i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+	// 	i.ContractStartDate = date(2021, 4, 5)
+	// 	i.ContractEndDate = date(2022, 4, 5)
+	// })
 
-	makeSystemIntake("With Both Contract Dates", logger, store, func(i *models.SystemIntake) {
-		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
-		i.ContractStartMonth = null.StringFrom("10")
-		i.ContractStartYear = null.StringFrom("2021")
-		i.ContractEndMonth = null.StringFrom("10")
-		i.ContractEndYear = null.StringFrom("2022")
-		i.ContractStartDate = date(2021, 4, 9)
-		i.ContractEndDate = date(2022, 4, 8)
-	})
+	// makeSystemIntake("With Both Contract Dates", logger, store, func(i *models.SystemIntake) {
+	// 	i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+	// 	i.ContractStartMonth = null.StringFrom("10")
+	// 	i.ContractStartYear = null.StringFrom("2021")
+	// 	i.ContractEndMonth = null.StringFrom("10")
+	// 	i.ContractEndYear = null.StringFrom("2022")
+	// 	i.ContractStartDate = date(2021, 4, 9)
+	// 	i.ContractEndDate = date(2022, 4, 8)
+	// })
 
-	makeSystemIntake("Ready for business case", logger, store, func(i *models.SystemIntake) {
-		i.Status = models.SystemIntakeStatusNEEDBIZCASE
-	})
+	// makeSystemIntake("Ready for business case", logger, store, func(i *models.SystemIntake) {
+	// 	i.Status = models.SystemIntakeStatusNEEDBIZCASE
+	// })
 
 	makeSystemIntake("For business case integration test", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
@@ -256,31 +255,31 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 	must(store.CreateBusinessCase(ctx, &businessCase))
 }
 
-var lcid = 0
+// var lcid = 0
 
-func makeAccessibilityRequest(name string, store *storage.Store) {
-	ctx := context.Background()
+// func makeAccessibilityRequest(name string, store *storage.Store) {
+// 	ctx := context.Background()
 
-	lifecycleID := fmt.Sprintf("%06d", lcid)
-	lcid = lcid + 1
+// 	lifecycleID := fmt.Sprintf("%06d", lcid)
+// 	lcid = lcid + 1
 
-	intake := models.SystemIntake{
-		Status:                 models.SystemIntakeStatusLCIDISSUED,
-		RequestType:            models.SystemIntakeRequestTypeNEW,
-		ProjectName:            null.StringFrom(name),
-		BusinessOwner:          null.StringFrom("Shane Clark"),
-		BusinessOwnerComponent: null.StringFrom("OIT"),
-		LifecycleID:            null.StringFrom(lifecycleID),
-	}
-	must(store.CreateSystemIntake(ctx, &intake))
-	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
+// 	intake := models.SystemIntake{
+// 		Status:                 models.SystemIntakeStatusLCIDISSUED,
+// 		RequestType:            models.SystemIntakeRequestTypeNEW,
+// 		ProjectName:            null.StringFrom(name),
+// 		BusinessOwner:          null.StringFrom("Shane Clark"),
+// 		BusinessOwnerComponent: null.StringFrom("OIT"),
+// 		LifecycleID:            null.StringFrom(lifecycleID),
+// 	}
+// 	must(store.CreateSystemIntake(ctx, &intake))
+// 	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
 
-	must(store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
-		Name:      fmt.Sprintf("%s v2", name),
-		IntakeID:  intake.ID,
-		EUAUserID: "ABCD",
-	}))
-}
+// 	must(store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+// 		Name:      fmt.Sprintf("%s v2", name),
+// 		IntakeID:  intake.ID,
+// 		EUAUserID: "ABCD",
+// 	}))
+// }
 
 func must(_ interface{}, err error) {
 	if err != nil {
