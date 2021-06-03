@@ -2,8 +2,11 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import { Alert } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
+import GetCurrentUserQuery from 'queries/GetCurrentUserQuery';
+import { GetCurrentUser } from 'queries/types/GetCurrentUser';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -29,7 +32,7 @@ const Home = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
-
+  const { data } = useQuery<GetCurrentUser>(GetCurrentUserQuery);
   const { message } = useMessage();
 
   const renderView = () => {
@@ -69,6 +72,7 @@ const Home = () => {
               <div className="tablet:grid-col-9">
                 <PageHeading>{t('home:title')}</PageHeading>
                 <h1>{localStorage.getItem('dev-user-config')}</h1>
+                <p>{JSON.stringify(data?.currentUser?.launchDarkly)}</p>
                 <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
                   {t('home:subtitle')}
                 </p>
