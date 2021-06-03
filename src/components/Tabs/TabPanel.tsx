@@ -25,6 +25,7 @@ const TabPanel = ({ id, tabName, isActive, children }: TabPanelProps) => {
       className={classes}
       aria-labelledby={`${id}-tab-btn`}
       data-tabname={tabName}
+      data-testid={`${id}-panel`}
       tabIndex={0}
     >
       {children}
