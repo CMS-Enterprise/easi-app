@@ -45,7 +45,7 @@ func main() {
 		panic(storeErr)
 	}
 
-	for i := 0; i < 20; i++ {
+	for i := 0; i < 5; i++ {
 		makeAccessibilityRequest("TACO", store)
 		makeAccessibilityRequest("Big Project", store)
 	}
