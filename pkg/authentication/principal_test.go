@@ -1,4 +1,4 @@
-package authn
+package authentication
 
 import (
 	"fmt"

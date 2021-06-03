@@ -114,6 +114,9 @@ const DBPasswordConfigKey = "PGPASS"
 // DBSSLModeConfigKey is the Postgres SSL mode config key
 const DBSSLModeConfigKey = "PGSSLMODE"
 
+// DBMaxConnections is the maximum number of connections to the database
+const DBMaxConnections = "DB_MAX_CONNECTIONS"
+
 // AWSSESSourceARNKey is the key for the ARN for sending email
 const AWSSESSourceARNKey = "AWS_SES_SOURCE_ARN"
 
@@ -170,6 +173,18 @@ const LambdaEndpoint = "LAMBDA_ENDPOINT"
 
 // LambdaFunctionPrince is the name of the prince lambda function
 const LambdaFunctionPrince = "LAMBDA_FUNCTION_PRINCE"
+
+// LocalAuthEnabled is whether local auth should be enabled
+const LocalAuthEnabled = "LOCAL_AUTH_ENABLED"
+
+// OktaClientID is the okta client id
+const OktaClientID = "OKTA_CLIENT_ID"
+
+// OktaIssuer is the okta issuer
+const OktaIssuer = "OKTA_ISSUER"
+
+// AltJobCodes are alternate job codes
+const AltJobCodes = "ALT_JOB_CODES"
 
 // FlagSourceOption represents an environment
 type FlagSourceOption string
