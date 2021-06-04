@@ -260,7 +260,7 @@ const accessibility = {
       ],
       download: {
         heading: 'Download Test Plan template',
-        link: 'Download the Test Plan template as a PDFc'
+        link: 'Download the Test Plan template as a PDF'
       }
     },
     remediationPlanSection: {
