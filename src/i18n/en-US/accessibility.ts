@@ -187,6 +187,27 @@ const accessibility = {
     },
     start: 'Get started with Step 1'
   },
+  makingARequest: {
+    breadcrumb: '508 testing',
+    info:
+      'EASi is replacing Service Now for making 508 requests for applications. This means you can manage all your 508 requests for applications within EASi. For all other 508 assistance, please email the Section 508 team at <1>CMS_Section508@cms.hhs.gov</1>.',
+    heading: 'Making a 508 testing request',
+    useThisService: 'Use this service to:',
+    request508TestingBullet: 'request 508 testing for your application',
+    uploadDocumentsBullet:
+      'upload and access documents related to your request like VPAT, Test plan and test results',
+    email508Team:
+      'For requests related to testing COTS products, GOTS products, review of documents and training please email the Section 508 team at <1>CMS_Section508@cms.hhs.gov</1>.',
+    beforeYouStart: 'Before you start',
+    needLcid:
+      'You’ll need the Lifecycle ID of the application you’d like to test to use this service.',
+    onceYouMakeRequest:
+      'Once you make the request, someone from the 508 team will email you with the next steps.',
+    continueButton: 'Continue to steps involved',
+    noLcidHeader: 'What if I don’t have a Lifecycle ID?',
+    noLcidBody:
+      'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>ITgovernanceteam@cms.hhs.gov</1> with information about your system.'
+  },
   testingTemplates: {
     heading: 'Templates for 508 testing',
     vpatSection: {
