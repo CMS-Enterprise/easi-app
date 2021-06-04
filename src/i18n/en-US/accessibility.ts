@@ -260,7 +260,7 @@ const accessibility = {
       ],
       download: {
         heading: 'Download Test Plan template',
-        link: 'Download the Test Plan template as a MS Word doc'
+        link: 'Download the Test Plan template as a PDFc'
       }
     },
     remediationPlanSection: {
@@ -273,7 +273,7 @@ const accessibility = {
       ],
       download: {
         heading: 'Download Remediation Plan template',
-        link: 'Download the Remediation Plan template as a MS Word doc'
+        link: 'Download the Remediation Plan template as a PDF'
       }
     }
   }
