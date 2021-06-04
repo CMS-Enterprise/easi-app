@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -109,6 +110,10 @@ func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *model
 	return r.store.FetchTestDatesByRequestID(ctx, obj.ID)
 }
 
+func (r *accessibilityRequestResolver) StatusRecord(ctx context.Context, obj *models.AccessibilityRequest) (*models.AccessibilityRequestStatusRecord, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
 	return &model.AccessibilityRequestDocumentType{
 		CommonType:           obj.CommonDocumentType,
@@ -122,6 +127,10 @@ func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj
 
 func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models.AccessibilityRequestDocument) (*time.Time, error) {
 	return obj.CreatedAt, nil
+}
+
+func (r *accessibilityRequestStatusRecordResolver) ID(ctx context.Context, obj *models.AccessibilityRequestStatusRecord) (uuid.UUID, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
@@ -1148,6 +1157,11 @@ func (r *Resolver) AccessibilityRequestDocument() generated.AccessibilityRequest
 	return &accessibilityRequestDocumentResolver{r}
 }
 
+// AccessibilityRequestStatusRecord returns generated.AccessibilityRequestStatusRecordResolver implementation.
+func (r *Resolver) AccessibilityRequestStatusRecord() generated.AccessibilityRequestStatusRecordResolver {
+	return &accessibilityRequestStatusRecordResolver{r}
+}
+
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
@@ -1162,7 +1176,18 @@ func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &syste
 
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
+type accessibilityRequestStatusRecordResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *queryResolver) AccessibilityRequestStatusRecord(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequestStatusRecord, error) {
+	panic(fmt.Errorf("not implemented"))
+}
