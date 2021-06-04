@@ -59,6 +59,7 @@ func (s AccessibilityRequestStatus) MarshalGQL(w io.Writer) {
 
 // AccessibilityRequestStatusRecord represents data about a status that has been set
 type AccessibilityRequestStatusRecord struct {
+	ID        uuid.UUID                  `json:"id"`
 	Status    AccessibilityRequestStatus `json:"status" db:"status"`
 	RequestID uuid.UUID                  `json:"requestId" db:"request_id"`
 	CreatedAt *time.Time                 `json:"createdAt" db:"created_at"`
