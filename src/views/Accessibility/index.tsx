@@ -21,6 +21,7 @@ import AccessibilityRequestsDocumentsNew from 'views/Accessibility/Accessibility
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 import AccessibilityTestingStepsOverview from 'views/Accessibility/AccessibilityTestingStepsOverview';
+import MakingARequest from 'views/Accessibility/MakingARequest';
 import TestingTemplates from 'views/Accessibility/TestingTemplates';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 import NewTestDateView from 'views/TestDate/NewTestDate';
@@ -49,6 +50,15 @@ const AccessibilityTestingOverview = (
     path="/508/testing-overview"
     exact
     component={AccessibilityTestingStepsOverview}
+  />
+);
+
+const MakingANewRequest = (
+  <SecureRoute
+    key="making-a-508-request"
+    path="/508/making-a-request"
+    exact
+    component={MakingARequest}
   />
 );
 
@@ -142,6 +152,7 @@ const Accessibility = () => {
             NewRequest,
             AllRequests,
             AccessibilityTestingOverview,
+            MakingANewRequest,
             AccessibilityTestingTemplates,
             NewDocument,
             UpdateTestDate,
@@ -157,6 +168,7 @@ const Accessibility = () => {
         {[
           NewRequest,
           AccessibilityTestingOverview,
+          MakingANewRequest,
           AccessibilityTestingTemplates,
           NewDocument,
           RequestDetails,
