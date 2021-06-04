@@ -1,0 +1,43 @@
+.easi-notes {
+  &__list {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  &__note-item {
+    display: flex;
+
+    &--linked {
+      margin-left: 6px;
+      &:not(:last-of-type) {
+        border-left: 1px solid #000;
+      }
+
+      &:before {
+        flex: none;
+        content: '';
+        background-color: #000;
+        height: 12px;
+        width: 12px;
+        margin-left: -6px;
+        line-height: 24px;
+        text-align: center;
+        border-radius: 50%;
+      }
+
+      .easi-notes__note-body {
+        margin-left: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+      }
+    }
+
+  }
+
+  &__note-body {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #979797;
+  }
+}
