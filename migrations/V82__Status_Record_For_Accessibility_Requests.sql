@@ -1,12 +1,3 @@
-CREATE TYPE accessibility_request_status AS ENUM ('OPEN', 'IN_REMEDIATION', 'CLOSED');
-
-CREATE TABLE accessibility_request_status_records (
-    id uuid PRIMARY KEY not null,
-    request_id uuid REFERENCES accessibility_requests(id),
-    status accessibility_request_status NOT NULL DEFAULT 'OPEN',
-    created_at timestamp with time zone NOT NULL
-);
-
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 DO $$
@@ -22,4 +13,3 @@ BEGIN
                 VALUES (uuid_generate_v4(), now(), 'CLOSED', arow.id);
     END LOOP;
 END $$
-

@@ -249,10 +249,16 @@ func makeAccessibilityRequest(name string, store *storage.Store) {
 	must(store.CreateSystemIntake(ctx, &intake))
 	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
 
-	must(store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+	request, err := store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
 		Name:      fmt.Sprintf("%s v2", name),
 		IntakeID:  intake.ID,
 		EUAUserID: "ABCD",
+	})
+	if err != nil {
+		panic(err)
+	}
+	must(store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: request.ID,
 	}))
 }
 
