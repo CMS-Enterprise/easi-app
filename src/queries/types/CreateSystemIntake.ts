@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CreateSystemIntakeInput, SystemIntakeRequestType } from "./../../types/graphql-global-types";
+import { CreateSystemIntakeInput, SystemIntakeStatus, SystemIntakeRequestType } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: CreateSystemIntake
@@ -12,11 +12,12 @@ import { CreateSystemIntakeInput, SystemIntakeRequestType } from "./../../types/
 export interface CreateSystemIntake_createSystemIntake_requester {
   __typename: "SystemIntakeRequester";
   name: string;
-  email: string | null;
 }
 
 export interface CreateSystemIntake_createSystemIntake {
   __typename: "SystemIntake";
+  id: UUID;
+  status: SystemIntakeStatus;
   requestType: SystemIntakeRequestType;
   requester: CreateSystemIntake_createSystemIntake_requester;
 }
