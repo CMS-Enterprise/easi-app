@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Button, Link as UswdsLink, Tag } from '@trussworks/react-uswds';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
@@ -127,6 +127,14 @@ const AccessibilityRequestDetailPage = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
   const hasDocuments = documents.length > 0;
+  const statusEnum = data?.accessibilityRequest?.statusRecord.status;
+  const statusMap: { [key: string]: string } = {
+    OPEN: 'Open',
+    IN_REMEDIATION: 'In remediation',
+    CLOSED: 'Closed'
+  };
+  const requestStatus = statusMap[`${statusEnum}`];
+
   const uploadDocumentLink = (
     <UswdsLink
       className="usa-button"
@@ -218,9 +226,9 @@ const AccessibilityRequestDetailPage = () => {
         )}
         <PageHeading>{requestName}</PageHeading>
         <h2 className="font-heading-sm text-normal">Current status</h2>
-        <Tag className="bg-warning-lighter text-ink">
-          {data?.accessibilityRequest?.statusRecord.status}
-        </Tag>
+        <span className="bg-warning-lighter text-ink padding-05">
+          {requestStatus}
+        </span>
       </div>
       <div className="grid-container margin-top-2 padding-top-6 padding-top">
         <div className="grid-row grid-gap-lg">
