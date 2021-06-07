@@ -39,6 +39,11 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	})
 	s.NoError(requestErr)
 
+	_, statusRecordErr := s.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: accessibilityRequest.ID,
+	})
+	s.NoError(statusRecordErr)
+
 	document, documentErr := s.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		RequestID:          accessibilityRequest.ID,
 		Name:               "uploaded_doc.pdf",
@@ -71,6 +76,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 				Size     int
 				Status   string
 			}
+			// TODO: add AccessibilityRequestStatusRecord here
 		}
 	}
 
