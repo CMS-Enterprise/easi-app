@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
 import {
   Breadcrumb,
@@ -11,6 +11,7 @@ import {
   Link as UswdsLink
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -22,25 +23,14 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
-import { initialSystemIntakeForm } from 'data/systemIntake';
-import { AppState } from 'reducers/rootReducer';
-import { postSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
   const { t } = useTranslation('intake');
   const { oktaAuth } = useOktaAuth();
-  const dispatch = useDispatch();
   const history = useHistory();
-
-  const isNewIntakeCreated = useSelector(
-    (state: AppState) => state.systemIntake.isNewIntakeCreated
-  );
-
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
+  const [mutate] = useMutation(CreateSystemIntake);
 
   const majorChangesExamples: string[] = t(
     'requestTypeForm.helpAndGuidance.majorChanges.list',
@@ -51,43 +41,39 @@ const RequestTypeForm = () => {
 
   const handleCreateIntake = (formikValues: { requestType: string }) => {
     oktaAuth.getUser().then((user: any) => {
-      dispatch(
-        postSystemIntake({
-          ...initialSystemIntakeForm,
-          requestType: formikValues.requestType,
-          requester: {
-            name: user.name,
-            component: '',
-            email: user.email
+      const { requestType } = formikValues;
+      const input = {
+        requestType,
+        requester: {
+          name: user.name,
+          email: user.email
+        }
+      };
+      mutate({ variables: { input } }).then(response => {
+        if (!response.errors) {
+          const uuid = response.data.createSystemIntake.systemIntake.id;
+          const navigationLink = `/governance-task-list/${uuid}`;
+          switch (requestType) {
+            case 'NEW':
+              history.push(`/governance-overview/${uuid}`);
+              break;
+            case 'MAJOR_CHANGES':
+              history.push(navigationLink);
+              break;
+            case 'RECOMPETE':
+              history.push(navigationLink);
+              break;
+            case 'SHUTDOWN':
+              history.push(`/system/${uuid}/contact-details`);
+              break;
+            default:
+              // console.warn(`Unknown request type: ${systemIntake.requestType}`);
+              break;
           }
-        })
-      );
+        }
+      });
     });
   };
-
-  useEffect(() => {
-    if (isNewIntakeCreated) {
-      const navigationLink = `/governance-task-list/${systemIntake.id}`;
-      switch (systemIntake.requestType) {
-        case 'NEW':
-          history.push(`/governance-overview/${systemIntake.id}`);
-          break;
-        case 'MAJOR_CHANGES':
-          history.push(navigationLink);
-          break;
-        case 'RECOMPETE':
-          history.push(navigationLink);
-          break;
-        case 'SHUTDOWN':
-          history.push(`/system/${systemIntake.id}/contact-details`);
-          break;
-        default:
-          // console.warn(`Unknown request type: ${systemIntake.requestType}`);
-          break;
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isNewIntakeCreated]);
 
   return (
     <PageWrapper>
