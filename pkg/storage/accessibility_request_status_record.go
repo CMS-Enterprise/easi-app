@@ -40,8 +40,22 @@ func (s *Store) CreateAccessibilityRequestStatusRecord(ctx context.Context, stat
 		statusRecord,
 	)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to create accessibility request", zap.Error(err))
+		appcontext.ZLogger(ctx).Error("Failed to create accessibility request status record", zap.Error(err))
 		return nil, err
 	}
 	return statusRecord, nil
+}
+
+// FetchLatestAccessibilityRequestStatusRecordByRequestID fetches the most recent status record for a given accessibilityRequest
+func (s *Store) FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx context.Context, accessibilityRequestID uuid.UUID) (*models.AccessibilityRequestStatusRecord, error) {
+	var statusRecord models.AccessibilityRequestStatusRecord
+	err := s.db.Get(
+		&statusRecord, "SELECT * FROM accessibility_request_status_records WHERE request_id=$1 ORDER BY created_at DESC LIMIT 1;",
+		accessibilityRequestID,
+	)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to fetch accessibility request status record", zap.Error(err))
+		return nil, err
+	}
+	return &statusRecord, nil
 }
