@@ -2,6 +2,7 @@
 
 require "rake"
 require "json"
+require "yaml"
 require "irb"        # debugging
 require "io/console" # for IO#getch
 
@@ -76,14 +77,14 @@ def check_bin(executable, install_with: nil)
   end
 end
 
-def wait_for_success(message,   command)
+def wait_for_success(message, command)
   printf(message)
   loop do
     break if system(command)
     printf(".")
     sleep 3
   end
-  puts "done"
+  puts " ✨ done ✨"
 end
 
 desc "Check to see if the app's prerequisites are installed"
@@ -134,6 +135,23 @@ end
 desc "Stops all services in the project"
 task :down do
   sh "docker-compose down"
+end
+
+desc "Restart the specified container"
+task restart: :consume_args do |t, args|
+  yml = `docker-compose config`
+  config = YAML.load(yml)["services"]
+  services = config.keys.sort
+
+  args.to_a.each do |service|
+    unless services.include?(service)
+      puts "service #{service} not one of defined services: #{services.join(', ')}"
+      next
+    end
+    sh "docker-compose rm -s --force #{service}"
+  end
+
+  Rake::Task["up"].invoke
 end
 
 desc "Run app and expose to other machines over Tailscale"
@@ -328,6 +346,10 @@ namespace :test do
     sh "gotest -short -count=1 ./..."
   end
   namespace :go do
+    desc "Runs Go tests, including long ones"
+    task :long => "db:clean" do
+      sh "gotest -count=1 ./..."
+    end
     desc "Run targeted Go tests (pass packages as additional options)"
     task :only => ["db:clean", :consume_args] do |t, args|
       sh "gotest", "-short", "-count=1", "-v", *args
