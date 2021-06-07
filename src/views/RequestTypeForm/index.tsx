@@ -45,17 +45,16 @@ const RequestTypeForm = () => {
       const input = {
         requestType,
         requester: {
-          name: user.name,
-          email: user.email
+          name: user.name
         }
       };
       mutate({ variables: { input } }).then(response => {
         if (!response.errors) {
-          const uuid = response.data.createSystemIntake.systemIntake.id;
-          const navigationLink = `/governance-task-list/${uuid}`;
+          const { id } = response.data.createSystemIntake;
+          const navigationLink = `/governance-task-list/${id}`;
           switch (requestType) {
             case 'NEW':
-              history.push(`/governance-overview/${uuid}`);
+              history.push(`/governance-overview/${id}`);
               break;
             case 'MAJOR_CHANGES':
               history.push(navigationLink);
@@ -64,7 +63,7 @@ const RequestTypeForm = () => {
               history.push(navigationLink);
               break;
             case 'SHUTDOWN':
-              history.push(`/system/${uuid}/contact-details`);
+              history.push(`/system/${id}/contact-details`);
               break;
             default:
               // console.warn(`Unknown request type: ${systemIntake.requestType}`);

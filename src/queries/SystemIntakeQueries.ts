@@ -4,10 +4,11 @@ import { gql } from '@apollo/client';
 export const CreateSystemIntake = gql`
   mutation CreateSystemIntake($input: CreateSystemIntakeInput!) {
     createSystemIntake(input: $input) {
+      id
+      status
       requestType
       requester {
         name
-        email
       }
     }
   }
