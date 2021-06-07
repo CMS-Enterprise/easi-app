@@ -16,56 +16,70 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewIntakeAddParams creates a new IntakeAddParams object
-// with the default values initialized.
+// NewIntakeAddParams creates a new IntakeAddParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewIntakeAddParams() *IntakeAddParams {
-	var ()
 	return &IntakeAddParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewIntakeAddParamsWithTimeout creates a new IntakeAddParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewIntakeAddParamsWithTimeout(timeout time.Duration) *IntakeAddParams {
-	var ()
 	return &IntakeAddParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewIntakeAddParamsWithContext creates a new IntakeAddParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewIntakeAddParamsWithContext(ctx context.Context) *IntakeAddParams {
-	var ()
 	return &IntakeAddParams{
-
 		Context: ctx,
 	}
 }
 
 // NewIntakeAddParamsWithHTTPClient creates a new IntakeAddParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewIntakeAddParamsWithHTTPClient(client *http.Client) *IntakeAddParams {
-	var ()
 	return &IntakeAddParams{
 		HTTPClient: client,
 	}
 }
 
-/*IntakeAddParams contains all the parameters to send to the API endpoint
-for the intake add operation typically these are written to a http.Request
+/* IntakeAddParams contains all the parameters to send to the API endpoint
+   for the intake add operation.
+
+   Typically these are written to a http.Request.
 */
 type IntakeAddParams struct {
 
-	/*Body*/
+	// Body.
 	Body IntakeAddBody
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the intake add params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *IntakeAddParams) WithDefaults() *IntakeAddParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the intake add params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *IntakeAddParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the intake add params
@@ -119,7 +133,6 @@ func (o *IntakeAddParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		return err
 	}
 	var res []error
-
 	if err := r.SetBodyParam(o.Body); err != nil {
 		return err
 	}

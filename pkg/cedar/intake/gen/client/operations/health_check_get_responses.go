@@ -35,7 +35,6 @@ func (o *HealthCheckGetReader) ReadResponse(response runtime.ClientResponse, con
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -46,7 +45,7 @@ func NewHealthCheckGetOK() *HealthCheckGetOK {
 	return &HealthCheckGetOK{}
 }
 
-/*HealthCheckGetOK handles this case with default header values.
+/* HealthCheckGetOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -57,7 +56,6 @@ type HealthCheckGetOK struct {
 func (o *HealthCheckGetOK) Error() string {
 	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckGetOK  %+v", 200, o.Payload)
 }
-
 func (o *HealthCheckGetOK) GetPayload() *models.HealthCheckResponse {
 	return o.Payload
 }
@@ -79,7 +77,7 @@ func NewHealthCheckGetUnauthorized() *HealthCheckGetUnauthorized {
 	return &HealthCheckGetUnauthorized{}
 }
 
-/*HealthCheckGetUnauthorized handles this case with default header values.
+/* HealthCheckGetUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
