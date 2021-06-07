@@ -45,7 +45,7 @@ func main() {
 		panic(storeErr)
 	}
 
-	for i := 0; i < 20; i++ {
+	for i := 0; i < 5; i++ {
 		makeAccessibilityRequest("TACO", store)
 		makeAccessibilityRequest("Big Project", store)
 	}
@@ -80,6 +80,32 @@ func main() {
 
 	makeSystemIntake("Ready for business case", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusNEEDBIZCASE
+	})
+
+	makeSystemIntake("For business case integration test", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
+		i.EUAUserID = null.StringFrom("TEST")
+		i.Status = models.SystemIntakeStatusNEEDBIZCASE
+		i.RequestType = models.SystemIntakeRequestTypeNEW
+		i.Requester = "John Requester"
+		i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")
+		i.BusinessOwner = null.StringFrom("John BusinessOwner")
+		i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
+		i.ProductManager = null.StringFrom("John ProductManager")
+		i.ProductManagerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
+		i.ISSO = null.StringFrom("")
+		i.TRBCollaborator = null.StringFrom("")
+		i.OITSecurityCollaborator = null.StringFrom("")
+		i.EACollaborator = null.StringFrom("")
+		i.ProjectName = null.StringFrom("Easy Access to System Information")
+		i.ExistingFunding = null.BoolFrom(false)
+		i.FundingNumber = null.StringFrom("")
+		i.BusinessNeed = null.StringFrom("Business Need: The quick brown fox jumps over the lazy dog.")
+		i.Solution = null.StringFrom("The quick brown fox jumps over the lazy dog.")
+		i.ProcessStatus = null.StringFrom("The project is already funded")
+		i.EASupportRequest = null.BoolFrom(false)
+		i.ExistingContract = null.StringFrom("No")
+		i.GrtReviewEmailBody = null.StringFrom("")
 	})
 
 	makeBusinessCase("TACO", logger, store, nil)
