@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Button } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Button
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -86,16 +90,15 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
           />
         </ErrorAlert>
       )}
-      <div className="grid-container padding-y-2">
-        <BreadcrumbNav>
-          <li>
-            <Link className="text-white" to="/">
-              Home
-            </Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>{intake.requestName}</li>
-        </BreadcrumbNav>
+      <div className="grid-container padding-bottom-2">
+        <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>Home</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>{intake.requestName}</Breadcrumb>
+        </BreadcrumbBar>
         <dl className="easi-grt__request-info">
           <div>
             <dt>{t('intake:fields.projectName')}</dt>

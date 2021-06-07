@@ -2,10 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Switch, useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink
+} from '@trussworks/react-uswds';
 import { FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -110,19 +114,22 @@ export const SystemIntake = () => {
     <PageWrapper className="system-intake">
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        <BreadcrumbNav className="margin-y-2">
-          <li>
-            <Link to="/">Home</Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>
-            <Link to={`/governance-task-list/${systemIntake.id || 'new'}`}>
-              Get governance approval
-            </Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>Intake Request</li>
-        </BreadcrumbNav>
+        <BreadcrumbBar variant="wrap">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>Home</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb>
+            <BreadcrumbLink
+              asCustom={Link}
+              to={`/governance-task-list/${systemIntake.id || 'new'}`}
+            >
+              <span>Get governance approval</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>Intake Request</Breadcrumb>
+        </BreadcrumbBar>
         {isLoading === false && (
           <Switch>
             <SecureRoute

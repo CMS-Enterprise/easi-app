@@ -9,6 +9,11 @@ import {
 } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { SecureRoute } from '@okta/okta-react';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink
+} from '@trussworks/react-uswds';
 import { FormikProps } from 'formik';
 import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import {
@@ -16,7 +21,6 @@ import {
   GetGRTFeedbackVariables
 } from 'queries/types/GetGRTFeedback';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -48,7 +52,10 @@ import './index.scss';
 
 export const BusinessCase = () => {
   const history = useHistory();
-  const { businessCaseId, formPage } = useParams();
+  const { businessCaseId, formPage } = useParams<{
+    businessCaseId: string;
+    formPage: string;
+  }>();
   const formikRef: any = useRef();
   const dispatch = useDispatch();
   const location = useLocation<any>();
@@ -125,19 +132,22 @@ export const BusinessCase = () => {
       <Header />
       <MainContent className="margin-bottom-5">
         <div className="grid-container">
-          <BreadcrumbNav className="margin-y-2">
-            <li>
-              <Link to="/">Home</Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>
-              <Link to={`/governance-task-list/${businessCase.systemIntakeId}`}>
-                Get governance approval
-              </Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>Business Case</li>
-          </BreadcrumbNav>
+          <BreadcrumbBar variant="wrap">
+            <Breadcrumb>
+              <BreadcrumbLink asCustom={Link} to="/">
+                <span>Home</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb>
+              <BreadcrumbLink
+                asCustom={Link}
+                to={`/governance-task-list/${businessCase.systemIntakeId}`}
+              >
+                <span>Get governance approval</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb current>Business Case</Breadcrumb>
+          </BreadcrumbBar>
         </div>
         {businessCase.id && (
           <Switch>
