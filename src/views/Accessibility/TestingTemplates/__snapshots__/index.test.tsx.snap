@@ -251,9 +251,9 @@ exports[`TestingTemplates matches the snapshot 1`] = `
             </h3>
             <a
               className="usa-link"
-              href="147732_TestPlan.docx"
+              href="Section508TestPlanTemplate_AppName-a.pdf"
             >
-              Download the Test Plan template as a MS Word doc
+              Download the Test Plan template as a PDF
             </a>
           </div>
         </div>
@@ -286,9 +286,9 @@ exports[`TestingTemplates matches the snapshot 1`] = `
             </h3>
             <a
               className="usa-link"
-              href="CMS Section 508 Remediation Plan Template.revisedOctober2018.doc"
+              href="CMS508RemediationPlanTemplate_AppName-a.pdf"
             >
-              Download the Remediation Plan template as a MS Word doc
+              Download the Remediation Plan template as a PDF
             </a>
           </div>
         </div>
