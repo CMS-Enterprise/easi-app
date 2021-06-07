@@ -31,6 +31,9 @@ export default gql`
         date
         score
       }
+      statusRecord {
+        status
+      }
     }
   }
 `;
