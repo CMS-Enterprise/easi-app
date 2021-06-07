@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -655,6 +656,10 @@ func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input mod
 		Content:   note.Content.String,
 		CreatedAt: *note.CreatedAt,
 	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
