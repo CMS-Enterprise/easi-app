@@ -506,7 +506,6 @@ type SystemIntake {
 }
 
 input SystemIntakeRequesterInput {
-  email: String!
   name: String!
 }
 

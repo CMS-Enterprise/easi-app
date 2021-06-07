@@ -2998,7 +2998,6 @@ type SystemIntake {
 }
 
 input SystemIntakeRequesterInput {
-  email: String!
   name: String!
 }
 
@@ -14179,14 +14178,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequesterInput(ctx context
 
 	for k, v := range asMap {
 		switch k {
-		case "email":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-			it.Email, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "name":
 			var err error
 

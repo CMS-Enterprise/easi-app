@@ -292,8 +292,7 @@ type SystemIntakeRequester struct {
 }
 
 type SystemIntakeRequesterInput struct {
-	Email string `json:"email"`
-	Name  string `json:"name"`
+	Name string `json:"name"`
 }
 
 // Parameters for updating a 508/accessibility request's status
