@@ -41,7 +41,6 @@ type Config struct {
 type ResolverRoot interface {
 	AccessibilityRequest() AccessibilityRequestResolver
 	AccessibilityRequestDocument() AccessibilityRequestDocumentResolver
-	AccessibilityRequestStatusRecord() AccessibilityRequestStatusRecordResolver
 	BusinessCase() BusinessCaseResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
@@ -452,9 +451,6 @@ type AccessibilityRequestDocumentResolver interface {
 	MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error)
 
 	UploadedAt(ctx context.Context, obj *models.AccessibilityRequestDocument) (*time.Time, error)
-}
-type AccessibilityRequestStatusRecordResolver interface {
-	ID(ctx context.Context, obj *models.AccessibilityRequestStatusRecord) (uuid.UUID, error)
 }
 type BusinessCaseResolver interface {
 	AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
@@ -4459,14 +4455,14 @@ func (ec *executionContext) _AccessibilityRequestStatusRecord_id(ctx context.Con
 		Object:     "AccessibilityRequestStatusRecord",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequestStatusRecord().ID(rctx, obj)
+		return obj.ID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14135,28 +14131,19 @@ func (ec *executionContext) _AccessibilityRequestStatusRecord(ctx context.Contex
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccessibilityRequestStatusRecord")
 		case "id":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequestStatusRecord_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._AccessibilityRequestStatusRecord_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "requestID":
 			out.Values[i] = ec._AccessibilityRequestStatusRecord_requestID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "status":
 			out.Values[i] = ec._AccessibilityRequestStatusRecord_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
