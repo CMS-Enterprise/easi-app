@@ -9,7 +9,7 @@
     "@okta/okta-auth-js": "^4.5.1",
     "@okta/okta-react": "^4.1.0",
     "@okta/okta-signin-widget": "^5.4.1",
-    "@trussworks/react-uswds": "^1.13.2",
+    "@trussworks/react-uswds": "^1.17.0",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
     "@types/jest": "24.0.19",
