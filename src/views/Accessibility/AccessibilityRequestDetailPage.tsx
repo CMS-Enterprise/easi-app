@@ -3,7 +3,13 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Button,
+  Link as UswdsLink
+} from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
@@ -22,7 +28,6 @@ import {
 } from 'queries/types/GetAccessibilityRequest';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
@@ -198,14 +203,15 @@ const AccessibilityRequestDetailPage = () => {
   }
 
   return (
-    <div className="grid-container margin-top-2">
-      <BreadcrumbNav>
-        <li>
-          <Link to="/">Home</Link>
-          <i className="fa fa-angle-right margin-x-05" aria-hidden />
-        </li>
-        <li>{requestName}</li>
-      </BreadcrumbNav>
+    <div className="grid-container">
+      <BreadcrumbBar variant="wrap">
+        <Breadcrumb>
+          <BreadcrumbLink asCustom={Link} to="/">
+            <span>Home</span>
+          </BreadcrumbLink>
+        </Breadcrumb>
+        <Breadcrumb current>{requestName}</Breadcrumb>
+      </BreadcrumbBar>
       {message && (
         <Alert
           className="margin-top-4"

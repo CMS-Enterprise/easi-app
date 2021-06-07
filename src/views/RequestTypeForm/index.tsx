@@ -3,10 +3,15 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Button,
+  Link as UswdsLink
+} from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -88,13 +93,14 @@ const RequestTypeForm = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        <BreadcrumbNav className="margin-y-2">
-          <li>
-            <Link to="/">Home</Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li aria-current="location">Make a request</li>
-        </BreadcrumbNav>
+        <BreadcrumbBar variant="wrap">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>Home</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>Make a request</Breadcrumb>
+        </BreadcrumbBar>
         <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
         <Formik
           initialValues={{ requestType: '' }}

@@ -1,9 +1,13 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Link as UswdsLink
+} from '@trussworks/react-uswds';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -12,14 +16,15 @@ const MakingARequest = () => {
   const { t } = useTranslation('accessibility');
 
   return (
-    <div className="grid-container margin-y-2">
-      <BreadcrumbNav className="margin-bottom-2">
-        <li>
-          <Link to="/">Home</Link>
-          <i className="fa fa-angle-right margin-x-05" aria-hidden />
-        </li>
-        <li>{t('makingARequest.breadcrumb')}</li>
-      </BreadcrumbNav>
+    <div className="grid-container margin-bottom-2">
+      <BreadcrumbBar variant="wrap">
+        <Breadcrumb>
+          <BreadcrumbLink asCustom={Link} to="/">
+            <span>Home</span>
+          </BreadcrumbLink>
+        </Breadcrumb>
+        <Breadcrumb current>{t('makingARequest.breadcrumb')}</Breadcrumb>
+      </BreadcrumbBar>
       <div className="tablet:grid-col-10">
         <Alert type="info">
           <Trans i18nKey="accessibility:makingARequest.info">
