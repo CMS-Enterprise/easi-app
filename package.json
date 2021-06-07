@@ -71,7 +71,7 @@
     "reselect": "^4.0.0",
     "serialize-javascript": "^3.1.0",
     "typescript": "3.7.5",
-    "uswds": "^2.8.1",
+    "uswds": "^2.10.3",
     "uuid": "^7.0.3",
     "validator": "^13.6.0",
     "wait-on": "^5.0.0",
