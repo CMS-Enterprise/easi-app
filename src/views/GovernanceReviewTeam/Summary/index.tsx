@@ -94,7 +94,7 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
         <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/">
-              <span>Home</span>
+              <span className="text-white">Home</span>
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb current>{intake.requestName}</Breadcrumb>
