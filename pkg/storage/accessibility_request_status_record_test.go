@@ -44,7 +44,30 @@ func (s StoreTestSuite) TestCreateAccessibilityRequestStatusRecord() {
 		}
 
 		_, err := s.store.CreateAccessibilityRequestStatusRecord(ctx, &statusRecord)
-		s.Equal("must include accessibility request id", err)
+		s.Equal("must include accessibility request id", err.Error())
 
 	})
+}
+
+func (s StoreTestSuite) TestFetchLatestAccessibilityRequestStatusRecordByRequestID() {
+	ctx := context.Background()
+
+	intake := testhelpers.NewSystemIntake()
+	_, err := s.store.CreateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	accessibilityRequest := testhelpers.NewAccessibilityRequest(intake.ID)
+	_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequest)
+	s.NoError(err)
+
+	newStatusRecord := models.AccessibilityRequestStatusRecord{
+		Status:    models.AccessibilityRequestStatusClosed,
+		RequestID: accessibilityRequest.ID,
+	}
+	_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &newStatusRecord)
+	s.NoError(err)
+
+	statusRecord, err := s.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx, accessibilityRequest.ID)
+	s.NoError(err)
+	s.Equal(newStatusRecord.Status, statusRecord.Status)
 }

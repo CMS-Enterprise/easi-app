@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -111,7 +110,7 @@ func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *model
 }
 
 func (r *accessibilityRequestResolver) StatusRecord(ctx context.Context, obj *models.AccessibilityRequest) (*models.AccessibilityRequestStatusRecord, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx, obj.ID)
 }
 
 func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
