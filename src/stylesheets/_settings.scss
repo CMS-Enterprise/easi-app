@@ -8,5 +8,8 @@ $theme-header-max-width: 'desktop-lg';
 $theme-grid-container-max-width: 'desktop-lg';
 $theme-footer-max-width: 'desktop-lg';
 
-//Override default USWDS body font
+// Override default USWDS body font
 $theme-font-type-sans: 'public-sans';
+
+// Override default sorted header background color
+$theme-table-sorted-header-background-color: 'white';
