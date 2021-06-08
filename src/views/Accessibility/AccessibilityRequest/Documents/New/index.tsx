@@ -86,23 +86,19 @@ const New = () => {
           size: file?.size
         }
       }
-    })
-      .then(result => {
-        if (!result.errors) {
-          const url = result.data?.generatePresignedUploadURL?.url;
-          if (
-            generateURLStatus.error ||
-            result.data?.generatePresignedUploadURL?.userErrors ||
-            isUndefined(url)
-          ) {
-            // eslint-disable-next-line
-            console.error('Could not fetch presigned S3 URL');
-          } else {
-            setS3URL(url || '');
-          }
-        }
-      })
-      .catch(() => {});
+    }).then(result => {
+      const url = result.data?.generatePresignedUploadURL?.url;
+      if (
+        generateURLStatus.error ||
+        result.data?.generatePresignedUploadURL?.userErrors ||
+        isUndefined(url)
+      ) {
+        // eslint-disable-next-line
+        console.error('Could not fetch presigned S3 URL');
+      } else {
+        setS3URL(url || '');
+      }
+    });
   };
 
   const onSubmit = (values: FileUploadForm) => {
