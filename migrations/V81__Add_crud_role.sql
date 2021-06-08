@@ -1,4 +1,18 @@
-DROP ROLE IF EXISTS crud;
+DO
+$do$
+BEGIN
+  IF EXISTS (
+    SELECT -- SELECT list can stay empty for this
+    FROM   pg_catalog.pg_roles
+    WHERE  rolname = 'crud') THEN
+
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE SELECT, INSERT, UPDATE, DELETE ON TABLES FROM crud;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE USAGE, UPDATE ON SEQUENCES FROM crud;
+
+    DROP ROLE crud;
+  END IF;
+END
+$do$;
 
 CREATE ROLE crud;
 
