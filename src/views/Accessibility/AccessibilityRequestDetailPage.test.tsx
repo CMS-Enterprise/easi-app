@@ -27,7 +27,7 @@ describe('AccessibilityRequestDetailPage', () => {
         </MessageProvider>
       </MemoryRouter>
     );
-    expect(wrapper.length).toEqual(1);
+    expect(wrapper.find('AccessibilityRequestDetailPage').length).toEqual(1);
   });
 
   it('renders Next step if no documents', async () => {
@@ -77,7 +77,6 @@ describe('AccessibilityRequestDetailPage', () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       wrapper.update();
     });
-
     expect(
       wrapper
         .find('h2')
@@ -146,7 +145,6 @@ describe('AccessibilityRequestDetailPage', () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       wrapper.update();
     });
-
     expect(wrapper.find('h2').children().first().contains('Documents')).toBe(
       true
     );
