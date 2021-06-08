@@ -71,8 +71,8 @@ func translateBizCase(ctx context.Context, bc *models.BusinessCase) (*wire.Intak
 
 	obj.BusinessSolutions = append(obj.BusinessSolutions, preferredSolution)
 
-	// TODO: what is the best way to tell if alternative A and/or B are filled out?
-	//       do i need to check each field individually?
+	// TODO: do we need to check if alternative a and b are filled out?
+	//       what is the best way to do that? need to check each field individually?
 
 	// alternative a (optional)
 	alternativeASolution := &wire.EASIBusinessSolution{
