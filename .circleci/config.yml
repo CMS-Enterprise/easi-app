@@ -119,8 +119,8 @@ jobs:
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
-          PGUSER: postgres
-          PGPASS: easirox
+          PGUSER: app_user
+          PGPASS: supersecretapp
           PGSSLMODE: disable
           DB_MAX_CONNECTIONS: 20
           FLAG_SOURCE: LOCAL
@@ -138,6 +138,7 @@ jobs:
           FLYWAY_USER: postgres
           FLYWAY_PASSWORD: easirox
           FLYWAY_URL: jdbc:postgresql://localhost/postgres
+          FLYWAY_PLACEHOLDERS_APPUSERPASSWORD: supersecretapp
     steps:
       - checkout
       - restore_cache:
