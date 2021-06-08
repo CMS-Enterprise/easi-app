@@ -146,9 +146,15 @@ func (s *Server) routes(
 		lambdaClient = lambda.New(lambdaSession, &aws.Config{})
 	}
 
+	var dbConfig storage.DBConfig
+	if s.environment.Dev() {
+		dbConfig = s.NewDBAppConfig()
+	} else {
+		dbConfig = s.NewDBConfig()
+	}
 	store, storeErr := storage.NewStore(
 		s.logger,
-		s.NewDBConfig(),
+		dbConfig,
 		ldClient,
 	)
 	if storeErr != nil {
