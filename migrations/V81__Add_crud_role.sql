@@ -1,3 +1,5 @@
+DROP ROLE IF EXISTS crud;
+
 CREATE ROLE crud;
 
 -- Modify existing tables and sequences.
