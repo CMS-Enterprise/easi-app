@@ -105,21 +105,13 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
   useEffect(() => {
     const tabsEl = tabsRef.current;
     tabsEl?.addEventListener('keyup', handleKeyup);
-
-    return () => {
-      tabsEl?.removeEventListener('keyup', handleKeyup);
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tabEls]);
-
-  useEffect(() => {
-    const tabsEl = tabsRef.current;
     tabsEl?.addEventListener('keydown', handleKeydown);
 
     return () => {
+      tabsEl?.removeEventListener('keyup', handleKeyup);
       tabsEl?.removeEventListener('keydown', handleKeydown);
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabEls]);
 
