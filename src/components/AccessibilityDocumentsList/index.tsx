@@ -1,13 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Cell, Column, useTable } from 'react-table';
-import { useMutation } from '@apollo/client';
 import { Button, Link, Table } from '@trussworks/react-uswds';
-import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
-import {
-  DeleteAccessibilityRequestDocument,
-  DeleteAccessibilityRequestDocumentVariables
-} from 'queries/types/DeleteAccessibilityRequestDocument';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -32,60 +26,27 @@ type Document = {
 type DocumentsListProps = {
   documents: Document[];
   requestName: string;
-  refetchRequest: () => any;
-  setConfirmationText: (text: string) => void;
+  removeDocument: (
+    id: string,
+    documentType: string,
+    callback: () => void
+  ) => void;
 };
 
 const AccessibilityDocumentsList = ({
   documents,
   requestName,
-  refetchRequest,
-  setConfirmationText
+  removeDocument
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
   const [document, setDocument] = useState<Document | null>(null);
-
-  const getDocType = (documentType: {
-    commonType: AccessibilityRequestDocumentCommonType;
-    otherTypeDescription: string | null;
-  }) => {
-    if (documentType.commonType !== 'OTHER') {
-      return translateDocumentType(
-        documentType.commonType as AccessibilityRequestDocumentCommonType
-      );
-    }
-    return documentType.otherTypeDescription || '';
-  };
-
-  const [mutate] = useMutation<
-    DeleteAccessibilityRequestDocument,
-    DeleteAccessibilityRequestDocumentVariables
-  >(DeleteAccessibilityRequestDocumentQuery);
-
-  const submitDelete = (id: string) => {
-    mutate({
-      variables: {
-        input: {
-          id
-        }
-      }
-    }).then(() => {
-      refetchRequest();
-      if (document) {
-        setConfirmationText(
-          `${getDocType(document.documentType)} removed from ${requestName}`
-        );
-      }
-      setDocument(null);
-    });
-  };
 
   const columns = useMemo<Column<Document>[]>(() => {
     return [
       {
         Header: t<string>('documentTable.header.documentName'),
         accessor: 'documentType',
-        Cell: ({ value }: any) => getDocType(value)
+        Cell: ({ value }: any) => translateDocumentType(value)
       },
       {
         Header: t<string>('documentTable.header.uploadedAt'),
@@ -112,14 +73,16 @@ const AccessibilityDocumentsList = ({
                   target="_blank"
                   rel="noreferrer"
                   href={row.original.url}
-                  aria-label={`View ${getDocType(
+                  aria-label={`View ${translateDocumentType(
                     row.original.documentType
                   )} in a new tab or window`}
                 >
                   {t('documentTable.view')}
                 </Link>
                 <Button
-                  aria-label={`Remove ${getDocType(row.original.documentType)}`}
+                  aria-label={`Remove ${translateDocumentType(
+                    row.original.documentType
+                  )}`}
                   type="button"
                   unstyled
                   onClick={() => setDocument(row.original)}
@@ -213,7 +176,7 @@ const AccessibilityDocumentsList = ({
               className="margin-top-0 line-height-heading-2 margin-bottom-2"
             >
               {t('documentTable.modal.header', {
-                name: getDocType(document.documentType)
+                name: translateDocumentType(document.documentType)
               })}
             </PageHeading>
             <span>{t('documentTable.modal.warning')}</span>
@@ -221,7 +184,13 @@ const AccessibilityDocumentsList = ({
               <Button
                 type="button"
                 className="margin-right-5"
-                onClick={() => submitDelete(document.id)}
+                onClick={() =>
+                  removeDocument(
+                    document.id,
+                    translateDocumentType(document.documentType),
+                    () => setDocument(null)
+                  )
+                }
               >
                 {t('documentTable.modal.proceedButton')}
               </Button>
