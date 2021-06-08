@@ -126,36 +126,6 @@ const AccessibilityDocumentsList = ({
                 >
                   {t('documentTable.remove')}
                 </Button>
-                <Modal
-                  isOpen={document === row.original}
-                  closeModal={() => setDocument(null)}
-                >
-                  <PageHeading
-                    headingLevel="h2"
-                    className="margin-top-0 line-height-heading-2 margin-bottom-2"
-                  >
-                    {t('documentTable.modal.header', {
-                      name: getDocType(row.original.documentType)
-                    })}
-                  </PageHeading>
-                  <span>{t('documentTable.modal.warning')}</span>
-                  <div className="display-flex margin-top-2">
-                    <Button
-                      type="button"
-                      className="margin-right-5"
-                      onClick={() => submitDelete(row.original.id)}
-                    >
-                      {t('documentTable.modal.proceedButton')}
-                    </Button>
-                    <Button
-                      type="button"
-                      unstyled
-                      onClick={() => setDocument(null)}
-                    >
-                      {t('documentTable.modal.declineButton')}
-                    </Button>
-                  </div>
-                </Modal>
               </>
             )}
             {row.original.status === 'UNAVAILABLE' && (
