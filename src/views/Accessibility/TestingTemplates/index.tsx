@@ -8,8 +8,8 @@ import {
   Link as UswdsLink
 } from '@trussworks/react-uswds';
 
-import TestPlanDoc from 'assets/files/147732_TestPlan.docx';
-import RemediationPlanDoc from 'assets/files/CMS Section 508 Remediation Plan Template.revisedOctober2018.doc';
+import RemediationPlanDoc from 'assets/files/CMS508RemediationPlanTemplate_AppName-a.pdf';
+import TestPlanDoc from 'assets/files/Section508TestPlanTemplate_AppName-a.pdf';
 import PageHeading from 'components/PageHeading';
 
 import './index.scss';
