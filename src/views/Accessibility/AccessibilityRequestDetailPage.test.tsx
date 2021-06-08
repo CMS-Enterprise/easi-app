@@ -52,7 +52,10 @@ describe('AccessibilityRequestDetailPage', () => {
                 businessOwner: { name: 'Clark Kent', component: 'OIT' }
               },
               documents: [],
-              testDates: []
+              testDates: [],
+              statusRecord: {
+                status: 'OPEN'
+              }
             }
           }
         }
@@ -120,7 +123,10 @@ describe('AccessibilityRequestDetailPage', () => {
                   }
                 }
               ],
-              testDates: []
+              testDates: [],
+              statusRecord: {
+                status: 'OPEN'
+              }
             }
           }
         }
