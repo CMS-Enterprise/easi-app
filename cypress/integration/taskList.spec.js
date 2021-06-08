@@ -1,16 +1,9 @@
 describe('The Task List', () => {
-  before(() => {
-    cy.login();
-    // TODO HACK
-    cy.wait(1000);
-    cy.saveLocalStorage();
-  });
-
   beforeEach(() => {
     cy.server();
+    cy.localLogin({name: 'TEST'});
     cy.route('POST', '/api/v1/system_intake').as('postSystemIntake');
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
-    cy.restoreLocalStorage();
     cy.visit('/governance-task-list/new');
   });
 

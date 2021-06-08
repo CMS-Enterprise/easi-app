@@ -1,13 +1,19 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
+import { Link } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import {
+  REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY,
+  REPORT_PROBLEM_BASIC_USER_SURVEY
+} from 'constants/externalUrls';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import Create from 'views/Accessibility/AccessibilityRequest/Create';
@@ -15,6 +21,7 @@ import AccessibilityRequestsDocumentsNew from 'views/Accessibility/Accessibility
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 import AccessibilityTestingStepsOverview from 'views/Accessibility/AccessibilityTestingStepsOverview';
+import MakingARequest from 'views/Accessibility/MakingARequest';
 import TestingTemplates from 'views/Accessibility/TestingTemplates';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 import NewTestDateView from 'views/TestDate/NewTestDate';
@@ -43,6 +50,15 @@ const AccessibilityTestingOverview = (
     path="/508/testing-overview"
     exact
     component={AccessibilityTestingStepsOverview}
+  />
+);
+
+const MakingANewRequest = (
+  <SecureRoute
+    key="making-a-508-request"
+    path="/508/making-a-request"
+    exact
+    component={MakingARequest}
   />
 );
 
@@ -93,13 +109,31 @@ const NotFound = () => (
 
 const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 
-const PageTemplate = ({ children }: { children: React.ReactNode }) => {
+const ReportProblemLinkArea = ({ url }: { url: string }) => {
+  const { t } = useTranslation('accessibility');
+  return (
+    <div className="grid-container width-full padding-bottom-2 report-problem-link-area">
+      <Link href={url} target="_blank" rel="noopener noreferrer">
+        {t('reportProblem')}
+      </Link>
+    </div>
+  );
+};
+
+const PageTemplate = ({
+  children,
+  surveyUrl
+}: {
+  children: React.ReactNode;
+  surveyUrl: string;
+}) => {
   return (
     <PageWrapper>
       <Header />
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
+      <ReportProblemLinkArea url={surveyUrl} />
       <Footer />
     </PageWrapper>
   );
@@ -113,11 +147,12 @@ const Accessibility = () => {
   if (isUserSet) {
     if (user.isAccessibilityTeam(userGroups, flags)) {
       return (
-        <PageTemplate>
+        <PageTemplate surveyUrl={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY}>
           {[
             NewRequest,
             AllRequests,
             AccessibilityTestingOverview,
+            MakingANewRequest,
             AccessibilityTestingTemplates,
             NewDocument,
             UpdateTestDate,
@@ -129,10 +164,11 @@ const Accessibility = () => {
       );
     }
     return (
-      <PageTemplate>
+      <PageTemplate surveyUrl={REPORT_PROBLEM_BASIC_USER_SURVEY}>
         {[
           NewRequest,
           AccessibilityTestingOverview,
+          MakingANewRequest,
           AccessibilityTestingTemplates,
           NewDocument,
           RequestDetails,
