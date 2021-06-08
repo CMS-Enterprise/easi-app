@@ -4,9 +4,12 @@ describe('The System Intake Form', () => {
   beforeEach(() => {
     cy.server();
     cy.localLogin({name: 'TEST'});
-    cy.route('POST', '/api/v1/system_intake').as('postSystemIntake');
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
-    cy.visit('/system/new');
+    cy.visit('/system/request-type');
+    cy.get('#RequestType-NewSystem').check({ force: true });
+    cy.contains('button', 'Continue').click();
+    cy.contains('a', 'Get started').click();
+    cy.contains('a', 'Start').click();
   });
 
   it('fills out minimum required fields (smoke test)', () => {
@@ -23,7 +26,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@postSystemIntake');
+    cy.wait('@putSystemIntake');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -74,14 +77,12 @@ describe('The System Intake Form', () => {
           name: 'Casey Doe',
           component: 'Center for Medicare'
         },
-        // DB doesn't properly save the radio button value
         isso: {
-          isPresent: null,
+          isPresent: false,
           name: ''
         },
-        // DB doesn't properly save the radio button value
         governanceTeams: {
-          isPresent: null,
+          isPresent: false,
           teams: []
         },
         fundingSource: {
@@ -143,7 +144,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@postSystemIntake');
+    cy.wait('@putSystemIntake');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -338,7 +339,7 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
-    cy.wait('@postSystemIntake');
+    cy.wait('@putSystemIntake');
 
     cy.contains('h1', 'Request details');
 
