@@ -42,6 +42,22 @@ type AccessibilityRequest {
   system: System!
   testDates: [TestDate!]!
   euaUserId: String!
+  statusRecord: AccessibilityRequestStatusRecord!
+}
+
+enum AccessibilityRequestStatus {
+  OPEN
+  IN_REMEDIATION
+  CLOSED
+}
+
+"""
+An accessibility request status record is the data related to a status action
+"""
+type AccessibilityRequestStatusRecord {
+  id: UUID!
+  requestID: UUID!
+  status: AccessibilityRequestStatus!
 }
 
 """

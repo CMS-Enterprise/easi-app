@@ -109,6 +109,10 @@ func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *model
 	return r.store.FetchTestDatesByRequestID(ctx, obj.ID)
 }
 
+func (r *accessibilityRequestResolver) StatusRecord(ctx context.Context, obj *models.AccessibilityRequest) (*models.AccessibilityRequestStatusRecord, error) {
+	return r.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx, obj.ID)
+}
+
 func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
 	return &model.AccessibilityRequestDocumentType{
 		CommonType:           obj.CommonDocumentType,
@@ -323,6 +327,14 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		EUAUserID: requesterEUAID,
 		Name:      input.Name,
 		IntakeID:  input.IntakeID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: request.ID,
+		Status:    models.AccessibilityRequestStatusOpen,
 	})
 	if err != nil {
 		return nil, err
