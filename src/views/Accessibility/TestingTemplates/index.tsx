@@ -2,8 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@trussworks/react-uswds';
 
-import TestPlanDoc from 'assets/files/147732_TestPlan.docx';
-import RemediationPlanDoc from 'assets/files/CMS Section 508 Remediation Plan Template.revisedOctober2018.doc';
+import RemediationPlanDoc from 'assets/files/CMS508RemediationPlanTemplate_AppName-a.pdf';
+import TestPlanDoc from 'assets/files/Section508TestPlanTemplate_AppName-a.pdf';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import PageHeading from 'components/PageHeading';
 
