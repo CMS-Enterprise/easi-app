@@ -65,7 +65,7 @@ const TestingTemplates = () => {
         <h3 className="margin-top-0">
           {t('testingTemplates.testPlanSection.download.heading')}
         </h3>
-        <Link href={TestPlanDoc}>
+        <Link href={TestPlanDoc} target="_blank">
           {t('testingTemplates.testPlanSection.download.link')}
         </Link>
       </div>
@@ -86,7 +86,7 @@ const TestingTemplates = () => {
         <h3 className="margin-top-0">
           {t('testingTemplates.remediationPlanSection.download.heading')}
         </h3>
-        <Link href={RemediationPlanDoc}>
+        <Link href={RemediationPlanDoc} target="_blank">
           {t('testingTemplates.remediationPlanSection.download.link')}
         </Link>
       </div>
