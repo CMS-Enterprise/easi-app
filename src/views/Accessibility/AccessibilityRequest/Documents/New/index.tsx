@@ -102,7 +102,7 @@ const New = () => {
           }
         }
       })
-      .catch(e => console.log(e));
+      .catch(() => {});
   };
 
   const onSubmit = (values: FileUploadForm) => {
@@ -219,6 +219,7 @@ const New = () => {
                           onChange(e);
                           setFieldValue('file', e.currentTarget?.files?.[0]);
                         }}
+                        accept=".pdf,.docx,.xlsx"
                       />
                       <div
                         id="FileUpload-Description"
