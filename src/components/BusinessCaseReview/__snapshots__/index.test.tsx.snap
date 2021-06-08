@@ -480,6 +480,44 @@ Array [
                   </dd>
                 </div>
               </div>
+              <div>
+                <div
+                  className="easi-review-row"
+                >
+                  <div
+                    className="line-height-body-3"
+                  >
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      Where are you planning to host?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test location
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  className="easi-review-row"
+                >
+                  <div
+                    className="line-height-body-3"
+                  >
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test cloud service
+                    </dd>
+                  </div>
+                </div>
+              </div>
               <div
                 className="easi-review-row"
               >
@@ -489,26 +527,30 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    Where are you planning to host?
+                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
                   >
-                    Test location
+                    No
                   </dd>
                 </div>
+              </div>
+              <div
+                className="easi-review-row"
+              >
                 <div
                   className="line-height-body-3"
                 >
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                    Is your solution in the process of CMS IT Security approval?
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
                   >
-                    Test cloud service
+                    Yes
                   </dd>
                 </div>
               </div>
@@ -698,6 +740,44 @@ Array [
                   </dd>
                 </div>
               </div>
+              <div>
+                <div
+                  className="easi-review-row"
+                >
+                  <div
+                    className="line-height-body-3"
+                  >
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      Where are you planning to host?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test location
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  className="easi-review-row"
+                >
+                  <div
+                    className="line-height-body-3"
+                  >
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test cloud service
+                    </dd>
+                  </div>
+                </div>
+              </div>
               <div
                 className="easi-review-row"
               >
@@ -707,26 +787,30 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    Where are you planning to host?
+                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
                   >
-                    Test location
+                    No
                   </dd>
                 </div>
+              </div>
+              <div
+                className="easi-review-row"
+              >
                 <div
                   className="line-height-body-3"
                 >
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                    Is your solution in the process of CMS IT Security approval?
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
                   >
-                    Test cloud service
+                    Yes
                   </dd>
                 </div>
               </div>
@@ -916,6 +1000,44 @@ Array [
                   </dd>
                 </div>
               </div>
+              <div>
+                <div
+                  className="easi-review-row"
+                >
+                  <div
+                    className="line-height-body-3"
+                  >
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      Where are you planning to host?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test location
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  className="easi-review-row"
+                >
+                  <div
+                    className="line-height-body-3"
+                  >
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                    </dt>
+                    <dd
+                      className="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test cloud service
+                    </dd>
+                  </div>
+                </div>
+              </div>
               <div
                 className="easi-review-row"
               >
@@ -925,26 +1047,30 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    Where are you planning to host?
+                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
                   >
-                    Test location
+                    No
                   </dd>
                 </div>
+              </div>
+              <div
+                className="easi-review-row"
+              >
                 <div
                   className="line-height-body-3"
                 >
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                    Is your solution in the process of CMS IT Security approval?
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
                   >
-                    Test cloud service
+                    Yes
                   </dd>
                 </div>
               </div>

@@ -14,11 +14,15 @@ import {
 } from 'queries/types/CreateSystemIntakeNote';
 import {
   GetAdminNotesAndActions,
-  GetAdminNotesAndActions_systemIntake_actions as GetAdminNotesAndActionsSystemIntakeAction,
-  GetAdminNotesAndActions_systemIntake_notes as GetAdminNotesAndActionsSystemIntakeNote,
   GetAdminNotesAndActionsVariables
 } from 'queries/types/GetAdminNotesAndActions';
 
+import {
+  NoteByline,
+  NoteContent,
+  NoteListItem,
+  NotesList
+} from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -28,68 +32,10 @@ import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { AppState } from 'reducers/rootReducer';
+import { formatDate } from 'utils/date';
 
 type NoteForm = {
   note: string;
-};
-
-function formatRFC3393Time(time: string): string {
-  const parsed = DateTime.fromISO(time);
-  return `${parsed.toLocaleString(
-    DateTime.DATE_FULL
-  )} at ${parsed.toLocaleString(DateTime.TIME_SIMPLE)}`;
-}
-
-const NoteListItem = ({
-  note
-}: {
-  note: GetAdminNotesAndActionsSystemIntakeNote;
-}) => {
-  return (
-    <li className="easi-grt__history-item">
-      <div className="easi-grt__history-item-content">
-        <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
-          {note.content}
-        </p>
-        <span className="text-base-dark font-body-2xs">{`by: ${
-          note.author.name
-        } | ${formatRFC3393Time(note.createdAt)}`}</span>
-      </div>
-    </li>
-  );
-};
-
-const ActionListItem = ({
-  action
-}: {
-  action: GetAdminNotesAndActionsSystemIntakeAction;
-}) => {
-  const { t } = useTranslation('governanceReviewTeam');
-
-  return (
-    <li className="easi-grt__history-item">
-      <div className="easi-grt__history-item-content">
-        <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
-          {t(`notes.actionName.${action.type}`)}
-        </p>
-        <span className="text-base-dark font-body-2xs display-block">
-          {`by: ${action.actor.name} | ${formatRFC3393Time(action.createdAt)}}`}
-        </span>
-        {action.feedback && (
-          <div className="margin-top-2">
-            <CollapsableLink
-              id={`ActionEmailText-${action.id}`}
-              label={t('notes.showEmail')}
-              closeLabel={t('notes.hideEmail')}
-              styleLeftBar={false}
-            >
-              {action.feedback}
-            </CollapsableLink>
-          </div>
-        )}
-      </div>
-    </li>
-  );
 };
 
 const Notes = () => {
@@ -138,25 +84,59 @@ const Notes = () => {
     note: ''
   };
 
+  // New
   const notesByTimestamp =
     data?.systemIntake?.notes.map(note => {
+      const { id, createdAt, content, author } = note;
       return {
-        createdAt: note.createdAt,
-        element: <NoteListItem note={note} key={note.id} />
+        createdAt,
+        element: (
+          <NoteListItem key={id} isLinked>
+            <NoteContent>{content}</NoteContent>
+            <NoteByline>{`by ${author.name} | ${formatDate(
+              createdAt
+            )} at ${DateTime.fromISO(createdAt).toLocaleString(
+              DateTime.TIME_SIMPLE
+            )}`}</NoteByline>
+          </NoteListItem>
+        )
       };
     }) || [];
 
   const actionsByTimestamp =
     data?.systemIntake?.actions.map(action => {
+      const { id, createdAt, type, actor, feedback } = action;
       return {
-        createdAt: action.createdAt,
-        element: <ActionListItem action={action} key={action.id} />
+        createdAt,
+        element: (
+          <NoteListItem key={id} isLinked>
+            <NoteContent>{t(`notes.actionName.${type}`)}</NoteContent>
+            <NoteByline>{`by: ${actor.name} | ${formatDate(
+              createdAt
+            )} at ${DateTime.fromISO(createdAt).toLocaleString(
+              DateTime.TIME_SIMPLE
+            )}`}</NoteByline>
+            {feedback && (
+              <div className="margin-top-2">
+                <CollapsableLink
+                  id={`ActionEmailText-${id}`}
+                  label={t('notes.showEmail')}
+                  closeLabel={t('notes.hideEmail')}
+                  styleLeftBar={false}
+                >
+                  {feedback}
+                </CollapsableLink>
+              </div>
+            )}
+          </NoteListItem>
+        )
       };
     }) || [];
 
   const interleavedList = [...notesByTimestamp, ...actionsByTimestamp]
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .map(a => a.element);
+  // New
 
   return (
     <>
@@ -204,7 +184,9 @@ const Notes = () => {
                 <Alert type="error">The notes could not be loaded.</Alert>
               )}
               {!error && data && (
-                <ul className="easi-grt__history">{interleavedList}</ul>
+                <NotesList className="margin-top-7 margin-left-1">
+                  {interleavedList}
+                </NotesList>
               )}
               <AnythingWrongSurvey />
             </div>

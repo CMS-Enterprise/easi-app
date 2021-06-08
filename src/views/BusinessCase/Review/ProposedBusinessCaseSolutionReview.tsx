@@ -10,6 +10,7 @@ import {
 import { hostingTypeMap } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { ProposedBusinessCaseSolution } from 'types/businessCase';
+import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
 /**
  * Title
@@ -73,23 +74,47 @@ const PropsedBusinessCaseSolutionReview = ({
         </div>
       </ReviewRow>
       {['cloud', 'dataCenter'].includes(solution.hosting.type) && (
-        <ReviewRow>
-          <div className="line-height-body-3">
-            <DescriptionTerm term="Where are you planning to host?" />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={solution.hosting.location}
-            />
-          </div>
-          {solution.hosting.cloudServiceType && (
+        <div>
+          <ReviewRow>
             <div className="line-height-body-3">
-              <DescriptionTerm term="What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?" />
+              <DescriptionTerm term="Where are you planning to host?" />
               <DescriptionDefinition
                 className="text-pre-wrap"
-                definition={solution.hosting.cloudServiceType}
+                definition={solution.hosting.location}
               />
             </div>
+          </ReviewRow>
+          {solution.hosting.cloudServiceType && (
+            <ReviewRow>
+              <div className="line-height-body-3">
+                <DescriptionTerm term="What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?" />
+                <DescriptionDefinition
+                  className="text-pre-wrap"
+                  definition={solution.hosting.cloudServiceType}
+                />
+              </div>
+            </ReviewRow>
           )}
+        </div>
+      )}
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={convertBoolToYesNo(solution.security.isApproved)}
+          />
+        </div>
+      </ReviewRow>
+      {!solution.security.isApproved && (
+        <ReviewRow>
+          <div className="line-height-body-3">
+            <DescriptionTerm term="Is your solution in the process of CMS IT Security approval?" />
+            <DescriptionDefinition
+              className="text-pre-wrap"
+              definition={yesNoMap[solution.security.isBeingReviewed]}
+            />
+          </div>
         </ReviewRow>
       )}
       <ReviewRow>
