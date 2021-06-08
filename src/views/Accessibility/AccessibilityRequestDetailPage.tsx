@@ -206,29 +206,35 @@ const AccessibilityRequestDetailPage = () => {
 
   return (
     <div>
-      <div className="bg-primary-lighter padding-x-5 padding-bottom-3 padding-top-5">
-        <BreadcrumbNav>
-          <li>
-            <Link to="/">Home</Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>{requestName}</li>
-        </BreadcrumbNav>
-        {message && (
-          <Alert
-            className="margin-top-4"
-            type="success"
-            role="alert"
-            heading="Success"
-          >
-            {message}
-          </Alert>
-        )}
-        <PageHeading>{requestName}</PageHeading>
-        <h2 className="font-heading-sm text-normal">Current status</h2>
-        <span className="bg-warning-lighter text-ink padding-05">
-          {requestStatus}
-        </span>
+      <div className="bg-primary-lighter">
+        <div className="grid-container padding-x-5 padding-bottom-3 padding-top-5">
+          <BreadcrumbNav>
+            <li>
+              <Link to="/">Home</Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>{requestName}</li>
+          </BreadcrumbNav>
+          {message && (
+            <Alert
+              className="margin-top-4"
+              type="success"
+              role="alert"
+              heading="Success"
+            >
+              {message}
+            </Alert>
+          )}
+          <PageHeading>{requestName}</PageHeading>
+          <h2 className="font-heading-sm text-normal">
+            Current status
+            <div className="display-block">
+              <span className="bg-warning-lighter text-ink padding-05 display-inline-block margin-top-1">
+                {requestStatus}
+              </span>
+            </div>
+          </h2>
+        </div>
       </div>
       <div className="grid-container margin-top-2 padding-top-6 padding-top">
         <div className="grid-row grid-gap-lg">
