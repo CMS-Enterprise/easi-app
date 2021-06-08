@@ -351,3 +351,14 @@ describe('The System Intake Form', () => {
     cy.wait('@putSystemIntake');
   });
 });
+
+describe('users who got lost', () => {
+  it('redirects to the system type page if somebody managed to skip it', () => {
+    cy.server();
+    cy.localLogin({name: 'TEST'});
+    cy.visit('/system/new')
+    cy.location().should(loc => {
+      expect(loc.pathname).to.equal('/system/request-type')
+    })
+  })
+})
