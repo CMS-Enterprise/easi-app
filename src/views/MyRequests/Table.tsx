@@ -66,6 +66,13 @@ const Table = () => {
           }
           return t('requestsTable.defaultSubmittedAt');
         }
+      },
+      {
+        Header: t('requestsTable.headers.status'),
+        accessor: 'status',
+        Cell: ({ value }: any) => {
+          return value;
+        }
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
