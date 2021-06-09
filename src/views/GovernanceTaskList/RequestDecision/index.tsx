@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Link as UswdsLink
+} from '@trussworks/react-uswds';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -34,19 +38,22 @@ const RequestDecision = () => {
       <Header />
       <MainContent className="grid-container margin-bottom-7">
         <div className="grid-row">
-          <BreadcrumbNav className="margin-y-2 tablet:grid-col-12">
-            <li>
-              <Link to="/">Home</Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>
-              <Link to={`/governance-task-list/${systemId}`}>
-                Get governance approval
-              </Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li aria-current="location">Decision and next steps</li>
-          </BreadcrumbNav>
+          <BreadcrumbBar variant="wrap">
+            <Breadcrumb>
+              <BreadcrumbLink asCustom={Link} to="/">
+                <span>Home</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb>
+              <BreadcrumbLink
+                asCustom={Link}
+                to={`/governance-task-list/${systemId}`}
+              >
+                <span>Get governance approval</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb current>Decision and next steps</Breadcrumb>
+          </BreadcrumbBar>
         </div>
         <div className="grid-row">
           <div className="tablet:grid-col-9">

@@ -5,24 +5,29 @@ exports[`TestingTemplates matches the snapshot 1`] = `
   className="grid-container accessibility-testing-templates"
 >
   <nav
-    aria-label="breadcrumbs"
-    className="easi-breadcrumb-nav margin-y-2"
-    role="navigation"
+    aria-label="Breadcrumbs"
+    className="usa-breadcrumb usa-breadcrumb--wrap"
   >
-    <ol>
-      <li>
+    <ol
+      className="usa-breadcrumb__list"
+    >
+      <li
+        className="usa-breadcrumb__list-item"
+      >
         <a
-          className="usa-link"
+          className="usa-breadcrumb__link"
           href="/"
+          onClick={[Function]}
         >
-          Home
+          <span>
+            Home
+          </span>
         </a>
-        <i
-          aria-hidden={true}
-          className="fa fa-angle-right margin-x-05"
-        />
       </li>
-      <li>
+      <li
+        aria-current="page"
+        className="usa-breadcrumb__list-item usa-current"
+      >
         Templates for 508 testing
       </li>
     </ol>

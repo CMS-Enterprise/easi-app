@@ -1,9 +1,13 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Link as UswdsLink
+} from '@trussworks/react-uswds';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { Step, StepBody, StepHeading, StepList } from 'components/StepList';
@@ -24,13 +28,14 @@ const AccessibilityTestingStepsOverview = () => {
   return (
     <div className="grid-container">
       <div className="tablet:grid-col-10">
-        <BreadcrumbNav className="margin-top-2">
-          <li>
-            <Link to="/">Home</Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>Steps involved in 508 testing</li>
-        </BreadcrumbNav>
+        <BreadcrumbBar variant="wrap">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>Home</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>Steps involved in 508 testing</Breadcrumb>
+        </BreadcrumbBar>
         <PageHeading>{t('testingStepsOverview.heading')}</PageHeading>
         <p className="accessibility-testing-overview__description">
           {t('testingStepsOverview.description')}

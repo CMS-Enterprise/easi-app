@@ -1,9 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { Link as USWDSLink } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Link as USWDSLink
+} from '@trussworks/react-uswds';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import CollapsableList from 'components/CollapsableList';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -22,31 +26,22 @@ const PrepareForGRB = () => {
       <Header />
       <MainContent className="margin-bottom-5">
         <div className="grid-container">
-          <BreadcrumbNav className="margin-y-2">
-            <li>
-              <Link to="/" className="text-ink">
-                Home
-              </Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>
-              <Link
+          <BreadcrumbBar variant="wrap">
+            <Breadcrumb>
+              <BreadcrumbLink asCustom={Link} to="/">
+                <span>Home</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb>
+              <BreadcrumbLink
+                asCustom={Link}
                 to={`/governance-task-list/${systemId}`}
-                className="text-ink"
               >
-                Get governance approval
-              </Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>
-              <Link
-                to={`/governance-task-list/${systemId}/prepare-for-grb`}
-                aria-current="location"
-              >
-                {t('prepare.title')}
-              </Link>
-            </li>
-          </BreadcrumbNav>
+                <span>Get governance approval</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb current>{t('prepare.title')}</Breadcrumb>
+          </BreadcrumbBar>
           <div className="grid-row">
             <div className="grid-col-10">
               <PageHeading>{t('prepare.title')}</PageHeading>
