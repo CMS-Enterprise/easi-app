@@ -213,7 +213,7 @@ const AccessibilityRequestDetailPage = () => {
     <div>
       <div className="bg-primary-lighter">
         <div className="grid-container padding-x-5 padding-bottom-3 padding-top-5">
-          <BreadcrumbBar variant="wrap">
+          <BreadcrumbBar variant="wrap" className="bg-transparent">
             <Breadcrumb>
               <BreadcrumbLink asCustom={Link} to="/">
                 <span>Home</span>
