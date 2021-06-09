@@ -19,6 +19,36 @@ describe('AccessibilityRequestDetailPage', () => {
     }
   });
 
+  const mocksWithoutDocs = [
+    {
+      request: {
+        query: GetAccessibilityRequestQuery,
+        variables: {
+          id: 'a11yRequest123'
+        }
+      },
+      result: {
+        data: {
+          accessibilityRequest: {
+            id: 'a11yRequest123',
+            euaUserId: 'AAAA',
+            submittedAt: new Date(),
+            name: 'MY Request',
+            system: {
+              name: 'TACO',
+              lcid: '0000',
+              businessOwner: { name: 'Clark Kent', component: 'OIT' }
+            },
+            documents: [],
+            testDates: [],
+            statusRecord: {
+              status: 'OPEN'
+            }
+          }
+        }
+      }
+    }
+  ];
   it('renders without crashing', () => {
     const wrapper = shallow(
       <MemoryRouter>
@@ -27,43 +57,15 @@ describe('AccessibilityRequestDetailPage', () => {
         </MessageProvider>
       </MemoryRouter>
     );
-    expect(wrapper.length).toEqual(1);
+    expect(wrapper.find('AccessibilityRequestDetailPage').length).toEqual(1);
   });
 
   it('renders Next step if no documents', async () => {
-    const mocks = [
-      {
-        request: {
-          query: GetAccessibilityRequestQuery,
-          variables: {
-            id: 'a11yRequest123'
-          }
-        },
-        result: {
-          data: {
-            accessibilityRequest: {
-              id: 'a11yRequest123',
-              euaUserId: 'AAAA',
-              submittedAt: new Date(),
-              name: 'MY Request',
-              system: {
-                name: 'TACO',
-                lcid: '0000',
-                businessOwner: { name: 'Clark Kent', component: 'OIT' }
-              },
-              documents: [],
-              testDates: []
-            }
-          }
-        }
-      }
-    ];
-
     let wrapper: any;
     await act(async () => {
       wrapper = mount(
         <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocksWithoutDocs} addTypename={false}>
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/508/requests/:accessibilityRequestId">
@@ -77,13 +79,8 @@ describe('AccessibilityRequestDetailPage', () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       wrapper.update();
     });
-
     expect(
-      wrapper
-        .find('h2')
-        .children()
-        .first()
-        .contains('Next step: Provide your documents')
+      wrapper.find('h2').at(1).contains('Next step: Provide your documents')
     ).toBe(true);
   });
 
@@ -121,7 +118,10 @@ describe('AccessibilityRequestDetailPage', () => {
                   }
                 }
               ],
-              testDates: []
+              testDates: [],
+              statusRecord: {
+                status: 'OPEN'
+              }
             }
           }
         }
@@ -146,10 +146,30 @@ describe('AccessibilityRequestDetailPage', () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       wrapper.update();
     });
-
-    expect(wrapper.find('h2').children().first().contains('Documents')).toBe(
-      true
-    );
+    expect(wrapper.find('h2').at(1).contains('Documents')).toBe(true);
     expect(wrapper.find('AccessibilityDocumentsList').exists()).toBe(true);
+  });
+
+  it('renders the accessibility request status', async () => {
+    let wrapper: any;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
+          <MockedProvider mocks={mocksWithoutDocs} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/508/requests/:accessibilityRequestId">
+                  <AccessibilityRequestDetailPage />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      wrapper.update();
+    });
+    expect(wrapper.find('h2').at(0).contains('Current status')).toBe(true);
+    expect(wrapper.find('h2').at(0).find('span').contains('Open')).toBe(true);
   });
 });
