@@ -10,6 +10,10 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Continue').click();
     cy.contains('a', 'Get started').click();
     cy.contains('a', 'Start').click();
+    cy.location().should(loc => {
+      expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/)
+    })
+    cy.contains('h1', 'Contact details')
   });
 
   it('fills out minimum required fields (smoke test)', () => {
