@@ -61,6 +61,7 @@ describe('Accessibility Requests', () => {
         const dateString = formatDate(new Date().toISOString())
         cy.contains('td', 'Section 508')
         cy.contains('td', dateString)
+        cy.contains('td', 'Open')
       })
     })
   });
