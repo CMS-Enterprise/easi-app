@@ -64,12 +64,13 @@ const TestingTemplates = () => {
       <SummaryBox
         heading={t('testingTemplates.testPlanSection.download.heading')}
       >
-        <Link href={TestPlanDoc}>
+        <Link href={TestPlanDoc} target="_blank">
           {t('testingTemplates.testPlanSection.download.link')}
         </Link>
       </SummaryBox>
     </div>
   );
+
   const remediationPlanSection = (
     <div>
       <h2 id="remediation-plan">
@@ -84,7 +85,7 @@ const TestingTemplates = () => {
       <SummaryBox
         heading={t('testingTemplates.remediationPlanSection.download.heading')}
       >
-        <Link href={RemediationPlanDoc}>
+        <Link href={RemediationPlanDoc} target="_blank">
           {t('testingTemplates.remediationPlanSection.download.link')}
         </Link>
       </SummaryBox>
