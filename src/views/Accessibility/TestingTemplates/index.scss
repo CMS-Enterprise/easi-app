@@ -3,30 +3,33 @@
     padding-left: 0;
     margin: 0;
     list-style-type: none;
+
     li {
       margin-bottom: 8px;
+
       &:last-child {
         margin-bottom: 0;
       }
+
       &:before {
           content: "-";
           padding-right: 8px;
       }
     }
   }
+
   &__vpat-list, &__test-plan-list, &__remediation-plan-list {
     padding-left: 20px;
   }
-  &__downloadBox {
-    background: color($theme-color-info-lighter);
-    padding: 24px 18px;
-  }
+
   &__sidebar {
-  border-top: 4px solid $easi-bright-blue;
+    border-top: 4px solid $easi-bright-blue;
   }
+
   h2 {
     margin-top: 48px;
   }
+
   &__alert-note {
     i {
     font-size: 1.5em;

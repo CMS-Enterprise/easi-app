@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from '@trussworks/react-uswds';
+import { Link, SummaryBox } from '@trussworks/react-uswds';
 
 import RemediationPlanDoc from 'assets/files/CMS508RemediationPlanTemplate_AppName-a.pdf';
 import TestPlanDoc from 'assets/files/Section508TestPlanTemplate_AppName-a.pdf';
@@ -61,16 +61,16 @@ const TestingTemplates = () => {
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <div className="accessibility-testing-templates__downloadBox">
-        <h3 className="margin-top-0">
-          {t('testingTemplates.testPlanSection.download.heading')}
-        </h3>
+      <SummaryBox
+        heading={t('testingTemplates.testPlanSection.download.heading')}
+      >
         <Link href={TestPlanDoc} target="_blank">
           {t('testingTemplates.testPlanSection.download.link')}
         </Link>
-      </div>
+      </SummaryBox>
     </div>
   );
+
   const remediationPlanSection = (
     <div>
       <h2 id="remediation-plan">
@@ -82,22 +82,22 @@ const TestingTemplates = () => {
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <div className="accessibility-testing-templates__downloadBox">
-        <h3 className="margin-top-0">
-          {t('testingTemplates.remediationPlanSection.download.heading')}
-        </h3>
+      <SummaryBox
+        heading={t('testingTemplates.remediationPlanSection.download.heading')}
+      >
         <Link href={RemediationPlanDoc} target="_blank">
           {t('testingTemplates.remediationPlanSection.download.link')}
         </Link>
-      </div>
+      </SummaryBox>
     </div>
   );
 
   const downloadVPAT = (
-    <div className="accessibility-testing-templates__downloadBox">
-      <h3 className="margin-top-0">
-        {t('testingTemplates.vpatSection.subSection.downloadVPAT.heading')}
-      </h3>
+    <SummaryBox
+      heading={t(
+        'testingTemplates.vpatSection.subSection.downloadVPAT.heading'
+      )}
+    >
       <p>
         <Link
           href="https://www.itic.org/policy/accessibility/vpat"
@@ -129,7 +129,7 @@ const TestingTemplates = () => {
           )}
         </Link>
       </p>
-    </div>
+    </SummaryBox>
   );
 
   const vpatSection = (
