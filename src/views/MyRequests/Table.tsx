@@ -17,6 +17,7 @@ import { formatDate } from 'utils/date';
 
 const Table = () => {
   const { t } = useTranslation('home');
+  const { t: tGovernance } = useTranslation('governanceReviewTeam');
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
     GetRequestsVariables
@@ -70,8 +71,19 @@ const Table = () => {
       {
         Header: t('requestsTable.headers.status'),
         accessor: 'status',
-        Cell: ({ value }: any) => {
-          return value;
+        Cell: ({ row, value }: any) => {
+          let statusString;
+          switch (row.original.type) {
+            case RequestType.ACCESSIBILITY_REQUEST:
+              statusString = value;
+              break;
+            case RequestType.GOVERNANCE_REQUEST:
+              statusString = tGovernance(`intake:statusMap.${value}`);
+              break;
+            default:
+              statusString = '';
+          }
+          return statusString;
         }
       }
     ];
