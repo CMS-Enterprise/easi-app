@@ -48,15 +48,6 @@
   }
 }
 
-// Addiitional class names were introduced in v2.9.0
-// There are breaking changes in this version that crash our application.
-// On 2/7/2021, USWDS said a fix is on the way.
-// https://github.com/uswds/uswds/issues/3909
-// https://github.com/uswds/uswds/releases/tag/v2.9.0
-.flex-align-self-center {
-  align-self: center !important;
-}
-
 .bg-transparent {
   background-color: transparent;
 }
