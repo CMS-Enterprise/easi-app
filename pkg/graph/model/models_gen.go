@@ -183,6 +183,7 @@ type Request struct {
 	Name        *string     `json:"name"`
 	SubmittedAt *time.Time  `json:"submittedAt"`
 	Type        RequestType `json:"type"`
+	Status      string      `json:"status"`
 }
 
 type RequestEdge struct {
