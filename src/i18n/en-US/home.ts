@@ -30,7 +30,8 @@ const home = {
     headers: {
       name: 'Request name',
       type: 'Governance',
-      submittedAt: 'Submission date'
+      submittedAt: 'Submission date',
+      status: 'Status'
     },
     types: {
       ACCESSIBILITY_REQUEST: 'Section 508',

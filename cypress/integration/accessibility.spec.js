@@ -54,6 +54,7 @@ describe('Accessibility Requests', () => {
         cy.contains('th', 'Request name')
         cy.contains('th', 'Governance')
         cy.contains('th', 'Submission date')
+        cy.contains('th', 'Status')
       })
 
       cy.get('tbody').within(() => {
