@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { AccessibilityRequestStatus } from "./../../types/graphql-global-types";
+
 // ====================================================
 // GraphQL query operation: GetAccessibilityRequests
 // ====================================================
@@ -24,6 +26,11 @@ export interface GetAccessibilityRequests_accessibilityRequests_edges_node_syste
   businessOwner: GetAccessibilityRequests_accessibilityRequests_edges_node_system_businessOwner;
 }
 
+export interface GetAccessibilityRequests_accessibilityRequests_edges_node_statusRecord {
+  __typename: "AccessibilityRequestStatusRecord";
+  status: AccessibilityRequestStatus;
+}
+
 export interface GetAccessibilityRequests_accessibilityRequests_edges_node {
   __typename: "AccessibilityRequest";
   id: UUID;
@@ -31,6 +38,7 @@ export interface GetAccessibilityRequests_accessibilityRequests_edges_node {
   relevantTestDate: GetAccessibilityRequests_accessibilityRequests_edges_node_relevantTestDate | null;
   submittedAt: Time;
   system: GetAccessibilityRequests_accessibilityRequests_edges_node_system;
+  statusRecord: GetAccessibilityRequests_accessibilityRequests_edges_node_statusRecord;
 }
 
 export interface GetAccessibilityRequests_accessibilityRequests_edges {

@@ -28,6 +28,12 @@ export enum AccessibilityRequestDocumentStatus {
   UNAVAILABLE = "UNAVAILABLE",
 }
 
+export enum AccessibilityRequestStatus {
+  CLOSED = "CLOSED",
+  IN_REMEDIATION = "IN_REMEDIATION",
+  OPEN = "OPEN",
+}
+
 export enum GRTFeedbackType {
   BUSINESS_OWNER = "BUSINESS_OWNER",
   GRB = "GRB",
