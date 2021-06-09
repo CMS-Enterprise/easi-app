@@ -809,6 +809,7 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 			SubmittedAt: request.SubmittedAt,
 			Name:        request.Name.Ptr(),
 			Type:        request.Type,
+			Status:      request.Status,
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,
