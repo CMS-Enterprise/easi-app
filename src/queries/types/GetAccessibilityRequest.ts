@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { AccessibilityRequestDocumentStatus, AccessibilityRequestDocumentCommonType, TestDateTestType } from "./../../types/graphql-global-types";
+import { AccessibilityRequestDocumentStatus, AccessibilityRequestDocumentCommonType, TestDateTestType, AccessibilityRequestStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetAccessibilityRequest
@@ -45,6 +45,11 @@ export interface GetAccessibilityRequest_accessibilityRequest_testDates {
   score: number | null;
 }
 
+export interface GetAccessibilityRequest_accessibilityRequest_statusRecord {
+  __typename: "AccessibilityRequestStatusRecord";
+  status: AccessibilityRequestStatus;
+}
+
 export interface GetAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
   id: UUID;
@@ -54,6 +59,7 @@ export interface GetAccessibilityRequest_accessibilityRequest {
   system: GetAccessibilityRequest_accessibilityRequest_system;
   documents: GetAccessibilityRequest_accessibilityRequest_documents[];
   testDates: GetAccessibilityRequest_accessibilityRequest_testDates[];
+  statusRecord: GetAccessibilityRequest_accessibilityRequest_statusRecord;
 }
 
 export interface GetAccessibilityRequest {
