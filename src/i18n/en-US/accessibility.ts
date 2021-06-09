@@ -281,7 +281,7 @@ const accessibility = {
       ],
       download: {
         heading: 'Download Test Plan template',
-        link: 'Download the Test Plan template as a PDF'
+        link: 'Download the Test Plan template as a PDF (opens in a new tab)'
       }
     },
     remediationPlanSection: {
@@ -294,7 +294,8 @@ const accessibility = {
       ],
       download: {
         heading: 'Download Remediation Plan template',
-        link: 'Download the Remediation Plan template as a PDF'
+        link:
+          'Download the Remediation Plan template as a PDF (opens in a new tab)'
       }
     }
   }
