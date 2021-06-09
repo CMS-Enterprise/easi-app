@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Switch, useHistory, useParams } from 'react-router-dom';
+import { SecureRoute } from '@okta/okta-react';
 import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
-import { SecureRoute } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
