@@ -4,11 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
-import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Link as UswdsLink,
+  Table
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import PageHeading from 'components/PageHeading';
 import TruncatedText from 'components/shared/TruncatedText';
 import { convertIntakeToCSV } from 'data/systemIntake';
@@ -331,15 +336,15 @@ const RequestRepository = () => {
 
   return (
     <>
-      <div className="display-flex flex-justify flex-wrap margin-y-2">
-        <BreadcrumbNav>
-          <li>
-            <Link to="/">Home</Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>Requests</li>
-        </BreadcrumbNav>
-
+      <div className="display-flex flex-justify flex-wrap margin-bottom-2">
+        <BreadcrumbBar variant="wrap">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>Home</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>Requests</Breadcrumb>
+        </BreadcrumbBar>
         <div>
           <CSVLink
             data={convertIntakesToCSV(data)}
