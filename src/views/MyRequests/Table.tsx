@@ -18,6 +18,7 @@ import { formatDate } from 'utils/date';
 const Table = () => {
   const { t } = useTranslation('home');
   const { t: tGovernance } = useTranslation('governanceReviewTeam');
+  const { t: tAccessibility } = useTranslation('accessibility');
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
     GetRequestsVariables
@@ -75,7 +76,7 @@ const Table = () => {
           let statusString;
           switch (row.original.type) {
             case RequestType.ACCESSIBILITY_REQUEST:
-              statusString = value;
+              statusString = tAccessibility(`statusMap.${value}`);
               break;
             case RequestType.GOVERNANCE_REQUEST:
               statusString = tGovernance(`intake:statusMap.${value}`);
