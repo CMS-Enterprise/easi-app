@@ -12,5 +12,11 @@
     font-size: 35px;
     text-align: center;
     color: #fff;
+
+    &--small {
+      height: 24px;
+      width: 24px;
+      font-size: 22px;
+    }
   }
 }
