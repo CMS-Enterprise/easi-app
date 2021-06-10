@@ -17,6 +17,7 @@ type Request {
   name: String
   submittedAt: Time
   type: RequestType!
+  status: String!
 }
 
 type RequestsConnection {
