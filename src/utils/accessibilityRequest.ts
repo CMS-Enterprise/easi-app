@@ -54,3 +54,12 @@ export const translateDocumentType = (documentType: {
   }
   return documentType.otherTypeDescription || '';
 };
+
+/**
+ * Map 508 Request type API enum to a human readable string
+ */
+export const accessibilityRequestStatusMap: { [key: string]: string } = {
+  OPEN: i18next.t('accessibility:requestStatus.open'),
+  IN_REMEDIATION: i18next.t('accessibility:requestStatus.remediation'),
+  CLOSED: i18next.t('accessibility:requestStatus.closed')
+};

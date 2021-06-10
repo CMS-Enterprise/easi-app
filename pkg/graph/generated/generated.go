@@ -242,6 +242,7 @@ type ComplexityRoot struct {
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
+		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
 		UpdateSystemIntakeAdminLead                      func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTestDate                                   func(childComplexity int, input model.UpdateTestDateInput) int
@@ -420,6 +421,13 @@ type ComplexityRoot struct {
 		TestType func(childComplexity int) int
 	}
 
+	UpdateAccessibilityRequestStatusPayload struct {
+		ID         func(childComplexity int) int
+		RequestID  func(childComplexity int) int
+		Status     func(childComplexity int) int
+		UserErrors func(childComplexity int) int
+	}
+
 	UpdateSystemIntakePayload struct {
 		SystemIntake func(childComplexity int) int
 		UserErrors   func(childComplexity int) int
@@ -479,6 +487,7 @@ type MutationResolver interface {
 	DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error)
 	CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error)
 	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
+	UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error)
 	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
@@ -1511,6 +1520,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RejectIntake(childComplexity, args["input"].(model.RejectIntakeInput)), true
 
+	case "Mutation.updateAccessibilityRequestStatus":
+		if e.complexity.Mutation.UpdateAccessibilityRequestStatus == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateAccessibilityRequestStatus_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateAccessibilityRequestStatus(childComplexity, args["input"].(*model.UpdateAccessibilityRequestStatus)), true
+
 	case "Mutation.updateSystemIntakeAdminLead":
 		if e.complexity.Mutation.UpdateSystemIntakeAdminLead == nil {
 			break
@@ -2321,6 +2342,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TestDate.TestType(childComplexity), true
 
+	case "UpdateAccessibilityRequestStatusPayload.id":
+		if e.complexity.UpdateAccessibilityRequestStatusPayload.ID == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccessibilityRequestStatusPayload.ID(childComplexity), true
+
+	case "UpdateAccessibilityRequestStatusPayload.requestID":
+		if e.complexity.UpdateAccessibilityRequestStatusPayload.RequestID == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccessibilityRequestStatusPayload.RequestID(childComplexity), true
+
+	case "UpdateAccessibilityRequestStatusPayload.status":
+		if e.complexity.UpdateAccessibilityRequestStatusPayload.Status == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccessibilityRequestStatusPayload.Status(childComplexity), true
+
+	case "UpdateAccessibilityRequestStatusPayload.userErrors":
+		if e.complexity.UpdateAccessibilityRequestStatusPayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccessibilityRequestStatusPayload.UserErrors(childComplexity), true
+
 	case "UpdateSystemIntakePayload.systemIntake":
 		if e.complexity.UpdateSystemIntakePayload.SystemIntake == nil {
 			break
@@ -2488,6 +2537,24 @@ type AccessibilityRequestStatusRecord {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+}
+
+"""
+Parameters for updating a 508/accessibility request's status
+"""
+input UpdateAccessibilityRequestStatus {
+  requestID: UUID!
+  status: AccessibilityRequestStatus!
+}
+
+"""
+ Result of updating an accessibiiity request's status
+ """
+type UpdateAccessibilityRequestStatusPayload {
+  id: UUID!
+  requestID: UUID!
+  status: AccessibilityRequestStatus!
+  userErrors: [UserError!]
 }
 
 """
@@ -3049,6 +3116,7 @@ type Mutation {
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
+  updateAccessibilityRequestStatus(input: UpdateAccessibilityRequestStatus) : UpdateAccessibilityRequestStatusPayload @hasRole(role: EASI_508_TESTER_OR_USER)
   createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionGuideReceievedClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -3481,6 +3549,21 @@ func (ec *executionContext) field_Mutation_rejectIntake_args(ctx context.Context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNRejectIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRejectIntakeInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateAccessibilityRequestStatus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.UpdateAccessibilityRequestStatus
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOUpdateAccessibilityRequestStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatus(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -7282,6 +7365,69 @@ func (ec *executionContext) _Mutation_deleteAccessibilityRequestDocument(ctx con
 	res := resTmp.(*model.DeleteAccessibilityRequestDocumentPayload)
 	fc.Result = res
 	return ec.marshalODeleteAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateAccessibilityRequestStatus(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateAccessibilityRequestStatus_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateAccessibilityRequestStatus(rctx, args["input"].(*model.UpdateAccessibilityRequestStatus))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.UpdateAccessibilityRequestStatusPayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateAccessibilityRequestStatusPayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateAccessibilityRequestStatusPayload)
+	fc.Result = res
+	return ec.marshalOUpdateAccessibilityRequestStatusPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatusPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createSystemIntakeActionBusinessCaseNeeded(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -12050,6 +12196,143 @@ func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphq
 	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_id(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccessibilityRequestStatusPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_requestID(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccessibilityRequestStatusPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RequestID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_status(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccessibilityRequestStatusPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.AccessibilityRequestStatus)
+	fc.Result = res
+	return ec.marshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccessibilityRequestStatusPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _UpdateSystemIntakePayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -13783,6 +14066,34 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestStatus(ctx context.Context, obj interface{}) (model.UpdateAccessibilityRequestStatus, error) {
+	var it model.UpdateAccessibilityRequestStatus
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "requestID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
+			it.RequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "status":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+			it.Status, err = ec.unmarshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeAdminLeadInput, error) {
 	var it model.UpdateSystemIntakeAdminLeadInput
 	var asMap = obj.(map[string]interface{})
@@ -14942,6 +15253,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createAccessibilityRequestDocument(ctx, field)
 		case "deleteAccessibilityRequestDocument":
 			out.Values[i] = ec._Mutation_deleteAccessibilityRequestDocument(ctx, field)
+		case "updateAccessibilityRequestStatus":
+			out.Values[i] = ec._Mutation_updateAccessibilityRequestStatus(ctx, field)
 		case "createSystemIntakeActionBusinessCaseNeeded":
 			out.Values[i] = ec._Mutation_createSystemIntakeActionBusinessCaseNeeded(ctx, field)
 		case "createSystemIntakeActionBusinessCaseNeedsChanges":
@@ -16134,6 +16447,45 @@ func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateAccessibilityRequestStatusPayloadImplementors = []string{"UpdateAccessibilityRequestStatusPayload"}
+
+func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateAccessibilityRequestStatusPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccessibilityRequestStatusPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateAccessibilityRequestStatusPayload")
+		case "id":
+			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "requestID":
+			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_requestID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "status":
+			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "userErrors":
+			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -18008,6 +18360,21 @@ func (ec *executionContext) marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(
 		return graphql.Null
 	}
 	return models.MarshalUUID(*v)
+}
+
+func (ec *executionContext) unmarshalOUpdateAccessibilityRequestStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatus(ctx context.Context, v interface{}) (*model.UpdateAccessibilityRequestStatus, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputUpdateAccessibilityRequestStatus(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOUpdateAccessibilityRequestStatusPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatusPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateAccessibilityRequestStatusPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateAccessibilityRequestStatusPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateSystemIntakePayload) graphql.Marshaler {
