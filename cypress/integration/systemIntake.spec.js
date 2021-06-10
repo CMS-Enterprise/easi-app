@@ -7,13 +7,10 @@ describe('The System Intake Form', () => {
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
     cy.visit('/system/request-type');
     cy.get('#RequestType-NewSystem').check({ force: true });
-    cy.wait(1000)
     cy.contains('button', 'Continue').click();
-    cy.wait(1000)
     cy.contains('a', 'Get started').click();
     cy.wait(1000)
     cy.contains('a', 'Start').click();
-    cy.wait(1000)
     cy.location().should(loc => {
       expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/)
     })
