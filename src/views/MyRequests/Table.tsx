@@ -16,9 +16,7 @@ import { RequestType } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
 
 const Table = () => {
-  const { t } = useTranslation('home');
-  const { t: tGovernance } = useTranslation('governanceReviewTeam');
-  const { t: tAccessibility } = useTranslation('accessibility');
+  const { t } = useTranslation(['home', 'intake', 'accessibility']);
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
     GetRequestsVariables
@@ -76,10 +74,10 @@ const Table = () => {
           let statusString;
           switch (row.original.type) {
             case RequestType.ACCESSIBILITY_REQUEST:
-              statusString = tAccessibility(`statusMap.${value}`);
+              statusString = t(`accessibility:statusMap.${value}`);
               break;
             case RequestType.GOVERNANCE_REQUEST:
-              statusString = tGovernance(`intake:statusMap.${value}`);
+              statusString = t(`intake:statusMap.${value}`);
               break;
             default:
               statusString = '';
