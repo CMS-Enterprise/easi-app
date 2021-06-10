@@ -16,7 +16,9 @@ import PageHeading from 'components/PageHeading';
 import PlainInfo from 'components/PlainInfo';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
+import useMessage from 'hooks/useMessage';
 import { AccessibilityRequestStatus } from 'types/graphql-global-types';
+import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { NotFoundPartial } from 'views/NotFound';
 
 type ChangeRequestStatusForm = {
@@ -26,6 +28,7 @@ type ChangeRequestStatusForm = {
 const ChangeRequestStatus = () => {
   const history = useHistory();
   const { t } = useTranslation('accessibility');
+  const { showMessageOnNextPage } = useMessage();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -34,6 +37,7 @@ const ChangeRequestStatus = () => {
       id: accessibilityRequestId
     }
   });
+
   const [mutate, mutationResult] = useMutation(
     UpdateAccessibilityRequestStatus
   );
@@ -53,6 +57,15 @@ const ChangeRequestStatus = () => {
       }
     }).then(response => {
       if (!response.errors) {
+        showMessageOnNextPage(
+          t('updateRequestStatus.confirmation', {
+            status:
+              accessibilityRequestStatusMap[
+                response.data.updateAccessibilityRequestStatus.status
+              ],
+            requestName: data.accessibilityRequest?.name
+          })
+        );
         history.push(`/508/requests/${accessibilityRequestId}`);
       }
     });
