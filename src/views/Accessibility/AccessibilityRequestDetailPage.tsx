@@ -240,6 +240,14 @@ const AccessibilityRequestDetailPage = () => {
               </span>
             </div>
           </h2>
+          {isAccessibilityTeam && (
+            <UswdsLink
+              asCustom={Link}
+              to={`/508/requests/${accessibilityRequestId}/change-status`}
+            >
+              Change
+            </UswdsLink>
+          )}
         </div>
       </div>
       <div className="grid-container margin-top-2 padding-top-6 padding-top">
