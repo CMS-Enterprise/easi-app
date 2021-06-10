@@ -45,6 +45,7 @@ import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import { DeleteAccessibilityRequestForm } from 'types/accessibility';
 import { AccessibilityRequestDeletionReason } from 'types/graphql-global-types';
+import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import user from 'utils/user';
@@ -163,12 +164,7 @@ const AccessibilityRequestDetailPage = () => {
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
   const hasDocuments = documents.length > 0;
   const statusEnum = data?.accessibilityRequest?.statusRecord.status;
-  const statusMap: { [key: string]: string } = {
-    OPEN: 'Open',
-    IN_REMEDIATION: 'In remediation',
-    CLOSED: 'Closed'
-  };
-  const requestStatus = statusMap[`${statusEnum}`];
+  const requestStatus = accessibilityRequestStatusMap[`${statusEnum}`];
 
   const uploadDocumentLink = (
     <UswdsLink
@@ -269,6 +265,15 @@ const AccessibilityRequestDetailPage = () => {
               </span>
             </div>
           </h2>
+          {isAccessibilityTeam && (
+            <UswdsLink
+              asCustom={Link}
+              to={`/508/requests/${accessibilityRequestId}/change-status`}
+              aria-label="Change status"
+            >
+              Change
+            </UswdsLink>
+          )}
         </div>
       </div>
       <div className="grid-container margin-top-2 padding-top-6 padding-top">

@@ -286,6 +286,20 @@ type SystemIntakeRequester struct {
 	Name      string  `json:"name"`
 }
 
+// Parameters for updating a 508/accessibility request's status
+type UpdateAccessibilityRequestStatus struct {
+	RequestID uuid.UUID                         `json:"requestID"`
+	Status    models.AccessibilityRequestStatus `json:"status"`
+}
+
+// Result of updating an accessibiiity request's status
+type UpdateAccessibilityRequestStatusPayload struct {
+	ID         uuid.UUID                         `json:"id"`
+	RequestID  uuid.UUID                         `json:"requestID"`
+	Status     models.AccessibilityRequestStatus `json:"status"`
+	UserErrors []*UserError                      `json:"userErrors"`
+}
+
 type UpdateSystemIntakeAdminLeadInput struct {
 	AdminLead string    `json:"adminLead"`
 	ID        uuid.UUID `json:"id"`
