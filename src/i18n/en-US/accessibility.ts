@@ -310,6 +310,7 @@ const accessibility = {
     changeStatusDisclaimer:
       'Changing the request status will send an email to all members of the 508 team letting them know about the new status.',
     submit: 'Change status',
+    confirmation: 'Status has changed to {{-status}} for {{-requestName}}',
     cancel: "Don't change status and return to request page"
   }
 };

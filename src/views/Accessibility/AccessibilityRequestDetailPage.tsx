@@ -40,6 +40,7 @@ import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import { DeleteAccessibilityRequestForm } from 'types/accessibility';
 import { AccessibilityRequestDeletionReason } from 'types/graphql-global-types';
+import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import user from 'utils/user';
@@ -133,12 +134,7 @@ const AccessibilityRequestDetailPage = () => {
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
   const hasDocuments = documents.length > 0;
   const statusEnum = data?.accessibilityRequest?.statusRecord.status;
-  const statusMap: { [key: string]: string } = {
-    OPEN: t('requestStatus.open'),
-    IN_REMEDIATION: t('requestStatus.remediation'),
-    CLOSED: t('requestStatus.closed')
-  };
-  const requestStatus = statusMap[`${statusEnum}`];
+  const requestStatus = accessibilityRequestStatusMap[`${statusEnum}`];
 
   const uploadDocumentLink = (
     <UswdsLink
