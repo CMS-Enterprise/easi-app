@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import {
@@ -8,11 +9,7 @@ import {
   Radio
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
-import {
-  GetAccessibilityRequest,
-  GetAccessibilityRequestVariables
-} from 'queries/types/GetAccessibilityRequest';
+import GetAccessibilityRequestForStatusChange from 'queries/GetAccessibilityRequestForStatusChange';
 import UpdateAccessibilityRequestStatus from 'queries/UpdateAccessibilityRequestStatusQuery';
 
 import PageHeading from 'components/PageHeading';
@@ -28,13 +25,11 @@ type ChangeRequestStatusForm = {
 
 const ChangeRequestStatus = () => {
   const history = useHistory();
+  const { t } = useTranslation('accessibility');
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
-  const { loading, data } = useQuery<
-    GetAccessibilityRequest,
-    GetAccessibilityRequestVariables
-  >(GetAccessibilityRequestQuery, {
+  const { loading, data } = useQuery(GetAccessibilityRequestForStatusChange, {
     variables: {
       id: accessibilityRequestId
     }
@@ -49,7 +44,6 @@ const ChangeRequestStatus = () => {
   };
 
   const handleSubmit = (values: ChangeRequestStatusForm) => {
-    console.log('submitting');
     mutate({
       variables: {
         input: {
@@ -77,7 +71,10 @@ const ChangeRequestStatus = () => {
   }
 
   return (
-    <div className="grid-container margin-y-5">
+    <div
+      className="grid-container margin-y-5"
+      data-testid="change-request-status-view"
+    >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {(formikProps: FormikProps<ChangeRequestStatusForm>) => {
           const { values } = formikProps;
@@ -93,21 +90,25 @@ const ChangeRequestStatus = () => {
                 </ErrorAlert>
               )}
               <PageHeading>
-                Choose a status for Medicare Office of Change Initiative
+                {t('updateRequestStatus.heading', {
+                  requestName: data.accessibilityRequest?.name
+                })}
               </PageHeading>
               <div className="tablet:grid-col-10">
                 <Form>
                   <FieldGroup>
                     <Fieldset
                       className="display-inline-block"
-                      legend="Choose a status for Medicare Office of Change Initiative"
+                      legend={t('updateRequestStatus.statusFieldLegend', {
+                        requestName: data.accessibilityRequest?.name
+                      })}
                       legendStyle="srOnly"
                     >
                       <Field
                         as={Radio}
                         id="RequestStatus-Open"
                         name="status"
-                        label="Open"
+                        label={t('requestStatus.open')}
                         value="OPEN"
                         checked={values.status === 'OPEN'}
                       />
@@ -115,7 +116,7 @@ const ChangeRequestStatus = () => {
                         as={Radio}
                         id="RequestStatus-Remediation"
                         name="status"
-                        label="In Remediation"
+                        label={t('requestStatus.remediation')}
                         value="IN_REMEDIATION"
                         checked={values.status === 'IN_REMEDIATION'}
                       />
@@ -123,26 +124,24 @@ const ChangeRequestStatus = () => {
                         as={Radio}
                         id="RequestStatus-Closed"
                         name="status"
-                        label="Closed"
+                        label={t('requestStatus.closed')}
                         value="CLOSED"
                         checked={values.status === 'CLOSED'}
                       />
                     </Fieldset>
                   </FieldGroup>
                   <PlainInfo className="margin-top-2" small>
-                    Changing the request status will send an email to all
-                    members of the 508 team letting them know about the new
-                    status.
+                    {t('updateRequestStatus.changeStatusDisclaimer')}
                   </PlainInfo>
                   <Button type="submit" className="margin-top-4">
-                    Change status
+                    {t('updateRequestStatus.submit')}
                   </Button>
                   <UswdsLink
                     className="display-block margin-top-3"
                     asCustom={Link}
-                    to={`/508/request/${accessibilityRequestId}`}
+                    to={`/508/requests/${accessibilityRequestId}`}
                   >
-                    Don&apos;t change status and return to request page
+                    {t('updateRequestStatus.cancel')}
                   </UswdsLink>
                 </Form>
               </div>
