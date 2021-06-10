@@ -153,6 +153,9 @@
     "ts-loader": "^7.0.5"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "!src/**/*.stories.{jsx,tsx}"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 30,
