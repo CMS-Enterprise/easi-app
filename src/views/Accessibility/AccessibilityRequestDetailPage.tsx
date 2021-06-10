@@ -13,6 +13,7 @@ import {
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
+import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
 import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
 import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
@@ -20,6 +21,10 @@ import {
   DeleteAccessibilityRequest,
   DeleteAccessibilityRequestVariables
 } from 'queries/types/DeleteAccessibilityRequest';
+import {
+  DeleteAccessibilityRequestDocument,
+  DeleteAccessibilityRequestDocumentVariables
+} from 'queries/types/DeleteAccessibilityRequestDocument';
 import { DeleteTestDate } from 'queries/types/DeleteTestDate';
 import {
   GetAccessibilityRequest,
@@ -118,6 +123,31 @@ const AccessibilityRequestDetailPage = () => {
     });
   };
 
+  const [removeDocumentMutation] = useMutation<
+    DeleteAccessibilityRequestDocument,
+    DeleteAccessibilityRequestDocumentVariables
+  >(DeleteAccessibilityRequestDocumentQuery);
+
+  const removeDocument = (
+    id: string,
+    documentTypeAsString: string,
+    callback: () => void
+  ) => {
+    removeDocumentMutation({
+      variables: {
+        input: {
+          id
+        }
+      }
+    }).then(() => {
+      refetch();
+      if (document) {
+        showMessage(`${documentTypeAsString} removed from ${requestName}`);
+      }
+      callback();
+    });
+  };
+
   const requestName = data?.accessibilityRequest?.name || '';
   const requestOwnerEuaId = data?.accessibilityRequest?.euaUserId || '';
   const systemName = data?.accessibilityRequest?.system.name || '';
@@ -155,8 +185,7 @@ const AccessibilityRequestDetailPage = () => {
         <AccessibilityDocumentsList
           documents={documents}
           requestName={requestName}
-          refetchRequest={refetch}
-          setConfirmationText={showMessage}
+          removeDocument={removeDocument}
         />
       </div>
     </>
