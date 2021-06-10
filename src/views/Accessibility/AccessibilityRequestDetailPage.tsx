@@ -134,9 +134,9 @@ const AccessibilityRequestDetailPage = () => {
   const hasDocuments = documents.length > 0;
   const statusEnum = data?.accessibilityRequest?.statusRecord.status;
   const statusMap: { [key: string]: string } = {
-    OPEN: 'Open',
-    IN_REMEDIATION: 'In remediation',
-    CLOSED: 'Closed'
+    OPEN: t('requestStatus.open'),
+    IN_REMEDIATION: t('requestStatus.remediation'),
+    CLOSED: t('requestStatus.closed')
   };
   const requestStatus = statusMap[`${statusEnum}`];
 
@@ -244,6 +244,7 @@ const AccessibilityRequestDetailPage = () => {
             <UswdsLink
               asCustom={Link}
               to={`/508/requests/${accessibilityRequestId}/change-status`}
+              aria-label="Change status"
             >
               Change
             </UswdsLink>
