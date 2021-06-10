@@ -171,6 +171,14 @@ export interface RejectIntakeInput {
   reason: string;
 }
 
+/**
+ * Parameters for updating a 508/accessibility request's status
+ */
+export interface UpdateAccessibilityRequestStatus {
+  requestID: UUID;
+  status: AccessibilityRequestStatus;
+}
+
 export interface UpdateSystemIntakeAdminLeadInput {
   adminLead: string;
   id: UUID;
