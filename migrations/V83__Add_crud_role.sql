@@ -1,22 +1,11 @@
 DO
 $do$
 BEGIN
-  IF EXISTS (
-    SELECT -- SELECT list can stay empty for this
-    FROM   pg_catalog.pg_roles
-    WHERE  rolname = 'crud') THEN
-
-    REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM crud;
-    REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM crud;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON TABLES FROM crud;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON SEQUENCES FROM crud;
-
-    DROP ROLE crud;
-  END IF;
+  CREATE ROLE crud;
+  EXCEPTION WHEN DUPLICATE_OBJECT THEN
+  RAISE NOTICE 'not creating role crud -- it already exists';
 END
 $do$;
-
-CREATE ROLE crud;
 
 -- Modify existing tables and sequences.
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO crud;
