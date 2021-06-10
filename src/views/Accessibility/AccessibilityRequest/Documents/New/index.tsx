@@ -319,6 +319,7 @@ const New = () => {
                           generateURLStatus.loading ||
                           createDocumentStatus.loading
                         }
+                        data-testid="Upload-Document"
                       >
                         Upload document
                       </Button>
