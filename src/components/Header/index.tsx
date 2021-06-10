@@ -124,6 +124,7 @@ export const Header = ({ children }: HeaderProps) => {
                 aria-controls="Header-UserActionsList"
                 type="button"
                 className="easi-header__username"
+                data-testid="UserActions-Toggle"
                 onClick={() => {
                   setDisplayDropdown(!displayDropdown);
                 }}
@@ -142,6 +143,7 @@ export const Header = ({ children }: HeaderProps) => {
                     </UserAction>
                   )}
                   <UserAction
+                    testId="UserActions-Logout"
                     onClick={() => {
                       localStorage.removeItem(localAuthStorageKey);
                       oktaAuth.signOut();

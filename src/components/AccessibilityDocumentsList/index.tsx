@@ -187,7 +187,7 @@ const AccessibilityDocumentsList = ({
   });
 
   return (
-    <>
+    <div data-testid="AccessibilityDocumentsList">
       <Table bordered={false} {...getTableProps()} fullWidth>
         <caption className="usa-sr-only">
           {`${t('documentTable.caption')} ${requestName}`}
@@ -262,7 +262,7 @@ const AccessibilityDocumentsList = ({
           </>
         )}
       </Modal>
-    </>
+    </div>
   );
 };
 

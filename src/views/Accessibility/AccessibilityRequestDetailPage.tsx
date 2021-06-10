@@ -146,6 +146,7 @@ const AccessibilityRequestDetailPage = () => {
       variant="unstyled"
       asCustom={Link}
       to={`/508/requests/${accessibilityRequestId}/documents/new`}
+      data-testid="Upload-New-Document"
     >
       {t('requestDetails.documentUpload')}
     </UswdsLink>
