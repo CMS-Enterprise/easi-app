@@ -52,6 +52,13 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	AccessibilityNote struct {
+		CreatedAt func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Note      func(childComplexity int) int
+		RequestID func(childComplexity int) int
+	}
+
 	AccessibilityRequest struct {
 		CreatedAt        func(childComplexity int) int
 		Documents        func(childComplexity int) int
@@ -160,6 +167,10 @@ type ComplexityRoot struct {
 		Year  func(childComplexity int) int
 	}
 
+	CreateAccessibilityNotePayload struct {
+		AccessibilityNote func(childComplexity int) int
+	}
+
 	CreateAccessibilityRequestDocumentPayload struct {
 		AccessibilityRequestDocument func(childComplexity int) int
 		UserErrors                   func(childComplexity int) int
@@ -223,6 +234,7 @@ type ComplexityRoot struct {
 		AddGRTFeedbackAndKeepBusinessCaseInDraft         func(childComplexity int, input model.AddGRTFeedbackInput) int
 		AddGRTFeedbackAndProgressToFinalBusinessCase     func(childComplexity int, input model.AddGRTFeedbackInput) int
 		AddGRTFeedbackAndRequestBusinessCase             func(childComplexity int, input model.AddGRTFeedbackInput) int
+		CreateAccessibilityNote                          func(childComplexity int, input model.CreateAccessibilityNoteInput) int
 		CreateAccessibilityRequest                       func(childComplexity int, input model.CreateAccessibilityRequestInput) int
 		CreateAccessibilityRequestDocument               func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
 		CreateSystemIntakeActionBusinessCaseNeeded       func(childComplexity int, input model.BasicActionInput) int
@@ -486,6 +498,7 @@ type MutationResolver interface {
 	CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
 	DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error)
 	CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error)
+	CreateAccessibilityNote(ctx context.Context, input model.CreateAccessibilityNoteInput) (*model.CreateAccessibilityNotePayload, error)
 	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
 	UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error)
 	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
@@ -569,6 +582,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "AccessibilityNote.createdAt":
+		if e.complexity.AccessibilityNote.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityNote.CreatedAt(childComplexity), true
+
+	case "AccessibilityNote.id":
+		if e.complexity.AccessibilityNote.ID == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityNote.ID(childComplexity), true
+
+	case "AccessibilityNote.note":
+		if e.complexity.AccessibilityNote.Note == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityNote.Note(childComplexity), true
+
+	case "AccessibilityNote.requestID":
+		if e.complexity.AccessibilityNote.RequestID == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityNote.RequestID(childComplexity), true
 
 	case "AccessibilityRequest.submittedAt":
 		if e.complexity.AccessibilityRequest.CreatedAt == nil {
@@ -1074,6 +1115,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ContractDate.Year(childComplexity), true
 
+	case "CreateAccessibilityNotePayload.accessibilityNote":
+		if e.complexity.CreateAccessibilityNotePayload.AccessibilityNote == nil {
+			break
+		}
+
+		return e.complexity.CreateAccessibilityNotePayload.AccessibilityNote(childComplexity), true
+
 	case "CreateAccessibilityRequestDocumentPayload.accessibilityRequestDocument":
 		if e.complexity.CreateAccessibilityRequestDocumentPayload.AccessibilityRequestDocument == nil {
 			break
@@ -1291,6 +1339,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.AddGRTFeedbackAndRequestBusinessCase(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
+
+	case "Mutation.createAccessibilityNote":
+		if e.complexity.Mutation.CreateAccessibilityNote == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createAccessibilityNote_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateAccessibilityNote(childComplexity, args["input"].(model.CreateAccessibilityNoteInput)), true
 
 	case "Mutation.createAccessibilityRequest":
 		if e.complexity.Mutation.CreateAccessibilityRequest == nil {
@@ -2557,6 +2617,22 @@ type UpdateAccessibilityRequestStatusPayload {
   userErrors: [UserError!]
 }
 
+input CreateAccessibilityNoteInput {
+  requestID: UUID!
+  note: String!
+}
+
+type AccessibilityNote {
+  id: UUID!
+  requestID: UUID!
+  createdAt: Time!
+  note: String!
+}
+
+type CreateAccessibilityNotePayload {
+  accessibilityNote: AccessibilityNote!
+}
+
 """
 A business owner is the person at CMS responsible for a system
 """
@@ -3115,6 +3191,9 @@ type Mutation {
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
+  createAccessibilityNote(
+    input: CreateAccessibilityNoteInput!
+  ): CreateAccessibilityNotePayload
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
   updateAccessibilityRequestStatus(input: UpdateAccessibilityRequestStatus) : UpdateAccessibilityRequestStatusPayload @hasRole(role: EASI_508_TESTER_OR_USER)
   createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -3264,6 +3343,21 @@ func (ec *executionContext) field_Mutation_addGRTFeedbackAndRequestBusinessCase_
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createAccessibilityNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CreateAccessibilityNoteInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateAccessibilityNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityNoteInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3771,6 +3865,146 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _AccessibilityNote_id(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityNote_requestID(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RequestID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityNote_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityNote_note(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Note, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
 
 func (ec *executionContext) _AccessibilityRequest_documents(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
 	defer func() {
@@ -6175,6 +6409,41 @@ func (ec *executionContext) _ContractDate_year(ctx context.Context, field graphq
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CreateAccessibilityNotePayload_accessibilityNote(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityNotePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateAccessibilityNotePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccessibilityNote, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.AccessibilityNote)
+	fc.Result = res
+	return ec.marshalNAccessibilityNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityNote(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CreateAccessibilityRequestDocumentPayload_accessibilityRequestDocument(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestDocumentPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7326,6 +7595,45 @@ func (ec *executionContext) _Mutation_createAccessibilityRequestDocument(ctx con
 	res := resTmp.(*model.CreateAccessibilityRequestDocumentPayload)
 	fc.Result = res
 	return ec.marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createAccessibilityNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createAccessibilityNote_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateAccessibilityNote(rctx, args["input"].(model.CreateAccessibilityNoteInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CreateAccessibilityNotePayload)
+	fc.Result = res
+	return ec.marshalOCreateAccessibilityNotePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityNotePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_deleteAccessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -13682,6 +13990,34 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateAccessibilityNoteInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityNoteInput, error) {
+	var it model.CreateAccessibilityNoteInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "requestID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
+			it.RequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "note":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("note"))
+			it.Note, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityRequestDocumentInput, error) {
 	var it model.CreateAccessibilityRequestDocumentInput
 	var asMap = obj.(map[string]interface{})
@@ -14209,6 +14545,48 @@ func (ec *executionContext) unmarshalInputUpdateTestDateInput(ctx context.Contex
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
+
+var accessibilityNoteImplementors = []string{"AccessibilityNote"}
+
+func (ec *executionContext) _AccessibilityNote(ctx context.Context, sel ast.SelectionSet, obj *models.AccessibilityNote) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accessibilityNoteImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AccessibilityNote")
+		case "id":
+			out.Values[i] = ec._AccessibilityNote_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "requestID":
+			out.Values[i] = ec._AccessibilityNote_requestID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._AccessibilityNote_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "note":
+			out.Values[i] = ec._AccessibilityNote_note(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
 
 var accessibilityRequestImplementors = []string{"AccessibilityRequest"}
 
@@ -14915,6 +15293,33 @@ func (ec *executionContext) _ContractDate(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var createAccessibilityNotePayloadImplementors = []string{"CreateAccessibilityNotePayload"}
+
+func (ec *executionContext) _CreateAccessibilityNotePayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateAccessibilityNotePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createAccessibilityNotePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateAccessibilityNotePayload")
+		case "accessibilityNote":
+			out.Values[i] = ec._CreateAccessibilityNotePayload_accessibilityNote(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var createAccessibilityRequestDocumentPayloadImplementors = []string{"CreateAccessibilityRequestDocumentPayload"}
 
 func (ec *executionContext) _CreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
@@ -15251,6 +15656,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_deleteAccessibilityRequest(ctx, field)
 		case "createAccessibilityRequestDocument":
 			out.Values[i] = ec._Mutation_createAccessibilityRequestDocument(ctx, field)
+		case "createAccessibilityNote":
+			out.Values[i] = ec._Mutation_createAccessibilityNote(ctx, field)
 		case "deleteAccessibilityRequestDocument":
 			out.Values[i] = ec._Mutation_deleteAccessibilityRequestDocument(ctx, field)
 		case "updateAccessibilityRequestStatus":
@@ -16826,6 +17233,16 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNAccessibilityNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityNote(ctx context.Context, sel ast.SelectionSet, v *models.AccessibilityNote) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AccessibilityNote(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequest(ctx context.Context, sel ast.SelectionSet, v *models.AccessibilityRequest) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -17059,6 +17476,11 @@ func (ec *executionContext) marshalNBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeas
 		return graphql.Null
 	}
 	return ec._BusinessOwner(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNCreateAccessibilityNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityNoteInput(ctx context.Context, v interface{}) (model.CreateAccessibilityNoteInput, error) {
+	res, err := ec.unmarshalInputCreateAccessibilityNoteInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNCreateAccessibilityRequestDocumentInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentInput(ctx context.Context, v interface{}) (model.CreateAccessibilityRequestDocumentInput, error) {
@@ -18016,6 +18438,13 @@ func (ec *executionContext) marshalOContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasi
 		return graphql.Null
 	}
 	return ec._ContractDate(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCreateAccessibilityNotePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityNotePayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityNotePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateAccessibilityNotePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
