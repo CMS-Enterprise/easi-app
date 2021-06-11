@@ -1,11 +1,6 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
-  statusMap: {
-    OPEN: 'Open',
-    IN_REMEDIATION: 'In remediation',
-    CLOSED: 'Closed'
-  },
   reportProblem: 'Report a problem (opens in a new tab)',
   requestStatus: {
     open: 'Open',
