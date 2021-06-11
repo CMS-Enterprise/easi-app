@@ -23,13 +23,15 @@ func (s *Store) CreateAccessibilityNote(ctx context.Context, note *models.Access
 				id,
 				request_id,
 				created_at,
-				note
+				note,
+			    eua_user_id
 			)
 			VALUES (
 				:id,
 				:request_id,
 				:created_at,
-				:note
+				:note,
+				:eua_user_id
 			)`
 	_, err := s.db.NamedExec(
 		createAccessibilityNoteSQL,
