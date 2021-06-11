@@ -655,7 +655,7 @@ type Mutation {
   ): CreateAccessibilityRequestDocumentPayload
   createAccessibilityNote(
     input: CreateAccessibilityNoteInput!
-  ): CreateAccessibilityNotePayload
+  ): CreateAccessibilityNotePayload @hasRole(role: EASI_508_TESTER_OR_USER)
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
   updateAccessibilityRequestStatus(input: UpdateAccessibilityRequestStatus) : UpdateAccessibilityRequestStatusPayload @hasRole(role: EASI_508_TESTER_OR_USER)
   createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
