@@ -42,7 +42,7 @@ describe('AccessibilityRequestsTable', () => {
       {
         id: '124',
         name: 'Burrito v2',
-        relevantTestDate: '2021-06-30T19:22:40Z',
+        relevantTestDate: { date: '2021-06-30T19:22:40Z' },
         submittedAt: '2021-06-10T19:22:40Z',
         system: {
           lcid: '0000',
