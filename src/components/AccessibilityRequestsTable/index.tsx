@@ -9,6 +9,7 @@ import classnames from 'classnames';
 import { DateTime } from 'luxon';
 import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
+import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 
 import './index.scss';
@@ -63,8 +64,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       {
         Header: t('requestTable.header.status'),
         accessor: 'status',
-        Cell: ({ row, value }: any) => {
-          return <strong>{value}</strong>;
+        Cell: ({ value }: any) => {
+          return value;
         }
       }
     ];
@@ -80,13 +81,16 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       const testDate = request.relevantTestDate?.date
         ? DateTime.fromISO(request.relevantTestDate?.date)
         : null;
+      const status =
+        accessibilityRequestStatusMap[`${request.statusRecord.status}`];
 
       return {
         id: request.id,
         requestName: request.name,
         submittedAt,
         businessOwner,
-        relevantTestDate: testDate
+        relevantTestDate: testDate,
+        status
       };
     });
 
