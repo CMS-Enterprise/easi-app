@@ -41,6 +41,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 
 	_, statusRecordErr := s.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
 		RequestID: accessibilityRequest.ID,
+		EUAUserID: "ABCD",
 	})
 	s.NoError(statusRecordErr)
 

@@ -87,6 +87,7 @@ type ComplexityRoot struct {
 	}
 
 	AccessibilityRequestStatusRecord struct {
+		EUAUserID func(childComplexity int) int
 		ID        func(childComplexity int) int
 		RequestID func(childComplexity int) int
 		Status    func(childComplexity int) int
@@ -422,6 +423,7 @@ type ComplexityRoot struct {
 	}
 
 	UpdateAccessibilityRequestStatusPayload struct {
+		EuaUserID  func(childComplexity int) int
 		ID         func(childComplexity int) int
 		RequestID  func(childComplexity int) int
 		Status     func(childComplexity int) int
@@ -723,6 +725,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequestEdge.Node(childComplexity), true
+
+	case "AccessibilityRequestStatusRecord.euaUserId":
+		if e.complexity.AccessibilityRequestStatusRecord.EUAUserID == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestStatusRecord.EUAUserID(childComplexity), true
 
 	case "AccessibilityRequestStatusRecord.id":
 		if e.complexity.AccessibilityRequestStatusRecord.ID == nil {
@@ -2342,6 +2351,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TestDate.TestType(childComplexity), true
 
+	case "UpdateAccessibilityRequestStatusPayload.euaUserId":
+		if e.complexity.UpdateAccessibilityRequestStatusPayload.EuaUserID == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccessibilityRequestStatusPayload.EuaUserID(childComplexity), true
+
 	case "UpdateAccessibilityRequestStatusPayload.id":
 		if e.complexity.UpdateAccessibilityRequestStatusPayload.ID == nil {
 			break
@@ -2537,6 +2553,7 @@ type AccessibilityRequestStatusRecord {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+  euaUserId: String!
 }
 
 """
@@ -2554,6 +2571,7 @@ type UpdateAccessibilityRequestStatusPayload {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+  euaUserId: String!
   userErrors: [UserError!]
 }
 
@@ -4639,6 +4657,41 @@ func (ec *executionContext) _AccessibilityRequestStatusRecord_status(ctx context
 	res := resTmp.(models.AccessibilityRequestStatus)
 	fc.Result = res
 	return ec.marshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequestStatusRecord_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestStatusRecord) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestStatusRecord",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EUAUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestsConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestsConnection) (ret graphql.Marshaler) {
@@ -12301,6 +12354,41 @@ func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_status(ctx 
 	return ec.marshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_euaUserId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccessibilityRequestStatusPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EuaUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -14500,6 +14588,11 @@ func (ec *executionContext) _AccessibilityRequestStatusRecord(ctx context.Contex
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "euaUserId":
+			out.Values[i] = ec._AccessibilityRequestStatusRecord_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -16481,6 +16574,11 @@ func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload(ctx context
 			}
 		case "status":
 			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "euaUserId":
+			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_euaUserId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
