@@ -12,4 +12,5 @@ type AccessibilityNote struct {
 	Note      string
 	RequestID uuid.UUID  `json:"requestId" db:"request_id"`
 	CreatedAt *time.Time `json:"createdAt" db:"created_at"`
+	EUAUserID string     `json:"euaUserId" db:"eua_user_id"`
 }
