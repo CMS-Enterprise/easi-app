@@ -6,9 +6,9 @@ describe('Accessibility Utils', () => {
       expect(accessibilityRequestStatusMap.OPEN).toEqual('Open');
     });
 
-    it('returns In Remediation', () => {
+    it('returns In remediation', () => {
       expect(accessibilityRequestStatusMap.IN_REMEDIATION).toEqual(
-        'In Remediation'
+        'In remediation'
       );
     });
 

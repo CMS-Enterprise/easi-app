@@ -9,7 +9,7 @@ const accessibility = {
   reportProblem: 'Report a problem (opens in a new tab)',
   requestStatus: {
     open: 'Open',
-    remediation: 'In Remediation',
+    remediation: 'In remediation',
     closed: 'Closed'
   },
   documentTable: {
