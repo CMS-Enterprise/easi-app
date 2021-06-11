@@ -297,6 +297,7 @@ type UpdateAccessibilityRequestStatusPayload struct {
 	ID         uuid.UUID                         `json:"id"`
 	RequestID  uuid.UUID                         `json:"requestID"`
 	Status     models.AccessibilityRequestStatus `json:"status"`
+	EuaUserID  string                            `json:"euaUserId"`
 	UserErrors []*UserError                      `json:"userErrors"`
 }
 
