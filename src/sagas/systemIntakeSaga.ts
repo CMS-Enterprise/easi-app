@@ -2,14 +2,10 @@ import axios from 'axios';
 import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import {
-  prepareSystemIntakeForApi,
-  prepareSystemIntakeForApp
-} from 'data/systemIntake';
+import { prepareSystemIntakeForApi } from 'data/systemIntake';
 import {
   archiveSystemIntake,
   fetchSystemIntake,
-  postSystemIntake,
   saveSystemIntake
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -18,27 +14,6 @@ function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
   const data = prepareSystemIntakeForApi(formData);
   return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
-}
-
-function postSystemIntakeRequest(formData: SystemIntakeForm) {
-  const data = prepareSystemIntakeForApi(formData);
-  return axios.post(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
-}
-
-function* createSystemIntake(action: Action<any>) {
-  try {
-    yield put(postSystemIntake.request());
-    const response = yield call(postSystemIntakeRequest, action.payload);
-    const formattedResponse = yield call(
-      prepareSystemIntakeForApp,
-      response.data
-    );
-    yield put(postSystemIntake.success(formattedResponse));
-  } catch (error) {
-    yield put(postSystemIntake.failure(error.message));
-  } finally {
-    yield put(postSystemIntake.fulfill());
-  }
 }
 
 function* putSystemIntake(action: Action<any>) {
@@ -94,6 +69,5 @@ function* deleteSystemIntake(action: Action<any>) {
 export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
-  yield takeLatest(postSystemIntake.TRIGGER, createSystemIntake);
   yield takeLatest(archiveSystemIntake.TRIGGER, deleteSystemIntake);
 }
