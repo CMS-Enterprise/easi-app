@@ -9,6 +9,8 @@ import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
 
+import { ACCESSIBILITY_TESTER_DEV } from '../../constants/jobCodes';
+
 import AccessibilityRequestDetailPage from './AccessibilityRequestDetailPage';
 
 describe('AccessibilityRequestDetailPage', () => {
@@ -60,94 +62,127 @@ describe('AccessibilityRequestDetailPage', () => {
     expect(wrapper.find('AccessibilityRequestDetailPage').length).toEqual(1);
   });
 
-  it('renders Next step if no documents', async () => {
-    let wrapper: any;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-          <MockedProvider mocks={mocksWithoutDocs} addTypename={false}>
-            <Provider store={store}>
-              <MessageProvider>
-                <Route path="/508/requests/:accessibilityRequestId">
-                  <AccessibilityRequestDetailPage />
-                </Route>
-              </MessageProvider>
-            </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      );
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      wrapper.update();
+  describe('for a basic user', () => {
+    it('renders Next step if no documents', async () => {
+      let wrapper: any;
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
+            <MockedProvider mocks={mocksWithoutDocs} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/508/requests/:accessibilityRequestId">
+                    <AccessibilityRequestDetailPage />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        wrapper.update();
+      });
+      expect(
+        wrapper.find('h2').at(1).contains('Next step: Provide your documents')
+      ).toBe(true);
     });
-    expect(
-      wrapper.find('h2').at(1).contains('Next step: Provide your documents')
-    ).toBe(true);
-  });
 
-  it('renders the AccessibilityDocumentList when documents exist', async () => {
-    const mocks = [
-      {
-        request: {
-          query: GetAccessibilityRequestQuery,
-          variables: {
-            id: 'a11yRequest123'
-          }
-        },
-        result: {
-          data: {
-            accessibilityRequest: {
-              id: 'a11yRequest123',
-              euaUserId: 'AAAA',
-              submittedAt: new Date(),
-              name: 'MY Request',
-              system: {
-                name: 'TACO',
-                lcid: '0000',
-                businessOwner: { name: 'Clark Kent', component: 'OIT' }
-              },
-              documents: [
-                {
-                  id: 'doc1',
-                  url: 'myurl',
-                  uploadedAt: 'time',
-                  status: 'PENDING',
-                  documentType: {
-                    commonType: 'TEST_PLAN',
-                    otherTypeDescription: '',
-                    __typename: 'AccessibilityRequestDocumentType'
+    it('renders the AccessibilityDocumentList when documents exist', async () => {
+      const mocksWithDocs = [
+        {
+          request: {
+            query: GetAccessibilityRequestQuery,
+            variables: {
+              id: 'a11yRequest123'
+            }
+          },
+          result: {
+            data: {
+              accessibilityRequest: {
+                id: 'a11yRequest123',
+                euaUserId: 'AAAA',
+                submittedAt: new Date(),
+                name: 'MY Request',
+                system: {
+                  name: 'TACO',
+                  lcid: '0000',
+                  businessOwner: { name: 'Clark Kent', component: 'OIT' }
+                },
+                documents: [
+                  {
+                    id: 'doc1',
+                    url: 'myurl',
+                    uploadedAt: 'time',
+                    status: 'PENDING',
+                    documentType: {
+                      commonType: 'TEST_PLAN',
+                      otherTypeDescription: '',
+                      __typename: 'AccessibilityRequestDocumentType'
+                    }
                   }
+                ],
+                testDates: [],
+                statusRecord: {
+                  status: 'OPEN'
                 }
-              ],
-              testDates: [],
-              statusRecord: {
-                status: 'OPEN'
               }
             }
           }
         }
-      }
-    ];
+      ];
 
-    let wrapper: any;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-          <MockedProvider mocks={mocks} addTypename={false}>
-            <Provider store={store}>
-              <MessageProvider>
-                <Route path="/508/requests/:accessibilityRequestId">
-                  <AccessibilityRequestDetailPage />
-                </Route>
-              </MessageProvider>
-            </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      );
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      wrapper.update();
+      let wrapper: any;
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
+            <MockedProvider mocks={mocksWithDocs} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/508/requests/:accessibilityRequestId">
+                    <AccessibilityRequestDetailPage />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        wrapper.update();
+      });
+      expect(wrapper.find('h2').at(1).contains('Documents')).toBe(true);
+      expect(wrapper.find('AccessibilityDocumentsList').exists()).toBe(true);
     });
-    expect(wrapper.find('h2').at(1).contains('Documents')).toBe(true);
-    expect(wrapper.find('AccessibilityDocumentsList').exists()).toBe(true);
+  });
+
+  describe('for a 508 user or 508 tester', () => {
+    const testerStore = mockStore({
+      auth: { groups: [ACCESSIBILITY_TESTER_DEV], isUserSet: true }
+    });
+    it('renders "Documents" and no documents message if there are no documents', async () => {
+      let wrapper: any;
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
+            <MockedProvider mocks={mocksWithoutDocs} addTypename={false}>
+              <Provider store={testerStore}>
+                <MessageProvider>
+                  <Route path="/508/requests/:accessibilityRequestId">
+                    <AccessibilityRequestDetailPage />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        wrapper.update();
+      });
+      expect(wrapper.find('h2').at(1).contains('Documents')).toBe(true);
+      expect(wrapper.find('AccessibilityDocumentsList').exists()).toBe(true);
+      expect(wrapper.find('AccessibilityDocumentsList').text()).toEqual(
+        'No documents added to request yet.'
+      );
+    });
   });
 
   it('renders the accessibility request status', async () => {
