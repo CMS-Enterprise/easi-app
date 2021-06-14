@@ -191,7 +191,7 @@ const AccessibilityRequestDetailPage = () => {
     </>
   );
 
-  const bodyNoDocumentsBasicUser = (
+  const bodyNoDocumentsBusinessOwner = (
     <>
       <div className="margin-bottom-3">
         <h2 className="margin-y-0 font-heading-lg">
@@ -281,7 +281,7 @@ const AccessibilityRequestDetailPage = () => {
           <div className="grid-col-8">
             {hasDocuments || isAccessibilityTeam
               ? bodyWithDocumentsTable
-              : bodyNoDocumentsBasicUser}
+              : bodyNoDocumentsBusinessOwner}
           </div>
           <div className="grid-col-1" />
           <div className="grid-col-3">
