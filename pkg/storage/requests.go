@@ -52,7 +52,7 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		) current_status 
 			ON current_status.request_id = accessibility_requests.id
 		WHERE accessibility_requests.deleted_at IS null
-		AND eua_user_id = $1
+		AND accessibility_requests.eua_user_id = $1
 	UNION
 	SELECT
 		id,
@@ -62,7 +62,7 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		status::text
 	FROM system_intakes
 		WHERE archived_at IS NULL
-		AND eua_user_id = $1
+		AND system_intakes.eua_user_id = $1
 	ORDER BY submitted_at desc nulls first
 	`
 
