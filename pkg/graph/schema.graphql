@@ -17,6 +17,7 @@ type Request {
   name: String
   submittedAt: Time
   type: RequestType!
+  status: String!
 }
 
 type RequestsConnection {
@@ -42,6 +43,40 @@ type AccessibilityRequest {
   system: System!
   testDates: [TestDate!]!
   euaUserId: String!
+  statusRecord: AccessibilityRequestStatusRecord!
+}
+
+enum AccessibilityRequestStatus {
+  OPEN
+  IN_REMEDIATION
+  CLOSED
+}
+
+"""
+An accessibility request status record is the data related to a status action
+"""
+type AccessibilityRequestStatusRecord {
+  id: UUID!
+  requestID: UUID!
+  status: AccessibilityRequestStatus!
+}
+
+"""
+Parameters for updating a 508/accessibility request's status
+"""
+input UpdateAccessibilityRequestStatus {
+  requestID: UUID!
+  status: AccessibilityRequestStatus!
+}
+
+"""
+ Result of updating an accessibiiity request's status
+ """
+type UpdateAccessibilityRequestStatusPayload {
+  id: UUID!
+  requestID: UUID!
+  status: AccessibilityRequestStatus!
+  userErrors: [UserError!]
 }
 
 """
@@ -603,6 +638,7 @@ type Mutation {
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
+  updateAccessibilityRequestStatus(input: UpdateAccessibilityRequestStatus) : UpdateAccessibilityRequestStatusPayload @hasRole(role: EASI_508_TESTER_OR_USER)
   createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionGuideReceievedClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)

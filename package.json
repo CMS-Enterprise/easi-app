@@ -122,6 +122,9 @@
     "@storybook/node-logger": "^6.1.11",
     "@storybook/preset-create-react-app": "^3.1.5",
     "@storybook/react": "^6.1.11",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^13.1.9",
     "babel-loader": "8.1.0",
     "cypress": "4.5.0",
     "cypress-otp": "^1.0.2",
@@ -150,6 +153,9 @@
     "ts-loader": "^7.0.5"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "!src/**/*.stories.{jsx,tsx}"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 30,
