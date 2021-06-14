@@ -24,7 +24,7 @@ const intake = {
   },
   lifecycleId: 'Lifecycle ID',
   statusMap: {
-    INTAKE_DRAFT: 'N/A',
+    INTAKE_DRAFT: 'Intake draft',
     INTAKE_SUBMITTED: 'Intake request received',
     NEED_BIZ_CASE: 'Waiting for draft business case',
     BIZ_CASE_DRAFT: 'Waiting for draft business case',

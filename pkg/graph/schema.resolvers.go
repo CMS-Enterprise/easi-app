@@ -487,6 +487,22 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
 }
 
+func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error) {
+	statusRecord, err := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: input.RequestID,
+		Status:    input.Status,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateAccessibilityRequestStatusPayload{
+		RequestID:  statusRecord.ID,
+		Status:     statusRecord.Status,
+		UserErrors: nil,
+	}, nil
+}
+
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
@@ -809,6 +825,7 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 			SubmittedAt: request.SubmittedAt,
 			Name:        request.Name.Ptr(),
 			Type:        request.Type,
+			Status:      request.Status,
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,

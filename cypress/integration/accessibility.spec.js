@@ -127,6 +127,7 @@ describe('Accessibility Requests', () => {
         cy.contains('th', 'Request name');
         cy.contains('th', 'Governance');
         cy.contains('th', 'Submission date');
+        cy.contains('th', 'Status');
       });
 
       cy.get('tbody').within(() => {
@@ -134,6 +135,7 @@ describe('Accessibility Requests', () => {
         const dateString = formatDate(new Date().toISOString());
         cy.contains('td', 'Section 508');
         cy.contains('td', dateString);
+        cy.contains('td', 'Open');
       });
     });
   });

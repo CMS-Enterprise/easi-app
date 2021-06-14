@@ -27,7 +27,7 @@ import TextField from 'components/shared/TextField';
 import { useMessage } from 'hooks/useMessage';
 import { FileUploadForm } from 'types/files';
 import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
-import { translateDocumentType } from 'utils/accessibilityRequest';
+import { translateDocumentCommonType } from 'utils/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { DocumentUploadValidationSchema } from 'validations/documentUploadSchema';
 
@@ -254,7 +254,9 @@ const New = () => {
                                   }
                                   id={`FileUpload-CommonType${commonType}`}
                                   name="documentType.commonType"
-                                  label={translateDocumentType(commonType)}
+                                  label={translateDocumentCommonType(
+                                    commonType
+                                  )}
                                   onChange={() => {
                                     setFieldValue(
                                       'documentType.commonType',
@@ -272,7 +274,7 @@ const New = () => {
                             checked={values.documentType.commonType === 'OTHER'}
                             id="FileUpload-CommonTypeOTHER"
                             name="documentType.commonType"
-                            label={translateDocumentType(
+                            label={translateDocumentCommonType(
                               AccessibilityRequestDocumentCommonType.OTHER
                             )}
                             value="OTHER"
