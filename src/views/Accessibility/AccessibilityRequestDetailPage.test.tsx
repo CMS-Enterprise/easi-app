@@ -62,7 +62,7 @@ describe('AccessibilityRequestDetailPage', () => {
     expect(wrapper.find('AccessibilityRequestDetailPage').length).toEqual(1);
   });
 
-  describe('for a basic user', () => {
+  describe('for a business owner', () => {
     it('renders Next step if no documents', async () => {
       let wrapper: any;
       await act(async () => {
