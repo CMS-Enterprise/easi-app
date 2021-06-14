@@ -35,7 +35,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             </UswdsLink>
           );
         },
-        maxWidth: 350
+        maxWidth: 350,
+        width: 350
       },
       {
         Header: t('requestTable.header.submissionDate'),
@@ -154,8 +155,6 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     return 'none';
   };
 
-  const tableColWidths = [350, 150, 260, 150, 260]; // [request name, submission date, business owner, test date, status]
-
   return (
     <div className="accessibility-requests-table">
       <Table bordered={false} {...getTableProps()} fullWidth>
@@ -165,9 +164,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
                 <th
-                  {...column.getHeaderProps()}
+                  {...column.getHeaderProps({
+                    style: { width: column.width, whiteSpace: 'nowrap' }
+                  })}
                   aria-sort={getColumnSortStatus(column)}
-                  style={{ whiteSpace: 'nowrap' }}
                   scope="col"
                 >
                   <button
@@ -199,12 +199,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                   if (i === 0) {
                     return (
                       <th
-                        {...cell.getCellProps()}
+                        {...cell.getCellProps({
+                          style: { width: cell.column.width, maxWidth: '16em' }
+                        })}
                         scope="row"
-                        style={{
-                          width: `${tableColWidths[0]}px`,
-                          maxWidth: '16em'
-                        }}
                       >
                         {cell.render('Cell')}
                       </th>
@@ -212,11 +210,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                   }
                   return (
                     <td
-                      {...cell.getCellProps()}
-                      style={{
-                        width: `${tableColWidths[i]}px`,
-                        maxWidth: '16em'
-                      }}
+                      {...cell.getCellProps({
+                        style: { width: cell.column.width, maxWidth: '16em' }
+                      })}
                     >
                       {cell.render('Cell')}
                     </td>
