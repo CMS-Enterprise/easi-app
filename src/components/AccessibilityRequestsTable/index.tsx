@@ -154,6 +154,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     return 'none';
   };
 
+  const tableColWidths = [350, 150, 260, 150, 260]; // [request name, submission date, business owner, test date, status]
+
   return (
     <div className="accessibility-requests-table">
       <Table bordered={false} {...getTableProps()} fullWidth>
@@ -199,14 +201,20 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                       <th
                         {...cell.getCellProps()}
                         scope="row"
-                        style={{ maxWidth: '16rem' }}
+                        style={{ width: '350px', maxWidth: '16em' }}
                       >
                         {cell.render('Cell')}
                       </th>
                     );
                   }
                   return (
-                    <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
+                    <td
+                      {...cell.getCellProps()}
+                      style={{
+                        width: `${tableColWidths[i]}px`,
+                        maxWidth: '16em'
+                      }}
+                    >
                       {cell.render('Cell')}
                     </td>
                   );
