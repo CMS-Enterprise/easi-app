@@ -48,9 +48,30 @@ services:
       - LD_ENV_USER
       - LAMBDA_FUNCTION_PRINCE=handler
       - LAMBDA_ENDPOINT=http://prince:9001
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_ADDRESS=http://minio:9000
       - SERVER_CERT
       - SERVER_KEY
     depends_on:
       - db_migrate
   easi_client:
     image: easi-frontend:latest
+  minio:
+    restart: always
+    image: minio/minio:latest
+    entrypoint: minio server /data
+    volumes:
+      - ./tmp/minio:/data
+  minio_mc:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    volumes:
+      - ./.minio/config.json:/root/.mc/config.json
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc rb --force local/easi-app-file-uploads/;
+      /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
+      /usr/bin/mc policy set public local/easi-app-file-uploads;
+      "
