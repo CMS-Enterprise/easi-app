@@ -16,16 +16,18 @@ import {
 } from 'constants/externalUrls';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
-import Create from 'views/Accessibility/AccessibilityRequest/Create';
-import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibilityRequest/Documents/New';
-import List from 'views/Accessibility/AccessibilityRequest/List';
-import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
-import AccessibilityTestingStepsOverview from 'views/Accessibility/AccessibilityTestingStepsOverview';
-import MakingARequest from 'views/Accessibility/MakingARequest';
-import TestingTemplates from 'views/Accessibility/TestingTemplates';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 import NewTestDateView from 'views/TestDate/NewTestDate';
 import UpdateTestDateView from 'views/TestDate/UpdateTestDate';
+
+import Create from './AccessibilityRequest/Create';
+import AccessibilityRequestsDocumentsNew from './AccessibilityRequest/Documents/New';
+import List from './AccessibilityRequest/List';
+import AccessibilityRequestDetailPage from './AccessibilityRequestDetailPage';
+import AccessibilityTestingStepsOverview from './AccessibilityTestingStepsOverview';
+import ChangeRequestStatus from './ChangeRequestStatus';
+import MakingARequest from './MakingARequest';
+import TestingTemplates from './TestingTemplates';
 
 const NewRequest = (
   <SecureRoute
@@ -93,11 +95,20 @@ const NewTestDate = (
   />
 );
 
+const RequestStatusChange = (
+  <SecureRoute
+    key="change-508-request-status"
+    path="/508/requests/:accessibilityRequestId/change-status"
+    component={ChangeRequestStatus}
+  />
+);
+
 const RequestDetails = (
   <SecureRoute
     key="508-request-detail"
     path="/508/requests/:accessibilityRequestId"
     component={AccessibilityRequestDetailPage}
+    exact
   />
 );
 
@@ -153,6 +164,7 @@ const Accessibility = () => {
             AllRequests,
             AccessibilityTestingOverview,
             MakingANewRequest,
+            RequestStatusChange,
             AccessibilityTestingTemplates,
             NewDocument,
             UpdateTestDate,

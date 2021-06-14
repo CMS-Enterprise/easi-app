@@ -183,6 +183,7 @@ type Request struct {
 	Name        *string     `json:"name"`
 	SubmittedAt *time.Time  `json:"submittedAt"`
 	Type        RequestType `json:"type"`
+	Status      string      `json:"status"`
 }
 
 type RequestEdge struct {
@@ -283,6 +284,20 @@ type SystemIntakeRequester struct {
 	Component *string `json:"component"`
 	Email     *string `json:"email"`
 	Name      string  `json:"name"`
+}
+
+// Parameters for updating a 508/accessibility request's status
+type UpdateAccessibilityRequestStatus struct {
+	RequestID uuid.UUID                         `json:"requestID"`
+	Status    models.AccessibilityRequestStatus `json:"status"`
+}
+
+// Result of updating an accessibiiity request's status
+type UpdateAccessibilityRequestStatusPayload struct {
+	ID         uuid.UUID                         `json:"id"`
+	RequestID  uuid.UUID                         `json:"requestID"`
+	Status     models.AccessibilityRequestStatus `json:"status"`
+	UserErrors []*UserError                      `json:"userErrors"`
 }
 
 type UpdateSystemIntakeAdminLeadInput struct {

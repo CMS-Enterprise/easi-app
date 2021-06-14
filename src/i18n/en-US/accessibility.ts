@@ -1,7 +1,17 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
+  statusMap: {
+    OPEN: 'Open',
+    IN_REMEDIATION: 'In remediation',
+    CLOSED: 'Closed'
+  },
   reportProblem: 'Report a problem (opens in a new tab)',
+  requestStatus: {
+    open: 'Open',
+    remediation: 'In Remediation',
+    closed: 'Closed'
+  },
   documentTable: {
     caption: 'Documents uploaded for',
     header: {
@@ -298,6 +308,15 @@ const accessibility = {
           'Download the Remediation Plan template as a PDF (opens in a new tab)'
       }
     }
+  },
+  updateRequestStatus: {
+    heading: 'Choose a status for {{-requestName}}',
+    statusFieldLegend: 'Choose a status for {{-requestName}}',
+    changeStatusDisclaimer:
+      'Changing the request status will send an email to all members of the 508 team letting them know about the new status.',
+    submit: 'Change status',
+    confirmation: 'Status has changed to {{-status}} for {{-requestName}}',
+    cancel: "Don't change status and return to request page"
   }
 };
 

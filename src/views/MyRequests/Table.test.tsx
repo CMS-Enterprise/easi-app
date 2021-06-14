@@ -52,7 +52,8 @@ describe('My Requests Table', () => {
                     id: '123',
                     name: '508 Test 1',
                     submittedAt: '2021-05-25T19:22:40Z',
-                    type: 'ACCESSIBILITY_REQUEST'
+                    type: 'ACCESSIBILITY_REQUEST',
+                    status: 'OPEN'
                   }
                 },
                 {
@@ -60,7 +61,8 @@ describe('My Requests Table', () => {
                     id: '456',
                     name: 'Intake 1',
                     submittedAt: '2021-05-22T19:22:40Z',
-                    type: 'GOVERNANCE_REQUEST'
+                    type: 'GOVERNANCE_REQUEST',
+                    status: 'INTAKE_DRAFT'
                   }
                 }
               ]
@@ -95,10 +97,11 @@ describe('My Requests Table', () => {
     it('displays headers', async () => {
       const component = await renderComponent();
       const headers = component.find('thead').find('th');
-      expect(headers.length).toEqual(3);
+      expect(headers.length).toEqual(4);
       expect(headers.at(0).text()).toEqual('Request name');
       expect(headers.at(1).text()).toEqual('Governance');
       expect(headers.at(2).text()).toEqual('Submission date');
+      expect(headers.at(3).text()).toEqual('Status');
     });
 
     it('displays rows of data', async () => {
@@ -112,6 +115,7 @@ describe('My Requests Table', () => {
       );
       expect(rowOne.find('td').at(0).text()).toEqual('Section 508');
       expect(rowOne.find('td').at(1).text()).toEqual('May 25 2021');
+      expect(rowOne.find('td').at(2).text()).toEqual('Open');
 
       const rowTwo = rows.at(1);
       expect(rowTwo.find('th').find('a').html()).toEqual(
@@ -119,6 +123,7 @@ describe('My Requests Table', () => {
       );
       expect(rowTwo.find('td').at(0).text()).toEqual('IT Governance');
       expect(rowTwo.find('td').at(1).text()).toEqual('May 22 2021');
+      expect(rowTwo.find('td').at(2).text()).toEqual('Intake draft');
     });
   });
 });
