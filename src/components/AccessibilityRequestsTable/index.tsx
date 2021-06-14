@@ -201,7 +201,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                       <th
                         {...cell.getCellProps()}
                         scope="row"
-                        style={{ width: '350px', maxWidth: '16em' }}
+                        style={{
+                          width: `${tableColWidths[0]}px`,
+                          maxWidth: '16em'
+                        }}
                       >
                         {cell.render('Cell')}
                       </th>
