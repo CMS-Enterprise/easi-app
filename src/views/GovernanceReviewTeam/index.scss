@@ -2,6 +2,12 @@
   &__request-summary {
     background-color: $easi-bright-blue;
     color: #fff;
+
+    // Overriding USWDS to change the Breadcrumb caret to white
+    // The BG color is blue so by default, there's not enough color contrast
+    .usa-breadcrumb__list-item:not(:last-child)::after {
+      background-color: #fff;
+    }
   }
 
   &__request-info {

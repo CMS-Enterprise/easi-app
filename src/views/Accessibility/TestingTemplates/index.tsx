@@ -1,10 +1,16 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from '@trussworks/react-uswds';
+import { Link } from 'react-router-dom';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Link as UswdsLink,
+  SummaryBox
+} from '@trussworks/react-uswds';
 
 import RemediationPlanDoc from 'assets/files/CMS508RemediationPlanTemplate_AppName-a.pdf';
 import TestPlanDoc from 'assets/files/Section508TestPlanTemplate_AppName-a.pdf';
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import PageHeading from 'components/PageHeading';
 
 import './index.scss';
@@ -36,17 +42,19 @@ const TestingTemplates = () => {
       <p className="margin-bottom-1">Page contents</p>
       <ul className="accessibility-testing-templates__table-of-contents">
         <li>
-          <Link href="#vpat">{t('testingTemplates.vpatSection.heading')}</Link>
+          <UswdsLink href="#vpat">
+            {t('testingTemplates.vpatSection.heading')}
+          </UswdsLink>
         </li>
         <li>
-          <Link href="#test-plan">
+          <UswdsLink href="#test-plan">
             {t('testingTemplates.testPlanSection.heading')}
-          </Link>
+          </UswdsLink>
         </li>
         <li>
-          <Link href="#remediation-plan">
+          <UswdsLink href="#remediation-plan">
             {t('testingTemplates.remediationPlanSection.heading')}
-          </Link>
+          </UswdsLink>
         </li>
       </ul>
     </div>
@@ -61,16 +69,16 @@ const TestingTemplates = () => {
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <div className="accessibility-testing-templates__downloadBox">
-        <h3 className="margin-top-0">
-          {t('testingTemplates.testPlanSection.download.heading')}
-        </h3>
-        <Link href={TestPlanDoc}>
+      <SummaryBox
+        heading={t('testingTemplates.testPlanSection.download.heading')}
+      >
+        <UswdsLink href={TestPlanDoc} target="_blank">
           {t('testingTemplates.testPlanSection.download.link')}
-        </Link>
-      </div>
+        </UswdsLink>
+      </SummaryBox>
     </div>
   );
+
   const remediationPlanSection = (
     <div>
       <h2 id="remediation-plan">
@@ -82,24 +90,24 @@ const TestingTemplates = () => {
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <div className="accessibility-testing-templates__downloadBox">
-        <h3 className="margin-top-0">
-          {t('testingTemplates.remediationPlanSection.download.heading')}
-        </h3>
-        <Link href={RemediationPlanDoc}>
+      <SummaryBox
+        heading={t('testingTemplates.remediationPlanSection.download.heading')}
+      >
+        <UswdsLink href={RemediationPlanDoc} target="_blank">
           {t('testingTemplates.remediationPlanSection.download.link')}
-        </Link>
-      </div>
+        </UswdsLink>
+      </SummaryBox>
     </div>
   );
 
   const downloadVPAT = (
-    <div className="accessibility-testing-templates__downloadBox">
-      <h3 className="margin-top-0">
-        {t('testingTemplates.vpatSection.subSection.downloadVPAT.heading')}
-      </h3>
+    <SummaryBox
+      heading={t(
+        'testingTemplates.vpatSection.subSection.downloadVPAT.heading'
+      )}
+    >
       <p>
-        <Link
+        <UswdsLink
           href="https://www.itic.org/policy/accessibility/vpat"
           target="_blank"
           rel="noopener noreferrer"
@@ -107,7 +115,7 @@ const TestingTemplates = () => {
           {t(
             'testingTemplates.vpatSection.subSection.downloadVPAT.line1.linkText'
           )}
-        </Link>
+        </UswdsLink>
         {` `}
         {t(
           'testingTemplates.vpatSection.subSection.downloadVPAT.line1.otherText'
@@ -119,7 +127,7 @@ const TestingTemplates = () => {
         {t('testingTemplates.vpatSection.subSection.downloadVPAT.line2.text')}
       </p>
       <p>
-        <Link
+        <UswdsLink
           href="https://www.youtube.com/watch?v=kAkSV9xiJ1A"
           target="_blank"
           rel="noopener noreferrer"
@@ -127,9 +135,9 @@ const TestingTemplates = () => {
           {t(
             'testingTemplates.vpatSection.subSection.downloadVPAT.line3.linkText'
           )}
-        </Link>
+        </UswdsLink>
       </p>
-    </div>
+    </SummaryBox>
   );
 
   const vpatSection = (
@@ -161,13 +169,15 @@ const TestingTemplates = () => {
 
   return (
     <div className="grid-container accessibility-testing-templates">
-      <BreadcrumbNav className="margin-y-2">
-        <li>
-          <Link href="/">Home</Link>
-          <i className="fa fa-angle-right margin-x-05" aria-hidden />
-        </li>
-        <li>Templates for 508 testing</li>
-      </BreadcrumbNav>
+      <BreadcrumbBar variant="wrap">
+        <Breadcrumb>
+          <BreadcrumbLink asCustom={Link} to="/">
+            <span>Home</span>
+          </BreadcrumbLink>
+        </Breadcrumb>
+        <Breadcrumb current>Templates for 508 testing</Breadcrumb>
+      </BreadcrumbBar>
+
       <div className="grid-row grid-gap-lg margin-top-6">
         <div className="grid-col-9 line-height-body-4">
           <div className="tablet:grid-col-10">
@@ -183,9 +193,9 @@ const TestingTemplates = () => {
         <div className="grid-col-3 accessibility-testing-templates__sidebar">
           <div>
             <h4>Need help? Contact the Section 508 team</h4>
-            <Link href="mailto:CMS_Section508@cms.hhs.gov">
+            <UswdsLink href="mailto:CMS_Section508@cms.hhs.gov">
               CMS_Section508@cms.hhs.gov
-            </Link>
+            </UswdsLink>
           </div>
         </div>
       </div>

@@ -109,6 +109,10 @@ func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *model
 	return r.store.FetchTestDatesByRequestID(ctx, obj.ID)
 }
 
+func (r *accessibilityRequestResolver) StatusRecord(ctx context.Context, obj *models.AccessibilityRequest) (*models.AccessibilityRequestStatusRecord, error) {
+	return r.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx, obj.ID)
+}
+
 func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
 	return &model.AccessibilityRequestDocumentType{
 		CommonType:           obj.CommonDocumentType,
@@ -328,6 +332,14 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
+	_, err = r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: request.ID,
+		Status:    models.AccessibilityRequestStatusOpen,
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	err = r.emailClient.SendNewAccessibilityRequestEmail(
 		ctx,
 		requesterInfo.CommonName,
@@ -473,6 +485,22 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 	}
 
 	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
+}
+
+func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error) {
+	statusRecord, err := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: input.RequestID,
+		Status:    input.Status,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateAccessibilityRequestStatusPayload{
+		RequestID:  statusRecord.ID,
+		Status:     statusRecord.Status,
+		UserErrors: nil,
+	}, nil
 }
 
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
@@ -797,6 +825,7 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 			SubmittedAt: request.SubmittedAt,
 			Name:        request.Name.Ptr(),
 			Type:        request.Type,
+			Status:      request.Status,
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,

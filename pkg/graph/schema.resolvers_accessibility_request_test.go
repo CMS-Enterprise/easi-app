@@ -39,6 +39,11 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	})
 	s.NoError(requestErr)
 
+	_, statusRecordErr := s.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: accessibilityRequest.ID,
+	})
+	s.NoError(statusRecordErr)
+
 	document, documentErr := s.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		RequestID:          accessibilityRequest.ID,
 		Name:               "uploaded_doc.pdf",
@@ -71,6 +76,10 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 				Size     int
 				Status   string
 			}
+			StatusRecord struct {
+				ID     string
+				Status string
+			}
 		}
 	}
 
@@ -97,6 +106,10 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 						component
 					}
 				}
+				statusRecord {
+					id
+					status
+				}
 			}
 		}`, accessibilityRequest.ID), &resp)
 
@@ -116,6 +129,9 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	s.Equal("PENDING", responseDocument.Status)
 	s.Equal("https://signed.example.com/signed/get/123", responseDocument.URL)
 	s.Equal("uploaded_doc.pdf", responseDocument.Name)
+
+	responseStatusRecord := resp.AccessibilityRequest.StatusRecord
+	s.Equal("OPEN", responseStatusRecord.Status)
 }
 
 func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
