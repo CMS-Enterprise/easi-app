@@ -217,7 +217,7 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.security.isApproved']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label margin-bottom-05">
+                    <legend className="usa-label">
                       Is your solution approved by IT Security for use at CMS
                       (FedRAMP, FISMA approved, within the CMS cloud enclave)?
                     </legend>
@@ -273,10 +273,7 @@ const PreferredSolution = ({
                       <legend className="usa-label margin-bottom-1">
                         Is it in the process of CMS approval?
                       </legend>
-                      <HelpText
-                        id="BusinessCase-PreferredSolutionApprovalHelp"
-                        className="margin-bottom-05"
-                      >
+                      <HelpText id="BusinessCase-PreferredSolutionApprovalHelp">
                         Obtaining CMS Approval can be lengthy and solutions that
                         do not have it or are just starting may lead to longer
                         project timelines.
@@ -331,7 +328,7 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.hosting.type']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label margin-bottom-05">
+                    <legend className="usa-label">
                       Do you need to host your solution?
                     </legend>
                     <FieldErrorMsg>
@@ -487,7 +484,7 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.hasUserInterface']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label margin-bottom-05">
+                    <legend className="usa-label">
                       Will your solution have a User Interface?
                     </legend>
                     <FieldErrorMsg>
