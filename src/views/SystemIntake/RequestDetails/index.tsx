@@ -214,10 +214,7 @@ const RequestDetails = ({
                     <legend className="usa-label margin-bottom-1">
                       Does your request need Enterprise Architecture support?
                     </legend>
-                    <HelpText
-                      id="IntakeForm-EAHelp"
-                      className="margin-bottom-05"
-                    >
+                    <HelpText id="IntakeForm-EAHelp">
                       If you are unsure, mark &quot;Yes&quot; and someone from
                       the EA team will assess your needs.
                     </HelpText>

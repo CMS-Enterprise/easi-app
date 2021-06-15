@@ -143,10 +143,7 @@ const ContractDetails = ({
                       Will this project be funded out of an existing funding
                       source?
                     </legend>
-                    <HelpText
-                      id="Intake-Form-ExistingFundingHelp"
-                      className="margin-bottom-05"
-                    >
+                    <HelpText id="Intake-Form-ExistingFundingHelp">
                       If you are unsure, please get in touch with your
                       Contracting Officer Representative
                     </HelpText>
@@ -284,10 +281,7 @@ const ContractDetails = ({
                       Do the costs for this request exceed what you are
                       currently spending to meet your business need?
                     </legend>
-                    <HelpText
-                      id="IntakeForm-IncreasedCostsHelp"
-                      className="margin-bottom-05"
-                    >
+                    <HelpText id="IntakeForm-IncreasedCostsHelp">
                       This information helps the team decide on the right
                       approval process for this request
                     </HelpText>
@@ -372,10 +366,7 @@ const ContractDetails = ({
                       Do you already have a contract in place to support this
                       effort?
                     </legend>
-                    <HelpText
-                      id="IntakeForm-HasContractHelp"
-                      className="margin-bottom-05"
-                    >
+                    <HelpText id="IntakeForm-HasContractHelp">
                       This information helps the Office of Acquisition and
                       Grants Management (OAGM) track work
                     </HelpText>
