@@ -368,10 +368,7 @@ const ContactDetails = ({
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.isso.label')}
                     </legend>
-                    <HelpText
-                      id="IntakeForm-ISSOHelp"
-                      className="margin-bottom-05"
-                    >
+                    <HelpText id="IntakeForm-ISSOHelp">
                       {t('contactDetails.isso.helpText')}
                     </HelpText>
                     <FieldErrorMsg>
@@ -436,10 +433,7 @@ const ContactDetails = ({
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.collaboration.label')}
                     </legend>
-                    <HelpText
-                      id="IntakeForm-Collaborators"
-                      className="margin-bottom-05"
-                    >
+                    <HelpText id="IntakeForm-Collaborators">
                       {t('contactDetails.collaboration.helpText')}
                     </HelpText>
                     <FieldErrorMsg>
