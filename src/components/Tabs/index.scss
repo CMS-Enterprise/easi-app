@@ -66,9 +66,10 @@
   &__tab-panel {
     overflow: auto;
     border-top: 1px solid color($theme-color-base-lighter);
-  }
 
-  &__tab-panel-border {
-    border: 1px solid color($theme-color-base-lighter);
+    &--bordered {
+      border: 1px solid color($theme-color-base-lighter);
+
+    }
   }
 }

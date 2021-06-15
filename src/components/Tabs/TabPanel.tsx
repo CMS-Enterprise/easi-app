@@ -6,7 +6,7 @@ type TabPanelProps = {
   tabName: string;
   children: React.ReactNode;
   isActive?: boolean;
-  hasBorder?: boolean;
+  bordered?: boolean;
 };
 
 /**
@@ -19,11 +19,11 @@ const TabPanel = ({
   tabName,
   isActive,
   children,
-  hasBorder
+  bordered
 }: TabPanelProps) => {
   const classes = classnames('easi-tabs__tab-panel', {
     'easi-only-print': !isActive,
-    'easi-tabs__tab-panel-border': hasBorder
+    'easi-tabs__tab-panel--bordered': bordered
   });
 
   return (
