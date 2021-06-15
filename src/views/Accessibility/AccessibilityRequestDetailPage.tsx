@@ -14,9 +14,14 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
+import CreateAccessibilityNoteQuery from 'queries/CreateAccessibilityNoteQuery';
 import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
 import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
+import {
+  CreateAccessibilityNote,
+  CreateAccessibilityNoteVariables
+} from 'queries/types/CreateAccessibilityNote';
 import {
   DeleteAccessibilityRequest,
   DeleteAccessibilityRequestVariables
@@ -39,11 +44,17 @@ import Alert from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
+import TextAreaField from 'components/shared/TextAreaField';
+import { TabPanel, Tabs } from 'components/Tabs';
 import TestDateCard from 'components/TestDateCard';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
-import { DeleteAccessibilityRequestForm } from 'types/accessibility';
+import {
+  CreateNoteForm,
+  DeleteAccessibilityRequestForm
+} from 'types/accessibility';
 import { AccessibilityRequestDeletionReason } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
@@ -71,15 +82,19 @@ const AccessibilityRequestDetailPage = () => {
       id: accessibilityRequestId
     }
   });
-  const [mutate] = useMutation<
+  const [mutateDeleteRequest] = useMutation<
     DeleteAccessibilityRequest,
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
+  const [mutateCreateNote] = useMutation<
+    CreateAccessibilityNote,
+    CreateAccessibilityNoteVariables
+  >(CreateAccessibilityNoteQuery);
 
   const userEuaId = useSelector((state: AppState) => state.auth.euaId);
 
   const removeRequest = (values: DeleteAccessibilityRequestForm) => {
-    mutate({
+    mutateDeleteRequest({
       variables: {
         input: {
           id: accessibilityRequestId,
@@ -95,6 +110,19 @@ const AccessibilityRequestDetailPage = () => {
         );
         history.push('/');
       }
+    });
+  };
+
+  const createNote = (values: CreateNoteForm) => {
+    mutateCreateNote({
+      variables: {
+        input: {
+          requestID: accessibilityRequestId,
+          note: values.noteText
+        }
+      }
+    }).then(response => {
+      showMessage('eyy you made a note!');
     });
   };
 
@@ -215,6 +243,63 @@ const AccessibilityRequestDetailPage = () => {
       {uploadDocumentLink}
     </>
   );
+  const documentsTab = hasDocuments ? bodyWithDocuments : bodyNoDocuments;
+
+  const notesTab = (
+    <Formik
+      initialValues={{
+        noteText: ''
+      }}
+      onSubmit={createNote}
+      validationSchema={accessibilitySchema.noteForm}
+      validateOnBlur={false}
+      validateOnChange={false}
+      validateOnMount={false}
+    >
+      {(formikProps: FormikProps<CreateNoteForm>) => {
+        const { errors } = formikProps;
+        const flatErrors = flattenErrors(errors);
+        return (
+          <>
+            {Object.keys(errors).length > 0 && (
+              <ErrorAlert
+                testId="create-accessibility-note-errors"
+                classNames="margin-bottom-4 margin-top-4"
+                heading="There is a problem"
+              >
+                {Object.keys(flatErrors).map(key => {
+                  return (
+                    <ErrorAlertMessage
+                      key={`Error.${key}`}
+                      errorKey={key}
+                      message={flatErrors[key]}
+                    />
+                  );
+                })}
+              </ErrorAlert>
+            )}
+            <Form className="usa-form usa-form--large">
+              <FieldGroup>
+                <Label htmlFor="CreateAccessibilityNote-NoteText">
+                  {t('requestDetails.notes.addNote')}
+                </Label>
+                <Field
+                  as={TextAreaField}
+                  id="CreateAccessibilityNote-NoteText"
+                  maxLength={2000}
+                  className="accessibility-request__note-field"
+                  name="noteText"
+                />
+              </FieldGroup>
+              <Button className="margin-top-2" type="submit">
+                {t('requestDetails.notes.submit')}
+              </Button>
+            </Form>
+          </>
+        );
+      }}
+    </Formik>
+  );
 
   if (loading) {
     return <div>Loading</div>;
@@ -279,7 +364,18 @@ const AccessibilityRequestDetailPage = () => {
       <div className="grid-container margin-top-2 padding-top-6 padding-top">
         <div className="grid-row grid-gap-lg">
           <div className="grid-col-8">
-            {hasDocuments ? bodyWithDocuments : bodyNoDocuments}
+            {isAccessibilityTeam ? (
+              <Tabs>
+                <TabPanel id="Documents" tabName="Documents">
+                  <div className="margin-top-2">{documentsTab}</div>
+                </TabPanel>
+                <TabPanel id="Notes" tabName="Notes">
+                  <div className="margin-x-1">{notesTab}</div>
+                </TabPanel>
+              </Tabs>
+            ) : (
+              documentsTab
+            )}
           </div>
           <div className="grid-col-1" />
           <div className="grid-col-3">
