@@ -213,10 +213,7 @@ const ContactDetails = ({
                   >
                     {t('contactDetails.businessOwner.name')}
                   </Label>
-                  <HelpText
-                    id="IntakeForm-BusinessOwnerHelp"
-                    className="margin-bottom-105"
-                  >
+                  <HelpText id="IntakeForm-BusinessOwnerHelp">
                     {t('contactDetails.businessOwner.helpText')}
                   </HelpText>
                   <Field
@@ -294,10 +291,7 @@ const ContactDetails = ({
                   >
                     {t('contactDetails.productManager.name')}
                   </Label>
-                  <HelpText
-                    id="IntakeForm-ProductManagerHelp"
-                    className="margin-bottom-105"
-                  >
+                  <HelpText id="IntakeForm-ProductManagerHelp">
                     {t('contactDetails.productManager.helpText')}
                   </HelpText>
                   <Field
@@ -376,7 +370,7 @@ const ContactDetails = ({
                     </legend>
                     <HelpText
                       id="IntakeForm-ISSOHelp"
-                      className="margin-bottom-2"
+                      className="margin-bottom-05"
                     >
                       {t('contactDetails.isso.helpText')}
                     </HelpText>
@@ -438,13 +432,13 @@ const ContactDetails = ({
                   scrollElement="governanceTeams.isPresent"
                   error={!!flatErrors['governanceTeams.isPresent']}
                 >
-                  <fieldset className="usa-fieldset margin-top-3">
+                  <fieldset className="usa-fieldset margin-top-3 margin-bottom-105">
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.collaboration.label')}
                     </legend>
                     <HelpText
                       id="IntakeForm-Collaborators"
-                      className="margin-bottom-2"
+                      className="margin-bottom-05"
                     >
                       {t('contactDetails.collaboration.helpText')}
                     </HelpText>
@@ -468,6 +462,7 @@ const ContactDetails = ({
                       <FieldGroup
                         scrollElement="governanceTeams.teams"
                         error={!!flatErrors['governanceTeams.teams']}
+                        className="margin-top-105"
                       >
                         <FieldErrorMsg>
                           {flatErrors['governanceTeams.teams']}
