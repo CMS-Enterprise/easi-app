@@ -22,7 +22,8 @@ const accessibility = {
         'You will not be able to access this document after it is removed.',
       proceedButton: 'Remove document',
       declineButton: 'Keep document'
-    }
+    },
+    noDocuments: 'No documents added to request yet.'
   },
   requestTable: {
     caption: 'List of 508 requests',

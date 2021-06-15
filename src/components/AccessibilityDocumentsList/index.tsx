@@ -119,6 +119,9 @@ const AccessibilityDocumentsList = ({
     }
   });
 
+  if (documents.length === 0) {
+    return <div>{t('documentTable.noDocuments')}</div>;
+  }
   return (
     <>
       <Table bordered={false} {...getTableProps()} fullWidth>
