@@ -122,7 +122,7 @@ const AccessibilityRequestDetailPage = () => {
         }
       }
     }).then(response => {
-      showMessage('eyy you made a note!');
+      showMessage(t('requestDetails.notes.confirmation', { requestName }));
     });
   };
 
@@ -246,59 +246,61 @@ const AccessibilityRequestDetailPage = () => {
   const documentsTab = hasDocuments ? bodyWithDocuments : bodyNoDocuments;
 
   const notesTab = (
-    <Formik
-      initialValues={{
-        noteText: ''
-      }}
-      onSubmit={createNote}
-      validationSchema={accessibilitySchema.noteForm}
-      validateOnBlur={false}
-      validateOnChange={false}
-      validateOnMount={false}
-    >
-      {(formikProps: FormikProps<CreateNoteForm>) => {
-        const { errors } = formikProps;
-        const flatErrors = flattenErrors(errors);
-        return (
-          <>
-            {Object.keys(errors).length > 0 && (
-              <ErrorAlert
-                testId="create-accessibility-note-errors"
-                classNames="margin-bottom-4 margin-top-4"
-                heading="There is a problem"
-              >
-                {Object.keys(flatErrors).map(key => {
-                  return (
-                    <ErrorAlertMessage
-                      key={`Error.${key}`}
-                      errorKey={key}
-                      message={flatErrors[key]}
-                    />
-                  );
-                })}
-              </ErrorAlert>
-            )}
-            <Form className="usa-form usa-form--large">
-              <FieldGroup>
-                <Label htmlFor="CreateAccessibilityNote-NoteText">
-                  {t('requestDetails.notes.addNote')}
-                </Label>
-                <Field
-                  as={TextAreaField}
-                  id="CreateAccessibilityNote-NoteText"
-                  maxLength={2000}
-                  className="accessibility-request__note-field"
-                  name="noteText"
-                />
-              </FieldGroup>
-              <Button className="margin-top-2" type="submit">
-                {t('requestDetails.notes.submit')}
-              </Button>
-            </Form>
-          </>
-        );
-      }}
-    </Formik>
+    <div className="margin-y-2 margin-x-1">
+      <Formik
+        initialValues={{
+          noteText: ''
+        }}
+        onSubmit={createNote}
+        validationSchema={accessibilitySchema.noteForm}
+        validateOnBlur={false}
+        validateOnChange={false}
+        validateOnMount={false}
+      >
+        {(formikProps: FormikProps<CreateNoteForm>) => {
+          const { errors } = formikProps;
+          const flatErrors = flattenErrors(errors);
+          return (
+            <>
+              {Object.keys(errors).length > 0 && (
+                <ErrorAlert
+                  testId="create-accessibility-note-errors"
+                  classNames="margin-bottom-4 margin-top-4"
+                  heading="There is a problem"
+                >
+                  {Object.keys(flatErrors).map(key => {
+                    return (
+                      <ErrorAlertMessage
+                        key={`Error.${key}`}
+                        errorKey={key}
+                        message={flatErrors[key]}
+                      />
+                    );
+                  })}
+                </ErrorAlert>
+              )}
+              <Form className="usa-form usa-form--large">
+                <FieldGroup>
+                  <Label htmlFor="CreateAccessibilityNote-NoteText">
+                    {t('requestDetails.notes.addNote')}
+                  </Label>
+                  <Field
+                    as={TextAreaField}
+                    id="CreateAccessibilityNote-NoteText"
+                    maxLength={2000}
+                    className="accessibility-request__note-field"
+                    name="noteText"
+                  />
+                </FieldGroup>
+                <Button className="margin-top-2" type="submit">
+                  {t('requestDetails.notes.submit')}
+                </Button>
+              </Form>
+            </>
+          );
+        }}
+      </Formik>
+    </div>
   );
 
   if (loading) {
@@ -370,7 +372,7 @@ const AccessibilityRequestDetailPage = () => {
                   <div className="margin-top-2">{documentsTab}</div>
                 </TabPanel>
                 <TabPanel id="Notes" tabName="Notes">
-                  <div className="margin-x-1">{notesTab}</div>
+                  {notesTab}
                 </TabPanel>
               </Tabs>
             ) : (

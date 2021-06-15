@@ -56,7 +56,8 @@ const accessibility = {
     },
     notes: {
       addNote: 'Add a note',
-      submit: 'Add note'
+      submit: 'Add note',
+      confirmation: 'Note added to {{-requestName}}'
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
