@@ -9,6 +9,7 @@ import classnames from 'classnames';
 import { DateTime } from 'luxon';
 import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
+import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 
 import './index.scss';
@@ -34,7 +35,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             </UswdsLink>
           );
         },
-        maxWidth: 350
+        maxWidth: 350,
+        width: 350
       },
       {
         Header: t('requestTable.header.submissionDate'),
@@ -59,23 +61,14 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           }
           return t('requestTable.emptyTestDate');
         }
+      },
+      {
+        Header: t('requestTable.header.status'),
+        accessor: 'status',
+        Cell: ({ value }: any) => {
+          return value;
+        }
       }
-      // {
-      //   Header: t('requestTable.header.status'),
-      //   accessor: 'status',
-      //   Cell: ({ row, value }: any) => {
-      //     const date = DateTime.fromISO(row.original.updatedAt).toLocaleString(
-      //       DateTime.DATE_FULL
-      //     );
-      //     return (
-      //       <>
-      //         <strong>{value}</strong>
-      //         <br />
-      //         <span>{`${t('requestTable.lastUpdated')} ${date}`}</span>
-      //       </>
-      //     );
-      //   }
-      // }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -89,13 +82,16 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       const testDate = request.relevantTestDate?.date
         ? DateTime.fromISO(request.relevantTestDate?.date)
         : null;
+      const status =
+        accessibilityRequestStatusMap[`${request.statusRecord.status}`];
 
       return {
         id: request.id,
         requestName: request.name,
         submittedAt,
         businessOwner,
-        relevantTestDate: testDate
+        relevantTestDate: testDate,
+        status
       };
     });
 
@@ -168,9 +164,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
                 <th
-                  {...column.getHeaderProps()}
+                  {...column.getHeaderProps({
+                    style: { width: column.width, whiteSpace: 'nowrap' }
+                  })}
                   aria-sort={getColumnSortStatus(column)}
-                  style={{ whiteSpace: 'nowrap' }}
                   scope="col"
                 >
                   <button
@@ -202,16 +199,21 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                   if (i === 0) {
                     return (
                       <th
-                        {...cell.getCellProps()}
+                        {...cell.getCellProps({
+                          style: { width: cell.column.width, maxWidth: '16em' }
+                        })}
                         scope="row"
-                        style={{ maxWidth: '16rem' }}
                       >
                         {cell.render('Cell')}
                       </th>
                     );
                   }
                   return (
-                    <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
+                    <td
+                      {...cell.getCellProps({
+                        style: { width: cell.column.width, maxWidth: '16em' }
+                      })}
+                    >
                       {cell.render('Cell')}
                     </td>
                   );
