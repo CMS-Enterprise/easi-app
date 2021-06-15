@@ -288,7 +288,6 @@ const New = () => {
                                 <Label
                                   htmlFor="FileUpload-OtherType"
                                   className="margin-bottom-1"
-                                  style={{ marginTop: '0.5em' }}
                                 >
                                   Document name
                                 </Label>
