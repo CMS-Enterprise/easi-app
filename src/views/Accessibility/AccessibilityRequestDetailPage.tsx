@@ -172,7 +172,7 @@ const AccessibilityRequestDetailPage = () => {
       variant="unstyled"
       asCustom={Link}
       to={`/508/requests/${accessibilityRequestId}/documents/new`}
-      data-testid="Upload-New-Document"
+      data-testid="upload-new-document"
     >
       {t('requestDetails.documentUpload')}
     </UswdsLink>
