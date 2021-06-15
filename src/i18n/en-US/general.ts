@@ -13,7 +13,8 @@ const general = {
     anythingWrong: 'Is there anything wrong on this page? (opens in a new tab)'
   },
   edit: 'Edit',
-  remove: 'Remove'
+  remove: 'Remove',
+  pageLoading: 'Loading the page'
 };
 
 export default general;
