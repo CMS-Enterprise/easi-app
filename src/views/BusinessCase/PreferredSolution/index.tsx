@@ -217,7 +217,7 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.security.isApproved']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label margin-bottom-1">
+                    <legend className="usa-label margin-bottom-05">
                       Is your solution approved by IT Security for use at CMS
                       (FedRAMP, FISMA approved, within the CMS cloud enclave)?
                     </legend>
@@ -275,7 +275,7 @@ const PreferredSolution = ({
                       </legend>
                       <HelpText
                         id="BusinessCase-PreferredSolutionApprovalHelp"
-                        className="margin-bottom-1"
+                        className="margin-bottom-05"
                       >
                         Obtaining CMS Approval can be lengthy and solutions that
                         do not have it or are just starting may lead to longer
@@ -331,7 +331,7 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.hosting.type']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label margin-bottom-1">
+                    <legend className="usa-label margin-bottom-05">
                       Do you need to host your solution?
                     </legend>
                     <FieldErrorMsg>
@@ -362,7 +362,7 @@ const PreferredSolution = ({
                     {values.preferredSolution.hosting.type === 'cloud' && (
                       <>
                         <FieldGroup
-                          className="margin-top-neg-2 margin-bottom-1 margin-left-4"
+                          className="margin-y-1 margin-left-4"
                           scrollElement="preferredSolution.hosting.location"
                           error={
                             !!flatErrors['preferredSolution.hosting.location']
@@ -385,7 +385,7 @@ const PreferredSolution = ({
                           />
                         </FieldGroup>
                         <FieldGroup
-                          className="margin-top-neg-2 margin-bottom-1 margin-left-4"
+                          className="margin-y-1 margin-left-4"
                           scrollElement="preferredSolution.hosting.cloudServiceType"
                           error={
                             !!flatErrors[
@@ -441,7 +441,7 @@ const PreferredSolution = ({
                     />
                     {values.preferredSolution.hosting.type === 'dataCenter' && (
                       <FieldGroup
-                        className="margin-top-neg-2 margin-bottom-1 margin-left-4"
+                        className="margin-yx-1 margin-left-4"
                         scrollElement="preferredSolution.hosting.location"
                         error={
                           !!flatErrors['preferredSolution.hosting.location']
@@ -487,7 +487,7 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.hasUserInterface']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label margin-bottom-1">
+                    <legend className="usa-label margin-bottom-05">
                       Will your solution have a User Interface?
                     </legend>
                     <FieldErrorMsg>
