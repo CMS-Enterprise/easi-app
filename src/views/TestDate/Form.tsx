@@ -227,7 +227,6 @@ const TestDateForm = ({
                             <Label
                               htmlFor="TestDate-ScoreValue"
                               className="margin-bottom-1"
-                              style={{ marginTop: '0.5em' }}
                               aria-label={t(
                                 'testDateForm.scoreValueSRHelpText'
                               )}
