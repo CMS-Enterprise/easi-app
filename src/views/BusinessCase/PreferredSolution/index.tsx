@@ -385,7 +385,7 @@ const PreferredSolution = ({
                           />
                         </FieldGroup>
                         <FieldGroup
-                          className="margin-y-1 margin-left-4"
+                          className="margin-bottom-1 margin-left-4"
                           scrollElement="preferredSolution.hosting.cloudServiceType"
                           error={
                             !!flatErrors[

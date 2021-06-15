@@ -260,7 +260,7 @@ const AlternativeSolutionFields = ({
                   />
                 </FieldGroup>
                 <FieldGroup
-                  className="margin-y-1 margin-left-4"
+                  className="margin-bottom-1 margin-left-4"
                   scrollElement={`${altId}.hosting.cloudServiceType`}
                   error={!!flatErrors[`${altId}.hosting.cloudServiceType`]}
                 >
