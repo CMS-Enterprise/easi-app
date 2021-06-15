@@ -52,6 +52,8 @@ services:
   minio:
     ports:
       - '9000:9000'
+    volumes:
+      - ./tmp/minio:/data
   prince:
     image: lambci/lambda:go1.x
     ports:
