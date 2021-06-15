@@ -10,7 +10,7 @@ import {
   Button,
   Link as UswdsLink
 } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
@@ -113,7 +113,10 @@ const AccessibilityRequestDetailPage = () => {
     });
   };
 
-  const createNote = (values: CreateNoteForm) => {
+  const createNote = (
+    values: CreateNoteForm,
+    { resetForm }: FormikHelpers<CreateNoteForm>
+  ) => {
     mutateCreateNote({
       variables: {
         input: {
@@ -123,6 +126,7 @@ const AccessibilityRequestDetailPage = () => {
       }
     }).then(response => {
       showMessage(t('requestDetails.notes.confirmation', { requestName }));
+      resetForm({});
     });
   };
 
