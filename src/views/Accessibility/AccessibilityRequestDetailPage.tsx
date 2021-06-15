@@ -295,10 +295,12 @@ const AccessibilityRequestDetailPage = () => {
                     <Label htmlFor="CreateAccessibilityNote-NoteText">
                       {t('requestDetails.notes.addNote')}
                     </Label>
+                    <FieldErrorMsg>{flatErrors.noteText}</FieldErrorMsg>
                     <Field
                       as={TextAreaField}
                       id="CreateAccessibilityNote-NoteText"
                       maxLength={2000}
+                      error={!!flatErrors.noteText}
                       className="accessibility-request__note-field"
                       name="noteText"
                     />
