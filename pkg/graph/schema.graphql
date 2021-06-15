@@ -59,6 +59,7 @@ type AccessibilityRequestStatusRecord {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+  euaUserId: String!
 }
 
 """
@@ -76,6 +77,7 @@ type UpdateAccessibilityRequestStatusPayload {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+  euaUserId: String!
   userErrors: [UserError!]
 }
 
