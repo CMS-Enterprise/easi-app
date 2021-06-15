@@ -250,61 +250,67 @@ const AccessibilityRequestDetailPage = () => {
   const documentsTab = hasDocuments ? bodyWithDocuments : bodyNoDocuments;
 
   const notesTab = (
-    <div className="margin-y-2 margin-x-1">
-      <Formik
-        initialValues={{
-          noteText: ''
-        }}
-        onSubmit={createNote}
-        validationSchema={accessibilitySchema.noteForm}
-        validateOnBlur={false}
-        validateOnChange={false}
-        validateOnMount={false}
+    <>
+      <div
+        role="region"
+        aria-label="add new note"
+        className="margin-y-2 margin-x-1"
       >
-        {(formikProps: FormikProps<CreateNoteForm>) => {
-          const { errors } = formikProps;
-          const flatErrors = flattenErrors(errors);
-          return (
-            <>
-              {Object.keys(errors).length > 0 && (
-                <ErrorAlert
-                  testId="create-accessibility-note-errors"
-                  classNames="margin-bottom-4 margin-top-4"
-                  heading="There is a problem"
-                >
-                  {Object.keys(flatErrors).map(key => {
-                    return (
-                      <ErrorAlertMessage
-                        key={`Error.${key}`}
-                        errorKey={key}
-                        message={flatErrors[key]}
-                      />
-                    );
-                  })}
-                </ErrorAlert>
-              )}
-              <Form className="usa-form usa-form--large">
-                <FieldGroup>
-                  <Label htmlFor="CreateAccessibilityNote-NoteText">
-                    {t('requestDetails.notes.addNote')}
-                  </Label>
-                  <Field
-                    as={TextAreaField}
-                    id="CreateAccessibilityNote-NoteText"
-                    maxLength={2000}
-                    className="accessibility-request__note-field"
-                    name="noteText"
-                  />
-                </FieldGroup>
-                <Button className="margin-top-2" type="submit">
-                  {t('requestDetails.notes.submit')}
-                </Button>
-              </Form>
-            </>
-          );
-        }}
-      </Formik>
-    </div>
+        <Formik
+          initialValues={{
+            noteText: ''
+          }}
+          onSubmit={createNote}
+          validationSchema={accessibilitySchema.noteForm}
+          validateOnBlur={false}
+          validateOnChange={false}
+          validateOnMount={false}
+        >
+          {(formikProps: FormikProps<CreateNoteForm>) => {
+            const { errors } = formikProps;
+            const flatErrors = flattenErrors(errors);
+            return (
+              <>
+                {Object.keys(errors).length > 0 && (
+                  <ErrorAlert
+                    testId="create-accessibility-note-errors"
+                    classNames="margin-bottom-4 margin-top-4"
+                    heading="There is a problem"
+                  >
+                    {Object.keys(flatErrors).map(key => {
+                      return (
+                        <ErrorAlertMessage
+                          key={`Error.${key}`}
+                          errorKey={key}
+                          message={flatErrors[key]}
+                        />
+                      );
+                    })}
+                  </ErrorAlert>
+                )}
+                <Form className="usa-form usa-form--large">
+                  <FieldGroup>
+                    <Label htmlFor="CreateAccessibilityNote-NoteText">
+                      {t('requestDetails.notes.addNote')}
+                    </Label>
+                    <Field
+                      as={TextAreaField}
+                      id="CreateAccessibilityNote-NoteText"
+                      maxLength={2000}
+                      className="accessibility-request__note-field"
+                      name="noteText"
+                    />
+                  </FieldGroup>
+                  <Button className="margin-top-2" type="submit">
+                    {t('requestDetails.notes.submit')}
+                  </Button>
+                </Form>
+              </>
+            );
+          }}
+        </Formik>
+      </div>
+    </>
   );
 
   if (loading) {
