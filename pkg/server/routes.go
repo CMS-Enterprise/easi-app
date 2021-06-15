@@ -246,10 +246,6 @@ func (s *Server) routes(
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,
-		services.NewCreateSystemIntake(
-			serviceConfig,
-			store.CreateSystemIntake,
-		),
 		services.NewUpdateSystemIntake(
 			serviceConfig,
 			store.FetchSystemIntakeByID,

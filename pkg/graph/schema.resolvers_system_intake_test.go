@@ -11,6 +11,43 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+func (s GraphQLTestSuite) TestCreateSystemIntakeMutation() {
+	var resp struct {
+		CreateSystemIntake struct {
+			ID          string
+			Status      string
+			RequestType string
+			Requester   struct {
+				Name string
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(
+		`mutation {
+			createSystemIntake(input: {
+				requestType: NEW,
+				requester: {
+					name: "Test User"
+				}
+			}) {
+				id
+				status
+				requestType
+				requester {
+					name
+				}
+			}
+		}`, &resp)
+
+	s.NotNil(resp.CreateSystemIntake.ID)
+	s.Equal("Test User", resp.CreateSystemIntake.Requester.Name)
+	s.Equal("INTAKE_DRAFT", resp.CreateSystemIntake.Status)
+	s.Equal("NEW", resp.CreateSystemIntake.RequestType)
+}
+
 func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 	ctx := context.Background()
 	projectName := "Big Project"
