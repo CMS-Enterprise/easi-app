@@ -2961,10 +2961,10 @@
   dependencies:
     "@babel/runtime" "^7.11.2"
 
-"@okta/okta-signin-widget@^5.4.1":
-  version "5.4.2"
-  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-5.4.2.tgz#30b13db1fd3a4c85e8229e9a05616cd2fae28060"
-  integrity sha512-XXyaVywRTjlY8G7YJAqz5AtaDRJlUp+OkyOtvxLRju0sGnpwLMlD/Pyt6cJNuH42iKmNMi1iEBVoKyA4vWqREg==
+"@okta/okta-signin-widget@^5.7.1":
+  version "5.7.1"
+  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-5.7.1.tgz#03a8e6acce6a32bdfaab0eb27d5f397d51aa3fc7"
+  integrity sha512-XFiCz3uzDSe2Aw4LHMs8mPLEHyXXq3qjdt2Xk4BsPz3VDGhx2muVNu/YutLhZ0nirSQ+XtJoTYu3iqp1D/LPqw==
   dependencies:
     "@babel/polyfill" "^7.10.1"
     "@babel/runtime" "^7.10.3"
@@ -2972,7 +2972,7 @@
     handlebars "^4.5.3"
     q "1.4.1"
     u2f-api-polyfill "0.4.3"
-    underscore "1.8.3"
+    underscore "1.13.1"
   optionalDependencies:
     fsevents "*"
 
@@ -19360,10 +19360,10 @@ undeclared-identifiers@^1.1.2:
     simple-concat "^1.0.0"
     xtend "^4.0.1"
 
-underscore@1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.8.3.tgz#4f3fb53b106e6097fcf9cb4109f2a5e9bdfa5022"
-  integrity sha1-Tz+1OxBuYJf8+ctBCfKl6b36UCI=
+underscore@1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.1.tgz#0c1c6bd2df54b6b69f2314066d65b6cde6fcf9d1"
+  integrity sha512-hzSoAVtJF+3ZtiFX0VgfFPHEDRm7Y/QPjGyNo4TVdnDTdft3tr8hEkD25a1jC+TjTuE7tkHGKkhwCgs9dgBB2g==
 
 unfetch@^4.1.0:
   version "4.2.0"
