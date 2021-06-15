@@ -130,7 +130,7 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.security.isApproved`]}
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label margin-bottom-05">
+            <legend className="usa-label">
               Is your solution approved by IT Security for use at CMS (FedRAMP,
               FISMA approved, within the CMS cloud enclave)?
             </legend>
@@ -173,10 +173,7 @@ const AlternativeSolutionFields = ({
               <legend className="usa-label margin-bottom-1">
                 Is it in the process of CMS approval?
               </legend>
-              <HelpText
-                id={`BusinessCase-${altId}SecurityReviewHelp`}
-                className="margin-bottom-05"
-              >
+              <HelpText id={`BusinessCase-${altId}SecurityReviewHelp`}>
                 Obtaining CMS Approval can be lengthy and solutions that do not
                 have it or are just starting may lead to longer project
                 timelines.
@@ -220,7 +217,7 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.hosting.type`]}
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label margin-bottom-05">
+            <legend className="usa-label">
               Do you need to host your solution?
             </legend>
             <FieldErrorMsg>{flatErrors[`${altId}.hosting.type`]}</FieldErrorMsg>
@@ -336,7 +333,7 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.hasUserInterface`]}
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label margin-bottom-05">
+            <legend className="usa-label">
               Will your solution have a User Interface?
             </legend>
             <FieldErrorMsg>
