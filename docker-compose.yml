@@ -68,7 +68,9 @@ services:
     depends_on:
       - minio
     volumes:
-      - ./.minio/config.json:/root/.mc/config.json
+      - type: bind
+        source: .minio/config.json
+        target: /root/.mc/config.json
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc rb --force local/easi-app-file-uploads/;
