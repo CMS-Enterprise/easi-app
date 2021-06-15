@@ -52,7 +52,7 @@ const Phase = ({
               <FieldErrorMsg>
                 {typeof errors === 'string' ? errors : ''}
               </FieldErrorMsg>
-              <legend className={classnames('usa-label', 'margin-bottom-1')}>
+              <legend className={classnames('usa-label', 'margin-bottom-05')}>
                 {`Fiscal year ${fiscalYear} phase costs`}
               </legend>
 
