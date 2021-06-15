@@ -28,12 +28,14 @@ func (s *Store) CreateAccessibilityRequestStatusRecord(ctx context.Context, stat
 			INSERT INTO accessibility_request_status_records (
 				id,
 				request_id,
-				status
+				status,
+				eua_user_id
 			)
 			VALUES (
 				:id,
 				:request_id,
-				:status
+				:status,
+				:eua_user_id
 			)`
 	_, err := s.db.NamedExec(
 		createStatusRecordSQL,
