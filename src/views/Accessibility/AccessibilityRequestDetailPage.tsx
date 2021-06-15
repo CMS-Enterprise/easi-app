@@ -209,7 +209,7 @@ const AccessibilityRequestDetailPage = () => {
     </UswdsLink>
   );
 
-  const bodyWithDocuments = (
+  const bodyWithDocumentsTable = (
     <>
       <h2 className="margin-top-0">{t('requestDetails.documents.label')}</h2>
       {uploadDocumentLink}
@@ -223,7 +223,7 @@ const AccessibilityRequestDetailPage = () => {
     </>
   );
 
-  const bodyNoDocuments = (
+  const bodyNoDocumentsBusinessOwner = (
     <>
       <div className="margin-bottom-3">
         <h2 className="margin-y-0 font-heading-lg">
@@ -247,7 +247,9 @@ const AccessibilityRequestDetailPage = () => {
       {uploadDocumentLink}
     </>
   );
-  const documentsTab = hasDocuments ? bodyWithDocuments : bodyNoDocuments;
+  const documentsTab = hasDocuments
+    ? bodyWithDocumentsTable
+    : bodyNoDocumentsBusinessOwner;
 
   const notesTab = (
     <>
@@ -379,7 +381,7 @@ const AccessibilityRequestDetailPage = () => {
             {isAccessibilityTeam ? (
               <Tabs>
                 <TabPanel id="Documents" tabName="Documents">
-                  <div className="margin-top-2">{documentsTab}</div>
+                  <div className="margin-top-2">{bodyWithDocumentsTable}</div>
                 </TabPanel>
                 <TabPanel id="Notes" tabName="Notes">
                   {notesTab}

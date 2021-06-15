@@ -13,6 +13,7 @@ import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 
 import { RequestType } from 'types/graphql-global-types';
+import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 
 const Table = () => {
@@ -74,7 +75,7 @@ const Table = () => {
           let statusString;
           switch (row.original.type) {
             case RequestType.ACCESSIBILITY_REQUEST:
-              statusString = t(`accessibility:statusMap.${value}`);
+              statusString = accessibilityRequestStatusMap[`${value}`];
               break;
             case RequestType.GOVERNANCE_REQUEST:
               statusString = t(`intake:statusMap.${value}`);

@@ -1,15 +1,10 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
-  statusMap: {
-    OPEN: 'Open',
-    IN_REMEDIATION: 'In remediation',
-    CLOSED: 'Closed'
-  },
   reportProblem: 'Report a problem (opens in a new tab)',
   requestStatus: {
     open: 'Open',
-    remediation: 'In Remediation',
+    remediation: 'In remediation',
     closed: 'Closed'
   },
   documentTable: {
@@ -27,7 +22,8 @@ const accessibility = {
         'You will not be able to access this document after it is removed.',
       proceedButton: 'Remove document',
       declineButton: 'Keep document'
-    }
+    },
+    noDocuments: 'No documents added to request yet.'
   },
   requestTable: {
     caption: 'List of 508 requests',
