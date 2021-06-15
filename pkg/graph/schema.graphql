@@ -18,6 +18,7 @@ type Request {
   submittedAt: Time
   type: RequestType!
   status: String!
+  lcid: String
 }
 
 type RequestsConnection {
