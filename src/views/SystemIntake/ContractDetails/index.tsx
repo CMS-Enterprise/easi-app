@@ -145,7 +145,7 @@ const ContractDetails = ({
                     </legend>
                     <HelpText
                       id="Intake-Form-ExistingFundingHelp"
-                      className="margin-bottom-1"
+                      className="margin-bottom-05"
                     >
                       If you are unsure, please get in touch with your
                       Contracting Officer Representative
@@ -216,7 +216,6 @@ const ContractDetails = ({
                           </Field>
                         </FieldGroup>
                         <FieldGroup
-                          className="margin-top-neg-2"
                           scrollElement="fundingSource.fundingNumber"
                           error={!!flatErrors['fundingSource.fundingNumber']}
                         >
@@ -287,7 +286,7 @@ const ContractDetails = ({
                     </legend>
                     <HelpText
                       id="IntakeForm-IncreasedCostsHelp"
-                      className="margin-bottom-1"
+                      className="margin-bottom-05"
                     >
                       This information helps the team decide on the right
                       approval process for this request
@@ -366,6 +365,7 @@ const ContractDetails = ({
                 <FieldGroup
                   scrollElement="contract.hasContract"
                   error={!!flatErrors['contract.hasContract']}
+                  className="margin-bottom-105"
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
@@ -374,7 +374,7 @@ const ContractDetails = ({
                     </legend>
                     <HelpText
                       id="IntakeForm-HasContractHelp"
-                      className="margin-bottom-1"
+                      className="margin-bottom-05"
                     >
                       This information helps the Office of Acquisition and
                       Grants Management (OAGM) track work
