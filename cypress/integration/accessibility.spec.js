@@ -24,7 +24,7 @@ describe('Accessibility Requests', () => {
   }
 
   function addAndRemoveDocument(cy) {
-    cy.get('[data-testid="Upload-New-Document"]').click();
+    cy.get('[data-testid="upload-new-document"]').click();
     cy.contains('h1', 'Upload a document to');
 
     // select document
@@ -53,12 +53,12 @@ describe('Accessibility Requests', () => {
       .check({ force: true });
 
     // click upload button
-    cy.get('[data-testid="Upload-Document"]').click();
+    cy.get('[data-testid="upload-document"]').click();
 
     cy.contains('.usa-alert', 'document.pdf uploaded to');
     // verify that the document is in the list
 
-    cy.get('[data-testid="AccessibilityDocumentsList"] tbody tr')
+    cy.get('[data-testid="accessibility-documents-list"] tbody tr')
       .should('have.length', 1)
       .first()
       .within(() => {
