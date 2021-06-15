@@ -55,19 +55,11 @@ const GovernanceTaskList = () => {
   );
 
   useEffect(() => {
-    if (systemId !== 'new') {
-      dispatch(fetchSystemIntake(systemId));
-    }
+    dispatch(fetchSystemIntake(systemId));
   }, [dispatch, systemId]);
 
   useEffect(() => {
-    if (systemId === 'new' && systemIntake.id) {
-      history.replace(`/governance-task-list/${systemIntake.id}`);
-    }
-  }, [history, systemIntake.id, systemId]);
-
-  useEffect(() => {
-    if (systemIntake.id && systemIntake.businessCaseId) {
+    if (systemIntake.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
   }, [dispatch, systemIntake.id, systemIntake.businessCaseId]);

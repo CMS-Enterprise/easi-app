@@ -657,6 +657,17 @@ func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input mod
 	}, err
 }
 
+func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error) {
+	systemIntake := models.SystemIntake{
+		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
+		RequestType: models.SystemIntakeRequestType(input.RequestType),
+		Requester:   input.Requester.Name,
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+	}
+	createdIntake, err := r.store.CreateSystemIntake(ctx, &systemIntake)
+	return createdIntake, err
+}
+
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
 	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
 		TestType:  input.TestType,
