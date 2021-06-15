@@ -61,8 +61,6 @@ services:
     restart: always
     image: minio/minio:latest
     entrypoint: minio server /data
-    volumes:
-      - ./tmp/minio:/data
   minio_mc:
     image: minio/mc:latest
     depends_on:
