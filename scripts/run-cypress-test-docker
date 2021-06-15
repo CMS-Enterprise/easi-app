@@ -19,11 +19,13 @@ if [[ -n "${CIRCLECI+x}" ]]; then
 
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml pull db_migrate easi
 
-    docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml build --parallel easi_client cypress db_seed
+    docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml build --parallel
 
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up -d db
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up --exit-code-from db_migrate db_migrate
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up --exit-code-from db_seed db_seed
+    docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up -d minio
+    docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up --exit-code-from minio_mc minio_mc
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up -d easi easi_client
 
     EASI_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${EASI_CONTAINER}")
@@ -51,6 +53,7 @@ else
 
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml build --parallel
 
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up -d minio minio_mc
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up -d db db_migrate
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up -d db_seed
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up -d easi easi_client

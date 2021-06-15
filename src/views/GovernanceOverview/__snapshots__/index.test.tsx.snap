@@ -193,6 +193,7 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
             aria-expanded={false}
             aria-label="Expand User Menu"
             className="easi-header__username"
+            data-testid="UserActions-Toggle"
             onClick={[Function]}
             type="button"
           >
@@ -801,6 +802,7 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
             aria-expanded={false}
             aria-label="Expand User Menu"
             className="easi-header__username"
+            data-testid="UserActions-Toggle"
             onClick={[Function]}
             type="button"
           >
