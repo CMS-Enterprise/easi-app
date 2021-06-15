@@ -48,7 +48,7 @@ func (s *Store) CreateAccessibilityNote(ctx context.Context, note *models.Access
 func (s *Store) FetchAccessibilityNoteByID(ctx context.Context, id uuid.UUID) (*models.AccessibilityNote, error) {
 	var note models.AccessibilityNote
 	err := s.db.Get(
-		&note, "SELECT * FROM accessibility_request_status_records WHERE request_id=$1;",
+		&note, "SELECT * FROM accessibility_notes WHERE id=$1;",
 		id,
 	)
 	if err != nil {
