@@ -91,7 +91,7 @@ const TestDateForm = ({
                 >
                   <FieldGroup error={!!flatErrors.testType}>
                     <fieldset className="usa-fieldset">
-                      <legend className="usa-label margin-bottom-1">
+                      <legend className="usa-label">
                         {t('testDateForm.testTypeHeader')}
                       </legend>
                       <FieldErrorMsg>{flatErrors.testType}</FieldErrorMsg>
@@ -188,7 +188,7 @@ const TestDateForm = ({
                     error={!!flatErrors['score.isPresent']}
                   >
                     <fieldset className="usa-fieldset margin-top-4">
-                      <legend className="usa-label margin-bottom-1">
+                      <legend className="usa-label">
                         {t('testDateForm.scoreHeader')}
                       </legend>
 
