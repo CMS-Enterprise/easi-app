@@ -12,7 +12,6 @@ type FileUploadProps = {
   disabled?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
-  ariaDescribedBy: string;
 } & JSX.IntrinsicElements['input'];
 
 const FileUpload = (props: FileUploadProps) => {
@@ -23,8 +22,7 @@ const FileUpload = (props: FileUploadProps) => {
     // multiple = false,
     disabled = false,
     onChange,
-    onBlur,
-    ariaDescribedBy
+    onBlur
   } = props;
   const [file, setFile] = useState<File>(null);
   const [error, setError] = useState(false);
@@ -82,6 +80,11 @@ const FileUpload = (props: FileUploadProps) => {
             <span className="usa-file-input__choose">Change file</span>
           </div>
         )}
+        {file && (
+          <div role="alert" aria-live="assertive" className="sr-only">
+            File {file.name} selected.
+          </div>
+        )}
         <div className={instructionsClasses} aria-hidden>
           <span className="usa-file-input__drag-text">
             Drag document here or{' '}
@@ -111,11 +114,14 @@ const FileUpload = (props: FileUploadProps) => {
           accept={accept}
           // multiple={multiple}
           disabled={disabled}
-          aria-describedby={ariaDescribedBy}
+          aria-describedby="FileUpload-Description"
           onChange={handleChange}
           onBlur={onBlur}
           data-testid="file-upload-input"
         />
+      </div>
+      <div id="FileUpload-Description" className="sr-only" tabIndex={-1}>
+        {file ? `File ${file.name} selected` : 'Select a file'}
       </div>
     </div>
   );
