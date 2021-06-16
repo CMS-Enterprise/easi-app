@@ -4,7 +4,10 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Link as UswdsLink
+  Link as UswdsLink,
+  ProcessList,
+  ProcessListHeading,
+  ProcessListItem
 } from '@trussworks/react-uswds';
 
 import Footer from 'components/Footer';
@@ -15,24 +18,6 @@ import PageWrapper from 'components/PageWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
 
 import './index.scss';
-
-type NumberedListItemProps = {
-  header: string;
-  body: string;
-};
-
-const GovernanceStep = ({ header, body }: NumberedListItemProps) => {
-  return (
-    <li className="easi-governance-overview__governance-step">
-      <div className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4">
-        <h3 className="text-bold margin-top-0 margin-bottom-05">{header}</h3>
-        <p className="margin-bottom-0 line-height-body-4 margin-top-2px">
-          {body}
-        </p>
-      </div>
-    </li>
-  );
-};
 
 const GovernanceOverview = () => {
   const { systemId } = useParams<{
@@ -79,43 +64,87 @@ const GovernanceOverview = () => {
         </span>
         <div className="tablet:grid-col-6">
           <h2 className="font-heading-xl">Steps in the governance process</h2>
-          <ol className="easi-governance-overview__governance-steps">
-            <GovernanceStep
-              header="Fill the intake request form"
-              body="Tell the Governance admin team about your project/idea."
-            />
-            <GovernanceStep
-              header="Feedback from initial review"
-              body="The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they’ll direct you to go through the remaining steps."
-            />
-          </ol>
+          <ProcessList>
+            <ProcessListItem>
+              <ProcessListHeading type="h3">
+                Fill the intake request form
+              </ProcessListHeading>
+              <p>Tell the Governance admin team about your project/idea.</p>
+            </ProcessListItem>
+            <ProcessListItem>
+              <ProcessListHeading type="h3">
+                Feedback from initial review
+              </ProcessListHeading>
+              <p>
+                The Governance admin team will review your intake request form
+                and decide if it it needs further governance. If it does,
+                they’ll direct you to go through the remaining steps.
+              </p>
+            </ProcessListItem>
+          </ProcessList>
           <hr className="margin-y-3" />
-          <ol className="easi-governance-overview__governance-steps" start={3}>
-            <GovernanceStep
-              header="Prepare your business case"
-              body="Draft different solutions and the corresponding costs involved."
-            />
-            <GovernanceStep
-              header="Attend the Governance Review Team meeting"
-              body="Discuss your draft business case with Governance Review Team. They will help you refine your business case into the best shape possible."
-            />
-            <GovernanceStep
-              header="Feedback from the Governance Review Team"
-              body="If the Governance Review Team has any additional comments, they will ask you to update your business case before it’s submitted to the Governance Review Board."
-            />
-            <GovernanceStep
-              header="Submit the business case for final approval"
-              body="Update the business case based on feedback from the review meeting and submit it to the Governance Review Board."
-            />
-            <GovernanceStep
-              header="Attend the Governance Review Board Meeting"
-              body="The Governance Review Board will discuss and make decisions based on the business case and recommendations from the Governance Review Team."
-            />
-            <GovernanceStep
-              header="Decision and next steps"
-              body="If your business case is approved you will receive a unique Lifecycle ID. If it is not approved, you would need address the concerns to proceed."
-            />
-          </ol>
+          <ProcessList
+            className="easi-governance-overview__governance-steps"
+            start={3}
+          >
+            <ProcessListItem>
+              <ProcessListHeading type="h3">
+                Prepare your business case
+              </ProcessListHeading>
+              <p>
+                Draft different solutions and the corresponding costs involved.
+              </p>
+            </ProcessListItem>
+            <ProcessListItem>
+              <ProcessListHeading type="h3">
+                Attend the Governance Review Team meeting
+              </ProcessListHeading>
+              <p>
+                Discuss your draft business case with Governance Review Team.
+                They will help you refine your business case into the best shape
+                possible.
+              </p>
+            </ProcessListItem>
+            <ProcessListItem>
+              <ProcessListHeading type="h3">
+                Feedback from the Governance Review Team
+              </ProcessListHeading>
+              <p>
+                If the Governance Review Team has any additional comments, they
+                will ask you to update your business case before it’s submitted
+                to the Governance Review Board.
+              </p>
+            </ProcessListItem>
+            <ProcessListItem>
+              <ProcessListHeading type="h3">
+                Submit the business case for final approval
+              </ProcessListHeading>
+              <p>
+                Update the business case based on feedback from the review
+                meeting and submit it to the Governance Review Board.
+              </p>
+            </ProcessListItem>
+            <ProcessListItem>
+              <ProcessListHeading type="h3">
+                Attend the Governance Review Board Meeting
+              </ProcessListHeading>
+              <p>
+                The Governance Review Board will discuss and make decisions
+                based on the business case and recommendations from the
+                Governance Review Team.
+              </p>
+            </ProcessListItem>
+            <ProcessListItem>
+              <ProcessListHeading type="h3">
+                Decision and next steps
+              </ProcessListHeading>
+              <p>
+                If your business case is approved you will receive a unique
+                Lifecycle ID. If it is not approved, you would need address the
+                concerns to proceed.
+              </p>
+            </ProcessListItem>
+          </ProcessList>
         </div>
         <div className="margin-top-6 margin-bottom-7">
           <CollapsableLink
