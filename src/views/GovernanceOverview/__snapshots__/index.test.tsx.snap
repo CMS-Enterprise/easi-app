@@ -330,159 +330,119 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
         Steps in the governance process
       </h2>
       <ol
-        className="easi-governance-overview__governance-steps"
+        className="usa-process-list"
       >
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Fill the intake request form
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              Tell the Governance admin team about your project/idea.
-            </p>
-          </div>
+            Fill the intake request form
+          </h3>
+          <p>
+            Tell the Governance admin team about your project/idea.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Feedback from initial review
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they’ll direct you to go through the remaining steps.
-            </p>
-          </div>
+            Feedback from initial review
+          </h3>
+          <p>
+            The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they’ll direct you to go through the remaining steps.
+          </p>
         </li>
       </ol>
       <hr
         className="margin-y-3"
       />
       <ol
-        className="easi-governance-overview__governance-steps"
+        className="usa-process-list easi-governance-overview__governance-steps"
         start={3}
       >
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Prepare your business case
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              Draft different solutions and the corresponding costs involved.
-            </p>
-          </div>
+            Prepare your business case
+          </h3>
+          <p>
+            Draft different solutions and the corresponding costs involved.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Attend the Governance Review Team meeting
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              Discuss your draft business case with Governance Review Team. They will help you refine your business case into the best shape possible.
-            </p>
-          </div>
+            Attend the Governance Review Team meeting
+          </h3>
+          <p>
+            Discuss your draft business case with Governance Review Team. They will help you refine your business case into the best shape possible.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Feedback from the Governance Review Team
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              If the Governance Review Team has any additional comments, they will ask you to update your business case before it’s submitted to the Governance Review Board.
-            </p>
-          </div>
+            Feedback from the Governance Review Team
+          </h3>
+          <p>
+            If the Governance Review Team has any additional comments, they will ask you to update your business case before it’s submitted to the Governance Review Board.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Submit the business case for final approval
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              Update the business case based on feedback from the review meeting and submit it to the Governance Review Board.
-            </p>
-          </div>
+            Submit the business case for final approval
+          </h3>
+          <p>
+            Update the business case based on feedback from the review meeting and submit it to the Governance Review Board.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Attend the Governance Review Board Meeting
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              The Governance Review Board will discuss and make decisions based on the business case and recommendations from the Governance Review Team.
-            </p>
-          </div>
+            Attend the Governance Review Board Meeting
+          </h3>
+          <p>
+            The Governance Review Board will discuss and make decisions based on the business case and recommendations from the Governance Review Team.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Decision and next steps
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              If your business case is approved you will receive a unique Lifecycle ID. If it is not approved, you would need address the concerns to proceed.
-            </p>
-          </div>
+            Decision and next steps
+          </h3>
+          <p>
+            If your business case is approved you will receive a unique Lifecycle ID. If it is not approved, you would need address the concerns to proceed.
+          </p>
         </li>
       </ol>
     </div>
@@ -938,159 +898,119 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
         Steps in the governance process
       </h2>
       <ol
-        className="easi-governance-overview__governance-steps"
+        className="usa-process-list"
       >
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Fill the intake request form
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              Tell the Governance admin team about your project/idea.
-            </p>
-          </div>
+            Fill the intake request form
+          </h3>
+          <p>
+            Tell the Governance admin team about your project/idea.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Feedback from initial review
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they’ll direct you to go through the remaining steps.
-            </p>
-          </div>
+            Feedback from initial review
+          </h3>
+          <p>
+            The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they’ll direct you to go through the remaining steps.
+          </p>
         </li>
       </ol>
       <hr
         className="margin-y-3"
       />
       <ol
-        className="easi-governance-overview__governance-steps"
+        className="usa-process-list easi-governance-overview__governance-steps"
         start={3}
       >
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Prepare your business case
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              Draft different solutions and the corresponding costs involved.
-            </p>
-          </div>
+            Prepare your business case
+          </h3>
+          <p>
+            Draft different solutions and the corresponding costs involved.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Attend the Governance Review Team meeting
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              Discuss your draft business case with Governance Review Team. They will help you refine your business case into the best shape possible.
-            </p>
-          </div>
+            Attend the Governance Review Team meeting
+          </h3>
+          <p>
+            Discuss your draft business case with Governance Review Team. They will help you refine your business case into the best shape possible.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Feedback from the Governance Review Team
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              If the Governance Review Team has any additional comments, they will ask you to update your business case before it’s submitted to the Governance Review Board.
-            </p>
-          </div>
+            Feedback from the Governance Review Team
+          </h3>
+          <p>
+            If the Governance Review Team has any additional comments, they will ask you to update your business case before it’s submitted to the Governance Review Board.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Submit the business case for final approval
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              Update the business case based on feedback from the review meeting and submit it to the Governance Review Board.
-            </p>
-          </div>
+            Submit the business case for final approval
+          </h3>
+          <p>
+            Update the business case based on feedback from the review meeting and submit it to the Governance Review Board.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Attend the Governance Review Board Meeting
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              The Governance Review Board will discuss and make decisions based on the business case and recommendations from the Governance Review Team.
-            </p>
-          </div>
+            Attend the Governance Review Board Meeting
+          </h3>
+          <p>
+            The Governance Review Board will discuss and make decisions based on the business case and recommendations from the Governance Review Team.
+          </p>
         </li>
         <li
-          className="easi-governance-overview__governance-step"
+          className="usa-process-list__item"
         >
-          <div
-            className="margin-left-1 margin-bottom-3 tablet:margin-bottom-4"
+          <h3
+            className="usa-process-list__heading"
+            data-testid="processListHeading"
           >
-            <h3
-              className="text-bold margin-top-0 margin-bottom-05"
-            >
-              Decision and next steps
-            </h3>
-            <p
-              className="margin-bottom-0 line-height-body-4 margin-top-2px"
-            >
-              If your business case is approved you will receive a unique Lifecycle ID. If it is not approved, you would need address the concerns to proceed.
-            </p>
-          </div>
+            Decision and next steps
+          </h3>
+          <p>
+            If your business case is approved you will receive a unique Lifecycle ID. If it is not approved, you would need address the concerns to proceed.
+          </p>
         </li>
       </ol>
     </div>
