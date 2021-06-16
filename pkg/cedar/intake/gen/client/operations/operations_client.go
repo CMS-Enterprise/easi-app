@@ -25,11 +25,14 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
+// ClientOption is the option for Client methods
+type ClientOption func(*runtime.ClientOperation)
+
 // ClientService is the interface for Client methods
 type ClientService interface {
-	HealthCheckGet(params *HealthCheckGetParams, authInfo runtime.ClientAuthInfoWriter) (*HealthCheckGetOK, error)
+	HealthCheckGet(params *HealthCheckGetParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*HealthCheckGetOK, error)
 
-	IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthInfoWriter) (*IntakeAddAccepted, error)
+	IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*IntakeAddAccepted, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -39,13 +42,12 @@ type ClientService interface {
 
   Returns a status and current date/time
 */
-func (a *Client) HealthCheckGet(params *HealthCheckGetParams, authInfo runtime.ClientAuthInfoWriter) (*HealthCheckGetOK, error) {
+func (a *Client) HealthCheckGet(params *HealthCheckGetParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*HealthCheckGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewHealthCheckGetParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "healthCheckGet",
 		Method:             "GET",
 		PathPattern:        "/healthCheck",
@@ -57,7 +59,12 @@ func (a *Client) HealthCheckGet(params *HealthCheckGetParams, authInfo runtime.C
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -76,13 +83,12 @@ func (a *Client) HealthCheckGet(params *HealthCheckGetParams, authInfo runtime.C
 
   Add an intake
 */
-func (a *Client) IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthInfoWriter) (*IntakeAddAccepted, error) {
+func (a *Client) IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*IntakeAddAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewIntakeAddParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "intakeAdd",
 		Method:             "POST",
 		PathPattern:        "/intake",
@@ -94,7 +100,12 @@ func (a *Client) IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthI
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}

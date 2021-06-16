@@ -2,6 +2,7 @@ package integration
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,7 +11,6 @@ import (
 	"path"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -24,44 +24,19 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	s.NoError(err, "failed to parse URL")
 	systemIntakeURL.Path = path.Join(systemIntakeURL.Path, "/system_intake")
 
-	body, err := json.Marshal(map[string]string{
-		"status":      string(models.SystemIntakeStatusINTAKEDRAFT),
-		"requestType": string(models.SystemIntakeRequestTypeNEW),
-		"requester":   "TEST REQUESTER",
-	})
-	s.NoError(err)
-
 	getURL, err := url.Parse(systemIntakeURL.String())
 	s.NoError(err, "failed to parse URL")
 
 	client := &http.Client{}
 
-	s.Run("POST will fail with no Authorization", func() {
-		req, err := http.NewRequest(http.MethodPost, systemIntakeURL.String(), bytes.NewBuffer(body))
-		s.NoError(err)
-		resp, err := client.Do(req)
-
-		s.NoError(err)
-		s.Equal(http.StatusUnauthorized, resp.StatusCode)
-	})
-
-	var id uuid.UUID
-	s.Run("POST will succeed with a token", func() {
-		req, err := http.NewRequest(http.MethodPost, systemIntakeURL.String(), bytes.NewBuffer(body))
-		s.NoError(err)
-		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
-
-		resp, err := client.Do(req)
-
-		s.NoError(err)
-		s.Equal(http.StatusCreated, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
-		s.NoError(err)
-		var actualIntake models.SystemIntake
-		err = json.Unmarshal(actualBody, &actualIntake)
-		s.NoError(err)
-		id = actualIntake.ID
-	})
+	systemIntake := models.SystemIntake{
+		Requester:   "TEST REQUESTER",
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+		EUAUserID:   null.StringFrom(s.user.euaID),
+	}
+	createdIntake, _ := s.store.CreateSystemIntake(context.Background(), &systemIntake)
+	id := createdIntake.ID
 
 	s.Run("PUT will succeed first time with token", func() {
 		body, err := json.Marshal(map[string]string{

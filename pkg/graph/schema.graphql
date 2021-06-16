@@ -59,6 +59,7 @@ type AccessibilityRequestStatusRecord {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+  euaUserId: String!
 }
 
 """
@@ -76,6 +77,7 @@ type UpdateAccessibilityRequestStatusPayload {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+  euaUserId: String!
   userErrors: [UserError!]
 }
 
@@ -505,6 +507,15 @@ type SystemIntake {
   updatedAt: Time!
 }
 
+input SystemIntakeRequesterInput {
+  name: String!
+}
+
+input CreateSystemIntakeInput {
+  requestType: SystemIntakeRequestType!
+  requester: SystemIntakeRequesterInput!
+}
+
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -648,6 +659,7 @@ type Mutation {
   createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
+  createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake @hasRole(role: EASI_USER)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER_OR_USER)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload

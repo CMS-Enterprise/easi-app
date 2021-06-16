@@ -124,46 +124,6 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 	}
 }
 
-func (s ServicesTestSuite) TestNewCreateSystemIntake() {
-	logger := zap.NewNop()
-	fakeEuaID := "FAKE"
-	requester := "Test Requester"
-	serviceConfig := NewConfig(logger, nil)
-	serviceConfig.clock = clock.NewMock()
-	ctx := context.Background()
-	ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{EUAID: fakeEuaID, JobCodeEASi: true})
-
-	s.Run("successfully creates a system intake without an error", func() {
-		create := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-			return &models.SystemIntake{
-				EUAUserID: intake.EUAUserID,
-				Requester: requester,
-				Status:    models.SystemIntakeStatusINTAKEDRAFT,
-			}, nil
-		}
-		createIntake := NewCreateSystemIntake(serviceConfig, create)
-		intake, err := createIntake(ctx, &models.SystemIntake{
-			Requester: requester,
-			Status:    models.SystemIntakeStatusINTAKEDRAFT,
-		})
-		s.NoError(err)
-		s.Equal(fakeEuaID, intake.EUAUserID.ValueOrZero())
-	})
-
-	s.Run("returns query error when create fails", func() {
-		create := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-			return &models.SystemIntake{}, errors.New("creation failed")
-		}
-		createIntake := NewCreateSystemIntake(serviceConfig, create)
-		intake, err := createIntake(ctx, &models.SystemIntake{
-			Requester: requester,
-			Status:    models.SystemIntakeStatusINTAKEDRAFT,
-		})
-		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-}
-
 func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	nilIntake := (*models.SystemIntake)(nil)
 	logger := zap.NewNop()

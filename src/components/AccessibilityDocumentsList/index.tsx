@@ -123,7 +123,7 @@ const AccessibilityDocumentsList = ({
     return <div>{t('documentTable.noDocuments')}</div>;
   }
   return (
-    <>
+    <div data-testid="accessibility-documents-list">
       <Table bordered={false} {...getTableProps()} fullWidth>
         <caption className="usa-sr-only">
           {`${t('documentTable.caption')} ${requestName}`}
@@ -204,7 +204,7 @@ const AccessibilityDocumentsList = ({
           </>
         )}
       </Modal>
-    </>
+    </div>
   );
 };
 
