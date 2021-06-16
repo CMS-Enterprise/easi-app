@@ -108,11 +108,6 @@ export interface BasicActionInput {
   intakeId: UUID;
 }
 
-export interface CreateAccessibilityNoteInput {
-  requestID: UUID;
-  note: string;
-}
-
 export interface CreateAccessibilityRequestDocumentInput {
   commonDocumentType: AccessibilityRequestDocumentCommonType;
   mimeType: string;
@@ -126,6 +121,11 @@ export interface CreateAccessibilityRequestDocumentInput {
 export interface CreateAccessibilityRequestInput {
   intakeID: UUID;
   name: string;
+}
+
+export interface CreateAccessibilityRequestNoteInput {
+  requestID: UUID;
+  note: string;
 }
 
 export interface CreateSystemIntakeNoteInput {
