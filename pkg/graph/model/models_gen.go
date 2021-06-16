@@ -72,15 +72,6 @@ type ContractDate struct {
 	Year  *string `json:"year"`
 }
 
-type CreateAccessibilityNoteInput struct {
-	RequestID uuid.UUID `json:"requestID"`
-	Note      string    `json:"note"`
-}
-
-type CreateAccessibilityNotePayload struct {
-	AccessibilityNote *models.AccessibilityNote `json:"accessibilityNote"`
-}
-
 type CreateAccessibilityRequestDocumentInput struct {
 	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
 	MimeType                     string                                        `json:"mimeType"`
@@ -99,6 +90,15 @@ type CreateAccessibilityRequestDocumentPayload struct {
 type CreateAccessibilityRequestInput struct {
 	IntakeID uuid.UUID `json:"intakeID"`
 	Name     string    `json:"name"`
+}
+
+type CreateAccessibilityRequestNoteInput struct {
+	RequestID uuid.UUID `json:"requestID"`
+	Note      string    `json:"note"`
+}
+
+type CreateAccessibilityRequestNotePayload struct {
+	AccessibilityRequestNote *models.AccessibilityRequestNote `json:"accessibilityRequestNote"`
 }
 
 type CreateAccessibilityRequestPayload struct {

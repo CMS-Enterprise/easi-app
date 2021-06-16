@@ -79,20 +79,20 @@ type UpdateAccessibilityRequestStatusPayload {
   userErrors: [UserError!]
 }
 
-input CreateAccessibilityNoteInput {
+input CreateAccessibilityRequestNoteInput {
   requestID: UUID!
   note: String!
 }
 
-type AccessibilityNote {
+type AccessibilityRequestNote {
   id: UUID!
   requestID: UUID!
   createdAt: Time!
   note: String!
 }
 
-type CreateAccessibilityNotePayload {
-  accessibilityNote: AccessibilityNote!
+type CreateAccessibilityRequestNotePayload {
+  accessibilityRequestNote: AccessibilityRequestNote!
 }
 
 """
@@ -653,9 +653,9 @@ type Mutation {
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
-  createAccessibilityNote(
-    input: CreateAccessibilityNoteInput!
-  ): CreateAccessibilityNotePayload @hasRole(role: EASI_508_TESTER_OR_USER)
+  createAccessibilityRequestNote(
+    input: CreateAccessibilityRequestNoteInput!
+  ): CreateAccessibilityRequestNotePayload @hasRole(role: EASI_508_TESTER_OR_USER)
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
   updateAccessibilityRequestStatus(input: UpdateAccessibilityRequestStatus) : UpdateAccessibilityRequestStatusPayload @hasRole(role: EASI_508_TESTER_OR_USER)
   createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)

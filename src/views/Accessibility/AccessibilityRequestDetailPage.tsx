@@ -14,14 +14,14 @@ import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
-import CreateAccessibilityNoteQuery from 'queries/CreateAccessibilityNoteQuery';
+import CreateAccessibilityRequestNoteQuery from 'queries/CreateAccessibilityRequestNoteQuery';
 import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
 import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
-  CreateAccessibilityNote,
-  CreateAccessibilityNoteVariables
-} from 'queries/types/CreateAccessibilityNote';
+  CreateAccessibilityRequestNote,
+  CreateAccessibilityRequestNoteVariables
+} from 'queries/types/CreateAccessibilityRequestNote';
 import {
   DeleteAccessibilityRequest,
   DeleteAccessibilityRequestVariables
@@ -87,9 +87,9 @@ const AccessibilityRequestDetailPage = () => {
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
   const [mutateCreateNote] = useMutation<
-    CreateAccessibilityNote,
-    CreateAccessibilityNoteVariables
-  >(CreateAccessibilityNoteQuery);
+    CreateAccessibilityRequestNote,
+    CreateAccessibilityRequestNoteVariables
+  >(CreateAccessibilityRequestNoteQuery);
 
   const userEuaId = useSelector((state: AppState) => state.auth.euaId);
 
@@ -292,13 +292,13 @@ const AccessibilityRequestDetailPage = () => {
                 )}
                 <Form className="usa-form usa-form--large">
                   <FieldGroup>
-                    <Label htmlFor="CreateAccessibilityNote-NoteText">
+                    <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
                       {t('requestDetails.notes.addNote')}
                     </Label>
                     <FieldErrorMsg>{flatErrors.noteText}</FieldErrorMsg>
                     <Field
                       as={TextAreaField}
-                      id="CreateAccessibilityNote-NoteText"
+                      id="CreateAccessibilityRequestNote-NoteText"
                       maxLength={2000}
                       error={!!flatErrors.noteText}
                       className="accessibility-request__note-field"

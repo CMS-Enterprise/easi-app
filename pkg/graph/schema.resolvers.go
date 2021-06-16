@@ -462,8 +462,8 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	}, nil
 }
 
-func (r *mutationResolver) CreateAccessibilityNote(ctx context.Context, input model.CreateAccessibilityNoteInput) (*model.CreateAccessibilityNotePayload, error) {
-	created, err := r.store.CreateAccessibilityNote(ctx, &models.AccessibilityNote{
+func (r *mutationResolver) CreateAccessibilityRequestNote(ctx context.Context, input model.CreateAccessibilityRequestNoteInput) (*model.CreateAccessibilityRequestNotePayload, error) {
+	created, err := r.store.CreateAccessibilityRequestNote(ctx, &models.AccessibilityRequestNote{
 		Note:      input.Note,
 		RequestID: input.RequestID,
 		EUAUserID: appcontext.Principal(ctx).ID(),
@@ -472,7 +472,7 @@ func (r *mutationResolver) CreateAccessibilityNote(ctx context.Context, input mo
 		return nil, err
 	}
 
-	return &model.CreateAccessibilityNotePayload{AccessibilityNote: created}, nil
+	return &model.CreateAccessibilityRequestNotePayload{AccessibilityRequestNote: created}, nil
 }
 
 func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {

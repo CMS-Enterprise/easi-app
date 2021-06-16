@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 )
 
-// AccessibilityNote represents data about a status that has been set
-type AccessibilityNote struct {
+// AccessibilityRequestNote represents data about a status that has been set
+type AccessibilityRequestNote struct {
 	ID        uuid.UUID `json:"id"`
 	Note      string
 	RequestID uuid.UUID  `json:"requestId" db:"request_id"`
