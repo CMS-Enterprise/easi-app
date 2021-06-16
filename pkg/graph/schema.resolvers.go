@@ -335,6 +335,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	_, err = r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
 		RequestID: request.ID,
 		Status:    models.AccessibilityRequestStatusOpen,
+		EUAUserID: requesterEUAID,
 	})
 	if err != nil {
 		return nil, err
@@ -488,17 +489,21 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 }
 
 func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error) {
+	requesterEUAID := appcontext.Principal(ctx).ID()
 	statusRecord, err := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
 		RequestID: input.RequestID,
 		Status:    input.Status,
+		EUAUserID: requesterEUAID,
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	return &model.UpdateAccessibilityRequestStatusPayload{
-		RequestID:  statusRecord.ID,
+		ID:         statusRecord.ID,
+		RequestID:  statusRecord.RequestID,
 		Status:     statusRecord.Status,
+		EuaUserID:  statusRecord.EUAUserID,
 		UserErrors: nil,
 	}, nil
 }
@@ -655,6 +660,17 @@ func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input mod
 		Content:   note.Content.String,
 		CreatedAt: *note.CreatedAt,
 	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error) {
+	systemIntake := models.SystemIntake{
+		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
+		RequestType: models.SystemIntakeRequestType(input.RequestType),
+		Requester:   input.Requester.Name,
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+	}
+	createdIntake, err := r.store.CreateSystemIntake(ctx, &systemIntake)
+	return createdIntake, err
 }
 
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {

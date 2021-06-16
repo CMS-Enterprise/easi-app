@@ -62,5 +62,6 @@ type AccessibilityRequestStatusRecord struct {
 	ID        uuid.UUID                  `json:"id"`
 	Status    AccessibilityRequestStatus `json:"status" db:"status"`
 	RequestID uuid.UUID                  `json:"requestId" db:"request_id"`
+	EUAUserID string                     `json:"euaUserId" db:"eua_user_id"`
 	CreatedAt *time.Time                 `json:"createdAt" db:"created_at"`
 }

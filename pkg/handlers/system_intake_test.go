@@ -34,18 +34,6 @@ func newMockFetchSystemIntakeByID(err error) fetchSystemIntakeByID {
 	}
 }
 
-func newMockCreateSystemIntake(requester string, err error) createSystemIntake {
-	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-		newIntake := models.SystemIntake{
-			ID:        uuid.New(),
-			EUAUserID: null.StringFrom("FAKE"),
-			Status:    models.SystemIntakeStatusINTAKEDRAFT,
-			Requester: requester,
-		}
-		return &newIntake, err
-	}
-}
-
 func newMockArchiveSystemIntake(err error) archiveSystemIntake {
 	return func(ctx context.Context, id uuid.UUID) error {
 		return err
@@ -55,7 +43,6 @@ func newMockArchiveSystemIntake(err error) archiveSystemIntake {
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithPrincipal(requestContext, &authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
-	requester := "Test Requester"
 	id, err := uuid.NewUUID()
 	s.NoError(err)
 	s.Run("golden path GET passes", func() {
@@ -102,86 +89,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
 		s.NoError(err)
 		s.Equal("Resource not found", responseErr.Message)
-	})
-
-	s.Run("golden path POST passes", func() {
-		body, err := json.Marshal(map[string]string{
-			"status":    string(models.SystemIntakeStatusINTAKEDRAFT),
-			"requester": requester,
-		})
-		s.NoError(err)
-		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
-		s.NoError(err)
-		SystemIntakeHandler{
-			HandlerBase:           s.base,
-			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
-			UpdateSystemIntake:    nil,
-			FetchSystemIntakeByID: nil,
-		}.Handle()(rr, req)
-
-		s.Equal(http.StatusCreated, rr.Code)
-	})
-
-	s.Run("POST fails if there is no eua ID in the context", func() {
-		badContext := context.Background()
-		rr := httptest.NewRecorder()
-		body, err := json.Marshal(map[string]string{
-			"status":    string(models.SystemIntakeStatusINTAKEDRAFT),
-			"requester": requester,
-		})
-		s.NoError(err)
-		req, err := http.NewRequestWithContext(badContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
-		s.NoError(err)
-		SystemIntakeHandler{
-			HandlerBase:           s.base,
-			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
-			UpdateSystemIntake:    nil,
-			FetchSystemIntakeByID: nil,
-		}.Handle()(rr, req)
-		s.Equal(http.StatusInternalServerError, rr.Code)
-	})
-
-	s.Run("POST fails if a validation error is thrown", func() {
-		body, err := json.Marshal(map[string]string{
-			"status":    string(models.SystemIntakeStatusINTAKEDRAFT),
-			"requester": requester,
-		})
-		s.NoError(err)
-		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
-		s.NoError(err)
-		expectedErr := apperrors.ValidationError{
-			Model:   models.SystemIntake{},
-			ModelID: "",
-			Err:     fmt.Errorf("failed validations"),
-		}
-		SystemIntakeHandler{
-			HandlerBase:           s.base,
-			CreateSystemIntake:    newMockCreateSystemIntake(requester, &expectedErr),
-			UpdateSystemIntake:    nil,
-			FetchSystemIntakeByID: nil,
-		}.Handle()(rr, req)
-
-		s.Equal(http.StatusUnprocessableEntity, rr.Code)
-	})
-
-	s.Run("POST fails if system intake isn't created", func() {
-		body, err := json.Marshal(map[string]string{
-			"status":    string(models.SystemIntakeStatusINTAKEDRAFT),
-			"requester": requester,
-		})
-		s.NoError(err)
-		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
-		s.NoError(err)
-		SystemIntakeHandler{
-			HandlerBase:           s.base,
-			CreateSystemIntake:    newMockCreateSystemIntake(requester, fmt.Errorf("failed to create intake")),
-			UpdateSystemIntake:    nil,
-			FetchSystemIntakeByID: nil,
-		}.Handle()(rr, req)
-		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
 
 	s.Run("golden path PUT passes", func() {

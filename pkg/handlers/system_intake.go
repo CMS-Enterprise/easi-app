@@ -15,7 +15,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type createSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
 type fetchSystemIntakeByID func(context context.Context, id uuid.UUID) (*models.SystemIntake, error)
 type updateSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
 type archiveSystemIntake func(context context.Context, id uuid.UUID) error
@@ -23,14 +22,12 @@ type archiveSystemIntake func(context context.Context, id uuid.UUID) error
 // NewSystemIntakeHandler is a constructor for SystemIntakeHandler
 func NewSystemIntakeHandler(
 	base HandlerBase,
-	create createSystemIntake,
 	update updateSystemIntake,
 	fetch fetchSystemIntakeByID,
 	delete archiveSystemIntake,
 ) SystemIntakeHandler {
 	return SystemIntakeHandler{
 		HandlerBase:           base,
-		CreateSystemIntake:    create,
 		UpdateSystemIntake:    update,
 		FetchSystemIntakeByID: fetch,
 		ArchiveSystemIntake:   delete,
@@ -40,7 +37,6 @@ func NewSystemIntakeHandler(
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
 	HandlerBase
-	CreateSystemIntake    createSystemIntake
 	UpdateSystemIntake    updateSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
 	ArchiveSystemIntake   archiveSystemIntake
@@ -86,42 +82,6 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			return
-		case "POST":
-			if r.Body == nil {
-				h.WriteErrorResponse(
-					r.Context(),
-					w,
-					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
-				)
-				return
-			}
-			defer r.Body.Close()
-			decoder := json.NewDecoder(r.Body)
-			intake := models.SystemIntake{}
-			err := decoder.Decode(&intake)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
-				return
-			}
-			createdIntake, err := h.CreateSystemIntake(r.Context(), &intake)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
-
-			responseBody, err := json.Marshal(createdIntake)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
-
-			w.WriteHeader(http.StatusCreated)
-			_, err = w.Write(responseBody)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
 			return
 		case "PUT":
 			if r.Body == nil {

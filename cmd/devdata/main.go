@@ -285,6 +285,7 @@ func makeAccessibilityRequest(name string, store *storage.Store) {
 	}
 	must(store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
 		RequestID: request.ID,
+		EUAUserID: request.EUAUserID,
 	}))
 }
 

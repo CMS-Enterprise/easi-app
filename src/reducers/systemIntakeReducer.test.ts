@@ -6,9 +6,7 @@ import systemIntakeReducer from 'reducers/systemIntakeReducer';
 import {
   clearSystemIntake,
   fetchSystemIntake,
-  postSystemIntake,
-  saveSystemIntake,
-  storeSystemIntake
+  saveSystemIntake
 } from 'types/routines';
 
 describe('The system intake reducer', () => {
@@ -94,137 +92,6 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
-        isSaving: false,
-        isNewIntakeCreated: null,
-        error: null,
-        notes: []
-      });
-    });
-  });
-
-  describe('storeSystemIntake', () => {
-    it('handles storeSystemIntake.TRIGGER', () => {
-      const payload = {
-        id: '123',
-        requester: {
-          name: 'Tom Foolery',
-          component: 'My Test Component'
-        }
-      };
-      const mockTriggerAction = {
-        type: storeSystemIntake.TRIGGER,
-        payload
-      };
-
-      expect(systemIntakeReducer(undefined, mockTriggerAction)).toEqual({
-        systemIntake: {
-          ...initialSystemIntakeForm,
-          ...payload
-        },
-        isLoading: false,
-        isSaving: false,
-        isNewIntakeCreated: null,
-        error: null,
-        notes: []
-      });
-    });
-    it('handles storeSystemIntake.FAILURE', () => {
-      const mockFailureAction = {
-        type: storeSystemIntake.FAILURE,
-        payload: 'Error'
-      };
-
-      expect(systemIntakeReducer(undefined, mockFailureAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: null,
-        isSaving: false,
-        isNewIntakeCreated: null,
-        error: 'Error',
-        notes: []
-      });
-    });
-    it('handles storeSystemIntake.FULFILL', () => {
-      const mockFulfillAction = {
-        type: storeSystemIntake.FULFILL,
-        payload: undefined
-      };
-
-      expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        isSaving: false,
-        isNewIntakeCreated: null,
-        error: null,
-        notes: []
-      });
-    });
-  });
-
-  describe('postSystemIntake', () => {
-    it('handles postSystemIntake.REQUEST', () => {
-      const mockRequestAction = {
-        type: postSystemIntake.REQUEST,
-        payload: undefined
-      };
-
-      expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: null,
-        isSaving: true,
-        isNewIntakeCreated: null,
-        error: null,
-        notes: []
-      });
-    });
-    it('handles postSystemIntake.SUCCESS', () => {
-      const mockSuccessAction = {
-        type: postSystemIntake.SUCCESS,
-        payload: prepareSystemIntakeForApp(mockApiSystemIntake)
-      };
-
-      expect(systemIntakeReducer(undefined, mockSuccessAction)).toEqual({
-        systemIntake: mockSuccessAction.payload,
-        isLoading: null,
-        isSaving: false,
-        isNewIntakeCreated: true,
-        error: null,
-        notes: []
-      });
-    });
-
-    it('handles postSystemIntake.FAILURE', () => {
-      const initialState = {
-        systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        isSaving: true,
-        isNewIntakeCreated: null,
-        error: null,
-        notes: []
-      };
-      const mockFailureAction = {
-        type: postSystemIntake.FAILURE,
-        payload: 'Error'
-      };
-
-      expect(systemIntakeReducer(initialState, mockFailureAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        isSaving: true,
-        isNewIntakeCreated: false,
-        error: 'Error',
-        notes: []
-      });
-    });
-
-    it('handles postSystemIntake.FULFILL', () => {
-      const mockFulfillAction = {
-        type: postSystemIntake.FULFILL,
-        payload: undefined
-      };
-
-      expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: null,
         isSaving: false,
         isNewIntakeCreated: null,
         error: null,

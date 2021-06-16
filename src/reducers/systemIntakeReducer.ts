@@ -8,9 +8,7 @@ import {
   archiveSystemIntake,
   clearSystemIntake,
   fetchSystemIntake,
-  postSystemIntake,
-  saveSystemIntake,
-  storeSystemIntake
+  saveSystemIntake
 } from 'types/routines';
 import { SystemIntakeState } from 'types/systemIntake';
 
@@ -51,32 +49,6 @@ function systemIntakeReducer(
       };
     case clearSystemIntake.TRIGGER:
       return initialState;
-    case postSystemIntake.REQUEST:
-      return {
-        ...state,
-        isSaving: true
-      };
-    case postSystemIntake.SUCCESS:
-      return {
-        ...state,
-        systemIntake: {
-          ...state.systemIntake,
-          ...action.payload
-        },
-        isNewIntakeCreated: true
-      };
-    case postSystemIntake.FAILURE:
-      return {
-        ...state,
-        error: action.payload,
-        isNewIntakeCreated: false
-      };
-    case postSystemIntake.FULFILL:
-      return {
-        ...state,
-        isSaving: false,
-        isNewIntakeCreated: null
-      };
     case saveSystemIntake.REQUEST:
       return {
         ...state,
@@ -97,26 +69,6 @@ function systemIntakeReducer(
       return {
         ...state,
         isSaving: false
-      };
-    case storeSystemIntake.TRIGGER:
-      return {
-        ...state,
-        systemIntake: {
-          ...state.systemIntake,
-          ...action.payload
-        },
-        isLoading: false,
-        error: null
-      };
-    case storeSystemIntake.FAILURE:
-      return {
-        ...state,
-        error: action.payload
-      };
-    case storeSystemIntake.FULFILL:
-      return {
-        ...state,
-        isLoading: false
       };
     case archiveSystemIntake.SUCCESS:
       return initialState;

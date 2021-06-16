@@ -35,6 +35,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		status := models.AccessibilityRequestStatusRecord{
 			Status:    models.AccessibilityRequestStatusOpen,
 			RequestID: accessibilityRequestThatIsMine.ID,
+			EUAUserID: requesterID,
 		}
 		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
 		s.NoError(err)
@@ -49,6 +50,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		status = models.AccessibilityRequestStatusRecord{
 			Status:    models.AccessibilityRequestStatusOpen,
 			RequestID: createdRequest.ID,
+			EUAUserID: requesterID,
 		}
 		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
 		s.NoError(err)
@@ -59,6 +61,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		status = models.AccessibilityRequestStatusRecord{
 			Status:    models.AccessibilityRequestStatusClosed,
 			RequestID: createdRequest.ID,
+			EUAUserID: requesterID,
 		}
 		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
 		s.NoError(err)
@@ -73,6 +76,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		status = models.AccessibilityRequestStatusRecord{
 			Status:    models.AccessibilityRequestStatusOpen,
 			RequestID: otherRequest.ID,
+			EUAUserID: requesterID,
 		}
 		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
 		s.NoError(err)
