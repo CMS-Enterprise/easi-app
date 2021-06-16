@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import {
   Alert,
   Breadcrumb,
@@ -10,6 +11,11 @@ import {
   Link as UswdsLink
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import {
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -26,12 +32,7 @@ import {
   intakeTag
 } from 'data/taskList';
 import useMessage from 'hooks/useMessage';
-import { AppState } from 'reducers/rootReducer';
-import {
-  archiveSystemIntake,
-  fetchBusinessCase,
-  fetchSystemIntake
-} from 'types/routines';
+import { archiveSystemIntake } from 'types/routines';
 
 import SideNavActions from './SideNavActions';
 import {
@@ -50,19 +51,19 @@ const GovernanceTaskList = () => {
   const history = useHistory();
   const { showMessageOnNextPage } = useMessage();
   const { t } = useTranslation();
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
-
-  useEffect(() => {
-    dispatch(fetchSystemIntake(systemId));
-  }, [dispatch, systemId]);
-
-  useEffect(() => {
-    if (systemIntake.businessCaseId) {
-      dispatch(fetchBusinessCase(systemIntake.businessCaseId));
+  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
+    GetSystemIntakeQuery,
+    {
+      variables: {
+        id: systemId
+      }
     }
-  }, [dispatch, systemIntake.id, systemIntake.businessCaseId]);
+  );
+  const systemIntake = data?.systemIntake;
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   const archiveIntake = () => {
     const redirect = () => {
