@@ -120,7 +120,7 @@ const FileUpload = (props: FileUploadProps) => {
           data-testid="file-upload-input"
         />
       </div>
-      <div id="FileUpload-Description" className="sr-only" tabIndex={-1}>
+      <div id="FileUpload-Description" className="sr-only">
         {file ? `File ${file.name} selected` : 'Select a file'}
       </div>
     </div>
