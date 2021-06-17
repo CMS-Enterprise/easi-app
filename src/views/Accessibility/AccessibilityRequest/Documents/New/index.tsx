@@ -299,7 +299,7 @@ const New = () => {
                                   as={TextField}
                                   error={!!flatErrors['documentType.otherType']}
                                   className="margin-top-0"
-                                  id="DocumentType-OtherType"
+                                  id="FileUpload-OtherType"
                                   name="documentType.otherType"
                                 />
                               </FieldGroup>
