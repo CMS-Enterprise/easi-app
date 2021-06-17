@@ -25,6 +25,12 @@
     text-decoration: underline;
     color: color($theme-color-error);
   }
+
+  &__note-field {
+    &.usa-textarea {
+      height: 5rem;
+    }
+  }
 }
 
 .report-problem-link-area {

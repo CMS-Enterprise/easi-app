@@ -92,6 +92,15 @@ type CreateAccessibilityRequestInput struct {
 	Name     string    `json:"name"`
 }
 
+type CreateAccessibilityRequestNoteInput struct {
+	RequestID uuid.UUID `json:"requestID"`
+	Note      string    `json:"note"`
+}
+
+type CreateAccessibilityRequestNotePayload struct {
+	AccessibilityRequestNote *models.AccessibilityRequestNote `json:"accessibilityRequestNote"`
+}
+
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError                 `json:"userErrors"`

@@ -6,6 +6,7 @@ type TabPanelProps = {
   tabName: string;
   children: React.ReactNode;
   isActive?: boolean;
+  bordered?: boolean;
 };
 
 /**
@@ -13,9 +14,16 @@ type TabPanelProps = {
  * The `isActive` prop isn't passed in declaratively. `isActive` is passed
  * from the Tabs render from the React.Children cloneElement.
  */
-const TabPanel = ({ id, tabName, isActive, children }: TabPanelProps) => {
-  const classes = classnames('easi-tabs__tab-panel', {
-    'easi-only-print': !isActive
+const TabPanel = ({
+  id,
+  tabName,
+  isActive,
+  children,
+  bordered
+}: TabPanelProps) => {
+  const classes = classnames('easi-tabs__tab-panel overflow-visible', {
+    'easi-only-print': !isActive,
+    'easi-tabs__tab-panel--bordered': bordered
   });
 
   return (
