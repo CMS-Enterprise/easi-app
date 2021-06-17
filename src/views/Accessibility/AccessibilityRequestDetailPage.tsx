@@ -255,7 +255,7 @@ const AccessibilityRequestDetailPage = () => {
   const notesTab = (
     <>
       <div className="usa-sr-only">
-        <UswdsLink href="#notes-form">
+        <UswdsLink href="#CreateAccessibilityRequestNote-NoteText">
           {t('requestDetails.notes.srOnlyAddNoteLink')}
         </UswdsLink>
       </div>
