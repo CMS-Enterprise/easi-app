@@ -12,6 +12,10 @@ export type DeleteAccessibilityRequestForm = {
   deletionReason: string;
 };
 
+export type CreateNoteForm = {
+  noteText: string;
+};
+
 // Form for reviewer to add dates
 export type TestDateFormType = {
   testType: 'INITIAL' | 'REMEDIATION' | null;
