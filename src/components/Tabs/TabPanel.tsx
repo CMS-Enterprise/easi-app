@@ -21,7 +21,7 @@ const TabPanel = ({
   children,
   bordered
 }: TabPanelProps) => {
-  const classes = classnames('easi-tabs__tab-panel', {
+  const classes = classnames('easi-tabs__tab-panel overflow-visible', {
     'easi-only-print': !isActive,
     'easi-tabs__tab-panel--bordered': bordered
   });
