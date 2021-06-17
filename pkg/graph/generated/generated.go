@@ -261,12 +261,13 @@ type ComplexityRoot struct {
 	}
 
 	Request struct {
-		ID          func(childComplexity int) int
-		Lcid        func(childComplexity int) int
-		Name        func(childComplexity int) int
-		Status      func(childComplexity int) int
-		SubmittedAt func(childComplexity int) int
-		Type        func(childComplexity int) int
+		ID              func(childComplexity int) int
+		Lcid            func(childComplexity int) int
+		Name            func(childComplexity int) int
+		Status          func(childComplexity int) int
+		StatusCreatedAt func(childComplexity int) int
+		SubmittedAt     func(childComplexity int) int
+		Type            func(childComplexity int) int
 	}
 
 	RequestEdge struct {
@@ -1695,6 +1696,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Request.Status(childComplexity), true
 
+	case "Request.statusCreatedAt":
+		if e.complexity.Request.StatusCreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Request.StatusCreatedAt(childComplexity), true
+
 	case "Request.submittedAt":
 		if e.complexity.Request.SubmittedAt == nil {
 			break
@@ -2542,6 +2550,7 @@ type Request {
   submittedAt: Time
   type: RequestType!
   status: String!
+  statusCreatedAt: Time
   lcid: String
 }
 
@@ -9215,6 +9224,38 @@ func (ec *executionContext) _Request_status(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Request_statusCreatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StatusCreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Request_lcid(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -15763,6 +15804,8 @@ func (ec *executionContext) _Request(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "statusCreatedAt":
+			out.Values[i] = ec._Request_statusCreatedAt(ctx, field, obj)
 		case "lcid":
 			out.Values[i] = ec._Request_lcid(ctx, field, obj)
 		default:

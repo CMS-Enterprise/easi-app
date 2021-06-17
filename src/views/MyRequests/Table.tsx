@@ -75,18 +75,32 @@ const Table = () => {
           let statusString;
           switch (row.original.type) {
             case RequestType.ACCESSIBILITY_REQUEST:
-              statusString = accessibilityRequestStatusMap[`${value}`];
-              break;
+              // Status hasn't changed if the status record created at is the same
+              // as the 508 request's submitted at
+              if (
+                row.original.submittedAt.toISO() ===
+                row.original.statusCreatedAt.toISO()
+              ) {
+                return <span>{accessibilityRequestStatusMap[value]}</span>;
+              }
+
+              return (
+                <span>
+                  {accessibilityRequestStatusMap[value]}&nbsp;
+                  <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
+                    row.original.statusCreatedAt
+                  )}`}</span>
+                </span>
+              );
             case RequestType.GOVERNANCE_REQUEST:
               statusString = t(`intake:statusMap.${value}`);
               if (row.original.lcid) {
-                statusString = `${statusString}${row.original.lcid}`;
+                return `${statusString}${row.original.lcid}`;
               }
-              break;
+              return statusString;
             default:
-              statusString = '';
+              return '';
           }
-          return statusString;
         }
       }
     ];
@@ -105,7 +119,11 @@ const Table = () => {
       const submittedAt = request.submittedAt
         ? DateTime.fromISO(request.submittedAt)
         : null;
-      return { ...request, submittedAt };
+
+      const statusCreatedAt = request.statusCreatedAt
+        ? DateTime.fromISO(request.statusCreatedAt)
+        : null;
+      return { ...request, submittedAt, statusCreatedAt };
     });
 
     return mappedData || [];
