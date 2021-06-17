@@ -131,6 +131,7 @@ const AccessibilityRequestDetailPage = () => {
         }
       }
     }).then(response => {
+      refetch();
       showMessage(t('requestDetails.notes.confirmation', { requestName }));
       resetForm({});
     });
@@ -334,14 +335,16 @@ const AccessibilityRequestDetailPage = () => {
       >
         <NotesList>
           {data?.accessibilityRequest?.notes.map(note => (
-            <NoteListItem>
-              <NoteContent>{note.note}</NoteContent>
-              <NoteByline>
-                {`by ${note.authorName}`}
-                <span className="padding-x-1">|</span>
-                {formatDate(note.createdAt)}
-              </NoteByline>
-            </NoteListItem>
+            <div key={note.id}>
+              <NoteListItem>
+                <NoteContent>{note.note}</NoteContent>
+                <NoteByline>
+                  {`by ${note.authorName}`}
+                  <span className="padding-x-1">|</span>
+                  {formatDate(note.createdAt)}
+                </NoteByline>
+              </NoteListItem>
+            </div>
           ))}
         </NotesList>
       </div>
