@@ -84,6 +84,22 @@ type UpdateAccessibilityRequestStatusPayload {
   userErrors: [UserError!]
 }
 
+input CreateAccessibilityRequestNoteInput {
+  requestID: UUID!
+  note: String!
+}
+
+type AccessibilityRequestNote {
+  id: UUID!
+  requestID: UUID!
+  createdAt: Time!
+  note: String!
+}
+
+type CreateAccessibilityRequestNotePayload {
+  accessibilityRequestNote: AccessibilityRequestNote!
+}
+
 """
 A business owner is the person at CMS responsible for a system
 """
@@ -651,6 +667,9 @@ type Mutation {
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
+  createAccessibilityRequestNote(
+    input: CreateAccessibilityRequestNoteInput!
+  ): CreateAccessibilityRequestNotePayload @hasRole(role: EASI_508_TESTER_OR_USER)
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
   updateAccessibilityRequestStatus(input: UpdateAccessibilityRequestStatus) : UpdateAccessibilityRequestStatusPayload @hasRole(role: EASI_508_TESTER_OR_USER)
   createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)

@@ -123,6 +123,11 @@ export interface CreateAccessibilityRequestInput {
   name: string;
 }
 
+export interface CreateAccessibilityRequestNoteInput {
+  requestID: UUID;
+  note: string;
+}
+
 export interface CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType;
   requester: SystemIntakeRequesterInput;
