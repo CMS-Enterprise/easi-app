@@ -18,6 +18,7 @@ import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import FileUpload from 'components/FileUpload';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -59,6 +60,11 @@ const New = () => {
     CreateAccessibilityRequestDocumentVariables
   >(CreateAccessibilityRequestDocumentQuery);
 
+  const [
+    isErrorGeneratingPresignedUrl,
+    setErrorGeneratingPresignedUrl
+  ] = useState(false);
+
   if (loading) {
     return <div>Loading</div>;
   }
@@ -86,19 +92,23 @@ const New = () => {
           size: file?.size
         }
       }
-    }).then(result => {
-      const url = result.data?.generatePresignedUploadURL?.url;
-      if (
-        generateURLStatus.error ||
-        result.data?.generatePresignedUploadURL?.userErrors ||
-        isUndefined(url)
-      ) {
-        // eslint-disable-next-line
+    })
+      .then(result => {
+        const url = result.data?.generatePresignedUploadURL?.url;
+        if (
+          generateURLStatus.error ||
+          result.data?.generatePresignedUploadURL?.userErrors ||
+          isUndefined(url)
+        ) {
+          // eslint-disable-next-line
         console.error('Could not fetch presigned S3 URL');
-      } else {
-        setS3URL(url || '');
-      }
-    });
+        } else {
+          setS3URL(url || '');
+        }
+      })
+      .catch(() => {
+        setErrorGeneratingPresignedUrl(true);
+      });
   };
 
   const onSubmit = (values: FileUploadForm) => {
@@ -124,14 +134,18 @@ const New = () => {
               otherDocumentTypeDescription: values.documentType.otherType
             }
           }
-        }).then(response => {
-          if (!response.errors) {
-            showMessageOnNextPage(
-              `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
-            );
-            history.push(`/508/requests/${accessibilityRequestId}`);
-          }
-        });
+        })
+          .then(response => {
+            if (!response.errors) {
+              showMessageOnNextPage(
+                `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
+              );
+              history.push(`/508/requests/${accessibilityRequestId}`);
+            }
+          })
+          .catch(() => {
+            setErrorGeneratingPresignedUrl(true);
+          });
       });
     }
   };
@@ -184,6 +198,14 @@ const New = () => {
                     })}
                   </ErrorAlert>
                 )}
+                {isErrorGeneratingPresignedUrl && (
+                  <Alert
+                    type="error"
+                    heading={t('uploadDocument.presignedUrlErrorHeader')}
+                  >
+                    {t('uploadDocument.presignedUrlErrorBody')}
+                  </Alert>
+                )}
                 {createDocumentStatus.error && (
                   <ErrorAlert heading="Error uploading document">
                     <ErrorAlertMessage
@@ -214,6 +236,7 @@ const New = () => {
                           onChange(e);
                           setFieldValue('file', e.currentTarget?.files?.[0]);
                         }}
+                        accept=".pdf,.doc,.docx,.xls,.xlsx"
                       />
                     </FieldGroup>
                     {values.file && (

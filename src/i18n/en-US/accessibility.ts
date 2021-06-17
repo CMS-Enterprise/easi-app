@@ -25,6 +25,11 @@ const accessibility = {
     },
     noDocuments: 'No documents added to request yet.'
   },
+  uploadDocument: {
+    presignedUrlErrorHeader: 'There is a problem',
+    presignedUrlErrorBody:
+      'Something went wrong with EASi. Please try refreshing the page or try again later.'
+  },
   requestTable: {
     caption: 'List of 508 requests',
     header: {
