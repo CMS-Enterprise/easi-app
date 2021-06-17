@@ -50,6 +50,14 @@ export interface GetAccessibilityRequest_accessibilityRequest_statusRecord {
   status: AccessibilityRequestStatus;
 }
 
+export interface GetAccessibilityRequest_accessibilityRequest_notes {
+  __typename: "AccessibilityRequestNote";
+  id: UUID;
+  createdAt: Time;
+  authorName: string;
+  note: string;
+}
+
 export interface GetAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
   id: UUID;
@@ -60,6 +68,7 @@ export interface GetAccessibilityRequest_accessibilityRequest {
   documents: GetAccessibilityRequest_accessibilityRequest_documents[];
   testDates: GetAccessibilityRequest_accessibilityRequest_testDates[];
   statusRecord: GetAccessibilityRequest_accessibilityRequest_statusRecord;
+  notes: GetAccessibilityRequest_accessibilityRequest_notes[];
 }
 
 export interface GetAccessibilityRequest {

@@ -34,6 +34,12 @@ export default gql`
       statusRecord {
         status
       }
+      notes {
+        id
+        createdAt
+        authorName
+        note
+      }
     }
   }
 `;

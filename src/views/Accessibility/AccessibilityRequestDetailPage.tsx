@@ -39,6 +39,12 @@ import {
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import Modal from 'components/Modal';
+import {
+  NoteByline,
+  NoteContent,
+  NoteListItem,
+  NotesList
+} from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -320,6 +326,24 @@ const AccessibilityRequestDetailPage = () => {
             );
           }}
         </Formik>
+      </div>
+      <div
+        role="region"
+        aria-label="existing notes"
+        className="margin-top-6 margin-x-1"
+      >
+        <NotesList>
+          {data?.accessibilityRequest?.notes.map(note => (
+            <NoteListItem>
+              <NoteContent>{note.note}</NoteContent>
+              <NoteByline>
+                {`by ${note.authorName}`}
+                <span className="padding-x-1">|</span>
+                {formatDate(note.createdAt)}
+              </NoteByline>
+            </NoteListItem>
+          ))}
+        </NotesList>
       </div>
     </>
   );
