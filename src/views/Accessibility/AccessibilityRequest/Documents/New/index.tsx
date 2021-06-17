@@ -210,19 +210,11 @@ const New = () => {
                         as={FileUpload}
                         id="FileUpload-File"
                         name="file"
-                        ariaDescribedBy="FileUpload-Description"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           onChange(e);
                           setFieldValue('file', e.currentTarget?.files?.[0]);
                         }}
                       />
-                      <div
-                        id="FileUpload-Description"
-                        className="sr-only"
-                        tabIndex={-1}
-                      >
-                        Select a file.
-                      </div>
                     </FieldGroup>
                     {values.file && (
                       <FieldGroup
