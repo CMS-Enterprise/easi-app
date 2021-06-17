@@ -215,7 +215,7 @@ const New = () => {
                           onChange(e);
                           setFieldValue('file', e.currentTarget?.files?.[0]);
                         }}
-                        accept=".pdf,.docx,.xlsx"
+                        accept=".pdf,.doc,.docx,.xls,.xlsx"
                       />
                       <div
                         id="FileUpload-Description"
