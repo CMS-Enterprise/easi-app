@@ -23,11 +23,13 @@ func (s StoreTestSuite) TestCreateAccessibilityRequestNote() {
 		note := models.AccessibilityRequestNote{
 			Note:      "test note",
 			RequestID: accessibilityRequest.ID,
+			EUAUserID: testhelpers.RandomEUAID(),
 		}
 
 		returnedNote, err := s.store.CreateAccessibilityRequestNote(ctx, &note)
 		s.NoError(err)
 		s.Equal(note.Note, returnedNote.Note)
 		s.Equal(note.RequestID, returnedNote.RequestID)
+		s.Equal(note.EUAUserID, returnedNote.EUAUserID)
 	})
 }
