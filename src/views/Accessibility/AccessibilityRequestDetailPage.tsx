@@ -420,7 +420,7 @@ const AccessibilityRequestDetailPage = () => {
                             error={!!flatErrors.deletionReason}
                           >
                             <fieldset className="usa-fieldset margin-top-4">
-                              <legend className="usa-label margin-bottom-1">
+                              <legend className="usa-label">
                                 {t('removeAccessibilityRequest.reason')}
                               </legend>
                               <FieldErrorMsg>
