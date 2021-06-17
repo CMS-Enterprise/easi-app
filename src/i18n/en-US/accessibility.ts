@@ -50,6 +50,12 @@ const accessibility = {
           'Download and fill the VPAT and Test plan from the <1>templates page (opens in a new tab)</1>. The documents will help the 508 team know what to test and what criteria they should be looking for when testing.'
       }
     },
+    notes: {
+      addNote: 'Add a note',
+      submit: 'Add note',
+      confirmation: 'Note added to {{-requestName}}',
+      srOnlyAddNoteLink: 'Add a new note'
+    },
     documentUpload: 'Upload a document',
     other: 'Other request details',
     testingTemplates: '508 testing templates (opens in a new tab)',
