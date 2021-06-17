@@ -210,19 +210,11 @@ const New = () => {
                         as={FileUpload}
                         id="FileUpload-File"
                         name="file"
-                        ariaDescribedBy="FileUpload-Description"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           onChange(e);
                           setFieldValue('file', e.currentTarget?.files?.[0]);
                         }}
                       />
-                      <div
-                        id="FileUpload-Description"
-                        className="sr-only"
-                        tabIndex={-1}
-                      >
-                        Select a file.
-                      </div>
                     </FieldGroup>
                     {values.file && (
                       <FieldGroup
@@ -230,7 +222,7 @@ const New = () => {
                         error={!!flatErrors['documentType.commonType']}
                       >
                         <fieldset className="usa-fieldset margin-top-4">
-                          <legend className="usa-label margin-bottom-1">
+                          <legend className="usa-label">
                             What type of document are you uploading?
                           </legend>
                           <FieldErrorMsg>
@@ -288,7 +280,6 @@ const New = () => {
                                 <Label
                                   htmlFor="FileUpload-OtherType"
                                   className="margin-bottom-1"
-                                  style={{ marginTop: '0.5em' }}
                                 >
                                   Document name
                                 </Label>
@@ -299,7 +290,7 @@ const New = () => {
                                   as={TextField}
                                   error={!!flatErrors['documentType.otherType']}
                                   className="margin-top-0"
-                                  id="DocumentType-OtherType"
+                                  id="FileUpload-OtherType"
                                   name="documentType.otherType"
                                 />
                               </FieldGroup>

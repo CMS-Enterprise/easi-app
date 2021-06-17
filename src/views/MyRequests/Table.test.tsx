@@ -53,7 +53,8 @@ describe('My Requests Table', () => {
                     name: '508 Test 1',
                     submittedAt: '2021-05-25T19:22:40Z',
                     type: 'ACCESSIBILITY_REQUEST',
-                    status: 'OPEN'
+                    status: 'OPEN',
+                    lcid: null
                   }
                 },
                 {
@@ -62,7 +63,18 @@ describe('My Requests Table', () => {
                     name: 'Intake 1',
                     submittedAt: '2021-05-22T19:22:40Z',
                     type: 'GOVERNANCE_REQUEST',
-                    status: 'INTAKE_DRAFT'
+                    status: 'INTAKE_DRAFT',
+                    lcid: null
+                  }
+                },
+                {
+                  node: {
+                    id: '789',
+                    name: 'Intake 2',
+                    submittedAt: '2021-05-20T19:22:40Z',
+                    type: 'GOVERNANCE_REQUEST',
+                    status: 'LCID_ISSUED',
+                    lcid: 'A123456'
                   }
                 }
               ]
@@ -107,7 +119,7 @@ describe('My Requests Table', () => {
     it('displays rows of data', async () => {
       const component = await renderComponent();
       const rows = component.find('tbody').find('tr');
-      expect(rows.length).toEqual(2);
+      expect(rows.length).toEqual(3);
 
       const rowOne = rows.at(0);
       expect(rowOne.find('th').find('a').html()).toEqual(
@@ -117,13 +129,13 @@ describe('My Requests Table', () => {
       expect(rowOne.find('td').at(1).text()).toEqual('May 25 2021');
       expect(rowOne.find('td').at(2).text()).toEqual('Open');
 
-      const rowTwo = rows.at(1);
+      const rowTwo = rows.at(2);
       expect(rowTwo.find('th').find('a').html()).toEqual(
-        '<a class="usa-link" href="/governance-task-list/456">Intake 1</a>'
+        '<a class="usa-link" href="/governance-task-list/789">Intake 2</a>'
       );
       expect(rowTwo.find('td').at(0).text()).toEqual('IT Governance');
-      expect(rowTwo.find('td').at(1).text()).toEqual('May 22 2021');
-      expect(rowTwo.find('td').at(2).text()).toEqual('Intake draft');
+      expect(rowTwo.find('td').at(1).text()).toEqual('May 20 2021');
+      expect(rowTwo.find('td').at(2).text()).toEqual('LCID: A123456');
     });
   });
 });
