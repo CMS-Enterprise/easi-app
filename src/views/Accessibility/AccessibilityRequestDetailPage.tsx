@@ -257,15 +257,20 @@ const AccessibilityRequestDetailPage = () => {
               {message}
             </Alert>
           )}
-          <PageHeading>{requestName}</PageHeading>
-          <h2 className="font-heading-sm text-normal">
-            Current status
-            <div className="display-block">
-              <span className="bg-warning-lighter text-ink padding-05 display-inline-block margin-top-1">
-                {requestStatus}
-              </span>
-            </div>
-          </h2>
+          <PageHeading
+            aria-label={`${requestName} current status ${requestStatus}`}
+          >
+            {requestName}
+          </PageHeading>
+          <dl>
+            <dt data-testid="current-status-dt">Current status</dt>
+            <dd
+              data-testid="current-status-dd"
+              className="bg-warning-lighter padding-05 display-inline-block margin-top-1 margin-left-0"
+            >
+              {requestStatus}
+            </dd>
+          </dl>
           {isAccessibilityTeam && (
             <UswdsLink
               asCustom={Link}

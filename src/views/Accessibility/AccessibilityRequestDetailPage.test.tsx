@@ -83,7 +83,7 @@ describe('AccessibilityRequestDetailPage', () => {
         wrapper.update();
       });
       expect(
-        wrapper.find('h2').at(1).contains('Next step: Provide your documents')
+        wrapper.find('h2').at(0).contains('Next step: Provide your documents')
       ).toBe(true);
     });
 
@@ -149,7 +149,7 @@ describe('AccessibilityRequestDetailPage', () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
         wrapper.update();
       });
-      expect(wrapper.find('h2').at(1).contains('Documents')).toBe(true);
+      expect(wrapper.find('h2').at(0).contains('Documents')).toBe(true);
       expect(wrapper.find('AccessibilityDocumentsList').exists()).toBe(true);
     });
   });
@@ -177,7 +177,7 @@ describe('AccessibilityRequestDetailPage', () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
         wrapper.update();
       });
-      expect(wrapper.find('h2').at(1).contains('Documents')).toBe(true);
+      expect(wrapper.find('h2').at(0).contains('Documents')).toBe(true);
       expect(wrapper.find('AccessibilityDocumentsList').exists()).toBe(true);
       expect(wrapper.find('AccessibilityDocumentsList').text()).toEqual(
         'No documents added to request yet.'
@@ -204,7 +204,13 @@ describe('AccessibilityRequestDetailPage', () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       wrapper.update();
     });
-    expect(wrapper.find('h2').at(0).contains('Current status')).toBe(true);
-    expect(wrapper.find('h2').at(0).find('span').contains('Open')).toBe(true);
+    expect(
+      wrapper
+        .find('[data-testid="current-status-dt"]')
+        .contains('Current status')
+    ).toBe(true);
+    expect(
+      wrapper.find('[data-testid="current-status-dd"]').contains('Open')
+    ).toBe(true);
   });
 });
