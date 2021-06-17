@@ -261,6 +261,7 @@ type ComplexityRoot struct {
 
 	Request struct {
 		ID          func(childComplexity int) int
+		Lcid        func(childComplexity int) int
 		Name        func(childComplexity int) int
 		Status      func(childComplexity int) int
 		SubmittedAt func(childComplexity int) int
@@ -1665,6 +1666,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Request.ID(childComplexity), true
 
+	case "Request.lcid":
+		if e.complexity.Request.Lcid == nil {
+			break
+		}
+
+		return e.complexity.Request.Lcid(childComplexity), true
+
 	case "Request.name":
 		if e.complexity.Request.Name == nil {
 			break
@@ -2526,6 +2534,7 @@ type Request {
   submittedAt: Time
   type: RequestType!
   status: String!
+  lcid: String
 }
 
 type RequestsConnection {
@@ -9162,6 +9171,38 @@ func (ec *executionContext) _Request_status(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Request_lcid(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Lcid, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _RequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.RequestEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -15673,6 +15714,8 @@ func (ec *executionContext) _Request(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "lcid":
+			out.Values[i] = ec._Request_lcid(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
