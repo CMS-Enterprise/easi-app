@@ -11,36 +11,10 @@
   }
 
   &__governance-steps {
-    padding-left: 12px;
-    list-style: none;
     counter-reset: step;
 
     &[start="3"] {
       counter-reset: step 2;
-    }
-  }
-
-  &__governance-step {
-    display: flex;
-    align-items: baseline;
-    border-left: 2px solid #000;
-    counter-increment: step;
-
-
-    &:last-of-type {
-      border-left: none;
-    }
-
-    &:before {
-      flex: none;
-      content: counter(step);
-      background-color: #c4c4c4;
-      height: 24px;
-      width: 24px;
-      margin-left: -12px;
-      line-height: 24px;
-      text-align: center;
-      border-radius: 50%;
     }
   }
 }
