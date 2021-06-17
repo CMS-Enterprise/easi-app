@@ -128,6 +128,11 @@ export interface CreateAccessibilityRequestNoteInput {
   note: string;
 }
 
+export interface CreateSystemIntakeInput {
+  requestType: SystemIntakeRequestType;
+  requester: SystemIntakeRequesterInput;
+}
+
 export interface CreateSystemIntakeNoteInput {
   content: string;
   authorName: string;
@@ -174,6 +179,10 @@ export interface RejectIntakeInput {
   intakeId: UUID;
   nextSteps?: string | null;
   reason: string;
+}
+
+export interface SystemIntakeRequesterInput {
+  name: string;
 }
 
 /**

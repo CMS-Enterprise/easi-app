@@ -20,6 +20,7 @@ export interface UpdateAccessibilityRequestStatus_updateAccessibilityRequestStat
   id: UUID;
   requestID: UUID;
   status: AccessibilityRequestStatus;
+  euaUserId: string;
   userErrors: UpdateAccessibilityRequestStatus_updateAccessibilityRequestStatus_userErrors[] | null;
 }
 

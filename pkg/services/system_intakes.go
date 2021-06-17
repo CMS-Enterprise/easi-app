@@ -61,36 +61,6 @@ func NewFetchSystemIntakes(
 	}
 }
 
-// NewCreateSystemIntake is a service to create a business case
-func NewCreateSystemIntake(
-	config Config,
-	create func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
-) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-		logger := appcontext.ZLogger(ctx)
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowEASi() {
-			// Default to failure to authorize and create a quick audit log
-			logger.With(zap.Bool("Authorized", false)).
-				With(zap.String("Operation", "CreateSystemIntake")).
-				Info("something went wrong fetching the eua id from the context")
-			return &models.SystemIntake{}, &apperrors.UnauthorizedError{}
-		}
-		intake.EUAUserID = null.StringFrom(principal.ID())
-		// app validation belongs here
-		createdIntake, err := create(ctx, intake)
-		if err != nil {
-			logger.Error("failed to create a system intake")
-			return &models.SystemIntake{}, &apperrors.QueryError{
-				Err:       err,
-				Model:     intake,
-				Operation: apperrors.QueryPost,
-			}
-		}
-		return createdIntake, nil
-	}
-}
-
 // NewUpdateSystemIntake is a service to update a system intake
 func NewUpdateSystemIntake(
 	config Config,

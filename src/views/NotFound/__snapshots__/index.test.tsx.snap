@@ -193,6 +193,7 @@ exports[`The Not Found Page matches the snapshot 1`] = `
             aria-expanded={false}
             aria-label="Expand User Menu"
             className="easi-header__username"
+            data-testid="UserActions-Toggle"
             onClick={[Function]}
             type="button"
           >

@@ -23,6 +23,7 @@ func (s StoreTestSuite) TestCreateAccessibilityRequestStatusRecord() {
 		statusRecord := models.AccessibilityRequestStatusRecord{
 			Status:    models.AccessibilityRequestStatusOpen,
 			RequestID: accessibilityRequest.ID,
+			EUAUserID: "ASDF",
 		}
 
 		returnedRecord, err := s.store.CreateAccessibilityRequestStatusRecord(ctx, &statusRecord)
@@ -63,6 +64,7 @@ func (s StoreTestSuite) TestFetchLatestAccessibilityRequestStatusRecordByRequest
 	newStatusRecord := models.AccessibilityRequestStatusRecord{
 		Status:    models.AccessibilityRequestStatusClosed,
 		RequestID: accessibilityRequest.ID,
+		EUAUserID: "ASDF",
 	}
 	_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &newStatusRecord)
 	s.NoError(err)

@@ -8,6 +8,7 @@ export default gql`
       id
       requestID
       status
+      euaUserId
       userErrors {
         message
         path
