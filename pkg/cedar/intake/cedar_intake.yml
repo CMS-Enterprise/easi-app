@@ -126,42 +126,7 @@ definitions:
       - asIsPros
       - asIsCons
       - asIsCostSavings
-      - preferredTitle
-      - preferredSummary
-      - preferredAcquisitionApproach
-      - preferredSecurityIsApproved
-      - preferredSecurityIsBeingReviewed
-      - preferredHostingType
-      - preferredHostingLocation
-      - preferredHostingCloudServiceType
-      - preferredHasUI
-      - preferredPros
-      - preferredCons
-      - preferredCostSavings
-      - alternativeATitle
-      - alternativeASummary
-      - alternativeAAcquisitionApproach
-      - alternativeASecurityIsApproved
-      - alternativeASecurityIsBeingReviewed
-      - alternativeAHostingType
-      - alternativeAHostingLocation
-      - alternativeAHostingCloudServiceType
-      - alternativeAHasUI
-      - alternativeAPros
-      - alternativeACons
-      - alternativeACostSavings
-      - alternativeBTitle
-      - alternativeBSummary
-      - alternativeBAcquisitionApproach
-      - alternativeBSecurityIsApproved
-      - alternativeBSecurityIsBeingReviewed
-      - alternativeBHostingType
-      - alternativeBHostingLocation
-      - alternativeBHostingCloudServiceType
-      - alternativeBHasUI
-      - alternativeBPros
-      - alternativeBCons
-      - alternativeBCostSavings
+      - businessSolutions
       - lifecycleCostLines
       - submittedAt
       - archivedAt
@@ -206,93 +171,11 @@ definitions:
         type: string
       asIsCostSavings:
         type: string
-      preferredTitle:
-        type: string
-      preferredSummary:
-        type: string
-      preferredAcquisitionApproach:
-        type: string
-      preferredSecurityIsApproved:
-        # type: boolean
-        type: string
-        enum:
-          - ""
-          - "false"
-          - "true"
-      preferredSecurityIsBeingReviewed:
-        type: string
-      preferredHostingType:
-        type: string
-      preferredHostingLocation:
-        type: string
-      preferredHostingCloudServiceType:
-        type: string
-      preferredHasUI:
-        type: string
-      preferredPros:
-        type: string
-      preferredCons:
-        type: string
-      preferredCostSavings:
-        type: string
-      alternativeATitle:
-        type: string
-      alternativeASummary:
-        type: string
-      alternativeAAcquisitionApproach:
-        type: string
-      alternativeASecurityIsApproved:
-        # type: boolean
-        type: string
-        enum:
-          - ""
-          - "false"
-          - "true"
-      alternativeASecurityIsBeingReviewed:
-        type: string
-      alternativeAHostingType:
-        type: string
-      alternativeAHostingLocation:
-        type: string
-      alternativeAHostingCloudServiceType:
-        type: string
-      alternativeAHasUI:
-        type: string
-      alternativeAPros:
-        type: string
-      alternativeACons:
-        type: string
-      alternativeACostSavings:
-        type: string
-      alternativeBTitle:
-        type: string
-      alternativeBSummary:
-        type: string
-      alternativeBAcquisitionApproach:
-        type: string
-      alternativeBSecurityIsApproved:
-        # type: boolean
-        type: string
-        enum:
-          - ""
-          - "false"
-          - "true"
-      alternativeBSecurityIsBeingReviewed:
-        type: string
-      alternativeBHostingType:
-        type: string
-      alternativeBHostingLocation:
-        type: string
-      alternativeBHostingCloudServiceType:
-        type: string
-      alternativeBHasUI:
-        type: string
-      alternativeBPros:
-        type: string
-      alternativeBCons:
-        type: string
-      alternativeBCostSavings:
-        type: string
+      # solutions holds the preferred, alternative A, and alternative B solutions
+      businessSolutions:
+        type: array
+        items:
+          $ref: '#/definitions/EASIBusinessSolution'     
       lifecycleCostLines:
         type: array
         items:
@@ -492,6 +375,58 @@ definitions:
       rejectionReason:
         type: string
       adminLead:
+        type: string
+  EASIBusinessSolution:
+    type: object
+    required:
+      - solutionType
+      - title
+      - summary
+      - acquisitionApproach
+      - securityIsApproved
+      - securityIsBeingReviewed
+      - hostingType
+      - hostingLocation
+      - hostingCloudServiceType
+      - hasUI
+      - pros
+      - cons
+      - costSavings
+    properties:
+      solutionType:
+        type: string
+        enum:
+          - "preferred"
+          - "alternativeA"
+          - "alternativeB"
+      title:
+        type: string
+      summary:
+        type: string
+      acquisitionApproach:
+        type: string
+      securityIsApproved:
+        # type: boolean
+        type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
+      securityIsBeingReviewed:
+        type: string
+      hostingType:
+        type: string
+      hostingLocation:
+        type: string
+      hostingCloudServiceType:
+        type: string
+      hasUI:
+        type: string
+      pros:
+        type: string
+      cons:
+        type: string
+      costSavings:
         type: string
   EASILifecycleCost:
     type: object

@@ -34,44 +34,7 @@ func translateBizCase(ctx context.Context, bc *models.BusinessCase) (*wire.Intak
 		AsIsCons:        pStr(bc.AsIsCons.ValueOrZero()),
 		AsIsCostSavings: pStr(bc.AsIsCostSavings.ValueOrZero()),
 
-		PreferredTitle:                   pStr(bc.PreferredTitle.ValueOrZero()),
-		PreferredSummary:                 pStr(bc.PreferredSummary.ValueOrZero()),
-		PreferredAcquisitionApproach:     pStr(bc.PreferredAcquisitionApproach.ValueOrZero()),
-		PreferredSecurityIsApproved:      pBool(bc.PreferredSecurityIsApproved),
-		PreferredSecurityIsBeingReviewed: pStr(bc.PreferredSecurityIsBeingReviewed.ValueOrZero()),
-		PreferredHostingType:             pStr(bc.PreferredHostingType.ValueOrZero()),
-		PreferredHostingLocation:         pStr(bc.PreferredHostingLocation.ValueOrZero()),
-		PreferredHostingCloudServiceType: pStr(bc.PreferredHostingCloudServiceType.ValueOrZero()),
-		PreferredHasUI:                   pStr(bc.PreferredHasUI.ValueOrZero()),
-		PreferredPros:                    pStr(bc.PreferredPros.ValueOrZero()),
-		PreferredCons:                    pStr(bc.PreferredCons.ValueOrZero()),
-		PreferredCostSavings:             pStr(bc.PreferredCostSavings.ValueOrZero()),
-
-		AlternativeATitle:                   pStr(bc.AlternativeATitle.ValueOrZero()),
-		AlternativeASummary:                 pStr(bc.AlternativeASummary.ValueOrZero()),
-		AlternativeAAcquisitionApproach:     pStr(bc.AlternativeAAcquisitionApproach.ValueOrZero()),
-		AlternativeASecurityIsApproved:      pBool(bc.AlternativeASecurityIsApproved),
-		AlternativeASecurityIsBeingReviewed: pStr(bc.AlternativeASecurityIsBeingReviewed.ValueOrZero()),
-		AlternativeAHostingType:             pStr(bc.AlternativeAHostingType.ValueOrZero()),
-		AlternativeAHostingLocation:         pStr(bc.AlternativeAHostingLocation.ValueOrZero()),
-		AlternativeAHostingCloudServiceType: pStr(bc.AlternativeAHostingCloudServiceType.ValueOrZero()),
-		AlternativeAHasUI:                   pStr(bc.AlternativeAHasUI.ValueOrZero()),
-		AlternativeAPros:                    pStr(bc.AlternativeAPros.ValueOrZero()),
-		AlternativeACons:                    pStr(bc.AlternativeACons.ValueOrZero()),
-		AlternativeACostSavings:             pStr(bc.AlternativeACostSavings.ValueOrZero()),
-
-		AlternativeBTitle:                   pStr(bc.AlternativeBTitle.ValueOrZero()),
-		AlternativeBSummary:                 pStr(bc.AlternativeBSummary.ValueOrZero()),
-		AlternativeBAcquisitionApproach:     pStr(bc.AlternativeBAcquisitionApproach.ValueOrZero()),
-		AlternativeBSecurityIsApproved:      pBool(bc.AlternativeBSecurityIsApproved),
-		AlternativeBSecurityIsBeingReviewed: pStr(bc.AlternativeBSecurityIsBeingReviewed.ValueOrZero()),
-		AlternativeBHostingType:             pStr(bc.AlternativeBHostingType.ValueOrZero()),
-		AlternativeBHostingLocation:         pStr(bc.AlternativeBHostingLocation.ValueOrZero()),
-		AlternativeBHostingCloudServiceType: pStr(bc.AlternativeBHostingCloudServiceType.ValueOrZero()),
-		AlternativeBHasUI:                   pStr(bc.AlternativeBHasUI.ValueOrZero()),
-		AlternativeBPros:                    pStr(bc.AlternativeBPros.ValueOrZero()),
-		AlternativeBCons:                    pStr(bc.AlternativeBCons.ValueOrZero()),
-		AlternativeBCostSavings:             pStr(bc.PreferredCostSavings.ValueOrZero()),
+		BusinessSolutions: []*wire.EASIBusinessSolution{},
 
 		SubmittedAt:        pDateTime(bc.SubmittedAt),
 		ArchivedAt:         pDateTime(bc.ArchivedAt),
@@ -85,6 +48,71 @@ func translateBizCase(ctx context.Context, bc *models.BusinessCase) (*wire.Intak
 	}
 
 	// build the collection of embedded objects
+
+	// TODO: edit business case db model to hold solutions array instead of individual fields
+
+	// business solutions
+	// preferred (required)
+	preferredSolution := &wire.EASIBusinessSolution{
+		SolutionType:            pStr("preferred"),
+		Title:                   pStr(bc.PreferredTitle.ValueOrZero()),
+		Summary:                 pStr(bc.PreferredSummary.ValueOrZero()),
+		AcquisitionApproach:     pStr(bc.PreferredAcquisitionApproach.ValueOrZero()),
+		SecurityIsApproved:      pBool(bc.PreferredSecurityIsApproved),
+		SecurityIsBeingReviewed: pStr(bc.PreferredSecurityIsBeingReviewed.ValueOrZero()),
+		HostingType:             pStr(bc.PreferredHostingType.ValueOrZero()),
+		HostingLocation:         pStr(bc.PreferredHostingLocation.ValueOrZero()),
+		HostingCloudServiceType: pStr(bc.PreferredHostingCloudServiceType.ValueOrZero()),
+		HasUI:                   pStr(bc.PreferredHasUI.ValueOrZero()),
+		Pros:                    pStr(bc.PreferredPros.ValueOrZero()),
+		Cons:                    pStr(bc.PreferredCons.ValueOrZero()),
+		CostSavings:             pStr(bc.PreferredCostSavings.ValueOrZero()),
+	}
+
+	obj.BusinessSolutions = append(obj.BusinessSolutions, preferredSolution)
+
+	// TODO: do we need to check if alternative a and b are filled out?
+	//       what is the best way to do that? need to check each field individually?
+
+	// alternative a (optional)
+	alternativeASolution := &wire.EASIBusinessSolution{
+		SolutionType:            pStr("alternativeA"),
+		Title:                   pStr(bc.AlternativeATitle.ValueOrZero()),
+		Summary:                 pStr(bc.AlternativeASummary.ValueOrZero()),
+		AcquisitionApproach:     pStr(bc.AlternativeAAcquisitionApproach.ValueOrZero()),
+		SecurityIsApproved:      pBool(bc.AlternativeASecurityIsApproved),
+		SecurityIsBeingReviewed: pStr(bc.AlternativeASecurityIsBeingReviewed.ValueOrZero()),
+		HostingType:             pStr(bc.AlternativeAHostingType.ValueOrZero()),
+		HostingLocation:         pStr(bc.AlternativeAHostingLocation.ValueOrZero()),
+		HostingCloudServiceType: pStr(bc.AlternativeAHostingCloudServiceType.ValueOrZero()),
+		HasUI:                   pStr(bc.AlternativeAHasUI.ValueOrZero()),
+		Pros:                    pStr(bc.AlternativeAPros.ValueOrZero()),
+		Cons:                    pStr(bc.AlternativeACons.ValueOrZero()),
+		CostSavings:             pStr(bc.AlternativeACostSavings.ValueOrZero()),
+	}
+
+	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeASolution)
+
+	// alternative b (optional)
+	alternativeBSolution := &wire.EASIBusinessSolution{
+		SolutionType:            pStr("alternativeB"),
+		Title:                   pStr(bc.AlternativeBTitle.ValueOrZero()),
+		Summary:                 pStr(bc.AlternativeBSummary.ValueOrZero()),
+		AcquisitionApproach:     pStr(bc.AlternativeBAcquisitionApproach.ValueOrZero()),
+		SecurityIsApproved:      pBool(bc.AlternativeBSecurityIsApproved),
+		SecurityIsBeingReviewed: pStr(bc.AlternativeBSecurityIsBeingReviewed.ValueOrZero()),
+		HostingType:             pStr(bc.AlternativeBHostingType.ValueOrZero()),
+		HostingLocation:         pStr(bc.AlternativeBHostingLocation.ValueOrZero()),
+		HostingCloudServiceType: pStr(bc.AlternativeBHostingCloudServiceType.ValueOrZero()),
+		HasUI:                   pStr(bc.AlternativeBHasUI.ValueOrZero()),
+		Pros:                    pStr(bc.AlternativeBPros.ValueOrZero()),
+		Cons:                    pStr(bc.AlternativeBCons.ValueOrZero()),
+		CostSavings:             pStr(bc.AlternativeBCostSavings.ValueOrZero()),
+	}
+
+	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeBSolution)
+
+	// lifecycle cost lines
 	for _, line := range bc.LifecycleCostLines {
 		lc := &wire.EASILifecycleCost{
 			ID:             pStr(line.ID.String()),

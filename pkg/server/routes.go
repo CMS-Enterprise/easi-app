@@ -126,7 +126,7 @@ func (s *Server) routes(
 
 	// set up S3 client
 	s3Config := s.NewS3Config()
-	if s.environment.Local() {
+	if s.environment.Local() || s.environment.Test() {
 		s3Config.IsLocal = true
 	}
 
@@ -246,10 +246,6 @@ func (s *Server) routes(
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,
-		services.NewCreateSystemIntake(
-			serviceConfig,
-			store.CreateSystemIntake,
-		),
 		services.NewUpdateSystemIntake(
 			serviceConfig,
 			store.FetchSystemIntakeByID,

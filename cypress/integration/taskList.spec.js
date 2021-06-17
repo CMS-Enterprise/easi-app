@@ -2,13 +2,15 @@ describe('The Task List', () => {
   beforeEach(() => {
     cy.server();
     cy.localLogin({name: 'TEST'});
-    cy.route('POST', '/api/v1/system_intake').as('postSystemIntake');
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
-    cy.visit('/governance-task-list/new');
+    cy.visit('/system/request-type');
+    cy.get('#RequestType-NewSystem').check({ force: true });
+    cy.contains('button', 'Continue').click();
+    cy.contains('a', 'Get started').click();
   });
 
   it('shows a continue link when a user clicks back until they reach the task list', () => {
-    cy.wait(500);
+    cy.wait(1000);
     cy.get('[data-testid="intake-start-btn"]')
       .should('be.visible')
       .click();
@@ -23,7 +25,7 @@ describe('The Task List', () => {
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
-    cy.wait('@postSystemIntake');
+    cy.wait('@putSystemIntake');
 
     cy.contains('h1', 'Request details');
 

@@ -6,6 +6,7 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"strconv"
@@ -50,7 +51,6 @@ func (o *IntakeAddReader) ReadResponse(response runtime.ClientResponse, consumer
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -61,7 +61,7 @@ func NewIntakeAddAccepted() *IntakeAddAccepted {
 	return &IntakeAddAccepted{}
 }
 
-/*IntakeAddAccepted handles this case with default header values.
+/* IntakeAddAccepted describes a response with status code 202, with default header values.
 
 Accepted
 */
@@ -72,7 +72,6 @@ type IntakeAddAccepted struct {
 func (o *IntakeAddAccepted) Error() string {
 	return fmt.Sprintf("[POST /intake][%d] intakeAddAccepted  %+v", 202, o.Payload)
 }
-
 func (o *IntakeAddAccepted) GetPayload() *IntakeAddAcceptedBody {
 	return o.Payload
 }
@@ -94,7 +93,7 @@ func NewIntakeAddBadRequest() *IntakeAddBadRequest {
 	return &IntakeAddBadRequest{}
 }
 
-/*IntakeAddBadRequest handles this case with default header values.
+/* IntakeAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -105,7 +104,6 @@ type IntakeAddBadRequest struct {
 func (o *IntakeAddBadRequest) Error() string {
 	return fmt.Sprintf("[POST /intake][%d] intakeAddBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *IntakeAddBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -127,7 +125,7 @@ func NewIntakeAddUnauthorized() *IntakeAddUnauthorized {
 	return &IntakeAddUnauthorized{}
 }
 
-/*IntakeAddUnauthorized handles this case with default header values.
+/* IntakeAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -138,7 +136,6 @@ type IntakeAddUnauthorized struct {
 func (o *IntakeAddUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /intake][%d] intakeAddUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *IntakeAddUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -160,7 +157,7 @@ func NewIntakeAddInternalServerError() *IntakeAddInternalServerError {
 	return &IntakeAddInternalServerError{}
 }
 
-/*IntakeAddInternalServerError handles this case with default header values.
+/* IntakeAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -171,7 +168,6 @@ type IntakeAddInternalServerError struct {
 func (o *IntakeAddInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /intake][%d] intakeAddInternalServerError  %+v", 500, o.Payload)
 }
-
 func (o *IntakeAddInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -212,7 +208,6 @@ func (o *IntakeAddAcceptedBody) Validate(formats strfmt.Registry) error {
 }
 
 func (o *IntakeAddAcceptedBody) validateResponses(formats strfmt.Registry) error {
-
 	if swag.IsZero(o.Responses) { // not required
 		return nil
 	}
@@ -224,6 +219,38 @@ func (o *IntakeAddAcceptedBody) validateResponses(formats strfmt.Registry) error
 
 		if o.Responses[i] != nil {
 			if err := o.Responses[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("intakeAddAccepted" + "." + "Responses" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this intake add accepted body based on the context it is used
+func (o *IntakeAddAcceptedBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateResponses(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *IntakeAddAcceptedBody) contextValidateResponses(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Responses); i++ {
+
+		if o.Responses[i] != nil {
+			if err := o.Responses[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("intakeAddAccepted" + "." + "Responses" + "." + strconv.Itoa(i))
 				}
@@ -278,7 +305,6 @@ func (o *IntakeAddBody) Validate(formats strfmt.Registry) error {
 }
 
 func (o *IntakeAddBody) validateIntakes(formats strfmt.Registry) error {
-
 	if swag.IsZero(o.Intakes) { // not required
 		return nil
 	}
@@ -290,6 +316,38 @@ func (o *IntakeAddBody) validateIntakes(formats strfmt.Registry) error {
 
 		if o.Intakes[i] != nil {
 			if err := o.Intakes[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("body" + "." + "Intakes" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this intake add body based on the context it is used
+func (o *IntakeAddBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateIntakes(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *IntakeAddBody) contextValidateIntakes(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Intakes); i++ {
+
+		if o.Intakes[i] != nil {
+			if err := o.Intakes[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("body" + "." + "Intakes" + "." + strconv.Itoa(i))
 				}

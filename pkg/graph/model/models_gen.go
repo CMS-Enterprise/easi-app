@@ -106,6 +106,11 @@ type CreateAccessibilityRequestPayload struct {
 	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
+type CreateSystemIntakeInput struct {
+	RequestType models.SystemIntakeRequestType `json:"requestType"`
+	Requester   *SystemIntakeRequesterInput    `json:"requester"`
+}
+
 type CreateSystemIntakeNoteInput struct {
 	Content    string    `json:"content"`
 	AuthorName string    `json:"authorName"`
@@ -295,6 +300,10 @@ type SystemIntakeRequester struct {
 	Name      string  `json:"name"`
 }
 
+type SystemIntakeRequesterInput struct {
+	Name string `json:"name"`
+}
+
 // Parameters for updating a 508/accessibility request's status
 type UpdateAccessibilityRequestStatus struct {
 	RequestID uuid.UUID                         `json:"requestID"`
@@ -306,6 +315,7 @@ type UpdateAccessibilityRequestStatusPayload struct {
 	ID         uuid.UUID                         `json:"id"`
 	RequestID  uuid.UUID                         `json:"requestID"`
 	Status     models.AccessibilityRequestStatus `json:"status"`
+	EuaUserID  string                            `json:"euaUserId"`
 	UserErrors []*UserError                      `json:"userErrors"`
 }
 

@@ -16,52 +16,66 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewHealthCheckGetParams creates a new HealthCheckGetParams object
-// with the default values initialized.
+// NewHealthCheckGetParams creates a new HealthCheckGetParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewHealthCheckGetParams() *HealthCheckGetParams {
-
 	return &HealthCheckGetParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewHealthCheckGetParamsWithTimeout creates a new HealthCheckGetParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewHealthCheckGetParamsWithTimeout(timeout time.Duration) *HealthCheckGetParams {
-
 	return &HealthCheckGetParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewHealthCheckGetParamsWithContext creates a new HealthCheckGetParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewHealthCheckGetParamsWithContext(ctx context.Context) *HealthCheckGetParams {
-
 	return &HealthCheckGetParams{
-
 		Context: ctx,
 	}
 }
 
 // NewHealthCheckGetParamsWithHTTPClient creates a new HealthCheckGetParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewHealthCheckGetParamsWithHTTPClient(client *http.Client) *HealthCheckGetParams {
-
 	return &HealthCheckGetParams{
 		HTTPClient: client,
 	}
 }
 
-/*HealthCheckGetParams contains all the parameters to send to the API endpoint
-for the health check get operation typically these are written to a http.Request
+/* HealthCheckGetParams contains all the parameters to send to the API endpoint
+   for the health check get operation.
+
+   Typically these are written to a http.Request.
 */
 type HealthCheckGetParams struct {
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the health check get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *HealthCheckGetParams) WithDefaults() *HealthCheckGetParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the health check get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *HealthCheckGetParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the health check get params

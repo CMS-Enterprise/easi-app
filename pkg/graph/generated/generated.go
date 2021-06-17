@@ -94,6 +94,7 @@ type ComplexityRoot struct {
 	}
 
 	AccessibilityRequestStatusRecord struct {
+		EUAUserID func(childComplexity int) int
 		ID        func(childComplexity int) int
 		RequestID func(childComplexity int) int
 		Status    func(childComplexity int) int
@@ -237,6 +238,7 @@ type ComplexityRoot struct {
 		CreateAccessibilityRequest                       func(childComplexity int, input model.CreateAccessibilityRequestInput) int
 		CreateAccessibilityRequestDocument               func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
 		CreateAccessibilityRequestNote                   func(childComplexity int, input model.CreateAccessibilityRequestNoteInput) int
+		CreateSystemIntake                               func(childComplexity int, input model.CreateSystemIntakeInput) int
 		CreateSystemIntakeActionBusinessCaseNeeded       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionBusinessCaseNeedsChanges func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionGuideReceievedClose      func(childComplexity int, input model.BasicActionInput) int
@@ -434,6 +436,7 @@ type ComplexityRoot struct {
 	}
 
 	UpdateAccessibilityRequestStatusPayload struct {
+		EuaUserID  func(childComplexity int) int
 		ID         func(childComplexity int) int
 		RequestID  func(childComplexity int) int
 		Status     func(childComplexity int) int
@@ -510,6 +513,7 @@ type MutationResolver interface {
 	CreateSystemIntakeActionReadyForGrt(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error)
+	CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
 	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
 	DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error)
@@ -764,6 +768,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequestNote.RequestID(childComplexity), true
+
+	case "AccessibilityRequestStatusRecord.euaUserId":
+		if e.complexity.AccessibilityRequestStatusRecord.EUAUserID == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestStatusRecord.EUAUserID(childComplexity), true
 
 	case "AccessibilityRequestStatusRecord.id":
 		if e.complexity.AccessibilityRequestStatusRecord.ID == nil {
@@ -1375,6 +1386,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateAccessibilityRequestNote(childComplexity, args["input"].(model.CreateAccessibilityRequestNoteInput)), true
+
+	case "Mutation.createSystemIntake":
+		if e.complexity.Mutation.CreateSystemIntake == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSystemIntake_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSystemIntake(childComplexity, args["input"].(model.CreateSystemIntakeInput)), true
 
 	case "Mutation.createSystemIntakeActionBusinessCaseNeeded":
 		if e.complexity.Mutation.CreateSystemIntakeActionBusinessCaseNeeded == nil {
@@ -2402,6 +2425,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TestDate.TestType(childComplexity), true
 
+	case "UpdateAccessibilityRequestStatusPayload.euaUserId":
+		if e.complexity.UpdateAccessibilityRequestStatusPayload.EuaUserID == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccessibilityRequestStatusPayload.EuaUserID(childComplexity), true
+
 	case "UpdateAccessibilityRequestStatusPayload.id":
 		if e.complexity.UpdateAccessibilityRequestStatusPayload.ID == nil {
 			break
@@ -2597,6 +2627,7 @@ type AccessibilityRequestStatusRecord {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+  euaUserId: String!
 }
 
 """
@@ -2614,6 +2645,7 @@ type UpdateAccessibilityRequestStatusPayload {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+  euaUserId: String!
   userErrors: [UserError!]
 }
 
@@ -3059,6 +3091,15 @@ type SystemIntake {
   updatedAt: Time!
 }
 
+input SystemIntakeRequesterInput {
+  name: String!
+}
+
+input CreateSystemIntakeInput {
+  requestType: SystemIntakeRequestType!
+  requester: SystemIntakeRequesterInput!
+}
+
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -3205,6 +3246,7 @@ type Mutation {
   createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
+  createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake @hasRole(role: EASI_USER)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER_OR_USER)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
@@ -3523,6 +3565,21 @@ func (ec *executionContext) field_Mutation_createSystemIntakeNote_args(ctx conte
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreateSystemIntakeNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeNoteInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createSystemIntake_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CreateSystemIntakeInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateSystemIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4873,6 +4930,41 @@ func (ec *executionContext) _AccessibilityRequestStatusRecord_status(ctx context
 	res := resTmp.(models.AccessibilityRequestStatus)
 	fc.Result = res
 	return ec.marshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequestStatusRecord_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestStatusRecord) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestStatusRecord",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EUAUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestsConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestsConnection) (ret graphql.Marshaler) {
@@ -8327,6 +8419,69 @@ func (ec *executionContext) _Mutation_createSystemIntakeNote(ctx context.Context
 	res := resTmp.(*model.SystemIntakeNote)
 	fc.Result = res
 	return ec.marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNote(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createSystemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createSystemIntake_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateSystemIntake(rctx, args["input"].(model.CreateSystemIntakeInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_USER")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.SystemIntake); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.SystemIntake`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntake)
+	fc.Result = res
+	return ec.marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -12633,6 +12788,41 @@ func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_status(ctx 
 	return ec.marshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_euaUserId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccessibilityRequestStatusPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EuaUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -14138,6 +14328,34 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestNoteInput(ct
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateSystemIntakeInput(ctx context.Context, obj interface{}) (model.CreateSystemIntakeInput, error) {
+	var it model.CreateSystemIntakeInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "requestType":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestType"))
+			it.RequestType, err = ec.unmarshalNSystemIntakeRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "requester":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requester"))
+			it.Requester, err = ec.unmarshalNSystemIntakeRequesterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequesterInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateSystemIntakeNoteInput(ctx context.Context, obj interface{}) (model.CreateSystemIntakeNoteInput, error) {
 	var it model.CreateSystemIntakeNoteInput
 	var asMap = obj.(map[string]interface{})
@@ -14417,6 +14635,26 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
 			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeRequesterInput(ctx context.Context, obj interface{}) (model.SystemIntakeRequesterInput, error) {
+	var it model.SystemIntakeRequesterInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14899,6 +15137,11 @@ func (ec *executionContext) _AccessibilityRequestStatusRecord(ctx context.Contex
 			}
 		case "status":
 			out.Values[i] = ec._AccessibilityRequestStatusRecord_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "euaUserId":
+			out.Values[i] = ec._AccessibilityRequestStatusRecord_euaUserId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -15704,6 +15947,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createSystemIntakeActionSendEmail(ctx, field)
 		case "createSystemIntakeNote":
 			out.Values[i] = ec._Mutation_createSystemIntakeNote(ctx, field)
+		case "createSystemIntake":
+			out.Values[i] = ec._Mutation_createSystemIntake(ctx, field)
 		case "createTestDate":
 			out.Values[i] = ec._Mutation_createTestDate(ctx, field)
 		case "updateTestDate":
@@ -16915,6 +17160,11 @@ func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload(ctx context
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "euaUserId":
+			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "userErrors":
 			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_userErrors(ctx, field, obj)
 		default:
@@ -17517,6 +17767,11 @@ func (ec *executionContext) unmarshalNCreateAccessibilityRequestNoteInput2github
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateSystemIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeInput(ctx context.Context, v interface{}) (model.CreateSystemIntakeInput, error) {
+	res, err := ec.unmarshalInputCreateSystemIntakeInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateSystemIntakeNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeNoteInput(ctx context.Context, v interface{}) (model.CreateSystemIntakeNoteInput, error) {
 	res, err := ec.unmarshalInputCreateSystemIntakeNoteInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -17998,6 +18253,11 @@ func (ec *executionContext) marshalNSystemIntakeRequester2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._SystemIntakeRequester(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeRequesterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequesterInput(ctx context.Context, v interface{}) (*model.SystemIntakeRequesterInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeRequesterInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, v interface{}) (models.SystemIntakeStatus, error) {
