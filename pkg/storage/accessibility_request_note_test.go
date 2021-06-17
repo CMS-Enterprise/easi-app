@@ -34,8 +34,7 @@ func (s StoreTestSuite) TestCreateAccessibilityRequestNote() {
 	})
 }
 
-func (s StoreTestSuite) TestFetchAccessibilityRequestsByRequestID() {
-	// set up some notes
+func (s StoreTestSuite) TestFetchAccessibilityRequestsNotesByRequestID() {
 	ctx := context.Background()
 	intake := testhelpers.NewSystemIntake()
 	_, err := s.store.CreateSystemIntake(ctx, &intake)
@@ -71,19 +70,18 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestsByRequestID() {
 	s.NoError(err)
 
 	s.Run("fetch accessibility request notes succeeds", func() {
-		notes, err := s.store.FetchAccessibilityRequestsByRequestID(ctx, accessibilityRequest.ID)
+		notes, err := s.store.FetchAccessibilityRequestNotesByRequestID(ctx, accessibilityRequest.ID)
 		s.NoError(err)
-		s.Equal(3, len(*notes))
-		returnedNotes := *notes
-		s.Equal("last created test note", returnedNotes[0].Note)
-		s.Equal("HAHA", returnedNotes[0].EUAUserID)
-		s.Equal("first test note", returnedNotes[2].Note)
-		s.Equal("TADA", returnedNotes[2].EUAUserID)
+		s.Equal(3, len(notes))
+		s.Equal("last created test note", notes[0].Note)
+		s.Equal("HAHA", notes[0].EUAUserID)
+		s.Equal("first test note", notes[2].Note)
+		s.Equal("TADA", notes[2].EUAUserID)
 	})
 
 	s.Run("fetch accessibility request notes for request with no notes succeeds", func() {
-		notes, err := s.store.FetchAccessibilityRequestsByRequestID(ctx, uuid.New())
+		notes, err := s.store.FetchAccessibilityRequestNotesByRequestID(ctx, uuid.New())
 		s.NoError(err)
-		s.Equal(0, len(*notes))
+		s.Equal(0, len(notes))
 	})
 }
