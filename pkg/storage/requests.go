@@ -22,6 +22,7 @@ type Request struct {
 	SubmittedAt *time.Time        `db:"submitted_at"`
 	Type        model.RequestType `db:"record_type"`
 	Status      string
+	LifecycleID null.String `db:"lcid"`
 }
 
 // FetchMyRequests queries the DB for an accessibility requests.
@@ -38,7 +39,8 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		accessibility_requests.name,
 		accessibility_requests.created_at AS submitted_at,
 		'ACCESSIBILITY_REQUEST' record_type,
-		accessibility_request_status_records.status::text
+		accessibility_request_status_records.status::text,
+		null lcid
 	FROM accessibility_requests
 		JOIN accessibility_request_status_records
 			ON accessibility_request_status_records.request_id = accessibility_requests.id
@@ -59,7 +61,8 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		project_name AS name,
 		submitted_at,
 		'GOVERNANCE_REQUEST' record_type,
-		status::text
+		status::text,
+		lcid
 	FROM system_intakes
 		WHERE archived_at IS NULL
 		AND system_intakes.eua_user_id = $1
