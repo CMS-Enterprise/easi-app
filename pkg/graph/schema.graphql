@@ -45,7 +45,7 @@ type AccessibilityRequest {
   testDates: [TestDate!]!
   euaUserId: String!
   statusRecord: AccessibilityRequestStatusRecord!
-  notes: [AccessibilityRequestNote!]! @hasRole(role: EASI_508_TESTER_OR_USER)
+  notes: [AccessibilityRequestNote!]!
 }
 
 enum AccessibilityRequestStatus {

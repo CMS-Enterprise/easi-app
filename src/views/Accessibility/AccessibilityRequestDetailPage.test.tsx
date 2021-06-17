@@ -124,7 +124,14 @@ describe('AccessibilityRequestDetailPage', () => {
                 testDates: [],
                 statusRecord: {
                   status: 'OPEN'
-                }
+                },
+                notes: [
+                  {
+                    id: 'noteID',
+                    authorName: 'Common Human',
+                    note: 'This is very well done'
+                  }
+                ]
               }
             }
           }
