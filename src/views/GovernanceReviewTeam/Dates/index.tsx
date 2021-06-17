@@ -154,10 +154,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                     <FieldErrorMsg>{flatErrors.grtDateMonth}</FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.grtDateDay}</FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.grtDateYear}</FieldErrorMsg>
-                    <div
-                      className="usa-memorable-date"
-                      style={{ marginTop: '-2rem' }}
-                    >
+                    <div className="usa-memorable-date">
                       <div className="usa-form-group usa-form-group--month">
                         <Label htmlFor="Dates-GrtDateMonth">
                           {t('general:date.month')}
@@ -210,10 +207,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                     <FieldErrorMsg>{flatErrors.grbDateMonth}</FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.grbDateDay}</FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.grbDateYear}</FieldErrorMsg>
-                    <div
-                      className="usa-memorable-date"
-                      style={{ marginTop: '-2rem' }}
-                    >
+                    <div className="usa-memorable-date">
                       <div className="usa-form-group usa-form-group--month">
                         <Label htmlFor="Dates-GrbDateMonth">
                           {t('general:date.month')}
