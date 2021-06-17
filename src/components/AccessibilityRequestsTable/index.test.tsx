@@ -37,7 +37,7 @@ describe('AccessibilityRequestsTable', () => {
           lcid: '0000',
           businessOwner: { name: 'Shade', component: 'OIT' }
         },
-        statusRecord: { status: 'OPEN' }
+        statusRecord: { status: 'OPEN', createdAt: '2021-06-10T19:22:40Z' }
       },
       {
         id: '124',
@@ -48,7 +48,10 @@ describe('AccessibilityRequestsTable', () => {
           lcid: '0000',
           businessOwner: { name: 'Shade', component: 'OIT' }
         },
-        statusRecord: { status: 'IN_REMEDIATION' }
+        statusRecord: {
+          status: 'IN_REMEDIATION',
+          createdAt: '2021-06-11T19:22:40Z'
+        }
       }
     ];
     const wrapperWithRequests = mount(
@@ -73,6 +76,8 @@ describe('AccessibilityRequestsTable', () => {
     expect(row2.find('td').at(0).text()).toEqual('June 10 2021');
     expect(row2.find('td').at(1).text()).toEqual('Shade, OIT');
     expect(row2.find('td').at(2).text()).toEqual('June 30 2021');
-    expect(row2.find('td').at(3).text()).toEqual('In remediation');
+    expect(row2.find('td').at(3).text()).toEqual(
+      'In remediation\u00a0changed on June 11 2021'
+    );
   });
 });

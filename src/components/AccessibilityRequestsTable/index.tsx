@@ -35,8 +35,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             </UswdsLink>
           );
         },
-        maxWidth: 350,
-        width: 350
+        minWidth: 300,
+        maxWidth: 350
       },
       {
         Header: t('requestTable.header.submissionDate'),
@@ -46,7 +46,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             return formatDate(value);
           }
           return '';
-        }
+        },
+        minWidth: 180
       },
       {
         Header: t('requestTable.header.businessOwner'),
@@ -60,14 +61,29 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             return formatDate(value);
           }
           return t('requestTable.emptyTestDate');
-        }
+        },
+        minWidth: 180
       },
       {
         Header: t('requestTable.header.status'),
-        accessor: 'status',
-        Cell: ({ value }: any) => {
-          return value;
-        }
+        accessor: 'statusRecord',
+        Cell: ({ row, value }: any) => {
+          // Status hasn't changed if the status record created at is the same
+          // as the 508 request's submitted at
+          if (row.original.submittedAt.toISO() === value.createdAt.toISO()) {
+            return <span>{value.status}</span>;
+          }
+
+          return (
+            <span>
+              {value.status}&nbsp;
+              <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
+                value.createdAt
+              )}`}</span>
+            </span>
+          );
+        },
+        minWidth: 240
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,8 +98,12 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       const testDate = request.relevantTestDate?.date
         ? DateTime.fromISO(request.relevantTestDate?.date)
         : null;
-      const status =
-        accessibilityRequestStatusMap[`${request.statusRecord.status}`];
+      const statusRecord = {
+        status: accessibilityRequestStatusMap[`${request.statusRecord.status}`],
+        createdAt: request.statusRecord.createdAt
+          ? DateTime.fromISO(request.statusRecord.createdAt)
+          : null
+      };
 
       return {
         id: request.id,
@@ -91,7 +111,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         submittedAt,
         businessOwner,
         relevantTestDate: testDate,
-        status
+        statusRecord
       };
     });
 
@@ -165,7 +185,12 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
               {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps({
-                    style: { width: column.width, whiteSpace: 'nowrap' }
+                    style: {
+                      width: column.width,
+                      minWidth: column.minWidth,
+                      maxWidth: column.maxWidth,
+                      whiteSpace: 'nowrap'
+                    }
                   })}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
@@ -200,7 +225,11 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                     return (
                       <th
                         {...cell.getCellProps({
-                          style: { width: cell.column.width, maxWidth: '16em' }
+                          style: {
+                            width: cell.column.width,
+                            minWidth: cell.column.minWidth,
+                            maxWidth: cell.column.maxWidth
+                          }
                         })}
                         scope="row"
                       >
