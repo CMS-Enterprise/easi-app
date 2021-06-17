@@ -38,6 +38,7 @@ type GraphQLTestSuite struct {
 	store    *storage.Store
 	client   *client.Client
 	s3Client *mockS3Client
+	resolver *Resolver
 }
 
 func (s *GraphQLTestSuite) BeforeTest() {
@@ -165,7 +166,8 @@ func TestGraphQLTestSuite(t *testing.T) {
 	cedarLdapClient := local.NewCedarLdapClient(logger)
 	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
 
-	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client, &emailClient, ldClient), Directives: directives})
+	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient)
+	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
 	storeTestSuite := &GraphQLTestSuite{
@@ -174,6 +176,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 		store:    store,
 		client:   graphQLClient,
 		s3Client: &mockClient,
+		resolver: resolver,
 	}
 
 	suite.Run(t, storeTestSuite)
