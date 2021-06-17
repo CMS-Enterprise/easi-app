@@ -214,10 +214,7 @@ const RequestDetails = ({
                     <legend className="usa-label margin-bottom-1">
                       Does your request need Enterprise Architecture support?
                     </legend>
-                    <HelpText
-                      id="IntakeForm-EAHelp"
-                      className="margin-bottom-1"
-                    >
+                    <HelpText id="IntakeForm-EAHelp">
                       If you are unsure, mark &quot;Yes&quot; and someone from
                       the EA team will assess your needs.
                     </HelpText>
@@ -246,35 +243,39 @@ const RequestDetails = ({
                       }}
                       value={false}
                     />
-
-                    <CollapsableLink
-                      id="SystemIntake-WhatsEA"
-                      label="How can the Enterprise Architecture team help me?"
-                    >
-                      <>
-                        CMS&apos; Enterprise Architecture (EA) function will
-                        help you build your Business Case by addressing the
-                        following:
-                        <ul className="margin-bottom-0">
-                          <li>
-                            Explore business solutions that might exist
-                            elsewhere within CMS
-                          </li>
-                          <li>Discuss lessons learned from similar projects</li>
-                          <li>
-                            Give you and your team an enterprise-level view of
-                            the agency to avoid duplication of projects
-                          </li>
-                          <li>
-                            Help you explore alternatives you might not have
-                            thought of
-                          </li>
-                          <li>
-                            Model your business processes and document workflows
-                          </li>
-                        </ul>
-                      </>
-                    </CollapsableLink>
+                    <div className="margin-top-105">
+                      <CollapsableLink
+                        id="SystemIntake-WhatsEA"
+                        label="How can the Enterprise Architecture team help me?"
+                      >
+                        <>
+                          CMS&apos; Enterprise Architecture (EA) function will
+                          help you build your Business Case by addressing the
+                          following:
+                          <ul className="margin-bottom-0">
+                            <li>
+                              Explore business solutions that might exist
+                              elsewhere within CMS
+                            </li>
+                            <li>
+                              Discuss lessons learned from similar projects
+                            </li>
+                            <li>
+                              Give you and your team an enterprise-level view of
+                              the agency to avoid duplication of projects
+                            </li>
+                            <li>
+                              Help you explore alternatives you might not have
+                              thought of
+                            </li>
+                            <li>
+                              Model your business processes and document
+                              workflows
+                            </li>
+                          </ul>
+                        </>
+                      </CollapsableLink>
+                    </div>
                   </fieldset>
                 </FieldGroup>
 
