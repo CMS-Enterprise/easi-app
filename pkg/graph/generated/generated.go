@@ -2567,6 +2567,7 @@ enum AccessibilityRequestStatus {
   OPEN
   IN_REMEDIATION
   CLOSED
+  DELETED
 }
 
 """
@@ -2588,8 +2589,8 @@ input UpdateAccessibilityRequestStatus {
 }
 
 """
- Result of updating an accessibiiity request's status
- """
+Result of updating an accessibiiity request's status
+"""
 type UpdateAccessibilityRequestStatusPayload {
   id: UUID!
   requestID: UUID!
@@ -2774,7 +2775,6 @@ type DeleteAccessibilityRequestDocumentPayload {
   id: UUID
 }
 
-
 """
 A solution proposal within a business case
 """
@@ -2815,7 +2815,6 @@ enum LifecycleCostSolution {
 }
 
 enum LifecycleCostYear {
-
   LIFECYCLE_COST_YEAR_1
   LIFECYCLE_COST_YEAR_2
   LIFECYCLE_COST_YEAR_3
@@ -3161,22 +3160,47 @@ type Mutation {
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
-  deleteAccessibilityRequest(input: DeleteAccessibilityRequestInput!) : DeleteAccessibilityRequestPayload
+  deleteAccessibilityRequest(
+    input: DeleteAccessibilityRequestInput!
+  ): DeleteAccessibilityRequestPayload
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
-  deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
-  updateAccessibilityRequestStatus(input: UpdateAccessibilityRequestStatus) : UpdateAccessibilityRequestStatusPayload @hasRole(role: EASI_508_TESTER_OR_USER)
-  createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionGuideReceievedClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNoGovernanceNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNotItRequest(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNotRespondingClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
-  createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake @hasRole(role: EASI_USER)
+  deleteAccessibilityRequestDocument(
+    input: DeleteAccessibilityRequestDocumentInput!
+  ): DeleteAccessibilityRequestDocumentPayload
+  updateAccessibilityRequestStatus(
+    input: UpdateAccessibilityRequestStatus
+  ): UpdateAccessibilityRequestStatusPayload
+    @hasRole(role: EASI_508_TESTER_OR_USER)
+  createSystemIntakeActionBusinessCaseNeeded(
+    input: BasicActionInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionBusinessCaseNeedsChanges(
+    input: BasicActionInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionGuideReceievedClose(
+    input: BasicActionInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNoGovernanceNeeded(
+    input: BasicActionInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNotItRequest(
+    input: BasicActionInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNotRespondingClose(
+    input: BasicActionInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionReadyForGRT(
+    input: BasicActionInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionSendEmail(
+    input: BasicActionInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
+    @hasRole(role: EASI_GOVTEAM)
+  createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
+    @hasRole(role: EASI_USER)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER_OR_USER)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
@@ -3193,10 +3217,12 @@ type Mutation {
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeAdminLead(
+    input: UpdateSystemIntakeAdminLeadInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(
+    input: UpdateSystemIntakeReviewDatesInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 }
 
 type Query {
@@ -3205,10 +3231,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  requests(
-    after: String
-    first: Int!
-  ): RequestsConnection
+  requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
