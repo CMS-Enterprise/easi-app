@@ -253,10 +253,16 @@ const AccessibilityRequestDetailPage = () => {
 
   const notesTab = (
     <>
+      <div className="usa-sr-only">
+        <UswdsLink href="#notes-form">
+          {t('requestDetails.notes.srOnlyAddNoteLink')}
+        </UswdsLink>
+      </div>
       <div
         role="region"
         aria-label="add new note"
-        className="margin-y-2 margin-x-1"
+        className="margin-y-2"
+        id="notes-form"
       >
         <Formik
           initialValues={{
@@ -290,7 +296,7 @@ const AccessibilityRequestDetailPage = () => {
                     })}
                   </ErrorAlert>
                 )}
-                <Form className="usa-form usa-form--large">
+                <Form className="usa-form maxw-full ">
                   <FieldGroup>
                     <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
                       {t('requestDetails.notes.addNote')}

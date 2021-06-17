@@ -53,7 +53,8 @@ const accessibility = {
     notes: {
       addNote: 'Add a note',
       submit: 'Add note',
-      confirmation: 'Note added to {{-requestName}}'
+      confirmation: 'Note added to {{-requestName}}',
+      srOnlyAddNoteLink: 'Add a new note'
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
