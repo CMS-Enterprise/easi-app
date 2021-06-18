@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query GetAccessibilityRequest($id: UUID!) {
+  query GetAccessibilityRequestAccessibilityTeamOnly($id: UUID!) {
     accessibilityRequest(id: $id) {
       id
       euaUserId
@@ -33,6 +33,12 @@ export default gql`
       }
       statusRecord {
         status
+      }
+      notes {
+        id
+        createdAt
+        authorName
+        note
       }
     }
   }
