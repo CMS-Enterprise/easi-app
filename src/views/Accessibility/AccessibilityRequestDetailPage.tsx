@@ -17,6 +17,7 @@ import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRe
 import CreateAccessibilityRequestNoteQuery from 'queries/CreateAccessibilityRequestNoteQuery';
 import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
 import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
+import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   CreateAccessibilityRequestNote,
@@ -80,10 +81,17 @@ const AccessibilityRequestDetailPage = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
+
+  const userGroups = useSelector((state: AppState) => state.auth.groups);
+  const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
+
+  const requestQuery = isAccessibilityTeam
+    ? GetAccessibilityRequestAccessibilityTeamOnlyQuery
+    : GetAccessibilityRequestQuery;
   const { loading, error, data, refetch } = useQuery<
     GetAccessibilityRequest,
     GetAccessibilityRequestVariables
-  >(GetAccessibilityRequestQuery, {
+  >(requestQuery, {
     variables: {
       id: accessibilityRequestId
     }
@@ -199,8 +207,6 @@ const AccessibilityRequestDetailPage = () => {
   const documents = data?.accessibilityRequest?.documents || [];
   const testDates = data?.accessibilityRequest?.testDates || [];
 
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
   const hasDocuments = documents.length > 0;
   const statusEnum = data?.accessibilityRequest?.statusRecord.status;
   const requestStatus = accessibilityRequestStatusMap[`${statusEnum}`];
@@ -334,18 +340,21 @@ const AccessibilityRequestDetailPage = () => {
         className="margin-top-6 margin-x-1"
       >
         <NotesList>
-          {data?.accessibilityRequest?.notes.map(note => (
-            <div key={note.id}>
-              <NoteListItem>
-                <NoteContent>{note.note}</NoteContent>
-                <NoteByline>
-                  {`by ${note.authorName}`}
-                  <span className="padding-x-1">|</span>
-                  {formatDate(note.createdAt)}
-                </NoteByline>
-              </NoteListItem>
-            </div>
-          ))}
+          {data?.accessibilityRequest?.notes?.map(
+            note =>
+              note && (
+                <div key={note.id}>
+                  <NoteListItem>
+                    <NoteContent>{note.note}</NoteContent>
+                    <NoteByline>
+                      {`by ${note.authorName}`}
+                      <span className="padding-x-1">|</span>
+                      {formatDate(note.createdAt)}
+                    </NoteByline>
+                  </NoteListItem>
+                </div>
+              )
+          )}
         </NotesList>
       </div>
     </>
