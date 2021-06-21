@@ -16,7 +16,6 @@ following command:
 
 1. Then in Terminal, save your access token to a local variable:
   `OKTA_TOKEN="<paste your OKTA access token here>"`
-
 1. Also in Terminal, run the following, but change the time
 to whatever makes sense for your query:
 
