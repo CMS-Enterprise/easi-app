@@ -27,6 +27,8 @@ go-coverage.*
 .idea
 .envrc.local
 .eslintcache
+.tool-versions
+
 
 # npm/js ignores
 tmp
@@ -38,8 +40,7 @@ package-lock.json
 
 # Various temp files
 tmp
-
+*.swp
 
 # Binaries
 /bin/
-
