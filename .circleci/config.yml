@@ -138,7 +138,7 @@ jobs:
           FLYWAY_USER: postgres
           FLYWAY_PASSWORD: easirox
           FLYWAY_URL: jdbc:postgresql://localhost/postgres
-          FLYWAY_PLACEHOLDERS_APPUSERPASSWORD: supersecretapp
+          FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD: supersecretapp
     steps:
       - checkout
       - restore_cache:
