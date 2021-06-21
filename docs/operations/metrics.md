@@ -7,19 +7,19 @@ project to understand the impact EASi is making.
 
 1. Visit [EASi Production](https://easi.cms.gov)
 1. Login with your EUA credentials
-1. Open up the browser console
+1. Open up the browser console and find your OKTA Access Token with the
+following command:
 
-    - Type: `JSON.parse(localStorage["okta-token-storage"])["accessToken"].value`
-    - The output inside of the quotes is your OKTA access token. Copy it to your
-      clipboard.
+`JSON.parse(localStorage["okta-token-storage"])["accessToken"].value`
 
-1. Then in Terminal, save your access token to a variable for easy usage:
+- The output inside of the quotes is your OKTA access token. Copy it to your
+  clipboard.
 
-```BASH
-OKTA_TOKEN="<paste your OKTA access token here>" \
-```
+1. Then in Terminal, save your access token to a local variable:
 
-1. Then in Terminal, run the following, but change the time
+`OKTA_TOKEN="<paste your OKTA access token here>"`
+
+1. Also in Terminal, run the following, but change the time
 to whatever makes sense for your query:
 
 ```BASH
