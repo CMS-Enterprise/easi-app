@@ -59,7 +59,8 @@ const accessibility = {
       addNote: 'Add a note',
       submit: 'Add note',
       confirmation: 'Note added to {{-requestName}}',
-      srOnlyAddNoteLink: 'Add a new note'
+      srOnlyAddNoteLink: 'Add a new note',
+      srOnlyExistingNotesLink: 'Skip to existing notes'
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
