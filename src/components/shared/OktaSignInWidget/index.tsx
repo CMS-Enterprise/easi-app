@@ -3,6 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import OktaSignIn from '@okta/okta-signin-widget';
 
+import './index.scss';
+
 type OktaSignInWidgetProps = {
   onSuccess: (auth: any) => any;
   onError: () => void;
@@ -41,7 +43,7 @@ const OktaSignInWidget = ({ onSuccess, onError }: OktaSignInWidgetProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <div ref={widgetRef} />;
+  return <div id="easi-okta-sign-in" ref={widgetRef} />;
 };
 
 export default OktaSignInWidget;
