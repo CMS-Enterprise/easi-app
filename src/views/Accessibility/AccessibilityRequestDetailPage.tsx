@@ -271,11 +271,11 @@ const AccessibilityRequestDetailPage = () => {
     <>
       <div className="usa-sr-only">
         <h3>
-          {t('requestDetails.notes.srNotesHeadingPart1', {
+          {t('requestDetails.notes.srNotesHeading1Part1', {
             notesLength: notes.length
           })}{' '}
           {notes.length > 0 &&
-            t('requestDetails.notes.srNotesHeadingPart2', {
+            t('requestDetails.notes.srNotesHeading1Part2', {
               authorName: notes[0]?.authorName,
               createdAt: formatDate(notes[0]?.createdAt)
             })}
@@ -354,9 +354,11 @@ const AccessibilityRequestDetailPage = () => {
         aria-label="existing notes"
         className="margin-top-6 margin-x-1"
       >
-        <div className="sr-only" id="AccessibilityRequestNotesTab-NotesList">
-          existing notes
-        </div>
+        <h3 className="sr-only" id="AccessibilityRequestNotesTab-NotesList">
+          {t('requestDetails.notes.srNotesHeading2', {
+            notesLength: notes.length
+          })}
+        </h3>
         <NotesList>
           {notes.map(note => (
             <NoteListItem key={note.id}>
