@@ -7,7 +7,7 @@ BEGIN
 END
 $do$;
 
-ALTER USER app_user WITH PASSWORD '${appuserpassword}';
+ALTER USER app_user WITH PASSWORD '${app_user_password}';
 
 -- Assign the crud role (create, read, update, delete) to the
 -- app_user

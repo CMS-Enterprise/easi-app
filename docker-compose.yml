@@ -12,7 +12,7 @@ services:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=mysecretpassword
       - FLYWAY_URL=jdbc:postgresql://db/postgres
-      - FLYWAY_PLACEHOLDERS_APPUSERPASSWORD=supersecretapp
+      - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp
     depends_on:
       - db
   easi:
