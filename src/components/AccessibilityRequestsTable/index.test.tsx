@@ -77,7 +77,7 @@ describe('AccessibilityRequestsTable', () => {
     expect(row2.find('td').at(1).text()).toEqual('Shade, OIT');
     expect(row2.find('td').at(2).text()).toEqual('June 30 2021');
     expect(row2.find('td').at(3).text()).toEqual(
-      'In remediation\u00a0changed on June 11 2021'
+      'In remediation changed on June 11 2021'
     );
   });
 });

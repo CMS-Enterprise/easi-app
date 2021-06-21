@@ -86,7 +86,7 @@ const Table = () => {
 
               return (
                 <span>
-                  {accessibilityRequestStatusMap[value]}&nbsp;
+                  {accessibilityRequestStatusMap[value]}{' '}
                   <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
                     row.original.statusCreatedAt
                   )}`}</span>
