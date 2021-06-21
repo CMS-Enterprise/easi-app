@@ -272,6 +272,9 @@ const AccessibilityRequestDetailPage = () => {
         <UswdsLink href="#CreateAccessibilityRequestNote-NoteText">
           {t('requestDetails.notes.srOnlyAddNoteLink')}
         </UswdsLink>
+        <UswdsLink href="#AccessibilityRequestNotesTab-NotesList">
+          {t('requestDetails.notes.srOnlyExistingNotesLink')}
+        </UswdsLink>
       </div>
       <div
         role="region"
@@ -340,6 +343,12 @@ const AccessibilityRequestDetailPage = () => {
         aria-label="existing notes"
         className="margin-top-6 margin-x-1"
       >
+        <div
+          className="usa-sr-only"
+          id="AccessibilityRequestNotesTab-NotesList"
+        >
+          existing notes
+        </div>
         <NotesList>
           {data?.accessibilityRequest?.notes?.map(
             note =>
