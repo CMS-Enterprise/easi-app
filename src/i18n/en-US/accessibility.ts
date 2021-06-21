@@ -59,6 +59,10 @@ const accessibility = {
       addNote: 'Add a note',
       submit: 'Add note',
       confirmation: 'Note added to {{-requestName}}',
+      srNotesHeadingPart1:
+        'There are {{notesLength}} existing notes on this page.',
+      srNotesHeadingPart2:
+        'The most recent note was from {{authorName}} on {{createdAt}}.',
       srOnlyAddNoteLink: 'Add a new note',
       srOnlyExistingNotesLink: 'Skip to existing notes'
     },
