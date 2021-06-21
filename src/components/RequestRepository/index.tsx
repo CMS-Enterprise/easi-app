@@ -345,23 +345,18 @@ const RequestRepository = () => {
           </Breadcrumb>
           <Breadcrumb current>Requests</Breadcrumb>
         </BreadcrumbBar>
-        <div>
-          <CSVLink
-            data={convertIntakesToCSV(data)}
-            filename="request-repository.csv"
-            headers={csvHeaders}
-          >
-            <i className="fa fa-download" />
-          </CSVLink>
-          &nbsp;
-          <CSVLink
-            data={convertIntakesToCSV(data)}
-            filename="request-repository.csv"
-            headers={csvHeaders}
-          >
+        <CSVLink
+          className="flex-align-self-center text-no-underline"
+          data={convertIntakesToCSV(data)}
+          filename="request-repository.csv"
+          headers={csvHeaders}
+        >
+          <i className="fa fa-download" />
+          &nbsp;{' '}
+          <span className="text-underline">
             Download all requests as excel file
-          </CSVLink>
-        </div>
+          </span>
+        </CSVLink>
       </div>
       <nav aria-label="Request Repository Table Navigation">
         <ul className="easi-request-repo__tab-list">
