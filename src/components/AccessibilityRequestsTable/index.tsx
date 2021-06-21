@@ -76,7 +76,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
 
           return (
             <span>
-              {value.status}&nbsp;
+              {value.status}{' '}
               <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
                 value.createdAt
               )}`}</span>

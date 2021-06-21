@@ -150,7 +150,7 @@ describe('My Requests Table', () => {
       expect(rowTwo.find('td').at(0).text()).toEqual('Section 508');
       expect(rowTwo.find('td').at(1).text()).toEqual('May 25 2021');
       expect(rowTwo.find('td').at(2).text()).toEqual(
-        'In remediation\u00a0changed on May 26 2021'
+        'In remediation changed on May 26 2021'
       );
 
       const rowThree = rows.at(3);
