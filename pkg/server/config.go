@@ -43,28 +43,6 @@ func (s Server) NewDBConfig() storage.DBConfig {
 	}
 }
 
-// NewDBAppConfig returns a new DBConfig and check required fields
-func (s Server) NewDBAppConfig() storage.DBConfig {
-	s.checkRequiredConfig(appconfig.DBHostConfigKey)
-	s.checkRequiredConfig(appconfig.DBPortConfigKey)
-	s.checkRequiredConfig(appconfig.DBNameConfigKey)
-	s.checkRequiredConfig(appconfig.DBAppUsernameConfigKey)
-	s.checkRequiredConfig(appconfig.DBMaxConnections)
-	if s.environment.Deployed() {
-		s.checkRequiredConfig(appconfig.DBAppPasswordConfigKey)
-	}
-	s.checkRequiredConfig(appconfig.DBSSLModeConfigKey)
-	return storage.DBConfig{
-		Host:           s.Config.GetString(appconfig.DBHostConfigKey),
-		Port:           s.Config.GetString(appconfig.DBPortConfigKey),
-		Database:       s.Config.GetString(appconfig.DBNameConfigKey),
-		Username:       s.Config.GetString(appconfig.DBAppUsernameConfigKey),
-		Password:       s.Config.GetString(appconfig.DBAppPasswordConfigKey),
-		SSLMode:        s.Config.GetString(appconfig.DBSSLModeConfigKey),
-		MaxConnections: s.Config.GetInt(appconfig.DBMaxConnections),
-	}
-}
-
 // NewEmailConfig returns a new email.Config and checks required fields
 func (s Server) NewEmailConfig() email.Config {
 	s.checkRequiredConfig(appconfig.GRTEmailKey)
