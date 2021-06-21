@@ -17,6 +17,8 @@ type Request {
   name: String
   submittedAt: Time
   type: RequestType!
+  status: String!
+  lcid: String
 }
 
 type RequestsConnection {
@@ -58,6 +60,42 @@ type AccessibilityRequestStatusRecord {
   id: UUID!
   requestID: UUID!
   status: AccessibilityRequestStatus!
+  euaUserId: String!
+}
+
+"""
+Parameters for updating a 508/accessibility request's status
+"""
+input UpdateAccessibilityRequestStatus {
+  requestID: UUID!
+  status: AccessibilityRequestStatus!
+}
+
+"""
+ Result of updating an accessibiiity request's status
+ """
+type UpdateAccessibilityRequestStatusPayload {
+  id: UUID!
+  requestID: UUID!
+  status: AccessibilityRequestStatus!
+  euaUserId: String!
+  userErrors: [UserError!]
+}
+
+input CreateAccessibilityRequestNoteInput {
+  requestID: UUID!
+  note: String!
+}
+
+type AccessibilityRequestNote {
+  id: UUID!
+  requestID: UUID!
+  createdAt: Time!
+  note: String!
+}
+
+type CreateAccessibilityRequestNotePayload {
+  accessibilityRequestNote: AccessibilityRequestNote!
 }
 
 """
@@ -486,6 +524,15 @@ type SystemIntake {
   updatedAt: Time!
 }
 
+input SystemIntakeRequesterInput {
+  name: String!
+}
+
+input CreateSystemIntakeInput {
+  requestType: SystemIntakeRequestType!
+  requester: SystemIntakeRequesterInput!
+}
+
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -618,7 +665,11 @@ type Mutation {
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
+  createAccessibilityRequestNote(
+    input: CreateAccessibilityRequestNoteInput!
+  ): CreateAccessibilityRequestNotePayload @hasRole(role: EASI_508_TESTER_OR_USER)
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
+  updateAccessibilityRequestStatus(input: UpdateAccessibilityRequestStatus) : UpdateAccessibilityRequestStatusPayload @hasRole(role: EASI_508_TESTER_OR_USER)
   createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionGuideReceievedClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -628,6 +679,7 @@ type Mutation {
   createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
+  createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake @hasRole(role: EASI_USER)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER_OR_USER)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload

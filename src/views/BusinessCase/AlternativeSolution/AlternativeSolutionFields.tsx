@@ -130,7 +130,7 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.security.isApproved`]}
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label margin-bottom-1">
+            <legend className="usa-label">
               Is your solution approved by IT Security for use at CMS (FedRAMP,
               FISMA approved, within the CMS cloud enclave)?
             </legend>
@@ -173,10 +173,7 @@ const AlternativeSolutionFields = ({
               <legend className="usa-label margin-bottom-1">
                 Is it in the process of CMS approval?
               </legend>
-              <HelpText
-                id={`BusinessCase-${altId}SecurityReviewHelp`}
-                className="margin-bottom-1"
-              >
+              <HelpText id={`BusinessCase-${altId}SecurityReviewHelp`}>
                 Obtaining CMS Approval can be lengthy and solutions that do not
                 have it or are just starting may lead to longer project
                 timelines.
@@ -220,7 +217,7 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.hosting.type`]}
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label margin-bottom-1">
+            <legend className="usa-label">
               Do you need to host your solution?
             </legend>
             <FieldErrorMsg>{flatErrors[`${altId}.hosting.type`]}</FieldErrorMsg>
@@ -241,7 +238,7 @@ const AlternativeSolutionFields = ({
             {values[`${altId}`].hosting.type === 'cloud' && (
               <>
                 <FieldGroup
-                  className="margin-top-neg-2 margin-bottom-1 margin-left-4"
+                  className="margin-y-1 margin-left-4"
                   scrollElement={`{${altId}.hosting.location`}
                   error={!!flatErrors[`${altId}.hosting.location`]}
                 >
@@ -260,7 +257,7 @@ const AlternativeSolutionFields = ({
                   />
                 </FieldGroup>
                 <FieldGroup
-                  className="margin-top-neg-2 margin-bottom-1 margin-left-4"
+                  className="margin-bottom-1 margin-left-4"
                   scrollElement={`${altId}.hosting.cloudServiceType`}
                   error={!!flatErrors[`${altId}.hosting.cloudServiceType`]}
                 >
@@ -296,7 +293,7 @@ const AlternativeSolutionFields = ({
             />
             {values[`${altId}`].hosting.type === 'dataCenter' && (
               <FieldGroup
-                className="margin-top-neg-2 margin-bottom-1 margin-left-4"
+                className="margin-y-1 margin-left-4"
                 scrollElement={`${altId}.hosting.location`}
                 error={!!flatErrors[`${altId}.hosting.location`]}
               >
@@ -336,7 +333,7 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.hasUserInterface`]}
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label margin-bottom-1">
+            <legend className="usa-label">
               Will your solution have a User Interface?
             </legend>
             <FieldErrorMsg>

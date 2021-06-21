@@ -13,6 +13,7 @@ type UserActionProps = {
   onClick?: () => void;
   link?: string;
   children: React.ReactNode;
+  testId?: string;
 };
 
 export const UserActionList = ({
@@ -22,13 +23,18 @@ export const UserActionList = ({
 }: UserActionListProps) => {
   const classNames = classnames('user-actions-dropdown', className);
   return (
-    <ul id={id} className={classNames}>
+    <ul id={id} className={classNames} data-testid="UserActions-Dropdown">
       {children}
     </ul>
   );
 };
 
-export const UserAction = ({ onClick, link, children }: UserActionProps) => {
+export const UserAction = ({
+  onClick,
+  link,
+  children,
+  testId
+}: UserActionProps) => {
   const handleClick = () => {
     if (onClick) {
       onClick();
@@ -41,7 +47,7 @@ export const UserAction = ({ onClick, link, children }: UserActionProps) => {
 
   return (
     <li className="user-actions-dropdown__item">
-      <button type="button" onClick={handleClick}>
+      <button type="button" onClick={handleClick} data-testid={testId}>
         {children}
       </button>
     </li>

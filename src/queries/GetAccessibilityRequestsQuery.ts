@@ -18,6 +18,9 @@ export default gql`
               component
             }
           }
+          statusRecord {
+            status
+          }
         }
       }
     }

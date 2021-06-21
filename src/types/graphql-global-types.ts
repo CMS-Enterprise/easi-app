@@ -28,6 +28,12 @@ export enum AccessibilityRequestDocumentStatus {
   UNAVAILABLE = "UNAVAILABLE",
 }
 
+export enum AccessibilityRequestStatus {
+  CLOSED = "CLOSED",
+  IN_REMEDIATION = "IN_REMEDIATION",
+  OPEN = "OPEN",
+}
+
 export enum GRTFeedbackType {
   BUSINESS_OWNER = "BUSINESS_OWNER",
   GRB = "GRB",
@@ -117,6 +123,16 @@ export interface CreateAccessibilityRequestInput {
   name: string;
 }
 
+export interface CreateAccessibilityRequestNoteInput {
+  requestID: UUID;
+  note: string;
+}
+
+export interface CreateSystemIntakeInput {
+  requestType: SystemIntakeRequestType;
+  requester: SystemIntakeRequesterInput;
+}
+
 export interface CreateSystemIntakeNoteInput {
   content: string;
   authorName: string;
@@ -163,6 +179,18 @@ export interface RejectIntakeInput {
   intakeId: UUID;
   nextSteps?: string | null;
   reason: string;
+}
+
+export interface SystemIntakeRequesterInput {
+  name: string;
+}
+
+/**
+ * Parameters for updating a 508/accessibility request's status
+ */
+export interface UpdateAccessibilityRequestStatus {
+  requestID: UUID;
+  status: AccessibilityRequestStatus;
 }
 
 export interface UpdateSystemIntakeAdminLeadInput {
