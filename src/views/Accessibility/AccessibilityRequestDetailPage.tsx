@@ -266,9 +266,20 @@ const AccessibilityRequestDetailPage = () => {
     ? bodyWithDocumentsTable
     : bodyNoDocumentsBusinessOwner;
 
+  const notes = data?.accessibilityRequest?.notes || [];
   const notesTab = (
     <>
       <div className="usa-sr-only">
+        <h3>
+          {t('requestDetails.notes.srNotesHeadingPart1', {
+            notesLength: notes.length
+          })}{' '}
+          {notes.length > 0 &&
+            t('requestDetails.notes.srNotesHeadingPart2', {
+              authorName: notes[0]?.authorName,
+              createdAt: formatDate(notes[0]?.createdAt)
+            })}
+        </h3>
         <UswdsLink href="#CreateAccessibilityRequestNote-NoteText">
           {t('requestDetails.notes.srOnlyAddNoteLink')}
         </UswdsLink>
@@ -343,28 +354,20 @@ const AccessibilityRequestDetailPage = () => {
         aria-label="existing notes"
         className="margin-top-6 margin-x-1"
       >
-        <div
-          className="usa-sr-only"
-          id="AccessibilityRequestNotesTab-NotesList"
-        >
+        <div className="sr-only" id="AccessibilityRequestNotesTab-NotesList">
           existing notes
         </div>
         <NotesList>
-          {data?.accessibilityRequest?.notes?.map(
-            note =>
-              note && (
-                <div key={note.id}>
-                  <NoteListItem>
-                    <NoteContent>{note.note}</NoteContent>
-                    <NoteByline>
-                      {`by ${note.authorName}`}
-                      <span className="padding-x-1">|</span>
-                      {formatDate(note.createdAt)}
-                    </NoteByline>
-                  </NoteListItem>
-                </div>
-              )
-          )}
+          {notes.map(note => (
+            <NoteListItem key={note.id}>
+              <NoteContent>{note.note}</NoteContent>
+              <NoteByline>
+                {`by ${note.authorName}`}
+                <span className="padding-x-1">|</span>
+                {formatDate(note.createdAt)}
+              </NoteByline>
+            </NoteListItem>
+          ))}
         </NotesList>
       </div>
     </>
