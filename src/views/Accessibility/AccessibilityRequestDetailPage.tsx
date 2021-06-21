@@ -92,6 +92,7 @@ const AccessibilityRequestDetailPage = () => {
     GetAccessibilityRequest,
     GetAccessibilityRequestVariables
   >(requestQuery, {
+    fetchPolicy: 'network-only',
     variables: {
       id: accessibilityRequestId
     }
