@@ -16,6 +16,7 @@ export interface GetRequests_requests_edges_node {
   submittedAt: Time | null;
   type: RequestType;
   status: string;
+  statusCreatedAt: Time | null;
   lcid: string | null;
 }
 

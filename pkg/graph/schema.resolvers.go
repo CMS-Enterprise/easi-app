@@ -850,12 +850,13 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 
 	for _, request := range requests {
 		node := model.Request{
-			ID:          request.ID,
-			SubmittedAt: request.SubmittedAt,
-			Name:        request.Name.Ptr(),
-			Type:        request.Type,
-			Status:      request.Status,
-			Lcid:        request.LifecycleID.Ptr(),
+			ID:              request.ID,
+			SubmittedAt:     request.SubmittedAt,
+			Name:            request.Name.Ptr(),
+			Type:            request.Type,
+			Status:          request.Status,
+			StatusCreatedAt: request.StatusCreatedAt,
+			Lcid:            request.LifecycleID.Ptr(),
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,

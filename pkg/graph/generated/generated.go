@@ -94,6 +94,7 @@ type ComplexityRoot struct {
 	}
 
 	AccessibilityRequestStatusRecord struct {
+		CreatedAt func(childComplexity int) int
 		EUAUserID func(childComplexity int) int
 		ID        func(childComplexity int) int
 		RequestID func(childComplexity int) int
@@ -272,12 +273,13 @@ type ComplexityRoot struct {
 	}
 
 	Request struct {
-		ID          func(childComplexity int) int
-		Lcid        func(childComplexity int) int
-		Name        func(childComplexity int) int
-		Status      func(childComplexity int) int
-		SubmittedAt func(childComplexity int) int
-		Type        func(childComplexity int) int
+		ID              func(childComplexity int) int
+		Lcid            func(childComplexity int) int
+		Name            func(childComplexity int) int
+		Status          func(childComplexity int) int
+		StatusCreatedAt func(childComplexity int) int
+		SubmittedAt     func(childComplexity int) int
+		Type            func(childComplexity int) int
 	}
 
 	RequestEdge struct {
@@ -769,6 +771,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequestNote.RequestID(childComplexity), true
+
+	case "AccessibilityRequestStatusRecord.createdAt":
+		if e.complexity.AccessibilityRequestStatusRecord.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestStatusRecord.CreatedAt(childComplexity), true
 
 	case "AccessibilityRequestStatusRecord.euaUserId":
 		if e.complexity.AccessibilityRequestStatusRecord.EUAUserID == nil {
@@ -1747,6 +1756,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Request.Status(childComplexity), true
 
+	case "Request.statusCreatedAt":
+		if e.complexity.Request.StatusCreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Request.StatusCreatedAt(childComplexity), true
+
 	case "Request.submittedAt":
 		if e.complexity.Request.SubmittedAt == nil {
 			break
@@ -2594,6 +2610,7 @@ type Request {
   submittedAt: Time
   type: RequestType!
   status: String!
+  statusCreatedAt: Time
   lcid: String
 }
 
@@ -2637,6 +2654,7 @@ type AccessibilityRequestStatusRecord {
   requestID: UUID!
   status: AccessibilityRequestStatus!
   euaUserId: String!
+  createdAt: Time!
 }
 
 """
@@ -4974,6 +4992,41 @@ func (ec *executionContext) _AccessibilityRequestStatusRecord_euaUserId(ctx cont
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequestStatusRecord_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestStatusRecord) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestStatusRecord",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestsConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestsConnection) (ret graphql.Marshaler) {
@@ -9501,6 +9554,38 @@ func (ec *executionContext) _Request_status(ctx context.Context, field graphql.C
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Request_statusCreatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StatusCreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Request_lcid(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
@@ -15186,6 +15271,11 @@ func (ec *executionContext) _AccessibilityRequestStatusRecord(ctx context.Contex
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "createdAt":
+			out.Values[i] = ec._AccessibilityRequestStatusRecord_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -16145,6 +16235,8 @@ func (ec *executionContext) _Request(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "statusCreatedAt":
+			out.Values[i] = ec._Request_statusCreatedAt(ctx, field, obj)
 		case "lcid":
 			out.Values[i] = ec._Request_lcid(ctx, field, obj)
 		default:
