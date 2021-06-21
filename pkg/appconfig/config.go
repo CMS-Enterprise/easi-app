@@ -111,12 +111,6 @@ const DBUsernameConfigKey = "PGUSER"
 // DBPasswordConfigKey is the Postgres password config key
 const DBPasswordConfigKey = "PGPASS"
 
-// DBAppUsernameConfigKey is the DB username config key for the app
-const DBAppUsernameConfigKey = "PGAPPUSER"
-
-// DBAppPasswordConfigKey is the Postgres password config key
-const DBAppPasswordConfigKey = "PGAPPUSERPASS"
-
 // DBSSLModeConfigKey is the Postgres SSL mode config key
 const DBSSLModeConfigKey = "PGSSLMODE"
 
