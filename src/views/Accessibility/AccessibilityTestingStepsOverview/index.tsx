@@ -1,12 +1,18 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Link as UswdsLink,
+  ProcessList,
+  ProcessListHeading,
+  ProcessListItem
+} from '@trussworks/react-uswds';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
-import { Step, StepBody, StepHeading, StepList } from 'components/StepList';
 
 import './index.scss';
 
@@ -24,97 +30,82 @@ const AccessibilityTestingStepsOverview = () => {
   return (
     <div className="grid-container">
       <div className="tablet:grid-col-10">
-        <BreadcrumbNav className="margin-top-2">
-          <li>
-            <Link to="/">Home</Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>Steps involved in 508 testing</li>
-        </BreadcrumbNav>
+        <BreadcrumbBar variant="wrap">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>Home</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>Steps involved in 508 testing</Breadcrumb>
+        </BreadcrumbBar>
         <PageHeading>{t('testingStepsOverview.heading')}</PageHeading>
         <p className="accessibility-testing-overview__description">
           {t('testingStepsOverview.description')}
         </p>
       </div>
       <div className="tablet:grid-col-6 margin-top-6">
-        <StepList>
-          <Step>
-            <StepHeading>
+        <ProcessList>
+          <ProcessListItem>
+            <ProcessListHeading type="h3">
               {t('testingStepsOverview.fillForm.heading')}
-            </StepHeading>
-            <StepBody>
-              <p className="margin-0">
-                {t('testingStepsOverview.fillForm.description')}
-              </p>
-            </StepBody>
-          </Step>
-          <Step>
-            <StepHeading>
+            </ProcessListHeading>
+            <p>{t('testingStepsOverview.fillForm.description')}</p>
+          </ProcessListItem>
+          <ProcessListItem>
+            <ProcessListHeading type="h3">
               {t('testingStepsOverview.prepareVPAT.heading')}
-            </StepHeading>
-            <StepBody>
-              <Trans
-                i18nKey="accessibility:testingStepsOverview.prepareVPAT.fillOutVPAT"
-                className="margin-0"
+            </ProcessListHeading>
+            <Trans
+              i18nKey="accessibility:testingStepsOverview.prepareVPAT.fillOutVPAT"
+              className="margin-0"
+            >
+              indexZero
+              <UswdsLink
+                href="/508/templates"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                indexZero
-                <UswdsLink
-                  href="/508/templates"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  templatesLink
-                </UswdsLink>
-                indexTwo
-              </Trans>
-              <p className="margin-bottom-0">
-                {t('testingStepsOverview.prepareVPAT.changesVPAT')}
-              </p>
-            </StepBody>
-          </Step>
-          <Step>
-            <StepHeading>
+                templatesLink
+              </UswdsLink>
+              indexTwo
+            </Trans>
+            <p className="margin-bottom-0">
+              {t('testingStepsOverview.prepareVPAT.changesVPAT')}
+            </p>
+          </ProcessListItem>
+          <ProcessListItem>
+            <ProcessListHeading type="h3">
               {t('testingStepsOverview.testingSession.heading')}
-            </StepHeading>
-            <StepBody>
-              <p className="margin-0">
-                {t('testingStepsOverview.testingSession.description')}
-              </p>
-            </StepBody>
-          </Step>
-          <Step>
-            <StepHeading>
+            </ProcessListHeading>
+            <p>{t('testingStepsOverview.testingSession.description')}</p>
+          </ProcessListItem>
+          <ProcessListItem>
+            <ProcessListHeading type="h3">
               {t('testingStepsOverview.results.heading')}
-            </StepHeading>
-            <StepBody>
-              <p className="margin-0">
-                {t('testingStepsOverview.results.description')}
-              </p>
-              <dl title="508 test scores">
-                <dt className="text-bold margin-bottom-1">
-                  {t('testingStepsOverview.results.score.above99.heading')}
-                </dt>
-                <dd className="margin-left-0 margin-bottom-2">
-                  {t('testingStepsOverview.results.score.above99.description')}
-                </dd>
-                <dt className="text-bold margin-bottom-1">
-                  {t('testingStepsOverview.results.score.interval75.heading')}
-                </dt>
-                <dd className="margin-left-0 margin-bottom-2">
-                  {t(
-                    'testingStepsOverview.results.score.interval75.description'
-                  )}
-                </dd>
-                <dt className="text-bold margin-bottom-1">
-                  {t('testingStepsOverview.results.score.below75.heading')}
-                </dt>
-                <dd className="margin-left-0">
-                  {t('testingStepsOverview.results.score.below75.description')}
-                </dd>
-              </dl>
-            </StepBody>
-          </Step>
-        </StepList>
+            </ProcessListHeading>
+            <p>{t('testingStepsOverview.results.description')}</p>
+            <dl title="508 test scores">
+              <dt className="text-bold margin-bottom-1">
+                {t('testingStepsOverview.results.score.above99.heading')}
+              </dt>
+              <dd className="margin-left-0 margin-bottom-2">
+                {t('testingStepsOverview.results.score.above99.description')}
+              </dd>
+              <dt className="text-bold margin-bottom-1">
+                {t('testingStepsOverview.results.score.interval75.heading')}
+              </dt>
+              <dd className="margin-left-0 margin-bottom-2">
+                {t('testingStepsOverview.results.score.interval75.description')}
+              </dd>
+              <dt className="text-bold margin-bottom-1">
+                {t('testingStepsOverview.results.score.below75.heading')}
+              </dt>
+              <dd className="margin-left-0">
+                {t('testingStepsOverview.results.score.below75.description')}
+              </dd>
+            </dl>
+          </ProcessListItem>
+        </ProcessList>
         <CollapsableLink
           id="easi-508-testing-exception"
           label={t('testingStepsOverview.exception.label')}

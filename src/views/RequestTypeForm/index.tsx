@@ -1,12 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
-import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Button,
+  Link as UswdsLink
+} from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -17,25 +23,14 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
-import { initialSystemIntakeForm } from 'data/systemIntake';
-import { AppState } from 'reducers/rootReducer';
-import { postSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
   const { t } = useTranslation('intake');
   const { oktaAuth } = useOktaAuth();
-  const dispatch = useDispatch();
   const history = useHistory();
-
-  const isNewIntakeCreated = useSelector(
-    (state: AppState) => state.systemIntake.isNewIntakeCreated
-  );
-
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
+  const [mutate] = useMutation(CreateSystemIntake);
 
   const majorChangesExamples: string[] = t(
     'requestTypeForm.helpAndGuidance.majorChanges.list',
@@ -46,55 +41,51 @@ const RequestTypeForm = () => {
 
   const handleCreateIntake = (formikValues: { requestType: string }) => {
     oktaAuth.getUser().then((user: any) => {
-      dispatch(
-        postSystemIntake({
-          ...initialSystemIntakeForm,
-          requestType: formikValues.requestType,
-          requester: {
-            name: user.name,
-            component: '',
-            email: user.email
+      const { requestType } = formikValues;
+      const input = {
+        requestType,
+        requester: {
+          name: user.name
+        }
+      };
+      mutate({ variables: { input } }).then(response => {
+        if (!response.errors) {
+          const { id } = response.data.createSystemIntake;
+          const navigationLink = `/governance-task-list/${id}`;
+          switch (requestType) {
+            case 'NEW':
+              history.push(`/governance-overview/${id}`);
+              break;
+            case 'MAJOR_CHANGES':
+              history.push(navigationLink);
+              break;
+            case 'RECOMPETE':
+              history.push(navigationLink);
+              break;
+            case 'SHUTDOWN':
+              history.push(`/system/${id}/contact-details`);
+              break;
+            default:
+              // console.warn(`Unknown request type: ${systemIntake.requestType}`);
+              break;
           }
-        })
-      );
+        }
+      });
     });
   };
-
-  useEffect(() => {
-    if (isNewIntakeCreated) {
-      const navigationLink = `/governance-task-list/${systemIntake.id}`;
-      switch (systemIntake.requestType) {
-        case 'NEW':
-          history.push(`/governance-overview/${systemIntake.id}`);
-          break;
-        case 'MAJOR_CHANGES':
-          history.push(navigationLink);
-          break;
-        case 'RECOMPETE':
-          history.push(navigationLink);
-          break;
-        case 'SHUTDOWN':
-          history.push(`/system/${systemIntake.id}/contact-details`);
-          break;
-        default:
-          // console.warn(`Unknown request type: ${systemIntake.requestType}`);
-          break;
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isNewIntakeCreated]);
 
   return (
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        <BreadcrumbNav className="margin-y-2">
-          <li>
-            <Link to="/">Home</Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li aria-current="location">Make a request</li>
-        </BreadcrumbNav>
+        <BreadcrumbBar variant="wrap">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>Home</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>Make a request</Breadcrumb>
+        </BreadcrumbBar>
         <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
         <Formik
           initialValues={{ requestType: '' }}

@@ -9,6 +9,8 @@ export default gql`
           name
           submittedAt
           type
+          status
+          lcid
         }
       }
     }

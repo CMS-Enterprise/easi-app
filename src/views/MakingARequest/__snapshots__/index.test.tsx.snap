@@ -193,6 +193,7 @@ exports[`The making a request page matches the snapshot 1`] = `
             aria-expanded={false}
             aria-label="Expand User Menu"
             className="easi-header__username"
+            data-testid="UserActions-Toggle"
             onClick={[Function]}
             type="button"
           >
@@ -243,24 +244,29 @@ exports[`The making a request page matches the snapshot 1`] = `
     tabIndex={-1}
   >
     <nav
-      aria-label="breadcrumbs"
-      className="easi-breadcrumb-nav margin-y-2"
-      role="navigation"
+      aria-label="Breadcrumbs"
+      className="usa-breadcrumb usa-breadcrumb--wrap"
     >
-      <ol>
-        <li>
+      <ol
+        className="usa-breadcrumb__list"
+      >
+        <li
+          className="usa-breadcrumb__list-item"
+        >
           <a
+            className="usa-breadcrumb__link"
             href="/"
             onClick={[Function]}
           >
-            Home
+            <span>
+              Home
+            </span>
           </a>
-          <i
-            aria-hidden={true}
-            className="fa fa-angle-right margin-x-05"
-          />
         </li>
-        <li>
+        <li
+          aria-current="page"
+          className="usa-breadcrumb__list-item usa-current"
+        >
           IT Governance
         </li>
       </ol>

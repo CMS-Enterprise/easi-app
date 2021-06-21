@@ -2,6 +2,11 @@
 
 const accessibility = {
   reportProblem: 'Report a problem (opens in a new tab)',
+  requestStatus: {
+    open: 'Open',
+    remediation: 'In remediation',
+    closed: 'Closed'
+  },
   documentTable: {
     caption: 'Documents uploaded for',
     header: {
@@ -17,7 +22,13 @@ const accessibility = {
         'You will not be able to access this document after it is removed.',
       proceedButton: 'Remove document',
       declineButton: 'Keep document'
-    }
+    },
+    noDocuments: 'No documents added to request yet.'
+  },
+  uploadDocument: {
+    presignedUrlErrorHeader: 'There is a problem',
+    presignedUrlErrorBody:
+      'Something went wrong with EASi. Please try refreshing the page or try again later.'
   },
   requestTable: {
     caption: 'List of 508 requests',
@@ -43,6 +54,12 @@ const accessibility = {
         description:
           'Download and fill the VPAT and Test plan from the <1>templates page (opens in a new tab)</1>. The documents will help the 508 team know what to test and what criteria they should be looking for when testing.'
       }
+    },
+    notes: {
+      addNote: 'Add a note',
+      submit: 'Add note',
+      confirmation: 'Note added to {{-requestName}}',
+      srOnlyAddNoteLink: 'Add a new note'
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
@@ -281,7 +298,7 @@ const accessibility = {
       ],
       download: {
         heading: 'Download Test Plan template',
-        link: 'Download the Test Plan template as a PDF'
+        link: 'Download the Test Plan template as a PDF (opens in a new tab)'
       }
     },
     remediationPlanSection: {
@@ -294,9 +311,19 @@ const accessibility = {
       ],
       download: {
         heading: 'Download Remediation Plan template',
-        link: 'Download the Remediation Plan template as a PDF'
+        link:
+          'Download the Remediation Plan template as a PDF (opens in a new tab)'
       }
     }
+  },
+  updateRequestStatus: {
+    heading: 'Choose a status for {{-requestName}}',
+    statusFieldLegend: 'Choose a status for {{-requestName}}',
+    changeStatusDisclaimer:
+      'Changing the request status will send an email to all members of the 508 team letting them know about the new status.',
+    submit: 'Change status',
+    confirmation: 'Status has changed to {{-status}} for {{-requestName}}',
+    cancel: "Don't change status and return to request page"
   }
 };
 

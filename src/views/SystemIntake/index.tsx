@@ -1,11 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Switch, useHistory, useParams } from 'react-router-dom';
-import { SecureRoute, useOktaAuth } from '@okta/okta-react';
+import { SecureRoute } from '@okta/okta-react';
+import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink
+} from '@trussworks/react-uswds';
 import { FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -15,9 +19,7 @@ import { AppState } from 'reducers/rootReducer';
 import {
   clearSystemIntake,
   fetchSystemIntake,
-  postSystemIntake,
-  saveSystemIntake,
-  storeSystemIntake
+  saveSystemIntake
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { NotFoundPartial } from 'views/NotFound';
@@ -33,11 +35,10 @@ import './index.scss';
 
 export const SystemIntake = () => {
   const history = useHistory();
-  const { systemId, formPage } = useParams<{
+  const { systemId } = useParams<{
     systemId: string;
     formPage: string;
   }>();
-  const { oktaAuth } = useOktaAuth();
   const dispatch = useDispatch();
   const formikRef: any = useRef();
 
@@ -53,26 +54,11 @@ export const SystemIntake = () => {
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (systemId === 'new') {
-      dispatch(
-        postSystemIntake({
-          ...systemIntake,
-          ...current.values
-        })
-      );
-    } else {
-      dispatch(
-        saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
-      );
-    }
+    dispatch(
+      saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
+    );
     current.resetForm({ values: current.values, errors: current.errors });
   };
-
-  useEffect(() => {
-    if (systemIntake.id) {
-      history.replace(`/system/${systemIntake.id}/${formPage}`);
-    }
-  }, [history, systemIntake.id, formPage]);
 
   // Handle redirect after submitting
   useEffect(() => {
@@ -85,17 +71,7 @@ export const SystemIntake = () => {
 
   useEffect(() => {
     if (systemId === 'new') {
-      oktaAuth.getUser().then((user: any) => {
-        dispatch(
-          storeSystemIntake({
-            requester: {
-              name: user.name,
-              component: '',
-              email: user.email
-            }
-          })
-        );
-      });
+      history.push('/system/request-type');
     } else {
       dispatch(fetchSystemIntake(systemId));
     }
@@ -110,19 +86,22 @@ export const SystemIntake = () => {
     <PageWrapper className="system-intake">
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        <BreadcrumbNav className="margin-y-2">
-          <li>
-            <Link to="/">Home</Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>
-            <Link to={`/governance-task-list/${systemIntake.id || 'new'}`}>
-              Get governance approval
-            </Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>Intake Request</li>
-        </BreadcrumbNav>
+        <BreadcrumbBar variant="wrap">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>Home</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb>
+            <BreadcrumbLink
+              asCustom={Link}
+              to={`/governance-task-list/${systemIntake.id || 'new'}`}
+            >
+              <span>Get governance approval</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>Intake Request</Breadcrumb>
+        </BreadcrumbBar>
         {isLoading === false && (
           <Switch>
             <SecureRoute

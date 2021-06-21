@@ -13,10 +13,11 @@ import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 
 import { RequestType } from 'types/graphql-global-types';
+import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 
 const Table = () => {
-  const { t } = useTranslation('home');
+  const { t } = useTranslation(['home', 'intake', 'accessibility']);
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
     GetRequestsVariables
@@ -65,6 +66,27 @@ const Table = () => {
             return formatDate(value);
           }
           return t('requestsTable.defaultSubmittedAt');
+        }
+      },
+      {
+        Header: t('requestsTable.headers.status'),
+        accessor: 'status',
+        Cell: ({ row, value }: any) => {
+          let statusString;
+          switch (row.original.type) {
+            case RequestType.ACCESSIBILITY_REQUEST:
+              statusString = accessibilityRequestStatusMap[`${value}`];
+              break;
+            case RequestType.GOVERNANCE_REQUEST:
+              statusString = t(`intake:statusMap.${value}`);
+              if (row.original.lcid) {
+                statusString = `${statusString}${row.original.lcid}`;
+              }
+              break;
+            default:
+              statusString = '';
+          }
+          return statusString;
         }
       }
     ];

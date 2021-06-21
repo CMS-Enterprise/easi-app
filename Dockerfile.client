@@ -1,4 +1,4 @@
-FROM node:12.21.0 AS base
+FROM node:12.22.1 AS base
 
 WORKDIR /app
 
@@ -33,7 +33,7 @@ ARG REACT_APP_LOCAL_AUTH_ENABLED
 
 RUN yarn run build
 
-FROM node:12.21.0 as srv
+FROM node:12.22.1 as srv
 
 RUN yarn global add serve
 WORKDIR /app

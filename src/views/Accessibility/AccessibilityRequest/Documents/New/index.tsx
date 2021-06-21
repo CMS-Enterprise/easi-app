@@ -18,6 +18,7 @@ import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import FileUpload from 'components/FileUpload';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -27,7 +28,7 @@ import TextField from 'components/shared/TextField';
 import { useMessage } from 'hooks/useMessage';
 import { FileUploadForm } from 'types/files';
 import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
-import { translateDocumentType } from 'utils/accessibilityRequest';
+import { translateDocumentCommonType } from 'utils/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { DocumentUploadValidationSchema } from 'validations/documentUploadSchema';
 
@@ -59,6 +60,11 @@ const New = () => {
     CreateAccessibilityRequestDocumentVariables
   >(CreateAccessibilityRequestDocumentQuery);
 
+  const [
+    isErrorGeneratingPresignedUrl,
+    setErrorGeneratingPresignedUrl
+  ] = useState(false);
+
   if (loading) {
     return <div>Loading</div>;
   }
@@ -86,19 +92,23 @@ const New = () => {
           size: file?.size
         }
       }
-    }).then(result => {
-      const url = result.data?.generatePresignedUploadURL?.url;
-      if (
-        generateURLStatus.error ||
-        result.data?.generatePresignedUploadURL?.userErrors ||
-        isUndefined(url)
-      ) {
-        // eslint-disable-next-line
+    })
+      .then(result => {
+        const url = result.data?.generatePresignedUploadURL?.url;
+        if (
+          generateURLStatus.error ||
+          result.data?.generatePresignedUploadURL?.userErrors ||
+          isUndefined(url)
+        ) {
+          // eslint-disable-next-line
         console.error('Could not fetch presigned S3 URL');
-      } else {
-        setS3URL(url || '');
-      }
-    });
+        } else {
+          setS3URL(url || '');
+        }
+      })
+      .catch(() => {
+        setErrorGeneratingPresignedUrl(true);
+      });
   };
 
   const onSubmit = (values: FileUploadForm) => {
@@ -124,14 +134,18 @@ const New = () => {
               otherDocumentTypeDescription: values.documentType.otherType
             }
           }
-        }).then(response => {
-          if (!response.errors) {
-            showMessageOnNextPage(
-              `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
-            );
-            history.push(`/508/requests/${accessibilityRequestId}`);
-          }
-        });
+        })
+          .then(response => {
+            if (!response.errors) {
+              showMessageOnNextPage(
+                `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
+              );
+              history.push(`/508/requests/${accessibilityRequestId}`);
+            }
+          })
+          .catch(() => {
+            setErrorGeneratingPresignedUrl(true);
+          });
       });
     }
   };
@@ -184,6 +198,14 @@ const New = () => {
                     })}
                   </ErrorAlert>
                 )}
+                {isErrorGeneratingPresignedUrl && (
+                  <Alert
+                    type="error"
+                    heading={t('uploadDocument.presignedUrlErrorHeader')}
+                  >
+                    {t('uploadDocument.presignedUrlErrorBody')}
+                  </Alert>
+                )}
                 {createDocumentStatus.error && (
                   <ErrorAlert heading="Error uploading document">
                     <ErrorAlertMessage
@@ -210,19 +232,12 @@ const New = () => {
                         as={FileUpload}
                         id="FileUpload-File"
                         name="file"
-                        ariaDescribedBy="FileUpload-Description"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           onChange(e);
                           setFieldValue('file', e.currentTarget?.files?.[0]);
                         }}
+                        accept=".pdf,.doc,.docx,.xls,.xlsx"
                       />
-                      <div
-                        id="FileUpload-Description"
-                        className="sr-only"
-                        tabIndex={-1}
-                      >
-                        Select a file.
-                      </div>
                     </FieldGroup>
                     {values.file && (
                       <FieldGroup
@@ -230,7 +245,7 @@ const New = () => {
                         error={!!flatErrors['documentType.commonType']}
                       >
                         <fieldset className="usa-fieldset margin-top-4">
-                          <legend className="usa-label margin-bottom-1">
+                          <legend className="usa-label">
                             What type of document are you uploading?
                           </legend>
                           <FieldErrorMsg>
@@ -254,7 +269,9 @@ const New = () => {
                                   }
                                   id={`FileUpload-CommonType${commonType}`}
                                   name="documentType.commonType"
-                                  label={translateDocumentType(commonType)}
+                                  label={translateDocumentCommonType(
+                                    commonType
+                                  )}
                                   onChange={() => {
                                     setFieldValue(
                                       'documentType.commonType',
@@ -272,7 +289,7 @@ const New = () => {
                             checked={values.documentType.commonType === 'OTHER'}
                             id="FileUpload-CommonTypeOTHER"
                             name="documentType.commonType"
-                            label={translateDocumentType(
+                            label={translateDocumentCommonType(
                               AccessibilityRequestDocumentCommonType.OTHER
                             )}
                             value="OTHER"
@@ -286,7 +303,6 @@ const New = () => {
                                 <Label
                                   htmlFor="FileUpload-OtherType"
                                   className="margin-bottom-1"
-                                  style={{ marginTop: '0.5em' }}
                                 >
                                   Document name
                                 </Label>
@@ -297,7 +313,7 @@ const New = () => {
                                   as={TextField}
                                   error={!!flatErrors['documentType.otherType']}
                                   className="margin-top-0"
-                                  id="DocumentType-OtherType"
+                                  id="FileUpload-OtherType"
                                   name="documentType.otherType"
                                 />
                               </FieldGroup>
@@ -319,6 +335,7 @@ const New = () => {
                           generateURLStatus.loading ||
                           createDocumentStatus.loading
                         }
+                        data-testid="upload-document"
                       >
                         Upload document
                       </Button>

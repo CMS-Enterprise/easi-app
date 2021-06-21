@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from 'classnames';
 import { Field, FieldArray } from 'formik';
 import { DateTime } from 'luxon';
 
@@ -52,7 +51,7 @@ const Phase = ({
               <FieldErrorMsg>
                 {typeof errors === 'string' ? errors : ''}
               </FieldErrorMsg>
-              <legend className={classnames('usa-label', 'margin-bottom-1')}>
+              <legend className="usa-label">
                 {`Fiscal year ${fiscalYear} phase costs`}
               </legend>
 

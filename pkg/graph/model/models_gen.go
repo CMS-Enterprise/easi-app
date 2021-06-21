@@ -92,9 +92,23 @@ type CreateAccessibilityRequestInput struct {
 	Name     string    `json:"name"`
 }
 
+type CreateAccessibilityRequestNoteInput struct {
+	RequestID uuid.UUID `json:"requestID"`
+	Note      string    `json:"note"`
+}
+
+type CreateAccessibilityRequestNotePayload struct {
+	AccessibilityRequestNote *models.AccessibilityRequestNote `json:"accessibilityRequestNote"`
+}
+
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError                 `json:"userErrors"`
+}
+
+type CreateSystemIntakeInput struct {
+	RequestType models.SystemIntakeRequestType `json:"requestType"`
+	Requester   *SystemIntakeRequesterInput    `json:"requester"`
 }
 
 type CreateSystemIntakeNoteInput struct {
@@ -183,6 +197,8 @@ type Request struct {
 	Name        *string     `json:"name"`
 	SubmittedAt *time.Time  `json:"submittedAt"`
 	Type        RequestType `json:"type"`
+	Status      string      `json:"status"`
+	Lcid        *string     `json:"lcid"`
 }
 
 type RequestEdge struct {
@@ -283,6 +299,25 @@ type SystemIntakeRequester struct {
 	Component *string `json:"component"`
 	Email     *string `json:"email"`
 	Name      string  `json:"name"`
+}
+
+type SystemIntakeRequesterInput struct {
+	Name string `json:"name"`
+}
+
+// Parameters for updating a 508/accessibility request's status
+type UpdateAccessibilityRequestStatus struct {
+	RequestID uuid.UUID                         `json:"requestID"`
+	Status    models.AccessibilityRequestStatus `json:"status"`
+}
+
+// Result of updating an accessibiiity request's status
+type UpdateAccessibilityRequestStatusPayload struct {
+	ID         uuid.UUID                         `json:"id"`
+	RequestID  uuid.UUID                         `json:"requestID"`
+	Status     models.AccessibilityRequestStatus `json:"status"`
+	EuaUserID  string                            `json:"euaUserId"`
+	UserErrors []*UserError                      `json:"userErrors"`
 }
 
 type UpdateSystemIntakeAdminLeadInput struct {

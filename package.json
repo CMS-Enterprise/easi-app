@@ -8,7 +8,7 @@
     "@cypress/code-coverage": "^1.12.2",
     "@okta/okta-auth-js": "^4.5.1",
     "@okta/okta-react": "^4.1.0",
-    "@okta/okta-signin-widget": "^5.4.1",
+    "@okta/okta-signin-widget": "^5.7.1",
     "@trussworks/react-uswds": "^1.17.0",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
@@ -153,6 +153,9 @@
     "ts-loader": "^7.0.5"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "!src/**/*.stories.{jsx,tsx}"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 30,

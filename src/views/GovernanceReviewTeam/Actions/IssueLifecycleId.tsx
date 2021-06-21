@@ -144,9 +144,7 @@ const IssueLifecycleId = () => {
                     <legend className="usa-label margin-bottom-1">
                       {t('issueLCID.lcid.label')}
                     </legend>
-                    <HelpText className="margin-bottom-1">
-                      {t('issueLCID.lcid.helpText')}
-                    </HelpText>
+                    <HelpText>{t('issueLCID.lcid.helpText')}</HelpText>
                     <FieldErrorMsg>{flatErrors.newLifecycleId}</FieldErrorMsg>
                     <Field
                       as={RadioField}
@@ -200,13 +198,10 @@ const IssueLifecycleId = () => {
                     <legend className="usa-label margin-bottom-1">
                       {t('issueLCID.expirationDate.label')}
                     </legend>
-                    <HelpText className="margin-bottom-1">
+                    <HelpText>
                       {t('issueLCID.expirationDate.helpText')}
                     </HelpText>
-                    <div
-                      className="usa-memorable-date"
-                      style={{ marginTop: '-2rem' }}
-                    >
+                    <div className="usa-memorable-date">
                       <div className="usa-form-group usa-form-group--month">
                         <Label htmlFor="IssueLifecycleIdForm-ExpirationDateMonth">
                           {t('issueLCID.expirationDate.month')}
@@ -304,7 +299,7 @@ const IssueLifecycleId = () => {
                   />
                 </FieldGroup>
                 <Button
-                  className="margin-top-2"
+                  className="margin-y-2"
                   type="submit"
                   // disabled={isSubmitting}
                 >

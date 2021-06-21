@@ -2,10 +2,15 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
+import {
+  Alert,
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  Link as UswdsLink
+} from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -50,19 +55,11 @@ const GovernanceTaskList = () => {
   );
 
   useEffect(() => {
-    if (systemId !== 'new') {
-      dispatch(fetchSystemIntake(systemId));
-    }
+    dispatch(fetchSystemIntake(systemId));
   }, [dispatch, systemId]);
 
   useEffect(() => {
-    if (systemId === 'new' && systemIntake.id) {
-      history.replace(`/governance-task-list/${systemIntake.id}`);
-    }
-  }, [history, systemIntake.id, systemId]);
-
-  useEffect(() => {
-    if (systemIntake.id && systemIntake.businessCaseId) {
+    if (systemIntake.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
   }, [dispatch, systemIntake.id, systemIntake.businessCaseId]);
@@ -110,17 +107,14 @@ const GovernanceTaskList = () => {
       <Header />
       <MainContent className="grid-container margin-bottom-7">
         <div className="grid-row">
-          <BreadcrumbNav className="margin-y-2 tablet:grid-col-12">
-            <li>
-              <Link to="/">Home</Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>
-              <Link to="/governance-task-list" aria-current="location">
-                Get governance approval
-              </Link>
-            </li>
-          </BreadcrumbNav>
+          <BreadcrumbBar variant="wrap">
+            <Breadcrumb>
+              <BreadcrumbLink asCustom={Link} to="/">
+                <span>Home</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb current>Get governance approval</Breadcrumb>
+          </BreadcrumbBar>
         </div>
         <div className="grid-row">
           <div className="tablet:grid-col-9">
