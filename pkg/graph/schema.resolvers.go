@@ -531,6 +531,7 @@ func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context,
 	if latestStatusRecord.Status != input.Status {
 		err = r.emailClient.SendChangeAccessibilityRequestStatusEmail(
 			ctx,
+			input.RequestID,
 			request.Name,
 			userInfo.CommonName,
 			latestStatusRecord.Status,
