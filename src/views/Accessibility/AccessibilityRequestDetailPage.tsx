@@ -355,7 +355,7 @@ const AccessibilityRequestDetailPage = () => {
         aria-label="existing notes"
         className="margin-top-6 margin-x-1"
       >
-        <h3 className="sr-only" id="AccessibilityRequestNotesTab-NotesList">
+        <h3 id="AccessibilityRequestNotesTab-NotesList">
           {t('requestDetails.notes.srNotesHeading2', {
             notesLength: notes.length
           })}
