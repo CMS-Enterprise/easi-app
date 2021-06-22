@@ -2679,6 +2679,7 @@ type UpdateAccessibilityRequestStatusPayload {
 input CreateAccessibilityRequestNoteInput {
   requestID: UUID!
   note: String!
+  shouldSendEmail: Boolean!
 }
 
 type AccessibilityRequestNote {
@@ -14445,6 +14446,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestNoteInput(ct
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("note"))
 			it.Note, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldSendEmail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
+			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
