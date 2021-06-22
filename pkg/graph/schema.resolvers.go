@@ -486,6 +486,23 @@ func (r *mutationResolver) CreateAccessibilityRequestNote(ctx context.Context, i
 		return nil, err
 	}
 
+	if input.ShouldSendEmail {
+		request, err := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
+		if err != nil {
+			return nil, err
+		}
+
+		userInfo, err := r.service.FetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+		if err != nil {
+			return nil, err
+		}
+
+		err = r.emailClient.SendNewAccessibilityRequestNoteEmail(ctx, input.RequestID, request.Name, userInfo.CommonName)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return &model.CreateAccessibilityRequestNotePayload{AccessibilityRequestNote: created}, nil
 }
 
@@ -516,6 +533,22 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 
 func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
+
+	request, err := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	userInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	latestStatusRecord, err := r.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx, input.RequestID)
+	if err != nil {
+		return nil, err
+	}
+
 	statusRecord, err := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
 		RequestID: input.RequestID,
 		Status:    input.Status,
@@ -523,6 +556,20 @@ func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context,
 	})
 	if err != nil {
 		return nil, err
+	}
+
+	if latestStatusRecord.Status != input.Status {
+		err = r.emailClient.SendChangeAccessibilityRequestStatusEmail(
+			ctx,
+			input.RequestID,
+			request.Name,
+			userInfo.CommonName,
+			latestStatusRecord.Status,
+			input.Status,
+		)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &model.UpdateAccessibilityRequestStatusPayload{
@@ -863,12 +910,13 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 
 	for _, request := range requests {
 		node := model.Request{
-			ID:          request.ID,
-			SubmittedAt: request.SubmittedAt,
-			Name:        request.Name.Ptr(),
-			Type:        request.Type,
-			Status:      request.Status,
-			Lcid:        request.LifecycleID.Ptr(),
+			ID:              request.ID,
+			SubmittedAt:     request.SubmittedAt,
+			Name:            request.Name.Ptr(),
+			Type:            request.Type,
+			Status:          request.Status,
+			StatusCreatedAt: request.StatusCreatedAt,
+			Lcid:            request.LifecycleID.Ptr(),
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,

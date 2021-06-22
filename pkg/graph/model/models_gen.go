@@ -93,8 +93,9 @@ type CreateAccessibilityRequestInput struct {
 }
 
 type CreateAccessibilityRequestNoteInput struct {
-	RequestID uuid.UUID `json:"requestID"`
-	Note      string    `json:"note"`
+	RequestID       uuid.UUID `json:"requestID"`
+	Note            string    `json:"note"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 type CreateAccessibilityRequestNotePayload struct {
@@ -193,12 +194,13 @@ type RejectIntakeInput struct {
 }
 
 type Request struct {
-	ID          uuid.UUID   `json:"id"`
-	Name        *string     `json:"name"`
-	SubmittedAt *time.Time  `json:"submittedAt"`
-	Type        RequestType `json:"type"`
-	Status      string      `json:"status"`
-	Lcid        *string     `json:"lcid"`
+	ID              uuid.UUID   `json:"id"`
+	Name            *string     `json:"name"`
+	SubmittedAt     *time.Time  `json:"submittedAt"`
+	Type            RequestType `json:"type"`
+	Status          string      `json:"status"`
+	StatusCreatedAt *time.Time  `json:"statusCreatedAt"`
+	Lcid            *string     `json:"lcid"`
 }
 
 type RequestEdge struct {

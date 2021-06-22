@@ -48,10 +48,10 @@ import {
 } from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
-import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import { TabPanel, Tabs } from 'components/Tabs';
@@ -136,10 +136,11 @@ const AccessibilityRequestDetailPage = () => {
       variables: {
         input: {
           requestID: accessibilityRequestId,
-          note: values.noteText
+          note: values.noteText,
+          shouldSendEmail: values.shouldSendEmail
         }
       }
-    }).then(response => {
+    }).then(() => {
       refetch();
       showMessage(''); // allows screen reader to hear consecutive success message
       showMessage(t('requestDetails.notes.confirmation', { requestName }));
@@ -296,7 +297,8 @@ const AccessibilityRequestDetailPage = () => {
       >
         <Formik
           initialValues={{
-            noteText: ''
+            noteText: '',
+            shouldSendEmail: false
           }}
           onSubmit={createNote}
           validationSchema={accessibilitySchema.noteForm}
@@ -305,7 +307,7 @@ const AccessibilityRequestDetailPage = () => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<CreateNoteForm>) => {
-            const { errors } = formikProps;
+            const { values, errors, setFieldValue } = formikProps;
             const flatErrors = flattenErrors(errors);
             return (
               <>
@@ -327,10 +329,8 @@ const AccessibilityRequestDetailPage = () => {
                   </ErrorAlert>
                 )}
                 <Form className="usa-form maxw-full ">
-                  <FieldGroup>
-                    <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
-                      {t('requestDetails.notes.addNote')}
-                    </Label>
+                  <h3>{t('requestDetails.notes.addNote')}</h3>
+                  <FieldGroup className="margin-bottom-2">
                     <FieldErrorMsg>{flatErrors.noteText}</FieldErrorMsg>
                     <Field
                       as={TextAreaField}
@@ -339,6 +339,19 @@ const AccessibilityRequestDetailPage = () => {
                       error={!!flatErrors.noteText}
                       className="accessibility-request__note-field"
                       name="noteText"
+                    />
+                  </FieldGroup>
+                  <FieldGroup>
+                    <Field
+                      as={CheckboxField}
+                      checked={values.shouldSendEmail}
+                      id="CreateAccessibilityRequestNote-ShouldSendEmail"
+                      name="shouldSendEmail"
+                      label="Email the 508 team about this note"
+                      value="ShouldSendEmail"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setFieldValue(`shouldSendEmail`, e.target.checked);
+                      }}
                     />
                   </FieldGroup>
                   <Button className="margin-top-2" type="submit">
