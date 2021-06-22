@@ -14,6 +14,7 @@ export type DeleteAccessibilityRequestForm = {
 
 export type CreateNoteForm = {
   noteText: string;
+  shouldSendEmail: boolean;
 };
 
 // Form for reviewer to add dates

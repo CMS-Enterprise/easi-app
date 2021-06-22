@@ -152,7 +152,7 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.changeAccessibilityRequestStatus = changeAccessibilityRequestStatusTemplate
 
-	newAccessibilityRequestNoteTemplateName := "change_508_status.gohtml"
+	newAccessibilityRequestNoteTemplateName := "new_508_note.gohtml"
 	newAccessibilityRequestNoteTemplate := rawTemplates.Lookup(newAccessibilityRequestNoteTemplateName)
 	if newAccessibilityRequestNoteTemplate == nil {
 		return Client{}, templateError(newAccessibilityRequestNoteTemplateName)
