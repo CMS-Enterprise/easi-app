@@ -5,6 +5,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"path"
+
+	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -15,6 +18,7 @@ type changeAccessibilityRequestStatus struct {
 	ChangerName string
 	OldStatus   string
 	NewStatus   string
+	RequestLink string
 }
 
 func convertStatusToReadableString(status models.AccessibilityRequestStatus) string {
@@ -30,12 +34,14 @@ func convertStatusToReadableString(status models.AccessibilityRequestStatus) str
 	}
 }
 
-func (c Client) changeAccessibilityRequestStatusBody(requestName, removerName string, oldStatus, newStatus models.AccessibilityRequestStatus) (string, error) {
+func (c Client) changeAccessibilityRequestStatusBody(requestID uuid.UUID, requestName, removerName string, oldStatus, newStatus models.AccessibilityRequestStatus) (string, error) {
+	requestPath := path.Join("508", "requests", requestID.String())
 	data := changeAccessibilityRequestStatus{
 		ChangerName: removerName,
 		RequestName: requestName,
 		OldStatus:   convertStatusToReadableString(oldStatus),
 		NewStatus:   convertStatusToReadableString(newStatus),
+		RequestLink: c.urlFromPath(requestPath),
 	}
 	var b bytes.Buffer
 	if c.templates.changeAccessibilityRequestStatus == nil {
@@ -51,13 +57,14 @@ func (c Client) changeAccessibilityRequestStatusBody(requestName, removerName st
 // SendChangeAccessibilityRequestStatusEmail sends an email for a changed 508 status
 func (c Client) SendChangeAccessibilityRequestStatusEmail(
 	ctx context.Context,
+	requestID uuid.UUID,
 	requestName,
 	changerName string,
 	oldStatus,
 	newStatus models.AccessibilityRequestStatus,
 ) error {
 	subject := fmt.Sprintf("%s: Status changed to %s", requestName, convertStatusToReadableString(newStatus))
-	body, err := c.changeAccessibilityRequestStatusBody(requestName, changerName, oldStatus, newStatus)
+	body, err := c.changeAccessibilityRequestStatusBody(requestID, requestName, changerName, oldStatus, newStatus)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
