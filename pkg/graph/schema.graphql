@@ -85,6 +85,7 @@ type UpdateAccessibilityRequestStatusPayload {
 input CreateAccessibilityRequestNoteInput {
   requestID: UUID!
   note: String!
+  shouldSendEmail: Boolean!
 }
 
 type AccessibilityRequestNote {

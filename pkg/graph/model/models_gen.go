@@ -93,8 +93,9 @@ type CreateAccessibilityRequestInput struct {
 }
 
 type CreateAccessibilityRequestNoteInput struct {
-	RequestID uuid.UUID `json:"requestID"`
-	Note      string    `json:"note"`
+	RequestID       uuid.UUID `json:"requestID"`
+	Note            string    `json:"note"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 type CreateAccessibilityRequestNotePayload struct {
