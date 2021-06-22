@@ -21,6 +21,10 @@ const accessibilitySchema = {
         ],
         'Choose the reason for removing this request'
       )
+  }),
+
+  noteForm: Yup.object().shape({
+    noteText: Yup.string().required('Enter a note')
   })
 };
 

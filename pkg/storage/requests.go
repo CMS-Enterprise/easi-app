@@ -17,12 +17,13 @@ import (
 
 // Request defines the generic request object pulled from multiple db tables
 type Request struct {
-	ID          uuid.UUID
-	Name        null.String
-	SubmittedAt *time.Time        `db:"submitted_at"`
-	Type        model.RequestType `db:"record_type"`
-	Status      string
-	LifecycleID null.String `db:"lcid"`
+	ID              uuid.UUID
+	Name            null.String
+	SubmittedAt     *time.Time        `db:"submitted_at"`
+	Type            model.RequestType `db:"record_type"`
+	Status          string
+	StatusCreatedAt *time.Time  `db:"status_created_at"`
+	LifecycleID     null.String `db:"lcid"`
 }
 
 // FetchMyRequests queries the DB for an accessibility requests.
@@ -34,12 +35,13 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 	requests := []Request{}
 
 	requestsSQL := `
-	SELECT 
+	SELECT
 		accessibility_requests.id,
 		accessibility_requests.name,
 		accessibility_requests.created_at AS submitted_at,
 		'ACCESSIBILITY_REQUEST' record_type,
 		accessibility_request_status_records.status::text,
+		accessibility_request_status_records.created_at AS status_created_at,
 		null lcid
 	FROM accessibility_requests
 		JOIN accessibility_request_status_records
@@ -49,9 +51,9 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 				request_id,
 				max(created_at)
 			FROM
-				accessibility_request_status_records arsr 
+				accessibility_request_status_records arsr
 			GROUP BY request_id
-		) current_status 
+		) current_status
 			ON current_status.request_id = accessibility_requests.id
 		WHERE accessibility_requests.deleted_at IS null
 		AND accessibility_requests.eua_user_id = $1
@@ -62,6 +64,7 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		submitted_at,
 		'GOVERNANCE_REQUEST' record_type,
 		status::text,
+		null status_created_at,
 		lcid
 	FROM system_intakes
 		WHERE archived_at IS NULL
