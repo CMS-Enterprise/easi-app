@@ -125,7 +125,7 @@ const AccessibilityRequestDetailPage = () => {
           shouldSendEmail: values.shouldSendEmail
         }
       }
-    }).then(response => {
+    }).then(() => {
       showMessage(t('requestDetails.notes.confirmation', { requestName }));
       resetForm({});
     });
