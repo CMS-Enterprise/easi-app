@@ -7,15 +7,22 @@ import { Link as UswdsLink } from '@trussworks/react-uswds';
 import PageHeading from 'components/PageHeading';
 
 const WelcomeText = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('home');
   const { authState } = useOktaAuth();
+
+  const easiTasks: string[] = t('easiTasks', {
+    returnObjects: true
+  });
 
   return (
     <div className="tablet:grid-col-9">
       <PageHeading>{t('home:title')}</PageHeading>
-      <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
-        {t('home:subtitle')}
-      </p>
+      <p>{t('easiPurpose')}</p>
+      <ul className="line-height-body-5 margin-bottom-4">
+        {easiTasks.map(task => (
+          <li key={task}>{task}</li>
+        ))}
+      </ul>
       {authState.isAuthenticated ? (
         <UswdsLink
           className="usa-button"
@@ -23,7 +30,7 @@ const WelcomeText = () => {
           variant="unstyled"
           to="/system/request-type"
         >
-          {t('home:startNow')}
+          {t('startNow')}
         </UswdsLink>
       ) : (
         <UswdsLink
@@ -32,7 +39,7 @@ const WelcomeText = () => {
           variant="unstyled"
           to="/signin"
         >
-          {t('home:signIn')}
+          {t('signIn')}
         </UswdsLink>
       )}
     </div>

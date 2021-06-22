@@ -472,6 +472,19 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	}, nil
 }
 
+func (r *mutationResolver) CreateAccessibilityRequestNote(ctx context.Context, input model.CreateAccessibilityRequestNoteInput) (*model.CreateAccessibilityRequestNotePayload, error) {
+	created, err := r.store.CreateAccessibilityRequestNote(ctx, &models.AccessibilityRequestNote{
+		Note:      input.Note,
+		RequestID: input.RequestID,
+		EUAUserID: appcontext.Principal(ctx).ID(),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.CreateAccessibilityRequestNotePayload{AccessibilityRequestNote: created}, nil
+}
+
 func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {
 	accessibilityRequestDocument, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
 	if err != nil {
@@ -853,12 +866,13 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 
 	for _, request := range requests {
 		node := model.Request{
-			ID:          request.ID,
-			SubmittedAt: request.SubmittedAt,
-			Name:        request.Name.Ptr(),
-			Type:        request.Type,
-			Status:      request.Status,
-			Lcid:        request.LifecycleID.Ptr(),
+			ID:              request.ID,
+			SubmittedAt:     request.SubmittedAt,
+			Name:            request.Name.Ptr(),
+			Type:            request.Type,
+			Status:          request.Status,
+			StatusCreatedAt: request.StatusCreatedAt,
+			Lcid:            request.LifecycleID.Ptr(),
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,

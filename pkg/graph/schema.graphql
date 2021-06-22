@@ -18,6 +18,7 @@ type Request {
   submittedAt: Time
   type: RequestType!
   status: String!
+  statusCreatedAt: Time
   lcid: String
 }
 
@@ -62,6 +63,7 @@ type AccessibilityRequestStatusRecord {
   requestID: UUID!
   status: AccessibilityRequestStatus!
   euaUserId: String!
+  createdAt: Time!
 }
 
 """
@@ -81,6 +83,22 @@ type UpdateAccessibilityRequestStatusPayload {
   status: AccessibilityRequestStatus!
   euaUserId: String!
   userErrors: [UserError!]
+}
+
+input CreateAccessibilityRequestNoteInput {
+  requestID: UUID!
+  note: String!
+}
+
+type AccessibilityRequestNote {
+  id: UUID!
+  requestID: UUID!
+  createdAt: Time!
+  note: String!
+}
+
+type CreateAccessibilityRequestNotePayload {
+  accessibilityRequestNote: AccessibilityRequestNote!
 }
 
 """
@@ -650,6 +668,10 @@ type Mutation {
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
+  createAccessibilityRequestNote(
+    input: CreateAccessibilityRequestNoteInput!
+  ): CreateAccessibilityRequestNotePayload
+    @hasRole(role: EASI_508_TESTER_OR_USER)
   deleteAccessibilityRequestDocument(
     input: DeleteAccessibilityRequestDocumentInput!
   ): DeleteAccessibilityRequestDocumentPayload

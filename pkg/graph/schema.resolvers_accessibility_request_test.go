@@ -10,7 +10,9 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
@@ -388,4 +390,43 @@ func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 	s.Nil(statusRecordErr)
 
 	s.Equal(models.AccessibilityRequestStatusDeleted, latestStatusRecord.Status)
+}
+
+func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
+	// Setup
+	euaID := testhelpers.RandomEUAID()
+	principal := authentication.EUAPrincipal{EUAID: euaID, JobCodeEASi: true, JobCode508User: true}
+	ctx := appcontext.WithPrincipal(context.Background(), &principal)
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:            null.StringFrom("Big Project"),
+		Status:                 models.SystemIntakeStatusLCIDISSUED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		BusinessOwner:          null.StringFrom("Firstname Lastname"),
+		BusinessOwnerComponent: null.StringFrom("OIT"),
+	})
+	s.NoError(intakeErr)
+
+	lifecycleID, lcidErr := s.store.GenerateLifecycleID(ctx)
+	s.NoError(lcidErr)
+	intake.LifecycleID = null.StringFrom(lifecycleID)
+	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
+	s.NoError(updateErr)
+
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+		IntakeID:  intake.ID,
+		EUAUserID: "ABCD",
+	})
+	s.NoError(requestErr)
+
+	// The meat of the test
+	input := model.CreateAccessibilityRequestNoteInput{
+		RequestID: accessibilityRequest.ID,
+		Note:      "Here is my test note",
+	}
+	payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+	s.NoError(err)
+	s.Equal(input.Note, payload.AccessibilityRequestNote.Note)
+	s.Equal(input.RequestID, payload.AccessibilityRequestNote.RequestID)
+	s.Equal(euaID, payload.AccessibilityRequestNote.EUAUserID)
 }

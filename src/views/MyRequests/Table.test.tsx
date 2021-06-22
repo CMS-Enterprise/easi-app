@@ -54,6 +54,18 @@ describe('My Requests Table', () => {
                     submittedAt: '2021-05-25T19:22:40Z',
                     type: 'ACCESSIBILITY_REQUEST',
                     status: 'OPEN',
+                    statusCreatedAt: '2021-05-25T19:22:40Z',
+                    lcid: null
+                  }
+                },
+                {
+                  node: {
+                    id: '909',
+                    name: '508 Test 2',
+                    submittedAt: '2021-05-25T19:22:40Z',
+                    type: 'ACCESSIBILITY_REQUEST',
+                    status: 'IN_REMEDIATION',
+                    statusCreatedAt: '2021-05-26T19:22:40Z',
                     lcid: null
                   }
                 },
@@ -64,6 +76,7 @@ describe('My Requests Table', () => {
                     submittedAt: '2021-05-22T19:22:40Z',
                     type: 'GOVERNANCE_REQUEST',
                     status: 'INTAKE_DRAFT',
+                    statusCreatedAt: null,
                     lcid: null
                   }
                 },
@@ -74,6 +87,7 @@ describe('My Requests Table', () => {
                     submittedAt: '2021-05-20T19:22:40Z',
                     type: 'GOVERNANCE_REQUEST',
                     status: 'LCID_ISSUED',
+                    statusCreatedAt: null,
                     lcid: 'A123456'
                   }
                 }
@@ -119,7 +133,7 @@ describe('My Requests Table', () => {
     it('displays rows of data', async () => {
       const component = await renderComponent();
       const rows = component.find('tbody').find('tr');
-      expect(rows.length).toEqual(3);
+      expect(rows.length).toEqual(4);
 
       const rowOne = rows.at(0);
       expect(rowOne.find('th').find('a').html()).toEqual(
@@ -129,13 +143,23 @@ describe('My Requests Table', () => {
       expect(rowOne.find('td').at(1).text()).toEqual('May 25 2021');
       expect(rowOne.find('td').at(2).text()).toEqual('Open');
 
-      const rowTwo = rows.at(2);
+      const rowTwo = rows.at(1);
       expect(rowTwo.find('th').find('a').html()).toEqual(
+        '<a class="usa-link" href="/508/requests/909">508 Test 2</a>'
+      );
+      expect(rowTwo.find('td').at(0).text()).toEqual('Section 508');
+      expect(rowTwo.find('td').at(1).text()).toEqual('May 25 2021');
+      expect(rowTwo.find('td').at(2).text()).toEqual(
+        'In remediation changed on May 26 2021'
+      );
+
+      const rowThree = rows.at(3);
+      expect(rowThree.find('th').find('a').html()).toEqual(
         '<a class="usa-link" href="/governance-task-list/789">Intake 2</a>'
       );
-      expect(rowTwo.find('td').at(0).text()).toEqual('IT Governance');
-      expect(rowTwo.find('td').at(1).text()).toEqual('May 20 2021');
-      expect(rowTwo.find('td').at(2).text()).toEqual('LCID: A123456');
+      expect(rowThree.find('td').at(0).text()).toEqual('IT Governance');
+      expect(rowThree.find('td').at(1).text()).toEqual('May 20 2021');
+      expect(rowThree.find('td').at(2).text()).toEqual('LCID: A123456');
     });
   });
 });

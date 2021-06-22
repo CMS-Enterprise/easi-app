@@ -3,7 +3,6 @@
   justify-content: space-between;
   flex-direction: column;
   position: relative;
-  border-bottom: 1px solid color($theme-color-base-lighter);
 
   &__tab-list {
     display: inline-block;
@@ -66,6 +65,11 @@
 
   &__tab-panel {
     overflow: auto;
-    border: 1px solid color($theme-color-base-lighter);
+    border-top: 1px solid color($theme-color-base-lighter);
+
+    &--bordered {
+      border: 1px solid color($theme-color-base-lighter);
+
+    }
   }
 }
