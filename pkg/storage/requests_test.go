@@ -32,7 +32,26 @@ func (s StoreTestSuite) TestMyRequests() {
 		accessibilityRequestThatIsMine, err := s.store.CreateAccessibilityRequest(ctx, &newRequest)
 		s.NoError(err)
 
+		// create status of open
 		status := models.AccessibilityRequestStatusRecord{
+			Status:    models.AccessibilityRequestStatusOpen,
+			RequestID: accessibilityRequestThatIsMine.ID,
+			EUAUserID: requesterID,
+		}
+		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
+		s.NoError(err)
+
+		// set status to in remediation
+		status = models.AccessibilityRequestStatusRecord{
+			Status:    models.AccessibilityRequestStatusInRemediation,
+			RequestID: accessibilityRequestThatIsMine.ID,
+			EUAUserID: requesterID,
+		}
+		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
+		s.NoError(err)
+
+		// set status back to open
+		status = models.AccessibilityRequestStatusRecord{
 			Status:    models.AccessibilityRequestStatusOpen,
 			RequestID: accessibilityRequestThatIsMine.ID,
 			EUAUserID: requesterID,
