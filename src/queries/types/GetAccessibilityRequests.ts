@@ -29,6 +29,7 @@ export interface GetAccessibilityRequests_accessibilityRequests_edges_node_syste
 export interface GetAccessibilityRequests_accessibilityRequests_edges_node_statusRecord {
   __typename: "AccessibilityRequestStatusRecord";
   status: AccessibilityRequestStatus;
+  createdAt: Time;
 }
 
 export interface GetAccessibilityRequests_accessibilityRequests_edges_node {

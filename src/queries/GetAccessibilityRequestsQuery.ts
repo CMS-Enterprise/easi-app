@@ -20,6 +20,7 @@ export default gql`
           }
           statusRecord {
             status
+            createdAt
           }
         }
       }
