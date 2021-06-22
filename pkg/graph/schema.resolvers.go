@@ -503,6 +503,22 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 
 func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
+
+	request, err := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	userInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	latestStatusRecord, err := r.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx, input.RequestID)
+	if err != nil {
+		return nil, err
+	}
+
 	statusRecord, err := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
 		RequestID: input.RequestID,
 		Status:    input.Status,
@@ -510,6 +526,20 @@ func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context,
 	})
 	if err != nil {
 		return nil, err
+	}
+
+	if latestStatusRecord.Status != input.Status {
+		err = r.emailClient.SendChangeAccessibilityRequestStatusEmail(
+			ctx,
+			input.RequestID,
+			request.Name,
+			userInfo.CommonName,
+			latestStatusRecord.Status,
+			input.Status,
+		)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &model.UpdateAccessibilityRequestStatusPayload{
