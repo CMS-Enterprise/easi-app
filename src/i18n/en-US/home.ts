@@ -41,7 +41,12 @@ const home = {
     defaultSubmittedAt: 'Not submitted',
     caption:
       'Below is a list of governance requests that are in draft or submitted.'
-  }
+  },
+  easiPurpose: 'You can use EASi to make:',
+  easiTasks: [
+    'IT Governance requests',
+    '508 testing request for your application'
+  ]
 };
 
 export default home;
