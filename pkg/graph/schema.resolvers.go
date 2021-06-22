@@ -473,6 +473,23 @@ func (r *mutationResolver) CreateAccessibilityRequestNote(ctx context.Context, i
 		return nil, err
 	}
 
+	if input.ShouldSendEmail {
+		request, err := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
+		if err != nil {
+			return nil, err
+		}
+
+		userInfo, err := r.service.FetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+		if err != nil {
+			return nil, err
+		}
+
+		err = r.emailClient.SendNewAccessibilityRequestNoteEmail(ctx, input.RequestID, request.Name, userInfo.CommonName)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return &model.CreateAccessibilityRequestNotePayload{AccessibilityRequestNote: created}, nil
 }
 
