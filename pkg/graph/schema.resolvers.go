@@ -398,6 +398,15 @@ func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
+	_, statusRecordErr := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: input.ID,
+		Status:    models.AccessibilityRequestStatusDeleted,
+		EUAUserID: removerEUAID,
+	})
+	if statusRecordErr != nil {
+		return nil, statusRecordErr
+	}
+
 	return &model.DeleteAccessibilityRequestPayload{ID: &input.ID}, nil
 }
 
@@ -490,21 +499,28 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 
 func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	statusRecord, err := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
-		RequestID: input.RequestID,
-		Status:    input.Status,
-		EUAUserID: requesterEUAID,
-	})
-	if err != nil {
-		return nil, err
+
+	if input.Status == models.AccessibilityRequestStatusOpen || input.Status == models.AccessibilityRequestStatusClosed || input.Status == models.AccessibilityRequestStatusInRemediation {
+		statusRecord, err := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+			RequestID: input.RequestID,
+			Status:    input.Status,
+			EUAUserID: requesterEUAID,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		return &model.UpdateAccessibilityRequestStatusPayload{
+			ID:         statusRecord.ID,
+			RequestID:  statusRecord.RequestID,
+			Status:     statusRecord.Status,
+			EuaUserID:  statusRecord.EUAUserID,
+			UserErrors: nil,
+		}, nil
 	}
 
 	return &model.UpdateAccessibilityRequestStatusPayload{
-		ID:         statusRecord.ID,
-		RequestID:  statusRecord.RequestID,
-		Status:     statusRecord.Status,
-		EuaUserID:  statusRecord.EUAUserID,
-		UserErrors: nil,
+		UserErrors: []*model.UserError{{Message: "Invalid status", Path: []string{"status"}}},
 	}, nil
 }
 
