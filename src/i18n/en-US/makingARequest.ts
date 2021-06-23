@@ -17,7 +17,7 @@ const makingARequest = {
   forOtherQuestions: {
     message:
       'For all other questions, you can reach the CMS IT Governance team at: ',
-    email: 'ITgovernance@cms.hhs.gov'
+    email: 'IT_Governance@cms.hhs.gov'
   },
   nextStep: 'Start a new request'
 };

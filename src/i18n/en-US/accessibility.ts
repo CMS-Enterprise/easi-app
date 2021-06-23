@@ -135,8 +135,8 @@ const accessibility = {
     helpAndGuidance: {
       lifecycleIdAccordion: {
         header: 'What if I cannot find my application or Lifecycle ID?',
-        para:
-          'Your application might not have a Lifecycle ID. A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at ITgovernanceteam@cms.hhs.gov with information about your application.'
+        description:
+          'Your application might not have a Lifecycle ID. A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your application.'
       }
     }
   },
@@ -209,7 +209,7 @@ const accessibility = {
       exceptionFineprint:
         'Exceptions are only valid for one release. Future releases will be re-evaluated for additional exceptions.',
       contact:
-        'To apply for an exception or for more information, contact the CMS Section 508 team at <1>CMS_Section508@cms.hhs.gov<1/>.'
+        'To apply for an exception or for more information, contact the CMS Section 508 team at <1>CMS_Section508@cms.hhs.gov</1>.'
     },
     start: 'Get started with Step 1'
   },
@@ -232,7 +232,7 @@ const accessibility = {
     continueButton: 'Continue to steps involved',
     noLcidHeader: 'What if I don’t have a Lifecycle ID?',
     noLcidBody:
-      'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>ITgovernanceteam@cms.hhs.gov</1> with information about your system.'
+      'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your system.'
   },
   testingTemplates: {
     heading: 'Templates for 508 testing',
