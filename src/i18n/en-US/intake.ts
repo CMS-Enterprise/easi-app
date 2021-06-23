@@ -67,7 +67,7 @@ const intake = {
       bizCaseSubmitted:
         'Your Business Case has been submitted for review. The Governance Admin team will get back to you about the next step.',
       decommissioning:
-        'Follow the decommission guide, complete steps relevant to your system and submit it back to ITgovernance@cms.hhs.gov to officially complete the decommissioning of your system.'
+        'Follow the decommission guide, complete steps relevant to your system and submit it back to IT_Governance@cms.hhs.gov to officially complete the decommissioning of your system.'
     }
   },
   requestType: {
