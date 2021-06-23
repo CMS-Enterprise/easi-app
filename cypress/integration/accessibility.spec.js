@@ -173,7 +173,7 @@ describe('Accessibility Requests', () => {
     cy.get('table').should('not.exist');
   });
 
-  it.only('can add a note as a 508 user', () => {
+  it('can add a note and view it as a 508 user', () => {
     cy.localLogin({ name: 'BOWN' });
     create508Request(cy);
 
