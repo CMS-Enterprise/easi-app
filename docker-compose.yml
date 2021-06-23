@@ -12,6 +12,7 @@ services:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=mysecretpassword
       - FLYWAY_URL=jdbc:postgresql://db/postgres
+      - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp
     depends_on:
       - db
   easi:
@@ -38,8 +39,8 @@ services:
       - PGHOST=db
       - PGPORT=5432
       - PGDATABASE=postgres
-      - PGUSER=postgres
-      - PGPASS=mysecretpassword
+      - PGUSER=app_user
+      - PGPASS=supersecretapp
       - PGSSLMODE=disable
       - DB_MAX_CONNECTIONS=20
       - FLAG_SOURCE
