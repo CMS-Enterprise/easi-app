@@ -127,6 +127,7 @@ export interface CreateAccessibilityRequestInput {
 export interface CreateAccessibilityRequestNoteInput {
   requestID: UUID;
   note: string;
+  shouldSendEmail: boolean;
 }
 
 export interface CreateSystemIntakeInput {
