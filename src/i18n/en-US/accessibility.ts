@@ -56,10 +56,19 @@ const accessibility = {
       }
     },
     notes: {
-      addNote: 'Add a note',
+      form: {
+        note: 'Note',
+        sendEmail: 'Email the 508 team about this note'
+      },
       submit: 'Add note',
       confirmation: 'Note added to {{-requestName}}',
-      srOnlyAddNoteLink: 'Add a new note'
+      existingNotesCount:
+        'There are {{notesLength}} existing notes on this page.',
+      mostRecentNote:
+        'The most recent note was from {{-authorName}} on {{createdAt}}.',
+      existingNotes: '{{notesLength}} existing notes',
+      srOnlyAddNoteLink: 'Add a new note',
+      skipToExistingNotes: 'Skip to existing notes'
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',

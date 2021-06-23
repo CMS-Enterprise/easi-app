@@ -295,6 +295,7 @@ namespace :db do
   task :clean do
     tables = %w{
       accessibility_request_status_records
+      accessibility_request_notes
       accessibility_request_documents
       test_dates
       accessibility_requests
