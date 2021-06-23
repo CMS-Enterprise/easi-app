@@ -7,7 +7,8 @@ set -eu -o pipefail
 readonly environment="$APP_ENV"
 
 readonly db_instance_identifier=easi$environment
-readonly db_snapshot_identifier=$db_instance_identifier-$(date +%s)
+db_snapshot_identifier=$db_instance_identifier-$(date +%s)
+readonly db_snapshot_identifier
 readonly tags=("Key=Environment,Value=$environment" "Key=Tool,Value=$(basename "$0")")
 
 echo
