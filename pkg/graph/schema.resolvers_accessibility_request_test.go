@@ -156,8 +156,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	s.Equal("OPEN", responseStatusRecord.Status)
 
 	responseNote := resp.AccessibilityRequest.Notes[0]
-	// mock returns lowercased EUAUserID as CommonName
-	s.Equal("hehe", responseNote.AuthorName)
+	s.Equal("hehe Doe", responseNote.AuthorName)
 	s.Equal("I am a knot note, not a naughty note", responseNote.Note)
 }
 

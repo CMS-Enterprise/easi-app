@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
@@ -32,11 +32,11 @@ import {
   DeleteAccessibilityRequestDocumentVariables
 } from 'queries/types/DeleteAccessibilityRequestDocument';
 import { DeleteTestDate } from 'queries/types/DeleteTestDate';
+import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
 import {
-  GetAccessibilityRequest,
-  GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType,
-  GetAccessibilityRequestVariables
-} from 'queries/types/GetAccessibilityRequest';
+  GetAccessibilityRequestAccessibilityTeamOnly as GetAccessibilityRequest,
+  GetAccessibilityRequestAccessibilityTeamOnlyVariables as GetAccessibilityRequestPayload
+} from 'queries/types/GetAccessibilityRequestAccessibilityTeamOnly';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import Modal from 'components/Modal';
@@ -52,6 +52,7 @@ import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import { TabPanel, Tabs } from 'components/Tabs';
@@ -78,6 +79,7 @@ const AccessibilityRequestDetailPage = () => {
   const { message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
   const history = useHistory();
+  const existingNotesHeading = useRef<HTMLHeadingElement>(null);
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -88,19 +90,23 @@ const AccessibilityRequestDetailPage = () => {
   const requestQuery = isAccessibilityTeam
     ? GetAccessibilityRequestAccessibilityTeamOnlyQuery
     : GetAccessibilityRequestQuery;
+
+  // TODO: typechecking is off because of conditional query
   const { loading, error, data, refetch } = useQuery<
     GetAccessibilityRequest,
-    GetAccessibilityRequestVariables
+    GetAccessibilityRequestPayload
   >(requestQuery, {
     fetchPolicy: 'network-only',
     variables: {
       id: accessibilityRequestId
     }
   });
+
   const [mutateDeleteRequest] = useMutation<
     DeleteAccessibilityRequest,
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
+
   const [mutateCreateNote] = useMutation<
     CreateAccessibilityRequestNote,
     CreateAccessibilityRequestNoteVariables
@@ -271,24 +277,25 @@ const AccessibilityRequestDetailPage = () => {
   const notes = data?.accessibilityRequest?.notes || [];
   const notesTab = (
     <>
-      <div className="usa-sr-only">
-        <h3>
-          {t('requestDetails.notes.srNotesHeading1Part1', {
-            notesLength: notes.length
-          })}{' '}
-          {notes.length > 0 &&
-            t('requestDetails.notes.srNotesHeading1Part2', {
-              authorName: notes[0]?.authorName,
-              createdAt: formatDate(notes[0]?.createdAt)
-            })}
-        </h3>
-        <UswdsLink href="#CreateAccessibilityRequestNote-NoteText">
-          {t('requestDetails.notes.srOnlyAddNoteLink')}
-        </UswdsLink>
-        <UswdsLink href="#AccessibilityRequestNotesTab-NotesList">
-          {t('requestDetails.notes.srOnlyExistingNotesLink')}
-        </UswdsLink>
-      </div>
+      <h3 className="usa-sr-only">
+        {t('requestDetails.notes.existingNotesCount', {
+          notesLength: notes.length
+        })}{' '}
+        {notes.length > 0 &&
+          t('requestDetails.notes.mostRecentNote', {
+            authorName: notes[0]?.authorName,
+            createdAt: formatDate(notes[0]?.createdAt)
+          })}
+      </h3>
+      <Button
+        className="accessibility-request__add-note-btn"
+        type="button"
+        onClick={() => {
+          existingNotesHeading.current?.focus();
+        }}
+      >
+        {t('requestDetails.notes.skipToExistingNotes')}
+      </Button>
       <div
         role="region"
         aria-label="add new note"
@@ -328,17 +335,19 @@ const AccessibilityRequestDetailPage = () => {
                     })}
                   </ErrorAlert>
                 )}
-                <Form className="usa-form maxw-full ">
-                  <h3>{t('requestDetails.notes.addNote')}</h3>
-                  <FieldGroup className="margin-bottom-2">
+                <Form className="usa-form maxw-full">
+                  <FieldGroup>
+                    <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
+                      {t('requestDetails.notes.form.note')}
+                    </Label>
                     <FieldErrorMsg>{flatErrors.noteText}</FieldErrorMsg>
                     <Field
                       as={TextAreaField}
                       id="CreateAccessibilityRequestNote-NoteText"
-                      maxLength={2000}
-                      error={!!flatErrors.noteText}
-                      className="accessibility-request__note-field"
                       name="noteText"
+                      className="accessibility-request__note-field"
+                      error={!!flatErrors.noteText}
+                      maxLength={2000}
                     />
                   </FieldGroup>
                   <FieldGroup>
@@ -347,7 +356,7 @@ const AccessibilityRequestDetailPage = () => {
                       checked={values.shouldSendEmail}
                       id="CreateAccessibilityRequestNote-ShouldSendEmail"
                       name="shouldSendEmail"
-                      label="Email the 508 team about this note"
+                      label={t('requestDetails.notes.form.sendEmail')}
                       value="ShouldSendEmail"
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setFieldValue(`shouldSendEmail`, e.target.checked);
@@ -368,8 +377,8 @@ const AccessibilityRequestDetailPage = () => {
         aria-label="existing notes"
         className="margin-top-6 margin-x-1"
       >
-        <h3 id="AccessibilityRequestNotesTab-NotesList">
-          {t('requestDetails.notes.srNotesHeading2', {
+        <h3 ref={existingNotesHeading} tabIndex={-1}>
+          {t('requestDetails.notes.existingNotes', {
             notesLength: notes.length
           })}
         </h3>

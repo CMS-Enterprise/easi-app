@@ -56,16 +56,19 @@ const accessibility = {
       }
     },
     notes: {
-      addNote: 'Add a note',
+      form: {
+        note: 'Note',
+        sendEmail: 'Email the 508 team about this note'
+      },
       submit: 'Add note',
       confirmation: 'Note added to {{-requestName}}',
-      srNotesHeading1Part1:
+      existingNotesCount:
         'There are {{notesLength}} existing notes on this page.',
-      srNotesHeading1Part2:
-        'The most recent note was from {{authorName}} on {{createdAt}}.',
-      srNotesHeading2: '{{notesLength}} existing notes',
+      mostRecentNote:
+        'The most recent note was from {{-authorName}} on {{createdAt}}.',
+      existingNotes: '{{notesLength}} existing notes',
       srOnlyAddNoteLink: 'Add a new note',
-      srOnlyExistingNotesLink: 'Skip to existing notes'
+      skipToExistingNotes: 'Skip to existing notes'
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
