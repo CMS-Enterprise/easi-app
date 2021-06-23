@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import configureMockStore from 'redux-mock-store';
@@ -143,22 +143,24 @@ describe('AccessibilityRequestDetailPage', () => {
         <AccessibilityRequestDetailPage />
       );
 
-      render(providers);
-
+      const { findByRole, getAllByRole, getByRole } = render(providers);
       expect(
         await screen.findByRole('tab', {
           name: 'Notes'
         })
       ).toBeInTheDocument();
 
-      const notesTab = screen.getByRole('tab', { name: 'Notes' });
+      const notesTab = getByRole('tab', { name: 'Notes' });
       userEvent.click(notesTab);
       expect(
-        await screen.findByRole('heading', {
+        await findByRole('heading', {
           name: '2 existing notes',
           level: 3
         })
       ).toBeInTheDocument();
+
+      const [, notesList] = getAllByRole('list');
+      expect(within(notesList).getAllByRole('listitem').length).toEqual(2);
     });
   });
 });
