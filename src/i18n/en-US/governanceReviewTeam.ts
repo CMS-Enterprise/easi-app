@@ -193,7 +193,7 @@ const governanceReviewTeam = {
       'Jaime Cadwell',
       'Alex Smith',
       'Ann Rudolph',
-      'Surya Potu'
+      'Kyle Miller'
     ]
   }
 };
