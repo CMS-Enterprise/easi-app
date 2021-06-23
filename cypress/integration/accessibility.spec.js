@@ -9,7 +9,7 @@ describe('Accessibility Requests', () => {
       .type('TACO - 000000{enter}')
       .should('have.value', 'TACO - 000000');
     cy.contains('button', 'Send 508 testing request').click();
-    cy.location().should((loc) => {
+    cy.location().should(loc => {
       expect(loc.pathname).to.match(/\/508\/requests\/.{36}/);
     });
     cy.contains('li', 'Home');
@@ -36,7 +36,7 @@ describe('Accessibility Requests', () => {
       );
 
       const file = new File([blob], 'document.pdf', {
-        type: 'application/pdf',
+        type: 'application/pdf'
       });
       const list = new DataTransfer();
 
@@ -107,7 +107,7 @@ describe('Accessibility Requests', () => {
     cy.localLogin({ name: 'CMSU' });
     create508Request(cy);
 
-    cy.url().then((requestPageUrl) => {
+    cy.url().then(requestPageUrl => {
       cy.logout();
 
       cy.localLogin({ name: 'ADMN', role: 'EASI_D_508_USER' });
@@ -165,11 +165,35 @@ describe('Accessibility Requests', () => {
       cy.contains('.usa-radio', 'Other').click();
       cy.contains('button', 'Remove request').click();
     });
-    cy.location().should((loc) => {
+    cy.location().should(loc => {
       expect(loc.pathname).to.eq('/');
     });
     cy.contains('.usa-alert--success', 'TACO successfully removed');
     cy.contains('Requests will display in a table once you add them');
     cy.get('table').should('not.exist');
+  });
+
+  it('can add a note and view it as a 508 user', () => {
+    cy.localLogin({ name: 'BOWN' });
+    create508Request(cy);
+
+    cy.url().then(requestPageUrl => {
+      cy.logout();
+
+      cy.localLogin({ name: 'ADMI', role: 'EASI_D_508_USER' });
+      cy.visit(requestPageUrl);
+    });
+
+    cy.contains('button', 'Notes').click();
+    cy.get('#CreateAccessibilityRequestNote-NoteText').type(
+      'This is a really great note'
+    );
+    cy.contains('button', 'Add note').click();
+    cy.get('.easi-notes__list li p')
+      .should('have.length', 1)
+      .first()
+      .within(() => {
+        cy.contains('This is a really great note');
+      });
   });
 });

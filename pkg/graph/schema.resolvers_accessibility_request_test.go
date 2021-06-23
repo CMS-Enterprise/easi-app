@@ -59,6 +59,13 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	})
 	s.NoError(documentErr)
 
+	_, noteErr := s.store.CreateAccessibilityRequestNote(ctx, &models.AccessibilityRequestNote{
+		RequestID: accessibilityRequest.ID,
+		Note:      "I am a knot note, not a naughty note",
+		EUAUserID: "HEHE",
+	})
+	s.NoError(noteErr)
+
 	var resp struct {
 		AccessibilityRequest struct {
 			ID     string
@@ -82,6 +89,12 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 			StatusRecord struct {
 				ID     string
 				Status string
+			}
+			Notes []struct {
+				ID         string
+				AuthorName string
+				CreatedAt  string
+				Note       string
 			}
 		}
 	}
@@ -113,6 +126,12 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 					id
 					status
 				}
+				notes {
+					id
+					createdAt
+					note
+					authorName
+				}
 			}
 		}`, accessibilityRequest.ID), &resp)
 
@@ -135,6 +154,10 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 
 	responseStatusRecord := resp.AccessibilityRequest.StatusRecord
 	s.Equal("OPEN", responseStatusRecord.Status)
+
+	responseNote := resp.AccessibilityRequest.Notes[0]
+	s.Equal("hehe Doe", responseNote.AuthorName)
+	s.Equal("I am a knot note, not a naughty note", responseNote.Note)
 }
 
 func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {

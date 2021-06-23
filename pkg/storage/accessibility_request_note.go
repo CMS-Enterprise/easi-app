@@ -57,3 +57,16 @@ func (s *Store) FetchAccessibilityRequestNoteByID(ctx context.Context, id uuid.U
 	}
 	return &note, nil
 }
+
+// FetchAccessibilityRequestNotesByRequestID fetches all the notes for a given in descending order
+func (s *Store) FetchAccessibilityRequestNotesByRequestID(ctx context.Context, requestID uuid.UUID) ([]*models.AccessibilityRequestNote, error) {
+	var notes []*models.AccessibilityRequestNote
+	err := s.db.Select(
+		&notes, "SELECT * FROM accessibility_request_notes WHERE request_id=$1 ORDER BY created_at DESC;", requestID,
+	)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to fetch accessibility request notes", zap.Error(err))
+		return nil, err
+	}
+	return notes, nil
+}

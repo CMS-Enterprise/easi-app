@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -113,6 +114,10 @@ func (r *accessibilityRequestResolver) StatusRecord(ctx context.Context, obj *mo
 	return r.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx, obj.ID)
 }
 
+func (r *accessibilityRequestResolver) Notes(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestNote, error) {
+	return r.store.FetchAccessibilityRequestNotesByRequestID(ctx, obj.ID)
+}
+
 func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
 	return &model.AccessibilityRequestDocumentType{
 		CommonType:           obj.CommonDocumentType,
@@ -126,6 +131,14 @@ func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj
 
 func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models.AccessibilityRequestDocument) (*time.Time, error) {
 	return obj.CreatedAt, nil
+}
+
+func (r *accessibilityRequestNoteResolver) AuthorName(ctx context.Context, obj *models.AccessibilityRequestNote) (string, error) {
+	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
+	if err != nil {
+		return "", err
+	}
+	return user.CommonName, nil
 }
 
 func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
@@ -1255,6 +1268,11 @@ func (r *Resolver) AccessibilityRequestDocument() generated.AccessibilityRequest
 	return &accessibilityRequestDocumentResolver{r}
 }
 
+// AccessibilityRequestNote returns generated.AccessibilityRequestNoteResolver implementation.
+func (r *Resolver) AccessibilityRequestNote() generated.AccessibilityRequestNoteResolver {
+	return &accessibilityRequestNoteResolver{r}
+}
+
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
@@ -1269,7 +1287,18 @@ func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &syste
 
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
+type accessibilityRequestNoteResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *accessibilityRequestNoteResolver) CreatorName(ctx context.Context, obj *models.AccessibilityRequestNote) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}

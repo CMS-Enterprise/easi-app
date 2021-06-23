@@ -31,6 +31,17 @@
       height: 5rem;
     }
   }
+
+  &__add-note-btn {
+    position: absolute;
+    left: -999em;
+    right: auto;
+    margin-top: 1em;
+
+    &:focus {
+      position: initial;
+    }
+  }
 }
 
 .report-problem-link-area {

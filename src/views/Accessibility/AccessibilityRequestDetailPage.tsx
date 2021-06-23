@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRe
 import CreateAccessibilityRequestNoteQuery from 'queries/CreateAccessibilityRequestNoteQuery';
 import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
 import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
+import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   CreateAccessibilityRequestNote,
@@ -31,20 +32,27 @@ import {
   DeleteAccessibilityRequestDocumentVariables
 } from 'queries/types/DeleteAccessibilityRequestDocument';
 import { DeleteTestDate } from 'queries/types/DeleteTestDate';
+import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
 import {
-  GetAccessibilityRequest,
-  GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType,
-  GetAccessibilityRequestVariables
-} from 'queries/types/GetAccessibilityRequest';
+  GetAccessibilityRequestAccessibilityTeamOnly as GetAccessibilityRequest,
+  GetAccessibilityRequestAccessibilityTeamOnlyVariables as GetAccessibilityRequestPayload
+} from 'queries/types/GetAccessibilityRequestAccessibilityTeamOnly';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import Modal from 'components/Modal';
+import {
+  NoteByline,
+  NoteContent,
+  NoteListItem,
+  NotesList
+} from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import { TabPanel, Tabs } from 'components/Tabs';
@@ -71,21 +79,34 @@ const AccessibilityRequestDetailPage = () => {
   const { message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
   const history = useHistory();
+  const existingNotesHeading = useRef<HTMLHeadingElement>(null);
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
+
+  const userGroups = useSelector((state: AppState) => state.auth.groups);
+  const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
+
+  const requestQuery = isAccessibilityTeam
+    ? GetAccessibilityRequestAccessibilityTeamOnlyQuery
+    : GetAccessibilityRequestQuery;
+
+  // TODO: typechecking is off because of conditional query
   const { loading, error, data, refetch } = useQuery<
     GetAccessibilityRequest,
-    GetAccessibilityRequestVariables
-  >(GetAccessibilityRequestQuery, {
+    GetAccessibilityRequestPayload
+  >(requestQuery, {
+    fetchPolicy: 'network-only',
     variables: {
       id: accessibilityRequestId
     }
   });
+
   const [mutateDeleteRequest] = useMutation<
     DeleteAccessibilityRequest,
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
+
   const [mutateCreateNote] = useMutation<
     CreateAccessibilityRequestNote,
     CreateAccessibilityRequestNoteVariables
@@ -126,6 +147,8 @@ const AccessibilityRequestDetailPage = () => {
         }
       }
     }).then(() => {
+      refetch();
+      showMessage(''); // allows screen reader to hear consecutive success message
       showMessage(t('requestDetails.notes.confirmation', { requestName }));
       resetForm({});
     });
@@ -193,8 +216,6 @@ const AccessibilityRequestDetailPage = () => {
   const documents = data?.accessibilityRequest?.documents || [];
   const testDates = data?.accessibilityRequest?.testDates || [];
 
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
   const hasDocuments = documents.length > 0;
   const statusEnum = data?.accessibilityRequest?.statusRecord.status;
   const requestStatus = accessibilityRequestStatusMap[`${statusEnum}`];
@@ -253,13 +274,28 @@ const AccessibilityRequestDetailPage = () => {
     ? bodyWithDocumentsTable
     : bodyNoDocumentsBusinessOwner;
 
+  const notes = data?.accessibilityRequest?.notes || [];
   const notesTab = (
     <>
-      <div className="usa-sr-only">
-        <UswdsLink href="#CreateAccessibilityRequestNote-NoteText">
-          {t('requestDetails.notes.srOnlyAddNoteLink')}
-        </UswdsLink>
-      </div>
+      <h3 className="usa-sr-only">
+        {t('requestDetails.notes.existingNotesCount', {
+          notesLength: notes.length
+        })}{' '}
+        {notes.length > 0 &&
+          t('requestDetails.notes.mostRecentNote', {
+            authorName: notes[0]?.authorName,
+            createdAt: formatDate(notes[0]?.createdAt)
+          })}
+      </h3>
+      <Button
+        className="accessibility-request__add-note-btn"
+        type="button"
+        onClick={() => {
+          existingNotesHeading.current?.focus();
+        }}
+      >
+        {t('requestDetails.notes.skipToExistingNotes')}
+      </Button>
       <div
         role="region"
         aria-label="add new note"
@@ -299,17 +335,19 @@ const AccessibilityRequestDetailPage = () => {
                     })}
                   </ErrorAlert>
                 )}
-                <Form className="usa-form maxw-full ">
-                  <h3>{t('requestDetails.notes.addNote')}</h3>
-                  <FieldGroup className="margin-bottom-2">
+                <Form className="usa-form maxw-full">
+                  <FieldGroup>
+                    <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
+                      {t('requestDetails.notes.form.note')}
+                    </Label>
                     <FieldErrorMsg>{flatErrors.noteText}</FieldErrorMsg>
                     <Field
                       as={TextAreaField}
                       id="CreateAccessibilityRequestNote-NoteText"
-                      maxLength={2000}
-                      error={!!flatErrors.noteText}
-                      className="accessibility-request__note-field"
                       name="noteText"
+                      className="accessibility-request__note-field"
+                      error={!!flatErrors.noteText}
+                      maxLength={2000}
                     />
                   </FieldGroup>
                   <FieldGroup>
@@ -318,7 +356,7 @@ const AccessibilityRequestDetailPage = () => {
                       checked={values.shouldSendEmail}
                       id="CreateAccessibilityRequestNote-ShouldSendEmail"
                       name="shouldSendEmail"
-                      label="Email the 508 team about this note"
+                      label={t('requestDetails.notes.form.sendEmail')}
                       value="ShouldSendEmail"
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setFieldValue(`shouldSendEmail`, e.target.checked);
@@ -333,6 +371,29 @@ const AccessibilityRequestDetailPage = () => {
             );
           }}
         </Formik>
+      </div>
+      <div
+        role="region"
+        aria-label="existing notes"
+        className="margin-top-6 margin-x-1"
+      >
+        <h3 ref={existingNotesHeading} tabIndex={-1}>
+          {t('requestDetails.notes.existingNotes', {
+            notesLength: notes.length
+          })}
+        </h3>
+        <NotesList>
+          {notes.map(note => (
+            <NoteListItem key={note.id}>
+              <NoteContent>{note.note}</NoteContent>
+              <NoteByline>
+                {`by ${note.authorName}`}
+                <span className="padding-x-1">|</span>
+                {formatDate(note.createdAt)}
+              </NoteByline>
+            </NoteListItem>
+          ))}
+        </NotesList>
       </div>
     </>
   );

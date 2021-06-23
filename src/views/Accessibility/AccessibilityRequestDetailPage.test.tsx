@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, shallow } from 'enzyme';
+import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import configureMockStore from 'redux-mock-store';
 
@@ -124,7 +125,14 @@ describe('AccessibilityRequestDetailPage', () => {
                 testDates: [],
                 statusRecord: {
                   status: 'OPEN'
-                }
+                },
+                notes: [
+                  {
+                    id: 'noteID',
+                    authorName: 'Common Human',
+                    note: 'This is very well done'
+                  }
+                ]
               }
             }
           }
@@ -158,12 +166,51 @@ describe('AccessibilityRequestDetailPage', () => {
     const testerStore = mockStore({
       auth: { groups: [ACCESSIBILITY_TESTER_DEV], isUserSet: true }
     });
+    const mocksWithNotes = [
+      {
+        request: {
+          query: GetAccessibilityRequestAccessibilityTeamOnlyQuery,
+          variables: {
+            id: 'a11yRequest123'
+          }
+        },
+        result: {
+          data: {
+            accessibilityRequest: {
+              id: 'a11yRequest123',
+              euaUserId: 'AAAA',
+              submittedAt: new Date(),
+              name: 'MY Request',
+              system: {
+                name: 'TACO',
+                lcid: '0000',
+                businessOwner: { name: 'Clark Kent', component: 'OIT' }
+              },
+              documents: [],
+              testDates: [],
+              statusRecord: {
+                status: 'OPEN'
+              },
+              notes: [
+                {
+                  id: 'noteID',
+                  createdAt: 'time',
+                  authorName: 'Common Human',
+                  note: 'This is very well done'
+                }
+              ]
+            }
+          }
+        }
+      }
+    ];
+
     it('renders "Documents" and no documents message if there are no documents', async () => {
       let wrapper: any;
       await act(async () => {
         wrapper = mount(
           <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-            <MockedProvider mocks={mocksWithoutDocs} addTypename={false}>
+            <MockedProvider mocks={mocksWithNotes} addTypename={false}>
               <Provider store={testerStore}>
                 <MessageProvider>
                   <Route path="/508/requests/:accessibilityRequestId">
