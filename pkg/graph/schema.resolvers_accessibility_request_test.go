@@ -466,7 +466,36 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 	})
 
 	s.Run("create accessibility request note server error fails", func() {
+		invalidEuaID := "12345"
+		principal = authentication.EUAPrincipal{EUAID: invalidEuaID, JobCodeEASi: true, JobCode508User: true}
+		ctx = appcontext.WithPrincipal(context.Background(), &principal)
 
+		intake, intakeErr = s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+			ProjectName:            null.StringFrom("Another Project"),
+			Status:                 models.SystemIntakeStatusLCIDISSUED,
+			RequestType:            models.SystemIntakeRequestTypeNEW,
+			BusinessOwner:          null.StringFrom("Firstname Lastname"),
+			BusinessOwnerComponent: null.StringFrom("OIT"),
+		})
+		s.NoError(intakeErr)
+
+		lifecycleID, lcidErr = s.store.GenerateLifecycleID(ctx)
+		s.NoError(lcidErr)
+		intake.LifecycleID = null.StringFrom(lifecycleID)
+		_, err := s.store.UpdateSystemIntake(ctx, intake)
+		s.NoError(err)
+
+		accessibilityRequest, err = s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+			IntakeID:  intake.ID,
+			EUAUserID: "UXYZ",
+		})
+		s.NoError(err)
+
+		input := model.CreateAccessibilityRequestNoteInput{
+			RequestID: accessibilityRequest.ID,
+			Note:      "Here is my other test note",
+		}
+		_, err = s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+		s.Error(err)
 	})
-
 }
