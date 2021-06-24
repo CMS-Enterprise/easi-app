@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# usage: scripts/tag_minio_file /bucket/file tag
+#
+# This script marks a file in minio as having the provided av-status.
+# CLEAN, INFECTED, and "" are valid values.
+
+host="minio:9000"
+s3_key=$MINIO_ACCESS_KEY
+s3_secret=$MINIO_SECRET_KEY
+
+bucket_and_file=$1
+tag=$2
+
+if [[ "$tag" != "CLEAN" ]] && [[ "$tag" != "INFECTED" ]] && [[ -n "$tag" ]]; then
+    echo "tag must be CLEAN, INFECTED, or blank."
+    exit 1
+fi
+
+resource="${bucket_and_file}?tagging"
+date=$(date -R)
+content_type="application/octet-stream"
+
+canonical_request="PUT\n\n${content_type}\n${date}\n${resource}"
+signature=$(echo -en "${canonical_request}" | openssl sha1 -hmac "${s3_secret}" -binary | base64)
+
+prefix='<?xml version="1.0" encoding="UTF-8"?><Tagging xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><TagSet><Tag><Key>av-status</Key><Value>'
+suffix='</Value></Tag></TagSet></Tagging>'
+
+curl -X PUT \
+  -H "Host: $host" \
+  -H "Date: ${date}" \
+  -H "Content-Type: ${content_type}" \
+  -H "Authorization: AWS ${s3_key}:${signature}" \
+  --data "${prefix}${tag}${suffix}" \
+  "http://$host${resource}"
