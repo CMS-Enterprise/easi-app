@@ -408,6 +408,11 @@ func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 	s.NotNil(updatedAccessibilityRequest.DeletedAt)
 	s.NotNil(updatedAccessibilityRequest.DeletionReason)
 	s.Equal(models.AccessibilityRequestDeletionReasonOther, *updatedAccessibilityRequest.DeletionReason)
+
+	latestStatusRecord, statusRecordErr := s.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(context.Background(), accessibilityRequest.ID)
+	s.Nil(statusRecordErr)
+
+	s.Equal(models.AccessibilityRequestStatusDeleted, latestStatusRecord.Status)
 }
 
 func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {

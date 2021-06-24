@@ -30,6 +30,7 @@ export enum AccessibilityRequestDocumentStatus {
 
 export enum AccessibilityRequestStatus {
   CLOSED = "CLOSED",
+  DELETED = "DELETED",
   IN_REMEDIATION = "IN_REMEDIATION",
   OPEN = "OPEN",
 }

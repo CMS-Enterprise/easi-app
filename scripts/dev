@@ -269,7 +269,8 @@ namespace :db do
       match = /Exit (\d+)/.match(status)
       if match
         unless match[1] == "0"
-          puts "Migration failed, check the logs!"
+          puts "\n\n🚨 Migration failed! 🚨 Displaying logs from that container:\n\n"
+          sh("docker-compose logs db_migrate")
           exit(1)
         end
         break
