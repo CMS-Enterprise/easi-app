@@ -442,14 +442,31 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 	})
 	s.NoError(requestErr)
 
-	// The meat of the test
-	input := model.CreateAccessibilityRequestNoteInput{
-		RequestID: accessibilityRequest.ID,
-		Note:      "Here is my test note",
-	}
-	payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
-	s.NoError(err)
-	s.Equal(input.Note, payload.AccessibilityRequestNote.Note)
-	s.Equal(input.RequestID, payload.AccessibilityRequestNote.RequestID)
-	s.Equal(euaID, payload.AccessibilityRequestNote.EUAUserID)
+	s.Run("accessibility request note creation success", func() {
+		input := model.CreateAccessibilityRequestNoteInput{
+			RequestID: accessibilityRequest.ID,
+			Note:      "Here is my test note",
+		}
+		payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+		s.NoError(err)
+		s.Equal(input.Note, payload.AccessibilityRequestNote.Note)
+		s.Equal(input.RequestID, payload.AccessibilityRequestNote.RequestID)
+		s.Equal(euaID, payload.AccessibilityRequestNote.EUAUserID)
+	})
+
+	s.Run("create accessibility request note returns validation error in payload", func() {
+		input := model.CreateAccessibilityRequestNoteInput{
+			RequestID: accessibilityRequest.ID,
+			Note:      "",
+		}
+		payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+		s.NoError(err)
+		s.Equal("Must include a non-empty note", payload.UserErrors[0].Message)
+		s.Equal((*models.AccessibilityRequestNote)(nil), payload.AccessibilityRequestNote)
+	})
+
+	s.Run("create accessibility request note server error fails", func() {
+
+	})
+
 }
