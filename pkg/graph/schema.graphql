@@ -102,6 +102,7 @@ type AccessibilityRequestNote {
 
 type CreateAccessibilityRequestNotePayload {
   accessibilityRequestNote: AccessibilityRequestNote!
+  userErrors: [UserError!]
 }
 
 """
