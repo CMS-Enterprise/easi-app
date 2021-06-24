@@ -20,12 +20,17 @@ const (
 	AccessibilityRequestStatusInRemediation AccessibilityRequestStatus = "IN_REMEDIATION"
 	// AccessibilityRequestStatusClosed is the status of a request that has been closed
 	AccessibilityRequestStatusClosed AccessibilityRequestStatus = "CLOSED"
+	// AccessibilityRequestStatusDeleted is the status of a deleted request
+	AccessibilityRequestStatusDeleted AccessibilityRequestStatus = "DELETED"
 )
 
 // IsValid returns if the status is valid
 func (s AccessibilityRequestStatus) IsValid() bool {
 	switch s {
-	case AccessibilityRequestStatusOpen, AccessibilityRequestStatusInRemediation, AccessibilityRequestStatusClosed:
+	case AccessibilityRequestStatusOpen,
+		AccessibilityRequestStatusInRemediation,
+		AccessibilityRequestStatusClosed,
+		AccessibilityRequestStatusDeleted:
 		return true
 	}
 	return false
