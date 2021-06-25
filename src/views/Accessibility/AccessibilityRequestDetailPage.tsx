@@ -227,7 +227,7 @@ const AccessibilityRequestDetailPage = () => {
   const hasDocuments = documents.length > 0;
   const statusEnum = data?.accessibilityRequest?.statusRecord.status;
   const requestStatus = accessibilityRequestStatusMap[`${statusEnum}`];
-  const showSuccessMessage = message && typeof message !== 'string';
+  const showSuccessMessage = message && typeof message === 'string';
 
   const uploadDocumentLink = (
     <UswdsLink
@@ -439,8 +439,6 @@ const AccessibilityRequestDetailPage = () => {
           </BreadcrumbBar>
           {message &&
             (showSuccessMessage ? (
-              message
-            ) : (
               <Alert
                 className="margin-top-4"
                 type="success"
@@ -449,6 +447,8 @@ const AccessibilityRequestDetailPage = () => {
               >
                 {message}
               </Alert>
+            ) : (
+              message
             ))}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}
