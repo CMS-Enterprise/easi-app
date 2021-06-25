@@ -7,6 +7,7 @@ COPY cypress /cypress
 COPY cypress.json /
 COPY tsconfig.json /
 COPY src /src
+COPY scripts/tag_minio_file /scripts/tag_minio_file
 
 ENTRYPOINT ["/node_modules/.bin/cypress"]
 CMD ["run"]

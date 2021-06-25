@@ -5,7 +5,9 @@
 # This script marks a file in minio as having the provided av-status.
 # CLEAN, INFECTED, and "" are valid values.
 
-host="minio:9000"
+set -eu -o pipefail
+
+host=$MINIO_HOST
 s3_key=$MINIO_ACCESS_KEY
 s3_secret=$MINIO_SECRET_KEY
 
