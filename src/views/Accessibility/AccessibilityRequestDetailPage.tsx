@@ -146,12 +146,20 @@ const AccessibilityRequestDetailPage = () => {
           shouldSendEmail: values.shouldSendEmail
         }
       }
-    }).then(() => {
-      refetch();
-      showMessage(''); // allows screen reader to hear consecutive success message
-      showMessage(t('requestDetails.notes.confirmation', { requestName }));
-      resetForm({});
-    });
+    })
+      .then(() => {
+        refetch();
+        showMessage(''); // allows screen reader to hear consecutive success message
+        showMessage(t('requestDetails.notes.confirmation', { requestName }));
+        resetForm({});
+      })
+      .catch(response => {
+        return showMessage(
+          <ErrorAlert heading="There is a problem">
+            <p>{t('requestDetails.notes.formErrorMessage')}</p>
+          </ErrorAlert>
+        );
+      });
   };
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
@@ -219,6 +227,7 @@ const AccessibilityRequestDetailPage = () => {
   const hasDocuments = documents.length > 0;
   const statusEnum = data?.accessibilityRequest?.statusRecord.status;
   const requestStatus = accessibilityRequestStatusMap[`${statusEnum}`];
+  const showSuccessMessage = message && typeof message !== 'string';
 
   const uploadDocumentLink = (
     <UswdsLink
@@ -428,16 +437,19 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {message && (
-            <Alert
-              className="margin-top-4"
-              type="success"
-              role="alert"
-              heading="Success"
-            >
-              {message}
-            </Alert>
-          )}
+          {message &&
+            (showSuccessMessage ? (
+              message
+            ) : (
+              <Alert
+                className="margin-top-4"
+                type="success"
+                role="alert"
+                heading="Success"
+              >
+                {message}
+              </Alert>
+            ))}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}
           >
