@@ -1,4 +1,3 @@
-import { clear } from '@testing-library/user-event/dist/clear';
 import { DateTime } from 'luxon';
 
 import { formatDate } from '../../src/utils/date';
@@ -76,7 +75,7 @@ describe('Accessibility Requests', () => {
     // remove document
   }
 
-  xit('can create a request and see its details', () => {
+  it('can create a request and see its details', () => {
     cy.localLogin({ name: 'A11Y' });
     create508Request(cy);
 
@@ -103,13 +102,13 @@ describe('Accessibility Requests', () => {
     });
   });
 
-  xit('adds a document from a 508 request as the owner', () => {
+  it('adds a document from a 508 request as the owner', () => {
     cy.localLogin({ name: 'CMSU' });
     create508Request(cy);
     addAndRemoveDocument(cy);
   });
 
-  xit('adds and removes a document from a 508 request as an admin', () => {
+  it('adds and removes a document from a 508 request as an admin', () => {
     cy.localLogin({ name: 'CMSU' });
     create508Request(cy);
 
@@ -123,7 +122,7 @@ describe('Accessibility Requests', () => {
     addAndRemoveDocument(cy);
   });
 
-  xit('sees information for an existing request on the homepage', () => {
+  it('sees information for an existing request on the homepage', () => {
     cy.localLogin({ name: 'A11Y' });
     cy.visit('/');
     cy.contains('h1', 'Welcome to EASi');
@@ -146,7 +145,7 @@ describe('Accessibility Requests', () => {
     });
   });
 
-  xit('can remove a request', () => {
+  it('can remove a request', () => {
     cy.localLogin({ name: 'A11Y' });
     cy.visit('/');
     cy.contains('a', 'TACO').click();
@@ -179,7 +178,7 @@ describe('Accessibility Requests', () => {
     cy.get('table').should('not.exist');
   });
 
-  xit('can add a note and view it as a 508 user', () => {
+  it('can add a note and view it as a 508 user', () => {
     cy.localLogin({ name: 'BOWN' });
     create508Request(cy);
 
