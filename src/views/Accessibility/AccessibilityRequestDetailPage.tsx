@@ -150,7 +150,17 @@ const AccessibilityRequestDetailPage = () => {
       .then(() => {
         refetch();
         showMessage(''); // allows screen reader to hear consecutive success message
-        showMessage(t('requestDetails.notes.confirmation', { requestName }));
+        showMessage(
+          <Alert
+            className="margin-top-4"
+            type="success"
+            role="alert"
+            heading="Success"
+          >
+            {t('requestDetails.notes.confirmation', { requestName })}
+          </Alert>
+        );
+        // showMessage(t('requestDetails.notes.confirmation', { requestName }));
         resetForm({});
       })
       .catch(response => {
@@ -227,7 +237,6 @@ const AccessibilityRequestDetailPage = () => {
   const hasDocuments = documents.length > 0;
   const statusEnum = data?.accessibilityRequest?.statusRecord.status;
   const requestStatus = accessibilityRequestStatusMap[`${statusEnum}`];
-  const showSuccessMessage = message && typeof message === 'string';
 
   const uploadDocumentLink = (
     <UswdsLink
@@ -437,19 +446,7 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {message &&
-            (showSuccessMessage ? (
-              <Alert
-                className="margin-top-4"
-                type="success"
-                role="alert"
-                heading="Success"
-              >
-                {message}
-              </Alert>
-            ) : (
-              message
-            ))}
+          {message}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}
           >
