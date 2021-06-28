@@ -34,7 +34,7 @@ const intake = {
     BIZ_CASE_FINAL_SUBMITTED: 'Final business case received',
     READY_FOR_GRT: 'Ready for GRT meeting',
     READY_FOR_GRB: 'Ready for GRB meeting',
-    LCID_ISSUED: 'Lifecycle ID issued: ',
+    LCID_ISSUED: 'Lifecycle ID issued',
     WITHDRAWN: 'Withdrawn',
     NOT_IT_REQUEST: 'Closed',
     NOT_APPROVED: 'Business case not approved',
