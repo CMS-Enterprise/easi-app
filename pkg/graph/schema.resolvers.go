@@ -881,7 +881,10 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 }
 
 func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystenIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
