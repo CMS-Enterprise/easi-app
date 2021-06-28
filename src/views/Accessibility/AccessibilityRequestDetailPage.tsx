@@ -82,7 +82,6 @@ import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
-  const [noteErrs, setNoteErrs] = useState<FormikErrors<CreateNoteForm>>({});
   const [isModalOpen, setModalOpen] = useState(false);
   const { message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
@@ -405,11 +404,29 @@ const AccessibilityRequestDetailPage = () => {
                     className="margin-top-2"
                     type="button"
                     onClick={() =>
-                      validateForm().then(err => {
-                        if (Object.keys(err).length > 0) {
-                          setNoteErrs(err);
+                      validateForm().then(errs => {
+                        if (Object.keys(errs).length > 0) {
+                          showMessage(''); // allows screen reader to hear consecutive failure message
+                          showMessage(
+                            <ErrorAlert
+                              testId="create-accessibility-note-errors"
+                              classNames="margin-bottom-4 margin-top-4"
+                              heading="There is a problem"
+                            >
+                              {Object.keys(errs).map(
+                                (key: keyof FormikErrors<CreateNoteForm>) => {
+                                  return (
+                                    <ErrorAlertMessage
+                                      key={`Error.${key}`}
+                                      errorKey={key}
+                                      message={errs[key]}
+                                    />
+                                  );
+                                }
+                              )}
+                            </ErrorAlert>
+                          );
                         } else {
-                          setNoteErrs({});
                           submitForm();
                         }
                       })
@@ -478,27 +495,7 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {Object.keys(noteErrs).length > 0 ? (
-            <ErrorAlert
-              testId="create-accessibility-note-errors"
-              classNames="margin-bottom-4 margin-top-4"
-              heading="There is a problem"
-            >
-              {Object.keys(noteErrs).map(
-                (key: keyof FormikErrors<CreateNoteForm>) => {
-                  return (
-                    <ErrorAlertMessage
-                      key={`Error.${key}`}
-                      errorKey={key}
-                      message={noteErrs[key]}
-                    />
-                  );
-                }
-              )}
-            </ErrorAlert>
-          ) : (
-            message
-          )}
+          {message}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}
           >
