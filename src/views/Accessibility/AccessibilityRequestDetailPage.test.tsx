@@ -112,7 +112,7 @@ describe('AccessibilityRequestDetailPage', () => {
                 documents: [
                   {
                     id: 'doc1',
-                    url: 'myurl',
+                    url: 'https://host.biz/bucket/file.pdf',
                     uploadedAt: 'time',
                     status: 'PENDING',
                     documentType: {
