@@ -115,11 +115,44 @@ func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]models.Access
 }
 
 // DeleteAccessibilityRequest marks an accessibility request as deleted
-func (s *Store) DeleteAccessibilityRequest(ctx context.Context, id uuid.UUID, reason models.AccessibilityRequestDeletionReason) error {
+func (s *Store) DeleteAccessibilityRequest(_ context.Context, id uuid.UUID, reason models.AccessibilityRequestDeletionReason) error {
 	const archiveAccessibilityRequestSQL = `UPDATE accessibility_requests
 		SET deleted_at = $1, deletion_reason = $2
 		WHERE id = $3
 `
 	_, err := s.db.Exec(archiveAccessibilityRequestSQL, time.Now().UTC(), reason, id)
 	return err
+}
+
+// FetchAccessibilityRequestMetrics gets a metrics digest for 508 requests
+func (s *Store) FetchAccessibilityRequestMetrics(_ context.Context, startTime time.Time, endTime time.Time) (models.AccessibilityRequestMetrics, error) {
+	type createdQueryResponse struct {
+		CreatedCount int `db:"started_count"`
+	}
+	const startedCountSQL = `
+		WITH "started" AS (
+		    SELECT *
+		    FROM accessibility_requests
+		    WHERE created_at >=  $1
+		      AND created_at < $2
+		)
+		SELECT count(*) AS started_count
+		FROM started;
+	`
+
+	metrics := models.AccessibilityRequestMetrics{}
+
+	var createdResponse createdQueryResponse
+	err := s.db.Get(
+		&createdResponse,
+		startedCountSQL,
+		&startTime,
+		&endTime,
+	)
+	if err != nil {
+		return metrics, err
+	}
+	metrics.Created = createdResponse.CreatedCount
+
+	return metrics, nil
 }
