@@ -95,7 +95,7 @@ const Table = () => {
             case RequestType.GOVERNANCE_REQUEST:
               statusString = t(`intake:statusMap.${value}`);
               if (row.original.lcid) {
-                return `${statusString}${row.original.lcid}`;
+                return `${statusString}: ${row.original.lcid}`;
               }
               return statusString;
             default:
