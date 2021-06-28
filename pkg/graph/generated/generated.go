@@ -263,7 +263,7 @@ type ComplexityRoot struct {
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
 		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
 		UpdateSystemIntakeAdminLead                      func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
-		UpdateSystemIntakeContactDetails                 func(childComplexity int, input model.UpdateSystenIntakeContactDetails) int
+		UpdateSystemIntakeContactDetails                 func(childComplexity int, input model.UpdateSystenIntakeContactDetailsInput) int
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTestDate                                   func(childComplexity int, input model.UpdateTestDateInput) int
 	}
@@ -535,7 +535,7 @@ type MutationResolver interface {
 	RejectIntake(ctx context.Context, input model.RejectIntakeInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error)
-	UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystenIntakeContactDetails) (*model.UpdateSystemIntakePayload, error)
+	UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystenIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -1678,7 +1678,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateSystemIntakeContactDetails(childComplexity, args["input"].(model.UpdateSystenIntakeContactDetails)), true
+		return e.complexity.Mutation.UpdateSystemIntakeContactDetails(childComplexity, args["input"].(model.UpdateSystenIntakeContactDetailsInput)), true
 
 	case "Mutation.updateSystemIntakeReviewDates":
 		if e.complexity.Mutation.UpdateSystemIntakeReviewDates == nil {
@@ -3206,7 +3206,7 @@ input SystemIntakeGovernanceTeamInput {
   teams: [SystemIntakeCollaboratorInput!]
 }
 
-input UpdateSystenIntakeContactDetails {
+input UpdateSystenIntakeContactDetailsInput {
   requester: SystemIntakeRequesterWithComponentInput!,
   businessOwner: SystemIntakeBusinessOwnerInput!,
   productManager: SystemIntakeProductManagerInput!,
@@ -3407,7 +3407,7 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeContactDetails(input: UpdateSystenIntakeContactDetails!): UpdateSystemIntakePayload
+  updateSystemIntakeContactDetails(input: UpdateSystenIntakeContactDetailsInput!): UpdateSystemIntakePayload
 }
 
 type Query {
@@ -3879,10 +3879,10 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeAdminLead_args(ctx 
 func (ec *executionContext) field_Mutation_updateSystemIntakeContactDetails_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UpdateSystenIntakeContactDetails
+	var arg0 model.UpdateSystenIntakeContactDetailsInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateSystenIntakeContactDetails2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystenIntakeContactDetails(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateSystenIntakeContactDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystenIntakeContactDetailsInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -9366,7 +9366,7 @@ func (ec *executionContext) _Mutation_updateSystemIntakeContactDetails(ctx conte
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateSystemIntakeContactDetails(rctx, args["input"].(model.UpdateSystenIntakeContactDetails))
+		return ec.resolvers.Mutation().UpdateSystemIntakeContactDetails(rctx, args["input"].(model.UpdateSystenIntakeContactDetailsInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -15373,8 +15373,8 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeReviewDatesInput(ctx
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateSystenIntakeContactDetails(ctx context.Context, obj interface{}) (model.UpdateSystenIntakeContactDetails, error) {
-	var it model.UpdateSystenIntakeContactDetails
+func (ec *executionContext) unmarshalInputUpdateSystenIntakeContactDetailsInput(ctx context.Context, obj interface{}) (model.UpdateSystenIntakeContactDetailsInput, error) {
+	var it model.UpdateSystenIntakeContactDetailsInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -19177,8 +19177,8 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeReviewDatesInput2github�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateSystenIntakeContactDetails2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystenIntakeContactDetails(ctx context.Context, v interface{}) (model.UpdateSystenIntakeContactDetails, error) {
-	res, err := ec.unmarshalInputUpdateSystenIntakeContactDetails(ctx, v)
+func (ec *executionContext) unmarshalNUpdateSystenIntakeContactDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystenIntakeContactDetailsInput(ctx context.Context, v interface{}) (model.UpdateSystenIntakeContactDetailsInput, error) {
+	res, err := ec.unmarshalInputUpdateSystenIntakeContactDetailsInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
