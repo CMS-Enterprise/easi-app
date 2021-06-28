@@ -142,6 +142,23 @@ const AccessibilityRequestDetailPage = () => {
     });
   };
 
+  const showUserErrorsAlert = (errors: any) => {
+    if (errors.length > 0) {
+      return (
+        <ErrorAlert
+          testId="create-accessibility-note-errors"
+          classNames="margin-bottom-4 margin-top-4"
+          heading="There is a problem"
+        >
+          {errors.map((err: { [key: string]: string }) => {
+            return <p>{err.message}</p>;
+          })}
+        </ErrorAlert>
+      );
+    }
+    return null;
+  };
+
   const createNote = (
     values: CreateNoteForm,
     { resetForm }: FormikHelpers<CreateNoteForm>
@@ -155,24 +172,30 @@ const AccessibilityRequestDetailPage = () => {
         }
       }
     })
-      .then(() => {
-        refetch();
-        showMessage(''); // allows screen reader to hear consecutive success message
-        showMessage(
-          <Alert
-            className="margin-top-4"
-            type="success"
-            role="alert"
-            heading="Success"
-          >
-            {t('requestDetails.notes.confirmation', { requestName })}
-          </Alert>
-        );
-        // showMessage(t('requestDetails.notes.confirmation', { requestName }));
-        resetForm({});
+      .then(response => {
+        const userErrors =
+          response.data?.createAccessibilityRequestNote?.userErrors;
+        if (userErrors) {
+          showMessage(showUserErrorsAlert(userErrors));
+        } else {
+          refetch();
+          showMessage(''); // allows screen reader to hear consecutive success message
+          showMessage(
+            <Alert
+              className="margin-top-4"
+              type="success"
+              role="alert"
+              heading="Success"
+            >
+              {t('requestDetails.notes.confirmation', { requestName })}
+            </Alert>
+          );
+          // showMessage(t('requestDetails.notes.confirmation', { requestName }));
+          resetForm({});
+        }
       })
       .catch(response => {
-        return showMessage(
+        showMessage(
           <ErrorAlert heading="There is a problem">
             <p>{t('requestDetails.notes.formErrorMessage')}</p>
           </ErrorAlert>
