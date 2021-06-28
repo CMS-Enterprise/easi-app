@@ -61,13 +61,33 @@ describe('Accessibility Requests', () => {
     cy.get('[data-testid="accessibility-documents-list"] tbody tr')
       .should('have.length', 1)
       .first()
-      .within(() => {
+      .within(row => {
         cy.contains('Awarded VPAT');
         cy.contains('Virus scan in progress...');
+
+        const url = row.attr('data-testurl');
+        const path = new URL(url).pathname;
+
+        // Mark file as passing virus scan
+        cy.exec(`scripts/tag_minio_file ${path} CLEAN`);
       });
 
+    cy.reload();
+
     // view document
-    // remove document
+    cy.get('[data-testid="accessibility-documents-list"] tbody tr')
+      .first()
+      .within(() => {
+        cy.get('[data-testid="view-document"]').should('exist');
+
+        // remove document
+        cy.get('[data-testid="remove-document"]').click();
+      });
+
+    cy.get('[data-testid="remove-document-confirm"]').click();
+
+    // no documents are listed
+    cy.contains('.usa-alert--success', 'Awarded VPAT removed from TACO');
   }
 
   it('can create a request and see its details', () => {
@@ -97,10 +117,11 @@ describe('Accessibility Requests', () => {
     });
   });
 
-  it('adds a document from a 508 request as the owner', () => {
+  it('adds and removes a document from a 508 request as the owner', () => {
     cy.localLogin({ name: 'CMSU' });
     create508Request(cy);
     addAndRemoveDocument(cy);
+    cy.contains('h2', 'Next step: Provide your documents');
   });
 
   it('adds and removes a document from a 508 request as an admin', () => {
@@ -115,6 +136,8 @@ describe('Accessibility Requests', () => {
     });
 
     addAndRemoveDocument(cy);
+
+    cy.contains('div', 'No documents added to request yet.');
   });
 
   it('sees information for an existing request on the homepage', () => {

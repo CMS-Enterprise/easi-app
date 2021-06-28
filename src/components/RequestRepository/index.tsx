@@ -236,7 +236,9 @@ const RequestRepository = () => {
       // Translating status
       if (statusEnum === 'LCID_ISSUED') {
         // if status is LCID_ISSUED, translate from enum to i18n and append LCID
-        statusTranslation = t(`intake:statusMap.${statusEnum}`) + intake.lcid;
+        statusTranslation = `${t(`intake:statusMap.${statusEnum}`)}: ${
+          intake.lcid
+        }`;
       } else {
         // if not just translate from enum to i18n
         statusTranslation = t(`intake:statusMap.${statusEnum}`);
