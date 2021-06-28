@@ -259,10 +259,7 @@ type SystemIntakeCollaborator struct {
 }
 
 type SystemIntakeCollaboratorInput struct {
-	Acronym      string `json:"acronym"`
 	Collaborator string `json:"collaborator"`
-	Key          string `json:"key"`
-	Label        string `json:"label"`
 	Name         string `json:"name"`
 }
 
@@ -374,6 +371,7 @@ type UpdateSystemIntakeReviewDatesInput struct {
 }
 
 type UpdateSystenIntakeContactDetailsInput struct {
+	ID              uuid.UUID                                `json:"id"`
 	Requester       *SystemIntakeRequesterWithComponentInput `json:"requester"`
 	BusinessOwner   *SystemIntakeBusinessOwnerInput          `json:"businessOwner"`
 	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
