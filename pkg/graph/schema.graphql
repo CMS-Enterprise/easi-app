@@ -560,10 +560,7 @@ input SystemIntakeISSOInput {
 }
 
 input SystemIntakeCollaboratorInput {
-  acronym: String!
   collaborator: String!
-  key: String!
-  label: String!
   name: String!
 }
 
@@ -573,6 +570,7 @@ input SystemIntakeGovernanceTeamInput {
 }
 
 input UpdateSystenIntakeContactDetailsInput {
+  id: UUID!
   requester: SystemIntakeRequesterWithComponentInput!,
   businessOwner: SystemIntakeBusinessOwnerInput!,
   productManager: SystemIntakeProductManagerInput!,
