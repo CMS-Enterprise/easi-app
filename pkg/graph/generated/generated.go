@@ -3194,10 +3194,7 @@ input SystemIntakeISSOInput {
 }
 
 input SystemIntakeCollaboratorInput {
-  acronym: String!
   collaborator: String!
-  key: String!
-  label: String!
   name: String!
 }
 
@@ -3207,6 +3204,7 @@ input SystemIntakeGovernanceTeamInput {
 }
 
 input UpdateSystenIntakeContactDetailsInput {
+  id: UUID!
   requester: SystemIntakeRequesterWithComponentInput!,
   businessOwner: SystemIntakeBusinessOwnerInput!,
   productManager: SystemIntakeProductManagerInput!,
@@ -15103,35 +15101,11 @@ func (ec *executionContext) unmarshalInputSystemIntakeCollaboratorInput(ctx cont
 
 	for k, v := range asMap {
 		switch k {
-		case "acronym":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("acronym"))
-			it.Acronym, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "collaborator":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collaborator"))
 			it.Collaborator, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "key":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("key"))
-			it.Key, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "label":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("label"))
-			it.Label, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15379,6 +15353,14 @@ func (ec *executionContext) unmarshalInputUpdateSystenIntakeContactDetailsInput(
 
 	for k, v := range asMap {
 		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "requester":
 			var err error
 
