@@ -245,12 +245,25 @@ type SystemIntakeBusinessOwner struct {
 	Name      *string `json:"name"`
 }
 
+type SystemIntakeBusinessOwnerInput struct {
+	Name      string `json:"name"`
+	Component string `json:"component"`
+}
+
 type SystemIntakeCollaborator struct {
 	Acronym      *string `json:"acronym"`
 	Collaborator *string `json:"collaborator"`
 	Key          *string `json:"key"`
 	Label        *string `json:"label"`
 	Name         *string `json:"name"`
+}
+
+type SystemIntakeCollaboratorInput struct {
+	Acronym      string `json:"acronym"`
+	Collaborator string `json:"collaborator"`
+	Key          string `json:"key"`
+	Label        string `json:"label"`
+	Name         string `json:"name"`
 }
 
 type SystemIntakeContract struct {
@@ -277,8 +290,18 @@ type SystemIntakeGovernanceTeam struct {
 	Teams     []*SystemIntakeCollaborator `json:"teams"`
 }
 
+type SystemIntakeGovernanceTeamInput struct {
+	IsPresent bool                             `json:"isPresent"`
+	Teams     []*SystemIntakeCollaboratorInput `json:"teams"`
+}
+
 type SystemIntakeIsso struct {
 	IsPresent *bool   `json:"isPresent"`
+	Name      *string `json:"name"`
+}
+
+type SystemIntakeISSOInput struct {
+	IsPresent bool    `json:"isPresent"`
 	Name      *string `json:"name"`
 }
 
@@ -299,6 +322,11 @@ type SystemIntakeProductManager struct {
 	Name      *string `json:"name"`
 }
 
+type SystemIntakeProductManagerInput struct {
+	Name      string `json:"name"`
+	Component string `json:"component"`
+}
+
 type SystemIntakeRequester struct {
 	Component *string `json:"component"`
 	Email     *string `json:"email"`
@@ -307,6 +335,11 @@ type SystemIntakeRequester struct {
 
 type SystemIntakeRequesterInput struct {
 	Name string `json:"name"`
+}
+
+type SystemIntakeRequesterWithComponentInput struct {
+	Name      string `json:"name"`
+	Component string `json:"component"`
 }
 
 // Parameters for updating a 508/accessibility request's status
@@ -338,6 +371,14 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	GrbDate *time.Time `json:"grbDate"`
 	GrtDate *time.Time `json:"grtDate"`
 	ID      uuid.UUID  `json:"id"`
+}
+
+type UpdateSystenIntakeContactDetails struct {
+	Requester       *SystemIntakeRequesterWithComponentInput `json:"requester"`
+	BusinessOwner   *SystemIntakeBusinessOwnerInput          `json:"businessOwner"`
+	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
+	Isso            *SystemIntakeISSOInput                   `json:"isso"`
+	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
 }
 
 type UpdateTestDateInput struct {
