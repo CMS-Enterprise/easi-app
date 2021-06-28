@@ -101,6 +101,8 @@ const ContactDetails = ({
     return link;
   })();
 
+  console.log(systemIntake);
+
   return (
     <Formik
       initialValues={initialValues}
