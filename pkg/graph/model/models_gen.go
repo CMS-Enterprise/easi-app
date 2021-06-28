@@ -373,7 +373,7 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	ID      uuid.UUID  `json:"id"`
 }
 
-type UpdateSystenIntakeContactDetails struct {
+type UpdateSystenIntakeContactDetailsInput struct {
 	Requester       *SystemIntakeRequesterWithComponentInput `json:"requester"`
 	BusinessOwner   *SystemIntakeBusinessOwnerInput          `json:"businessOwner"`
 	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
