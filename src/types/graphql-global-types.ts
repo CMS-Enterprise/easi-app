@@ -183,8 +183,41 @@ export interface RejectIntakeInput {
   reason: string;
 }
 
+export interface SystemIntakeBusinessOwnerInput {
+  name: string;
+  component: string;
+}
+
+export interface SystemIntakeCollaboratorInput {
+  acronym: string;
+  collaborator: string;
+  key: string;
+  label: string;
+  name: string;
+}
+
+export interface SystemIntakeGovernanceTeamInput {
+  isPresent: boolean;
+  teams?: SystemIntakeCollaboratorInput[] | null;
+}
+
+export interface SystemIntakeISSOInput {
+  isPresent: boolean;
+  name?: string | null;
+}
+
+export interface SystemIntakeProductManagerInput {
+  name: string;
+  component: string;
+}
+
 export interface SystemIntakeRequesterInput {
   name: string;
+}
+
+export interface SystemIntakeRequesterWithComponentInput {
+  name: string;
+  component: string;
 }
 
 /**
@@ -204,6 +237,14 @@ export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
   grtDate?: Time | null;
   id: UUID;
+}
+
+export interface UpdateSystenIntakeContactDetailsInput {
+  requester: SystemIntakeRequesterWithComponentInput;
+  businessOwner: SystemIntakeBusinessOwnerInput;
+  productManager: SystemIntakeProductManagerInput;
+  isso: SystemIntakeISSOInput;
+  governanceTeams: SystemIntakeGovernanceTeamInput;
 }
 
 export interface UpdateTestDateInput {
