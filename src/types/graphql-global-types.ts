@@ -189,10 +189,7 @@ export interface SystemIntakeBusinessOwnerInput {
 }
 
 export interface SystemIntakeCollaboratorInput {
-  acronym: string;
   collaborator: string;
-  key: string;
-  label: string;
   name: string;
 }
 
@@ -240,6 +237,7 @@ export interface UpdateSystemIntakeReviewDatesInput {
 }
 
 export interface UpdateSystenIntakeContactDetailsInput {
+  id: UUID;
   requester: SystemIntakeRequesterWithComponentInput;
   businessOwner: SystemIntakeBusinessOwnerInput;
   productManager: SystemIntakeProductManagerInput;
