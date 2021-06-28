@@ -880,6 +880,10 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 	}, err
 }
 
+func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystenIntakeContactDetails) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
 	accessibilityRequest, err := r.store.FetchAccessibilityRequestByIDIncludingDeleted(ctx, id)
