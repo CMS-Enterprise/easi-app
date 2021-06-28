@@ -313,9 +313,9 @@ exports[`The making a request page matches the snapshot 1`] = `
        
       <a
         className="usa-link"
-        href="mailto:ITgovernance@cms.hhs.gov"
+        href="mailto:IT_Governance@cms.hhs.gov"
       >
-        ITgovernance@cms.hhs.gov
+        IT_Governance@cms.hhs.gov
       </a>
       .
     </p>
