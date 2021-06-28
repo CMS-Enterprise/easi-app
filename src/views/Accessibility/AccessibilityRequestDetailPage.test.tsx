@@ -58,7 +58,7 @@ describe('AccessibilityRequestDetailPage', () => {
   ];
 
   it('renders without crashing', async () => {
-    const { findByTestId } = render(
+    render(
       <MemoryRouter
         initialEntries={['/508/requests/e0a4de2f-a2c2-457d-ac08-bbd011104855']}
       >
@@ -74,8 +74,10 @@ describe('AccessibilityRequestDetailPage', () => {
       </MemoryRouter>
     );
 
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
     expect(
-      await findByTestId('accessibility-request-detail-page')
+      screen.getByTestId('accessibility-request-detail-page')
     ).toBeInTheDocument();
   });
 
