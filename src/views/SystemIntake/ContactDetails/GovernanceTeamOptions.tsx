@@ -26,6 +26,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
             team you&apos;ve worked with.
           </legend>
           {cmsGovernanceTeams.map((team: any, index: number) => {
+            const teams = values.governanceTeams.teams || [];
             const isChecked = values.governanceTeams.teams
               .map(t => t.name)
               .includes(team.value);
@@ -58,7 +59,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                     'aria-controls': `${team.key}-Collaborator`
                   }}
                 />
-                {values.governanceTeams.teams.map((t, idx) => {
+                {teams.map((t, idx) => {
                   const { key } = team;
                   if (team.value === t.name) {
                     return (
