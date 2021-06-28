@@ -148,12 +148,8 @@ const AccessibilityDocumentsList = ({
         <tbody {...getTableBodyProps()}>
           {rows.map(row => {
             prepareRow(row);
-
-            // This is used only during testing
-            const path = new URL(row.original.url).pathname;
-
             return (
-              <tr data-testpath={path} {...row.getRowProps()}>
+              <tr data-testurl={row.original.url} {...row.getRowProps()}>
                 {row.cells.map((cell, i) => {
                   if (i === 0) {
                     return (
