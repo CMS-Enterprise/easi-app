@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
+import {
+  UpdateSystemIntakeContactDetails,
+  UpdateSystemIntakeContactDetailsVariables
+} from 'queries/types/UpdateSystemIntakeContactDetails';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -79,6 +85,11 @@ const ContactDetails = ({
     governanceTeams: systemIntake.governanceTeams
   };
 
+  const [mutate] = useMutation<
+    UpdateSystemIntakeContactDetails,
+    UpdateSystemIntakeContactDetailsVariables
+  >(UpdateSystemIntakeContactDetailsQuery);
+
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
     cmsDivisionsAndOffices.map((office: any) => (
       <Field
@@ -101,12 +112,18 @@ const ContactDetails = ({
     return link;
   })();
 
-  console.log(systemIntake);
+  const onSubmit = (values: ContactDetailsForm) => {
+    mutate({
+      variables: {
+        input: values
+      }
+    });
+  };
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={dispatchSave}
+      onSubmit={onSubmit}
       validationSchema={SystemIntakeValidationSchema.contactDetails}
       validateOnBlur={false}
       validateOnChange={false}
