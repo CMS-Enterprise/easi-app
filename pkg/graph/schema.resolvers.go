@@ -880,7 +880,7 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 	}, err
 }
 
-func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystenIntakeContactDetails) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystenIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

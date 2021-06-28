@@ -571,7 +571,7 @@ input SystemIntakeGovernanceTeamInput {
   teams: [SystemIntakeCollaboratorInput!]
 }
 
-input UpdateSystenIntakeContactDetails {
+input UpdateSystenIntakeContactDetailsInput {
   requester: SystemIntakeRequesterWithComponentInput!,
   businessOwner: SystemIntakeBusinessOwnerInput!,
   productManager: SystemIntakeProductManagerInput!,
@@ -772,7 +772,7 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeContactDetails(input: UpdateSystenIntakeContactDetails!): UpdateSystemIntakePayload
+  updateSystemIntakeContactDetails(input: UpdateSystenIntakeContactDetailsInput!): UpdateSystemIntakePayload
 }
 
 type Query {
