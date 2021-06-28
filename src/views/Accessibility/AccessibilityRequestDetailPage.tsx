@@ -10,7 +10,14 @@ import {
   Button,
   Link as UswdsLink
 } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import {
+  Field,
+  Form,
+  Formik,
+  FormikErrors,
+  FormikHelpers,
+  FormikProps
+} from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
@@ -75,6 +82,7 @@ import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
+  const [noteErrs, setNoteErrs] = useState<FormikErrors<CreateNoteForm>>({});
   const [isModalOpen, setModalOpen] = useState(false);
   const { message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
@@ -332,27 +340,16 @@ const AccessibilityRequestDetailPage = () => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<CreateNoteForm>) => {
-            const { values, errors, setFieldValue } = formikProps;
+            const {
+              values,
+              errors,
+              setFieldValue,
+              validateForm,
+              submitForm
+            } = formikProps;
             const flatErrors = flattenErrors(errors);
             return (
               <>
-                {Object.keys(errors).length > 0 && (
-                  <ErrorAlert
-                    testId="create-accessibility-note-errors"
-                    classNames="margin-bottom-4 margin-top-4"
-                    heading="There is a problem"
-                  >
-                    {Object.keys(flatErrors).map(key => {
-                      return (
-                        <ErrorAlertMessage
-                          key={`Error.${key}`}
-                          errorKey={key}
-                          message={flatErrors[key]}
-                        />
-                      );
-                    })}
-                  </ErrorAlert>
-                )}
                 <Form className="usa-form maxw-full">
                   <FieldGroup>
                     <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
@@ -381,7 +378,20 @@ const AccessibilityRequestDetailPage = () => {
                       }}
                     />
                   </FieldGroup>
-                  <Button className="margin-top-2" type="submit">
+                  <Button
+                    className="margin-top-2"
+                    type="button"
+                    onClick={() =>
+                      validateForm().then(err => {
+                        if (Object.keys(err).length > 0) {
+                          setNoteErrs(err);
+                        } else {
+                          setNoteErrs({});
+                          submitForm();
+                        }
+                      })
+                    }
+                  >
                     {t('requestDetails.notes.submit')}
                   </Button>
                 </Form>
@@ -433,7 +443,6 @@ const AccessibilityRequestDetailPage = () => {
   if (error) {
     return <pre>{JSON.stringify(error, null, 2)}</pre>;
   }
-
   return (
     <div>
       <div className="bg-primary-lighter">
@@ -446,7 +455,27 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {message}
+          {Object.keys(noteErrs).length > 0 ? (
+            <ErrorAlert
+              testId="create-accessibility-note-errors"
+              classNames="margin-bottom-4 margin-top-4"
+              heading="There is a problem"
+            >
+              {Object.keys(noteErrs).map(
+                (key: keyof FormikErrors<CreateNoteForm>) => {
+                  return (
+                    <ErrorAlertMessage
+                      key={`Error.${key}`}
+                      errorKey={key}
+                      message={noteErrs[key]}
+                    />
+                  );
+                }
+              )}
+            </ErrorAlert>
+          ) : (
+            message
+          )}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}
           >
