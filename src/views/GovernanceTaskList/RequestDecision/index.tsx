@@ -72,8 +72,8 @@ const RequestDecision = () => {
                 Need help? Contact the Governance team
               </h3>
               <p>
-                <UswdsLink href="mailto:ITgovernance@cms.hhs.gov">
-                  ITgovernance@cms.hhs.gov
+                <UswdsLink href="mailto:IT_Governance@cms.hhs.gov">
+                  IT_Governance@cms.hhs.gov
                 </UswdsLink>
               </p>
             </div>

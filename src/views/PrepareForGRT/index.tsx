@@ -63,8 +63,8 @@ const PrepareForGRT = () => {
                   Need help? Contact the Governance team
                 </h3>
                 <p>
-                  <USWDSLink href="mailto:ITgovernance@cms.hhs.gov">
-                    ITgovernance@cms.hhs.gov
+                  <USWDSLink href="mailto:IT_Governance@cms.hhs.gov">
+                    IT_Governance@cms.hhs.gov
                   </USWDSLink>
                 </p>
               </div>
