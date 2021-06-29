@@ -73,6 +73,7 @@ const AccessibilityDocumentsList = ({
                   target="_blank"
                   rel="noreferrer"
                   href={row.original.url}
+                  data-testid="view-document"
                   aria-label={`View ${translateDocumentType(
                     row.original.documentType
                   )} in a new tab or window`}
@@ -85,6 +86,7 @@ const AccessibilityDocumentsList = ({
                   )}`}
                   type="button"
                   unstyled
+                  data-testid="remove-document"
                   onClick={() => setDocument(row.original)}
                 >
                   {t('documentTable.remove')}
@@ -147,7 +149,7 @@ const AccessibilityDocumentsList = ({
           {rows.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr data-testurl={row.original.url} {...row.getRowProps()}>
                 {row.cells.map((cell, i) => {
                   if (i === 0) {
                     return (
@@ -187,6 +189,7 @@ const AccessibilityDocumentsList = ({
               <Button
                 type="button"
                 className="margin-right-5"
+                data-testid="remove-document-confirm"
                 onClick={() =>
                   removeDocument(
                     document.id,

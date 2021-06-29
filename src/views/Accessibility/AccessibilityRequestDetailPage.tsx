@@ -54,6 +54,7 @@ import {
   NotesList
 } from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading/index';
 import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -248,7 +249,7 @@ const AccessibilityRequestDetailPage = () => {
   );
 
   const bodyWithDocumentsTable = (
-    <>
+    <div data-testid="body-with-doc-table">
       <h2 className="margin-top-0">{t('requestDetails.documents.label')}</h2>
       {uploadDocumentLink}
       <div className="margin-top-6">
@@ -258,7 +259,7 @@ const AccessibilityRequestDetailPage = () => {
           removeDocument={removeDocument}
         />
       </div>
-    </>
+    </div>
   );
 
   const bodyNoDocumentsBusinessOwner = (
@@ -393,12 +394,12 @@ const AccessibilityRequestDetailPage = () => {
         aria-label="existing notes"
         className="margin-top-6 margin-x-1"
       >
-        <h3 ref={existingNotesHeading} tabIndex={-1}>
+        <h3 id="NoteListLabel" ref={existingNotesHeading} tabIndex={-1}>
           {t('requestDetails.notes.existingNotes', {
             notesLength: notes.length
           })}
         </h3>
-        <NotesList>
+        <NotesList aria-labelledby="NoteListLabel">
           {notes.map(note => (
             <NoteListItem key={note.id}>
               <NoteContent>{note.note}</NoteContent>
@@ -415,7 +416,7 @@ const AccessibilityRequestDetailPage = () => {
   );
 
   if (loading) {
-    return <div>Loading</div>;
+    return <PageLoading />;
   }
 
   if (!data) {
@@ -432,7 +433,7 @@ const AccessibilityRequestDetailPage = () => {
     return <pre>{JSON.stringify(error, null, 2)}</pre>;
   }
   return (
-    <div>
+    <div data-testid="accessibility-request-detail-page">
       <div className="bg-primary-lighter">
         <div className="grid-container padding-x-5 padding-bottom-3 padding-top-5">
           <BreadcrumbBar variant="wrap" className="bg-transparent">

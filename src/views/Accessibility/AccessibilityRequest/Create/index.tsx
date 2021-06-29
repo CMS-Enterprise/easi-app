@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, ComboBox, Link } from '@trussworks/react-uswds';
@@ -191,9 +191,13 @@ const Create = () => {
                           )}
                         >
                           <p>
-                            {t(
-                              'newRequestForm.helpAndGuidance.lifecycleIdAccordion.para'
-                            )}
+                            <Trans i18nKey="accessibility:newRequestForm.helpAndGuidance.lifecycleIdAccordion.description">
+                              indexZero
+                              <Link href="mailto:IT_Governance@cms.hhs.gov">
+                                email
+                              </Link>
+                              indexTwo
+                            </Trans>
                           </p>
                         </CollapsibleLink>
                       </div>
