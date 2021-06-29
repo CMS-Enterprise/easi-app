@@ -566,7 +566,7 @@ input SystemIntakeCollaboratorInput {
 
 input SystemIntakeGovernanceTeamInput {
   isPresent: Boolean!
-  teams: [SystemIntakeCollaboratorInput!]
+  teams: [SystemIntakeCollaboratorInput]
 }
 
 input UpdateSystenIntakeContactDetailsInput {
