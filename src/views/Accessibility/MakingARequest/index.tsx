@@ -72,7 +72,7 @@ const MakingARequest = () => {
           <p className="line-height-body-5">
             <Trans i18nKey="accessibility:makingARequest.noLcidBody">
               indexZero
-              <UswdsLink href="mailto:ITgovernanceteam@cms.hhs.gov">
+              <UswdsLink href="mailto:IT_Governance@cms.hhs.gov">
                 email
               </UswdsLink>
               indexTwo

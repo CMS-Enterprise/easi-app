@@ -39,22 +39,19 @@ const TestDateCard = ({
 
     return score ? `${(score / 10).toFixed(1)}%` : 'Score not added';
   };
+
   return (
     <div className="bg-gray-10 padding-2 line-height-body-4 margin-bottom-2">
-      <div className="text-bold margin-bottom-1">
-        {`Test ${testIndex}: ${translateTestType(testType)}`}
-      </div>
-      <div className="margin-bottom-1">
-        <div className="display-inline-block margin-right-2">
-          {formatDate(date)}
-        </div>
-        <div
-          className="display-inline-block text-base-dark"
+      <b>{`Test ${testIndex}: ${translateTestType(testType)}`}</b>
+      <p className="margin-y-1">
+        <span className="margin-right-2">{formatDate(date)}</span>
+        <span
+          className=" display-inline-flex text-base-dark"
           data-testid="score"
         >
           {testScore()}
-        </div>
-      </div>
+        </span>
+      </p>
 
       {isEditableDeletable && (
         <div>

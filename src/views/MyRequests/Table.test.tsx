@@ -159,7 +159,9 @@ describe('My Requests Table', () => {
       );
       expect(rowThree.find('td').at(0).text()).toEqual('IT Governance');
       expect(rowThree.find('td').at(1).text()).toEqual('May 20 2021');
-      expect(rowThree.find('td').at(2).text()).toEqual('LCID: A123456');
+      expect(rowThree.find('td').at(2).text()).toEqual(
+        'Lifecycle ID issued: A123456'
+      );
     });
   });
 });

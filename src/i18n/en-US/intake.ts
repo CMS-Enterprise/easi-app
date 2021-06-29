@@ -34,7 +34,7 @@ const intake = {
     BIZ_CASE_FINAL_SUBMITTED: 'Final business case received',
     READY_FOR_GRT: 'Ready for GRT meeting',
     READY_FOR_GRB: 'Ready for GRB meeting',
-    LCID_ISSUED: 'LCID: ',
+    LCID_ISSUED: 'Lifecycle ID issued',
     WITHDRAWN: 'Withdrawn',
     NOT_IT_REQUEST: 'Closed',
     NOT_APPROVED: 'Business case not approved',
@@ -67,7 +67,7 @@ const intake = {
       bizCaseSubmitted:
         'Your Business Case has been submitted for review. The Governance Admin team will get back to you about the next step.',
       decommissioning:
-        'Follow the decommission guide, complete steps relevant to your system and submit it back to ITgovernance@cms.hhs.gov to officially complete the decommissioning of your system.'
+        'Follow the decommission guide, complete steps relevant to your system and submit it back to IT_Governance@cms.hhs.gov to officially complete the decommissioning of your system.'
     }
   },
   requestType: {
