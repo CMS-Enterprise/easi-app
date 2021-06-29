@@ -32,7 +32,9 @@ type AccessibilityRequest struct {
 
 // AccessibilityRequestMetrics models metrics about accessibility requests
 type AccessibilityRequestMetrics struct {
-	StartTime time.Time `json:"start_time"`
-	EndTime   time.Time `json:"end_time"`
-	Created   int
+	StartTime               time.Time `json:"start_time"`
+	EndTime                 time.Time `json:"end_time"`
+	CreatedAndOpen          int       `json:"created_and_open"`
+	CreatedAndClosed        int       `json:"created_and_closed"`
+	CreatedAndInRemediation int       `json:"created_and_in_remediation"`
 }

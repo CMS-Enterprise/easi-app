@@ -124,20 +124,56 @@ func (s *Store) DeleteAccessibilityRequest(_ context.Context, id uuid.UUID, reas
 	return err
 }
 
+// CreateAccessibilityRequestAndInitialStatusRecord creates the new request and sets the status to OPEN
+func (s *Store) CreateAccessibilityRequestAndInitialStatusRecord(ctx context.Context, request *models.AccessibilityRequest) (*models.AccessibilityRequest, error) {
+	createdRequest, err := s.CreateAccessibilityRequest(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: createdRequest.ID,
+		Status:    models.AccessibilityRequestStatusOpen,
+		EUAUserID: createdRequest.EUAUserID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return createdRequest, nil
+}
+
 // FetchAccessibilityRequestMetrics gets a metrics digest for 508 requests
 func (s *Store) FetchAccessibilityRequestMetrics(_ context.Context, startTime time.Time, endTime time.Time) (models.AccessibilityRequestMetrics, error) {
 	type createdQueryResponse struct {
-		CreatedCount int `db:"started_count"`
+		CreatedAndOpenCount          int `db:"created_and_open_count"`
+		CreatedAndClosedCount        int `db:"created_and_closed_count"`
+		CreatedAndInRemediationCount int `db:"created_and_in_remediation_count"`
 	}
 	const startedCountSQL = `
 		WITH "started" AS (
 		    SELECT *
 		    FROM accessibility_requests
-		    WHERE created_at >=  $1
-		      AND created_at < $2
+		    LEFT JOIN
+		    (
+		        SELECT arsr.request_id, status
+		        FROM accessibility_request_status_records as arsr
+		        INNER JOIN (
+		        	SELECT request_id, max(created_at) as latest
+		        	FROM accessibility_request_status_records
+		        	GROUP BY request_id
+		        ) most_recent
+		        ON arsr.request_id = most_recent.request_id
+		        WHERE arsr.created_at = most_recent.latest
+	        ) most_recent_status_record
+		    ON most_recent_status_record.request_id = accessibility_requests.id
+		    WHERE accessibility_requests.created_at >=  $1
+		      AND accessibility_requests.created_at < $2
 		)
-		SELECT count(*) AS started_count
-		FROM started;
+		SELECT sum(CASE WHEN status = 'OPEN' then 1 end) AS created_and_open_count,
+			   sum(CASE WHEN status = 'CLOSED' then 1 end) AS created_and_closed_count,
+			   sum(CASE WHEN status = 'IN_REMEDIATION' then 1 end) AS created_and_in_remediation_count
+		FROM started
 	`
 
 	metrics := models.AccessibilityRequestMetrics{}
@@ -152,7 +188,9 @@ func (s *Store) FetchAccessibilityRequestMetrics(_ context.Context, startTime ti
 	if err != nil {
 		return metrics, err
 	}
-	metrics.Created = createdResponse.CreatedCount
+	metrics.CreatedAndOpen = createdResponse.CreatedAndOpenCount
+	metrics.CreatedAndClosed = createdResponse.CreatedAndClosedCount
+	metrics.CreatedAndInRemediation = createdResponse.CreatedAndInRemediationCount
 
 	return metrics, nil
 }

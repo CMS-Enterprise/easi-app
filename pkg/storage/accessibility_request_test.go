@@ -44,13 +44,13 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestMetrics() {
 		s.Run(fmt.Sprintf("%s for started count", tt.name), func() {
 			settableClock.Set(tt.createdAt)
 			request := testhelpers.NewAccessibilityRequest(intake.ID)
-			_, err := s.store.CreateAccessibilityRequest(ctx, &request)
+			_, err := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &request)
 			s.NoError(err)
 
 			metrics, err := s.store.FetchAccessibilityRequestMetrics(ctx, startDate, endDate)
 
 			s.NoError(err)
-			s.Equal(tt.expectedCount, metrics.Created)
+			s.Equal(tt.expectedCount, metrics.CreatedAndOpen)
 		})
 	}
 }
