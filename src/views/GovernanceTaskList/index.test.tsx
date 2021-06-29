@@ -1,12 +1,14 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, within } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
 import GovernanceTaskList from './index';
 
@@ -28,6 +30,68 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The Goveranance Task List', () => {
+  const mocks = (intakeProps: any) => {
+    return [
+      {
+        request: {
+          query: GetSytemIntakeQuery,
+          variables: {
+            id: 'sysIntakeRequest123'
+          }
+        },
+        result: {
+          data: {
+            systemIntake: {
+              id: 'sysIntakeRequest123',
+              adminLead: null,
+              businessNeed: null,
+              businessSolution: null,
+              businessOwner: {
+                component: null,
+                name: null
+              },
+              contract: null,
+              costs: null,
+              currentStage: null,
+              decisionNextSteps: null,
+              grbDate: null,
+              grtDate: null,
+              grtFeedbacks: null,
+              governanceTeams: {
+                isPresent: false,
+                teams: null
+              },
+              isso: {
+                isPresent: false,
+                name: null
+              },
+              fundingSource: null,
+              lcid: null,
+              lcidExpiresAt: null,
+              lcidScope: null,
+              needsEaSupport: null,
+              productManager: {
+                component: null,
+                name: null
+              },
+              rejectionReason: null,
+              requester: {
+                component: null,
+                email: null,
+                name: null
+              },
+              requestName: null,
+              requestType: null,
+              status: 'DRAFT',
+              submittedAt: null,
+              ...intakeProps
+            }
+          }
+        }
+      }
+    ];
+  };
+
   it('renders without crashing', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
@@ -37,11 +101,13 @@ describe('The Goveranance Task List', () => {
     await act(async () => {
       render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <Provider store={store}>
-            <MessageProvider>
-              <GovernanceTaskList />
-            </MessageProvider>
-          </Provider>
+          <MockedProvider mocks={mocks()} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
         </MemoryRouter>
       );
     });
@@ -56,14 +122,21 @@ describe('The Goveranance Task List', () => {
 
     await act(async () => {
       render(
-        <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <Provider store={store}>
-            <MessageProvider>
-              <GovernanceTaskList />
-            </MessageProvider>
-          </Provider>
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={mocks()} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
         </MemoryRouter>
       );
+      await new Promise(resolve => setTimeout(resolve, 1));
     });
     const taskList = screen.getByTestId('task-list');
     expect(taskList).toBeInTheDocument();
@@ -101,16 +174,26 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
+      const mockWithType = mocks({
+        requestName: 'Easy Access to System Information',
+        requestType: 'RECOMPETE'
+      });
+
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithType} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(
@@ -134,17 +217,26 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
+      const mockWithType = mocks({
+        requestName: 'Easy Access to System Information',
+        requestType: 'RECOMPETE'
+      });
 
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithType} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(
@@ -174,17 +266,26 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
+      const mockWithType = mocks({
+        requestName: 'Easy Access to System Information',
+        requestType: 'RECOMPETE'
+      });
 
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithType} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('task-list-intake-form').textContent).toContain(
@@ -220,16 +321,24 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
+      const mockWithName = mocks({
+        requestName: 'Easy Access to System Information'
+      });
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithName} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(
@@ -250,13 +359,18 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mocks()} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
       expect(
         screen.getByRole('heading', {
@@ -276,13 +390,19 @@ describe('The Goveranance Task List', () => {
     await act(async () => {
       render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <Provider store={store}>
-            <MessageProvider>
-              <GovernanceTaskList />
-            </MessageProvider>
-          </Provider>
+          <MockedProvider mocks={mocks()} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
         </MemoryRouter>
       );
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      component.update();
     });
     expect(screen.getByTestId('sidenav-actions')).toBeInTheDocument();
   });
