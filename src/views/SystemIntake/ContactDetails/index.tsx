@@ -92,7 +92,8 @@ const ContactDetails = ({ formikRef, systemIntake }: ContactDetailsProps) => {
       isPresent: systemIntake.governanceTeams.isPresent,
       teams: systemIntake.governanceTeams.teams?.map(team => ({
         collaborator: team.collaborator,
-        name: team.name
+        name: team.name,
+        key: team.key
       }))
     }
   };
