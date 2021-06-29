@@ -897,6 +897,10 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 		intake.ISSOName = null.StringFrom(*input.Isso.Name)
 	}
 
+	if !input.Isso.IsPresent {
+		intake.ISSOName = null.StringFromPtr(nil)
+	}
+
 	if input.GovernanceTeams.IsPresent {
 		for _, team := range input.GovernanceTeams.Teams {
 			if team.Key == "technicalReviewBoard" {
@@ -909,6 +913,12 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 				intake.EACollaboratorName = null.StringFrom(team.Collaborator)
 			}
 		}
+	}
+
+	if !input.GovernanceTeams.IsPresent {
+		intake.TRBCollaboratorName = null.StringFromPtr(nil)
+		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)
+		intake.EACollaboratorName = null.StringFromPtr(nil)
 	}
 
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
