@@ -31,11 +31,13 @@ func (s ServicesTestSuite) TestNewFetchMetrics() {
 		systemIntakeMetrics.StartTime = startTime
 		endTime := serviceClock.Now()
 		systemIntakeMetrics.EndTime = endTime
+		accessibilityRequestMetrics.StartTime = systemIntakeMetrics.StartTime
+		accessibilityRequestMetrics.EndTime = systemIntakeMetrics.EndTime
 
 		metricsDigest, err := fetchMetrics(context.Background(), startTime, endTime)
 
 		s.NoError(err)
-		s.Equal(models.MetricsDigest{SystemIntakeMetrics: systemIntakeMetrics}, metricsDigest)
+		s.Equal(models.MetricsDigest{SystemIntakeMetrics: systemIntakeMetrics, AccessibilityRequestMetrics: accessibilityRequestMetrics}, metricsDigest)
 	})
 
 	s.Run("returns error if system intake service fails", func() {
