@@ -902,17 +902,29 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 	}
 
 	if input.GovernanceTeams.IsPresent {
+		trbCollaboratorName := null.StringFromPtr(nil)
 		for _, team := range input.GovernanceTeams.Teams {
 			if team.Key == "technicalReviewBoard" {
-				intake.TRBCollaboratorName = null.StringFrom(team.Collaborator)
-			}
-			if team.Key == "securityPrivacy" {
-				intake.OITSecurityCollaboratorName = null.StringFrom(team.Collaborator)
-			}
-			if team.Key == "enterpriseArchitecture" {
-				intake.EACollaboratorName = null.StringFrom(team.Collaborator)
+				trbCollaboratorName = null.StringFrom(team.Collaborator)
 			}
 		}
+		intake.TRBCollaboratorName = trbCollaboratorName
+
+		oitCollaboratorName := null.StringFromPtr(nil)
+		for _, team := range input.GovernanceTeams.Teams {
+			if team.Key == "securityPrivacy" {
+				oitCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+		}
+		intake.OITSecurityCollaboratorName = oitCollaboratorName
+
+		eaCollaboratorName := null.StringFromPtr(nil)
+		for _, team := range input.GovernanceTeams.Teams {
+			if team.Key == "enterpriseArchitecture" {
+				eaCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+		}
+		intake.EACollaboratorName = eaCollaboratorName
 	}
 
 	if !input.GovernanceTeams.IsPresent {
