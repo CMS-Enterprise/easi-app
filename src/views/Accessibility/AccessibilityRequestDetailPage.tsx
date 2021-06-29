@@ -83,6 +83,7 @@ import './index.scss';
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
+  const [formikErrors, setFormikErrors] = useState<FormikErrors<any>>({});
   const { message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
   const history = useHistory();
@@ -97,6 +98,8 @@ const AccessibilityRequestDetailPage = () => {
   const requestQuery = isAccessibilityTeam
     ? GetAccessibilityRequestAccessibilityTeamOnlyQuery
     : GetAccessibilityRequestQuery;
+
+  const flatFormikErrors = flattenErrors(formikErrors);
 
   // TODO: typechecking is off because of conditional query
   const { loading, error, data, refetch } = useQuery<
@@ -114,7 +117,7 @@ const AccessibilityRequestDetailPage = () => {
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
 
-  const [mutateCreateNote] = useMutation<
+  const [mutateCreateNote, { error: noteMutationError }] = useMutation<
     CreateAccessibilityRequestNote,
     CreateAccessibilityRequestNoteVariables
   >(CreateAccessibilityRequestNoteQuery);
@@ -141,23 +144,6 @@ const AccessibilityRequestDetailPage = () => {
     });
   };
 
-  const showUserErrorsAlert = (errors: any) => {
-    if (errors.length > 0) {
-      return (
-        <ErrorAlert
-          testId="create-accessibility-note-errors"
-          classNames="margin-bottom-4 margin-top-4"
-          heading="There is a problem"
-        >
-          {errors.map((err: { [key: string]: string }) => {
-            return <p>{err.message}</p>;
-          })}
-        </ErrorAlert>
-      );
-    }
-    return null;
-  };
-
   const createNote = (
     values: CreateNoteForm,
     { resetForm }: FormikHelpers<CreateNoteForm>
@@ -170,27 +156,17 @@ const AccessibilityRequestDetailPage = () => {
           shouldSendEmail: values.shouldSendEmail
         }
       }
-    })
-      .then(response => {
-        const userErrors =
-          response.data?.createAccessibilityRequestNote?.userErrors;
-        if (userErrors) {
-          showMessage(showUserErrorsAlert(userErrors));
-        } else {
-          refetch();
-          showMessage(''); // allows screen reader to hear consecutive success message
-          showMessage(t('requestDetails.notes.confirmation', { requestName }));
-          // showMessage(t('requestDetails.notes.confirmation', { requestName }));
-          resetForm({});
-        }
-      })
-      .catch(response => {
-        showMessage(
-          <ErrorAlert heading="There is a problem">
-            <p>{t('requestDetails.notes.formErrorMessage')}</p>
-          </ErrorAlert>
-        );
-      });
+    }).then(response => {
+      const userErrors =
+        response.data?.createAccessibilityRequestNote?.userErrors;
+      if (!userErrors) {
+        refetch();
+        showMessage(''); // allows screen reader to hear consecutive success message
+        showMessage(t('requestDetails.notes.confirmation', { requestName }));
+        // showMessage(t('requestDetails.notes.confirmation', { requestName }));
+        resetForm({});
+      }
+    });
   };
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
@@ -395,28 +371,9 @@ const AccessibilityRequestDetailPage = () => {
                     className="margin-top-2"
                     type="button"
                     onClick={() =>
-                      validateForm().then(errs => {
-                        if (Object.keys(errs).length > 0) {
-                          showMessage(''); // allows screen reader to hear consecutive failure message
-                          showMessage(
-                            <ErrorAlert
-                              testId="create-accessibility-note-errors"
-                              classNames="margin-bottom-4 margin-top-4"
-                              heading="There is a problem"
-                            >
-                              {Object.keys(errs).map(
-                                (key: keyof FormikErrors<CreateNoteForm>) => {
-                                  return (
-                                    <ErrorAlertMessage
-                                      key={`Error.${key}`}
-                                      errorKey={key}
-                                      message={errs[key]}
-                                    />
-                                  );
-                                }
-                              )}
-                            </ErrorAlert>
-                          );
+                      validateForm().then(err => {
+                        if (Object.keys(err).length > 0) {
+                          setFormikErrors(err);
                         } else {
                           submitForm();
                         }
@@ -495,6 +452,33 @@ const AccessibilityRequestDetailPage = () => {
             >
               {message}
             </Alert>
+          )}
+          {noteMutationError && (
+            <Alert
+              className="margin-top-4"
+              type="error"
+              role="alert"
+              heading="There is a problem"
+            >
+              {t('requestDetails.notes.formErrorMessage')}
+            </Alert>
+          )}
+          {Object.keys(flatFormikErrors).length > 0 && (
+            <ErrorAlert
+              testId="508-request-details-error"
+              classNames="margin-bottom-4 margin-top-4"
+              heading="There is a problem"
+            >
+              {Object.keys(flatFormikErrors).map(key => {
+                return (
+                  <ErrorAlertMessage
+                    key={`Error.${key}`}
+                    errorKey={key}
+                    message={flatFormikErrors[key]}
+                  />
+                );
+              })}
+            </ErrorAlert>
           )}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}
