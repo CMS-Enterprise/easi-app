@@ -3209,7 +3209,7 @@ input SystemIntakeCollaboratorInput {
 
 input SystemIntakeGovernanceTeamInput {
   isPresent: Boolean!
-  teams: [SystemIntakeCollaboratorInput!]
+  teams: [SystemIntakeCollaboratorInput]
 }
 
 input UpdateSystenIntakeContactDetailsInput {
@@ -15182,7 +15182,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeGovernanceTeamInput(ctx co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teams"))
-			it.Teams, err = ec.unmarshalOSystemIntakeCollaboratorInput2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInputᚄ(ctx, v)
+			it.Teams, err = ec.unmarshalOSystemIntakeCollaboratorInput2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18945,11 +18945,6 @@ func (ec *executionContext) marshalNSystemIntakeCollaborator2ᚖgithubᚗcomᚋc
 	return ec._SystemIntakeCollaborator(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNSystemIntakeCollaboratorInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx context.Context, v interface{}) (*model.SystemIntakeCollaboratorInput, error) {
-	res, err := ec.unmarshalInputSystemIntakeCollaboratorInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeamInput(ctx context.Context, v interface{}) (*model.SystemIntakeGovernanceTeamInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeGovernanceTeamInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
@@ -19787,7 +19782,7 @@ func (ec *executionContext) marshalOSystemIntakeCollaborator2ᚕᚖgithubᚗcom�
 	return ret
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeCollaboratorInput2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInputᚄ(ctx context.Context, v interface{}) ([]*model.SystemIntakeCollaboratorInput, error) {
+func (ec *executionContext) unmarshalOSystemIntakeCollaboratorInput2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx context.Context, v interface{}) ([]*model.SystemIntakeCollaboratorInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -19803,12 +19798,20 @@ func (ec *executionContext) unmarshalOSystemIntakeCollaboratorInput2ᚕᚖgithub
 	res := make([]*model.SystemIntakeCollaboratorInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNSystemIntakeCollaboratorInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalOSystemIntakeCollaboratorInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
 	}
 	return res, nil
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeCollaboratorInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx context.Context, v interface{}) (*model.SystemIntakeCollaboratorInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSystemIntakeCollaboratorInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOSystemIntakeContract2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeContract) graphql.Marshaler {
