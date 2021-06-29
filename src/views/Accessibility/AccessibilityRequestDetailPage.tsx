@@ -486,18 +486,19 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {message?.constructor === String ? (
-            <Alert
-              className="margin-top-4"
-              type="success"
-              role="alert"
-              heading="Success"
-            >
-              {message}
-            </Alert>
-          ) : (
-            message
-          )}
+          {message &&
+            (message?.constructor === String ? (
+              <Alert
+                className="margin-top-4"
+                type="success"
+                role="alert"
+                heading="Success"
+              >
+                {message}
+              </Alert>
+            ) : (
+              message
+            ))}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}
           >
