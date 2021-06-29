@@ -161,7 +161,8 @@
     "browserslist": "4.16.5",
     "lodash": "4.17.21",
     "axios": "0.21.1",
-    "marked": "0.7.0"
+    "marked": "0.7.0",
+    "node-fetch": "2.6.1"
   },
   "jest": {
     "collectCoverageFrom": [
