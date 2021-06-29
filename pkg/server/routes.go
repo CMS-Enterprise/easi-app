@@ -313,7 +313,10 @@ func (s *Server) routes(
 
 	metricsHandler := handlers.NewMetricsHandler(
 		base,
-		services.NewFetchMetrics(serviceConfig, store.FetchSystemIntakeMetrics),
+		services.NewFetchMetrics(
+			serviceConfig,
+			store.FetchSystemIntakeMetrics,
+			store.FetchAccessibilityRequestMetrics),
 	)
 	api.Handle("/metrics", metricsHandler.Handle())
 
