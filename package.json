@@ -39,7 +39,6 @@
     "detect-browser": "^5.0.0",
     "font-awesome": "^4.7.0",
     "formik": "^2.1.4",
-    "graphql": "^15.5.1",
     "graphql-schema-linter": "^2.0.1",
     "history": "^4.10.1",
     "i18next": "^19.8.5",
