@@ -164,7 +164,7 @@ const AccessibilityRequestDetailPage = () => {
         refetch();
         showMessage(''); // allows screen reader to hear consecutive success message
         showMessage(t('requestDetails.notes.confirmation', { requestName }));
-        // showMessage(t('requestDetails.notes.confirmation', { requestName }));
+        setFormikErrors({});
         resetForm({});
       }
     });
