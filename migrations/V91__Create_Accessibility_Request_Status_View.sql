@@ -2,9 +2,9 @@ CREATE VIEW accessibility_requests_and_statuses AS
 SELECT
 	DISTINCT ON (accessibility_requests.id)
 	accessibility_requests.*,
-	status AS current_status,
-	accessibility_request_status_records.created_at AS current_status_updated_at,
-	accessibility_request_status_records.eua_user_id AS current_status_eau_user_id
+	status,
+	accessibility_request_status_records.created_at AS status_created_at,
+	accessibility_request_status_records.eua_user_id AS status_eau_user_id
 FROM
 	accessibility_requests
 LEFT JOIN accessibility_request_status_records ON accessibility_request_status_records.request_id = accessibility_requests.id
