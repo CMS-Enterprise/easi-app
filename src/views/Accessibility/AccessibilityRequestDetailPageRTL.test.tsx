@@ -141,23 +141,23 @@ describe('AccessibilityRequestDetailPage', () => {
         <AccessibilityRequestDetailPage />
       );
 
-      const { findByRole, getAllByRole, getByRole } = render(providers);
+      render(providers);
       expect(
-        await findByRole('tab', {
+        await screen.findByRole('tab', {
           name: 'Notes'
         })
       ).toBeInTheDocument();
 
-      const notesTab = getByRole('tab', { name: 'Notes' });
+      const notesTab = screen.getByRole('tab', { name: 'Notes' });
       userEvent.click(notesTab);
       expect(
-        await findByRole('heading', {
+        await screen.findByRole('heading', {
           name: '2 existing notes',
           level: 3
         })
       ).toBeInTheDocument();
 
-      const [, notesList] = getAllByRole('list');
+      const [, notesList] = screen.getAllByRole('list');
       expect(within(notesList).getAllByRole('listitem').length).toEqual(2);
     });
 
@@ -192,9 +192,9 @@ describe('AccessibilityRequestDetailPage', () => {
           testerStore,
           <AccessibilityRequestDetailPage />
         );
-        const { findByRole, getByRole } = render(providers);
-        expect(await findByRole('alert')).toBeInTheDocument();
-        const { getByText } = within(getByRole('alert'));
+        render(providers);
+        expect(await screen.findByRole('alert')).toBeInTheDocument();
+        const { getByText } = within(screen.getByRole('alert'));
         expect(await getByText('Success')).toBeInTheDocument();
         expect(
           await getByText('Note added to My Special Request')
@@ -208,20 +208,20 @@ describe('AccessibilityRequestDetailPage', () => {
           <AccessibilityRequestDetailPage />
         );
 
-        const { getByRole, getByTestId } = render(providers);
-        const notesTabButton = getByTestId('Notes-tab-btn');
+        render(providers);
+        const notesTabButton = screen.getByTestId('Notes-tab-btn');
         userEvent.click(notesTabButton);
         userEvent.tab();
         userEvent.tab();
         expect(
-          getByRole('button', { name: 'Skip to existing notes' })
+          screen.getByRole('button', { name: 'Skip to existing notes' })
         ).toHaveFocus();
         userEvent.tab();
-        const textBox = getByRole('textbox', { name: 'Note' });
+        const textBox = screen.getByRole('textbox', { name: 'Note' });
         expect(textBox).toHaveFocus();
         userEvent.type(textBox, 'This request has been tested');
         userEvent.tab();
-        expect(getByRole('checkbox')).toHaveFocus();
+        expect(screen.getByRole('checkbox')).toHaveFocus();
         userEvent.tab();
       });
 
@@ -232,10 +232,10 @@ describe('AccessibilityRequestDetailPage', () => {
           <AccessibilityRequestDetailPage />
         );
 
-        const { getByRole } = render(providers);
+        render(providers);
 
-        getByRole('button', { name: 'Add note' }).click();
-        expect(await getByRole('alert')).toBeInTheDocument();
+        screen.getByRole('button', { name: 'Add note' }).click();
+        expect(await screen.findByRole('alert')).toBeInTheDocument();
       });
 
       it('shows an error alert message for an internal server error', async () => {
@@ -267,9 +267,9 @@ describe('AccessibilityRequestDetailPage', () => {
           testerStore,
           <AccessibilityRequestDetailPage />
         );
-        const { findByRole, getByRole } = render(providers);
-        expect(await findByRole('alert')).toBeInTheDocument();
-        const { getByText } = within(getByRole('alert'));
+        render(providers);
+        expect(await screen.findByRole('alert')).toBeInTheDocument();
+        const { getByText } = within(screen.getByRole('alert'));
         expect(await getByText('There is a problem')).toBeInTheDocument();
       });
 
@@ -306,9 +306,9 @@ describe('AccessibilityRequestDetailPage', () => {
           testerStore,
           <AccessibilityRequestDetailPage />
         );
-        const { findByRole, getByRole } = render(providers);
-        expect(await findByRole('alert')).toBeInTheDocument();
-        const { getByText } = within(getByRole('alert'));
+        render(providers);
+        expect(await screen.findByRole('alert')).toBeInTheDocument();
+        const { getByText } = within(screen.getByRole('alert'));
         expect(await getByText('There is a problem')).toBeInTheDocument();
       });
     });
