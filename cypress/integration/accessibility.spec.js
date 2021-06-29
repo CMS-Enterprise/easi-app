@@ -230,6 +230,8 @@ describe('Accessibility Requests', () => {
     beforeEach(() => {
       cy.localLogin({ name: 'ADMI', role: 'EASI_D_508_USER' });
       cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');
+      cy.get('[data-testid="page-loading"]').should('exist');
+      cy.get('[data-testid="page-loading"]').should('not.exist');
     });
 
     it('adds a 508 test date', () => {
