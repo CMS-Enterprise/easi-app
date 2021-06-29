@@ -43,6 +43,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                     if (e.target.checked) {
                       arrayHelpers.push({
                         name: e.target.value,
+                        key: team.key,
                         collaborator: ''
                       });
                     } else {
