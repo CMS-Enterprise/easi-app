@@ -19,6 +19,7 @@ import {
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
@@ -99,7 +100,7 @@ export const SystemIntake = () => {
   }, []);
 
   if (loading) {
-    return <p>Loading....</p>;
+    return <PageLoading />;
   }
 
   return (
