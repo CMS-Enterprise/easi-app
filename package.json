@@ -157,7 +157,8 @@
     "prismjs": "1.24.0",
     "glob-parent": "5.1.2",
     "css-what": "5.0.1",
-    "trim": "0.0.3"
+    "trim": "0.0.3",
+    "browserslist": "4.16.5"
   },
   "jest": {
     "collectCoverageFrom": [
