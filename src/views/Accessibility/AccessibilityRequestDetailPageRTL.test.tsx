@@ -22,10 +22,70 @@ describe('AccessibilityRequestDetailPage', () => {
     }
   });
 
-  const defaultMocks = [
-    {
+  const bizOwnerAccessibilityRequestMock = {
+    request: {
+      query: GetAccessibilityRequestQuery,
+      variables: {
+        id: 'a11yRequest123'
+      }
+    },
+    result: {
+      data: {
+        accessibilityRequest: {
+          id: 'a11yRequest123',
+          euaUserId: 'AAAA',
+          submittedAt: new Date(),
+          name: 'My Special Request',
+          system: {
+            name: 'TACO',
+            lcid: '0000',
+            businessOwner: { name: 'Clark Kent', component: 'OIT' }
+          },
+          documents: [],
+          testDates: [],
+          statusRecord: {
+            status: 'OPEN'
+          }
+        }
+      }
+    }
+  };
+
+  const buildProviders = (
+    mocks: any,
+    store: any,
+    children: React.ReactElement
+  ) => (
+    <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <Provider store={store}>
+          <Route path="/508/requests/:accessibilityRequestId">
+            <MessageProvider>{children}</MessageProvider>
+          </Route>
+        </Provider>
+      </MockedProvider>
+    </MemoryRouter>
+  );
+
+  it('renders without errors', async () => {
+    const providers = buildProviders(
+      [bizOwnerAccessibilityRequestMock],
+      defaultStore,
+      <AccessibilityRequestDetailPage />
+    );
+    render(providers);
+    expect(
+      await screen.findByRole('heading', {
+        name: 'My Special Request current status Open',
+        level: 1
+      })
+    ).toBeInTheDocument();
+  });
+
+  describe('notes tab', () => {
+    const testerAccessibilityRequestMock = {
       request: {
-        query: GetAccessibilityRequestQuery,
+        query: GetAccessibilityRequestAccessibilityTeamOnlyQuery,
         variables: {
           id: 'a11yRequest123'
         }
@@ -46,88 +106,26 @@ describe('AccessibilityRequestDetailPage', () => {
             testDates: [],
             statusRecord: {
               status: 'OPEN'
-            }
+            },
+            notes: [
+              {
+                id: 'noteID1',
+                createdAt: 'time',
+                authorName: 'Common Human',
+                note: 'This is very well done'
+              },
+              {
+                id: 'noteID2',
+                createdAt: 'time',
+                authorName: 'Common Human',
+                note: 'This is okay'
+              }
+            ]
           }
         }
       }
-    }
-  ];
+    };
 
-  const buildProviders = (
-    mocks: any,
-    store: any,
-    children: React.ReactElement
-  ) => (
-    <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <Provider store={store}>
-          <Route path="/508/requests/:accessibilityRequestId">
-            <MessageProvider>{children}</MessageProvider>
-          </Route>
-        </Provider>
-      </MockedProvider>
-    </MemoryRouter>
-  );
-  it('renders without errors', async () => {
-    const providers = buildProviders(
-      defaultMocks,
-      defaultStore,
-      <AccessibilityRequestDetailPage />
-    );
-    render(providers);
-    expect(
-      await screen.findByRole('heading', {
-        name: 'My Special Request current status Open',
-        level: 1
-      })
-    ).toBeInTheDocument();
-  });
-
-  describe('notes tab', () => {
-    const testerMocks = [
-      {
-        request: {
-          query: GetAccessibilityRequestAccessibilityTeamOnlyQuery,
-          variables: {
-            id: 'a11yRequest123'
-          }
-        },
-        result: {
-          data: {
-            accessibilityRequest: {
-              id: 'a11yRequest123',
-              euaUserId: 'AAAA',
-              submittedAt: new Date(),
-              name: 'My Special Request',
-              system: {
-                name: 'TACO',
-                lcid: '0000',
-                businessOwner: { name: 'Clark Kent', component: 'OIT' }
-              },
-              documents: [],
-              testDates: [],
-              statusRecord: {
-                status: 'OPEN'
-              },
-              notes: [
-                {
-                  id: 'noteID1',
-                  createdAt: 'time',
-                  authorName: 'Common Human',
-                  note: 'This is very well done'
-                },
-                {
-                  id: 'noteID2',
-                  createdAt: 'time',
-                  authorName: 'Common Human',
-                  note: 'This is okay'
-                }
-              ]
-            }
-          }
-        }
-      }
-    ];
     const testerStore = mockStore({
       auth: {
         euaId: 'AAAB',
@@ -138,7 +136,7 @@ describe('AccessibilityRequestDetailPage', () => {
 
     it('can view existing notes', async () => {
       const providers = buildProviders(
-        testerMocks,
+        [testerAccessibilityRequestMock],
         testerStore,
         <AccessibilityRequestDetailPage />
       );
@@ -166,7 +164,7 @@ describe('AccessibilityRequestDetailPage', () => {
     describe('Add a note', () => {
       it('shows a success message', async () => {
         const createNoteMocks = [
-          testerMocks[0],
+          testerAccessibilityRequestMock,
           {
             request: {
               query: CreateAccessibilityRequestNote,
@@ -203,37 +201,33 @@ describe('AccessibilityRequestDetailPage', () => {
         ).toBeInTheDocument();
       });
 
-      it('can navigate through note tab', async () => {
+      it('can add a note', async () => {
         const providers = buildProviders(
-          testerMocks,
+          [testerAccessibilityRequestMock],
           testerStore,
           <AccessibilityRequestDetailPage />
         );
 
         const { getByRole, getByTestId } = render(providers);
-        const notesTab = getByTestId('Notes-tab');
         const notesTabButton = getByTestId('Notes-tab-btn');
         userEvent.click(notesTabButton);
-        expect(await notesTab).toHaveClass('easi-tabs__tab--selected');
-        expect(await notesTabButton).toHaveFocus();
         userEvent.tab();
-        expect(getByTestId('Notes-panel')).toHaveFocus();
         userEvent.tab();
         expect(
-          await getByRole('button', { name: 'Skip to existing notes' })
+          getByRole('button', { name: 'Skip to existing notes' })
         ).toHaveFocus();
         userEvent.tab();
         const textBox = getByRole('textbox', { name: 'Note' });
-        expect(await textBox).toHaveFocus();
+        expect(textBox).toHaveFocus();
         userEvent.type(textBox, 'This request has been tested');
         userEvent.tab();
-        expect(await getByRole('checkbox')).toHaveFocus();
+        expect(getByRole('checkbox')).toHaveFocus();
         userEvent.tab();
       });
 
       it('shows an error alert when there is a validation error', async () => {
         const providers = buildProviders(
-          testerMocks,
+          [testerAccessibilityRequestMock],
           testerStore,
           <AccessibilityRequestDetailPage />
         );
@@ -246,7 +240,7 @@ describe('AccessibilityRequestDetailPage', () => {
 
       it('shows an error alert message for an internal server error', async () => {
         const errorMocks = [
-          testerMocks[0],
+          testerAccessibilityRequestMock,
           {
             request: {
               query: CreateAccessibilityRequestNote,
@@ -281,7 +275,7 @@ describe('AccessibilityRequestDetailPage', () => {
 
       it('shows an error message for userErrors returned from the server', async () => {
         const errorMocks = [
-          testerMocks[0],
+          testerAccessibilityRequestMock,
           {
             request: {
               query: CreateAccessibilityRequestNote,
