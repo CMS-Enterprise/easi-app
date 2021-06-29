@@ -101,7 +101,7 @@ describe('The Goveranance Task List', () => {
     await act(async () => {
       render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <MockedProvider mocks={mocks()} addTypename={false}>
+          <MockedProvider mocks={mocks({})} addTypename={false}>
             <Provider store={store}>
               <MessageProvider>
                 <GovernanceTaskList />
@@ -125,7 +125,7 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={mocks()} addTypename={false}>
+          <MockedProvider mocks={mocks({})} addTypename={false}>
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -359,7 +359,7 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks()} addTypename={false}>
+            <MockedProvider mocks={mocks({})} addTypename={false}>
               <Provider store={store}>
                 <MessageProvider>
                   <Route path="/governance-task-list/:systemId">
@@ -390,7 +390,7 @@ describe('The Goveranance Task List', () => {
     await act(async () => {
       render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <MockedProvider mocks={mocks()} addTypename={false}>
+          <MockedProvider mocks={mocks({})} addTypename={false}>
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -402,7 +402,6 @@ describe('The Goveranance Task List', () => {
         </MemoryRouter>
       );
       await new Promise(resolve => setTimeout(resolve, 1000));
-      component.update();
     });
     expect(screen.getByTestId('sidenav-actions')).toBeInTheDocument();
   });
@@ -421,16 +420,25 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
+      const mockWithStatus = mocks({
+        status: 'INTAKE_DRAFT'
+      });
+
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-start-btn')).toBeInTheDocument();
@@ -455,16 +463,25 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
+      const mockWithStatus = mocks({
+        status: 'INTAKE_SUBMITTED'
+      });
+
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -494,16 +511,25 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
+      const mockWithStatus = mocks({
+        status: 'NEED_BIZ_CASE'
+      });
+
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1000));
       });
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(screen.getByTestId('start-biz-case-btn')).toBeInTheDocument();
@@ -536,17 +562,25 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_DRAFT'
+      });
 
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -582,16 +616,26 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_DRAFT_SUBMITTED',
+        businessCaseId: 'ac94c1d7-48ca-4c49-9045-371b4d3062b4'
+      });
+
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -627,16 +671,25 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_CHANGES_NEEDED'
+      });
+
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -673,16 +726,25 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
+      const mockWithStatus = mocks({
+        status: 'READY_FOR_GRT'
+      });
+
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -736,16 +798,25 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_FINAL_NEEDED'
+      });
+
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -794,16 +865,25 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_FINAL_SUBMITTED'
+      });
+
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -852,17 +932,25 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
+      const mockWithStatus = mocks({
+        status: 'READY_FOR_GRB'
+      });
 
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -908,17 +996,25 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
+      const mockWithStatus = mocks({
+        status: 'LCID_ISSUED'
+      });
 
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -970,17 +1066,25 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
+      const mockWithStatus = mocks({
+        status: 'NO_GOVERNANCE'
+      });
 
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
@@ -1018,17 +1122,25 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
+      const mockWithStatus = mocks({
+        status: 'NOT_IT_REQUEST'
+      });
 
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
+        await new Promise(resolve => setTimeout(resolve, 1));
       });
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
