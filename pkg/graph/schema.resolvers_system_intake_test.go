@@ -751,3 +751,110 @@ func (s GraphQLTestSuite) TestUpdateContactDetails() {
 	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
 	s.False(respIntake.GovernanceTeams.IsPresent)
 }
+
+func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContactDetails struct {
+			SystemIntake struct {
+				ID            string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				ProductManager struct {
+					Name      string
+					Component string
+				}
+				Requester struct {
+					Name      string
+					Component string
+				}
+				Isso struct {
+					IsPresent bool
+					Name      string
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     []struct {
+						Name      string
+						Component string
+					}
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContactDetails(input: {
+				id: "%s",
+				businessOwner: {
+					name: "Iama Businessowner",
+					component: "CMS Office 1"
+				},
+				productManager: {
+					name: "Iama Productmanager",
+					component: "CMS Office 2"
+				},
+				requester: {
+					name: "Iama Requester",
+					component: "CMS Office 3"
+				},
+				isso: {
+					isPresent: true,
+					name: "Iama Issoperson"
+				},
+				governanceTeams: {
+					isPresent: false,
+					teams: [
+						
+					]
+				}
+			}) {
+				systemIntake {
+					id,
+					businessOwner {
+						name
+						component
+					}
+					productManager {
+						name
+						component
+					}
+					requester {
+						name
+						component
+					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							name
+						}
+						isPresent
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.Equal("Iama Issoperson", respIntake.Isso.Name)
+	s.True(respIntake.Isso.IsPresent)
+
+	// s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
+	// s.False(respIntake.GovernanceTeams.IsPresent)
+}
