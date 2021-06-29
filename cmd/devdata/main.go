@@ -297,11 +297,7 @@ func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...fu
 	for _, cb := range callbacks {
 		cb(&accessibilityRequest)
 	}
-	must(store.CreateAccessibilityRequest(ctx, &accessibilityRequest))
-	must(store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
-		RequestID: accessibilityRequest.ID,
-		EUAUserID: accessibilityRequest.EUAUserID,
-	}))
+	must(store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &accessibilityRequest))
 	return &accessibilityRequest
 }
 
