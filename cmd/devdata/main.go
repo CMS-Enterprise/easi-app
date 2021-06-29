@@ -50,6 +50,20 @@ func main() {
 		makeAccessibilityRequest("Big Project", store)
 	}
 
+	now := time.Now()
+	yyyy, mm, dd := now.Date()
+
+	makeAccessibilityRequest("Seeded 508 Request", store, func(i *models.AccessibilityRequest) {
+		i.ID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
+	})
+	// Test date is one day after the 508 request is created
+	makeTestDate(logger, store, func(i *models.TestDate) {
+		i.ID = uuid.MustParse("18624c5b-4c00-49a7-960f-ac6d8b2c58df")
+		i.RequestID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
+		i.TestType = models.TestDateTestTypeInitial
+		i.Date = time.Date(yyyy, mm, dd+1, 0, 0, 0, 0, time.UTC)
+	})
+
 	makeSystemIntake("A Completed Intake Form", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
 	})
@@ -258,7 +272,7 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 
 var lcid = 0
 
-func makeAccessibilityRequest(name string, store *storage.Store) {
+func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...func(*models.AccessibilityRequest)) *models.AccessibilityRequest {
 	ctx := context.Background()
 
 	lifecycleID := fmt.Sprintf("%06d", lcid)
@@ -275,18 +289,32 @@ func makeAccessibilityRequest(name string, store *storage.Store) {
 	must(store.CreateSystemIntake(ctx, &intake))
 	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
 
-	request, err := store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+	accessibilityRequest := models.AccessibilityRequest{
 		Name:      fmt.Sprintf("%s v2", name),
 		IntakeID:  intake.ID,
 		EUAUserID: "ABCD",
-	})
-	if err != nil {
-		panic(err)
 	}
+	for _, cb := range callbacks {
+		cb(&accessibilityRequest)
+	}
+	must(store.CreateAccessibilityRequest(ctx, &accessibilityRequest))
 	must(store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
-		RequestID: request.ID,
-		EUAUserID: request.EUAUserID,
+		RequestID: accessibilityRequest.ID,
+		EUAUserID: accessibilityRequest.EUAUserID,
 	}))
+	return &accessibilityRequest
+}
+
+func makeTestDate(logger *zap.Logger, store *storage.Store, callbacks ...func(*models.TestDate)) {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+
+	testDate := models.TestDate{}
+	for _, cb := range callbacks {
+		cb(&testDate)
+	}
+
+	must(store.CreateTestDate(ctx, &testDate))
+
 }
 
 func must(_ interface{}, err error) {
