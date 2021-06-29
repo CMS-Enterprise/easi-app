@@ -665,6 +665,14 @@ func (s GraphQLTestSuite) TestUpdateContactDetails() {
 					Name      string
 					Component string
 				}
+				Isso struct {
+					IsPresent bool
+					Name      null.String
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     null.String
+				}
 			}
 		}
 	}
@@ -689,9 +697,11 @@ func (s GraphQLTestSuite) TestUpdateContactDetails() {
 				},
 				isso: {
 					isPresent: false
+					name: null
 				},
 				governanceTeams: {
 					isPresent: false
+					teams: []
 				}
 			}) {
 				systemIntake {
@@ -708,6 +718,16 @@ func (s GraphQLTestSuite) TestUpdateContactDetails() {
 						name
 						component
 					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							name
+						}
+						isPresent
+					}
 				}
 			}
 		}`, intake.ID), &resp)
@@ -723,4 +743,10 @@ func (s GraphQLTestSuite) TestUpdateContactDetails() {
 
 	s.Equal(respIntake.Requester.Name, "Iama Requester")
 	s.Equal(respIntake.Requester.Component, "CMS Office 3")
+
+	s.Nil(respIntake.Isso.Name.Ptr())
+	s.False(respIntake.Isso.IsPresent)
+
+	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
+	s.False(respIntake.GovernanceTeams.IsPresent)
 }
