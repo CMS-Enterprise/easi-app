@@ -14,7 +14,7 @@ import {
 
 import PageHeading from 'components/PageHeading';
 import PlainInfo from 'components/PlainInfo';
-import { AlertText } from 'components/shared/Alert';
+import Alert, { AlertText } from 'components/shared/Alert';
 import CollapsibleLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -53,7 +53,12 @@ const Create = () => {
         const uuid =
           response.data.createAccessibilityRequest.accessibilityRequest.id;
         showMessageOnNextPage(
-          <>
+          <Alert
+            className="margin-top-4"
+            type="success"
+            role="alert"
+            heading="Success"
+          >
             <AlertText className="margin-bottom-2">
               {t('newRequestForm.confirmation')}
             </AlertText>
@@ -64,7 +69,7 @@ const Create = () => {
             >
               {t('newRequestForm.surveyLink')}
             </Link>
-          </>
+          </Alert>
         );
         history.push(`/508/requests/${uuid}`);
       }

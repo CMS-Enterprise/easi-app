@@ -179,16 +179,7 @@ const AccessibilityRequestDetailPage = () => {
         } else {
           refetch();
           showMessage(''); // allows screen reader to hear consecutive success message
-          showMessage(
-            <Alert
-              className="margin-top-4"
-              type="success"
-              role="alert"
-              heading="Success"
-            >
-              {t('requestDetails.notes.confirmation', { requestName })}
-            </Alert>
-          );
+          showMessage(t('requestDetails.notes.confirmation', { requestName }));
           // showMessage(t('requestDetails.notes.confirmation', { requestName }));
           resetForm({});
         }
@@ -495,7 +486,18 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {message}
+          {message?.constructor === String ? (
+            <Alert
+              className="margin-top-4"
+              type="success"
+              role="alert"
+              heading="Success"
+            >
+              {message}
+            </Alert>
+          ) : (
+            message
+          )}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}
           >
