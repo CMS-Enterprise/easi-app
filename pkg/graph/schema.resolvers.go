@@ -891,6 +891,9 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
 	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
 	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
+	if input.Isso.IsPresent {
+		intake.ISSOName = null.StringFrom(*input.Isso.Name)
+	}
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
