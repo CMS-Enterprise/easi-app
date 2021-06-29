@@ -151,29 +151,18 @@ func (s *Store) FetchAccessibilityRequestMetrics(_ context.Context, startTime ti
 		CreatedAndInRemediationCount int `db:"created_and_in_remediation_count"`
 	}
 	const startedCountSQL = `
-		WITH "started" AS (
-		    SELECT *
-		    FROM accessibility_requests
-		    LEFT JOIN
-		    (
-		        SELECT arsr.request_id, status
-		        FROM accessibility_request_status_records as arsr
-		        INNER JOIN (
-		        	SELECT request_id, max(created_at) as latest
-		        	FROM accessibility_request_status_records
-		        	GROUP BY request_id
-		        ) most_recent
-		        ON arsr.request_id = most_recent.request_id
-		        WHERE arsr.created_at = most_recent.latest
-	        ) most_recent_status_record
-		    ON most_recent_status_record.request_id = accessibility_requests.id
-		    WHERE accessibility_requests.created_at >=  $1
-		      AND accessibility_requests.created_at < $2
-		)
-		SELECT sum(CASE WHEN status = 'OPEN' then 1 end) AS created_and_open_count,
-			   sum(CASE WHEN status = 'CLOSED' then 1 end) AS created_and_closed_count,
-			   sum(CASE WHEN status = 'IN_REMEDIATION' then 1 end) AS created_and_in_remediation_count
-		FROM started
+		SELECT
+ 			COUNT(*) FILTER (WHERE status = 'OPEN') AS created_and_open_count,
+ 			COUNT(*) FILTER (WHERE status = 'CLOSED') AS created_and_closed_count,
+ 			COUNT(*) FILTER (WHERE status = 'IN_REMEDIATION') AS created_and_in_remediation_count
+ 		FROM (
+			SELECT DISTINCT ON (request_id) request_id, status, created_at FROM accessibility_request_status_records
+			WHERE request_id IN (
+				SELECT id FROM accessibility_requests
+				WHERE created_at >= $1 AND created_at < $2
+			)
+			ORDER BY request_id, created_at DESC
+		) requests;
 	`
 
 	metrics := models.AccessibilityRequestMetrics{}
