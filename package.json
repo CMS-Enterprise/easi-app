@@ -160,7 +160,8 @@
     "trim": "0.0.3",
     "browserslist": "4.16.5",
     "lodash": "4.17.21",
-    "axios": "0.21.1"
+    "axios": "0.21.1",
+    "marked": "0.7.0"
   },
   "jest": {
     "collectCoverageFrom": [
