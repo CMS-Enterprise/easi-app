@@ -3196,6 +3196,7 @@ input SystemIntakeISSOInput {
 input SystemIntakeCollaboratorInput {
   collaborator: String!
   name: String!
+  key: String!
 }
 
 input SystemIntakeGovernanceTeamInput {
@@ -15114,6 +15115,14 @@ func (ec *executionContext) unmarshalInputSystemIntakeCollaboratorInput(ctx cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
 			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "key":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("key"))
+			it.Key, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
