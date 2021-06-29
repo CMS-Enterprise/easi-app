@@ -191,6 +191,7 @@ export interface SystemIntakeBusinessOwnerInput {
 export interface SystemIntakeCollaboratorInput {
   collaborator: string;
   name: string;
+  key: string;
 }
 
 export interface SystemIntakeGovernanceTeamInput {
