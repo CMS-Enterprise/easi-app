@@ -44,47 +44,6 @@ describe('The Goveranance Task List', () => {
           data: {
             systemIntake: {
               id: 'sysIntakeRequest123',
-              adminLead: null,
-              businessNeed: null,
-              businessSolution: null,
-              businessOwner: {
-                component: null,
-                name: null
-              },
-              contract: null,
-              costs: null,
-              currentStage: null,
-              decisionNextSteps: null,
-              grbDate: null,
-              grtDate: null,
-              grtFeedbacks: null,
-              governanceTeams: {
-                isPresent: false,
-                teams: null
-              },
-              isso: {
-                isPresent: false,
-                name: null
-              },
-              fundingSource: null,
-              lcid: null,
-              lcidExpiresAt: null,
-              lcidScope: null,
-              needsEaSupport: null,
-              productManager: {
-                component: null,
-                name: null
-              },
-              rejectionReason: null,
-              requester: {
-                component: null,
-                email: null,
-                name: null
-              },
-              requestName: null,
-              requestType: null,
-              status: 'DRAFT',
-              submittedAt: null,
               ...intakeProps
             }
           }

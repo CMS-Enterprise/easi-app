@@ -61,7 +61,7 @@ const GovernanceTaskList = () => {
   );
   const systemIntake = data?.systemIntake;
 
-  if (loading) {
+  if (loading || !systemIntake) {
     return <p>Loading...</p>;
   }
 
