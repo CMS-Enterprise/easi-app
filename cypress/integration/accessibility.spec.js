@@ -235,10 +235,10 @@ describe('Accessibility Requests', () => {
       // This seeded 508 request comes with a test date that's scheduled one day
       // after the 508 request was created. This is why we're adding a test date
       // two days into the future.
-      const now = DateTime.local();
-      const currentMonth = String(now.month);
-      const tomorrow = String(now.day + 2);
-      const currentYear = String(now.year);
+      const futureDatetime = DateTime.local().plus({ day: 2 });
+      const currentMonth = String(futureDatetime.month);
+      const tomorrow = String(futureDatetime.day);
+      const currentYear = String(futureDatetime.year);
       const tomorrowDate = formatDate(
         DateTime.fromObject({
           month: currentMonth,
