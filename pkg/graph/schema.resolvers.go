@@ -882,8 +882,18 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 
 func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystenIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	intake.Requester = input.Requester.Name
+	intake.Component = null.StringFrom(input.Requester.Component)
+	intake.BusinessOwner = null.StringFrom(input.BusinessOwner.Name)
+	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
+	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
+	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
+	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
 	return &model.UpdateSystemIntakePayload{
-		SystemIntake: intake,
+		SystemIntake: savedIntake,
 	}, err
 }
 
