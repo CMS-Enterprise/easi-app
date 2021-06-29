@@ -153,6 +153,9 @@
     "text-encoding": "^0.7.0",
     "ts-loader": "^7.0.5"
   },
+  "resolutions": {
+    "prismjs": "1.24.0"
+  },
   "jest": {
     "collectCoverageFrom": [
       "!src/**/*.stories.{jsx,tsx}"
