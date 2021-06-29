@@ -891,9 +891,25 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
 	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
 	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
+
 	if input.Isso.IsPresent {
 		intake.ISSOName = null.StringFrom(*input.Isso.Name)
 	}
+
+	if input.GovernanceTeams.IsPresent {
+		for _, team := range input.GovernanceTeams.Teams {
+			if team.Key == "technicalReviewBoard" {
+				intake.TRBCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+			if team.Key == "securityPrivacy" {
+				intake.OITSecurityCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+			if team.Key == "enterpriseArchitecture" {
+				intake.EACollaboratorName = null.StringFrom(team.Collaborator)
+			}
+		}
+	}
+
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
