@@ -2,17 +2,16 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { mount, ReactWrapper, shallow } from 'enzyme';
-import configureMockStore from 'redux-mock-store';
-import { MockedProvider } from '@apollo/client/testing';
 import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 
 import GovernanceTaskList from './index';
-import { isNil } from 'lodash';
 
 jest.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
@@ -37,8 +36,8 @@ describe('The Goveranance Task List', () => {
       {
         request: {
           query: GetSytemIntakeQuery,
-          variables: {   
-            id: 'sysIntakeRequest123'     
+          variables: {
+            id: 'sysIntakeRequest123'
           }
         },
         result: {
@@ -50,7 +49,7 @@ describe('The Goveranance Task List', () => {
               businessSolution: null,
               businessOwner: {
                 component: null,
-                name: null,
+                name: null
               },
               contract: null,
               costs: null,
@@ -65,7 +64,7 @@ describe('The Goveranance Task List', () => {
               },
               isso: {
                 isPresent: false,
-                name: null,
+                name: null
               },
               fundingSource: null,
               lcid: null,
@@ -74,13 +73,13 @@ describe('The Goveranance Task List', () => {
               needsEaSupport: null,
               productManager: {
                 component: null,
-                name: null,
+                name: null
               },
               rejectionReason: null,
               requester: {
                 component: null,
                 email: null,
-                name: null,
+                name: null
               },
               requestName: null,
               requestType: null,
@@ -92,14 +91,16 @@ describe('The Goveranance Task List', () => {
         }
       }
     ];
-  }
+  };
 
   it('renders without crashing', () => {
     const mockStore = configureMockStore();
     const store = mockStore({});
     shallow(
-      <MemoryRouter initialEntries={['/governance-task-list/sysIntakeRequest123']}>
-        <MockedProvider mocks={mocks()} addTypename={false}>
+      <MemoryRouter
+        initialEntries={['/governance-task-list/sysIntakeRequest123']}
+      >
+        <MockedProvider mocks={mocks({})} addTypename={false}>
           <Provider store={store}>
             <MessageProvider>
               <Route path="/governance-task-list/:systemId">
@@ -122,8 +123,10 @@ describe('The Goveranance Task List', () => {
     let component: ReactWrapper;
     await act(async () => {
       component = mount(
-        <MemoryRouter initialEntries={['/governance-task-list/sysIntakeRequest123']}>
-          <MockedProvider mocks={mocks()} addTypename={false}>
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={mocks({})} addTypename={false}>
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -159,20 +162,21 @@ describe('The Goveranance Task List', () => {
       const mockWithType = mocks({
         requestName: 'Easy Access to System Information',
         requestType: 'RECOMPETE'
-      })
+      });
 
       let component: ReactWrapper;
       await act(async () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <MockedProvider mocks={mockWithType} addTypename={false}>
-            <Provider store={store}>
-              <MessageProvider>
-                <Route path="/governance-task-list/:systemId">
-                  <GovernanceTaskList />
-                </Route>
-              </MessageProvider>
-            </Provider></MockedProvider>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -199,20 +203,21 @@ describe('The Goveranance Task List', () => {
       const mockWithType = mocks({
         requestName: 'Easy Access to System Information',
         requestType: 'RECOMPETE'
-      })
+      });
 
       let component: ReactWrapper;
       await act(async () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <MockedProvider mocks={mockWithType} addTypename={false}>
-            <Provider store={store}>
-              <MessageProvider>
-                <Route path="/governance-task-list/:systemId">
-                  <GovernanceTaskList />
-                </Route>
-              </MessageProvider>
-            </Provider></MockedProvider>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -264,26 +269,27 @@ describe('The Goveranance Task List', () => {
       const mockWithType = mocks({
         requestName: 'Easy Access to System Information',
         requestType: 'RECOMPETE'
-      })
+      });
 
       let component: ReactWrapper;
       await act(async () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <MockedProvider mocks={mockWithType} addTypename={false}>
-            <Provider store={store}>
-              <MessageProvider>
-                <Route path="/governance-task-list/:systemId">
-                  <GovernanceTaskList />
-                </Route>
-              </MessageProvider>
-            </Provider></MockedProvider>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
         await new Promise(resolve => setTimeout(resolve, 1000));
         component.update();
       });
-      
+
       expect(
         component!
           .find('[data-testid="task-list-intake-form"]')
@@ -341,20 +347,21 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
       const mockWithName = mocks({
-        requestName: 'Easy Access to System Information',
-      })
+        requestName: 'Easy Access to System Information'
+      });
       let component: ReactWrapper;
       await act(async () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <MockedProvider mocks={mockWithName} addTypename={false}>
-            <Provider store={store}>
-              <MessageProvider>
-              <Route path="/governance-task-list/:systemId">
-                <GovernanceTaskList />
-                </Route>
-              </MessageProvider>
-            </Provider></MockedProvider>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -376,14 +383,15 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks()} addTypename={false}>
-            <Provider store={store}>
-              <MessageProvider>
-              <Route path="/governance-task-list/:systemId">
-                <GovernanceTaskList />
-                </Route>
-              </MessageProvider>
-            </Provider></MockedProvider>
+            <MockedProvider mocks={mocks({})} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -404,14 +412,15 @@ describe('The Goveranance Task List', () => {
     await act(async () => {
       component = mount(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <MockedProvider mocks={mocks()} addTypename={false}>
-          <Provider store={store}>
-            <MessageProvider>
-            <Route path="/governance-task-list/:systemId">
-              <GovernanceTaskList />
-              </Route>
-            </MessageProvider>
-          </Provider></MockedProvider>
+          <MockedProvider mocks={mocks({})} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
         </MemoryRouter>
       );
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -420,813 +429,906 @@ describe('The Goveranance Task List', () => {
     expect(component!.find('.sidenav-actions').length).toEqual(1);
   });
 
-  // describe('Statuses', () => {
-  //   const mockStore = configureMockStore();
-
-  //   it('renders proper buttons for INTAKE_DRAFT', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'INTAKE_DRAFT'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-start-btn"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
-  //   });
-
-  //   it('renders proper buttons for INTAKE_SUBMITTED', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'INTAKE_SUBMITTED'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .exists()
-  //     ).toEqual(false);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
-  //   });
-
-  //   it('renders proper buttons for NEED_BIZ_CASE', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'NEED_BIZ_CASE'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!.find('[data-testid="start-biz-case-btn"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .exists()
-  //     ).toEqual(false);
-  //   });
-
-  //   it('renders proper buttons for BIZ_CASE_DRAFT', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'BIZ_CASE_DRAFT'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!.find('[data-testid="continue-biz-case-btn"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .exists()
-  //     ).toEqual(false);
-  //   });
-
-  //   it('renders proper buttons for BIZ_CASE_DRAFT_SUBMITTED', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'BIZ_CASE_DRAFT_SUBMITTED',
-  //           businessCaseId: 'ac94c1d7-48ca-4c49-9045-371b4d3062b4'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!.find('[data-testid="view-biz-case-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-  //   });
-
-  //   it('renders proper buttons for BIZ_CASE_CHANGES_NEEDED', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'BIZ_CASE_CHANGES_NEEDED'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!.find('[data-testid="update-biz-case-draft-btn"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .exists()
-  //     ).toEqual(false);
-  //   });
-
-  //   it('renders proper buttons for READY_FOR_GRT', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'READY_FOR_GRT'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!.find('[data-testid="prepare-for-grt-cta"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!.find('[data-testid="view-biz-case-cta"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .exists()
-  //     ).toEqual(false);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-final"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-grb-meeting"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-decision"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
-  //   });
-
-  //   it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'BIZ_CASE_FINAL_NEEDED'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-final"]')
-  //         .find(UswdsLink)
-  //         .text()
-  //     ).toEqual('Review and Submit');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-final"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .exists()
-  //     ).toEqual(false);
-  //   });
-
-  //   it('renders proper buttons for BIZ_CASE_FINAL_SUBMITTED', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'BIZ_CASE_FINAL_SUBMITTED'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-final"]')
-  //         .find(UswdsLink)
-  //         .exists()
-  //     ).toEqual(false);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-final"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-  //   });
-
-  //   it('renders proper buttons for READY_FOR_GRB', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'READY_FOR_GRB'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!.find('[data-testid="prepare-for-grb-btn"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-final"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-grb-meeting"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .exists()
-  //     ).toEqual(false);
-  //   });
-
-  //   it('renders proper buttons for LCID_ISSUED', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'LCID_ISSUED'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(component!.find('[data-testid="decision-cta"]').exists()).toEqual(
-  //       true
-  //     );
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-final"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-grb-meeting"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-decision"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .exists()
-  //     ).toEqual(false);
-  //   });
-
-  //   it('renders proper buttons for NO_GOVERNANCE', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'NO_GOVERNANCE'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!.find('[data-testid="task-list-closed-alert"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="plain-text-no-governance-decision"]')
-  //         .exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-grb-meeting"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-  //   });
-
-  //   it('renders proper buttons for NOT_IT_REQUEST', async () => {
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           status: 'NOT_IT_REQUEST'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-
-  //     await act(async () => {
-  //       component = mount(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <MockedProvider mocks={mocks} addTypename={false}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider></MockedProvider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-
-  //     component!.update();
-  //     expect(
-  //       component!.find('[data-testid="intake-view-link"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!.find('[data-testid="task-list-closed-alert"]').exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="plain-text-not-it-request-decision"]')
-  //         .exists()
-  //     ).toEqual(true);
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-grb-meeting"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-  //   });
-  // });
+  describe('Statuses', () => {
+    const mockStore = configureMockStore();
+
+    it('renders proper buttons for INTAKE_DRAFT', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'INTAKE_DRAFT'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'INTAKE_DRAFT'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-start-btn"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+    });
+
+    it('renders proper buttons for INTAKE_SUBMITTED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'INTAKE_SUBMITTED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'INTAKE_SUBMITTED'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+    });
+
+    it('renders proper buttons for NEED_BIZ_CASE', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'NEED_BIZ_CASE'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'NEED_BIZ_CASE'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="start-biz-case-btn"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+    });
+
+    it('renders proper buttons for BIZ_CASE_DRAFT', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_DRAFT'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_DRAFT'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="continue-biz-case-btn"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+    });
+
+    it('renders proper buttons for BIZ_CASE_DRAFT_SUBMITTED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_DRAFT_SUBMITTED',
+            businessCaseId: 'ac94c1d7-48ca-4c49-9045-371b4d3062b4'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_DRAFT_SUBMITTED',
+        businessCaseId: 'ac94c1d7-48ca-4c49-9045-371b4d3062b4'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="view-biz-case-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for BIZ_CASE_CHANGES_NEEDED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_CHANGES_NEEDED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_CHANGES_NEEDED'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="update-biz-case-draft-btn"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+    });
+
+    it('renders proper buttons for READY_FOR_GRT', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'READY_FOR_GRT'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'READY_FOR_GRT'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="prepare-for-grt-cta"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="view-biz-case-cta"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-decision"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+    });
+
+    it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_FINAL_NEEDED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_FINAL_NEEDED'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find(UswdsLink)
+          .text()
+      ).toEqual('Review and Submit');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+    });
+
+    it('renders proper buttons for BIZ_CASE_FINAL_SUBMITTED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_FINAL_SUBMITTED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'BIZ_CASE_FINAL_SUBMITTED'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find(UswdsLink)
+          .exists()
+      ).toEqual(false);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for READY_FOR_GRB', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'READY_FOR_GRB'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'READY_FOR_GRB'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="prepare-for-grb-btn"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+    });
+
+    it('renders proper buttons for LCID_ISSUED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'LCID_ISSUED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'LCID_ISSUED'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(component!.find('[data-testid="decision-cta"]').exists()).toEqual(
+        true
+      );
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-decision"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+    });
+
+    it('renders proper buttons for NO_GOVERNANCE', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'NO_GOVERNANCE'
+          }
+        },
+        businessCase: { form: {} }
+      });
+
+      const mockWithStatus = mocks({
+        status: 'NO_GOVERNANCE'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="task-list-closed-alert"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="plain-text-no-governance-decision"]')
+          .exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for NOT_IT_REQUEST', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'NOT_IT_REQUEST'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      const mockWithStatus = mocks({
+        status: 'NOT_IT_REQUEST'
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mockWithStatus} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <Route path="/governance-task-list/:systemId">
+                    <GovernanceTaskList />
+                  </Route>
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
+          </MemoryRouter>
+        );
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        component.update();
+      });
+
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="task-list-closed-alert"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="plain-text-not-it-request-decision"]')
+          .exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+  });
 });
