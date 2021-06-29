@@ -783,8 +783,9 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     []struct {
-						Name      string
-						Component string
+						Name         string
+						Collaborator string
+						Key          string
 					}
 				}
 			}
@@ -814,9 +815,11 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 					name: "Iama Issoperson"
 				},
 				governanceTeams: {
-					isPresent: false,
+					isPresent: true,
 					teams: [
-						
+						{ name: "Technical Review Board", key: "technicalReviewBoard", collaborator: "Iama Trbperson" },
+						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" },
+						{ name: "Enterprise Architecture", key: "enterpriseArchitecture", collaborator: "Iama Eaperson" }
 					]
 				}
 			}) {
@@ -840,7 +843,8 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 					}
 					governanceTeams {
 						teams {
-							name
+							collaborator
+							key
 						}
 						isPresent
 					}
@@ -854,6 +858,14 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 	s.Equal("Iama Issoperson", respIntake.Isso.Name)
 	s.True(respIntake.Isso.IsPresent)
 
-	// s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
-	// s.False(respIntake.GovernanceTeams.IsPresent)
+	s.True(respIntake.GovernanceTeams.IsPresent)
+	teams := respIntake.GovernanceTeams.Teams
+	s.Equal("Iama Eaperson", teams[0].Collaborator)
+	s.Equal("enterpriseArchitecture", teams[0].Key)
+
+	s.Equal("Iama Trbperson", teams[2].Collaborator)
+	s.Equal("technicalReviewBoard", teams[2].Key)
+
+	s.Equal("Iama Ispgperson", teams[1].Collaborator)
+	s.Equal("securityPrivacy", teams[1].Key)
 }
