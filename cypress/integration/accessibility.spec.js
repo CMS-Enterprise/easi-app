@@ -195,5 +195,6 @@ describe('Accessibility Requests', () => {
       .within(() => {
         cy.contains('This is a really great note');
       });
+    cy.get('[data-testid="alert"]').contains('h3', 'Success');
   });
 });
