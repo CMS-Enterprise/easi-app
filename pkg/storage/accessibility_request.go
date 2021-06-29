@@ -115,11 +115,71 @@ func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]models.Access
 }
 
 // DeleteAccessibilityRequest marks an accessibility request as deleted
-func (s *Store) DeleteAccessibilityRequest(ctx context.Context, id uuid.UUID, reason models.AccessibilityRequestDeletionReason) error {
+func (s *Store) DeleteAccessibilityRequest(_ context.Context, id uuid.UUID, reason models.AccessibilityRequestDeletionReason) error {
 	const archiveAccessibilityRequestSQL = `UPDATE accessibility_requests
 		SET deleted_at = $1, deletion_reason = $2
 		WHERE id = $3
 `
 	_, err := s.db.Exec(archiveAccessibilityRequestSQL, time.Now().UTC(), reason, id)
 	return err
+}
+
+// CreateAccessibilityRequestAndInitialStatusRecord creates the new request and sets the status to OPEN
+func (s *Store) CreateAccessibilityRequestAndInitialStatusRecord(ctx context.Context, request *models.AccessibilityRequest) (*models.AccessibilityRequest, error) {
+	createdRequest, err := s.CreateAccessibilityRequest(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
+		RequestID: createdRequest.ID,
+		Status:    models.AccessibilityRequestStatusOpen,
+		EUAUserID: createdRequest.EUAUserID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return createdRequest, nil
+}
+
+// FetchAccessibilityRequestMetrics gets a metrics digest for 508 requests
+func (s *Store) FetchAccessibilityRequestMetrics(_ context.Context, startTime time.Time, endTime time.Time) (models.AccessibilityRequestMetrics, error) {
+	type createdQueryResponse struct {
+		CreatedAndOpenCount          int `db:"created_and_open_count"`
+		CreatedAndClosedCount        int `db:"created_and_closed_count"`
+		CreatedAndInRemediationCount int `db:"created_and_in_remediation_count"`
+	}
+	const startedCountSQL = `
+		SELECT
+ 			COUNT(*) FILTER (WHERE status = 'OPEN') AS created_and_open_count,
+ 			COUNT(*) FILTER (WHERE status = 'CLOSED') AS created_and_closed_count,
+ 			COUNT(*) FILTER (WHERE status = 'IN_REMEDIATION') AS created_and_in_remediation_count
+ 		FROM (
+			SELECT DISTINCT ON (request_id) request_id, status, created_at FROM accessibility_request_status_records
+			WHERE request_id IN (
+				SELECT id FROM accessibility_requests
+				WHERE created_at >= $1 AND created_at < $2
+			)
+			ORDER BY request_id, created_at DESC
+		) requests;
+	`
+
+	metrics := models.AccessibilityRequestMetrics{}
+
+	var createdResponse createdQueryResponse
+	err := s.db.Get(
+		&createdResponse,
+		startedCountSQL,
+		&startTime,
+		&endTime,
+	)
+	if err != nil {
+		return metrics, err
+	}
+	metrics.CreatedAndOpen = createdResponse.CreatedAndOpenCount
+	metrics.CreatedAndClosed = createdResponse.CreatedAndClosedCount
+	metrics.CreatedAndInRemediation = createdResponse.CreatedAndInRemediationCount
+
+	return metrics, nil
 }
