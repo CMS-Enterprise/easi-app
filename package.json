@@ -155,7 +155,8 @@
   },
   "resolutions": {
     "prismjs": "1.24.0",
-    "glob-parent": "5.1.2"
+    "glob-parent": "5.1.2",
+    "css-what": "5.0.1"
   },
   "jest": {
     "collectCoverageFrom": [
