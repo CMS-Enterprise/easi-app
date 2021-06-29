@@ -260,6 +260,7 @@ type SystemIntakeCollaborator struct {
 type SystemIntakeCollaboratorInput struct {
 	Collaborator string `json:"collaborator"`
 	Name         string `json:"name"`
+	Key          string `json:"key"`
 }
 
 type SystemIntakeContract struct {

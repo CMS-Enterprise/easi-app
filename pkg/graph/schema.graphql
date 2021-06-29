@@ -561,6 +561,7 @@ input SystemIntakeISSOInput {
 input SystemIntakeCollaboratorInput {
   collaborator: String!
   name: String!
+  key: String!
 }
 
 input SystemIntakeGovernanceTeamInput {
