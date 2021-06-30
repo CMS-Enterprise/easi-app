@@ -29,3 +29,12 @@ type AccessibilityRequest struct {
 	DeletedAt      *time.Time                          `db:"deleted_at" json:"deletedAt"`
 	DeletionReason *AccessibilityRequestDeletionReason `db:"deletion_reason"`
 }
+
+// AccessibilityRequestMetrics models metrics about accessibility requests
+type AccessibilityRequestMetrics struct {
+	StartTime               time.Time `json:"start_time"`
+	EndTime                 time.Time `json:"end_time"`
+	CreatedAndOpen          int       `json:"created_and_open"`
+	CreatedAndClosed        int       `json:"created_and_closed"`
+	CreatedAndInRemediation int       `json:"created_and_in_remediation"`
+}
