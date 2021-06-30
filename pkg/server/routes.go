@@ -206,8 +206,6 @@ func (s *Server) routes(
 				emailClient.SendIssueLCIDEmail,
 				store.GenerateLifecycleID,
 			),
-			AuthorizeUserIsReviewTeamOrIntakeRequester: services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
-			AuthorizeUserIs508TeamOrRequestOwner:       services.AuthorizeUserIsRequestOwnerOr508Team,
 			RejectIntake: services.NewUpdateRejectionFields(
 				serviceConfig,
 				services.AuthorizeRequireGRTJobCode,

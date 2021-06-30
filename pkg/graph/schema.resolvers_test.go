@@ -155,14 +155,6 @@ func TestGraphQLTestSuite(t *testing.T) {
 	}
 	var resolverService ResolverService
 	resolverService.IssueLifecycleID = issueLifecycleID
-	authorizeIntake := func(_ context.Context, _ *models.SystemIntake) (bool, error) {
-		return true, nil
-	}
-	authorize508 := func(_ context.Context, _ *models.AccessibilityRequest) (bool, error) {
-		return true, nil
-	}
-	resolverService.AuthorizeUserIsReviewTeamOrIntakeRequester = authorizeIntake
-	resolverService.AuthorizeUserIs508TeamOrRequestOwner = authorize508
 	cedarLdapClient := local.NewCedarLdapClient(logger)
 	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
 
