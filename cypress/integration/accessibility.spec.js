@@ -113,7 +113,7 @@ describe('Accessibility Requests', () => {
   });
 
   describe('notes', () => {
-    it.only('can add a note', () => {
+    it('can add a note', () => {
       cy.localLogin({ name: 'BOWN', role: 'EASI_D_508_USER' });
       cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');
 
