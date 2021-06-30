@@ -189,7 +189,7 @@ const TestDateForm = ({
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label">
-                        {t('testDateForm.scoreHeader')}
+                        {t('testDateForm.score.heading')}
                       </legend>
 
                       <FieldErrorMsg>
@@ -227,12 +227,16 @@ const TestDateForm = ({
                             <Label
                               htmlFor="TestDate-ScoreValue"
                               className="margin-bottom-1"
-                              aria-label={t(
-                                'testDateForm.scoreValueSRHelpText'
-                              )}
+                              aria-label={t('testDateForm.score.srHelp')}
                             >
-                              {t('testDateForm.scoreValueHeader')}
+                              {t('testDateForm.score.label')}
                             </Label>
+                            <HelpText
+                              id="TestDate-ScoreValueHelpText"
+                              className="margin-bottom-1"
+                            >
+                              {t('testDateForm.score.help')}
+                            </HelpText>
                             <FieldErrorMsg>
                               {flatErrors['score.value']}
                             </FieldErrorMsg>
@@ -252,9 +256,6 @@ const TestDateForm = ({
                                 <span className="text-bold">%</span>
                               </div>
                             </div>
-                            <HelpText id="TestDate-ScoreValueHelpText">
-                              {t('testDateForm.scoreHelpText')}
-                            </HelpText>
                           </FieldGroup>
                         </div>
                       )}

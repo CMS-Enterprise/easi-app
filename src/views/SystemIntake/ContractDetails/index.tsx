@@ -219,6 +219,9 @@ const ContractDetails = ({
                           <Label htmlFor="IntakeForm-FundingNumber">
                             Funding Number
                           </Label>
+                          <HelpText id="IntakeForm-FundingNumberRestrictions">
+                            Funding number must be 6 digits long
+                          </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['fundingSource.fundingNumber']}
                           </FieldErrorMsg>
@@ -229,7 +232,7 @@ const ContractDetails = ({
                             id="IntakeForm-FundingNumber"
                             maxLength={6}
                             name="fundingSource.fundingNumber"
-                            aria-describedby="IntakeForm-FundingNumberHelp"
+                            aria-describedby="IntakeForm-FundingNumberRestrictions IntakeForm-FundingNumberHelp"
                             // If funding source is 'Unknown' disable funding number input and set
                             // placeholder to 'N/A' (funding number value is set to '')
                             disabled={values.fundingSource.source === 'Unknown'}
@@ -441,7 +444,7 @@ const ContractDetails = ({
                             Period of performance
                           </legend>
                           <HelpText className="margin-bottom-1">
-                            For example: 4/10/2020
+                            For example: 04 10 2020
                           </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['contract.startDate.month']}
