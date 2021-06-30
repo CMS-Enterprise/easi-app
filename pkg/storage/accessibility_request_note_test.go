@@ -17,7 +17,7 @@ func (s StoreTestSuite) TestCreateAccessibilityRequestNote() {
 	s.NoError(err)
 
 	accessibilityRequest := testhelpers.NewAccessibilityRequest(intake.ID)
-	_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequest)
+	_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &accessibilityRequest)
 	s.NoError(err)
 
 	s.Run("create an accessibility request note succeeds", func() {
@@ -43,7 +43,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestsNotesByRequestID() {
 	s.NoError(err)
 
 	accessibilityRequest := testhelpers.NewAccessibilityRequest(intake.ID)
-	_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequest)
+	_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &accessibilityRequest)
 	s.NoError(err)
 
 	note1 := models.AccessibilityRequestNote{

@@ -17,7 +17,7 @@ func (s StoreTestSuite) TestUpdateTestDate() {
 		s.NoError(err)
 
 		accessibilityRequest := testhelpers.NewAccessibilityRequest(intake.ID)
-		_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequest)
+		_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &accessibilityRequest)
 		s.NoError(err)
 
 		testDate := testhelpers.NewTestDate(accessibilityRequest.ID)
@@ -41,7 +41,7 @@ func (s StoreTestSuite) TestUpdateTestDate() {
 		s.NoError(err)
 
 		accessibilityRequest := testhelpers.NewAccessibilityRequest(intake.ID)
-		_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequest)
+		_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &accessibilityRequest)
 		s.NoError(err)
 
 		testDate := testhelpers.NewTestDate(accessibilityRequest.ID)
@@ -71,7 +71,7 @@ func (s StoreTestSuite) TestUpdateTestDate() {
 		s.NoError(err)
 
 		accessibilityRequest := testhelpers.NewAccessibilityRequest(intake.ID)
-		_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequest)
+		_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &accessibilityRequest)
 		s.NoError(err)
 
 		testDate := testhelpers.NewTestDate(accessibilityRequest.ID)
