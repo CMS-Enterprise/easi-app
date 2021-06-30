@@ -74,11 +74,7 @@ describe('The Goveranance Task List', () => {
 
   it('displays all the governance steps', async () => {
     const mockStore = configureMockStore();
-    const store = mockStore({
-      systemIntake: { systemIntake: {} },
-      businessCase: { form: {} }
-    });
-
+    const store = mockStore({});
     let component: ReactWrapper;
     await act(async () => {
       component = mount(
