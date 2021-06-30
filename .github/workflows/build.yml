@@ -1,0 +1,287 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  pre_deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+      - uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: '12.22.1'
+      - uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8 # v2.1.3
+        with:
+          go-version: '1.15.8'
+      - uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        with:
+          path: |
+            ~/go/pkg/mod
+          key: v1-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            v1-go-
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Install yarn dependencies
+        run: yarn install
+      - name: Install go modules
+        run: go mod download
+
+          # lint:
+          #   needs: pre_deps
+          #   runs-on: ubuntu-latest
+          #   steps:
+          #     - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+          #     - uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+          #       with:
+          #         node-version: '12.22.1'
+          #     - uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8 # v2.1.3
+          #       with:
+          #         go-version: '1.15.8'
+          #     - uses: actions/setup-python@3105fb18c05ddd93efea5f9e0bef7a03a6e9e7df # v2.2.1
+          #       with:
+          #         python-version: '3.9'
+          #     - uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+          #       with:
+          #         path: |
+          #           ~/go/pkg/mod
+          #         key: v1-go-${{ hashFiles('**/go.sum') }}
+          #         restore-keys: |
+          #           v1-go-
+          #     - name: Get yarn cache directory path
+          #       id: yarn-cache-dir-path
+          #       run: echo "::set-output name=dir::$(yarn cache dir)"
+          #     - uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+          #       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+          #       with:
+          #         path: |
+          #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          #           ./node_modules
+          #         key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          #         restore-keys: |
+          #           v1-yarn-
+          #     - uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe # v2.0.3
+          #       with:
+          #         extra_args: --all-files
+
+          # client_test:
+          #   needs: pre_deps
+          #   runs-on: ubuntu-latest
+          #   steps:
+          #     - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+          #     - uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+          #       with:
+          #         node-version: '12.22.1'
+          #     - name: Get yarn cache directory path
+          #       id: yarn-cache-dir-path
+          #       run: echo "::set-output name=dir::$(yarn cache dir)"
+          #     - uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+          #       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+          #       with:
+          #         path: |
+          #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          #           ./node_modules
+          #         key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          #         restore-keys: |
+          #           v1-yarn-
+          #     - run: yarn test:coverage
+
+          # client_build:
+          #   needs: pre_deps
+          #   runs-on: ubuntu-latest
+          #   env:
+          #     # Use API address needed for e2e_tests so the frontend build
+          #     # can be reused in that job
+          #     REACT_APP_API_ADDRESS: http://easi:8080/api/v1
+          #     REACT_APP_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
+          #     REACT_APP_APP_ENV: test
+          #     REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          #     REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+          #     REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+          #     REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          #     REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+          #     REACT_APP_LOCAL_AUTH_ENABLED: true
+          #   steps:
+          #     - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+          #     - uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+          #       with:
+          #         node-version: '12.22.1'
+          #     - name: Get yarn cache directory path
+          #       id: yarn-cache-dir-path
+          #       run: echo "::set-output name=dir::$(yarn cache dir)"
+          #     - uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+          #       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+          #       with:
+          #         path: |
+          #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          #           ./node_modules
+          #         key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          #         restore-keys: |
+          #           v1-yarn-
+          #     - run: |
+          #         yarn install # only need this for local GitHub Action until caching between jobs is working
+          #         yarn run build
+          #     - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
+          #       with:
+          #         name: client-build
+          #         path: build
+
+          # storybook_build:
+          #   needs: pre_deps
+          #   runs-on: ubuntu-latest
+          #   steps:
+          #     - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+          #     - uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+          #       with:
+          #         node-version: '12.22.1'
+          #     - name: Get yarn cache directory path
+          #       id: yarn-cache-dir-path
+          #       run: echo "::set-output name=dir::$(yarn cache dir)"
+          #     - uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+          #       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+          #       with:
+          #         path: |
+          #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          #           ./node_modules
+          #         key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          #         restore-keys: |
+          #           v1-yarn-
+          #     - run: yarn run build-storybook
+          #     - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
+          #       with:
+          #         name: storybook-build
+          #         path: storybook-static
+
+          # server_test:
+          #   needs: pre_deps
+          #   runs-on: ubuntu-latest
+          #   services:
+          #     db:
+          #       image: postgres:11.10
+          #       environment:
+          #         POSTGRES_DB: postgres # needed?
+          #         POSTGRES_USER: postgres # needed?
+          #         POSTGRES_PASSWORD: mysecretpassword
+          #         POSTGRES_HOST_AUTH_METHOD: trust # needed?
+          #       ports:
+          #         - '5432:5432'
+          #     db_migrate:
+          #       image: # TODO
+          #       environment:
+          #         FLYWAY_USER: postgres
+          #         FLYWAY_PASSWORD: easirox
+          #         FLYWAY_URL: jdbc:postgresql://localhost/postgres
+          #         FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD: supersecretapp
+          #   steps:
+          #     - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+          #     - uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8 # v2.1.3
+          #       with:
+          #         go-version: '1.15.8'
+          #     - uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+          #       with:
+          #         path: |
+          #           ~/go/pkg/mod
+          #         key: v1-go-${{ hashFiles('**/go.sum') }}
+          #         restore-keys: |
+          #           v1-go-
+          #     - name: Run server tests
+          #       env:
+          #         APP_ENV: test
+          #         AWS_REGION: us-west-2 # easi app tests expect AWS_REGION instead of AWS_DEFAULT_REGION
+          #         AWS_SES_SOURCE: '"EASi Test" <no-reply-test@info.easi.cms.gov>'
+          #         AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
+          #         CLIENT_PROTOCOL: http
+          #         CLIENT_PORT: 3000
+          #         CLIENT_HOSTNAME: localhost:3000
+          #         GRT_EMAIL: success@simulator.amazonses.com
+          #         ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
+          #         PGHOST: localhost
+          #         PGPORT: 5432
+          #         PGDATABASE: postgres
+          #         PGUSER: app_user
+          #         PGPASS: supersecretapp
+          #         PGSSLMODE: disable
+          #         DB_MAX_CONNECTIONS: 20
+          #         FLAG_SOURCE: LOCAL
+          #       run: |
+          #         ./scripts/run-server-test
+
+          # server_image_build:
+          #   needs: server_test
+          #   runs-on: ubuntu-latest
+          #   env:
+          #     ECR_REPOSITORY: easi-backend
+          #     IMAGE_TAG: ${{ github.sha }}
+          #   steps:
+          #     - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+
+          #     - name: Login to Docker Hub
+          #       uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c # v1.9.0
+          #       with:
+          #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+          #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+          #     - name: Configure AWS credentials
+          #       uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+          #       with:
+          #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          #         aws-region: us-west-2
+
+          #     - name: Login to Amazon ECR
+          #       id: login-ecr
+          #       uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # v1.3.3
+
+          #     - name: Build and push images to Amazon ECR
+          #       id: push-images
+          #       env:
+          #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          #       run: |
+          #         APPLICATION_VERSION="$IMAGE_TAG"
+          #         APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
+          #         APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
+          #         docker image build \
+          #           --quiet \
+          #           --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" \
+          #           --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" \
+          #           --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" \
+          #           --no-cache \
+          #           --tag "${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}" \
+          #           .
+          #         docker image push "${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+
+          #     - name: Check for vulnerability scan findings
+          #       run: |
+          #         ./scripts/check_ecr_findings "$ECR_REPOSITORY" "$IMAGE_TAG" "5"
+
+          #         # e2e_tests:
+          #         #   needs: [lint, client_test, client_build, image_build]
+          #         #   runs-on: ubuntu-latest
+          #         #   steps:
+          #         #     - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+
+          #         #     - name: Login to Docker Hub
+          #         #       uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c # v1.9.0
+          #         #       with:
+          #         #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+          #         #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+          #         #     - name: Run Cypress integration tests
+          #         #       run: |
+          #         #         CI=true ./scripts/run-cypress-test-docker
