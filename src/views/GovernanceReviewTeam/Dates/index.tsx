@@ -21,6 +21,7 @@ import {
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { AnythingWrongSurvey } from 'components/Survey';
@@ -151,6 +152,9 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                     <legend className="usa-label margin-bottom-1">
                       {t('governanceReviewTeam:dates.grtDate.label')}
                     </legend>
+                    <HelpText id="TestDate-DateHelp">
+                      For example 4 28 2020
+                    </HelpText>
                     <FieldErrorMsg>{flatErrors.grtDateMonth}</FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.grtDateDay}</FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.grtDateYear}</FieldErrorMsg>

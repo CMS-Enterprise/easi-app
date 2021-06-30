@@ -170,7 +170,7 @@ const IssueLifecycleId = () => {
                       value={false}
                     />
                     {values.newLifecycleId === false && (
-                      <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
+                      <div className="margin-top-neg-2 margin-left-3 margin-bottom-1">
                         <FieldGroup
                           scrollElement="lifecycleId"
                           error={!!flatErrors.lifecycleId}
@@ -178,13 +178,18 @@ const IssueLifecycleId = () => {
                           <Label htmlFor="IssueLifecycleIdForm-LifecycleId">
                             {t('issueLCID.lcid.label')}
                           </Label>
+                          <HelpText id="IssueLifecycleIdForm-LifecycleIdHelp">
+                            For example A123456 or 123456
+                          </HelpText>
                           <FieldErrorMsg>
                             {flatErrors.lifecycleId}
                           </FieldErrorMsg>
                           <Field
                             as={TextField}
+                            className="width-card-lg"
                             error={!!flatErrors.lifecycleId}
                             id="IssueLifecycleIdForm-LifecycleId"
+                            aria-describedby="IssueLifecycleIdForm-LifecycleIdHelp"
                             maxLength={7}
                             name="lifecycleId"
                           />
