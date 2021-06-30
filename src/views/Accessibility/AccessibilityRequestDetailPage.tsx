@@ -444,26 +444,19 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {message && (
+          {(message || noteMutationError) && (
             <Alert
               className="margin-top-4"
-              type="success"
+              type={noteMutationError ? 'error' : 'success'}
               role="alert"
-              heading="Success"
+              heading={noteMutationError ? 'There is a problem' : 'Success'}
             >
-              {message}
+              {noteMutationError
+                ? t('requestDetails.notes.formErrorMessage')
+                : message}
             </Alert>
           )}
-          {noteMutationError && (
-            <Alert
-              className="margin-top-4"
-              type="error"
-              role="alert"
-              heading="There is a problem"
-            >
-              {t('requestDetails.notes.formErrorMessage')}
-            </Alert>
-          )}
+
           {Object.keys(flatFormikErrors).length > 0 && (
             <ErrorAlert
               testId="508-request-details-error"
