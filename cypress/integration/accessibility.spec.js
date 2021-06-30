@@ -36,7 +36,7 @@ describe('Accessibility Requests', () => {
   it('adds and removes a document from a 508 request as the owner', () => {
     cy.localLogin({ name: 'CMSU' });
     cy.accessibility.create508Request();
-    cy.accessibility.addDocument();
+    cy.accessibility.addAndRemoveDocument();
     cy.contains('h2', 'Next step: Provide your documents');
   });
 
@@ -51,7 +51,7 @@ describe('Accessibility Requests', () => {
       cy.visit(requestPageUrl);
     });
 
-    cy.accessibility.addDocument();
+    cy.accessibility.addAndRemoveDocument();
 
     cy.contains('div', 'No documents added to request yet.');
   });
