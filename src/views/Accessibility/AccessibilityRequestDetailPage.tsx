@@ -28,6 +28,7 @@ import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccess
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   CreateAccessibilityRequestNote,
+  CreateAccessibilityRequestNote_createAccessibilityRequestNote_userErrors, // eslint-disable-line camelcase
   CreateAccessibilityRequestNoteVariables
 } from 'queries/types/CreateAccessibilityRequestNote';
 import {
@@ -85,6 +86,7 @@ const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
   const [formikErrors, setFormikErrors] = useState<FormikErrors<any>>({});
+  const [returnedUserErrors, setReturnedUserErrors] = useState<any>(null);
   const { message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
   const history = useHistory();
@@ -157,17 +159,23 @@ const AccessibilityRequestDetailPage = () => {
           shouldSendEmail: values.shouldSendEmail
         }
       }
-    }).then(response => {
-      const userErrors =
-        response.data?.createAccessibilityRequestNote?.userErrors;
-      if (!userErrors) {
-        refetch();
-        showMessage(''); // allows screen reader to hear consecutive success message
-        showMessage(t('requestDetails.notes.confirmation', { requestName }));
-        setFormikErrors({});
-        resetForm({});
-      }
-    });
+    })
+      .then(response => {
+        const userErrors =
+          response.data?.createAccessibilityRequestNote?.userErrors;
+        if (userErrors) {
+          setReturnedUserErrors(userErrors);
+        }
+        if (!userErrors) {
+          refetch();
+          showMessage(''); // allows screen reader to hear consecutive success message
+          showMessage(t('requestDetails.notes.confirmation', { requestName }));
+          setFormikErrors({});
+          setReturnedUserErrors(null);
+          resetForm({});
+        }
+      })
+      .catch(response => {});
   };
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
@@ -444,7 +452,7 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {(message || noteMutationError) && (
+          {((!returnedUserErrors && message) || noteMutationError) && (
             <Alert
               className="margin-top-4"
               type={noteMutationError ? 'error' : 'success'}
@@ -456,7 +464,19 @@ const AccessibilityRequestDetailPage = () => {
                 : message}
             </Alert>
           )}
-
+          {returnedUserErrors && (
+            <ErrorAlert
+              testId="create-accessibility-note-errors"
+              classNames="margin-bottom-4 margin-top-4"
+              heading="There is a problem"
+            >
+              {returnedUserErrors.map((
+                err: CreateAccessibilityRequestNote_createAccessibilityRequestNote_userErrors /* eslint-disable-line camelcase */
+              ) => {
+                return <p key={err.message}>{err.message}</p>;
+              })}
+            </ErrorAlert>
+          )}
           {Object.keys(flatFormikErrors).length > 0 && (
             <ErrorAlert
               testId="508-request-details-error"
