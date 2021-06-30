@@ -465,7 +465,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 		s.Equal((*models.AccessibilityRequestNote)(nil), payload.AccessibilityRequestNote)
 	})
 
-	s.Run("create accessibility request note server error fails", func() {
+	s.Run("create accessibility request note - authorization error fails", func() {
 		invalidEuaID := "12345"
 		principal = authentication.EUAPrincipal{EUAID: invalidEuaID, JobCodeEASi: true, JobCode508User: true}
 		ctx = appcontext.WithPrincipal(context.Background(), &principal)
