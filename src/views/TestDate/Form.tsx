@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import {
   DateInputDay,
@@ -81,6 +82,9 @@ const TestDateForm = ({
             <PageHeading>
               {t(`testDateForm.header.${formType}`, { requestName })}
             </PageHeading>
+            <div className="tablet:grid-col-5">
+              <MandatoryFieldsAlert />
+            </div>
             <div className="grid-row grid-gap-lg">
               <div className="grid-col-9">
                 <Form
