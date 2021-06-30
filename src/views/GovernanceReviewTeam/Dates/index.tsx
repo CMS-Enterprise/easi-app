@@ -153,7 +153,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                       {t('governanceReviewTeam:dates.grtDate.label')}
                     </legend>
                     <HelpText id="TestDate-DateHelp">
-                      For example 4 28 2020
+                      For example 04 28 2020
                     </HelpText>
                     <FieldErrorMsg>{flatErrors.grtDateMonth}</FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.grtDateDay}</FieldErrorMsg>
