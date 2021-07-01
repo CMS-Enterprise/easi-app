@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { formatDate } from '../../src/utils/date';
 
 // scripts/dev db:seed
-// 508 Request UUId - 6e224030-09d5-46f7-ad04-4bb851b36eab
+// 508 Request UUID - 6e224030-09d5-46f7-ad04-4bb851b36eab
 
 describe('Accessibility Requests', () => {
   it('can create a request and see its details', () => {
@@ -112,29 +112,27 @@ describe('Accessibility Requests', () => {
     cy.get('table').should('not.exist');
   });
 
-  it('can add a note and view it as a 508 user', () => {
-    cy.localLogin({ name: 'BOWN' });
-    cy.accessibility.create508Request();
+  describe('notes', () => {
+    it('can add a note', () => {
+      cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_USER' });
+      cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');
 
-    cy.url().then(requestPageUrl => {
-      cy.logout();
-
-      cy.localLogin({ name: 'ADMI', role: 'EASI_D_508_USER' });
-      cy.visit(requestPageUrl);
+      cy.contains('button', 'Notes').click();
+      cy.get('#CreateAccessibilityRequestNote-NoteText').type(
+        'This is a really great note'
+      );
+      cy.contains('button', 'Add note').click();
+      cy.get('.easi-notes__list')
+        .should('have.length', 1)
+        .first()
+        .within(() => {
+          const today = new Date().toISOString();
+          const formattedDate = formatDate(today);
+          cy.contains('This is a really great note');
+          cy.contains(formattedDate);
+        });
+      cy.get('[data-testid="alert"]').contains('h3', 'Success');
     });
-
-    cy.contains('button', 'Notes').click();
-    cy.get('#CreateAccessibilityRequestNote-NoteText').type(
-      'This is a really great note'
-    );
-    cy.contains('button', 'Add note').click();
-    cy.get('.easi-notes__list li p')
-      .should('have.length', 1)
-      .first()
-      .within(() => {
-        cy.contains('This is a really great note');
-      });
-    cy.get('[data-testid="alert"]').contains('h3', 'Success');
   });
 
   describe('test dates', () => {
