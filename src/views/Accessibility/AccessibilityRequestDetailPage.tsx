@@ -80,6 +80,8 @@ import user from 'utils/user';
 import accessibilitySchema from 'validations/accessibilitySchema';
 import { NotFoundPartial } from 'views/NotFound';
 
+import RequestDeleted from './RequestDeleted';
+
 import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
@@ -440,7 +442,15 @@ const AccessibilityRequestDetailPage = () => {
       </div>
     );
   }
-
+  const isDeleted =
+    data?.accessibilityRequest?.statusRecord?.status === 'DELETED';
+  if (isDeleted) {
+    return (
+      <div className="grid-container margin-top-10">
+        <RequestDeleted />
+      </div>
+    );
+  }
   // What type of errors can we get/return?
   // How can we actually use the errors?
   if (error) {
