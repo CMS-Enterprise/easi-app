@@ -423,17 +423,6 @@ describe('AccessibilityRequestDetailPage', () => {
 
         expect(within(notesList).getAllByRole('listitem').length).toEqual(2);
       });
-
-      it('displays form validation errors', async () => {
-        defaultRender();
-
-        await waitForElementToBeRemoved(() =>
-          screen.getByTestId('page-loading')
-        );
-
-        screen.getByRole('button', { name: /Add note/i }).click();
-        expect(await screen.findByRole('button', { name: /Enter a note/i }));
-      });
     });
 
     describe('Add a note', () => {
