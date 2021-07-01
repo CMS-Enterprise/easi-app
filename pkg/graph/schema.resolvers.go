@@ -881,7 +881,7 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
-	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, id)
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestByIDIncludingDeleted(ctx, id)
 	if err != nil {
 		return nil, err
 	}
