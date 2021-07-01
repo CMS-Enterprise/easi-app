@@ -187,6 +187,7 @@ jobs:
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
   server_test:
+    needs: build_db_migrate_image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
