@@ -147,6 +147,12 @@ const AccessibilityRequestDetailPage = () => {
     });
   };
 
+  const resetAlerts = () => {
+    showMessage(undefined);
+    setFormikErrors({});
+    setReturnedUserErrors(null);
+  };
+
   const createNote = (
     values: CreateNoteForm,
     { resetForm }: FormikHelpers<CreateNoteForm>
@@ -164,14 +170,13 @@ const AccessibilityRequestDetailPage = () => {
         const userErrors =
           response.data?.createAccessibilityRequestNote?.userErrors;
         if (userErrors) {
+          resetAlerts();
           setReturnedUserErrors(userErrors);
         }
         if (!userErrors) {
           refetch();
-          showMessage(''); // allows screen reader to hear consecutive success message
+          resetAlerts();
           showMessage(t('requestDetails.notes.confirmation', { requestName }));
-          setFormikErrors({});
-          setReturnedUserErrors(null);
           resetForm({});
         }
       })
@@ -382,6 +387,7 @@ const AccessibilityRequestDetailPage = () => {
                     onClick={() =>
                       validateForm().then(err => {
                         if (Object.keys(err).length > 0) {
+                          resetAlerts();
                           setFormikErrors(err);
                         } else {
                           submitForm();
@@ -452,7 +458,7 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {((!returnedUserErrors && message) || noteMutationError) && (
+          {(message || noteMutationError) && !returnedUserErrors && (
             <Alert
               className="margin-top-4"
               type={noteMutationError ? 'error' : 'success'}

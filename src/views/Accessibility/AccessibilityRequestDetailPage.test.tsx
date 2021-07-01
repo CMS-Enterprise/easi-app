@@ -440,14 +440,14 @@ describe('AccessibilityRequestDetailPage', () => {
     describe('Add a note', () => {
       it('shows a success message', async () => {
         const createNoteMocks = [
-          defaultQuery,
+          withNotesQuery,
           {
             request: {
               query: CreateAccessibilityRequestNote,
               variables: {
                 input: {
                   requestID: 'a11yRequest123',
-                  note: 'This is such a success',
+                  note: 'This is very well done',
                   shouldSendEmail: false
                 }
               }
@@ -455,11 +455,13 @@ describe('AccessibilityRequestDetailPage', () => {
             result: {
               data: {
                 createAccessibilityRequestNote: {
-                  id: 'noteID2',
-                  createdAt: 'a time',
+                  id: 'noteID1',
+                  createdAt: new Date().toISOString(),
                   authorName: 'Common Human',
-                  note: 'This is such a success'
-                }
+                  note: 'This is very well done'
+                },
+                userErrors: null,
+                __typename: 'CreateAccessibilityRequestNotePayload'
               }
             }
           }
@@ -477,12 +479,12 @@ describe('AccessibilityRequestDetailPage', () => {
         );
 
         const textbox = screen.getByRole('textbox', { name: /note/i });
-        userEvent.type(textbox, 'This is such a success');
+        userEvent.type(textbox, 'This is very well done');
         screen.getByRole('button', { name: 'Add note' }).click();
         expect(await screen.findByRole('alert')).toBeInTheDocument();
         expect(screen.getByText(/success/i)).toBeInTheDocument();
         expect(
-          screen.getByText(/Note added to My Special Request/i)
+          screen.getByText(/Note added to MY Request/i)
         ).toBeInTheDocument();
 
         const notesList = screen.getByRole('list', {
@@ -491,7 +493,7 @@ describe('AccessibilityRequestDetailPage', () => {
         expect(within(notesList).getAllByRole('listitem').length).toEqual(2);
       });
 
-      it('shows an error alert when there is a validation error', async () => {
+      it('shows an error alert when there is a form validation error', async () => {
         const providers = buildProviders(
           [defaultQuery],
           testerStore,
@@ -506,6 +508,7 @@ describe('AccessibilityRequestDetailPage', () => {
 
         screen.getByRole('button', { name: 'Add note' }).click();
         expect(await screen.findByRole('alert')).toBeInTheDocument();
+        expect('');
       });
 
       it('shows an error alert message for an internal server error', async () => {
@@ -550,6 +553,7 @@ describe('AccessibilityRequestDetailPage', () => {
         screen.getByRole('button', { name: 'Add note' }).click();
         expect(await screen.findByRole('alert')).toBeInTheDocument();
         expect(screen.getByText('There is a problem')).toBeInTheDocument();
+        expect(screen.getByText('Error saving note.')).toBeInTheDocument();
       });
 
       it('shows an error alert message for userErrors returned from the server', async () => {
