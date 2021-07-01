@@ -65,7 +65,6 @@ const AlternativeSolutionA = ({
               </ErrorAlert>
             )}
             <PageHeading>Alternatives Analysis</PageHeading>
-
             <div className="tablet:grid-col-9">
               <div className="line-height-body-6">
                 Some examples of options to consider may include:

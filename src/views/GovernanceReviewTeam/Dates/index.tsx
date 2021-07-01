@@ -12,6 +12,7 @@ import {
 } from 'queries/types/UpdateSystemIntakeReviewDates';
 import UpdateSystemIntakeReviewDatesQuery from 'queries/UpdateSystemIntakeReviewDatesQuery';
 
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import {
   DateInputDay,
@@ -132,6 +133,9 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
             )}
             <PageHeading>{t('governanceReviewTeam:dates.heading')}</PageHeading>
             <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
+            <div className="tablet:grid-col-6">
+              <MandatoryFieldsAlert />
+            </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form
                 onSubmit={e => {

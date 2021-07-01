@@ -8,6 +8,7 @@ import { DateTime } from 'luxon';
 import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
 import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import {
   DateInputDay,
@@ -129,6 +130,9 @@ const IssueLifecycleId = () => {
               Approve request and issue Lifecycle ID{' '}
               <Link to={backLink}>Change</Link>
             </p>
+            <div className="tablet:grid-col-6">
+              <MandatoryFieldsAlert />
+            </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form
                 onSubmit={e => {
