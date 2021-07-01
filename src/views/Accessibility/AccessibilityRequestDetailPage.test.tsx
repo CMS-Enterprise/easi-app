@@ -424,7 +424,7 @@ describe('AccessibilityRequestDetailPage', () => {
         expect(within(notesList).getAllByRole('listitem').length).toEqual(2);
       });
 
-      it('displays validation errors', async () => {
+      it('displays form validation errors', async () => {
         defaultRender();
 
         await waitForElementToBeRemoved(() =>
@@ -432,13 +432,60 @@ describe('AccessibilityRequestDetailPage', () => {
         );
 
         screen.getByRole('button', { name: /Add note/i }).click();
-
         expect(await screen.findByRole('button', { name: /Enter a note/i }));
       });
     });
 
     describe('Add a note', () => {
       it('shows a success message', async () => {
+        const withNotesQueryWithNewNote = {
+          request: {
+            query: GetAccessibilityRequestAccessibilityTeamOnlyQuery,
+            variables: {
+              id: 'a11yRequest123'
+            }
+          },
+          result: {
+            data: {
+              accessibilityRequest: {
+                id: 'a11yRequest123',
+                euaUserId: 'AAAA',
+                submittedAt: new Date().toISOString(),
+                name: 'MY Request',
+                system: {
+                  name: 'TACO',
+                  lcid: '0000',
+                  businessOwner: { name: 'Clark Kent', component: 'OIT' }
+                },
+                documents: [],
+                testDates: [],
+                statusRecord: {
+                  status: 'OPEN'
+                },
+                notes: [
+                  {
+                    id: 'noteID',
+                    createdAt: new Date().toISOString(),
+                    authorName: 'Common Human',
+                    note: 'This is very well done'
+                  },
+                  {
+                    id: 'noteID2',
+                    createdAt: new Date().toISOString(),
+                    authorName: 'Common Human',
+                    note: 'This is okay'
+                  },
+                  {
+                    id: 'noteID3',
+                    createdAt: new Date().toISOString(),
+                    authorName: 'Common Human',
+                    note: 'This is quite a success'
+                  }
+                ]
+              }
+            }
+          }
+        };
         const createNoteMocks = [
           withNotesQuery,
           {
@@ -447,7 +494,7 @@ describe('AccessibilityRequestDetailPage', () => {
               variables: {
                 input: {
                   requestID: 'a11yRequest123',
-                  note: 'This is very well done',
+                  note: 'This is quite a success',
                   shouldSendEmail: false
                 }
               }
@@ -458,13 +505,14 @@ describe('AccessibilityRequestDetailPage', () => {
                   id: 'noteID1',
                   createdAt: new Date().toISOString(),
                   authorName: 'Common Human',
-                  note: 'This is very well done'
+                  note: 'This is quite a success'
                 },
                 userErrors: null,
                 __typename: 'CreateAccessibilityRequestNotePayload'
               }
             }
-          }
+          },
+          withNotesQueryWithNewNote
         ];
 
         const providers = buildProviders(
@@ -479,10 +527,11 @@ describe('AccessibilityRequestDetailPage', () => {
         );
 
         const textbox = screen.getByRole('textbox', { name: /note/i });
-        userEvent.type(textbox, 'This is very well done');
+        userEvent.type(textbox, 'This is quite a success');
         screen.getByRole('button', { name: 'Add note' }).click();
-        expect(await screen.findByRole('alert')).toBeInTheDocument();
-        expect(screen.getByText(/success/i)).toBeInTheDocument();
+        const alert = await screen.findByRole('alert');
+        expect(alert).toBeInTheDocument();
+        expect(within(alert).getByText(/success/i)).toBeInTheDocument();
         expect(
           screen.getByText(/Note added to MY Request/i)
         ).toBeInTheDocument();
@@ -490,12 +539,39 @@ describe('AccessibilityRequestDetailPage', () => {
         const notesList = screen.getByRole('list', {
           name: /existing notes/i
         });
-        expect(within(notesList).getAllByRole('listitem').length).toEqual(2);
+        expect(within(notesList).getAllByRole('listitem').length).toEqual(3);
       });
 
       it('shows an error alert when there is a form validation error', async () => {
+        const mocks = [
+          defaultQuery,
+          {
+            request: {
+              query: CreateAccessibilityRequestNote,
+              variables: {
+                input: {
+                  requestID: 'a11yRequest123',
+                  note: 'This is quite a success',
+                  shouldSendEmail: false
+                }
+              }
+            },
+            result: {
+              data: {
+                createAccessibilityRequestNote: {
+                  id: 'noteID1',
+                  createdAt: new Date().toISOString(),
+                  authorName: 'Common Human',
+                  note: 'This is quite a success'
+                },
+                userErrors: null,
+                __typename: 'CreateAccessibilityRequestNotePayload'
+              }
+            }
+          }
+        ];
         const providers = buildProviders(
-          [defaultQuery],
+          mocks,
           testerStore,
           <AccessibilityRequestDetailPage />
         );
@@ -507,8 +583,13 @@ describe('AccessibilityRequestDetailPage', () => {
         );
 
         screen.getByRole('button', { name: 'Add note' }).click();
-        expect(await screen.findByRole('alert')).toBeInTheDocument();
-        expect('');
+        const alert = await screen.getByTestId('508-request-details-error');
+        // const alert = await screen.findByRole('alert');
+        expect(alert).toBeInTheDocument();
+        expect(
+          within(alert).getByText(/There is a problem/i)
+        ).toBeInTheDocument();
+        expect(within(alert).getByRole('button', { name: /Enter a note/i }));
       });
 
       it('shows an error alert message for an internal server error', async () => {
@@ -551,13 +632,18 @@ describe('AccessibilityRequestDetailPage', () => {
         const textbox = screen.getByRole('textbox', { name: /note/i });
         userEvent.type(textbox, 'I am an important note');
         screen.getByRole('button', { name: 'Add note' }).click();
-        expect(await screen.findByRole('alert')).toBeInTheDocument();
-        expect(screen.getByText('There is a problem')).toBeInTheDocument();
-        expect(screen.getByText('Error saving note.')).toBeInTheDocument();
+        const alert = await screen.findByRole('alert');
+        expect(alert).toBeInTheDocument();
+        expect(
+          within(alert).getByText(/There is a problem/i)
+        ).toBeInTheDocument();
+        expect(
+          within(alert).getByText(/Error saving note./i)
+        ).toBeInTheDocument();
       });
 
       it('shows an error alert message for userErrors returned from the server', async () => {
-        const errorMocks = [
+        const userErrorMocks = [
           defaultQuery,
           {
             request: {
@@ -587,7 +673,7 @@ describe('AccessibilityRequestDetailPage', () => {
         ];
 
         const providers = buildProviders(
-          errorMocks,
+          userErrorMocks,
           testerStore,
           <AccessibilityRequestDetailPage />
         );
@@ -600,8 +686,14 @@ describe('AccessibilityRequestDetailPage', () => {
         const textbox = screen.getByRole('textbox', { name: /note/i });
         userEvent.type(textbox, 'I am an important note');
         screen.getByRole('button', { name: 'Add note' }).click();
-        expect(await screen.findByRole('alert')).toBeInTheDocument();
-        expect(screen.getByText('I am a validation error')).toBeInTheDocument();
+        const alert = await screen.findByRole('alert');
+        expect(alert).toBeInTheDocument();
+        expect(
+          within(alert).getByText(/There is a problem/i)
+        ).toBeInTheDocument();
+        expect(
+          within(alert).getByText(/I am a validation error/i)
+        ).toBeInTheDocument();
       });
     });
   });
