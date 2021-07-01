@@ -335,19 +335,10 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
-	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+	request, err := r.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
 		EUAUserID: requesterEUAID,
 		Name:      input.Name,
 		IntakeID:  input.IntakeID,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
-		RequestID: request.ID,
-		Status:    models.AccessibilityRequestStatusOpen,
-		EUAUserID: requesterEUAID,
 	})
 	if err != nil {
 		return nil, err
