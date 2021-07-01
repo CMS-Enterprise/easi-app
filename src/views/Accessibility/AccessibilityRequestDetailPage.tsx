@@ -458,16 +458,24 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {(message || noteMutationError) && !returnedUserErrors && (
+          {message && (
             <Alert
               className="margin-top-4"
-              type={noteMutationError ? 'error' : 'success'}
+              type="success"
               role="alert"
-              heading={noteMutationError ? 'There is a problem' : 'Success'}
+              heading="Success"
             >
-              {noteMutationError
-                ? t('requestDetails.notes.formErrorMessage')
-                : message}
+              {message}
+            </Alert>
+          )}
+          {noteMutationError && (
+            <Alert
+              className="margin-top-4"
+              type="error"
+              role="alert"
+              heading="There is a problem"
+            >
+              {t('requestDetails.notes.formErrorMessage')}
             </Alert>
           )}
           {returnedUserErrors && (
