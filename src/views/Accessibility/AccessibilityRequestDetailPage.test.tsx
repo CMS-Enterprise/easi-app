@@ -496,8 +496,7 @@ describe('AccessibilityRequestDetailPage', () => {
                   authorName: 'Common Human',
                   note: 'This is quite a success'
                 },
-                userErrors: null,
-                __typename: 'CreateAccessibilityRequestNotePayload'
+                userErrors: null
               }
             }
           },
