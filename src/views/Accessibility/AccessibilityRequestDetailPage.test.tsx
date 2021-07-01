@@ -543,33 +543,7 @@ describe('AccessibilityRequestDetailPage', () => {
       });
 
       it('shows an error alert when there is a form validation error', async () => {
-        const mocks = [
-          defaultQuery,
-          {
-            request: {
-              query: CreateAccessibilityRequestNote,
-              variables: {
-                input: {
-                  requestID: 'a11yRequest123',
-                  note: 'This is quite a success',
-                  shouldSendEmail: false
-                }
-              }
-            },
-            result: {
-              data: {
-                createAccessibilityRequestNote: {
-                  id: 'noteID1',
-                  createdAt: new Date().toISOString(),
-                  authorName: 'Common Human',
-                  note: 'This is quite a success'
-                },
-                userErrors: null,
-                __typename: 'CreateAccessibilityRequestNotePayload'
-              }
-            }
-          }
-        ];
+        const mocks = [defaultQuery];
         const providers = buildProviders(
           mocks,
           testerStore,
@@ -583,8 +557,7 @@ describe('AccessibilityRequestDetailPage', () => {
         );
 
         screen.getByRole('button', { name: 'Add note' }).click();
-        const alert = await screen.getByTestId('508-request-details-error');
-        // const alert = await screen.findByRole('alert');
+        const alert = await screen.findByTestId('508-request-details-error');
         expect(alert).toBeInTheDocument();
         expect(
           within(alert).getByText(/There is a problem/i)
