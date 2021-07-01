@@ -527,7 +527,7 @@ describe('AccessibilityRequestDetailPage', () => {
         const notesList = screen.getByRole('list', {
           name: /existing notes/i
         });
-        expect(within(notesList).getAllByRole('listitem').length).toEqual(3);
+        expect(within(notesList).getAllByRole('listitem')).toHaveLength(3);
       });
 
       it('shows an error alert when there is a form validation error', async () => {
