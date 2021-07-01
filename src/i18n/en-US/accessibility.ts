@@ -68,7 +68,8 @@ const accessibility = {
         'The most recent note was from {{-authorName}} on {{createdAt}}.',
       existingNotes: '{{notesLength}} existing notes',
       srOnlyAddNoteLink: 'Add a new note',
-      skipToExistingNotes: 'Skip to existing notes'
+      skipToExistingNotes: 'Skip to existing notes',
+      formErrorMessage: 'Error saving note.'
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',

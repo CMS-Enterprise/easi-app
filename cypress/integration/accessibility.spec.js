@@ -131,6 +131,7 @@ describe('Accessibility Requests', () => {
           cy.contains('This is a really great note');
           cy.contains(formattedDate);
         });
+      cy.get('[data-testid="alert"]').contains('h3', 'Success');
     });
   });
 
