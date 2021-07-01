@@ -28,7 +28,7 @@ import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccess
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   CreateAccessibilityRequestNote,
-  CreateAccessibilityRequestNote_createAccessibilityRequestNote_userErrors, // eslint-disable-line camelcase
+  CreateAccessibilityRequestNote_createAccessibilityRequestNote_userErrors as noteUserErrors,
   CreateAccessibilityRequestNoteVariables
 } from 'queries/types/CreateAccessibilityRequestNote';
 import {
@@ -484,9 +484,7 @@ const AccessibilityRequestDetailPage = () => {
               classNames="margin-bottom-4 margin-top-4"
               heading="There is a problem"
             >
-              {returnedUserErrors.map((
-                err: CreateAccessibilityRequestNote_createAccessibilityRequestNote_userErrors /* eslint-disable-line camelcase */
-              ) => {
+              {returnedUserErrors.map((err: noteUserErrors) => {
                 return <p key={err.message}>{err.message}</p>;
               })}
             </ErrorAlert>
