@@ -231,6 +231,7 @@ jobs:
           GRT_EMAIL: success@simulator.amazonses.com
           ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
           OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          OKTA_DOMAIN: https://test.idp.idm.cms.gov
           OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
           PGHOST: localhost
           PGPORT: 5432
