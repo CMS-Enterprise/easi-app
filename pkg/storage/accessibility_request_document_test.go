@@ -15,7 +15,7 @@ func (s StoreTestSuite) TestDeleteAccessibilityRequestDocument() {
 		s.NoError(err)
 
 		accessibilityRequest := testhelpers.NewAccessibilityRequest(intake.ID)
-		_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequest)
+		_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &accessibilityRequest)
 		s.NoError(err)
 
 		document := testhelpers.NewAccessibilityRequestDocument(accessibilityRequest.ID)

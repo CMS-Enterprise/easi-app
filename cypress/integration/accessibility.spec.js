@@ -3,101 +3,12 @@ import { DateTime } from 'luxon';
 import { formatDate } from '../../src/utils/date';
 
 // scripts/dev db:seed
-// 508 Request UUId - 6e224030-09d5-46f7-ad04-4bb851b36eab
+// 508 Request UUID - 6e224030-09d5-46f7-ad04-4bb851b36eab
 
 describe('Accessibility Requests', () => {
-  function create508Request(cy) {
-    cy.visit('/508/requests/new');
-    cy.contains('h1', 'Request 508 testing');
-    cy.contains('label', "Choose the application you'd like to test");
-    cy.get('#508Request-IntakeId')
-      .type('TACO - 000000{enter}')
-      .should('have.value', 'TACO - 000000');
-    cy.contains('button', 'Send 508 testing request').click();
-    cy.location().should(loc => {
-      expect(loc.pathname).to.match(/\/508\/requests\/.{36}/);
-    });
-    cy.contains('li', 'Home');
-    cy.contains('li', 'TACO');
-    cy.contains(
-      '.usa-alert--success',
-      '508 testing request created. We have sent you a confirmation email.'
-    );
-    cy.contains('h1', 'TACO');
-    cy.contains('h2', 'Next step: Provide your documents');
-    cy.contains('.usa-button', 'Upload a document');
-  }
-
-  function addAndRemoveDocument(cy) {
-    cy.get('[data-testid="upload-new-document"]').click();
-    cy.contains('h1', 'Upload a document to');
-
-    // select document
-    cy.fixture('test.pdf').as('document');
-    cy.get('[data-testid="file-upload-input"]').then(function (el) {
-      const blob = Cypress.Blob.base64StringToBlob(
-        this.document,
-        'application/pdf'
-      );
-
-      const file = new File([blob], 'document.pdf', {
-        type: 'application/pdf'
-      });
-      const list = new DataTransfer();
-
-      list.items.add(file);
-      const myFileList = list.files;
-
-      el[0].files = myFileList;
-      el[0].dispatchEvent(new Event('change', { bubbles: true }));
-    });
-
-    // enter the document type
-    cy.contains('.usa-radio', 'Awarded VPAT')
-      .find('input')
-      .check({ force: true });
-
-    // click upload button
-    cy.get('[data-testid="upload-document"]').click();
-
-    cy.contains('.usa-alert', 'document.pdf uploaded to');
-    // verify that the document is in the list
-
-    cy.get('[data-testid="accessibility-documents-list"] tbody tr')
-      .should('have.length', 1)
-      .first()
-      .within(row => {
-        cy.contains('Awarded VPAT');
-        cy.contains('Virus scan in progress...');
-
-        const url = row.attr('data-testurl');
-        const path = new URL(url).pathname;
-
-        // Mark file as passing virus scan
-        cy.exec(`scripts/tag_minio_file ${path} CLEAN`);
-      });
-
-    cy.reload();
-
-    // view document
-    cy.get('[data-testid="accessibility-documents-list"] tbody tr')
-      .first()
-      .within(() => {
-        cy.get('[data-testid="view-document"]').should('exist');
-
-        // remove document
-        cy.get('[data-testid="remove-document"]').click();
-      });
-
-    cy.get('[data-testid="remove-document-confirm"]').click();
-
-    // no documents are listed
-    cy.contains('.usa-alert--success', 'Awarded VPAT removed from TACO');
-  }
-
   it('can create a request and see its details', () => {
     cy.localLogin({ name: 'A11Y' });
-    create508Request(cy);
+    cy.accessibility.create508Request();
 
     cy.get('.accessibility-request__side-nav').within(() => {
       cy.contains('h2', 'Test Dates and Scores');
@@ -124,14 +35,14 @@ describe('Accessibility Requests', () => {
 
   it('adds and removes a document from a 508 request as the owner', () => {
     cy.localLogin({ name: 'CMSU' });
-    create508Request(cy);
-    addAndRemoveDocument(cy);
+    cy.accessibility.create508Request();
+    cy.accessibility.addAndRemoveDocument();
     cy.contains('h2', 'Next step: Provide your documents');
   });
 
   it('adds and removes a document from a 508 request as an admin', () => {
     cy.localLogin({ name: 'CMSU' });
-    create508Request(cy);
+    cy.accessibility.create508Request();
 
     cy.url().then(requestPageUrl => {
       cy.logout();
@@ -140,7 +51,7 @@ describe('Accessibility Requests', () => {
       cy.visit(requestPageUrl);
     });
 
-    addAndRemoveDocument(cy);
+    cy.accessibility.addAndRemoveDocument();
 
     cy.contains('div', 'No documents added to request yet.');
   });
@@ -201,28 +112,27 @@ describe('Accessibility Requests', () => {
     cy.get('table').should('not.exist');
   });
 
-  it('can add a note and view it as a 508 user', () => {
-    cy.localLogin({ name: 'BOWN' });
-    create508Request(cy);
+  describe('notes', () => {
+    it('can add a note', () => {
+      cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_USER' });
+      cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');
 
-    cy.url().then(requestPageUrl => {
-      cy.logout();
-
-      cy.localLogin({ name: 'ADMI', role: 'EASI_D_508_USER' });
-      cy.visit(requestPageUrl);
+      cy.contains('button', 'Notes').click();
+      cy.get('#CreateAccessibilityRequestNote-NoteText').type(
+        'This is a really great note'
+      );
+      cy.contains('button', 'Add note').click();
+      cy.get('.easi-notes__list')
+        .should('have.length', 1)
+        .first()
+        .within(() => {
+          const today = new Date().toISOString();
+          const formattedDate = formatDate(today);
+          cy.contains('This is a really great note');
+          cy.contains(formattedDate);
+        });
+      cy.get('[data-testid="alert"]').contains('h3', 'Success');
     });
-
-    cy.contains('button', 'Notes').click();
-    cy.get('#CreateAccessibilityRequestNote-NoteText').type(
-      'This is a really great note'
-    );
-    cy.contains('button', 'Add note').click();
-    cy.get('.easi-notes__list li p')
-      .should('have.length', 1)
-      .first()
-      .within(() => {
-        cy.contains('This is a really great note');
-      });
   });
 
   describe('test dates', () => {
