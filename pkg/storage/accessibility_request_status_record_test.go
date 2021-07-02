@@ -58,7 +58,7 @@ func (s StoreTestSuite) TestFetchLatestAccessibilityRequestStatusRecordByRequest
 	s.NoError(err)
 
 	accessibilityRequest := testhelpers.NewAccessibilityRequest(intake.ID)
-	_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequest)
+	_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &accessibilityRequest)
 	s.NoError(err)
 
 	newStatusRecord := models.AccessibilityRequestStatusRecord{

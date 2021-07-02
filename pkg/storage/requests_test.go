@@ -29,20 +29,11 @@ func (s StoreTestSuite) TestMyRequests() {
 		createdAt, _ := time.Parse("2006-1-2", "2015-1-1")
 		newRequest.CreatedAt = &createdAt
 		newRequest.Name = "My Accessibility Request"
-		accessibilityRequestThatIsMine, err := s.store.CreateAccessibilityRequest(ctx, &newRequest)
-		s.NoError(err)
-
-		// create status of open
-		status := models.AccessibilityRequestStatusRecord{
-			Status:    models.AccessibilityRequestStatusOpen,
-			RequestID: accessibilityRequestThatIsMine.ID,
-			EUAUserID: requesterID,
-		}
-		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
+		accessibilityRequestThatIsMine, err := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &newRequest)
 		s.NoError(err)
 
 		// set status to in remediation
-		status = models.AccessibilityRequestStatusRecord{
+		status := models.AccessibilityRequestStatusRecord{
 			Status:    models.AccessibilityRequestStatusInRemediation,
 			RequestID: accessibilityRequestThatIsMine.ID,
 			EUAUserID: requesterID,
@@ -59,19 +50,11 @@ func (s StoreTestSuite) TestMyRequests() {
 		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
 		s.NoError(err)
 
-		// add an accessbility request belonging to the user, and then delete it
+		// add an accessibility request belonging to the user, and then delete it
 		newRequest = testhelpers.NewAccessibilityRequestForUser(intake.ID, requesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-2-1")
 		newRequest.CreatedAt = &createdAt
-		createdRequest, err := s.store.CreateAccessibilityRequest(ctx, &newRequest)
-		s.NoError(err)
-
-		status = models.AccessibilityRequestStatusRecord{
-			Status:    models.AccessibilityRequestStatusOpen,
-			RequestID: createdRequest.ID,
-			EUAUserID: requesterID,
-		}
-		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
+		createdRequest, err := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &newRequest)
 		s.NoError(err)
 
 		err = s.store.DeleteAccessibilityRequest(ctx, createdRequest.ID, models.AccessibilityRequestDeletionReasonOther)
@@ -85,19 +68,11 @@ func (s StoreTestSuite) TestMyRequests() {
 		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
 		s.NoError(err)
 
-		// add an accessbility request that does not belong to the user
+		// add an accessibility request that does not belong to the user
 		newRequest = testhelpers.NewAccessibilityRequestForUser(intake.ID, notRequesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-3-1")
 		newRequest.CreatedAt = &createdAt
-		otherRequest, err := s.store.CreateAccessibilityRequest(ctx, &newRequest)
-		s.NoError(err)
-
-		status = models.AccessibilityRequestStatusRecord{
-			Status:    models.AccessibilityRequestStatusOpen,
-			RequestID: otherRequest.ID,
-			EUAUserID: requesterID,
-		}
-		_, err = s.store.CreateAccessibilityRequestStatusRecord(ctx, &status)
+		_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &newRequest)
 		s.NoError(err)
 
 		// add an intake belonging to the user

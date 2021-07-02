@@ -7,6 +7,14 @@ export default gql`
     createAccessibilityRequestNote(input: $input) {
       accessibilityRequestNote {
         id
+        note
+        authorName
+        requestID
+        createdAt
+      }
+      userErrors {
+        message
+        path
       }
     }
   }
