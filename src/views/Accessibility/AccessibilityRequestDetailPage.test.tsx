@@ -80,6 +80,48 @@ describe('AccessibilityRequestDetailPage', () => {
     ).toBeInTheDocument();
   });
 
+  it('renders RequestDeleted component when request is deleted', async () => {
+    const deleted508RequestQuery = {
+      request: {
+        query: GetAccessibilityRequestQuery,
+        variables: {
+          id: 'a11yRequest123'
+        }
+      },
+      result: {
+        data: {
+          accessibilityRequest: {
+            id: 'a11yRequest123',
+            euaUserId: 'ABCD',
+            submittedAt: new Date().toISOString(),
+            name: 'My Special Request',
+            system: {
+              name: 'TACO',
+              lcid: '123456',
+              businessOwner: { name: 'Clark Kent', component: 'OIT' }
+            },
+            documents: [],
+            testDates: [],
+            statusRecord: {
+              status: 'DELETED'
+            }
+          }
+        }
+      }
+    };
+
+    render(buildProviders([deleted508RequestQuery], defaultStore));
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /The request you are looking for was deleted./i
+      })
+    ).toBeInTheDocument();
+  });
+
   describe('for a business owner', () => {
     // ✅ Documents
     const withDocsQuery = {
