@@ -136,6 +136,11 @@ jobs:
             v1-yarn-
       - run: |
           yarn run build
+      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
+        with:
+          name: client-build
+          path: build
+          retention-days: 1
 
   storybook_build:
     needs: pre_deps
