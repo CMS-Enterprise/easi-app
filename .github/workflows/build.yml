@@ -309,6 +309,7 @@ jobs:
       - name: Run e2e cypress tests
         env:
           APP_ENV: test
+          AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: actions-${{ github.sha }}
         run: |
