@@ -442,14 +442,9 @@ const AccessibilityRequestDetailPage = () => {
       </div>
     );
   }
-  const isDeleted =
-    data?.accessibilityRequest?.statusRecord?.status === 'DELETED';
-  if (isDeleted) {
-    return (
-      <div className="grid-container margin-top-10">
-        <RequestDeleted />
-      </div>
-    );
+
+  if (data?.accessibilityRequest?.statusRecord?.status === 'DELETED') {
+    return <RequestDeleted />;
   }
   // What type of errors can we get/return?
   // How can we actually use the errors?
