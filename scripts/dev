@@ -34,14 +34,20 @@ def needs(executable, install_with:nil)
   @needed << [executable, install_with]
 end
 
-needs "air", install_with: "go get -u github.com/cosmtrek/air"
-needs "yarn"
-needs "psql", install_with: "brew install postgresql"
+needs "direnv", install_with: "brew install direnv"
+needs "pre-commit", install_with: "pre-commit"
 needs "docker-compose"
+needs "yarn"
+needs "curl"
+needs "node"
 needs "go"
+
+needs "psql", install_with: "brew install postgresql"
+needs "air", install_with: "go get -u github.com/cosmtrek/air"
 needs "gotest", install_with: "go get -u github.com/rakyll/gotest"
 needs "goimports", install_with: "go get -u golang.org/x/tools/cmd/goimports"
-needs "ulimit"
+needs "circleci", install_with: "brew install circleci"
+needs "pgcli", install_with: "brew install pgcli"
 
 # Gracefully handle folks trying to explore using common help flags
 ["--help", "-help", "--h", "-h"].each do |flag|
@@ -114,9 +120,7 @@ def up(*args)
 
   sh(environment, command, verbose: true)
 
-  # Avoid open file limits
-  # sh "ulimit -S -n 2048"
-
+  wait_for_success("Waiting for the back end to build...", "curl --silent --output /dev/null -m 1 localhost:8080/api/v1/healthcheck")
   wait_for_success("Waiting for the front end to build...", "curl --silent --output /dev/null -m 1 localhost:3000")
 end
 
@@ -265,7 +269,7 @@ namespace :db do
     sh "docker-compose start db_migrate"
     loop do
       sleep 0.5
-      status = `docker-compose ps | grep easi-app_db_migrate_1`
+      status = `docker-compose ps | grep "db_migrate_1"`
       match = /Exit (\d+)/.match(status)
       if match
         unless match[1] == "0"
@@ -369,6 +373,11 @@ namespace :test do
       sh "yarn", "run", "craco", "test", "--watchAll=false", "-t", *args
     end
   end
+end
+
+desc "Build the Go application"
+task :build do
+  sh("go build -a -o bin/easi ./cmd/easi")
 end
 
 task :default do
