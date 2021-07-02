@@ -31,14 +31,9 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
           },
           flags: {
             sandbox: true,
-            pdfExport: true,
-            prototype508: true,
-            fileUploads: true,
-            prototypeTRB: true,
             downgradeGovTeam: false,
             downgrade508User: false,
-            downgrade508Tester: false,
-            add508Request: true
+            downgrade508Tester: false
           }
         });
 

@@ -33,14 +33,9 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 const defaultFlags = {
-  add508Request: false,
   downgrade508Tester: false,
   downgrade508User: false,
   downgradeGovTeam: false,
-  fileUploads: true,
-  pdfExport: true,
-  prototype508: true,
-  prototypeTrb: true,
   sandbox: true
 };
 
@@ -104,7 +99,7 @@ describe('The home page', () => {
       });
       describe('add508FeatureFlag is true', () => {
         it('displays process options', async () => {
-          mockFlags({ ...defaultFlags, add508Request: true });
+          mockFlags({ ...defaultFlags });
           const mockStore = configureMockStore();
           const store = mockStore({
             auth: mockAuthReducer,
