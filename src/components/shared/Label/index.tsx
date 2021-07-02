@@ -8,7 +8,7 @@ type LabelProps = {
 } & JSX.IntrinsicElements['label'];
 
 const Label = ({ children, htmlFor, className, ...props }: LabelProps) => {
-  const classes = classnames('usa-label', className);
+  const classes = classnames(className, 'usa-label');
 
   return (
     <label className={classes} htmlFor={htmlFor} {...props}>

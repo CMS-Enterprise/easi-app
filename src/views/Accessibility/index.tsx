@@ -112,6 +112,15 @@ const RequestDetails = (
   />
 );
 
+const RequestDetailsNotes = (
+  <SecureRoute
+    key="508-request-detail-notes"
+    path="/508/requests/:accessibilityRequestId/notes"
+    component={AccessibilityRequestDetailPage}
+    exact
+  />
+);
+
 const NotFound = () => (
   <div className="grid-container">
     <NotFoundPartial />
@@ -169,6 +178,7 @@ const Accessibility = () => {
             NewDocument,
             UpdateTestDate,
             NewTestDate,
+            RequestDetailsNotes,
             RequestDetails,
             Default
           ]}
