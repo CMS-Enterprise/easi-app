@@ -220,6 +220,7 @@ jobs:
           APP_ENV: test
           AWS_REGION: us-west-2 # easi app tests expect AWS_REGION instead of AWS_DEFAULT_REGION
           AWS_SES_SOURCE: '"EASi Test" <no-reply-test@info.easi.cms.gov>'
+          AWS_SES_SOURCE_ARN: $${{ secrets.AWS_SES_SOURCE_ARN }}
           AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
@@ -229,6 +230,7 @@ jobs:
           IMAGE_TAG: actions-${{ github.sha }}
           GRT_EMAIL: success@simulator.amazonses.com
           ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
+          OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
