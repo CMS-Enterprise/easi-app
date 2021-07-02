@@ -12,9 +12,9 @@ import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
 
-import New from './index';
+import NewTestDate from './NewTestDate';
 
-describe('NewDocument page', () => {
+describe('NewTestDate page', () => {
   const mockStore = configureMockStore();
   const defaultStore = mockStore({
     auth: {
@@ -52,14 +52,12 @@ describe('NewDocument page', () => {
   };
 
   const buildProviders = (mocks: any, store: any) => (
-    <MemoryRouter
-      initialEntries={['/508/requests/a11yRequest123/documents/new']}
-    >
+    <MemoryRouter initialEntries={['/508/requests/a11yRequest123/test-date']}>
       <MockedProvider mocks={mocks} addTypename={false}>
         <Provider store={store}>
-          <Route path="/508/requests/:accessibilityRequestId/documents/new">
+          <Route path="/508/requests/:accessibilityRequestId/test-date">
             <MessageProvider>
-              <New />
+              <NewTestDate />
             </MessageProvider>
           </Route>
         </Provider>
@@ -74,7 +72,7 @@ describe('NewDocument page', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: 'Upload a document to My Special Request',
+        name: 'Add a test date for My Special Request',
         level: 1
       })
     ).toBeInTheDocument();

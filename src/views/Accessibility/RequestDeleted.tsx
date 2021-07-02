@@ -7,7 +7,7 @@ import PageHeading from 'components/PageHeading';
 const RequestDeleted = () => {
   const { t } = useTranslation('accessibility');
   return (
-    <>
+    <div className="grid-container margin-top-10">
       <PageHeading>{t('requestDetails.requestDeleted.heading')}</PageHeading>
       <p>
         <Trans
@@ -21,7 +21,7 @@ const RequestDeleted = () => {
       <p className="margin-top-3">
         <Link href="/">{t('requestDetails.requestDeleted.homeLinkText')}</Link>
       </p>
-    </>
+    </div>
   );
 };
 
