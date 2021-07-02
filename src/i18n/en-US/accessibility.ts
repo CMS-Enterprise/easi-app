@@ -50,7 +50,7 @@ const accessibility = {
     requestDeleted: {
       heading: 'The request you are looking for was deleted.',
       body:
-        'Email the Section 508 team at CMS_Section508@cms.hhs.gov for any further information.',
+        'Email the Section 508 team at <1>CMS_Section508@cms.hhs.gov</1> for any further information.',
       homeLinkText: 'Go back to EASi homepage'
     },
     documents: {
