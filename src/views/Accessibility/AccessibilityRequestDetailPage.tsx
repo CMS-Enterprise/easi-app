@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   Breadcrumb,
@@ -61,10 +61,9 @@ import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
-import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextAreaField from 'components/shared/TextAreaField';
-import { TabPanel, Tabs } from 'components/Tabs';
 import TestDateCard from 'components/TestDateCard';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
@@ -94,6 +93,7 @@ const AccessibilityRequestDetailPage = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
+  const { pathname } = useLocation();
 
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
@@ -180,7 +180,7 @@ const AccessibilityRequestDetailPage = () => {
           resetForm({});
         }
       })
-      .catch(response => {});
+      .catch(() => {});
   };
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
@@ -325,12 +325,7 @@ const AccessibilityRequestDetailPage = () => {
       >
         {t('requestDetails.notes.skipToExistingNotes')}
       </Button>
-      <div
-        role="region"
-        aria-label="add new note"
-        className="margin-y-2"
-        id="notes-form"
-      >
+      <div role="region" aria-label="add new note" id="notes-form">
         <Formik
           initialValues={{
             noteText: '',
@@ -355,9 +350,12 @@ const AccessibilityRequestDetailPage = () => {
               <>
                 <Form className="usa-form maxw-full">
                   <FieldGroup>
-                    <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
+                    <label
+                      htmlFor="CreateAccessibilityRequestNote-NoteText"
+                      className="margin-top-0 text-bold"
+                    >
                       {t('requestDetails.notes.form.note')}
-                    </Label>
+                    </label>
                     <FieldErrorMsg>{flatErrors.noteText}</FieldErrorMsg>
                     <Field
                       as={TextAreaField}
@@ -531,21 +529,25 @@ const AccessibilityRequestDetailPage = () => {
           )}
         </div>
       </div>
-      <div className="grid-container margin-top-2 padding-top-6 padding-top">
+      {isAccessibilityTeam && (
+        <SecondaryNav>
+          <NavLink to={`/508/requests/${accessibilityRequestId}`}>
+            Documents
+          </NavLink>
+          <NavLink to={`/508/requests/${accessibilityRequestId}/notes`}>
+            Notes
+          </NavLink>
+        </SecondaryNav>
+      )}
+      <div className="grid-container padding-top-6 padding-top">
         <div className="grid-row grid-gap-lg">
           <div className="grid-col-8">
-            {isAccessibilityTeam ? (
-              <Tabs>
-                <TabPanel id="Documents" tabName="Documents">
-                  <div className="margin-top-2">{bodyWithDocumentsTable}</div>
-                </TabPanel>
-                <TabPanel id="Notes" tabName="Notes">
-                  {notesTab}
-                </TabPanel>
-              </Tabs>
-            ) : (
-              documentsTab
-            )}
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {isAccessibilityTeam
+              ? pathname.endsWith('notes')
+                ? notesTab
+                : bodyWithDocumentsTable
+              : documentsTab}
           </div>
           <div className="grid-col-1" />
           <div className="grid-col-3">
