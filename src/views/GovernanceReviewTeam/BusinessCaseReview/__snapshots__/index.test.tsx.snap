@@ -2,527 +2,315 @@
 
 exports[`The GRT business case review matches the snapshot 1`] = `
 <div>
-  <h1
-    aria-live="polite"
-    className="easi-h1 margin-top-0"
-    tabIndex={-1}
-  >
-    Business Case
-  </h1>
-  <h2
-    className="font-heading-xl"
-  >
-    General request information
-  </h2>
-  <dl
-    title="General request information"
-  >
-    <div
-      className="easi-review-row"
-    >
-      <div>
-        <dt
-          className="text-bold margin-bottom-05"
-        >
-          Project Name
-        </dt>
-        <dd
-          className="description-definition margin-0"
-        >
-          Easy Access to System Information
-        </dd>
-      </div>
-      <div>
-        <dt
-          className="text-bold margin-bottom-05"
-        >
-          Business Owner
-        </dt>
-        <dd
-          className="description-definition margin-0"
-        >
-          Jane Doe
-        </dd>
-      </div>
-    </div>
-    <div
-      className="easi-review-row"
-    >
-      <div>
-        <dt
-          className="text-bold margin-bottom-05"
-        >
-          Requester
-        </dt>
-        <dd
-          className="description-definition margin-0"
-        >
-          Jane Doe
-        </dd>
-      </div>
-      <div>
-        <dt
-          className="text-bold margin-bottom-05"
-        >
-          Requester Phone Number
-        </dt>
-        <dd
-          className="description-definition margin-0"
-        >
-          1234567890
-        </dd>
-      </div>
-    </div>
-  </dl>
-  <h2
-    className="font-heading-xl margin-top-6"
-  >
-    Request description
-  </h2>
-  <dl
-    title="Request description"
-  >
-    <div
-      className="easi-review-row"
-    >
-      <div
-        className="margin-bottom-205 line-height-body-3"
-      >
-        <dt
-          className="text-bold margin-bottom-05"
-        >
-          What is your business or user need?
-        </dt>
-        <dd
-          className="description-definition margin-0 text-pre-wrap"
-        >
-          Mock business need
-        </dd>
-      </div>
-    </div>
-    <div
-      className="easi-review-row"
-    >
-      <div
-        className="margin-bottom-205 line-height-body-3"
-      >
-        <dt
-          className="text-bold margin-bottom-05"
-        >
-          How will CMS benefit from this effort?
-        </dt>
-        <dd
-          className="description-definition margin-0 text-pre-wrap"
-        >
-          Mock CMS benefit
-        </dd>
-      </div>
-    </div>
-    <div
-      className="easi-review-row"
-    >
-      <div
-        className="margin-bottom-205 line-height-body-3"
-      >
-        <dt
-          className="text-bold margin-bottom-05"
-        >
-          How does this effort align with organizational priorities?
-        </dt>
-        <dd
-          className="description-definition margin-0 text-pre-wrap"
-        >
-          Mock priority alignment
-        </dd>
-      </div>
-    </div>
-    <div
-      className="easi-review-row"
-    >
-      <div
-        className="margin-bottom-205 line-height-body-3"
-      >
-        <dt
-          className="text-bold margin-bottom-05"
-        >
-          How will you determine whether or not this effort is successful?
-        </dt>
-        <dd
-          className="description-definition margin-0 text-pre-wrap"
-        >
-          Mock success indicators
-        </dd>
-      </div>
-    </div>
-  </dl>
-  <h2
-    className="font-heading-xl margin-top-6 margin-bottom-2"
-  >
-    Alternatives analysis
-  </h2>
   <div
-    className="easi-responsive-tabs bg-base-lightest"
+    className="easi-pdf-export"
   >
-    <div
-      className="easi-responsive-tabs__navigation"
+    <h1
+      aria-live="polite"
+      className="easi-h1 margin-top-0"
+      tabIndex={-1}
+    >
+      Business Case
+    </h1>
+    <h2
+      className="font-heading-xl"
+    >
+      General request information
+    </h2>
+    <dl
+      title="General request information"
     >
       <div
-        className="easi-responsive-tabs__tabs-wrapper"
+        className="easi-review-row"
       >
-        <ul
-          className="easi-responsive-tabs__tab-list"
-        >
-          <li
-            className="easi-responsive-tabs__tab easi-responsive-tabs__tab--selected"
+        <div>
+          <dt
+            className="text-bold margin-bottom-05"
           >
-            <button
-              className="easi-responsive-tabs__tab-btn"
-              onClick={[Function]}
-              type="button"
-            >
-              <span
-                className="easi-responsive-tabs__tab-divider"
-              >
-                <span
-                  className="easi-responsive-tabs__tab-text"
-                >
-                  "As is" solution
-                </span>
-              </span>
-            </button>
-          </li>
-          <li
-            className="easi-responsive-tabs__tab"
+            Project Name
+          </dt>
+          <dd
+            className="description-definition margin-0"
           >
-            <button
-              className="easi-responsive-tabs__tab-btn"
-              onClick={[Function]}
-              type="button"
-            >
-              <span
-                className="easi-responsive-tabs__tab-divider"
-              >
-                <span
-                  className="easi-responsive-tabs__tab-text"
-                >
-                  Preferred solution
-                </span>
-              </span>
-            </button>
-          </li>
-        </ul>
+            Easy Access to System Information
+          </dd>
+        </div>
+        <div>
+          <dt
+            className="text-bold margin-bottom-05"
+          >
+            Business Owner
+          </dt>
+          <dd
+            className="description-definition margin-0"
+          >
+            Jane Doe
+          </dd>
+        </div>
       </div>
-      <div />
-    </div>
-    <div
-      className="bg-white easi-business-case__review-solutions-wrapper"
-      style={
-        Object {
-          "overflow": "auto",
-        }
-      }
+      <div
+        className="easi-review-row"
+      >
+        <div>
+          <dt
+            className="text-bold margin-bottom-05"
+          >
+            Requester
+          </dt>
+          <dd
+            className="description-definition margin-0"
+          >
+            Jane Doe
+          </dd>
+        </div>
+        <div>
+          <dt
+            className="text-bold margin-bottom-05"
+          >
+            Requester Phone Number
+          </dt>
+          <dd
+            className="description-definition margin-0"
+          >
+            1234567890
+          </dd>
+        </div>
+      </div>
+    </dl>
+    <h2
+      className="font-heading-xl margin-top-6"
     >
-      <div>
-        <h3
-          className="easi-only-print business-case-solution-header"
-        >
-          As-Is Solution
-        </h3>
-        <dl
-          title="As-Is Solution"
-        >
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                “As is” solution: Title
-              </dt>
-              <dd
-                className="description-definition margin-0"
-              >
-                Mock As is Solution
-              </dd>
-            </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                “As is” solution: Summary
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              >
-                Mock As is solution summary
-              </dd>
-            </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                “As is” solution: Pros
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              >
-                Mock As is solution  pros
-              </dd>
-            </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                “As is” solution: Cons
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              >
-                Mock As is solution cons
-              </dd>
-            </div>
-          </div>
-        </dl>
+      Request description
+    </h2>
+    <dl
+      title="Request description"
+    >
+      <div
+        className="easi-review-row"
+      >
         <div
-          className="easi-review-row"
+          className="margin-bottom-205 line-height-body-3"
         >
-          <div>
-            <div
-              className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
+          <dt
+            className="text-bold margin-bottom-05"
+          >
+            What is your business or user need?
+          </dt>
+          <dd
+            className="description-definition margin-0 text-pre-wrap"
+          >
+            Mock business need
+          </dd>
+        </div>
+      </div>
+      <div
+        className="easi-review-row"
+      >
+        <div
+          className="margin-bottom-205 line-height-body-3"
+        >
+          <dt
+            className="text-bold margin-bottom-05"
+          >
+            How will CMS benefit from this effort?
+          </dt>
+          <dd
+            className="description-definition margin-0 text-pre-wrap"
+          >
+            Mock CMS benefit
+          </dd>
+        </div>
+      </div>
+      <div
+        className="easi-review-row"
+      >
+        <div
+          className="margin-bottom-205 line-height-body-3"
+        >
+          <dt
+            className="text-bold margin-bottom-05"
+          >
+            How does this effort align with organizational priorities?
+          </dt>
+          <dd
+            className="description-definition margin-0 text-pre-wrap"
+          >
+            Mock priority alignment
+          </dd>
+        </div>
+      </div>
+      <div
+        className="easi-review-row"
+      >
+        <div
+          className="margin-bottom-205 line-height-body-3"
+        >
+          <dt
+            className="text-bold margin-bottom-05"
+          >
+            How will you determine whether or not this effort is successful?
+          </dt>
+          <dd
+            className="description-definition margin-0 text-pre-wrap"
+          >
+            Mock success indicators
+          </dd>
+        </div>
+      </div>
+    </dl>
+    <h2
+      className="font-heading-xl margin-top-6 margin-bottom-2"
+    >
+      Alternatives analysis
+    </h2>
+    <div
+      className="easi-responsive-tabs bg-base-lightest"
+    >
+      <div
+        className="easi-responsive-tabs__navigation"
+      >
+        <div
+          className="easi-responsive-tabs__tabs-wrapper"
+        >
+          <ul
+            className="easi-responsive-tabs__tab-list"
+          >
+            <li
+              className="easi-responsive-tabs__tab easi-responsive-tabs__tab--selected"
             >
-              <dl
-                title="System total cost"
+              <button
+                className="easi-responsive-tabs__tab-btn"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="easi-responsive-tabs__tab-divider"
+                >
+                  <span
+                    className="easi-responsive-tabs__tab-text"
+                  >
+                    "As is" solution
+                  </span>
+                </span>
+              </button>
+            </li>
+            <li
+              className="easi-responsive-tabs__tab"
+            >
+              <button
+                className="easi-responsive-tabs__tab-btn"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="easi-responsive-tabs__tab-divider"
+                >
+                  <span
+                    className="easi-responsive-tabs__tab-text"
+                  >
+                    Preferred solution
+                  </span>
+                </span>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div />
+      </div>
+      <div
+        className="bg-white easi-business-case__review-solutions-wrapper"
+        style={
+          Object {
+            "overflow": "auto",
+          }
+        }
+      >
+        <div>
+          <h3
+            className="easi-only-print business-case-solution-header"
+          >
+            As-Is Solution
+          </h3>
+          <dl
+            title="As-Is Solution"
+          >
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
               >
                 <dt
                   className="text-bold margin-bottom-05"
                 >
-                  System total cost
+                  “As is” solution: Title
                 </dt>
                 <dd
                   className="description-definition margin-0"
                 >
-                  $15
+                  Mock As is Solution
                 </dd>
-              </dl>
+              </div>
             </div>
-          </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
-          <div
-            className="line-height-body-3"
-          >
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              What is the cost savings or avoidance associated with this solution?
-            </dt>
-            <dd
-              className="description-definition margin-0 text-pre-wrap"
-            >
-              
-            </dd>
-          </div>
-        </div>
-      </div>
-      <div
-        className="easi-only-print"
-      >
-        <h3
-          className="easi-only-print business-case-solution-header"
-        >
-          Preferred solution
-        </h3>
-        <dl
-          title="Preferred solution"
-        >
-          <div
-            className="easi-review-row"
-          >
             <div
-              className="line-height-body-3"
+              className="easi-review-row"
             >
-              <dt
-                className="text-bold margin-bottom-05"
+              <div
+                className="line-height-body-3"
               >
-                Preferred solution: Title
-              </dt>
-              <dd
-                className="description-definition margin-0"
-              >
-                
-              </dd>
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  “As is” solution: Summary
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                >
+                  Mock As is solution summary
+                </dd>
+              </div>
             </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
             <div
-              className="line-height-body-3"
+              className="easi-review-row"
             >
-              <dt
-                className="text-bold margin-bottom-05"
+              <div
+                className="line-height-body-3"
               >
-                Preferred solution: Summary
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              >
-                
-              </dd>
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  “As is” solution: Pros
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                >
+                  Mock As is solution  pros
+                </dd>
+              </div>
             </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
             <div
-              className="line-height-body-3"
+              className="easi-review-row"
             >
-              <dt
-                className="text-bold margin-bottom-05"
+              <div
+                className="line-height-body-3"
               >
-                Preferred solution: Acquisition approach
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              >
-                
-              </dd>
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  “As is” solution: Cons
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                >
+                  Mock As is solution cons
+                </dd>
+              </div>
             </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                Do you need to host your solution?
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              />
-            </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              >
-                N/A
-              </dd>
-            </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                Is your solution in the process of CMS IT Security approval?
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              />
-            </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                Will your solution have a User Interface?
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              />
-            </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                Preferred solution: Pros
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              >
-                
-              </dd>
-            </div>
-          </div>
-          <div
-            className="easi-review-row"
-          >
-            <div
-              className="line-height-body-3"
-            >
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                Preferred solution: Cons
-              </dt>
-              <dd
-                className="description-definition margin-0 text-pre-wrap"
-              >
-                
-              </dd>
-            </div>
-          </div>
+          </dl>
           <div
             className="easi-review-row"
           >
             <div>
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                Requester indicated there is no associated cost with this solution
-              </dt>
               <div
                 className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
               >
@@ -537,7 +325,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
                   <dd
                     className="description-definition margin-0"
                   >
-                    $0
+                    $15
                   </dd>
                 </dl>
               </div>
@@ -561,14 +349,247 @@ exports[`The GRT business case review matches the snapshot 1`] = `
               </dd>
             </div>
           </div>
-        </dl>
+        </div>
+        <div
+          className="easi-only-print"
+        >
+          <h3
+            className="easi-only-print business-case-solution-header"
+          >
+            Preferred solution
+          </h3>
+          <dl
+            title="Preferred solution"
+          >
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Preferred solution: Title
+                </dt>
+                <dd
+                  className="description-definition margin-0"
+                >
+                  
+                </dd>
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Preferred solution: Summary
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                >
+                  
+                </dd>
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Preferred solution: Acquisition approach
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                >
+                  
+                </dd>
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Do you need to host your solution?
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                />
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                >
+                  N/A
+                </dd>
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Is your solution in the process of CMS IT Security approval?
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                />
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Will your solution have a User Interface?
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                />
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Preferred solution: Pros
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                >
+                  
+                </dd>
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Preferred solution: Cons
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                >
+                  
+                </dd>
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div>
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  Requester indicated there is no associated cost with this solution
+                </dt>
+                <div
+                  className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
+                >
+                  <dl
+                    title="System total cost"
+                  >
+                    <dt
+                      className="text-bold margin-bottom-05"
+                    >
+                      System total cost
+                    </dt>
+                    <dd
+                      className="description-definition margin-0"
+                    >
+                      $0
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+            <div
+              className="easi-review-row"
+            >
+              <div
+                className="line-height-body-3"
+              >
+                <dt
+                  className="text-bold margin-bottom-05"
+                >
+                  What is the cost savings or avoidance associated with this solution?
+                </dt>
+                <dd
+                  className="description-definition margin-0 text-pre-wrap"
+                >
+                  
+                </dd>
+              </div>
+            </div>
+          </dl>
+        </div>
+        <div
+          className="easi-only-print"
+        />
+        <div
+          className="easi-only-print"
+        />
       </div>
-      <div
-        className="easi-only-print"
-      />
-      <div
-        className="easi-only-print"
-      />
+    </div>
+    <div
+      className="easi-pdf-export__controls"
+    >
+      <button
+        className="usa-button usa-button--unstyled easi-no-print"
+        onClick={[Function]}
+        type="button"
+      >
+        <img
+          alt=""
+          aria-hidden="true"
+          className="margin-right-1"
+          src="download.svg"
+        />
+        Download Business Case as PDF
+      </button>
     </div>
   </div>
   <a
