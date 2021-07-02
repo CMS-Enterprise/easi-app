@@ -170,12 +170,15 @@ const IssueLifecycleId = () => {
                       value={false}
                     />
                     {values.newLifecycleId === false && (
-                      <div className="margin-top-neg-2 margin-left-3 margin-bottom-1">
+                      <div className="margin-bottom-1">
                         <FieldGroup
                           scrollElement="lifecycleId"
                           error={!!flatErrors.lifecycleId}
                         >
-                          <Label htmlFor="IssueLifecycleIdForm-LifecycleId">
+                          <Label
+                            htmlFor="IssueLifecycleIdForm-LifecycleId"
+                            className="margin-bottom-1"
+                          >
                             {t('issueLCID.lcid.label')}
                           </Label>
                           <HelpText id="IssueLifecycleIdForm-LifecycleIdHelp">
