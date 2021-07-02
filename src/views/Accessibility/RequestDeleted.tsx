@@ -16,7 +16,6 @@ const RequestDeleted = () => {
         >
           indexZero
           <Link href="mailto:CMS_Section508@cms.hhs.gov">emailLink</Link>
-          indexTwo
         </Trans>
       </p>
       <p className="margin-top-3">
