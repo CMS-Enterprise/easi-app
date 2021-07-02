@@ -263,8 +263,18 @@ jobs:
           key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             v1-yarn-
-      - run: |
-          yarn run build
+      - name: Build frontend code
+        env:
+          REACT_APP_API_ADDRESS: http://easi:8080/api/v1
+          REACT_APP_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
+          REACT_APP_APP_ENV: test
+          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+          REACT_APP_LOCAL_AUTH_ENABLED: true
+        run: yarn run build
       - name: Login to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # v1.10.0
         with:
@@ -285,14 +295,5 @@ jobs:
           AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: actions-${{ github.sha }}
-          REACT_APP_API_ADDRESS: http://easi:8080/api/v1
-          REACT_APP_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
-          REACT_APP_APP_ENV: test
-          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
-          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
-          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
-          REACT_APP_LOCAL_AUTH_ENABLED: true
         run: |
           ./scripts/run-cypress-test-docker-github-actions
