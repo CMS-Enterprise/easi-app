@@ -13,9 +13,9 @@ export SERVER_KEY
 
 # Running in CI
 if [[ -n "${CI+x}" ]]; then
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml pull db_migrate easi
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml pull --quiet db_migrate easi
 
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml build --parallel
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml build --parallel --quiet
 
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up -d db
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up --exit-code-from db_migrate db_migrate
