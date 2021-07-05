@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import RequestDeleted from './RequestDeleted';
+import RequestDeleted from './index';
 
 describe('RequestDeleted view', () => {
   it('renders without errors', () => {
