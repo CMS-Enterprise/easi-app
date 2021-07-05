@@ -8,6 +8,7 @@ import (
 
 	"github.com/facebookgo/clock"
 
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -53,4 +54,72 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestMetrics() {
 			s.Equal(tt.expectedCount, metrics.CreatedAndOpen)
 		})
 	}
+}
+
+func (s StoreTestSuite) TestFetchAccessibilityRequestByID() {
+	ctx := context.Background()
+	intake := testhelpers.NewSystemIntake()
+	_, err := s.store.CreateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	s.Run("retrieves an active accessibility request", func() {
+		accessibilityRequest := models.AccessibilityRequest{
+			IntakeID:  intake.ID,
+			Name:      "My Accessibility Request",
+			EUAUserID: "ASDF",
+		}
+		_, err = s.store.CreateAccessibilityRequest(ctx, &accessibilityRequest)
+		s.NoError(err)
+
+		returnedAccessibilityRequest, fetchErr := s.store.FetchAccessibilityRequestByID(ctx, accessibilityRequest.ID)
+		s.NoError(fetchErr)
+
+		s.Equal(accessibilityRequest.ID, returnedAccessibilityRequest.ID)
+	})
+
+	s.Run("does not retrieve a deleted accessibility request", func() {
+		deletedAccessibilityRequest := models.AccessibilityRequest{
+			IntakeID:  intake.ID,
+			Name:      "My Accessibility Request",
+			EUAUserID: "ASDF",
+		}
+		_, err = s.store.CreateAccessibilityRequest(ctx, &deletedAccessibilityRequest)
+		s.NoError(err)
+
+		err = s.store.DeleteAccessibilityRequest(
+			ctx, deletedAccessibilityRequest.ID,
+			models.AccessibilityRequestDeletionReasonOther)
+		s.NoError(err)
+
+		_, err := s.store.FetchAccessibilityRequestByID(ctx, deletedAccessibilityRequest.ID)
+		s.Error(err)
+		s.Equal(
+			"Could not not find resource models.AccessibilityRequest with error: sql: no rows in result set",
+			err.Error())
+	})
+}
+
+func (s StoreTestSuite) TestFetchAccessibilityRequestByIDIncludingDeleted() {
+	ctx := context.Background()
+	intake := testhelpers.NewSystemIntake()
+	_, err := s.store.CreateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	deletedAccessibilityRequest := models.AccessibilityRequest{
+		IntakeID:  intake.ID,
+		Name:      "My Accessibility Request",
+		EUAUserID: "ASDF",
+	}
+	_, err = s.store.CreateAccessibilityRequest(ctx, &deletedAccessibilityRequest)
+	s.NoError(err)
+
+	err = s.store.DeleteAccessibilityRequest(
+		ctx, deletedAccessibilityRequest.ID, models.AccessibilityRequestDeletionReasonOther)
+	s.NoError(err)
+
+	returnedAccessibilityRequest, err := s.store.FetchAccessibilityRequestByIDIncludingDeleted(
+		ctx, deletedAccessibilityRequest.ID)
+	s.NoError(err)
+
+	s.Equal(deletedAccessibilityRequest.ID, returnedAccessibilityRequest.ID)
 }
