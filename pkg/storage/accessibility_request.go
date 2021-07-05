@@ -94,7 +94,7 @@ func (s *Store) FetchAccessibilityRequestByIDIncludingDeleted(ctx context.Contex
 	return &request, nil
 }
 
-// FetchAccessibilityRequests queries the DB for an accessibility requests.
+// FetchAccessibilityRequests queries the DB for accessibility requests.
 // TODO implement cursor pagination
 func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]models.AccessibilityRequest, error) {
 	requests := []models.AccessibilityRequest{}

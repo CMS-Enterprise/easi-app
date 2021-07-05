@@ -123,3 +123,41 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByIDIncludingDeleted() {
 
 	s.Equal(deletedAccessibilityRequest.ID, returnedAccessibilityRequest.ID)
 }
+
+func (s StoreTestSuite) TestFetchAccessibilityRequests() {
+	ctx := context.Background()
+	intake := testhelpers.NewSystemIntake()
+	_, err := s.store.CreateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	s.Run("returns only not deleted accessibility requests", func() {
+		requestsBefore, fetchError := s.store.FetchAccessibilityRequests(ctx)
+		s.NoError(fetchError)
+
+		newRequest1 := testhelpers.NewAccessibilityRequest(intake.ID)
+		newRequest2 := testhelpers.NewAccessibilityRequest(intake.ID)
+
+		_, err = s.store.CreateAccessibilityRequest(ctx, &newRequest1)
+		s.NoError(err)
+
+		_, err = s.store.CreateAccessibilityRequest(ctx, &newRequest2)
+		s.NoError(err)
+
+		newRequest3Deleted := models.AccessibilityRequest{
+			IntakeID:  intake.ID,
+			Name:      "My Deleted Request",
+			EUAUserID: "ASDF",
+		}
+		_, err = s.store.CreateAccessibilityRequest(ctx, &newRequest3Deleted)
+		s.NoError(err)
+
+		err = s.store.DeleteAccessibilityRequest(
+			ctx, newRequest3Deleted.ID, models.AccessibilityRequestDeletionReasonOther)
+		s.NoError(err)
+
+		requests, fetchError := s.store.FetchAccessibilityRequests(ctx)
+		s.NoError(fetchError)
+		expectedNumRequests := len(requestsBefore) + 2
+		s.Equal(expectedNumRequests, len(requests))
+	})
+}
