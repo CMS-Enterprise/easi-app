@@ -59,7 +59,7 @@ const TestDate = () => {
     dateMonth: String(testDate.month),
     dateDay: String(testDate.day),
     dateYear: String(testDate.year),
-    testType: test?.testType,
+    testType: test?.testType || null,
     score: {
       isPresent: Boolean(test?.score),
       value: test?.score ? `${test?.score && test?.score / 10}` : ''
