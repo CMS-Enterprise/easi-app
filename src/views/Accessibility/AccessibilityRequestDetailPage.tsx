@@ -61,6 +61,7 @@ import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -349,13 +350,10 @@ const AccessibilityRequestDetailPage = () => {
             return (
               <>
                 <Form className="usa-form maxw-full">
-                  <FieldGroup>
-                    <label
-                      htmlFor="CreateAccessibilityRequestNote-NoteText"
-                      className="margin-top-0 text-bold"
-                    >
+                  <FieldGroup className="margin-top-0">
+                    <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
                       {t('requestDetails.notes.form.note')}
-                    </label>
+                    </Label>
                     <FieldErrorMsg>{flatErrors.noteText}</FieldErrorMsg>
                     <Field
                       as={TextAreaField}
