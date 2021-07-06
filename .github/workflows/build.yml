@@ -343,6 +343,3 @@ jobs:
           IMAGE_TAG: actions-${{ github.sha }}
         run: |
           ./scripts/run-cypress-test-docker-github-actions
-
-  deploy_dev:
-
