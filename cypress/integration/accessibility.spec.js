@@ -33,6 +33,28 @@ describe('Accessibility Requests', () => {
     });
   });
 
+  it('has the correct page order when clicking through 508 team home page', () => {
+    cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_USER' });
+
+    cy.contains('a', 'Add a new request').click();
+    cy.location().should(loc => {
+      expect(loc.pathname).to.eq('/508/making-a-request');
+    });
+    cy.contains('h1', 'Making a 508 testing request');
+    cy.contains('a', 'steps involved').click();
+
+    cy.location().should(loc => {
+      expect(loc.pathname).to.eq('/508/testing-overview');
+    });
+    cy.contains('h1', 'Steps involved');
+    cy.contains('a', 'Get started').click();
+
+    cy.location().should(loc => {
+      expect(loc.pathname).to.eq('/508/requests/new');
+    });
+    cy.contains('h1', 'Request 508 testing');
+  });
+
   it('adds and removes a document from a 508 request as the owner', () => {
     cy.localLogin({ name: 'CMSU' });
     cy.accessibility.create508Request();
