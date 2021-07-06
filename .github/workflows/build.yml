@@ -378,4 +378,4 @@ jobs:
           aws-region: us-west-2
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
           role-duration-seconds: 1800
-
+          role-skip-session-tagging: true
