@@ -103,7 +103,7 @@ const SystemIntakeValidationSchema: any = {
         then: Yup.string()
           .trim()
           .length(6, 'Funding number must be exactly 6 digits')
-          .matches(/^\d+$/, 'Fuding number can only contain digits')
+          .matches(/^\d+$/, 'Funding number can only contain digits')
           .required(
             'Tell us your funding number. This is a six digit number and starts with 00'
           )

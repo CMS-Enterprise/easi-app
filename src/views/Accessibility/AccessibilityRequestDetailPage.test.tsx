@@ -31,13 +31,13 @@ describe('AccessibilityRequestDetailPage', () => {
     request: {
       query: GetAccessibilityRequestQuery,
       variables: {
-        id: 'e0a4de2f-a2c2-457d-ac08-bbd011104855'
+        id: 'a11yRequest123'
       }
     },
     result: {
       data: {
         accessibilityRequest: {
-          id: 'e0a4de2f-a2c2-457d-ac08-bbd011104855',
+          id: 'a11yRequest123',
           euaUserId: 'ABCD',
           submittedAt: new Date().toISOString(),
           name: 'My Special Request',
@@ -56,16 +56,14 @@ describe('AccessibilityRequestDetailPage', () => {
     }
   };
 
-  const buildProviders = (
-    mocks: any,
-    store: any,
-    children: React.ReactElement
-  ) => (
+  const buildProviders = (mocks: any, store: any) => (
     <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
       <MockedProvider mocks={mocks} addTypename={false}>
         <Provider store={store}>
           <Route path="/508/requests/:accessibilityRequestId">
-            <MessageProvider>{children}</MessageProvider>
+            <MessageProvider>
+              <AccessibilityRequestDetailPage />
+            </MessageProvider>
           </Route>
         </Provider>
       </MockedProvider>
@@ -73,26 +71,54 @@ describe('AccessibilityRequestDetailPage', () => {
   );
 
   it('renders without crashing', async () => {
-    render(
-      <MemoryRouter
-        initialEntries={['/508/requests/e0a4de2f-a2c2-457d-ac08-bbd011104855']}
-      >
-        <MockedProvider mocks={[default508RequestQuery]} addTypename={false}>
-          <MessageProvider>
-            <Provider store={defaultStore}>
-              <Route path="/508/requests/:accessibilityRequestId">
-                <AccessibilityRequestDetailPage />
-              </Route>
-            </Provider>
-          </MessageProvider>
-        </MockedProvider>
-      </MemoryRouter>
-    );
+    render(buildProviders([default508RequestQuery], defaultStore));
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(
       screen.getByTestId('accessibility-request-detail-page')
+    ).toBeInTheDocument();
+  });
+
+  it('renders RequestDeleted component when request is deleted', async () => {
+    const deleted508RequestQuery = {
+      request: {
+        query: GetAccessibilityRequestQuery,
+        variables: {
+          id: 'a11yRequest123'
+        }
+      },
+      result: {
+        data: {
+          accessibilityRequest: {
+            id: 'a11yRequest123',
+            euaUserId: 'ABCD',
+            submittedAt: new Date().toISOString(),
+            name: 'My Special Request',
+            system: {
+              name: 'TACO',
+              lcid: '123456',
+              businessOwner: { name: 'Clark Kent', component: 'OIT' }
+            },
+            documents: [],
+            testDates: [],
+            statusRecord: {
+              status: 'DELETED'
+            }
+          }
+        }
+      }
+    };
+
+    render(buildProviders([deleted508RequestQuery], defaultStore));
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /The request you are looking for was deleted./i
+      })
     ).toBeInTheDocument();
   });
 
@@ -176,19 +202,7 @@ describe('AccessibilityRequestDetailPage', () => {
     };
 
     it('renders Next step if no documents', async () => {
-      render(
-        <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-          <MockedProvider mocks={[withoutDocsQuery]} addTypename={false}>
-            <Provider store={defaultStore}>
-              <MessageProvider>
-                <Route path="/508/requests/:accessibilityRequestId">
-                  <AccessibilityRequestDetailPage />
-                </Route>
-              </MessageProvider>
-            </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      );
+      render(buildProviders([withoutDocsQuery], defaultStore));
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -351,19 +365,7 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     const defaultRender = () =>
-      render(
-        <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-          <MockedProvider mocks={[defaultQuery]} addTypename={false}>
-            <Provider store={testerStore}>
-              <MessageProvider>
-                <Route path="/508/requests/:accessibilityRequestId">
-                  <AccessibilityRequestDetailPage />
-                </Route>
-              </MessageProvider>
-            </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      );
+      render(buildProviders([defaultQuery], testerStore));
 
     it("doesn't render table if there are no documents", async () => {
       defaultRender();
@@ -376,19 +378,7 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     it('renders table if there are documents', async () => {
-      render(
-        <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-          <MockedProvider mocks={[withDocsQuery]} addTypename={false}>
-            <Provider store={testerStore}>
-              <MessageProvider>
-                <Route path="/508/requests/:accessibilityRequestId">
-                  <AccessibilityRequestDetailPage />
-                </Route>
-              </MessageProvider>
-            </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      );
+      render(buildProviders([withDocsQuery], testerStore));
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -399,19 +389,7 @@ describe('AccessibilityRequestDetailPage', () => {
 
     describe('notes tab', () => {
       it('can view existing notes', async () => {
-        render(
-          <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-            <MockedProvider mocks={[withNotesQuery]} addTypename={false}>
-              <Provider store={testerStore}>
-                <MessageProvider>
-                  <Route path="/508/requests/:accessibilityRequestId">
-                    <AccessibilityRequestDetailPage />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
+        render(buildProviders([withNotesQuery], testerStore));
 
         await waitForElementToBeRemoved(() =>
           screen.getByTestId('page-loading')
@@ -503,11 +481,7 @@ describe('AccessibilityRequestDetailPage', () => {
           withNotesQueryWithNewNote
         ];
 
-        const providers = buildProviders(
-          createNoteMocks,
-          testerStore,
-          <AccessibilityRequestDetailPage />
-        );
+        const providers = buildProviders(createNoteMocks, testerStore);
         render(providers);
 
         await waitForElementToBeRemoved(() =>
@@ -532,11 +506,7 @@ describe('AccessibilityRequestDetailPage', () => {
 
       it('shows an error alert when there is a form validation error', async () => {
         const mocks = [defaultQuery];
-        const providers = buildProviders(
-          mocks,
-          testerStore,
-          <AccessibilityRequestDetailPage />
-        );
+        const providers = buildProviders(mocks, testerStore);
 
         render(providers);
 
@@ -579,11 +549,7 @@ describe('AccessibilityRequestDetailPage', () => {
           }
         ];
 
-        const providers = buildProviders(
-          errorMocks,
-          testerStore,
-          <AccessibilityRequestDetailPage />
-        );
+        const providers = buildProviders(errorMocks, testerStore);
         render(providers);
 
         await waitForElementToBeRemoved(() =>
@@ -633,11 +599,7 @@ describe('AccessibilityRequestDetailPage', () => {
           }
         ];
 
-        const providers = buildProviders(
-          userErrorMocks,
-          testerStore,
-          <AccessibilityRequestDetailPage />
-        );
+        const providers = buildProviders(userErrorMocks, testerStore);
         render(providers);
 
         await waitForElementToBeRemoved(() =>
