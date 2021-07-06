@@ -11,10 +11,14 @@ import {
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
+import PageLoading from 'components/PageLoading';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import { useMessage } from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
+
+import RequestDeleted from '../Accessibility/RequestDeleted';
+import { NotFoundPartial } from '../NotFound';
 
 import TestDateForm from './Form';
 
@@ -50,16 +54,12 @@ const TestDate = () => {
     date => date.id === testDateId
   );
 
-  if (!test) {
-    throw new TypeError('TypeError: test does not exist');
-  }
-
   const testDate = DateTime.fromISO(test?.date);
   const initialValues: TestDateFormType = {
     dateMonth: String(testDate.month),
     dateDay: String(testDate.day),
     dateYear: String(testDate.year),
-    testType: test?.testType,
+    testType: test?.testType || null,
     score: {
       isPresent: Boolean(test?.score),
       value: test?.score ? `${test?.score && test?.score / 10}` : ''
@@ -97,7 +97,19 @@ const TestDate = () => {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <PageLoading />;
+  }
+
+  if (!data || !test) {
+    return (
+      <div className="grid-container">
+        <NotFoundPartial />
+      </div>
+    );
+  }
+
+  if (data?.accessibilityRequest?.statusRecord.status === 'DELETED') {
+    return <RequestDeleted />;
   }
 
   return (

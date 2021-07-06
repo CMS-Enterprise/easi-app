@@ -47,6 +47,12 @@ const accessibility = {
     accessibilityRequests: '508 Requests'
   },
   requestDetails: {
+    requestDeleted: {
+      heading: 'The request you are looking for was deleted.',
+      body:
+        'For any further information, email the Section 508 team at <1>CMS_Section508@cms.hhs.gov</1>.',
+      homeLinkText: 'Go back to EASi homepage'
+    },
     documents: {
       label: 'Documents',
       noDocs: {
