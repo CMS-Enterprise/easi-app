@@ -437,6 +437,10 @@ const AccessibilityRequestDetailPage = () => {
     );
   }
 
+  const selectedTabContent = pathname.endsWith('notes')
+    ? notesTab
+    : bodyWithDocumentsTable;
+
   // What type of errors can we get/return?
   // How can we actually use the errors?
   if (error) {
@@ -540,12 +544,7 @@ const AccessibilityRequestDetailPage = () => {
       <div className="grid-container padding-top-6 padding-top">
         <div className="grid-row grid-gap-lg">
           <div className="grid-col-8">
-            {/* eslint-disable-next-line no-nested-ternary */}
-            {isAccessibilityTeam
-              ? pathname.endsWith('notes')
-                ? notesTab
-                : bodyWithDocumentsTable
-              : documentsTab}
+            {isAccessibilityTeam ? selectedTabContent : documentsTab}
           </div>
           <div className="grid-col-1" />
           <div className="grid-col-3">
