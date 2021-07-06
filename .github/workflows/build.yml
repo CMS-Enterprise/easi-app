@@ -347,6 +347,7 @@ jobs:
   deploy_dev:
     needs: [ lint, client_test, server_test, e2e_tests ]
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - name: Check out code
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
