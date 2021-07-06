@@ -108,16 +108,6 @@ const RequestDetails = (
     key="508-request-detail"
     path="/508/requests/:accessibilityRequestId"
     component={AccessibilityRequestDetailPage}
-    exact
-  />
-);
-
-const RequestDetailsNotes = (
-  <SecureRoute
-    key="508-request-detail-notes"
-    path="/508/requests/:accessibilityRequestId/notes"
-    component={AccessibilityRequestDetailPage}
-    exact
   />
 );
 
@@ -178,7 +168,6 @@ const Accessibility = () => {
             NewDocument,
             UpdateTestDate,
             NewTestDate,
-            RequestDetailsNotes,
             RequestDetails,
             Default
           ]}
