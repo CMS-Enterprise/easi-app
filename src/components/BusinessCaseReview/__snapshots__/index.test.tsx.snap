@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The Business Case Review Component matches the snapshot 1`] = `
-Array [
+<div
+  className="easi-pdf-export"
+>
   <div
     className="grid-container"
   >
@@ -151,7 +153,7 @@ Array [
         </div>
       </div>
     </dl>
-  </div>,
+  </div>
   <div
     className="grid-container"
   >
@@ -160,7 +162,7 @@ Array [
     >
       Alternatives analysis
     </h2>
-  </div>,
+  </div>
   <div
     className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper"
   >
@@ -1180,6 +1182,23 @@ Array [
         </div>
       </div>
     </div>
-  </div>,
-]
+  </div>
+  <div
+    className="easi-pdf-export__controls"
+  >
+    <button
+      className="usa-button usa-button--unstyled easi-no-print"
+      onClick={[Function]}
+      type="button"
+    >
+      <img
+        alt=""
+        aria-hidden="true"
+        className="margin-right-1"
+        src="download.svg"
+      />
+      Download Business Case as PDF
+    </button>
+  </div>
+</div>
 `;
