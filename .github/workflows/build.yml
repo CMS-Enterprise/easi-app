@@ -401,5 +401,7 @@ jobs:
           ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "6" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           ./scripts/healthcheck
       - name: Build static assets and release to S3
+        env:
+          STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET_DEV }}
         run: |
           ./scripts/release_static
