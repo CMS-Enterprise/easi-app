@@ -1,19 +1,24 @@
 # CMS EASi Application
 
-This repository contains the application code
-for the CMS EASi (Easy Access to System Information).
+This repository contains the application code for the CMS EASi (Easy Access to
+System Information).
 
 ## Overview
 
 This application is made up of the following main components:
 
-* A Go backend that provides REST and GraphQL APIs. More information on the packages within that program can be found in the [pkg documentation](./pkg/README.md).
-* A React frontend that uses [Apollo](https://www.apollographql.com/docs/react/)
-* A few lambda functions for PDF generation and file upload virus scanning
+- A Go backend that provides REST and GraphQL APIs. More information on the
+  packages within that program can be found in the
+  [pkg documentation](./pkg/README.md).
+- A React frontend that uses [Apollo](https://www.apollographql.com/docs/react/)
+- A few lambda functions for PDF generation and file upload virus scanning
 
-We generally use Docker Compose to orchestrate running these components during development, and developers usually interact with `scripts/dev` as a frontend to various development commands instead of invoking them directly. Here are the commands it currently supports:
+We generally use Docker Compose to orchestrate running these components during
+development, and developers usually interact with `scripts/dev` as a frontend to
+various development commands instead of invoking them directly. Here are the
+commands it currently supports:
 
-```
+```console
 $ scripts/dev
 Please provide a task to run:
 
@@ -45,9 +50,13 @@ scripts/dev up              # Starts all services in the project
 scripts/dev up:watch        # Starts all services in the project in the foreground
 ```
 
-Some additional tools are required to work with the application source directly on the host machine. These operations can theoretically be done within Docker as well, but we haven't yet had the opportunity to migrate everything into it.
+Some additional tools are required to work with the application source directly
+on the host machine. These operations can theoretically be done within Docker as
+well, but we haven't yet had the opportunity to migrate everything into it.
 
-_Note: The `scripts/dev` utility is written in Ruby, which is installed by default on macOS <= 11.4. The script uses only standard lib dependencies and should work without installing a Ruby interpreter or other libraries._
+_Note: The `scripts/dev` utility is written in Ruby, which is installed by
+default on macOS <= 11.4. The script uses only standard lib dependencies and
+should work without installing a Ruby interpreter or other libraries._
 
 ### Homebrew
 
@@ -57,28 +66,30 @@ Install [Homebrew](https://brew.sh) using the following command:
 
 ### Git
 
-Install git using `brew install git`.
-If you haven't already, follow the steps in the [Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/blob/main/developing/vcs/tools.md#git) to configure git on your machine.
+Install git using `brew install git`. If you haven't already, follow the steps
+in the
+[Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/blob/main/developing/vcs/tools.md#git)
+to configure git on your machine.
 
 ### Bash
+
 - Ensure you are using the latest version of bash for this project:
-  - Install it with Homebrew:
-    `brew install bash`
+
+  - Install it with Homebrew: `brew install bash`
   - Update list of shells that users can choose from:
+
     ```bash
     [[ $(cat /etc/shells | grep /usr/local/bin/bash) ]] \
     || echo "/usr/local/bin/bash" | sudo tee -a /etc/shells
     ```
-  - If you are using bash as your shell
-    (and not zsh, fish, etc)
-    and want to use the latest shell as well,
-    then change it (optional): `chsh -s /usr/local/bin/bash`
-  - Ensure that `/usr/local/bin` comes before `/bin`
-    on your `$PATH` by running `echo $PATH`.
-    Modify your path by editing `~/.bashrc` or `~/.bash_profile`
-    and changing the `PATH`.
-    Then source your profile with `source ~/.bashrc` or `~/.bash_profile`
-    to ensure that your terminal has it.
+
+  - If you are using bash as your shell (and not zsh, fish, etc) and want to use
+    the latest shell as well, then change it (optional):
+    `chsh -s /usr/local/bin/bash`
+  - Ensure that `/usr/local/bin` comes before `/bin` on your `$PATH` by running
+    `echo $PATH`. Modify your path by editing `~/.bashrc` or `~/.bash_profile`
+    and changing the `PATH`. Then source your profile with `source ~/.bashrc` or
+    `~/.bash_profile` to ensure that your terminal has it.
 
 ### Docker and docker-compose
 
@@ -92,15 +103,17 @@ brew install docker-completion docker-compose docker-compose-completion
 Now you will need to start the Docker service: run Spotlight and type in
 "docker", then select "Docker Desktop" in the results.
 
-__Note: The project does not work with the new docker compose v2 release that will ship as a part of the main docker command.__
+**Note: The project does not work with the new docker compose v2 release that
+will ship as a part of the main docker command.**
 
 ### Go
 
-You'll need a recent version of Go. We've had very few issues with using different versions of Go on the project. Most developers use homebrew and run `brew install go` to use whatever the latest version is.
+You'll need a recent version of Go. We've had very few issues with using
+different versions of Go on the project. Most developers use homebrew and run
+`brew install go` to use whatever the latest version is.
 
-Be sure to add `$GOPATH/bin` to your `PATH`
-so that executables installed with the go tooling can be found.
-Add the following to your `.bash_profile`:
+Be sure to add `$GOPATH/bin` to your `PATH` so that executables installed with
+the go tooling can be found. Add the following to your `.bash_profile`:
 
 ```bash
 export PATH=$(go env GOPATH)/bin:$PATH
@@ -108,21 +121,21 @@ export PATH=$(go env GOPATH)/bin:$PATH
 
 ### Yarn
 
-We use Yarn to manage our JavaScript dependencies. Most developers install it with `brew install yarn`.
+We use Yarn to manage our JavaScript dependencies. Most developers install it
+with `brew install yarn`.
 
 ### direnv
 
-* Run `brew install direnv` to install this tool.
-* Add the following line at the very end of your `~/.bashrc`
-file:
+- Run `brew install direnv` to install this tool.
+- Add the following line at the very end of your `~/.bashrc` file:
   `eval "$(direnv hook bash)"`
-  * Refer to [instructions for other shells](https://direnv.net/docs/hook.html) if you're using a shell other than bash.
-* Restart your shell.
-* To allow direnv in the project directory `direnv allow .`.
+  - Refer to [instructions for other shells](https://direnv.net/docs/hook.html)
+    if you're using a shell other than bash.
+- Restart your shell.
+- To allow direnv in the project directory `direnv allow .`.
 
-Once this is setup, you should see `direnv` loading/unloading
-environment variables as you enter or depart from the
-project directory:
+Once this is setup, you should see `direnv` loading/unloading environment
+variables as you enter or depart from the project directory:
 
 ```console
 $ cd easi-app
@@ -136,14 +149,14 @@ $
 For additional documentation of this tool, see also:
 
 - The [official site](https://direnv.net/)
-- Truss' [Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/tree/master/developing/direnv)
+- Truss'
+  [Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/tree/master/developing/direnv)
 
 ## Code checkout
 
 You can checkout this repository by running
-`git clone git@github.com:cmsgov/easi-app.git`.
-Please check out the code in a directory like
-`~/Projects/easi-app` and NOT in your `$GOPATH`. As an example:
+`git clone git@github.com:cmsgov/easi-app.git`. Please check out the code in a
+directory like `~/Projects/easi-app` and NOT in your `$GOPATH`. As an example:
 
 ```bash
 mkdir -p ~/Projects
@@ -155,20 +168,32 @@ You will then find the code at `~/Projects/easi-app`.
 
 ### pre-commit
 
-* Run `pre-commit install` to install a pre-commit hook into `./git/hooks/pre-commit`.
-  * This is different than `brew install pre-commit` and must be done so that the hook will check files you are about to commit to the repository.  
-* Next install the pre-commit hook libraries with `pre-commit install-hooks`.
+- Run `pre-commit install` to install a pre-commit hook into
+  `./git/hooks/pre-commit`.
+  - This is different than `brew install pre-commit` and must be done so that
+    the hook will check files you are about to commit to the repository.
+- Next install the pre-commit hook libraries with `pre-commit install-hooks`.
 
 ## Starting the application
 
-From within the project directory, run `direnv allow` to load the default environment variables for the project. You will need to run this command again each time changes are made to `.envrc` or `.envrc.local`.
+From within the project directory, run `direnv allow` to load the default
+environment variables for the project. You will need to run this command again
+each time changes are made to `.envrc` or `.envrc.local`.
 
-* Run `scripts/dev prereqs` to check your machine for dependencies that need to be installed. It will offer to install most of them for you.
-  * This script will also offer to configure your hosts file to resolve `minio`, which is required to work with file uploads locally.
+- Run `scripts/dev prereqs` to check your machine for dependencies that need to
+  be installed. It will offer to install most of them for you.
 
-* Start the application using `scripts/dev reset`. This will download and build a bunch of Docker containers and then start the frontend, backend, and database, as well as run scripts to migrate the database and seed data. You can run this again later to restore the application to a known state during development.
+  - This script will also offer to configure your hosts file to resolve `minio`,
+    which is required to work with file uploads locally.
 
-* You should be able to visit the application by visiting [http://localhost:3000](http://localhost:3000) in a browser.
+- Start the application using `scripts/dev reset`. This will download and build
+  a bunch of Docker containers and then start the frontend, backend, and
+  database, as well as run scripts to migrate the database and seed data. You
+  can run this again later to restore the application to a known state during
+  development.
+
+- You should be able to visit the application by visiting
+  [http://localhost:3000](http://localhost:3000) in a browser.
 
 Run `scripts/dev` to see a list of other useful commands.
 
@@ -182,8 +207,8 @@ scripts/dev gql
 
 This command will:
 
-* Regenerate the go types and resolver definitions
-* Regenerate the TypeScript types and validate `schema.graphql`
+- Regenerate the go types and resolver definitions
+- Regenerate the TypeScript types and validate `schema.graphql`
 
 ### Golang cli app
 
@@ -199,9 +224,8 @@ You can then access the tool with the `easi` command.
 
 ### Migrating the Database
 
-To add a new migration, add a new file to the `migrations` directory
-following the standard
-`V__${last_migration_version + 1}_your_migration_name_here.sql`
+To add a new migration, add a new file to the `migrations` directory following
+the standard `V__${last_migration_version + 1}_your_migration_name_here.sql`
 
 Then run `scripts/dev db:migrate`.
 
@@ -248,41 +272,46 @@ Run `scripts/dev test:js`.
 
 There are multiple ways to run the Cypress tests:
 
-- Run `yarn run cypress run` to run the tests in the CLI. To have a slightly more interactive
-  experience, you can instead run `yarn run cypress open`. Note: the database,
-  frontend, and backend must be running prior to starting the Cypress tests.
-  The `APP_ENV` environment variable
-  should be set to `test`.
-- `APP_ENV=test ./scripts/run-cypress-test-docker` : Run the Cypress tests, database,
-  migrations, backend, and frontend locally in Docker, similar to how they run
-  in CircleCI. Running the tests in this way takes time, but is useful for
-  troubleshooting integration test failures in CI.
+- Run `yarn run cypress run` to run the tests in the CLI. To have a slightly
+  more interactive experience, you can instead run `yarn run cypress open`.
+  Note: the database, frontend, and backend must be running prior to starting
+  the Cypress tests. The `APP_ENV` environment variable should be set to `test`.
+- `APP_ENV=test ./scripts/run-cypress-test-docker` : Run the Cypress tests,
+  database, migrations, backend, and frontend locally in Docker, similar to how
+  they run in CircleCI. Running the tests in this way takes time, but is useful
+  for troubleshooting integration test failures in CI.
 
 ## Optional Setup
 
 ### LaunchDarkly
 
-The app uses LaunchDarkly to control feature flags in deployed environments. By default the application run in offline mode and uses default values for all flags. To enable loading the flags from LaunchDarkly, add the following to `.envrc.local`:
+The app uses LaunchDarkly to control feature flags in deployed environments. By
+default the application run in offline mode and uses default values for all
+flags. To enable loading the flags from LaunchDarkly, add the following to
+`.envrc.local`:
 
-```
+```bash
 export LD_SDK_KEY=sdk-0123456789
 export FLAG_SOURCE=LAUNCH_DARKLY
 ```
 
-These values can be obtained from the LaunchDarkly settings page or from 1Password.
+These values can be obtained from the LaunchDarkly settings page or from
+1Password.
 
 ### CircleCI
 
 If you want to make changes to the CircleCI configuration, you will need to
 install the `circleci` cli tool so that the changes can be validated by
-pre-commit: `brew install circleci`. This should be done automatically by `scripts/dev prereqs`.
+pre-commit: `brew install circleci`. This should be done automatically by
+`scripts/dev prereqs`.
 
 ### 1Password
 
-_See also: [ADR on how we share secrets](./docs/adr/0019-use-1password-for-sharing-secrets.md)_
+_See also:
+[ADR on how we share secrets](./docs/adr/0019-use-1password-for-sharing-secrets.md)_
 
-Truss have set up a [1Password vault](https://cmseasi.1password.com) for
-EASi engineers to securely share secrets, such as API keys. You will need to be
+Truss have set up a [1Password vault](https://cmseasi.1password.com) for EASi
+engineers to securely share secrets, such as API keys. You will need to be
 invited to generate login credentials.
 
 If you need access to a secret that is not in the EASi vault, please ask for
@@ -290,16 +319,13 @@ someone to add it to the vault.
 
 ### Cloud Services
 
-You may need to access cloud service
-to develop the application.
-This allows access to AWS resources (ex. SES Email).
+You may need to access cloud service to develop the application. This allows
+access to AWS resources (ex. SES Email).
 
 Follow the instructions in the infra repo
-[here](https://github.com/CMSgov/easi-infra#ctkey-wrapper).
-You'll need to add the infra account environment variables
-to your `.envrc.local`.
-You can then run the `ctkey` command
-to get/set AWS environment variables.
+[here](https://github.com/CMSgov/easi-infra#ctkey-wrapper). You'll need to add
+the infra account environment variables to your `.envrc.local`. You can then run
+the `ctkey` command to get/set AWS environment variables.
 
 ```bash
 https_proxy=localhost:8888 \\
@@ -311,20 +337,24 @@ ctkey --username=$CTKEY_USERNAME \\
 --iam-role=$CT_AWS_ROLE setenv
 ```
 
-Eventually, we will move this over to wrapper
-so developers do not need to manually run these commands.
+Eventually, we will move this over to wrapper so developers do not need to
+manually run these commands.
 
 ## Development and Debugging
 
 ### Authentication
 
-The application has two authentication modes. The main mode is to use Okta to authenticate using hosted services. The second is to use a local-only login mode that avoids this network dependency.
+The application has two authentication modes. The main mode is to use Okta to
+authenticate using hosted services. The second is to use a local-only login mode
+that avoids this network dependency.
 
-To sign in using local mode, Click the __Use Local Auth__ button on the sign in page. This is only provided when running the app locally.
+To sign in using local mode, Click the **Use Local Auth** button on the sign in
+page. This is only provided when running the app locally.
 
-To enable Okta authentication locally, add the following values to `.envrc.local`:
+To enable Okta authentication locally, add the following values to
+`.envrc.local`:
 
-```
+```bash
 export OKTA_TEST_USERNAME=
 export OKTA_TEST_PASSWORD=
 export OKTA_TEST_SECRET=
@@ -334,19 +364,21 @@ These values can be found in 1Password.
 
 ### GraphQL Playground
 
-You can visit `http://localhost:8080/api/graph/playground`
-to access a GraphQL playground while
-the Go backend is running. **You will need to enter `/api/graph/query` as the query
-path in the UI for this to work.**
+You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL
+playground while the Go backend is running. **You will need to enter
+`/api/graph/query` as the query path in the UI for this to work.**
 
 ### Accessing the application over Tailscale
 
-`scripts/dev tailscale` will configure and start the app so it can be accessed over a TAilscale network. This is currently used by developers to perform accessibility audits of locally running applications through JAWS on cloud Windows instances.
+`scripts/dev tailscale` will configure and start the app so it can be accessed
+over a TAilscale network. This is currently used by developers to perform
+accessibility audits of locally running applications through JAWS on cloud
+Windows instances.
 
 ### Routes Debugging
 
-Setting the `DEBUG_ROUTES` environment variable, and upon startup, this will
-log out a representation of all routes that have been registered.
+Setting the `DEBUG_ROUTES` environment variable, and upon startup, this will log
+out a representation of all routes that have been registered.
 
 ```shell
 $ DEBUG_ROUTES=1 ./bin/easi serve
@@ -365,31 +397,33 @@ Queries regexps:
 
 ### Minio
 
-[MinIO](https://min.io/) is an S3 compatible object store.
-It ships as a Docker container and accepts normal AWS S3
-API requests. This allows us to test file uploading functionality
-in our local development environments without needing to interact
-with CMS AWS accounts.
+[MinIO](https://min.io/) is an S3 compatible object store. It ships as a Docker
+container and accepts normal AWS S3 API requests. This allows us to test file
+uploading functionality in our local development environments without needing to
+interact with CMS AWS accounts.
 
-The container is configured as part of our `docker-compose.yml` and
-should be running when you `scripts/dev up`.
+The container is configured as part of our `docker-compose.yml` and should be
+running when you `scripts/dev up`.
 
 The container is accessed from the browser using the hostname `minio`. To make
 this work, run `scripts/dev hosts:check` and press enter to setup this hostname
 on your machine.
 
-You can use `scripts/dev minio:clean`, `scripts/dev minio:infected`, or `scripts/dev minio:pending` to modify the virus scanning status of files in minio during development.
+You can use `scripts/dev minio:clean`, `scripts/dev minio:infected`, or
+`scripts/dev minio:pending` to modify the virus scanning status of files in
+minio during development.
 
 ### Prince XML Lambda
 
 EASi runs [Prince XML](https://www.princexml.com/) as a Lambda function to
 convert HTML to PDF.
 
-See the [easi-infra-modules](https://github.com/CMSgov/easi-infra-modules/blob/master/lambda/prince/README.md)
+See the
+[easi-infra-modules](https://github.com/CMSgov/easi-infra-modules/blob/master/lambda/prince/README.md)
 repo for instructions on how to build the lambda locally.
 
-[docker-lambda](https://github.com/lambci/docker-lambda) is used to run lambda functions
-locally that execute in AWS in a deployed environment.
+[docker-lambda](https://github.com/lambci/docker-lambda) is used to run lambda
+functions locally that execute in AWS in a deployed environment.
 
 For local development, the Prince XML Lambda should start automatically if you
 run `scripts/dev up`.
@@ -439,12 +473,10 @@ or
 Note: using `LICENSE_KEY_SSM_PATH` requires AWS credentials for the appropriate
 environment.
 
-
 ## Docker Compose Files
 
-`scripts/dev` and parts of our CI tooling rely on docker-compose.
-Multiple docker-compose files exist to support different use cases and
-environments.
+`scripts/dev` and parts of our CI tooling rely on docker-compose. Multiple
+docker-compose files exist to support different use cases and environments.
 
 | File                        | Description                                                                                                                       |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
