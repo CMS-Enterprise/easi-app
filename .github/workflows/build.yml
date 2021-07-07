@@ -351,8 +351,16 @@ jobs:
           #       run: |
           #         ./scripts/run-cypress-test-docker-github-actions
 
+  approve_dev_deploy:
+    needs: server_test
+    runs-on: ubuntu-latest
+    environment: hold_dev
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - run: echo "Approve dev deploy"
+
   deploy_dev:
-    needs: [ lint, client_test, server_test ]
+    needs: [ lint, client_test, server_test, approve_dev_deploy ]
     runs-on: ubuntu-latest
     environment: dev
     env:
