@@ -12,7 +12,6 @@ payload="$(jq --null-input ".command = \"runtask\" | .body.cluster_id = \"$clust
 cli_read_timeout=240
 
 if (set -x ; aws lambda invoke --qualifier "$lambda_version" --cli-read-timeout "$cli_read_timeout" --function "$function_name" --cli-binary-format raw-in-base64-out --payload "$payload" lambda_response.json) ; then
-  jq < lambda_response.json
   exitCode="$(jq '.data.response.taskStatus.exitCode' < lambda_response.json)"
   if [[ "$exitCode" != 0 ]] ; then
     echo ": task exited non-zero or exit status could not be parsed" 1>&2

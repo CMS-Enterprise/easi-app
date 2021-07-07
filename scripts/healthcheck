@@ -11,7 +11,7 @@ healthcheck_timeout="300"
 
 # wait for the new service to come up
 echo -n "Waiting for health check version to match new deployment on ${healthcheck_url}" 1>&2
-until [[ "$(jq --raw-output --monochrome-output .version < <(curl --silent --show-error --max-time 2 --location "$healthcheck_url"))" == "$CIRCLE_SHA1" ]] ; do
+until [[ "$(jq --raw-output --monochrome-output .version < <(curl --silent --show-error --max-time 2 --location "$healthcheck_url"))" == "$IMAGE_TAG" ]] ; do
   if ((++time > healthcheck_timeout)) ; then
     # we timed out
     echo ""

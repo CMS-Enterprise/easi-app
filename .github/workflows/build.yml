@@ -348,6 +348,8 @@ jobs:
     needs: [ lint, client_test, server_test, e2e_tests ]
     runs-on: ubuntu-latest
     environment: dev
+    env:
+      APP_ENV: dev
     steps:
       - name: Check out code
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
@@ -379,3 +381,25 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
           role-duration-seconds: 1800
           role-skip-session-tagging: true
+      - name: Clean the database
+        run: |
+          ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
+      - name: Run migrations
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-db-migrate
+          IMAGE_TAG: actions-${{ github.sha }}
+        run: |
+          ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "6" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "6" "easi-app-db-migrate"
+      - name: Deploy ECS service
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-backend
+          IMAGE_TAG: actions-${{ github.sha }}
+        run: |
+          ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "6" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/healthcheck
+      - name: Build static assets and release to S3
+        run: |
+          ./scripts/release_static
