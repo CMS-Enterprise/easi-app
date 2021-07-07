@@ -402,6 +402,9 @@ jobs:
           ./scripts/healthcheck
       - name: Build static assets and release to S3
         env:
+          LD_CLIENT_ID_DEV: ${{ secrets.LD_CLIENT_ID_DEV }}
+          OKTA_CLIENT_ID_DEV: ${{ secrets.OKTA_CLIENT_ID_DEV }}
+          OKTA_SERVER_ID_DEV: ${{ secrets.OKTA_SERVER_ID_DEV }}
           STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET_DEV }}
         run: |
           ./scripts/release_static
