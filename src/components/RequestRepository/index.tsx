@@ -371,6 +371,9 @@ const RequestRepository = () => {
               type="button"
               className="easi-request-repo__tab-btn"
               onClick={() => setActiveTable('open')}
+              aria-label={
+                activeTable === 'open' ? 'Open requests selected' : ''
+              }
             >
               Open Requests
             </button>
@@ -385,6 +388,9 @@ const RequestRepository = () => {
               className="easi-request-repo__tab-btn"
               onClick={() => setActiveTable('closed')}
               data-testid="view-closed-intakes-btn"
+              aria-label={
+                activeTable === 'closed' ? 'Closed requests selected' : ''
+              }
             >
               Closed Requests
             </button>

@@ -10,7 +10,14 @@ import {
   Button,
   Link as UswdsLink
 } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import {
+  Field,
+  Form,
+  Formik,
+  FormikErrors,
+  FormikHelpers,
+  FormikProps
+} from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
@@ -21,6 +28,7 @@ import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccess
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   CreateAccessibilityRequestNote,
+  CreateAccessibilityRequestNote_createAccessibilityRequestNote_userErrors as noteUserErrors,
   CreateAccessibilityRequestNoteVariables
 } from 'queries/types/CreateAccessibilityRequestNote';
 import {
@@ -72,11 +80,15 @@ import user from 'utils/user';
 import accessibilitySchema from 'validations/accessibilitySchema';
 import { NotFoundPartial } from 'views/NotFound';
 
+import RequestDeleted from './RequestDeleted';
+
 import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
+  const [formikErrors, setFormikErrors] = useState<FormikErrors<any>>({});
+  const [returnedUserErrors, setReturnedUserErrors] = useState<any>(null);
   const { message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
   const history = useHistory();
@@ -91,6 +103,8 @@ const AccessibilityRequestDetailPage = () => {
   const requestQuery = isAccessibilityTeam
     ? GetAccessibilityRequestAccessibilityTeamOnlyQuery
     : GetAccessibilityRequestQuery;
+
+  const flatFormikErrors = flattenErrors(formikErrors);
 
   // TODO: typechecking is off because of conditional query
   const { loading, error, data, refetch } = useQuery<
@@ -108,7 +122,7 @@ const AccessibilityRequestDetailPage = () => {
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
 
-  const [mutateCreateNote] = useMutation<
+  const [mutateCreateNote, { error: noteMutationError }] = useMutation<
     CreateAccessibilityRequestNote,
     CreateAccessibilityRequestNoteVariables
   >(CreateAccessibilityRequestNoteQuery);
@@ -135,6 +149,12 @@ const AccessibilityRequestDetailPage = () => {
     });
   };
 
+  const resetAlerts = () => {
+    showMessage(undefined);
+    setFormikErrors({});
+    setReturnedUserErrors(null);
+  };
+
   const createNote = (
     values: CreateNoteForm,
     { resetForm }: FormikHelpers<CreateNoteForm>
@@ -147,12 +167,22 @@ const AccessibilityRequestDetailPage = () => {
           shouldSendEmail: values.shouldSendEmail
         }
       }
-    }).then(() => {
-      refetch();
-      showMessage(''); // allows screen reader to hear consecutive success message
-      showMessage(t('requestDetails.notes.confirmation', { requestName }));
-      resetForm({});
-    });
+    })
+      .then(response => {
+        const userErrors =
+          response.data?.createAccessibilityRequestNote?.userErrors;
+        if (userErrors) {
+          resetAlerts();
+          setReturnedUserErrors(userErrors);
+        }
+        if (!userErrors) {
+          refetch();
+          resetAlerts();
+          showMessage(t('requestDetails.notes.confirmation', { requestName }));
+          resetForm({});
+        }
+      })
+      .catch(response => {});
   };
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
@@ -315,27 +345,16 @@ const AccessibilityRequestDetailPage = () => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<CreateNoteForm>) => {
-            const { values, errors, setFieldValue } = formikProps;
+            const {
+              values,
+              errors,
+              setFieldValue,
+              validateForm,
+              submitForm
+            } = formikProps;
             const flatErrors = flattenErrors(errors);
             return (
               <>
-                {Object.keys(errors).length > 0 && (
-                  <ErrorAlert
-                    testId="create-accessibility-note-errors"
-                    classNames="margin-bottom-4 margin-top-4"
-                    heading="There is a problem"
-                  >
-                    {Object.keys(flatErrors).map(key => {
-                      return (
-                        <ErrorAlertMessage
-                          key={`Error.${key}`}
-                          errorKey={key}
-                          message={flatErrors[key]}
-                        />
-                      );
-                    })}
-                  </ErrorAlert>
-                )}
                 <Form className="usa-form maxw-full">
                   <FieldGroup>
                     <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
@@ -364,7 +383,20 @@ const AccessibilityRequestDetailPage = () => {
                       }}
                     />
                   </FieldGroup>
-                  <Button className="margin-top-2" type="submit">
+                  <Button
+                    className="margin-top-2"
+                    type="button"
+                    onClick={() =>
+                      validateForm().then(err => {
+                        if (Object.keys(err).length > 0) {
+                          resetAlerts();
+                          setFormikErrors(err);
+                        } else {
+                          submitForm();
+                        }
+                      })
+                    }
+                  >
                     {t('requestDetails.notes.submit')}
                   </Button>
                 </Form>
@@ -411,12 +443,14 @@ const AccessibilityRequestDetailPage = () => {
     );
   }
 
+  if (data?.accessibilityRequest?.statusRecord?.status === 'DELETED') {
+    return <RequestDeleted />;
+  }
   // What type of errors can we get/return?
   // How can we actually use the errors?
   if (error) {
     return <pre>{JSON.stringify(error, null, 2)}</pre>;
   }
-
   return (
     <div data-testid="accessibility-request-detail-page">
       <div className="bg-primary-lighter">
@@ -438,6 +472,44 @@ const AccessibilityRequestDetailPage = () => {
             >
               {message}
             </Alert>
+          )}
+          {noteMutationError && (
+            <Alert
+              className="margin-top-4"
+              type="error"
+              role="alert"
+              heading="There is a problem"
+            >
+              {t('requestDetails.notes.formErrorMessage')}
+            </Alert>
+          )}
+          {returnedUserErrors && (
+            <ErrorAlert
+              testId="create-accessibility-note-errors"
+              classNames="margin-bottom-4 margin-top-4"
+              heading="There is a problem"
+            >
+              {returnedUserErrors.map((err: noteUserErrors) => {
+                return <p key={err.message}>{err.message}</p>;
+              })}
+            </ErrorAlert>
+          )}
+          {Object.keys(flatFormikErrors).length > 0 && (
+            <ErrorAlert
+              testId="508-request-details-error"
+              classNames="margin-bottom-4 margin-top-4"
+              heading="There is a problem"
+            >
+              {Object.keys(flatFormikErrors).map(key => {
+                return (
+                  <ErrorAlertMessage
+                    key={`Error.${key}`}
+                    errorKey={key}
+                    message={flatFormikErrors[key]}
+                  />
+                );
+              })}
+            </ErrorAlert>
           )}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}

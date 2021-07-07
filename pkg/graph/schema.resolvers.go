@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -336,19 +335,10 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
-	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+	request, err := r.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
 		EUAUserID: requesterEUAID,
 		Name:      input.Name,
 		IntakeID:  input.IntakeID,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
-		RequestID: request.ID,
-		Status:    models.AccessibilityRequestStatusOpen,
-		EUAUserID: requesterEUAID,
 	})
 	if err != nil {
 		return nil, err
@@ -486,6 +476,13 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 }
 
 func (r *mutationResolver) CreateAccessibilityRequestNote(ctx context.Context, input model.CreateAccessibilityRequestNoteInput) (*model.CreateAccessibilityRequestNotePayload, error) {
+	if input.Note == "" {
+		return &model.CreateAccessibilityRequestNotePayload{
+			AccessibilityRequestNote: nil,
+			UserErrors:               []*model.UserError{{Message: "Must include a non-empty note", Path: []string{"note"}}},
+		}, nil
+	}
+
 	created, err := r.store.CreateAccessibilityRequestNote(ctx, &models.AccessibilityRequestNote{
 		Note:      input.Note,
 		RequestID: input.RequestID,
@@ -884,7 +881,8 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
-	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, id)
+	// deleted requests need to be returned to be able to show a deleted request view
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestByIDIncludingDeleted(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -1308,13 +1306,3 @@ type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *accessibilityRequestNoteResolver) CreatorName(ctx context.Context, obj *models.AccessibilityRequestNote) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
-}

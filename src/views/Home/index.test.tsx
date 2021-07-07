@@ -33,14 +33,9 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 const defaultFlags = {
-  add508Request: false,
   downgrade508Tester: false,
   downgrade508User: false,
   downgradeGovTeam: false,
-  fileUploads: true,
-  pdfExport: true,
-  prototype508: true,
-  prototypeTrb: true,
   sandbox: true
 };
 
@@ -71,85 +66,52 @@ describe('The home page', () => {
     });
 
     describe('User is logged in', () => {
-      describe('add508FeatureFlag is false', () => {
-        it('displays login button', async () => {
-          mockFlags(defaultFlags);
-          const mockStore = configureMockStore();
-          const store = mockStore({
-            auth: mockAuthReducer,
-            systemIntakes: {
-              systemIntakes: []
+      it('displays process options', async () => {
+        mockFlags({ ...defaultFlags });
+        const mockStore = configureMockStore();
+        const store = mockStore({
+          auth: mockAuthReducer,
+          systemIntakes: {
+            systemIntakes: []
+          },
+          businessCases: {
+            businessCases: []
+          }
+        });
+        let component: any;
+        const mocks = [
+          {
+            request: {
+              query: GetRequestsQuery,
+              variables: { first: 20 }
             },
-            businessCases: {
-              businessCases: []
-            }
-          });
-          let component: any;
-          await act(async () => {
-            component = mount(
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            result: {}
+          }
+        ];
+        await act(async () => {
+          component = mount(
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks}>
                 <Provider store={store}>
                   <MessageProvider>
                     <Home />
                   </MessageProvider>
                 </Provider>
-              </MemoryRouter>
-            );
-            component.update();
-            expect(component.find('a[children="Start now"]').exists()).toEqual(
-              true
-            );
-          });
-        });
-      });
-      describe('add508FeatureFlag is true', () => {
-        it('displays process options', async () => {
-          mockFlags({ ...defaultFlags, add508Request: true });
-          const mockStore = configureMockStore();
-          const store = mockStore({
-            auth: mockAuthReducer,
-            systemIntakes: {
-              systemIntakes: []
-            },
-            businessCases: {
-              businessCases: []
-            }
-          });
-          let component: any;
-          const mocks = [
-            {
-              request: {
-                query: GetRequestsQuery,
-                variables: { first: 20 }
-              },
-              result: {}
-            }
-          ];
-          await act(async () => {
-            component = mount(
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider mocks={mocks}>
-                  <Provider store={store}>
-                    <MessageProvider>
-                      <Home />
-                    </MessageProvider>
-                  </Provider>
-                </MockedProvider>
-              </MemoryRouter>
-            );
-            component.update();
-            expect(component.find('a[children="Start now"]').exists()).toEqual(
-              false
-            );
-            expect(
-              component.find('a[children="IT Governance"]').exists()
-            ).toEqual(true);
-            expect(
-              component.find('a[children="Section 508 compliance"]').exists()
-            ).toEqual(true);
-            expect(component.find('hr').exists()).toBeTruthy();
-            expect(component.find(Table).exists()).toBeTruthy();
-          });
+              </MockedProvider>
+            </MemoryRouter>
+          );
+          component.update();
+          expect(component.find('a[children="Start now"]').exists()).toEqual(
+            false
+          );
+          expect(
+            component.find('a[children="IT Governance"]').exists()
+          ).toEqual(true);
+          expect(
+            component.find('a[children="Section 508 compliance"]').exists()
+          ).toEqual(true);
+          expect(component.find('hr').exists()).toBeTruthy();
+          expect(component.find(Table).exists()).toBeTruthy();
         });
       });
     });

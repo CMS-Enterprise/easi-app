@@ -12,6 +12,7 @@ import {
 } from 'queries/types/UpdateSystemIntakeReviewDates';
 import UpdateSystemIntakeReviewDatesQuery from 'queries/UpdateSystemIntakeReviewDatesQuery';
 
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import {
   DateInputDay,
@@ -21,6 +22,7 @@ import {
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { AnythingWrongSurvey } from 'components/Survey';
@@ -132,6 +134,9 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
             )}
             <PageHeading>{t('governanceReviewTeam:dates.heading')}</PageHeading>
             <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
+            <div className="tablet:grid-col-6">
+              <MandatoryFieldsAlert />
+            </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form
                 onSubmit={e => {
@@ -151,6 +156,9 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                     <legend className="usa-label margin-bottom-1">
                       {t('governanceReviewTeam:dates.grtDate.label')}
                     </legend>
+                    <HelpText id="TestDate-DateHelp">
+                      For example 04 28 2020
+                    </HelpText>
                     <FieldErrorMsg>{flatErrors.grtDateMonth}</FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.grtDateDay}</FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.grtDateYear}</FieldErrorMsg>

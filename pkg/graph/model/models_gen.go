@@ -100,6 +100,7 @@ type CreateAccessibilityRequestNoteInput struct {
 
 type CreateAccessibilityRequestNotePayload struct {
 	AccessibilityRequestNote *models.AccessibilityRequestNote `json:"accessibilityRequestNote"`
+	UserErrors               []*UserError                     `json:"userErrors"`
 }
 
 type CreateAccessibilityRequestPayload struct {
