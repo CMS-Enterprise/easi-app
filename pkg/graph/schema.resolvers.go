@@ -428,7 +428,7 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	if requestErr != nil {
 		return nil, requestErr
 	}
-	ok, authErr := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	ok, authErr := services.AuthorizeUserIsRequestOwnerOr508Team(ctx, accessibilityRequest)
 	if authErr != nil {
 		return nil, authErr
 	}
@@ -521,7 +521,7 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
-	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	ok, err := services.AuthorizeUserIsRequestOwnerOr508Team(ctx, accessibilityRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -886,7 +886,7 @@ func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) 
 	if err != nil {
 		return nil, err
 	}
-	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	ok, err := services.AuthorizeUserIsRequestOwnerOr508Team(ctx, accessibilityRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -946,7 +946,7 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
-	ok, err := r.service.AuthorizeUserIsReviewTeamOrIntakeRequester(ctx, intake)
+	ok, err := services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx, intake)
 	if err != nil {
 		return nil, err
 	}
