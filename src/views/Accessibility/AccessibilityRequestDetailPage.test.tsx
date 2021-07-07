@@ -56,11 +56,17 @@ describe('AccessibilityRequestDetailPage', () => {
     }
   };
 
-  const buildProviders = (mocks: any, store: any) => (
+  const buildProviders = (mocks: any, store: any, useNotesPath: boolean) => (
     <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
       <MockedProvider mocks={mocks} addTypename={false}>
         <Provider store={store}>
-          <Route path="/508/requests/:accessibilityRequestId">
+          <Route
+            path={
+              useNotesPath
+                ? '/508/requests/:accessibilityRequestId/notes'
+                : '/508/requests/:accessibilityRequestId'
+            }
+          >
             <MessageProvider>
               <AccessibilityRequestDetailPage />
             </MessageProvider>
@@ -71,7 +77,7 @@ describe('AccessibilityRequestDetailPage', () => {
   );
 
   it('renders without crashing', async () => {
-    render(buildProviders([default508RequestQuery], defaultStore));
+    render(buildProviders([default508RequestQuery], defaultStore, false));
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -110,7 +116,7 @@ describe('AccessibilityRequestDetailPage', () => {
       }
     };
 
-    render(buildProviders([deleted508RequestQuery], defaultStore));
+    render(buildProviders([deleted508RequestQuery], defaultStore, false));
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -202,7 +208,7 @@ describe('AccessibilityRequestDetailPage', () => {
     };
 
     it('renders Next step if no documents', async () => {
-      render(buildProviders([withoutDocsQuery], defaultStore));
+      render(buildProviders([withoutDocsQuery], defaultStore, false));
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -365,7 +371,7 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     const defaultRender = () =>
-      render(buildProviders([defaultQuery], testerStore));
+      render(buildProviders([defaultQuery], testerStore, false));
 
     it("doesn't render table if there are no documents", async () => {
       defaultRender();
@@ -378,7 +384,7 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     it('renders table if there are documents', async () => {
-      render(buildProviders([withDocsQuery], testerStore));
+      render(buildProviders([withDocsQuery], testerStore, false));
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -389,7 +395,7 @@ describe('AccessibilityRequestDetailPage', () => {
 
     describe('notes tab', () => {
       it('can view existing notes', async () => {
-        render(buildProviders([withNotesQuery], testerStore));
+        render(buildProviders([withNotesQuery], testerStore, true));
 
         await waitForElementToBeRemoved(() =>
           screen.getByTestId('page-loading')
@@ -481,7 +487,7 @@ describe('AccessibilityRequestDetailPage', () => {
           withNotesQueryWithNewNote
         ];
 
-        const providers = buildProviders(createNoteMocks, testerStore);
+        const providers = buildProviders(createNoteMocks, testerStore, true);
         render(providers);
 
         await waitForElementToBeRemoved(() =>
@@ -506,7 +512,7 @@ describe('AccessibilityRequestDetailPage', () => {
 
       it('shows an error alert when there is a form validation error', async () => {
         const mocks = [defaultQuery];
-        const providers = buildProviders(mocks, testerStore);
+        const providers = buildProviders(mocks, testerStore, true);
 
         render(providers);
 
@@ -549,7 +555,7 @@ describe('AccessibilityRequestDetailPage', () => {
           }
         ];
 
-        const providers = buildProviders(errorMocks, testerStore);
+        const providers = buildProviders(errorMocks, testerStore, true);
         render(providers);
 
         await waitForElementToBeRemoved(() =>
@@ -599,7 +605,7 @@ describe('AccessibilityRequestDetailPage', () => {
           }
         ];
 
-        const providers = buildProviders(userErrorMocks, testerStore);
+        const providers = buildProviders(userErrorMocks, testerStore, true);
         render(providers);
 
         await waitForElementToBeRemoved(() =>
