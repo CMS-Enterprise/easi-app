@@ -236,6 +236,9 @@ jobs:
           OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
           OKTA_DOMAIN: https://test.idp.idm.cms.gov
           OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
+          OKTA_TEST_SECRET : ${{ secrets.OKTA_TEST_SECRET }}
+          OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
