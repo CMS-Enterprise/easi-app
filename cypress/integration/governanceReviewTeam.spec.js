@@ -30,7 +30,7 @@ describe('Governance Review Team', () => {
       .type('2020')
       .should('have.value', '2020');
 
-    cy.get('button[data-testid="button"]').contains('Save').click();
+    cy.get('button[type="submit"]').click();
 
     cy.location().should(loc => {
       expect(loc.pathname).to.eq(
