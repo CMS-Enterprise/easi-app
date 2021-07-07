@@ -8,6 +8,7 @@ import (
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
@@ -47,7 +48,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 		`query {
 			systemIntake(id: "%s") {
 				id
-				businessCase { 
+				businessCase {
 					id
 					alternativeASolution {
 						cons
@@ -57,7 +58,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -124,7 +125,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery
 		`query {
 			systemIntake(id: "%s") {
 				id
-				businessCase { 
+				businessCase {
 					id
 					alternativeASolution {
 						acquisitionApproach
@@ -142,7 +143,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -234,7 +235,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery
 		`query {
 			systemIntake(id: "%s") {
 				id
-				businessCase { 
+				businessCase {
 					id
 					lifecycleCostLines {
 						cost
@@ -244,7 +245,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
