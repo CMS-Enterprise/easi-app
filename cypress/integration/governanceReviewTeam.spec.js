@@ -3,12 +3,10 @@ describe('Governance Review Team', () => {
     cy.server();
     cy.route('GET', '/api/v1/system_intakes?status=open').as('getOpenIntakes');
     cy.localLogin({ name: 'GRTB', role: 'EASI_D_GOVTEAM' });
-    cy.visit('/');
+    cy.wait('@getOpenIntakes').its('status').should('be', 200);
   });
 
   it('can add GRT/GRB dates', () => {
-    cy.wait('@getOpenIntakes');
-
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.get('a').contains('A Completed Intake Form').click();
