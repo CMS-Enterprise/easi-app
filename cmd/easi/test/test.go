@@ -21,7 +21,6 @@ func Server() {
 	c := exec.Command(
 		"go",
 		"test",
-		"-short",
 		"-coverprofile=go-coverage.out",
 		"./pkg/...")
 	// Replace with some sort of configured writer
