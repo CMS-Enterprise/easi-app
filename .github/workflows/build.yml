@@ -277,7 +277,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-backend
           IMAGE_TAG: actions-${{ github.sha }}
-          APPLICATION_VERSION: ${{ github.sha }}
+          APPLICATION_VERSION: actions-${{ github.sha }}
         run: |
           APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
           APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
