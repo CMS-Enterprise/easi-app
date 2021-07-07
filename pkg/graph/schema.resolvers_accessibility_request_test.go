@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/99designs/gqlgen/client"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
@@ -127,7 +126,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 					authorName
 				}
 			}
-		}`, accessibilityRequest.ID), &resp)
+		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("HEHE"))
 
 	s.Equal(accessibilityRequest.ID.String(), resp.AccessibilityRequest.ID)
 	s.Equal(intake.ID.String(), resp.AccessibilityRequest.System.ID)
@@ -211,7 +210,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 					status
 				}
 			}
-		}`, accessibilityRequest.ID), &resp)
+		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("ABCD"))
 
 	responseDocument := resp.AccessibilityRequest.Documents[0]
 	s.Equal("AVAILABLE", responseDocument.Status)
@@ -226,7 +225,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 					status
 				}
 			}
-		}`, accessibilityRequest.ID), &resp)
+		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	responseDocument = resp.AccessibilityRequest.Documents[0]
 	s.Equal("UNAVAILABLE", responseDocument.Status)
@@ -327,7 +326,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 					path
 				}
 			}
-		}`, accessibilityRequest.ID.String()), &resp)
+		}`, accessibilityRequest.ID.String()), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	document := resp.CreateAccessibilityRequestDocument.AccessibilityRequestDocument
 
@@ -387,11 +386,7 @@ func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 						path
 					}
 			}
-		}`, accessibilityRequest.ID.String()), &resp, func(request *client.Request) {
-		principal := authentication.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true, JobCode508User: true}
-		ctx := appcontext.WithPrincipal(context.Background(), &principal)
-		request.HTTP = request.HTTP.WithContext(ctx)
-	})
+		}`, accessibilityRequest.ID.String()), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("ABCD"))
 
 	s.Equal(accessibilityRequest.ID.String(), resp.DeleteAccessibilityRequest.ID)
 	s.Nil(resp.DeleteAccessibilityRequest.UserErrors)
