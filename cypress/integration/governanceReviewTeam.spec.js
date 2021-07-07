@@ -3,8 +3,7 @@ describe('Governance Review Team', () => {
     cy.server();
     cy.route('GET', '/api/v1/system_intakes?status=open').as('getOpenIntakes');
     cy.localLogin({ name: 'GRTB', role: 'EASI_D_GOVTEAM' });
-    cy.visit('/');
-    cy.wait('@getOpenIntakes');
+    cy.wait('@getOpenIntakes').its('status').should('be', 200);
   });
 
   it('can add GRT/GRB dates', () => {
