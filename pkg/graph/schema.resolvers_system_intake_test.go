@@ -9,6 +9,7 @@ import (
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s GraphQLTestSuite) TestCreateSystemIntakeMutation() {
@@ -94,7 +95,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 				}
 				businessNeed
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.Equal(projectName, resp.SystemIntake.RequestName)
@@ -170,7 +171,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("WWWW"))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -247,7 +248,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -314,7 +315,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -376,7 +377,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.False(resp.SystemIntake.GovernanceTeams.IsPresent)
@@ -433,7 +434,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.True(resp.SystemIntake.GovernanceTeams.IsPresent)
@@ -506,7 +507,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 					createdAt
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(2, len(resp.SystemIntake.Actions))
 
