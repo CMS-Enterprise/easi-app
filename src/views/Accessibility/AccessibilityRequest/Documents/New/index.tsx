@@ -18,6 +18,7 @@ import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import FileUpload from 'components/FileUpload';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -31,6 +32,8 @@ import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-typ
 import { translateDocumentCommonType } from 'utils/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { DocumentUploadValidationSchema } from 'validations/documentUploadSchema';
+
+import RequestDeleted from '../../../RequestDeleted';
 
 const New = () => {
   const history = useHistory();
@@ -66,7 +69,7 @@ const New = () => {
   ] = useState(false);
 
   if (loading) {
-    return <div>Loading</div>;
+    return <PageLoading />;
   }
 
   if (error) {
@@ -77,6 +80,10 @@ const New = () => {
     return (
       <div>{`No request found matching id: ${accessibilityRequestId}`}</div>
     );
+  }
+
+  if (data.accessibilityRequest?.statusRecord.status === 'DELETED') {
+    return <RequestDeleted />;
   }
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

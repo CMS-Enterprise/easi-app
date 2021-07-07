@@ -10,6 +10,7 @@ import {
   AddGRTFeedbackVariables
 } from 'queries/types/AddGRTFeedback';
 
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -87,6 +88,9 @@ const ProvideGRTRecommendationsToGRB = () => {
               {t('actions.readyForGrb')} &nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
+            <div className="tablet:grid-col-6">
+              <MandatoryFieldsAlert />
+            </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form
                 onSubmit={e => {

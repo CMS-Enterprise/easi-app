@@ -35,17 +35,11 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(updateErr)
 
-	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
 		IntakeID:  intake.ID,
 		EUAUserID: "ABCD",
 	})
 	s.NoError(requestErr)
-
-	_, statusRecordErr := s.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
-		RequestID: accessibilityRequest.ID,
-		EUAUserID: "ABCD",
-	})
-	s.NoError(statusRecordErr)
 
 	document, documentErr := s.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		RequestID:          accessibilityRequest.ID,
@@ -180,7 +174,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(updateErr)
 
-	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
 		IntakeID:  intake.ID,
 		EUAUserID: "ABCD",
 	})
@@ -282,7 +276,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(updateErr)
 
-	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
 		IntakeID:  intake.ID,
 		EUAUserID: "ABCD",
 	})
@@ -365,7 +359,7 @@ func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(updateErr)
 
-	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
 		IntakeID:  intake.ID,
 		EUAUserID: "ABCD",
 	})
@@ -436,20 +430,66 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(updateErr)
 
-	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
 		IntakeID:  intake.ID,
 		EUAUserID: "ABCD",
 	})
 	s.NoError(requestErr)
 
-	// The meat of the test
-	input := model.CreateAccessibilityRequestNoteInput{
-		RequestID: accessibilityRequest.ID,
-		Note:      "Here is my test note",
-	}
-	payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
-	s.NoError(err)
-	s.Equal(input.Note, payload.AccessibilityRequestNote.Note)
-	s.Equal(input.RequestID, payload.AccessibilityRequestNote.RequestID)
-	s.Equal(euaID, payload.AccessibilityRequestNote.EUAUserID)
+	s.Run("accessibility request note creation success", func() {
+		input := model.CreateAccessibilityRequestNoteInput{
+			RequestID: accessibilityRequest.ID,
+			Note:      "Here is my test note",
+		}
+		payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+		s.NoError(err)
+		s.Equal(input.Note, payload.AccessibilityRequestNote.Note)
+		s.Equal(input.RequestID, payload.AccessibilityRequestNote.RequestID)
+		s.Equal(euaID, payload.AccessibilityRequestNote.EUAUserID)
+	})
+
+	s.Run("create accessibility request note returns validation error in payload", func() {
+		input := model.CreateAccessibilityRequestNoteInput{
+			RequestID: accessibilityRequest.ID,
+			Note:      "",
+		}
+		payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+		s.NoError(err)
+		s.Equal("Must include a non-empty note", payload.UserErrors[0].Message)
+		s.Equal((*models.AccessibilityRequestNote)(nil), payload.AccessibilityRequestNote)
+	})
+
+	s.Run("create accessibility request note - authorization error fails", func() {
+		invalidEuaID := "12345"
+		principal = authentication.EUAPrincipal{EUAID: invalidEuaID, JobCodeEASi: true, JobCode508User: true}
+		ctx = appcontext.WithPrincipal(context.Background(), &principal)
+
+		intake, intakeErr = s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+			ProjectName:            null.StringFrom("Another Project"),
+			Status:                 models.SystemIntakeStatusLCIDISSUED,
+			RequestType:            models.SystemIntakeRequestTypeNEW,
+			BusinessOwner:          null.StringFrom("Firstname Lastname"),
+			BusinessOwnerComponent: null.StringFrom("OIT"),
+		})
+		s.NoError(intakeErr)
+
+		lifecycleID, lcidErr = s.store.GenerateLifecycleID(ctx)
+		s.NoError(lcidErr)
+		intake.LifecycleID = null.StringFrom(lifecycleID)
+		_, err := s.store.UpdateSystemIntake(ctx, intake)
+		s.NoError(err)
+
+		accessibilityRequest, err = s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+			IntakeID:  intake.ID,
+			EUAUserID: "UXYZ",
+		})
+		s.NoError(err)
+
+		input := model.CreateAccessibilityRequestNoteInput{
+			RequestID: accessibilityRequest.ID,
+			Note:      "Here is my other test note",
+		}
+		_, err = s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+		s.Error(err)
+	})
 }

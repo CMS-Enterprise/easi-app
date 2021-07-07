@@ -61,7 +61,7 @@ func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID)
 	err := s.db.Get(&request, `SELECT * FROM accessibility_requests WHERE id=$1 AND deleted_at IS NULL`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.AccessibilityRequest{}}
 		}
 		appcontext.ZLogger(ctx).Error("Failed to fetch accessibility request", zap.Error(err), zap.String("id", id.String()))
 		return nil, &apperrors.QueryError{
@@ -81,7 +81,7 @@ func (s *Store) FetchAccessibilityRequestByIDIncludingDeleted(ctx context.Contex
 	err := s.db.Get(&request, `SELECT * FROM accessibility_requests WHERE id=$1`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.AccessibilityRequest{}}
 		}
 		appcontext.ZLogger(ctx).Error("Failed to fetch accessibility request", zap.Error(err), zap.String("id", id.String()))
 		return nil, &apperrors.QueryError{
@@ -94,7 +94,7 @@ func (s *Store) FetchAccessibilityRequestByIDIncludingDeleted(ctx context.Contex
 	return &request, nil
 }
 
-// FetchAccessibilityRequests queries the DB for an accessibility requests.
+// FetchAccessibilityRequests queries the DB for accessibility requests.
 // TODO implement cursor pagination
 func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]models.AccessibilityRequest, error) {
 	requests := []models.AccessibilityRequest{}

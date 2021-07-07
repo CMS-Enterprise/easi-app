@@ -10,6 +10,7 @@ import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
@@ -147,6 +148,9 @@ const GeneralRequestInfo = ({
                   <Label htmlFor="BusinessCase-RequesterPhoneNumber">
                     Requester Phone Number
                   </Label>
+                  <HelpText id="BusinessCase-PhoneNumber">
+                    For example 123456789 or 123-456-789
+                  </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['requester.phoneNumber']}
                   </FieldErrorMsg>
@@ -158,6 +162,7 @@ const GeneralRequestInfo = ({
                       maxLength={20}
                       name="requester.phoneNumber"
                       match={allowedPhoneNumberCharacters}
+                      aria-describedby="BusinessCase-PhoneNumber"
                     />
                   </div>
                 </FieldGroup>
