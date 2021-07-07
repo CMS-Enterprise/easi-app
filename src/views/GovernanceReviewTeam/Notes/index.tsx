@@ -91,7 +91,7 @@ const Notes = () => {
       return {
         createdAt,
         element: (
-          <NoteListItem key={id} isLinked>
+          <NoteListItem key={id} isLinked data-testid="user-note">
             <NoteContent>{content}</NoteContent>
             <NoteByline>{`by ${author.name} | ${formatDate(
               createdAt
@@ -109,7 +109,7 @@ const Notes = () => {
       return {
         createdAt,
         element: (
-          <NoteListItem key={id} isLinked>
+          <NoteListItem key={id} isLinked data-testid="action-note">
             <NoteContent>{t(`notes.actionName.${type}`)}</NoteContent>
             <NoteByline>{`by: ${actor.name} | ${formatDate(
               createdAt

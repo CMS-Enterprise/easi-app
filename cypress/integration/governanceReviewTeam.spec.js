@@ -4,11 +4,10 @@ describe('Governance Review Team', () => {
     cy.route('GET', '/api/v1/system_intakes?status=open').as('getOpenIntakes');
     cy.localLogin({ name: 'GRTB', role: 'EASI_D_GOVTEAM' });
     cy.visit('/');
+    cy.wait('@getOpenIntakes');
   });
 
   it('can add GRT/GRB dates', () => {
-    cy.wait('@getOpenIntakes');
-
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.get('a').contains('A Completed Intake Form').click();
@@ -49,5 +48,32 @@ describe('Governance Review Team', () => {
     cy.get('#Dates-GrbDateMonth').should('have.value', '12');
     cy.get('#Dates-GrbDateDay').should('have.value', '25');
     cy.get('#Dates-GrbDateYear').should('have.value', '2020');
+  });
+
+  it.only('can add a note', () => {
+    // Selecting name based on pre-seeded data
+    // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
+    cy.get('a').contains('A Completed Intake Form').click();
+    cy.get(
+      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
+    ).click();
+
+    cy.get('[data-testid="user-note"]').then(notes => {
+      const numOfNotes = notes.length;
+
+      const noteFixture = 'Test note';
+
+      cy.get('#GovernanceReviewTeam-Note')
+        .type(noteFixture)
+        .should('have.value', noteFixture);
+
+      cy.get('button[type="submit"]').click();
+
+      cy.get('[data-testid="user-note"]').should('have.length', numOfNotes + 1);
+
+      // .first() is the most recent note we just created
+      cy.get('[data-testid="user-note"]').first().contains(noteFixture);
+      cy.get('[data-testid="user-note"]').first().contains('User GRTB');
+    });
   });
 });
