@@ -352,7 +352,7 @@ jobs:
           #         ./scripts/run-cypress-test-docker-github-actions
 
   deploy_dev:
-    needs: [ lint, client_test, server_test, e2e_tests ]
+    needs: [ lint, client_test, server_test ]
     runs-on: ubuntu-latest
     environment: dev
     env:
