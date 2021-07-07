@@ -80,6 +80,8 @@ import user from 'utils/user';
 import accessibilitySchema from 'validations/accessibilitySchema';
 import { NotFoundPartial } from 'views/NotFound';
 
+import RequestDeleted from './RequestDeleted';
+
 import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
@@ -441,6 +443,9 @@ const AccessibilityRequestDetailPage = () => {
     ? notesTab
     : bodyWithDocumentsTable;
 
+  if (data?.accessibilityRequest?.statusRecord?.status === 'DELETED') {
+    return <RequestDeleted />;
+  }
   // What type of errors can we get/return?
   // How can we actually use the errors?
   if (error) {

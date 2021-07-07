@@ -47,6 +47,12 @@ const accessibility = {
     accessibilityRequests: '508 Requests'
   },
   requestDetails: {
+    requestDeleted: {
+      heading: 'The request you are looking for was deleted.',
+      body:
+        'For any further information, email the Section 508 team at <1>CMS_Section508@cms.hhs.gov</1>.',
+      homeLinkText: 'Go back to EASi homepage'
+    },
     documents: {
       label: 'Documents',
       noDocs: {
@@ -93,10 +99,12 @@ const accessibility = {
     testTypeHeader: 'What type of test?',
     dateHeader: 'Test date',
     dateHelpText: 'For example: 4 28 2020',
-    scoreHelpText: 'The test score must be a number between 0 and 100',
-    scoreHeader: 'Does this test have a score?',
-    scoreValueHeader: 'Test Score',
-    scoreValueSRHelpText: 'Enter the test score without the percentage symbol',
+    score: {
+      heading: 'Does this test have a score?',
+      label: 'Test Score',
+      help: 'Must be between 0 and 100',
+      srHelp: 'Enter the test score without the percentage symbol'
+    },
     submitButton: {
       create: 'Add date',
       update: 'Update date'
