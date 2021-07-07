@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import axios from 'axios';
 import { Base64 } from 'js-base64';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import escape from 'lodash';
 
 import downloadSVG from './download.svg';
@@ -106,11 +105,9 @@ const downloadRefAsPDF = (
 // the HTML content of child elements is sent to the server and converted
 // to PDF format.
 const PDFExport = ({ title, filename, children, label }: PDFExportProps) => {
-  const flags = useFlags();
-
   const divEl = useRef<HTMLDivElement>(null);
 
-  return flags.pdfExport ? (
+  return (
     <div className="easi-pdf-export" ref={divEl}>
       {children}
 
@@ -130,8 +127,6 @@ const PDFExport = ({ title, filename, children, label }: PDFExportProps) => {
         </button>
       </div>
     </div>
-  ) : (
-    <>{children}</>
   );
 };
 

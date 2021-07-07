@@ -14,6 +14,9 @@ import { useMessage } from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
+import PageLoading from '../../components/PageLoading';
+import RequestDeleted from '../Accessibility/RequestDeleted';
+
 import Form from './Form';
 
 import './styles.scss';
@@ -85,7 +88,11 @@ const NewTestDate = () => {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <PageLoading />;
+  }
+
+  if (data?.accessibilityRequest?.statusRecord.status === 'DELETED') {
+    return <RequestDeleted />;
   }
 
   return (
