@@ -49,7 +49,7 @@ describe('Governance Review Team', () => {
     cy.get('#Dates-GrbDateYear').should('have.value', '2020');
   });
 
-  it.only('can add a note', () => {
+  it('can add a note', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.get('a').contains('A Completed Intake Form').click();
