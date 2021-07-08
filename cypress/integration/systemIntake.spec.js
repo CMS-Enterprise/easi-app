@@ -3,27 +3,25 @@ import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
 describe('The System Intake Form', () => {
   beforeEach(() => {
     cy.server();
-    cy.localLogin({name: 'TEST'});
+    cy.localLogin({ name: 'TEST' });
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
     cy.visit('/system/request-type');
     cy.get('#RequestType-NewSystem').check({ force: true });
     cy.contains('button', 'Continue').click();
     cy.contains('a', 'Get started').click();
-    cy.wait(1000)
+    cy.wait(1000);
     cy.contains('a', 'Start').click();
     cy.location().should(loc => {
-      expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/)
-    })
-    cy.contains('h1', 'Contact details')
+      expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/);
+    });
+    cy.contains('h1', 'Contact details');
   });
 
   it('fills out minimum required fields (smoke test)', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
-    cy.get('#IntakeForm-HasIssoNo')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
 
     cy.get('#IntakeForm-NoGovernanceTeam')
       .check({ force: true })
@@ -197,9 +195,7 @@ describe('The System Intake Form', () => {
       .type('1')
       .should('have.value', '1');
 
-    cy.get('#IntakeForm-ContractStartDay')
-      .type('2')
-      .should('have.value', '2');
+    cy.get('#IntakeForm-ContractStartDay').type('2').should('have.value', '2');
 
     cy.get('#IntakeForm-ContractStartYear')
       .type('2020')
@@ -209,9 +205,7 @@ describe('The System Intake Form', () => {
       .type('12')
       .should('have.value', '12');
 
-    cy.get('#IntakeForm-ContractEndDay')
-      .type('29')
-      .should('have.value', '29');
+    cy.get('#IntakeForm-ContractEndDay').type('29').should('have.value', '29');
 
     cy.get('#IntakeForm-ContractEndYear')
       .type('2021')
@@ -316,9 +310,7 @@ describe('The System Intake Form', () => {
   it('displays request details error messages', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
-    cy.get('#IntakeForm-HasIssoNo')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
 
     cy.get('#IntakeForm-NoGovernanceTeam')
       .check({ force: true })
@@ -335,9 +327,7 @@ describe('The System Intake Form', () => {
 
   it('saves on back click', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
-    cy.get('#IntakeForm-HasIssoNo')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
 
     cy.get('#IntakeForm-NoGovernanceTeam')
       .check({ force: true })
@@ -360,10 +350,24 @@ describe('The System Intake Form', () => {
 describe('users who got lost', () => {
   it('redirects to the system type page if somebody managed to skip it', () => {
     cy.server();
-    cy.localLogin({name: 'TEST'});
-    cy.visit('/system/new')
+    cy.localLogin({ name: 'TEST' });
+    cy.visit('/system/new');
     cy.location().should(loc => {
-      expect(loc.pathname).to.equal('/system/request-type')
-    })
-  })
-})
+      expect(loc.pathname).to.equal('/system/request-type');
+    });
+  });
+});
+
+describe('office user', () => {
+  it.only('can assign Admin Lead', () => {
+    cy.localLogin({ name: 'OFFI', role: 'EASI_D_GOVTEAM' });
+    cy.visit(
+      'governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
+    );
+    cy.get('[data-testid="adminLead"]').contains('Not assigned');
+    cy.contains('button', 'Change').click();
+    cy.get('input[value="Ann Rudolph"]').check({ force: true });
+    cy.get('[data-testid="button"]').contains('Save').click();
+    cy.get('dd[data-testid="adminLead"]').contains('Ann Rudolph');
+  });
+});
