@@ -288,71 +288,71 @@ jobs:
           docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-          # e2e_tests:
-          #   needs: [ pre_deps, build_db_migrate_image, build_server_image ]
-          #   runs-on: ubuntu-latest
-          #   steps:
-          #     - name: Check out code
-          #       uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
-          #       with:
-          #         ref: ${{ github.event.pull_request.head.sha }}
-          #     - name: Set up node
-          #       uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
-          #       with:
-          #         node-version: ${{ env.EASI_APP_NODE_VERSION }}
-          #     - name: Get yarn cache directory path
-          #       id: yarn-cache-dir-path
-          #       run: echo "::set-output name=dir::$(yarn cache dir)"
-          #     - name: Configure yarn cache
-          #       uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
-          #       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-          #       with:
-          #         path: |
-          #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          #           ./node_modules
-          #         key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
-          #         restore-keys: |
-          #           v1-yarn-
-          #     - name: Build frontend code
-          #       env:
-          #         REACT_APP_API_ADDRESS: http://easi:8080/api/v1
-          #         REACT_APP_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
-          #         REACT_APP_APP_ENV: test
-          #         REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
-          #         REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
-          #         REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
-          #         REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
-          #         REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
-          #         REACT_APP_LOCAL_AUTH_ENABLED: true
-          #       run: yarn run build
-          #     - name: Login to Docker Hub
-          #       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # v1.10.0
-          #       with:
-          #         username: ${{ secrets.DOCKERHUB_USERNAME }}
-          #         password: ${{ secrets.DOCKERHUB_TOKEN }}
-          #     - name: Configure AWS credentials
-          #       uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
-          #       with:
-          #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          #         aws-region: us-west-2
-          #     - name: Login to Amazon ECR
-          #       id: login-ecr
-          #       uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # v1.3.3
-          #     - name: Run e2e cypress tests
-          #       env:
-          #         APP_ENV: test
-          #         AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
-          #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          #         IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
-          #         OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
-          #         OKTA_TEST_SECRET : ${{ secrets.OKTA_TEST_SECRET }}
-          #         OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
-          #       run: |
-          #         ./scripts/run-cypress-test-docker-github-actions
+  e2e_tests:
+    needs: [ pre_deps, build_db_migrate_image, build_server_image ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Build frontend code
+        env:
+          REACT_APP_API_ADDRESS: http://easi:8080/api/v1
+          REACT_APP_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
+          REACT_APP_APP_ENV: test
+          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+          REACT_APP_LOCAL_AUTH_ENABLED: true
+        run: yarn run build
+      - name: Login to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # v1.10.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # v1.3.3
+      - name: Run e2e cypress tests
+        env:
+          APP_ENV: test
+          AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
+          OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
+          OKTA_TEST_SECRET : ${{ secrets.OKTA_TEST_SECRET }}
+          OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
+        run: |
+          ./scripts/run-cypress-test-docker-github-actions
 
   deploy_dev:
-    needs: [ lint, client_test, server_test, build_server_image ]
+    needs: [ lint, client_test, server_test, e2e_tests ]
     runs-on: ubuntu-latest
     environment: dev
     env:
@@ -408,7 +408,7 @@ jobs:
           IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
         run: |
           ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "6" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          ./scripts/healthcheck
+          ./scripts/healthcheck "$IMAGE_TAG"
       - name: Build static assets and release to S3
         env:
           LD_CLIENT_ID_DEV: ${{ secrets.LD_CLIENT_ID_DEV }}
