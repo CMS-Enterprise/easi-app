@@ -2,6 +2,8 @@
 #
 # wait some time for the easi health check http endpoint to return the expected version
 
+tag="${1:-${CIRCLE_SHA1}}"
+
 if [[ "$APP_ENV" != "prod" ]] ; then
   url_prefix="${APP_ENV}."
 fi
@@ -11,7 +13,7 @@ healthcheck_timeout="300"
 
 # wait for the new service to come up
 echo -n "Waiting for health check version to match new deployment on ${healthcheck_url}" 1>&2
-until [[ "$(jq --raw-output --monochrome-output .version < <(curl --silent --show-error --max-time 2 --location "$healthcheck_url"))" == "$IMAGE_TAG" ]] ; do
+until [[ "$(jq --raw-output --monochrome-output .version < <(curl --silent --show-error --max-time 2 --location "$healthcheck_url"))" == "$tag" ]] ; do
   if ((++time > healthcheck_timeout)) ; then
     # we timed out
     echo ""
