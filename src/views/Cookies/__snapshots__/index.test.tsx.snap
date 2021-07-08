@@ -1,0 +1,460 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The Cookies static page matches the snapshot 1`] = `
+<div
+  className="easi-page-wrapper"
+>
+  <header
+    className="usa-header easi-header"
+    role="banner"
+  >
+    <section
+      aria-label="Official government website"
+      className="usa-banner"
+    >
+      <div
+        className="usa-accordion"
+      >
+        <header
+          className="usa-banner__header"
+        >
+          <div
+            className="usa-banner__inner"
+          >
+            <div
+              className="grid-col-auto"
+            >
+              <img
+                alt="U.S. flag"
+                className="usa-banner__header-flag"
+                src="us_flag_small.png"
+              />
+            </div>
+            <div
+              className="grid-col-fill tablet:grid-col-auto"
+            >
+              <p
+                className="usa-banner__header-text"
+              >
+                An official website of the United States government
+              </p>
+              <p
+                aria-hidden="true"
+                className="usa-banner__header-action"
+              >
+                Here’s how you know
+              </p>
+            </div>
+            <button
+              aria-controls="gov-banner"
+              aria-expanded={false}
+              className="usa-accordion__button usa-banner__button"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="usa-banner__button-text"
+              >
+                Here’s how you know
+              </span>
+            </button>
+          </div>
+        </header>
+        <div
+          className="usa-banner__content usa-accordion__content"
+          hidden={true}
+          id="gov-banner"
+        >
+          <div
+            className="grid-row grid-gap-lg"
+          >
+            <div
+              className="usa-banner__guidance tablet:grid-col-6"
+            >
+              <img
+                alt="Dot gov"
+                className="usa-banner__icon usa-media-block__img"
+                src="icon-dot-gov.svg"
+              />
+              <div
+                className="usa-media-block__body"
+              >
+                <p>
+                  <strong>
+                    Official websites use .gov
+                  </strong>
+                  <br />
+                  A 
+                  <strong>
+                    .gov
+                  </strong>
+                   website belongs to an official government organization in the United States.
+                </p>
+              </div>
+            </div>
+            <div
+              className="usa-banner__guidance tablet:grid-col-6"
+            >
+              <img
+                alt="Https"
+                className="usa-banner__icon usa-media-block__img"
+                src="icon-https.svg"
+              />
+              <div
+                className="usa-media-block__body"
+              >
+                <p>
+                  <strong>
+                    Secure .gov websites use HTTPS
+                  </strong>
+                  <br />
+                  A 
+                  <strong>
+                    lock
+                  </strong>
+                   (
+                  <span
+                    className="icon-lock"
+                  >
+                    <svg
+                      aria-labelledby="banner-lock-title banner-lock-description"
+                      className="usa-banner__lock-image"
+                      height="64"
+                      role="img"
+                      viewBox="0 0 52 64"
+                      width="52"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title
+                        id="banner-lock-title"
+                      >
+                        Lock
+                      </title>
+                      <desc
+                        id="banner-lock-description"
+                      >
+                        A locked padlock
+                      </desc>
+                      <path
+                        d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"
+                        fill="#000000"
+                        fillRule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  ) or 
+                  <strong>
+                    https://
+                  </strong>
+                   means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div
+      className="grid-container easi-header__basic"
+    >
+      <div
+        className="usa-logo site-logo"
+        id="logo"
+      >
+        <a
+          href="/"
+          onClick={[Function]}
+        >
+          <em
+            aria-label="EASi home"
+            className="usa-logo__text"
+          >
+            EASi
+          </em>
+        </a>
+      </div>
+      <button
+        className="usa-menu-btn"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="fa fa-bars"
+        />
+      </button>
+      <div
+        className="navbar--container"
+      >
+        <div
+          className="easi-header__dropdown-wrapper"
+        >
+          <button
+            aria-controls="Header-UserActionsList"
+            aria-expanded={false}
+            aria-label="Expand User Menu"
+            className="easi-header__username"
+            data-testid="UserActions-Toggle"
+            onClick={[Function]}
+            type="button"
+          >
+            
+            <i
+              className="fa fa-angle-down easi-header__caret"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="grid-container easi-header--desktop "
+    />
+    <div
+      className="usa-overlay"
+    />
+    <div
+      className="usa-nav sidenav-mobile"
+    >
+      <button
+        aria-label="Close"
+        className="usa-nav__close"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="fa fa-close"
+        />
+      </button>
+      <div
+        className="usa-nav__inner"
+      >
+        <button
+          className="easi-header__nav-link"
+          onClick={[Function]}
+          type="button"
+        >
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </header>
+  <main
+    className="easi-main-content grid-container line-height-body-5"
+    id="main-content"
+    role="main"
+    tabIndex={-1}
+  >
+    <h1
+      aria-live="polite"
+      className="easi-h1"
+      tabIndex={-1}
+    >
+      Cookies
+    </h1>
+    <div>
+      <h2>
+        How CMS websites use information they collect
+      </h2>
+      CMS websites use a variety of Web measurement software tools. We use them to collect the information listed in the “Types of information collected” section in Privacy Policy. The tools collect information automatically and continuously. 
+      <strong>
+        No personally identifiable information is collected by these tools.
+      </strong>
+      <p>
+        CMS website staff analyze and report on the collected data from these tools. The reports are available only to CMS website managers, members of the CMS websites communications and web teams, and other designated staff who need this information to perform their duties.
+      </p>
+      <p>
+        CMS websites may also use an online survey to collect opinions and feedback. This online survey appears on the bottom left of many pages on the site. You don't have to answer these questions. Please do not to include any personally identifiable information (PII) in comments you make. We analyze and use this information to improve the site's operation and content. The reports are available only to CMS website managers, members of the communications and Web teams, and other designated staff who require this information to perform their duties.
+      </p>
+      <p>
+        CMS websites keep the data from our measurement tools as long as needed to support the mission of the website.
+      </p>
+    </div>
+    <div>
+      <h2>
+        How CMS websites use cookies
+      </h2>
+      <p>
+        The Office of Management and Budget Memo M-10-22, Guidance for Online Use of Web Measurement and Customization Technologies, allows federal agencies to use session and persistent cookies.
+      </p>
+      <p>
+        When you visit any website, its server may generate a piece of text known as a "cookie to place on your computer. The cookie allows the server to "remember" specific information about your visit while you are connected. The cookie makes it easier for you to use the dynamic features of Web pages. Cookies from CMS websites collect only information about your browser's visit to the site. They do not collect personal information about you.
+      </p>
+      <p>
+        There are two types of cookies: single session (temporary) and multi-session (persistent). Session cookies last only as long as your Web browser is open. Once you close your browser, the cookie disappears. Persistent cookies are stored on your computer for longer periods.
+      </p>
+      <ul>
+        <li>
+          <strong>
+            Session Cookies:
+          </strong>
+           
+          <span>
+            We use session cookies for technical purposes such as to allow better navigation through our site. These cookies let our server know that you are continuing a visit to our site. The OMB Memo 10-22 Guidance defines our use of session cookies as "Usage Tier 1: Single Session.” The policy says, "This tier encompasses any use of single session web measurement and customization technologies."
+          </span>
+        </li>
+        <li>
+          <strong>
+            Persistent Cookies:
+          </strong>
+           
+          <span>
+            We use persistent cookies to understand the differences between new and returning CMS website visitors. Persistent cookies remain on your computer between visits to our site until they expire. The OMB Memo 10-22 Guidance defines our use of persistent cookies as "Usage Tier 2â€”Multi-session without Personally Identifiable Information (PII).â€ The policy says, "This tier encompasses any use of multi-session Web measurement and customization technologies when no PII is collected."
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h2>
+        How to opt out or disable cookies
+      </h2>
+      <p>
+        If you do not wish to have session or persistent cookies placed on your computer, you can disable them using your Web browser. If you opt out of cookies, you will still have access to all information and resources on CMS websites. Instructions for disabling or opting out of cookies in the most popular browsers are located at 
+        <a
+          aria-label="Open 'Cookies opt-out' in a new tab"
+          className="usa-link usa-link--external"
+          href="http://www.usa.gov/optout_instructions.shtml"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          http://www.usa.gov/optout_instructions.shtml
+        </a>
+      </p>
+      <p>
+        Please note that by opting out of cookies, you will disable cookies from all sources, not just from CMS websites.
+      </p>
+    </div>
+    <div>
+      <h2>
+        How we protect your personal information
+      </h2>
+      <p>
+        You do not have to give us personal information to visit CMS websites. However, if you choose to receive alerts or e-newsletters, we collect your email address to complete the subscription process.
+      </p>
+      <p>
+        If you choose to provide us with personally identifiable information through an email message, request for information, paper or electronic form, questionnaire, survey, etc., we will maintain the information you provide only as long as needed to respond to your question or to fulfill the stated purpose of the communication.
+      </p>
+      <p>
+        If in order to contact you we store your personal information in a record system designed to retrieve information about you by personal identifier (name, personal email address, home mailing address, personal or mobile phone number, etc.), we will safeguard the information you provide in accordance with the Privacy Act of 1974, as amended (5 U.S.C. Section 552a).
+      </p>
+      <p>
+        If any CMS website operates a record system designed to retrieve information about you in order to accomplish its mission, a Privacy Act Notification Statement should be prominently and conspicuously displayed on the public-facing website or form which asks you to provide personally identifiable information. The notice must address the following five criteria:
+      </p>
+      <ol>
+        <li>
+          The CMS website's legal authorization to collect information about you
+        </li>
+        <li>
+          Purpose of the information collection
+        </li>
+        <li>
+          Routine uses for disclosure of information outside of CMS websites
+        </li>
+        <li>
+          Whether the request made of you is voluntary or mandatory under law
+        </li>
+        <li>
+          Effects of non-disclosure if you choose to not provide the requested information
+        </li>
+      </ol>
+      <p>
+        For further information about the CMS website privacy policy, please contact 
+        <a
+          className="usa-link"
+          href="mailto:Privacy@cms.hhs.gov"
+        >
+          Privacy@cms.hhs.gov
+        </a>
+      </p>
+    </div>
+  </main>
+  <footer
+    className="usa-footer usa-footer--slim"
+  >
+    <div
+      className="usa-footer__primary-section"
+    >
+      <div
+        className="usa-footer__primary-container grid-row"
+      >
+        <div
+          className="mobile-lg:grid-col-8"
+        >
+          <nav
+            className="usa-footer__nav"
+          >
+            <ul
+              className="grid-row grid-gap"
+            >
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/privacy-policy"
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/cookies"
+                >
+                  Cookies
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/terms-and-conditions"
+                >
+                  Terms and Conditions
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/accessibility-statement"
+                >
+                  Accessibility Statement
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-footer__secondary-section"
+    >
+      <div
+        className="grid-container"
+      >
+        <div>
+          <div
+            className="easi-footer__secondary-logo-wrap"
+          >
+            <img
+              alt="CMS.gov Logo"
+              src="cmsGovLogo.png"
+            />
+            <img
+              alt="Department of Health and Human Services USA"
+              className="margin-left-1"
+              src="hhsLogo.png"
+            />
+          </div>
+          <span>
+            A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 21244
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+`;
