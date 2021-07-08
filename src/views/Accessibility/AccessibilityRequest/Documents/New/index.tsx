@@ -147,7 +147,7 @@ const New = () => {
               showMessageOnNextPage(
                 `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
               );
-              history.push(`/508/requests/${accessibilityRequestId}`);
+              history.push(`/508/requests/${accessibilityRequestId}/documents`);
             }
           })
           .catch(() => {

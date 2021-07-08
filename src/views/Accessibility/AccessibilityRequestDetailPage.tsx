@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   Breadcrumb,
@@ -93,10 +93,10 @@ const AccessibilityRequestDetailPage = () => {
   const flags = useFlags();
   const history = useHistory();
   const existingNotesHeading = useRef<HTMLHeadingElement>(null);
-  const { accessibilityRequestId } = useParams<{
+  const { accessibilityRequestId, secondaryNavTab } = useParams<{
     accessibilityRequestId: string;
+    secondaryNavTab: string;
   }>();
-  const { pathname } = useLocation();
 
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
@@ -439,9 +439,8 @@ const AccessibilityRequestDetailPage = () => {
     );
   }
 
-  const selectedTabContent = pathname.endsWith('notes')
-    ? notesTab
-    : bodyWithDocumentsTable;
+  const selectedTabContent =
+    secondaryNavTab === 'notes' ? notesTab : bodyWithDocumentsTable;
 
   if (data?.accessibilityRequest?.statusRecord?.status === 'DELETED') {
     return <RequestDeleted />;
