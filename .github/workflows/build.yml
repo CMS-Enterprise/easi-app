@@ -439,7 +439,6 @@ jobs:
           task-definition: ${{ steps.render-web-container.outputs.task-definition }}
           service: easi-app
           cluster: ${{ env.APP_ENV }}-easi-app
-          wait-for-service-stability: true
       - name: Check deployed version
         env:
           IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
