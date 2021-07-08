@@ -151,10 +151,13 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
             </div>
             <div className="text-gray-90">
               <dt className="text-bold">{t('intake:fields.adminLead')}</dt>
-              <dd className="margin-left-0 padding-1">{getAdminLead()}</dd>
+              <dd className="margin-left-0 padding-1" data-testid="adminLead">
+                {getAdminLead()}
+              </dd>
               <Button
                 type="button"
                 unstyled
+                data-testid="changeAdminLeadButton"
                 onClick={() => {
                   // Reset newAdminLead to value in intake
                   resetNewAdminLead();
