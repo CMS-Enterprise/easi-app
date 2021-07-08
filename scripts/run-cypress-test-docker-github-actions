@@ -26,6 +26,8 @@ if [[ -n "${CI+x}" ]]; then
 
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up cypress
 
+  docker container cp "${CYPRESS_CONTAINER}":/cypress/screenshots cypress/ || echo "No cypress screenshots copied"
+  docker container cp "${CYPRESS_CONTAINER}":/cypress/videos cypress/ || echo "No cypress videos copied"
   CYPRESS_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${CYPRESS_CONTAINER}")
   echo "done"
   exit "${CYPRESS_EXIT_CODE}"
