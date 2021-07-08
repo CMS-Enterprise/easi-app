@@ -440,7 +440,7 @@ const RequestRepository = () => {
           {rows.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} data-testid={`${row.original.id}-row`}>
                 {row.cells.map((cell, i) => {
                   if (i === 0) {
                     return (
