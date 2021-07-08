@@ -364,10 +364,10 @@ describe('office user', () => {
     cy.visit(
       'governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
     );
-    cy.get('[data-testid="adminLead"]').contains('Not assigned');
+    cy.get('[data-testid="admin-lead"]').contains('Not Assigned');
     cy.contains('button', 'Change').click();
     cy.get('input[value="Ann Rudolph"]').check({ force: true });
     cy.get('[data-testid="button"]').contains('Save').click();
-    cy.get('dd[data-testid="adminLead"]').contains('Ann Rudolph');
+    cy.get('dd[data-testid="admin-lead"]').contains('Ann Rudolph');
   });
 });
