@@ -6,7 +6,7 @@ import './index.scss';
 type NoteListItemProps = {
   children: React.ReactNode;
   isLinked?: boolean;
-};
+} & JSX.IntrinsicElements['li'];
 
 type NoteContentProps = {
   children: React.ReactNode;
@@ -52,13 +52,17 @@ export const NoteByline = ({
   );
 };
 
-export const NoteListItem = ({ children, isLinked }: NoteListItemProps) => {
+export const NoteListItem = ({
+  children,
+  isLinked,
+  ...props
+}: NoteListItemProps) => {
   const classes = classnames('easi-notes__note-item', {
     'easi-notes__note-item--linked': isLinked
   });
 
   return (
-    <li className={classes}>
+    <li className={classes} {...props}>
       <div className="easi-notes__note-body">{children}</div>
     </li>
   );
