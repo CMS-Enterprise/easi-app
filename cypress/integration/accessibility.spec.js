@@ -8,7 +8,26 @@ import { formatDate } from '../../src/utils/date';
 describe('Accessibility Requests', () => {
   it('can create a request and see its details', () => {
     cy.localLogin({ name: 'A11Y' });
-    cy.accessibility.create508Request();
+
+    cy.visit('/508/requests/new');
+    cy.contains('h1', 'Request 508 testing');
+    cy.contains('label', "Choose the application you'd like to test");
+    cy.get('#508Request-IntakeId')
+      .type('TACO - 000000{enter}')
+      .should('have.value', 'TACO - 000000');
+    cy.contains('button', 'Send 508 testing request').click();
+    cy.location().should(loc => {
+      expect(loc.pathname).to.match(/\/508\/requests\/.{36}/);
+    });
+    cy.contains('li', 'Home');
+    cy.contains('li', 'TACO');
+    cy.contains(
+      '.usa-alert--success',
+      '508 testing request created. We have sent you a confirmation email.'
+    );
+    cy.contains('h1', 'TACO');
+    cy.contains('h2', 'Next step: Provide your documents');
+    cy.contains('.usa-button', 'Upload a document');
 
     cy.get('.accessibility-request__side-nav').within(() => {
       cy.contains('h2', 'Test Dates and Scores');
@@ -55,16 +74,16 @@ describe('Accessibility Requests', () => {
     cy.contains('h1', 'Request 508 testing');
   });
 
-  it('adds and removes a document from a 508 request as the owner', () => {
+  it.only('adds and removes a document from a 508 request as the owner', () => {
     cy.localLogin({ name: 'CMSU' });
-    cy.accessibility.create508Request();
+    cy.accessibility.create508Request({ euaUserID: 'CMSU', name: 'TACO' });
     cy.accessibility.addAndRemoveDocument();
     cy.contains('h2', 'Next step: Provide your documents');
   });
 
   it('adds and removes a document from a 508 request as an admin', () => {
     cy.localLogin({ name: 'CMSU' });
-    cy.accessibility.create508Request();
+    cy.accessibility.create508Request({ euaUserID: 'CMSU', name: 'TACO' });
 
     cy.url().then(requestPageUrl => {
       cy.logout();
