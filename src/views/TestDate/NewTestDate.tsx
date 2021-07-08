@@ -82,7 +82,7 @@ const NewTestDate = () => {
     }).then(result => {
       if (!result.errors) {
         showMessageOnNextPage(submitConfirmation);
-        history.push(`/508/requests/${accessibilityRequestId}`);
+        history.push(`/508/requests/${accessibilityRequestId}/documents`);
       }
     });
   };

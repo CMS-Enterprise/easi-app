@@ -116,7 +116,7 @@ const RequestDetails = (
   <SecureRoute
     exact
     key="508-request-detail"
-    path="/508/requests/:accessibilityRequestId/:tab"
+    path="/508/requests/:accessibilityRequestId/:secondaryNavTab"
     component={AccessibilityRequestDetailPage}
   />
 );
