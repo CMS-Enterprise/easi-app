@@ -359,7 +359,7 @@ describe('users who got lost', () => {
 });
 
 describe('office user', () => {
-  it.only('can assign Admin Lead', () => {
+  it('can assign Admin Lead', () => {
     cy.localLogin({ name: 'OFFI', role: 'EASI_D_GOVTEAM' });
     cy.visit(
       'governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
