@@ -367,6 +367,7 @@ jobs:
         with:
           name: cypress-screenshots
           path: cypress/screenshots
+          if-no-files-found: ignore
           retention-days: 14
 
   deploy_dev:
