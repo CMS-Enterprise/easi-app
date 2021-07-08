@@ -393,19 +393,21 @@ jobs:
           ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
       - name: Run migrations
         env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-db-migrate
           IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
         run: |
-          ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "6" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "6" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "6" "easi-app-db-migrate"
       - name: Deploy ECS service
         env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-backend
           IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
         run: |
-          ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "6" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "6" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           ./scripts/healthcheck
       - name: Build static assets and release to S3
         env:

@@ -8,13 +8,17 @@ service_id="$1"
 function_name="$2"
 function_qualifier="${3:-\$LATEST}"
 image="${4:-}"
+image_uri="${5:-}"
 
+ecr_backend="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com"
 
-# ecr_backend="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com"
-#
-# if [[ -n "$image" ]]; then
-#   image_tag="$ecr_backend/$image:${CIRCLE_SHA1-$(git rev-parse HEAD)}"
-# fi
+if [[ -n "$image" ]]; then
+  image_tag="$ecr_backend/$image:${CIRCLE_SHA1-$(git rev-parse HEAD)}"
+fi
+
+if [[ -n "$image_uri" ]]; then
+  image_tag="$image_uri"
+fi
 
 _payload() {
   local image_tag="${1:-}"
@@ -34,7 +38,7 @@ _payload() {
   echo "$result"
 }
 
-_payload "${image:-}" > payload.json || exit
+_payload "${image_tag:-}" > payload.json || exit
 
 echo ": Invoking the $function_name lambda..."
 time (set -x ; aws lambda invoke --function-name "$function_name" --qualifier "$function_qualifier" --cli-binary-format raw-in-base64-out --payload file://./payload.json output.json) || exit
