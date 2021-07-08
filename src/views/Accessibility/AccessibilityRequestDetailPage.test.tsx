@@ -57,7 +57,13 @@ describe('AccessibilityRequestDetailPage', () => {
   };
 
   const buildProviders = (mocks: any, store: any, useNotesPath: boolean) => (
-    <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
+    <MemoryRouter
+      initialEntries={[
+        useNotesPath
+          ? '/508/requests/a11yRequest123/notes'
+          : '/508/requests/a11yRequest123'
+      ]}
+    >
       <MockedProvider mocks={mocks} addTypename={false}>
         <Provider store={store}>
           <Route
