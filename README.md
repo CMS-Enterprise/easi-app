@@ -132,7 +132,7 @@ with `brew install yarn`.
   - Refer to [instructions for other shells](https://direnv.net/docs/hook.html)
     if you're using a shell other than bash.
 - Restart your shell.
-- To allow direnv in the project directory `direnv allow .`.
+- To allow direnv in the project directory `direnv allow`.
 
 Once this is setup, you should see `direnv` loading/unloading environment
 variables as you enter or depart from the project directory:
@@ -370,8 +370,13 @@ playground while the Go backend is running. **You will need to enter
 
 ### Accessing the application over Tailscale
 
+[Tailscale](https://tailscale.com) is a tool that provides secure networks
+between devices and can be used to access locally running programs from other
+machines without exposing ports on the open internet. It's a convenient
+alternative to a traditional VPN.
+
 `scripts/dev tailscale` will configure and start the app so it can be accessed
-over a TAilscale network. This is currently used by developers to perform
+over a Tailscale network. This is currently used by developers to perform
 accessibility audits of locally running applications through JAWS on cloud
 Windows instances.
 
