@@ -165,7 +165,8 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "!src/**/*.stories.{jsx,tsx}"
+      "!src/**/*.stories.{jsx,tsx}",
+      "!src/**/__snapshots__/*.test.tsx.snap"
     ],
     "coverageThreshold": {
       "global": {
