@@ -47,6 +47,12 @@ describe('Governance Review Team', () => {
     cy.get('#Dates-GrbDateMonth').should('have.value', '12');
     cy.get('#Dates-GrbDateDay').should('have.value', '25');
     cy.get('#Dates-GrbDateYear').should('have.value', '2020');
+
+    cy.visit('/');
+    cy.wait('@getOpenIntakes').its('status').should('be', 200);
+
+    cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains('td', 'November 24 2020')
+    cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains('td', 'December 25 2020')
   });
 
   it('can add a note', () => {
