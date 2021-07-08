@@ -254,6 +254,12 @@ jobs:
           ./scripts/build_app
           ./scripts/testsuite
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
+      - name: Upload backend test artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-tests
+          path: results
+          retention-days: 14
 
   build_server_image:
     runs-on: ubuntu-latest
@@ -350,6 +356,18 @@ jobs:
           OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
         run: |
           ./scripts/run-cypress-test-docker-github-actions
+      - name: Upload cypress videos
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-videos
+          path: cypress/videos
+          retention-days: 14
+      - name: Upload cypress screenshots
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          retention-days: 14
 
   deploy_dev:
     needs: [ lint, client_test, server_test, e2e_tests ]
