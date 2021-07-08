@@ -6,6 +6,17 @@ describe('Governance Review Team', () => {
     cy.wait('@getOpenIntakes').its('status').should('be', 200);
   });
 
+  it('can assign Admin Lead', () => {
+    cy.visit(
+      '/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
+    );
+    cy.get('[data-testid="admin-lead"]').contains('Not Assigned');
+    cy.contains('button', 'Change').click();
+    cy.get('input[value="Ann Rudolph"]').check({ force: true });
+    cy.get('[data-testid="button"]').contains('Save').click();
+    cy.get('dd[data-testid="admin-lead"]').contains('Ann Rudolph');
+  });
+
   it('can add GRT/GRB dates', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
@@ -51,8 +62,14 @@ describe('Governance Review Team', () => {
     cy.visit('/');
     cy.wait('@getOpenIntakes').its('status').should('be', 200);
 
-    cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains('td', 'November 24 2020')
-    cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains('td', 'December 25 2020')
+    cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains(
+      'td',
+      'November 24 2020'
+    );
+    cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains(
+      'td',
+      'December 25 2020'
+    );
   });
 
   it('can add a note', () => {
