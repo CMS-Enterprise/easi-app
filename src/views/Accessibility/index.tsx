@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 import { Link } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -103,10 +103,20 @@ const RequestStatusChange = (
   />
 );
 
+const DocumentsRedirect = (
+  <Redirect
+    key="508-request-documents-redirect"
+    exact
+    from="/508/requests/:accessibilityRequestId"
+    to="/508/requests/:accessibilityRequestId/documents"
+  />
+);
+
 const RequestDetails = (
   <SecureRoute
+    exact
     key="508-request-detail"
-    path="/508/requests/:accessibilityRequestId"
+    path="/508/requests/:accessibilityRequestId/:tab"
     component={AccessibilityRequestDetailPage}
   />
 );
@@ -168,6 +178,7 @@ const Accessibility = () => {
             NewDocument,
             UpdateTestDate,
             NewTestDate,
+            DocumentsRedirect,
             RequestDetails,
             Default
           ]}
@@ -182,6 +193,7 @@ const Accessibility = () => {
           MakingANewRequest,
           AccessibilityTestingTemplates,
           NewDocument,
+          DocumentsRedirect,
           RequestDetails,
           Default
         ]}

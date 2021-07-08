@@ -538,7 +538,7 @@ const AccessibilityRequestDetailPage = () => {
       </div>
       {isAccessibilityTeam && (
         <SecondaryNav>
-          <NavLink to={`/508/requests/${accessibilityRequestId}`}>
+          <NavLink to={`/508/requests/${accessibilityRequestId}/documents`}>
             Documents
           </NavLink>
           <NavLink to={`/508/requests/${accessibilityRequestId}/notes`}>
