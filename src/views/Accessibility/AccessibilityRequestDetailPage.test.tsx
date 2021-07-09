@@ -61,18 +61,12 @@ describe('AccessibilityRequestDetailPage', () => {
       initialEntries={[
         useNotesPath
           ? '/508/requests/a11yRequest123/notes'
-          : '/508/requests/a11yRequest123'
+          : '/508/requests/a11yRequest123/documents'
       ]}
     >
       <MockedProvider mocks={mocks} addTypename={false}>
         <Provider store={store}>
-          <Route
-            path={
-              useNotesPath
-                ? '/508/requests/:accessibilityRequestId/notes'
-                : '/508/requests/:accessibilityRequestId'
-            }
-          >
+          <Route path="/508/requests/:accessibilityRequestId/:secondaryNavTab">
             <MessageProvider>
               <AccessibilityRequestDetailPage />
             </MessageProvider>
