@@ -92,7 +92,7 @@ const TestDate = () => {
       }
     }).then(() => {
       showMessageOnNextPage(confirmationText);
-      history.push(`/508/requests/${accessibilityRequestId}`);
+      history.push(`/508/requests/${accessibilityRequestId}/documents`);
     });
   };
 
