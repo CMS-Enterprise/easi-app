@@ -63,8 +63,8 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextAreaField from 'components/shared/TextAreaField';
-import { TabPanel, Tabs } from 'components/Tabs';
 import TestDateCard from 'components/TestDateCard';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
@@ -93,8 +93,9 @@ const AccessibilityRequestDetailPage = () => {
   const flags = useFlags();
   const history = useHistory();
   const existingNotesHeading = useRef<HTMLHeadingElement>(null);
-  const { accessibilityRequestId } = useParams<{
+  const { accessibilityRequestId, secondaryNavTab } = useParams<{
     accessibilityRequestId: string;
+    secondaryNavTab: string;
   }>();
 
   const userGroups = useSelector((state: AppState) => state.auth.groups);
@@ -182,7 +183,7 @@ const AccessibilityRequestDetailPage = () => {
           resetForm({});
         }
       })
-      .catch(response => {});
+      .catch(() => {});
   };
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
@@ -327,12 +328,7 @@ const AccessibilityRequestDetailPage = () => {
       >
         {t('requestDetails.notes.skipToExistingNotes')}
       </Button>
-      <div
-        role="region"
-        aria-label="add new note"
-        className="margin-y-2"
-        id="notes-form"
-      >
+      <div role="region" aria-label="add new note" id="notes-form">
         <Formik
           initialValues={{
             noteText: '',
@@ -356,7 +352,7 @@ const AccessibilityRequestDetailPage = () => {
             return (
               <>
                 <Form className="usa-form maxw-full">
-                  <FieldGroup>
+                  <FieldGroup className="margin-top-0">
                     <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
                       {t('requestDetails.notes.form.note')}
                     </Label>
@@ -442,6 +438,9 @@ const AccessibilityRequestDetailPage = () => {
       </div>
     );
   }
+
+  const selectedTabContent =
+    secondaryNavTab === 'notes' ? notesTab : bodyWithDocumentsTable;
 
   if (data?.accessibilityRequest?.statusRecord?.status === 'DELETED') {
     return <RequestDeleted />;
@@ -536,21 +535,20 @@ const AccessibilityRequestDetailPage = () => {
           )}
         </div>
       </div>
-      <div className="grid-container margin-top-2 padding-top-6 padding-top">
+      {isAccessibilityTeam && (
+        <SecondaryNav>
+          <NavLink to={`/508/requests/${accessibilityRequestId}/documents`}>
+            Documents
+          </NavLink>
+          <NavLink to={`/508/requests/${accessibilityRequestId}/notes`}>
+            Notes
+          </NavLink>
+        </SecondaryNav>
+      )}
+      <div className="grid-container padding-top-6 padding-top">
         <div className="grid-row grid-gap-lg">
           <div className="grid-col-8">
-            {isAccessibilityTeam ? (
-              <Tabs>
-                <TabPanel id="Documents" tabName="Documents">
-                  <div className="margin-top-2">{bodyWithDocumentsTable}</div>
-                </TabPanel>
-                <TabPanel id="Notes" tabName="Notes">
-                  {notesTab}
-                </TabPanel>
-              </Tabs>
-            ) : (
-              documentsTab
-            )}
+            {isAccessibilityTeam ? selectedTabContent : documentsTab}
           </div>
           <div className="grid-col-1" />
           <div className="grid-col-3">

@@ -139,7 +139,7 @@ describe('Accessibility Requests', () => {
       cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_USER' });
       cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');
 
-      cy.contains('button', 'Notes').click();
+      cy.contains('a', 'Notes').click();
       cy.get('#CreateAccessibilityRequestNote-NoteText').type(
         'This is a really great note'
       );
@@ -203,7 +203,7 @@ describe('Accessibility Requests', () => {
 
       cy.location().should(loc => {
         expect(loc.pathname).to.eq(
-          '/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab'
+          '/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab/documents'
         );
       });
       cy.get('[data-testid="alert"]');
@@ -234,7 +234,7 @@ describe('Accessibility Requests', () => {
 
       cy.location().should(loc => {
         expect(loc.pathname).to.eq(
-          '/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab'
+          '/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab/documents'
         );
       });
       cy.get('b').contains('Test 1: Initial');
