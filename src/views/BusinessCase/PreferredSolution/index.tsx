@@ -72,6 +72,7 @@ const PreferredSolution = ({
               <ErrorAlert
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
+                testId="formik-validation-errors"
               >
                 {Object.keys(flatErrors).map(key => {
                   return (
@@ -215,6 +216,7 @@ const PreferredSolution = ({
                 <FieldGroup
                   scrollElement="preferredSolution.security.isApproved"
                   error={!!flatErrors['preferredSolution.security.isApproved']}
+                  data-testid="security-approval"
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label">
@@ -268,6 +270,7 @@ const PreferredSolution = ({
                     error={
                       !!flatErrors['preferredSolution.security.isBeingReviewed']
                     }
+                    data-testid="security-approval-in-progress"
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label margin-bottom-1">
@@ -482,6 +485,7 @@ const PreferredSolution = ({
                 <FieldGroup
                   scrollElement="preferredSolution.hasUserInterface"
                   error={!!flatErrors['preferredSolution.hasUserInterface']}
+                  data-testid="user-interface-group"
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label">
