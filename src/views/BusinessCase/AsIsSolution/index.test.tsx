@@ -36,7 +36,7 @@ const renderPage = (store: any) =>
   render(
     <MemoryRouter
       initialEntries={[
-        '/business/75746af8-9a9b-4558-a375-cf9848eb2b0d/request-description'
+        '/business/75746af8-9a9b-4558-a375-cf9848eb2b0d/as-is-solution'
       ]}
     >
       <Provider store={store}>
@@ -50,7 +50,7 @@ const renderPage = (store: any) =>
     </MemoryRouter>
   );
 
-describe('Business case request description form', () => {
+describe('Business case as is solution form', () => {
   const mockStore = configureMockStore();
   const defaultStore = mockStore({
     auth: {
@@ -76,53 +76,44 @@ describe('Business case request description form', () => {
     renderPage(defaultStore);
     await waitForPageLoad();
 
-    expect(screen.getByTestId('request-description')).toBeInTheDocument();
+    expect(screen.getByTestId('as-is-solution')).toBeInTheDocument();
   });
 
   it('fills all fields', async () => {
     renderPage(defaultStore);
     await waitForPageLoad();
 
-    const businessNeedField = screen.getByRole('textbox', {
-      name: /business or user need/i
+    const titleField = screen.getByRole('textbox', {
+      name: /title/i
     });
-    userEvent.type(businessNeedField, 'My business need');
-    expect(businessNeedField).toHaveValue('My business need');
+    userEvent.type(titleField, 'As is solution title');
+    expect(titleField).toHaveValue('As is solution title');
 
-    const cmsBenefitField = screen.getByRole('textbox', {
-      name: /cms benefit/i
+    const summaryField = screen.getByRole('textbox', {
+      name: /summary/i
     });
-    userEvent.type(cmsBenefitField, 'CMS benefit');
-    expect(cmsBenefitField).toHaveValue('CMS benefit');
+    userEvent.type(summaryField, 'As is solution summary');
+    expect(summaryField).toHaveValue('As is solution summary');
 
-    const priorityAlignmentField = screen.getByRole('textbox', {
-      name: /organizational priorities/i
+    const prosField = screen.getByRole('textbox', {
+      name: /pros/i
     });
-    userEvent.type(priorityAlignmentField, 'Organizational priorities');
-    expect(priorityAlignmentField).toHaveValue('Organizational priorities');
+    userEvent.type(prosField, 'As is solution pros');
+    expect(prosField).toHaveValue('As is solution pros');
 
-    const successIndicatorsField = screen.getByRole('textbox', {
-      name: /effort is successful/i
+    const consField = screen.getByRole('textbox', {
+      name: /cons/i
     });
-    userEvent.type(successIndicatorsField, 'Success indicators');
-    expect(successIndicatorsField).toHaveValue('Success indicators');
-  });
+    userEvent.type(consField, 'As is solution cons');
+    expect(consField).toHaveValue('As is solution cons');
 
-  it('does not run validations', async () => {
-    renderPage(defaultStore);
-    await waitForPageLoad();
+    // Skip Estimated Lifecycle Costs
 
-    screen.getByRole('button', { name: /Next/i }).click();
-
-    expect(
-      screen.queryByTestId('formik-validation-errors')
-    ).not.toBeInTheDocument();
-
-    await waitForPageLoad();
-
-    expect(
-      screen.getByRole('heading', { name: /"As is" solution/i, level: 2 })
-    ).toBeInTheDocument();
+    const costSavingsField = screen.getByRole('textbox', {
+      name: /cost savings/i
+    });
+    userEvent.type(costSavingsField, 'As is solution cost savings');
+    expect(costSavingsField).toHaveValue('As is solution cost savings');
   });
 
   it('does not render mandatory fields message', async () => {
@@ -140,7 +131,9 @@ describe('Business case request description form', () => {
 
     screen.getByRole('button', { name: /back/i }).click();
 
-    expect(screen.getByTestId('general-request-info')).toBeInTheDocument();
+    await waitForPageLoad();
+
+    expect(screen.getByTestId('request-description')).toBeInTheDocument();
   });
 
   it('navigates to next page', async () => {
@@ -151,8 +144,9 @@ describe('Business case request description form', () => {
 
     await waitForPageLoad();
 
-    expect(screen.getByTestId('as-is-solution')).toBeInTheDocument();
+    expect(screen.getByTestId('preferred-solution')).toBeInTheDocument();
   });
+
   describe('BIZ_CASE_FINAL_NEEDED', () => {
     const storeWithFinalBizCase = mockStore({
       auth: {
