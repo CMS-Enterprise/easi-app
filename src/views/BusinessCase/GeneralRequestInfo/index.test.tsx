@@ -134,6 +134,17 @@ describe('Business case general request info form', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('navigates to next page', async () => {
+    renderPage(defaultStore);
+    await waitForPageLoad();
+
+    screen.getByRole('button', { name: /next/i }).click();
+
+    await waitForPageLoad();
+
+    expect(screen.getByTestId('request-description')).toBeInTheDocument();
+  });
+
   describe('BIZ_CASE_FINAL_NEEDED', () => {
     const storeWithFinalBizCase = mockStore({
       auth: {
