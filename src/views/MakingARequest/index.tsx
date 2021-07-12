@@ -19,7 +19,7 @@ const MakingARequest = () => {
   const reasons = t('reasonList.options', { returnObjects: true }) as string[];
 
   return (
-    <PageWrapper>
+    <PageWrapper data-testid="making-a-system-request">
       <Header />
       <MainContent className="grid-container line-height-body-5 margin-bottom-5">
         <BreadcrumbBar variant="wrap">
