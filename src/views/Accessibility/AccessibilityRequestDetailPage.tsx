@@ -266,6 +266,9 @@ const AccessibilityRequestDetailPage = () => {
 
   const bodyWithDocumentsTable = (
     <div data-testid="body-with-doc-table">
+      <p className="usa-sr-only" aria-live="polite">
+        {t('requestDetails.activeDocumentTab')}
+      </p>
       <h2 className="margin-top-0">{t('requestDetails.documents.label')}</h2>
       {uploadDocumentLink}
       <div className="margin-top-6">
@@ -281,6 +284,9 @@ const AccessibilityRequestDetailPage = () => {
   const bodyNoDocumentsBusinessOwner = (
     <>
       <div className="margin-bottom-3">
+        <p className="usa-sr-only" aria-live="polite">
+          {t('requestDetails.activeDocumentTab')}
+        </p>
         <h2 className="margin-y-0 font-heading-lg">
           {t('requestDetails.documents.noDocs.heading')}
         </h2>
@@ -319,6 +325,9 @@ const AccessibilityRequestDetailPage = () => {
             createdAt: formatDate(notes[0]?.createdAt)
           })}
       </h3>
+      <p className="usa-sr-only" aria-live="polite">
+        {t('requestDetails.activeNoteTab')}
+      </p>
       <Button
         className="accessibility-request__add-note-btn"
         type="button"
