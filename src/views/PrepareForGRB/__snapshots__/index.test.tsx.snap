@@ -1,0 +1,554 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The prepare for GRB info page matches the snapshot 1`] = `
+<div
+  className="easi-page-wrapper easi-prepare-for-grb"
+>
+  <header
+    className="usa-header easi-header"
+    role="banner"
+  >
+    <section
+      aria-label="Official government website"
+      className="usa-banner"
+    >
+      <div
+        className="usa-accordion"
+      >
+        <header
+          className="usa-banner__header"
+        >
+          <div
+            className="usa-banner__inner"
+          >
+            <div
+              className="grid-col-auto"
+            >
+              <img
+                alt="U.S. flag"
+                className="usa-banner__header-flag"
+                src="us_flag_small.png"
+              />
+            </div>
+            <div
+              className="grid-col-fill tablet:grid-col-auto"
+            >
+              <p
+                className="usa-banner__header-text"
+              >
+                An official website of the United States government
+              </p>
+              <p
+                aria-hidden="true"
+                className="usa-banner__header-action"
+              >
+                Here’s how you know
+              </p>
+            </div>
+            <button
+              aria-controls="gov-banner"
+              aria-expanded={false}
+              className="usa-accordion__button usa-banner__button"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="usa-banner__button-text"
+              >
+                Here’s how you know
+              </span>
+            </button>
+          </div>
+        </header>
+        <div
+          className="usa-banner__content usa-accordion__content"
+          hidden={true}
+          id="gov-banner"
+        >
+          <div
+            className="grid-row grid-gap-lg"
+          >
+            <div
+              className="usa-banner__guidance tablet:grid-col-6"
+            >
+              <img
+                alt="Dot gov"
+                className="usa-banner__icon usa-media-block__img"
+                src="icon-dot-gov.svg"
+              />
+              <div
+                className="usa-media-block__body"
+              >
+                <p>
+                  <strong>
+                    Official websites use .gov
+                  </strong>
+                  <br />
+                  A 
+                  <strong>
+                    .gov
+                  </strong>
+                   website belongs to an official government organization in the United States.
+                </p>
+              </div>
+            </div>
+            <div
+              className="usa-banner__guidance tablet:grid-col-6"
+            >
+              <img
+                alt="Https"
+                className="usa-banner__icon usa-media-block__img"
+                src="icon-https.svg"
+              />
+              <div
+                className="usa-media-block__body"
+              >
+                <p>
+                  <strong>
+                    Secure .gov websites use HTTPS
+                  </strong>
+                  <br />
+                  A 
+                  <strong>
+                    lock
+                  </strong>
+                   (
+                  <span
+                    className="icon-lock"
+                  >
+                    <svg
+                      aria-labelledby="banner-lock-title banner-lock-description"
+                      className="usa-banner__lock-image"
+                      height="64"
+                      role="img"
+                      viewBox="0 0 52 64"
+                      width="52"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title
+                        id="banner-lock-title"
+                      >
+                        Lock
+                      </title>
+                      <desc
+                        id="banner-lock-description"
+                      >
+                        A locked padlock
+                      </desc>
+                      <path
+                        d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"
+                        fill="#000000"
+                        fillRule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  ) or 
+                  <strong>
+                    https://
+                  </strong>
+                   means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div
+      className="grid-container easi-header__basic"
+    >
+      <div
+        className="usa-logo site-logo"
+        id="logo"
+      >
+        <a
+          href="/"
+          onClick={[Function]}
+        >
+          <em
+            aria-label="EASi home"
+            className="usa-logo__text"
+          >
+            EASi
+          </em>
+        </a>
+      </div>
+      <button
+        className="usa-menu-btn"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="fa fa-bars"
+        />
+      </button>
+      <div
+        className="navbar--container"
+      >
+        <div
+          className="easi-header__dropdown-wrapper"
+        >
+          <button
+            aria-controls="Header-UserActionsList"
+            aria-expanded={false}
+            aria-label="Expand User Menu"
+            className="easi-header__username"
+            data-testid="UserActions-Toggle"
+            onClick={[Function]}
+            type="button"
+          >
+            
+            <i
+              className="fa fa-angle-down easi-header__caret"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="grid-container easi-header--desktop "
+    />
+    <div
+      className="usa-overlay"
+    />
+    <div
+      className="usa-nav sidenav-mobile"
+    >
+      <button
+        aria-label="Close"
+        className="usa-nav__close"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="fa fa-close"
+        />
+      </button>
+      <div
+        className="usa-nav__inner"
+      >
+        <button
+          className="easi-header__nav-link"
+          onClick={[Function]}
+          type="button"
+        >
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </header>
+  <main
+    className="easi-main-content margin-bottom-5"
+    id="main-content"
+    role="main"
+    tabIndex={-1}
+  >
+    <div
+      className="grid-container"
+    >
+      <nav
+        aria-label="Breadcrumbs"
+        className="usa-breadcrumb usa-breadcrumb--wrap"
+      >
+        <ol
+          className="usa-breadcrumb__list"
+        >
+          <li
+            className="usa-breadcrumb__list-item"
+          >
+            <a
+              className="usa-breadcrumb__link"
+              href="/"
+              onClick={[Function]}
+            >
+              <span>
+                Home
+              </span>
+            </a>
+          </li>
+          <li
+            className="usa-breadcrumb__list-item"
+          >
+            <a
+              className="usa-breadcrumb__link"
+              href="/governance-task-list/undefined"
+              onClick={[Function]}
+            >
+              <span>
+                Get governance approval
+              </span>
+            </a>
+          </li>
+          <li
+            aria-current="page"
+            className="usa-breadcrumb__list-item usa-current"
+          >
+            Prepare for the Review Board meeting
+          </li>
+        </ol>
+      </nav>
+      <div
+        className="grid-row"
+      >
+        <div
+          className="grid-col-10"
+        >
+          <h1
+            aria-live="polite"
+            className="easi-h1"
+            tabIndex={-1}
+          >
+            Prepare for the Review Board meeting
+          </h1>
+          <h2
+            className="font-heading-xl margin-top-6"
+          >
+            What is the Governance Review Board?
+          </h2>
+          <p
+            className="line-height-sans-6"
+          >
+            The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.
+          </p>
+          <ul>
+            <li
+              className="line-height-sans-6"
+            >
+              At the meeting, you will talk through your business case with the board members and how the approval of your project will help benefit CMS Programs.
+            </li>
+            <li
+              className="line-height-sans-6"
+            >
+              The Review Board will review your proposed alternatives and their pros and cons.
+            </li>
+            <li
+              className="line-height-sans-6"
+            >
+              At the meeting, you’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. 
+            </li>
+          </ul>
+          <div
+            className="usa-alert usa-alert--info easi-inline-alert margin-top-4 margin-bottom-4"
+            data-testid="alert"
+          >
+            <div
+              className="usa-alert__body"
+            >
+              <p
+                className="usa-alert__text"
+              >
+                You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.
+              </p>
+            </div>
+          </div>
+          <h3
+            className="font-heading-lg"
+          >
+            Possible outcomes
+          </h3>
+          <p>
+            After this discussion, the Governance Review Board will decide whether to approve your request at this time.
+          </p>
+          <ul>
+            <li
+              className="line-height-sans-6"
+            >
+              If the request is approved, the Board will issue you a Lifecycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.
+            </li>
+            <li
+              className="line-height-sans-6"
+            >
+              If two or more Board members voice concerns about the project, a Lifceycle ID won’t be issued. The request will not be approved until all concerns are addressed or withdrawn. 
+            </li>
+          </ul>
+        </div>
+        <div
+          className="grid-col-2"
+        >
+          <div
+            className="sidebar margin-top-4"
+          >
+            <h3
+              className="font-sans-sm"
+            >
+              Need help? Contact the Governance team
+            </h3>
+            <p>
+              <a
+                className="usa-link"
+                href="mailto:IT_Governance@cms.hhs.gov"
+              >
+                IT_Governance@cms.hhs.gov
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="distinct-content margin-top-4"
+    >
+      <div
+        className="grid-container"
+      >
+        <div
+          className="grid-row"
+        >
+          <div
+            className="grid-col-10"
+          >
+            <h2
+              className="font-heading-xl"
+            >
+              How to best prepare
+            </h2>
+            <div
+              className="margin-top-3"
+            >
+              <div
+                className="easi-collapsable-link"
+              >
+                <button
+                  aria-controls="take-with-you"
+                  aria-expanded={false}
+                  className="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <span
+                    className="fa easi-collapsable-link__square fa-caret-right"
+                  />
+                  Take with you
+                </button>
+              </div>
+            </div>
+            <div
+              className="margin-top-3"
+            >
+              <div
+                className="easi-collapsable-link"
+              >
+                <button
+                  aria-controls="during-the-meeting"
+                  aria-expanded={false}
+                  className="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <span
+                    className="fa easi-collapsable-link__square fa-caret-right"
+                  />
+                  During the meeting
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="grid-container"
+    >
+      <a
+        className="text-ink"
+        href="/governance-task-list/undefined"
+        onClick={[Function]}
+      >
+        Back
+      </a>
+    </div>
+  </main>
+  <footer
+    className="usa-footer usa-footer--slim"
+  >
+    <div
+      className="usa-footer__primary-section"
+    >
+      <div
+        className="usa-footer__primary-container grid-row"
+      >
+        <div
+          className="mobile-lg:grid-col-8"
+        >
+          <nav
+            className="usa-footer__nav"
+          >
+            <ul
+              className="grid-row grid-gap"
+            >
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/privacy-policy"
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/cookies"
+                >
+                  Cookies
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/terms-and-conditions"
+                >
+                  Terms and Conditions
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/accessibility-statement"
+                >
+                  Accessibility Statement
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-footer__secondary-section"
+    >
+      <div
+        className="grid-container"
+      >
+        <div>
+          <div
+            className="easi-footer__secondary-logo-wrap"
+          >
+            <img
+              alt="CMS.gov Logo"
+              src="cmsGovLogo.png"
+            />
+            <img
+              alt="Department of Health and Human Services USA"
+              className="margin-left-1"
+              src="hhsLogo.png"
+            />
+          </div>
+          <span>
+            A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 21244
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+`;
