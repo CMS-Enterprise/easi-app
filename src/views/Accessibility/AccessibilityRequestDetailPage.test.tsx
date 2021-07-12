@@ -56,28 +56,23 @@ describe('AccessibilityRequestDetailPage', () => {
     }
   };
 
-  const buildProviders = (mocks: any, store: any, useNotesPath: boolean) => (
-    <MemoryRouter
-      initialEntries={[
-        useNotesPath
-          ? '/508/requests/a11yRequest123/notes'
-          : '/508/requests/a11yRequest123/documents'
-      ]}
-    >
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <Provider store={store}>
-          <Route path="/508/requests/:accessibilityRequestId/:secondaryNavTab">
-            <MessageProvider>
-              <AccessibilityRequestDetailPage />
-            </MessageProvider>
-          </Route>
-        </Provider>
-      </MockedProvider>
-    </MemoryRouter>
-  );
+  const render508DocumentsPage = (mocks: any[], store: any) =>
+    render(
+      <MemoryRouter initialEntries={['/508/requests/a11yRequest123/documents']}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <Provider store={store}>
+            <Route path="/508/requests/:accessibilityRequestId/documents">
+              <MessageProvider>
+                <AccessibilityRequestDetailPage />
+              </MessageProvider>
+            </Route>
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
 
   it('renders without crashing', async () => {
-    render(buildProviders([default508RequestQuery], defaultStore, false));
+    render508DocumentsPage([default508RequestQuery], defaultStore);
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -116,7 +111,7 @@ describe('AccessibilityRequestDetailPage', () => {
       }
     };
 
-    render(buildProviders([deleted508RequestQuery], defaultStore, false));
+    render508DocumentsPage([deleted508RequestQuery], defaultStore);
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -208,7 +203,7 @@ describe('AccessibilityRequestDetailPage', () => {
     };
 
     it('renders Next step if no documents', async () => {
-      render(buildProviders([withoutDocsQuery], defaultStore, false));
+      render508DocumentsPage([withoutDocsQuery], defaultStore);
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -221,19 +216,7 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     it('renders the AccessibilityDocumentList when documents exist', async () => {
-      render(
-        <MemoryRouter initialEntries={['/508/requests/a11yRequest123']}>
-          <MockedProvider mocks={[withDocsQuery]} addTypename={false}>
-            <Provider store={defaultStore}>
-              <MessageProvider>
-                <Route path="/508/requests/:accessibilityRequestId">
-                  <AccessibilityRequestDetailPage />
-                </Route>
-              </MessageProvider>
-            </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      );
+      render508DocumentsPage([withDocsQuery], defaultStore);
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -370,11 +353,22 @@ describe('AccessibilityRequestDetailPage', () => {
       auth: { groups: [ACCESSIBILITY_TESTER_DEV], isUserSet: true }
     });
 
-    const defaultRender = () =>
-      render(buildProviders([defaultQuery], testerStore, false));
-
+    const render508NotesPage = (mocks: any[]) =>
+      render(
+        <MemoryRouter initialEntries={['/508/requests/a11yRequest123/notes']}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <Provider store={testerStore}>
+              <Route path="/508/requests/:accessibilityRequestId/notes">
+                <MessageProvider>
+                  <AccessibilityRequestDetailPage />
+                </MessageProvider>
+              </Route>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
     it("doesn't render table if there are no documents", async () => {
-      defaultRender();
+      render508DocumentsPage([defaultQuery], testerStore);
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -384,7 +378,7 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     it('renders table if there are documents', async () => {
-      render(buildProviders([withDocsQuery], testerStore, false));
+      render508DocumentsPage([withDocsQuery], testerStore);
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -393,24 +387,20 @@ describe('AccessibilityRequestDetailPage', () => {
       ).toBeInTheDocument();
     });
 
-    describe('notes tab', () => {
-      it('can view existing notes', async () => {
-        render(buildProviders([withNotesQuery], testerStore, true));
+    it('can view existing notes', async () => {
+      render508NotesPage([withNotesQuery]);
 
-        await waitForElementToBeRemoved(() =>
-          screen.getByTestId('page-loading')
-        );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
-        const notesList = screen.getByRole('list', {
-          name: /existing notes/i
-        });
-
-        expect(within(notesList).getAllByRole('listitem').length).toEqual(2);
+      const notesList = screen.getByRole('list', {
+        name: /existing notes/i
       });
+
+      expect(within(notesList).getAllByRole('listitem').length).toEqual(2);
     });
 
-    describe('Add a note', () => {
-      it('shows a success message', async () => {
+    describe('add note', () => {
+      it('can add a note', async () => {
         const withNotesQueryWithNewNote = {
           request: {
             query: GetAccessibilityRequestAccessibilityTeamOnlyQuery,
@@ -487,8 +477,7 @@ describe('AccessibilityRequestDetailPage', () => {
           withNotesQueryWithNewNote
         ];
 
-        const providers = buildProviders(createNoteMocks, testerStore, true);
-        render(providers);
+        render508NotesPage(createNoteMocks);
 
         await waitForElementToBeRemoved(() =>
           screen.getByTestId('page-loading')
@@ -510,11 +499,8 @@ describe('AccessibilityRequestDetailPage', () => {
         expect(within(notesList).getAllByRole('listitem')).toHaveLength(3);
       });
 
-      it('shows an error alert when there is a form validation error', async () => {
-        const mocks = [defaultQuery];
-        const providers = buildProviders(mocks, testerStore, true);
-
-        render(providers);
+      it('shows an error alert when there is a note form validation error', async () => {
+        render508NotesPage([defaultQuery]);
 
         await waitForElementToBeRemoved(() =>
           screen.getByTestId('page-loading')
@@ -555,8 +541,7 @@ describe('AccessibilityRequestDetailPage', () => {
           }
         ];
 
-        const providers = buildProviders(errorMocks, testerStore, true);
-        render(providers);
+        render508NotesPage(errorMocks);
 
         await waitForElementToBeRemoved(() =>
           screen.getByTestId('page-loading')
@@ -574,7 +559,6 @@ describe('AccessibilityRequestDetailPage', () => {
           within(alert).getByText(/Error saving note./i)
         ).toBeInTheDocument();
       });
-
       it('shows an error alert message for userErrors returned from the server', async () => {
         const userErrorMocks = [
           defaultQuery,
@@ -605,8 +589,7 @@ describe('AccessibilityRequestDetailPage', () => {
           }
         ];
 
-        const providers = buildProviders(userErrorMocks, testerStore, true);
-        render(providers);
+        render508NotesPage(userErrorMocks);
 
         await waitForElementToBeRemoved(() =>
           screen.getByTestId('page-loading')
