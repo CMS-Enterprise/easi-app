@@ -157,7 +157,7 @@ describe('Governance Review Team', () => {
       });
     cy.contains('.easi-review-row dt', 'Lifecycle ID Expiration')
       .siblings('dd')
-      .contains('December 25, 2020');
+      .contains('December 25 2020');
     cy.contains('.easi-review-row dt', 'Lifecycle ID Scope')
       .siblings('dd')
       .contains('Scope');
