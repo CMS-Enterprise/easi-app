@@ -148,7 +148,6 @@ describe('Governance Review Team', () => {
     ).click();
 
     cy.contains('h1', 'Decision - Approved');
-    // If this line fails, you may need to clean/seed the database
     cy.contains('.easi-review-row dt', 'Lifecycle ID')
       .siblings('dd')
       .invoke('text')
