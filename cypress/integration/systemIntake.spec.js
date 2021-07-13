@@ -357,17 +357,3 @@ describe('users who got lost', () => {
     });
   });
 });
-
-describe('office user', () => {
-  it('can assign Admin Lead', () => {
-    cy.localLogin({ name: 'OFFI', role: 'EASI_D_GOVTEAM' });
-    cy.visit(
-      'governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
-    );
-    cy.get('[data-testid="admin-lead"]').contains('Not Assigned');
-    cy.contains('button', 'Change').click();
-    cy.get('input[value="Ann Rudolph"]').check({ force: true });
-    cy.get('[data-testid="button"]').contains('Save').click();
-    cy.get('dd[data-testid="admin-lead"]').contains('Ann Rudolph');
-  });
-});
