@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { DateTime } from 'luxon';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 import PageHeading from 'components/PageHeading';
@@ -10,6 +9,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import { formatDateAndIgnoreTimezone } from 'utils/date';
 
 type DecisionProps = {
   systemIntake?: SystemIntake | null;
@@ -43,9 +43,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             <DescriptionDefinition
               definition={
                 systemIntake?.lcidExpiresAt
-                  ? DateTime.fromISO(
-                      systemIntake?.lcidExpiresAt
-                    ).toLocaleString(DateTime.DATE_FULL)
+                  ? formatDateAndIgnoreTimezone(systemIntake?.lcidExpiresAt)
                   : ''
               }
             />
