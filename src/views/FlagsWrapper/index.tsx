@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
+
 import GetCurrentUserQuery from 'queries/GetCurrentUserQuery';
 import { GetCurrentUser } from 'queries/types/GetCurrentUser';
 
