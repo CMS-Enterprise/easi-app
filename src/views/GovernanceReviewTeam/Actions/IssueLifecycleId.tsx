@@ -5,8 +5,6 @@ import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
-import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
-import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -23,6 +21,8 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
+import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 import { SubmitLifecycleIdForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
