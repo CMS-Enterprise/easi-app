@@ -98,4 +98,71 @@ describe('Governance Review Team', () => {
       cy.get('[data-testid="user-note"]').first().contains('User GRTB');
     });
   });
+
+  it('can issue a Lifecycle ID', () => {
+    // Selecting name based on pre-seeded data
+    // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
+    cy.get('a').contains('A Completed Intake Form').click();
+    cy.get(
+      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/actions"]'
+    )
+      .contains('Take an action')
+      .click();
+
+    cy.get('button[data-testid="collapsable-link"]').click();
+    cy.get('#issue-lcid').check({ force: true }).should('be.checked');
+    cy.get('button[type="submit"]').click();
+
+    cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes')
+      .check({ force: true })
+      .should('be.checked');
+    cy.get('#IssueLifecycleIdForm-ExpirationDateMonth')
+      .clear()
+      .type('12')
+      .should('have.value', '12');
+    cy.get('#IssueLifecycleIdForm-ExpirationDateDay')
+      .clear()
+      .type('25')
+      .should('have.value', '25');
+    cy.get('#IssueLifecycleIdForm-ExpirationDateYear')
+      .clear()
+      .type('2020')
+      .should('have.value', '2020');
+    cy.get('#IssueLifecycleIdForm-Scope')
+      .type('Scope')
+      .should('have.value', 'Scope');
+    cy.get('#IssueLifecycleIdForm-NextSteps')
+      .type('Next steps')
+      .should('have.value', 'Next steps');
+    cy.get('#IssueLifecycleIdForm-Feedback')
+      .type('Feedback')
+      .should('have.value', 'Feedback');
+    cy.get('button[type="submit"]').click();
+
+    cy.get('[data-testid="action-note"]')
+      .first()
+      .contains('Issued Lifecycle ID with no further governance');
+
+    cy.get(
+      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/decision"]'
+    ).click();
+
+    cy.contains('h1', 'Decision - Approved');
+    // If this line fails, you may need to clean/seed the database
+    cy.contains('.easi-review-row dt', 'Lifecycle ID')
+      .siblings('dd')
+      .invoke('text')
+      .then(text => {
+        expect(text.length).to.equal(6);
+      });
+    cy.contains('.easi-review-row dt', 'Lifecycle ID Expiration')
+      .siblings('dd')
+      .contains('December 25, 2020');
+    cy.contains('.easi-review-row dt', 'Lifecycle ID Scope')
+      .siblings('dd')
+      .contains('Scope');
+    cy.contains('.easi-review-row dt', 'Next Steps')
+      .siblings('dd')
+      .contains('Next steps');
+  });
 });
