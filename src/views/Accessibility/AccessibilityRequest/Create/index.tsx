@@ -66,7 +66,7 @@ const Create = () => {
             </Link>
           </>
         );
-        history.push(`/508/requests/${uuid}`);
+        history.push(`/508/requests/${uuid}/documents`);
       }
     });
   };
