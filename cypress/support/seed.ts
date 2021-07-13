@@ -17,12 +17,17 @@ Cypress.Commands.add(
     options: AccessibilityRequestSchema
   ): Cypress.Chainable<AccessibilityRequestSchema> => {
     return cy
-      .exec('go run cmd/seed/main.go accessibilityRequest', {
+      .exec('scripts/seed_database accessibilityRequest', {
         env: {
           SEED_INPUT: JSON.stringify(options)
         }
       })
       .then(result => {
+        Cypress.log({
+          name: 'seedAccessibilityRequest',
+          displayName: 'result',
+          message: [result.stdout]
+        });
         return JSON.parse(result.stdout);
       });
   }

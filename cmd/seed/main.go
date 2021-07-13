@@ -37,6 +37,7 @@ var accessibilityRequestCmd = &cobra.Command{
 	Use:   "accessibilityRequest",
 	Short: "Generate an Accessibility Request",
 	Run: func(cmd *cobra.Command, args []string) {
+		connect()
 		modelData := os.Getenv("SEED_INPUT")
 		var accessibilityRequest models.AccessibilityRequest
 		if deserializeErr := json.Unmarshal([]byte(modelData), &accessibilityRequest); deserializeErr != nil {
@@ -66,7 +67,7 @@ func init() {
 
 var store *storage.Store
 
-func main() {
+func connect() {
 	config := testhelpers.NewConfig()
 	logger, loggerErr := zap.NewDevelopment()
 	if loggerErr != nil {
@@ -93,6 +94,9 @@ func main() {
 		panic(storeErr)
 	}
 	store = storeInstance
+}
+
+func main() {
 	execute()
 }
 
