@@ -457,7 +457,7 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
           aria-controls="GovernanceOverview-WhyGovernanceExists"
           aria-expanded={false}
           className="usa-button usa-button--unstyled"
-          data-testid="button"
+          data-testid="collapsable-link"
           onClick={[Function]}
           type="button"
         >
@@ -1026,7 +1026,7 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
           aria-controls="GovernanceOverview-WhyGovernanceExists"
           aria-expanded={false}
           className="usa-button usa-button--unstyled"
-          data-testid="button"
+          data-testid="collapsable-link"
           onClick={[Function]}
           type="button"
         >
