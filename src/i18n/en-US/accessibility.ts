@@ -89,6 +89,8 @@ const accessibility = {
       confirm: 'Remove request',
       cancel: 'Keep request'
     },
+    activeDocumentTab: 'Displaying documents',
+    activeNoteTab: 'Displaying notes',
     removeConfirmationText: '{{-requestName}} successfully removed'
   },
   testDateForm: {
