@@ -74,16 +74,24 @@ describe('Accessibility Requests', () => {
     cy.contains('h1', 'Request 508 testing');
   });
 
-  it.only('adds and removes a document from a 508 request as the owner', () => {
+  it('adds and removes a document from a 508 request as the owner', () => {
     cy.localLogin({ name: 'CMSU' });
-    cy.accessibility.create508Request({ euaUserID: 'CMSU', name: 'TACO' });
+    cy.seedAccessibilityRequest({ euaUserID: 'CMSU', name: 'TACO' }).then(
+      data => {
+        cy.visit(`/508/requests/${data.id}`);
+      }
+    );
     cy.accessibility.addAndRemoveDocument();
     cy.contains('h2', 'Next step: Provide your documents');
   });
 
   it('adds and removes a document from a 508 request as an admin', () => {
     cy.localLogin({ name: 'CMSU' });
-    cy.accessibility.create508Request({ euaUserID: 'CMSU', name: 'TACO' });
+    cy.seedAccessibilityRequest({ euaUserID: 'CMSU', name: 'TACO' }).then(
+      data => {
+        cy.visit(`/508/requests/${data.id}`);
+      }
+    );
 
     cy.url().then(requestPageUrl => {
       cy.logout();

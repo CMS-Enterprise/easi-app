@@ -1,5 +1,12 @@
 package main
 
+// This program generates seed data for use in end to end tests.
+//
+// It is designed to be invoked from within Cypress tests using cy.exec.
+// Field values are specified by setting the SEED_INPUT environment variable
+// to a JSON object compatible with the default JSON serialization defined
+// on that model in the Go code.
+
 import (
 	"context"
 	"encoding/json"

@@ -1,17 +1,4 @@
 cy.accessibility = {
-  create508Request: options => {
-    cy.exec('go run cmd/seed/main.go accessibilityRequest', {
-      env: {
-        SEED_INPUT: JSON.stringify({
-          euaUserID: options.euaUserID || 'EASI',
-          name: options.name || 'TACO'
-        })
-      }
-    }).then(result => {
-      const data = JSON.parse(result.stdout);
-      cy.visit(`/508/requests/${data.id}`);
-    });
-  },
   addAndRemoveDocument: () => {
     cy.get('[data-testid="upload-new-document"]').click();
     cy.contains('h1', 'Upload a document to');
