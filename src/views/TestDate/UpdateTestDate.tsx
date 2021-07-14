@@ -3,6 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { DateTime } from 'luxon';
+
+import PageLoading from 'components/PageLoading';
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import { useMessage } from 'hooks/useMessage';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   GetAccessibilityRequest,
@@ -10,10 +14,6 @@ import {
 } from 'queries/types/GetAccessibilityRequest';
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
-
-import PageLoading from 'components/PageLoading';
-import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
-import { useMessage } from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
@@ -92,7 +92,7 @@ const TestDate = () => {
       }
     }).then(() => {
       showMessageOnNextPage(confirmationText);
-      history.push(`/508/requests/${accessibilityRequestId}`);
+      history.push(`/508/requests/${accessibilityRequestId}/documents`);
     });
   };
 

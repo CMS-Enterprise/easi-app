@@ -1,9 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The making a request page matches the snapshot 1`] = `
+exports[`The prepare for GRB info page matches the snapshot 1`] = `
 <div
-  className="easi-page-wrapper"
-  data-testid="making-a-system-request"
+  className="easi-page-wrapper easi-prepare-for-grb"
 >
   <header
     className="usa-header easi-header"
@@ -239,94 +238,227 @@ exports[`The making a request page matches the snapshot 1`] = `
     </div>
   </header>
   <main
-    className="easi-main-content grid-container line-height-body-5 margin-bottom-5"
+    className="easi-main-content margin-bottom-5"
     id="main-content"
     role="main"
     tabIndex={-1}
   >
-    <nav
-      aria-label="Breadcrumbs"
-      className="usa-breadcrumb usa-breadcrumb--wrap"
+    <div
+      className="grid-container"
     >
-      <ol
-        className="usa-breadcrumb__list"
+      <nav
+        aria-label="Breadcrumbs"
+        className="usa-breadcrumb usa-breadcrumb--wrap"
       >
-        <li
-          className="usa-breadcrumb__list-item"
+        <ol
+          className="usa-breadcrumb__list"
         >
-          <a
-            className="usa-breadcrumb__link"
-            href="/"
-            onClick={[Function]}
+          <li
+            className="usa-breadcrumb__list-item"
           >
-            <span>
-              Home
-            </span>
-          </a>
-        </li>
-        <li
-          aria-current="page"
-          className="usa-breadcrumb__list-item usa-current"
+            <a
+              className="usa-breadcrumb__link"
+              href="/"
+              onClick={[Function]}
+            >
+              <span>
+                Home
+              </span>
+            </a>
+          </li>
+          <li
+            className="usa-breadcrumb__list-item"
+          >
+            <a
+              className="usa-breadcrumb__link"
+              href="/governance-task-list/undefined"
+              onClick={[Function]}
+            >
+              <span>
+                Get governance approval
+              </span>
+            </a>
+          </li>
+          <li
+            aria-current="page"
+            className="usa-breadcrumb__list-item usa-current"
+          >
+            Prepare for the Review Board meeting
+          </li>
+        </ol>
+      </nav>
+      <div
+        className="grid-row"
+      >
+        <div
+          className="grid-col-10"
         >
-          IT Governance
-        </li>
-      </ol>
-    </nav>
-    <h1
-      aria-live="polite"
-      className="easi-h1"
-      tabIndex={-1}
+          <h1
+            aria-live="polite"
+            className="easi-h1"
+            tabIndex={-1}
+          >
+            Prepare for the Review Board meeting
+          </h1>
+          <h2
+            className="font-heading-xl margin-top-6"
+          >
+            What is the Governance Review Board?
+          </h2>
+          <p
+            className="line-height-sans-6"
+          >
+            The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.
+          </p>
+          <ul>
+            <li
+              className="line-height-sans-6"
+            >
+              At the meeting, you will talk through your business case with the board members and how the approval of your project will help benefit CMS Programs.
+            </li>
+            <li
+              className="line-height-sans-6"
+            >
+              The Review Board will review your proposed alternatives and their pros and cons.
+            </li>
+            <li
+              className="line-height-sans-6"
+            >
+              At the meeting, you’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. 
+            </li>
+          </ul>
+          <div
+            className="usa-alert usa-alert--info easi-inline-alert margin-top-4 margin-bottom-4"
+            data-testid="alert"
+          >
+            <div
+              className="usa-alert__body"
+            >
+              <p
+                className="usa-alert__text"
+              >
+                You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.
+              </p>
+            </div>
+          </div>
+          <h3
+            className="font-heading-lg"
+          >
+            Possible outcomes
+          </h3>
+          <p>
+            After this discussion, the Governance Review Board will decide whether to approve your request at this time.
+          </p>
+          <ul>
+            <li
+              className="line-height-sans-6"
+            >
+              If the request is approved, the Board will issue you a Lifecycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.
+            </li>
+            <li
+              className="line-height-sans-6"
+            >
+              If two or more Board members voice concerns about the project, a Lifceycle ID won’t be issued. The request will not be approved until all concerns are addressed or withdrawn. 
+            </li>
+          </ul>
+        </div>
+        <div
+          className="grid-col-2"
+        >
+          <div
+            className="sidebar margin-top-4"
+          >
+            <h3
+              className="font-sans-sm"
+            >
+              Need help? Contact the Governance team
+            </h3>
+            <p>
+              <a
+                className="usa-link"
+                href="mailto:IT_Governance@cms.hhs.gov"
+              >
+                IT_Governance@cms.hhs.gov
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="distinct-content margin-top-4"
     >
-      IT Governance
-    </h1>
-    <p>
-      You can make a request to:
-    </p>
-    <ul>
-      <li>
-        add a new system
-      </li>
-      <li>
-        make major changes or updates
-      </li>
-      <li>
-        re-compete a contract
-      </li>
-      <li>
-        decomission a system
-      </li>
-    </ul>
-    <p>
-      If you are looking for help with Enterprise Architecture or the Navigator program, please get in touch with them directly at:
-       
-      <a
-        className="usa-link"
-        href="mailto:EnterpriseArchitecture@cms.hhs.gov"
+      <div
+        className="grid-container"
       >
-        EnterpriseArchitecture@cms.hhs.gov
-      </a>
-      .
-    </p>
-    <p
-      className="margin-bottom-3"
+        <div
+          className="grid-row"
+        >
+          <div
+            className="grid-col-10"
+          >
+            <h2
+              className="font-heading-xl"
+            >
+              How to best prepare
+            </h2>
+            <div
+              className="margin-top-3"
+            >
+              <div
+                className="easi-collapsable-link"
+              >
+                <button
+                  aria-controls="take-with-you"
+                  aria-expanded={false}
+                  className="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <span
+                    className="fa easi-collapsable-link__square fa-caret-right"
+                  />
+                  Take with you
+                </button>
+              </div>
+            </div>
+            <div
+              className="margin-top-3"
+            >
+              <div
+                className="easi-collapsable-link"
+              >
+                <button
+                  aria-controls="during-the-meeting"
+                  aria-expanded={false}
+                  className="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <span
+                    className="fa easi-collapsable-link__square fa-caret-right"
+                  />
+                  During the meeting
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="grid-container"
     >
-      For all other questions, you can reach the CMS IT Governance team at: 
-       
       <a
-        className="usa-link"
-        href="mailto:IT_Governance@cms.hhs.gov"
+        className="text-ink"
+        href="/governance-task-list/undefined"
+        onClick={[Function]}
       >
-        IT_Governance@cms.hhs.gov
+        Back
       </a>
-      .
-    </p>
-    <a
-      className="usa-button"
-      href="/system/request-type"
-      onClick={[Function]}
-    >
-      Start a new request
-    </a>
+    </div>
   </main>
   <footer
     className="usa-footer usa-footer--slim"

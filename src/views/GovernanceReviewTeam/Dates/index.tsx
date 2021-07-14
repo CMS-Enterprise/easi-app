@@ -5,12 +5,6 @@ import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
-import {
-  UpdateSystemIntakeReviewDates,
-  UpdateSystemIntakeReviewDatesVariables
-} from 'queries/types/UpdateSystemIntakeReviewDates';
-import UpdateSystemIntakeReviewDatesQuery from 'queries/UpdateSystemIntakeReviewDatesQuery';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -26,6 +20,12 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { AnythingWrongSurvey } from 'components/Survey';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import {
+  UpdateSystemIntakeReviewDates,
+  UpdateSystemIntakeReviewDatesVariables
+} from 'queries/types/UpdateSystemIntakeReviewDates';
+import UpdateSystemIntakeReviewDatesQuery from 'queries/UpdateSystemIntakeReviewDatesQuery';
 import { SubmitDatesForm } from 'types/systemIntake';
 import { parseAsDate } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';

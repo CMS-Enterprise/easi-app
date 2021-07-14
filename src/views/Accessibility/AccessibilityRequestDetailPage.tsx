@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   Breadcrumb,
@@ -20,6 +20,28 @@ import {
 } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
+
+import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
+import Modal from 'components/Modal';
+import {
+  NoteByline,
+  NoteContent,
+  NoteListItem,
+  NotesList
+} from 'components/NotesList';
+import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading/index';
+import Alert from 'components/shared/Alert';
+import CheckboxField from 'components/shared/CheckboxField';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
+import Label from 'components/shared/Label';
+import { RadioField } from 'components/shared/RadioField';
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import TextAreaField from 'components/shared/TextAreaField';
+import TestDateCard from 'components/TestDateCard';
+import useMessage from 'hooks/useMessage';
 import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
 import CreateAccessibilityRequestNoteQuery from 'queries/CreateAccessibilityRequestNoteQuery';
 import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
@@ -45,28 +67,6 @@ import {
   GetAccessibilityRequestAccessibilityTeamOnly as GetAccessibilityRequest,
   GetAccessibilityRequestAccessibilityTeamOnlyVariables as GetAccessibilityRequestPayload
 } from 'queries/types/GetAccessibilityRequestAccessibilityTeamOnly';
-
-import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
-import Modal from 'components/Modal';
-import {
-  NoteByline,
-  NoteContent,
-  NoteListItem,
-  NotesList
-} from 'components/NotesList';
-import PageHeading from 'components/PageHeading';
-import PageLoading from 'components/PageLoading/index';
-import Alert from 'components/shared/Alert';
-import CheckboxField from 'components/shared/CheckboxField';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import FieldGroup from 'components/shared/FieldGroup';
-import Label from 'components/shared/Label';
-import { RadioField } from 'components/shared/RadioField';
-import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
-import TextAreaField from 'components/shared/TextAreaField';
-import TestDateCard from 'components/TestDateCard';
-import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import {
   CreateNoteForm,
@@ -93,10 +93,10 @@ const AccessibilityRequestDetailPage = () => {
   const flags = useFlags();
   const history = useHistory();
   const existingNotesHeading = useRef<HTMLHeadingElement>(null);
-  const { accessibilityRequestId, secondaryNavTab } = useParams<{
+  const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
-    secondaryNavTab: string;
   }>();
+  const { pathname } = useLocation();
 
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
@@ -266,6 +266,9 @@ const AccessibilityRequestDetailPage = () => {
 
   const bodyWithDocumentsTable = (
     <div data-testid="body-with-doc-table">
+      <p className="usa-sr-only" aria-live="polite">
+        {t('requestDetails.activeDocumentTab')}
+      </p>
       <h2 className="margin-top-0">{t('requestDetails.documents.label')}</h2>
       {uploadDocumentLink}
       <div className="margin-top-6">
@@ -281,6 +284,9 @@ const AccessibilityRequestDetailPage = () => {
   const bodyNoDocumentsBusinessOwner = (
     <>
       <div className="margin-bottom-3">
+        <p className="usa-sr-only" aria-live="polite">
+          {t('requestDetails.activeDocumentTab')}
+        </p>
         <h2 className="margin-y-0 font-heading-lg">
           {t('requestDetails.documents.noDocs.heading')}
         </h2>
@@ -319,6 +325,9 @@ const AccessibilityRequestDetailPage = () => {
             createdAt: formatDate(notes[0]?.createdAt)
           })}
       </h3>
+      <p className="usa-sr-only" aria-live="polite">
+        {t('requestDetails.activeNoteTab')}
+      </p>
       <Button
         className="accessibility-request__add-note-btn"
         type="button"
@@ -439,8 +448,9 @@ const AccessibilityRequestDetailPage = () => {
     );
   }
 
-  const selectedTabContent =
-    secondaryNavTab === 'notes' ? notesTab : bodyWithDocumentsTable;
+  const selectedTabContent = pathname.endsWith('/notes')
+    ? notesTab
+    : bodyWithDocumentsTable;
 
   if (data?.accessibilityRequest?.statusRecord?.status === 'DELETED') {
     return <RequestDeleted />;
