@@ -7,7 +7,6 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535 // indirect
 	github.com/aws/aws-sdk-go v1.30.28
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
-	github.com/fatih/color v1.12.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-openapi/errors v0.19.4
 	github.com/go-openapi/loads v0.19.5 // indirect
@@ -26,13 +25,11 @@ require (
 	github.com/launchdarkly/eventsource v1.6.1 // indirect
 	github.com/lestrrat-go/jwx v1.0.2 // indirect
 	github.com/lib/pq v1.5.2
-	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/mitchellh/mapstructure v1.3.0 // indirect
 	github.com/oklog/run v1.1.0
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/pelletier/go-toml v1.7.0 // indirect
 	github.com/pquerna/otp v1.2.0
-	github.com/rakyll/gotest v0.0.6 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/cobra v1.0.0
