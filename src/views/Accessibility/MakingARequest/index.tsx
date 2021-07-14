@@ -16,7 +16,10 @@ const MakingARequest = () => {
   const { t } = useTranslation('accessibility');
 
   return (
-    <div className="grid-container margin-bottom-2">
+    <div
+      className="grid-container margin-bottom-2"
+      data-testid="making-a-508-request"
+    >
       <BreadcrumbBar variant="wrap">
         <Breadcrumb>
           <BreadcrumbLink asCustom={Link} to="/">
