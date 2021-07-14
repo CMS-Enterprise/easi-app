@@ -59,11 +59,12 @@ const GeneralRequestInfo = ({
         const { errors, values, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
-          <div className="grid-container">
+          <div className="grid-container" data-testid="general-request-info">
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
+                testId="formik-validation-errors"
               >
                 {Object.keys(flatErrors).map(key => {
                   return (

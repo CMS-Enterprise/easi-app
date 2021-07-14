@@ -6,12 +6,14 @@ type FieldGroupProps = {
   className?: string;
   error?: boolean;
   scrollElement?: string;
-};
+} & JSX.IntrinsicElements['div'];
+
 const FieldGroup = ({
   children,
   className,
   error,
-  scrollElement
+  scrollElement,
+  ...props
 }: FieldGroupProps) => {
   const fieldGroupClasses = classnames(
     'usa-form-group',
@@ -19,7 +21,7 @@ const FieldGroup = ({
     className
   );
   return (
-    <div className={fieldGroupClasses} data-scroll={scrollElement}>
+    <div className={fieldGroupClasses} data-scroll={scrollElement} {...props}>
       {children}
     </div>
   );

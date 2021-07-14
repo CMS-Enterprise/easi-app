@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
-import { GetGRTFeedback_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetGRTFeedback';
 
 import HelpText from 'components/shared/HelpText';
+import { GetGRTFeedback_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetGRTFeedback';
 
 type GRTFeedbackViewProps = {
   grtFeedbacks: GRTFeedback[];

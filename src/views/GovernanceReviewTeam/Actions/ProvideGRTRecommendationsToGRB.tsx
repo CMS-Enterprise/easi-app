@@ -4,11 +4,6 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import MarkReadyForGRBQuery from 'queries/MarkReadyForGRBQuery';
-import {
-  AddGRTFeedback,
-  AddGRTFeedbackVariables
-} from 'queries/types/AddGRTFeedback';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -17,6 +12,11 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import MarkReadyForGRBQuery from 'queries/MarkReadyForGRBQuery';
+import {
+  AddGRTFeedback,
+  AddGRTFeedbackVariables
+} from 'queries/types/AddGRTFeedback';
 import { ProvideGRTFeedbackForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { provideGRTFeedbackSchema } from 'validations/actionSchema';
