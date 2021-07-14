@@ -11,11 +11,6 @@ import {
   Link as UswdsLink
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -32,6 +27,11 @@ import {
   intakeTag
 } from 'data/taskList';
 import useMessage from 'hooks/useMessage';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import {
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
 import { archiveSystemIntake } from 'types/routines';
 
 import SideNavActions from './SideNavActions';
@@ -61,7 +61,7 @@ const GovernanceTaskList = () => {
   );
   const systemIntake = data?.systemIntake;
 
-  if (loading) {
+  if (loading || !systemIntake) {
     return <p>Loading...</p>;
   }
 

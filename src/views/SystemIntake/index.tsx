@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Switch, useHistory, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import { SecureRoute } from '@okta/okta-react';
 import {
   Breadcrumb,
@@ -13,8 +14,14 @@ import { DateTime } from 'luxon';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import {
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
 import {
   clearSystemIntake,
@@ -52,6 +59,16 @@ export const SystemIntake = () => {
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
   const prevIsSubmitting = usePrevious(isSubmitting);
 
+  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
+    GetSystemIntakeQuery,
+    {
+      variables: {
+        id: systemId
+      }
+    }
+  );
+  const queryIntake = data?.systemIntake;
+
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
     dispatch(
@@ -82,6 +99,10 @@ export const SystemIntake = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (loading) {
+    return <PageLoading />;
+  }
+
   return (
     <PageWrapper className="system-intake">
       <Header />
@@ -109,7 +130,7 @@ export const SystemIntake = () => {
               render={() => (
                 <ContactDetails
                   formikRef={formikRef}
-                  systemIntake={systemIntake}
+                  systemIntake={queryIntake}
                   dispatchSave={dispatchSave}
                 />
               )}

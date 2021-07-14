@@ -640,3 +640,463 @@ func date(year, month, day int) *time.Time {
 	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 	return &date
 }
+
+func (s GraphQLTestSuite) TestUpdateContactDetails() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContactDetails struct {
+			SystemIntake struct {
+				ID            string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				ProductManager struct {
+					Name      string
+					Component string
+				}
+				Requester struct {
+					Name      string
+					Component string
+				}
+				Isso struct {
+					IsPresent bool
+					Name      null.String
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     null.String
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContactDetails(input: {
+				id: "%s",
+				businessOwner: {
+					name: "Iama Businessowner",
+					component: "CMS Office 1"
+				},
+				productManager: {
+					name: "Iama Productmanager",
+					component: "CMS Office 2"
+				},
+				requester: {
+					name: "Iama Requester",
+					component: "CMS Office 3"
+				},
+				isso: {
+					isPresent: false
+					name: null
+				},
+				governanceTeams: {
+					isPresent: false
+					teams: []
+				}
+			}) {
+				systemIntake {
+					id,
+					businessOwner {
+						name
+						component
+					}
+					productManager {
+						name
+						component
+					}
+					requester {
+						name
+						component
+					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							name
+						}
+						isPresent
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.Equal(respIntake.BusinessOwner.Name, "Iama Businessowner")
+	s.Equal(respIntake.BusinessOwner.Component, "CMS Office 1")
+
+	s.Equal(respIntake.ProductManager.Name, "Iama Productmanager")
+	s.Equal(respIntake.ProductManager.Component, "CMS Office 2")
+
+	s.Equal(respIntake.Requester.Name, "Iama Requester")
+	s.Equal(respIntake.Requester.Component, "CMS Office 3")
+
+	s.Nil(respIntake.Isso.Name.Ptr())
+	s.False(respIntake.Isso.IsPresent)
+
+	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
+	s.False(respIntake.GovernanceTeams.IsPresent)
+}
+
+func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContactDetails struct {
+			SystemIntake struct {
+				ID            string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				ProductManager struct {
+					Name      string
+					Component string
+				}
+				Requester struct {
+					Name      string
+					Component string
+				}
+				Isso struct {
+					IsPresent bool
+					Name      string
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     []struct {
+						Name         string
+						Collaborator string
+						Key          string
+					}
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContactDetails(input: {
+				id: "%s",
+				businessOwner: {
+					name: "Iama Businessowner",
+					component: "CMS Office 1"
+				},
+				productManager: {
+					name: "Iama Productmanager",
+					component: "CMS Office 2"
+				},
+				requester: {
+					name: "Iama Requester",
+					component: "CMS Office 3"
+				},
+				isso: {
+					isPresent: true,
+					name: "Iama Issoperson"
+				},
+				governanceTeams: {
+					isPresent: true,
+					teams: [
+						{ name: "Technical Review Board", key: "technicalReviewBoard", collaborator: "Iama Trbperson" },
+						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" },
+						{ name: "Enterprise Architecture", key: "enterpriseArchitecture", collaborator: "Iama Eaperson" }
+					]
+				}
+			}) {
+				systemIntake {
+					id,
+					businessOwner {
+						name
+						component
+					}
+					productManager {
+						name
+						component
+					}
+					requester {
+						name
+						component
+					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							collaborator
+							key
+						}
+						isPresent
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.Equal("Iama Issoperson", respIntake.Isso.Name)
+	s.True(respIntake.Isso.IsPresent)
+
+	s.True(respIntake.GovernanceTeams.IsPresent)
+	teams := respIntake.GovernanceTeams.Teams
+	s.Equal("Iama Eaperson", teams[0].Collaborator)
+	s.Equal("enterpriseArchitecture", teams[0].Key)
+
+	s.Equal("Iama Trbperson", teams[2].Collaborator)
+	s.Equal("technicalReviewBoard", teams[2].Key)
+
+	s.Equal("Iama Ispgperson", teams[1].Collaborator)
+	s.Equal("securityPrivacy", teams[1].Key)
+}
+
+func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	intake.ISSOName = null.StringFrom("Isso Person")
+	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
+	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
+	intake.EACollaboratorName = null.StringFrom("EA Person")
+	_, err := s.store.UpdateSystemIntake(ctx, intake)
+	s.NoError(err)
+
+	var resp struct {
+		UpdateSystemIntakeContactDetails struct {
+			SystemIntake struct {
+				ID            string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				ProductManager struct {
+					Name      string
+					Component string
+				}
+				Requester struct {
+					Name      string
+					Component string
+				}
+				Isso struct {
+					IsPresent bool
+					Name      null.String
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     null.String
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContactDetails(input: {
+				id: "%s",
+				businessOwner: {
+					name: "Iama Businessowner",
+					component: "CMS Office 1"
+				},
+				productManager: {
+					name: "Iama Productmanager",
+					component: "CMS Office 2"
+				},
+				requester: {
+					name: "Iama Requester",
+					component: "CMS Office 3"
+				},
+				isso: {
+					isPresent: false,
+					name: null
+				},
+				governanceTeams: {
+					isPresent: false,
+					teams: null
+				}
+			}) {
+				systemIntake {
+					id,
+					businessOwner {
+						name
+						component
+					}
+					productManager {
+						name
+						component
+					}
+					requester {
+						name
+						component
+					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							collaborator
+							key
+						}
+						isPresent
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.Nil(respIntake.Isso.Name.Ptr())
+	s.False(respIntake.Isso.IsPresent)
+
+	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
+	s.False(respIntake.GovernanceTeams.IsPresent)
+}
+
+func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	intake.ISSOName = null.StringFrom("Isso Person")
+	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
+	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
+	intake.EACollaboratorName = null.StringFrom("EA Person")
+	_, err := s.store.UpdateSystemIntake(ctx, intake)
+	s.NoError(err)
+
+	var resp struct {
+		UpdateSystemIntakeContactDetails struct {
+			SystemIntake struct {
+				ID            string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				ProductManager struct {
+					Name      string
+					Component string
+				}
+				Requester struct {
+					Name      string
+					Component string
+				}
+				Isso struct {
+					IsPresent bool
+					Name      null.String
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     []struct {
+						Name         string
+						Collaborator string
+						Key          string
+					}
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContactDetails(input: {
+				id: "%s",
+				businessOwner: {
+					name: "Iama Businessowner",
+					component: "CMS Office 1"
+				},
+				productManager: {
+					name: "Iama Productmanager",
+					component: "CMS Office 2"
+				},
+				requester: {
+					name: "Iama Requester",
+					component: "CMS Office 3"
+				},
+				isso: {
+					isPresent: false,
+					name: null
+				},
+				governanceTeams: {
+					isPresent: true,
+					teams: [
+						{ name: "Technical Review Board", key: "technicalReviewBoard", collaborator: "Iama Trbperson" },
+						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" }
+					]
+				}
+			}) {
+				systemIntake {
+					id,
+					businessOwner {
+						name
+						component
+					}
+					productManager {
+						name
+						component
+					}
+					requester {
+						name
+						component
+					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							collaborator
+							key
+						}
+						isPresent
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.True(respIntake.GovernanceTeams.IsPresent)
+	teams := respIntake.GovernanceTeams.Teams
+	s.Equal(2, len(teams))
+	s.Equal("Iama Ispgperson", teams[0].Collaborator)
+	s.Equal("securityPrivacy", teams[0].Key)
+
+	s.Equal("Iama Trbperson", teams[1].Collaborator)
+	s.Equal("technicalReviewBoard", teams[1].Key)
+}

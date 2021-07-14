@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -877,6 +878,64 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 	intake, err := r.store.UpdateReviewDates(ctx, input.ID, input.GrbDate, input.GrtDate)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystenIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	intake.Requester = input.Requester.Name
+	intake.Component = null.StringFrom(input.Requester.Component)
+	intake.BusinessOwner = null.StringFrom(input.BusinessOwner.Name)
+	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
+	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
+	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
+
+	if input.Isso.IsPresent {
+		intake.ISSOName = null.StringFrom(*input.Isso.Name)
+	}
+
+	if !input.Isso.IsPresent {
+		intake.ISSOName = null.StringFromPtr(nil)
+	}
+
+	if input.GovernanceTeams.IsPresent {
+		trbCollaboratorName := null.StringFromPtr(nil)
+		for _, team := range input.GovernanceTeams.Teams {
+			if team.Key == "technicalReviewBoard" {
+				trbCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+		}
+		intake.TRBCollaboratorName = trbCollaboratorName
+
+		oitCollaboratorName := null.StringFromPtr(nil)
+		for _, team := range input.GovernanceTeams.Teams {
+			if team.Key == "securityPrivacy" {
+				oitCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+		}
+		intake.OITSecurityCollaboratorName = oitCollaboratorName
+
+		eaCollaboratorName := null.StringFromPtr(nil)
+		for _, team := range input.GovernanceTeams.Teams {
+			if team.Key == "enterpriseArchitecture" {
+				eaCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+		}
+		intake.EACollaboratorName = eaCollaboratorName
+	}
+
+	if !input.GovernanceTeams.IsPresent {
+		intake.TRBCollaboratorName = null.StringFromPtr(nil)
+		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)
+		intake.EACollaboratorName = null.StringFromPtr(nil)
+	}
+
+	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: savedIntake,
 	}, err
 }
 

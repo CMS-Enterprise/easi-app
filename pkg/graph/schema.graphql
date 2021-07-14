@@ -538,6 +538,46 @@ input CreateSystemIntakeInput {
   requester: SystemIntakeRequesterInput!
 }
 
+input SystemIntakeRequesterWithComponentInput {
+  name: String!
+  component: String!
+}
+
+input SystemIntakeBusinessOwnerInput {
+  name: String!
+  component: String!
+}
+
+input SystemIntakeProductManagerInput {
+  name: String!
+  component: String!
+}
+
+input SystemIntakeISSOInput {
+  isPresent: Boolean!
+  name: String
+}
+
+input SystemIntakeCollaboratorInput {
+  collaborator: String!
+  name: String!
+  key: String!
+}
+
+input SystemIntakeGovernanceTeamInput {
+  isPresent: Boolean!
+  teams: [SystemIntakeCollaboratorInput]
+}
+
+input UpdateSystenIntakeContactDetailsInput {
+  id: UUID!
+  requester: SystemIntakeRequesterWithComponentInput!,
+  businessOwner: SystemIntakeBusinessOwnerInput!,
+  productManager: SystemIntakeProductManagerInput!,
+  isso: SystemIntakeISSOInput!,
+  governanceTeams: SystemIntakeGovernanceTeamInput!,
+}
+
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -727,12 +767,11 @@ type Mutation {
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeAdminLead(
-    input: UpdateSystemIntakeAdminLeadInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeReviewDates(
-    input: UpdateSystemIntakeReviewDatesInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeContactDetails(input: UpdateSystenIntakeContactDetailsInput!): UpdateSystemIntakePayload
 }
 
 type Query {
