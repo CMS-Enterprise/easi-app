@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
-import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
-import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
 import PageHeading from 'components/PageHeading';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import useMessage from 'hooks/useMessage';
+import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
+import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
 const List = () => {
   const { t } = useTranslation('home');

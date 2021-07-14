@@ -6,16 +6,6 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
-import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
-import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
-import {
-  CreateSystemIntakeNote,
-  CreateSystemIntakeNoteVariables
-} from 'queries/types/CreateSystemIntakeNote';
-import {
-  GetAdminNotesAndActions,
-  GetAdminNotesAndActionsVariables
-} from 'queries/types/GetAdminNotesAndActions';
 
 import {
   NoteByline,
@@ -31,6 +21,16 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { AnythingWrongSurvey } from 'components/Survey';
+import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
+import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
+import {
+  CreateSystemIntakeNote,
+  CreateSystemIntakeNoteVariables
+} from 'queries/types/CreateSystemIntakeNote';
+import {
+  GetAdminNotesAndActions,
+  GetAdminNotesAndActionsVariables
+} from 'queries/types/GetAdminNotesAndActions';
 import { AppState } from 'reducers/rootReducer';
 import { formatDate } from 'utils/date';
 

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
-import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
 import { translateTestType } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 
