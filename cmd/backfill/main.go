@@ -75,7 +75,7 @@ func execute(cfg *config) error {
 			continue
 		}
 		item, rErr := convert(row)
-		if err != nil {
+		if rErr != nil {
 			errs = append(errs, rErr)
 			continue
 		}
@@ -116,7 +116,7 @@ func upload(host string, auth string, item *entry) error {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return err
+		return fmt.Errorf("request failed: %v", err)
 	}
 	defer resp.Body.Close()
 	content, err := ioutil.ReadAll(resp.Body)
