@@ -51,3 +51,19 @@ export const UpdateSystemIntakeContactDetails = gql`
     }
   }
 `;
+
+export const UpdateSystemIntakeRequestDetails = gql`
+  mutation UpdateSystemIntakeRequestDetails(
+    $input: UpdateSystemIntakeRequestDetailsInput!
+  ) {
+    updateSystemIntakeRequestDetails(input: $input) {
+      systemIntake {
+        id
+        requestName
+        businessNeed
+        businessSolution
+        needsEaSupport
+      }
+    }
+  }
+`;

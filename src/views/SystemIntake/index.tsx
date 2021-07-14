@@ -131,7 +131,6 @@ export const SystemIntake = () => {
                 <ContactDetails
                   formikRef={formikRef}
                   systemIntake={queryIntake}
-                  dispatchSave={dispatchSave}
                 />
               )}
             />
@@ -140,8 +139,7 @@ export const SystemIntake = () => {
               render={() => (
                 <RequestDetails
                   formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
+                  systemIntake={queryIntake}
                 />
               )}
             />
