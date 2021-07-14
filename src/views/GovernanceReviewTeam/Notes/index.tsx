@@ -140,7 +140,9 @@ const Notes = () => {
 
   return (
     <>
-      <PageHeading>{t('notes.heading')}</PageHeading>
+      <PageHeading data-testid="grt-notes-view">
+        {t('notes.heading')}
+      </PageHeading>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<NoteForm>) => {
           const { values, handleSubmit } = formikProps;

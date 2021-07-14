@@ -28,7 +28,7 @@ const BusinessCaseReview = ({
 
   if (!businessCase.id) {
     return (
-      <div>
+      <div data-testid="business-case-review-not-found">
         <PageHeading className="margin-top-0">
           {t('general:businessCase')}
         </PageHeading>
@@ -38,7 +38,7 @@ const BusinessCaseReview = ({
   }
 
   return (
-    <div>
+    <div data-testid="business-case-review">
       <PDFExport
         title="System Intake"
         filename={filename}
