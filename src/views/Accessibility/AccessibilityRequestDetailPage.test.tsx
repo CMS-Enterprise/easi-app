@@ -400,12 +400,7 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     describe('add note', () => {
-      // TODO: Flaky test; need to investigate why
-      // expect(received).toHaveLength(expected)
-
-      // Expected length: 3
-      // Received length: 2
-      xit('can add a note', async () => {
+      it('can add a note', async () => {
         const withNotesQueryWithNewNote = {
           request: {
             query: GetAccessibilityRequestAccessibilityTeamOnlyQuery,
@@ -501,7 +496,9 @@ describe('AccessibilityRequestDetailPage', () => {
         const notesList = screen.getByRole('list', {
           name: /existing notes/i
         });
-        expect(within(notesList).getAllByRole('listitem')).toHaveLength(3);
+        expect(await within(notesList).findAllByRole('listitem')).toHaveLength(
+          3
+        );
       });
 
       it('shows an error alert when there is a note form validation error', async () => {
