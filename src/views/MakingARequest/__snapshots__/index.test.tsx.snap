@@ -3,6 +3,7 @@
 exports[`The making a request page matches the snapshot 1`] = `
 <div
   className="easi-page-wrapper"
+  data-testid="making-a-system-request"
 >
   <header
     className="usa-header easi-header"
