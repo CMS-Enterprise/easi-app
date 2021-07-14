@@ -99,7 +99,9 @@ const RejectIntake = () => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading>{t('rejectIntake.heading')}</PageHeading>
+            <PageHeading data-testid="not-approved">
+              {t('rejectIntake.heading')}
+            </PageHeading>
             <h2>{t('rejectIntake.subheading')}</h2>
             <p>
               {t('rejectIntake.actionDescription')}{' '}

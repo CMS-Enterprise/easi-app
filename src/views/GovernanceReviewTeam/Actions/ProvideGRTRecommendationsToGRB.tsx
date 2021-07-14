@@ -82,7 +82,7 @@ const ProvideGRTRecommendationsToGRB = () => {
                 })}
               </ErrorAlert>
             )}
-            <h1>{t('submitAction.heading')}</h1>
+            <h1 data-testid="ready-for-grb">{t('submitAction.heading')}</h1>
             <h2>{t('submitAction.subheading')}</h2>
             <p>
               {t('actions.readyForGrb')} &nbsp;

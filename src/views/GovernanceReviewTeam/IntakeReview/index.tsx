@@ -20,7 +20,7 @@ const IntakeReview = ({ systemIntake, now }: IntakeReviewProps) => {
   const filename = `System intake for ${systemIntake.requestName}.pdf`;
 
   return (
-    <div>
+    <div data-testid="intake-review">
       <PageHeading className="margin-top-0">{t('general:intake')}</PageHeading>
       <PDFExport
         title="System Intake"

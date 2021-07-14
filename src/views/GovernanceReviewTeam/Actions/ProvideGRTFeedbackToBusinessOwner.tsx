@@ -87,7 +87,9 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                 })}
               </ErrorAlert>
             )}
-            <h1>{t('submitAction.heading')}</h1>
+            <h1 data-testid="provide-feedback-biz-case">
+              {t('submitAction.heading')}
+            </h1>
             <h2>{t('submitAction.subheading')}</h2>
             <p>
               {actionName} &nbsp;

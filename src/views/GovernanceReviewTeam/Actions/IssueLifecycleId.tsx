@@ -124,7 +124,9 @@ const IssueLifecycleId = () => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading>{t('issueLCID.heading')}</PageHeading>
+            <PageHeading data-testid="issue-lcid">
+              {t('issueLCID.heading')}
+            </PageHeading>
             <h2>{t('issueLCID.subheading')}</h2>
             <p>
               Approve request and issue Lifecycle ID{' '}
