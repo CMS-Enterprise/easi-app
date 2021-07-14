@@ -1100,3 +1100,54 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	s.Equal("Iama Trbperson", teams[1].Collaborator)
 	s.Equal("technicalReviewBoard", teams[1].Key)
 }
+
+func (s GraphQLTestSuite) TestUpdateRequestDetails() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeRequestDetails struct {
+			SystemIntake struct {
+				ID               string
+				RequestName      string
+				BusinessSolution string
+				BusinessNeed     string
+				NeedsEaSupport   bool
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeRequestDetails(input: {
+				id: "%s",
+				requestName: "My request",
+				businessSolution: "My solution",
+				businessNeed: "My need",
+				needsEaSupport: false
+			}) {
+				systemIntake {
+					id
+					requestName
+					businessSolution
+					businessNeed
+					needsEaSupport
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeRequestDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeRequestDetails.SystemIntake
+	s.Equal(respIntake.RequestName, "My request")
+	s.Equal(respIntake.BusinessSolution, "My solution")
+	s.Equal(respIntake.BusinessNeed, "My need")
+	s.False(respIntake.NeedsEaSupport)
+}
