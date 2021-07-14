@@ -9,13 +9,13 @@ import {
   within
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CreateAccessibilityRequestNote from 'queries/CreateAccessibilityRequestNoteQuery';
-import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
-import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import configureMockStore from 'redux-mock-store';
 
 import { ACCESSIBILITY_TESTER_DEV } from 'constants/jobCodes';
 import { MessageProvider } from 'hooks/useMessage';
+import CreateAccessibilityRequestNote from 'queries/CreateAccessibilityRequestNoteQuery';
+import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
+import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 
 import AccessibilityRequestDetailPage from './AccessibilityRequestDetailPage';
 
