@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UpdateSystenIntakeContactDetailsInput } from "./../../types/graphql-global-types";
+import { UpdateSystemIntakeContactDetailsInput } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: UpdateSystemIntakeContactDetails
@@ -68,5 +68,5 @@ export interface UpdateSystemIntakeContactDetails {
 }
 
 export interface UpdateSystemIntakeContactDetailsVariables {
-  input: UpdateSystenIntakeContactDetailsInput;
+  input: UpdateSystemIntakeContactDetailsInput;
 }
