@@ -15,17 +15,17 @@ import {
   BreadcrumbLink
 } from '@trussworks/react-uswds';
 import { FormikProps } from 'formik';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
-import {
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
+import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
+import {
+  GetGRTFeedback,
+  GetGRTFeedbackVariables
+} from 'queries/types/GetGRTFeedback';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import {

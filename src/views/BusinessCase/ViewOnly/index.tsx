@@ -1,8 +1,8 @@
 import React from 'react';
-import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
 import PageHeading from 'components/PageHeading';
+import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 
 type BusinessCaseViewOnlyProps = {
