@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -17,16 +18,18 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
+import {
+  UpdateSystemIntakeRequestDetails,
+  UpdateSystemIntakeRequestDetailsVariables
+} from 'queries/types/UpdateSystemIntakeRequestDetails';
 import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 type RequestDetailsForm = {
+  id: string;
   requestName: string;
-  fundingSource: {
-    isFunded: boolean | null;
-    fundingNumber: string;
-  };
   businessNeed: string;
   businessSolution: string;
   needsEaSupport: boolean | null;
@@ -35,22 +38,30 @@ type RequestDetailsForm = {
 type RequestDetailsProps = {
   formikRef: any;
   systemIntake: SystemIntakeForm;
-  dispatchSave: () => void;
 };
 
-const RequestDetails = ({
-  formikRef,
-  systemIntake,
-  dispatchSave
-}: RequestDetailsProps) => {
+const RequestDetails = ({ formikRef, systemIntake }: RequestDetailsProps) => {
   const history = useHistory();
 
   const initialValues: RequestDetailsForm = {
+    id: systemIntake.id,
     requestName: systemIntake.requestName,
-    fundingSource: systemIntake.fundingSource,
     businessNeed: systemIntake.businessNeed,
     businessSolution: systemIntake.businessSolution,
     needsEaSupport: systemIntake.needsEaSupport
+  };
+
+  const [mutate] = useMutation<
+    UpdateSystemIntakeRequestDetails,
+    UpdateSystemIntakeRequestDetailsVariables
+  >(UpdateSystemIntakeRequestDetailsQuery);
+
+  const onSubmit = (myValues: RequestDetailsForm) => {
+    mutate({
+      variables: {
+        input: myValues
+      }
+    });
   };
 
   const saveExitLink = (() => {
@@ -66,7 +77,7 @@ const RequestDetails = ({
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={dispatchSave}
+      onSubmit={onSubmit}
       validationSchema={SystemIntakeValidationSchema.requestDetails}
       validateOnBlur={false}
       validateOnChange={false}
@@ -173,7 +184,10 @@ const RequestDetails = ({
                   />
                   <CharacterCounter
                     id="IntakeForm-BusinessNeedCounter"
-                    characterCount={2000 - values.businessNeed.length}
+                    characterCount={
+                      2000 -
+                      (values.businessNeed ? values.businessNeed.length : 0)
+                    }
                   />
                 </FieldGroup>
 
@@ -201,7 +215,12 @@ const RequestDetails = ({
                   />
                   <CharacterCounter
                     id="IntakeForm-BusinessSolutionCounter"
-                    characterCount={2000 - values.businessSolution.length}
+                    characterCount={
+                      2000 -
+                      (values.businessSolution
+                        ? values.businessSolution.length
+                        : 0)
+                    }
                   />
                 </FieldGroup>
 
@@ -283,10 +302,17 @@ const RequestDetails = ({
                   type="button"
                   outline
                   onClick={() => {
-                    dispatchSave();
                     formikProps.setErrors({});
-                    const newUrl = 'contact-details';
-                    history.push(newUrl);
+                    mutate({
+                      variables: {
+                        input: values
+                      }
+                    }).then(response => {
+                      if (!response.errors) {
+                        const newUrl = 'contact-details';
+                        history.push(newUrl);
+                      }
+                    });
                   }}
                 >
                   Back
@@ -296,9 +322,16 @@ const RequestDetails = ({
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
-                        dispatchSave();
-                        const newUrl = 'contract-details';
-                        history.push(newUrl);
+                        mutate({
+                          variables: {
+                            input: values
+                          }
+                        }).then(response => {
+                          if (!response.errors) {
+                            const newUrl = 'contract-details';
+                            history.push(newUrl);
+                          }
+                        });
                       } else {
                         window.scrollTo(0, 0);
                       }
@@ -312,8 +345,15 @@ const RequestDetails = ({
                     type="button"
                     unstyled
                     onClick={() => {
-                      dispatchSave();
-                      history.push(saveExitLink);
+                      mutate({
+                        variables: {
+                          input: values
+                        }
+                      }).then(response => {
+                        if (!response.errors) {
+                          history.push(saveExitLink);
+                        }
+                      });
                     }}
                   >
                     <span>
@@ -325,8 +365,8 @@ const RequestDetails = ({
             </div>
             <AutoSave
               values={values}
-              onSave={dispatchSave}
-              debounceDelay={1000 * 30}
+              onSave={() => onSubmit(values)}
+              debounceDelay={1000 * 3}
             />
             <PageNumber currentPage={2} totalPages={3} />
           </>

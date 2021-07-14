@@ -16,7 +16,7 @@ const AutoSave = ({ values, onSave, debounceDelay }: AutoSaveProps) => {
       // We also don't want to save when the component is unmounted, but a
       // debounceSave had already been invoked and ispending the debounce delay.
       if (isMounted.current) {
-        onSave();
+        onSave(values);
       }
     }, debounceDelay);
     // eslint-disable-next-line react-hooks/exhaustive-deps
