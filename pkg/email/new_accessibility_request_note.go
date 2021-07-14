@@ -19,7 +19,7 @@ type newAccessibilityRequestNote struct {
 }
 
 func (c Client) newAccessibilityRequestNoteBody(requestID uuid.UUID, requestName, creatorName string) (string, error) {
-	requestPath := path.Join("508", "requests", requestID.String())
+	requestPath := path.Join("508", "requests", requestID.String(), "notes")
 	data := newAccessibilityRequestNote{
 		CreatorName: creatorName,
 		RequestName: requestName,
