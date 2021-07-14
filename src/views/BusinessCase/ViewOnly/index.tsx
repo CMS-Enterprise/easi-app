@@ -1,13 +1,13 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
+
+import BusinessCaseReview from 'components/BusinessCaseReview';
+import PageHeading from 'components/PageHeading';
 import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import {
   GetGRTFeedback,
   GetGRTFeedbackVariables
 } from 'queries/types/GetGRTFeedback';
-
-import BusinessCaseReview from 'components/BusinessCaseReview';
-import PageHeading from 'components/PageHeading';
 import { BusinessCaseModel } from 'types/businessCase';
 
 type BusinessCaseViewOnlyProps = {

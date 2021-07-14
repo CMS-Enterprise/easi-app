@@ -6,15 +6,6 @@ import { Button, Label } from '@trussworks/react-uswds';
 import axios from 'axios';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { isUndefined } from 'lodash';
-import { CreateAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
-import GeneratePresignedUploadURLQuery from 'queries/GeneratePresignedUploadURLQuery';
-import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
-import {
-  CreateAccessibilityRequestDocument,
-  CreateAccessibilityRequestDocumentVariables
-} from 'queries/types/CreateAccessibilityRequestDocument';
-import { GeneratePresignedUploadURL } from 'queries/types/GeneratePresignedUploadURL';
-import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import FileUpload from 'components/FileUpload';
 import PageHeading from 'components/PageHeading';
@@ -27,6 +18,15 @@ import { RadioField } from 'components/shared/RadioField';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextField from 'components/shared/TextField';
 import { useMessage } from 'hooks/useMessage';
+import { CreateAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
+import GeneratePresignedUploadURLQuery from 'queries/GeneratePresignedUploadURLQuery';
+import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
+import {
+  CreateAccessibilityRequestDocument,
+  CreateAccessibilityRequestDocumentVariables
+} from 'queries/types/CreateAccessibilityRequestDocument';
+import { GeneratePresignedUploadURL } from 'queries/types/GeneratePresignedUploadURL';
+import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 import { FileUploadForm } from 'types/files';
 import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
 import { translateDocumentCommonType } from 'utils/accessibilityRequest';
