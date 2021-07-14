@@ -61,11 +61,12 @@ const RequestDescription = ({
         const { values, errors, setErrors, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
-          <div className="grid-container">
+          <div className="grid-container" data-testid="request-description">
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
+                testId="formik-validation-errors"
               >
                 {Object.keys(flatErrors).map(key => {
                   return (
@@ -79,7 +80,6 @@ const RequestDescription = ({
               </ErrorAlert>
             )}
             <PageHeading>Request description</PageHeading>
-            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
             {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
               <div className="tablet:grid-col-5">
                 <MandatoryFieldsAlert />
