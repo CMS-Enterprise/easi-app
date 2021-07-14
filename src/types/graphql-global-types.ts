@@ -231,19 +231,19 @@ export interface UpdateSystemIntakeAdminLeadInput {
   id: UUID;
 }
 
-export interface UpdateSystemIntakeReviewDatesInput {
-  grbDate?: Time | null;
-  grtDate?: Time | null;
-  id: UUID;
-}
-
-export interface UpdateSystenIntakeContactDetailsInput {
+export interface UpdateSystemIntakeContactDetailsInput {
   id: UUID;
   requester: SystemIntakeRequesterWithComponentInput;
   businessOwner: SystemIntakeBusinessOwnerInput;
   productManager: SystemIntakeProductManagerInput;
   isso: SystemIntakeISSOInput;
   governanceTeams: SystemIntakeGovernanceTeamInput;
+}
+
+export interface UpdateSystemIntakeReviewDatesInput {
+  grbDate?: Time | null;
+  grtDate?: Time | null;
+  id: UUID;
 }
 
 export interface UpdateTestDateInput {

@@ -16,7 +16,7 @@ export const CreateSystemIntake = gql`
 
 export const UpdateSystemIntakeContactDetails = gql`
   mutation UpdateSystemIntakeContactDetails(
-    $input: UpdateSystenIntakeContactDetailsInput!
+    $input: UpdateSystemIntakeContactDetailsInput!
   ) {
     updateSystemIntakeContactDetails(input: $input) {
       systemIntake {
