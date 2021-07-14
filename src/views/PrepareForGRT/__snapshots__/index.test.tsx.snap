@@ -373,7 +373,7 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
                   aria-controls="capital-planning-and-investment-control-cpic"
                   aria-expanded={false}
                   className="usa-button usa-button--unstyled"
-                  data-testid="button"
+                  data-testid="collapsable-link"
                   onClick={[Function]}
                   type="button"
                 >
@@ -394,7 +394,7 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
                   aria-controls="enterprise-architecture-and-data"
                   aria-expanded={false}
                   className="usa-button usa-button--unstyled"
-                  data-testid="button"
+                  data-testid="collapsable-link"
                   onClick={[Function]}
                   type="button"
                 >
@@ -415,7 +415,7 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
                   aria-controls="shared-services-and-data-hosting"
                   aria-expanded={false}
                   className="usa-button usa-button--unstyled"
-                  data-testid="button"
+                  data-testid="collapsable-link"
                   onClick={[Function]}
                   type="button"
                 >
@@ -436,7 +436,7 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
                   aria-controls="it-security-privacy"
                   aria-expanded={false}
                   className="usa-button usa-button--unstyled"
-                  data-testid="button"
+                  data-testid="collapsable-link"
                   onClick={[Function]}
                   type="button"
                 >
