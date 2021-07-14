@@ -3,9 +3,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, shallow } from 'enzyme';
 import { DateTime } from 'luxon';
-import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
 
 import TestDateCard from 'components/TestDateCard';
+import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
 import { TestDateTestType } from 'types/graphql-global-types';
 
 const renderComponent = (customProps?: any) => {

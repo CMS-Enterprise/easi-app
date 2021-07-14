@@ -5,12 +5,6 @@ import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, ComboBox, Link } from '@trussworks/react-uswds';
 import { Form as FormikForm, Formik, FormikProps } from 'formik';
-import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
-import GetSystemsQuery from 'queries/GetSystems';
-import {
-  GetSystems,
-  GetSystems_systems_edges_node as SystemNode
-} from 'queries/types/GetSystems';
 
 import PageHeading from 'components/PageHeading';
 import PlainInfo from 'components/PlainInfo';
@@ -23,6 +17,12 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { initialAccessibilityRequestFormData } from 'data/accessibility';
 import useMessage from 'hooks/useMessage';
+import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
+import GetSystemsQuery from 'queries/GetSystems';
+import {
+  GetSystems,
+  GetSystems_systems_edges_node as SystemNode
+} from 'queries/types/GetSystems';
 import { AccessibilityRequestForm } from 'types/accessibility';
 import flattenErrors from 'utils/flattenErrors';
 import accessibilitySchema from 'validations/accessibilitySchema';

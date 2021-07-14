@@ -5,6 +5,12 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
+
+import Footer from 'components/Footer';
+import Header from 'components/Header';
+import MainContent from 'components/MainContent';
+import PageLoading from 'components/PageLoading';
+import PageWrapper from 'components/PageWrapper';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
@@ -21,12 +27,6 @@ import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
-
-import Footer from 'components/Footer';
-import Header from 'components/Header';
-import MainContent from 'components/MainContent';
-import PageLoading from 'components/PageLoading';
-import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedbackToBusinessOwner';
@@ -49,7 +49,10 @@ const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
-  const { systemId, activePage } = useParams();
+  const { systemId, activePage } = useParams<{
+    systemId: string;
+    activePage: string;
+  }>();
   const { loading, data: graphData } = useQuery<
     GetSystemIntake,
     GetSystemIntakeVariables

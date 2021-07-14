@@ -4,11 +4,6 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import RejectIntakeQuery from 'queries/RejectIntakeQuery';
-import {
-  RejectIntake as RejectIntakeType,
-  RejectIntakeVariables
-} from 'queries/types/RejectIntake';
 
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -17,6 +12,11 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import RejectIntakeQuery from 'queries/RejectIntakeQuery';
+import {
+  RejectIntake as RejectIntakeType,
+  RejectIntakeVariables
+} from 'queries/types/RejectIntake';
 import { RejectIntakeForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { rejectIntakeSchema } from 'validations/actionSchema';

@@ -7,10 +7,10 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
+import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 
 import NewTestDate from './NewTestDate';
 
