@@ -569,13 +569,21 @@ input SystemIntakeGovernanceTeamInput {
   teams: [SystemIntakeCollaboratorInput]
 }
 
-input UpdateSystenIntakeContactDetailsInput {
+input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
   requester: SystemIntakeRequesterWithComponentInput!,
   businessOwner: SystemIntakeBusinessOwnerInput!,
   productManager: SystemIntakeProductManagerInput!,
   isso: SystemIntakeISSOInput!,
   governanceTeams: SystemIntakeGovernanceTeamInput!,
+}
+
+input UpdateSystemIntakeRequestDetailsInput {
+  id: UUID!
+  requestName: String
+  businessNeed: String
+  businessSolution: String
+  needsEaSupport: Boolean
 }
 
 enum SystemIntakeActionType {
@@ -771,7 +779,8 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeContactDetails(input: UpdateSystenIntakeContactDetailsInput!): UpdateSystemIntakePayload
+  updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
+  updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
 }
 
 type Query {

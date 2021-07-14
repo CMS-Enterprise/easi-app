@@ -359,24 +359,32 @@ type UpdateSystemIntakeAdminLeadInput struct {
 	ID        uuid.UUID `json:"id"`
 }
 
-type UpdateSystemIntakePayload struct {
-	SystemIntake *models.SystemIntake `json:"systemIntake"`
-	UserErrors   []*UserError         `json:"userErrors"`
-}
-
-type UpdateSystemIntakeReviewDatesInput struct {
-	GrbDate *time.Time `json:"grbDate"`
-	GrtDate *time.Time `json:"grtDate"`
-	ID      uuid.UUID  `json:"id"`
-}
-
-type UpdateSystenIntakeContactDetailsInput struct {
+type UpdateSystemIntakeContactDetailsInput struct {
 	ID              uuid.UUID                                `json:"id"`
 	Requester       *SystemIntakeRequesterWithComponentInput `json:"requester"`
 	BusinessOwner   *SystemIntakeBusinessOwnerInput          `json:"businessOwner"`
 	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
 	Isso            *SystemIntakeISSOInput                   `json:"isso"`
 	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
+}
+
+type UpdateSystemIntakePayload struct {
+	SystemIntake *models.SystemIntake `json:"systemIntake"`
+	UserErrors   []*UserError         `json:"userErrors"`
+}
+
+type UpdateSystemIntakeRequestDetailsInput struct {
+	ID               uuid.UUID `json:"id"`
+	RequestName      *string   `json:"requestName"`
+	BusinessNeed     *string   `json:"businessNeed"`
+	BusinessSolution *string   `json:"businessSolution"`
+	NeedsEaSupport   *bool     `json:"needsEaSupport"`
+}
+
+type UpdateSystemIntakeReviewDatesInput struct {
+	GrbDate *time.Time `json:"grbDate"`
+	GrtDate *time.Time `json:"grtDate"`
+	ID      uuid.UUID  `json:"id"`
 }
 
 type UpdateTestDateInput struct {

@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -880,7 +881,7 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 	}, err
 }
 
-func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystenIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystemIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
@@ -936,6 +937,10 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
 	}, err
+}
+
+func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context, input model.UpdateSystemIntakeRequestDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
