@@ -5,12 +5,11 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper, shallow } from 'enzyme';
 import { mockFlags, resetLDMocks } from 'jest-launchdarkly-mock';
-import GetRequestsQuery from 'queries/GetRequestsQuery';
 import configureMockStore from 'redux-mock-store';
 
-import ActionBanner from 'components/shared/ActionBanner';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import GetRequestsQuery from 'queries/GetRequestsQuery';
 import Table from 'views/MyRequests/Table';
 
 import Home from './index';
@@ -214,24 +213,6 @@ describe('The home page', () => {
       await act(async () => {
         homePage.update();
         expect(homePage.text()).toContain('There is 1 closed request');
-      });
-    });
-
-    it('does not render any banners', async () => {
-      mockFlags(defaultFlags);
-      const homePage = mountComponent({
-        auth: mockAuthReducer,
-        systemIntakes: {
-          systemIntakes: mockOpenIntakes
-        },
-        businessCases: {
-          businessCases: []
-        }
-      });
-
-      await act(async () => {
-        homePage.update();
-        expect(homePage.find(ActionBanner).length).toEqual(0);
       });
     });
   });

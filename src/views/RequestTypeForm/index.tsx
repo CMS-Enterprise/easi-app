@@ -11,7 +11,6 @@ import {
   Link as UswdsLink
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -23,6 +22,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
+import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
