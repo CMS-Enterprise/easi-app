@@ -14,29 +14,31 @@ const GovernanceReviewTeam = () => {
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
 
+  // TODO: this is causing the Routes to unexpectedly unmount
+  const RenderPage = () => (
+    <Switch>
+      <Route
+        path="/governance-review-team/all"
+        render={() => (
+          // Changed GRT table from grid-container to just slight margins. This is take up
+          // entire screen to better fit the more expansive data in the table.
+          // NOTE: not sure this is ever used (deprecated for Home/index.tsx ?)
+          <div className="padding-x-4">
+            <RequestRepository />
+          </div>
+        )}
+      />
+      <Route
+        path="/governance-review-team/:systemId/:activePage"
+        component={RequestOverview}
+      />
+      <Route path="*" component={NotFound} />
+    </Switch>
+  );
+
   if (isUserSet) {
     if (user.isGrtReviewer(userGroups, flags)) {
-      return (
-        <Switch>
-          <Route
-            key="grt-request-list"
-            path="/governance-review-team/all"
-            render={() => (
-              // Changed GRT table from grid-container to just slight margins. This is take up
-              // entire screen to better fit the more expansive data in the table.
-              <div className="padding-x-4">
-                <RequestRepository />
-              </div>
-            )}
-          />
-          <Route
-            key="grt-overview"
-            path="/governance-review-team/:systemId/:activePage"
-            component={RequestOverview}
-          />
-          <Route key="not-found" path="*" component={NotFound} />
-        </Switch>
-      );
+      return <RenderPage />;
     }
     return <NotFound />;
   }
