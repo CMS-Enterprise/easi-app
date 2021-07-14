@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Link,
+  Route,
   Switch,
   useHistory,
   useLocation,
   useParams
 } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-import { SecureRoute } from '@okta/okta-react';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -21,11 +20,6 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
-import {
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import {
@@ -63,15 +57,6 @@ export const BusinessCase = () => {
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
   );
-
-  const { data: grtFeedbackPayload } = useQuery<
-    GetGRTFeedback,
-    GetGRTFeedbackVariables
-  >(GetGRTFeedbackQuery, {
-    variables: {
-      intakeID: businessCase.systemIntakeId
-    }
-  });
 
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
 
@@ -151,7 +136,7 @@ export const BusinessCase = () => {
         </div>
         {businessCase.id && (
           <Switch>
-            <SecureRoute
+            <Route
               path="/business/:businessCaseId/general-request-info"
               render={() => (
                 <GeneralRequestInfo
@@ -161,7 +146,7 @@ export const BusinessCase = () => {
                 />
               )}
             />
-            <SecureRoute
+            <Route
               path="/business/:businessCaseId/request-description"
               render={() => (
                 <RequestDescription
@@ -171,7 +156,7 @@ export const BusinessCase = () => {
                 />
               )}
             />
-            <SecureRoute
+            <Route
               path="/business/:businessCaseId/as-is-solution"
               render={() => (
                 <AsIsSolution
@@ -181,7 +166,7 @@ export const BusinessCase = () => {
                 />
               )}
             />
-            <SecureRoute
+            <Route
               path="/business/:businessCaseId/preferred-solution"
               render={() => (
                 <PreferredSolution
@@ -191,7 +176,7 @@ export const BusinessCase = () => {
                 />
               )}
             />
-            <SecureRoute
+            <Route
               path="/business/:businessCaseId/alternative-solution-a"
               render={() => (
                 <AlternativeSolutionA
@@ -201,7 +186,7 @@ export const BusinessCase = () => {
                 />
               )}
             />
-            <SecureRoute
+            <Route
               path="/business/:businessCaseId/alternative-solution-b"
               render={() => (
                 <AlternativeSolutionB
@@ -211,24 +196,19 @@ export const BusinessCase = () => {
                 />
               )}
             />
-            <SecureRoute
+            <Route
               path="/business/:businessCaseId/review"
               render={() => <Review businessCase={businessCase} />}
             />
-            <SecureRoute
+            <Route
               path="/business/:businessCaseId/view"
-              render={() => (
-                <BusinessCaseView
-                  businessCase={businessCase}
-                  grtFeedbacks={grtFeedbackPayload?.systemIntake?.grtFeedbacks}
-                />
-              )}
+              render={() => <BusinessCaseView businessCase={businessCase} />}
             />
-            <SecureRoute
+            <Route
               path="/business/:businessCaseId/confirmation"
               render={() => <Confirmation businessCase={businessCase} />}
             />
-            <SecureRoute
+            <Route
               path="*"
               render={() => (
                 <div className="grid-container">
