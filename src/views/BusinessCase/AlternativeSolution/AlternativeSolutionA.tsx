@@ -47,7 +47,7 @@ const AlternativeSolutionA = ({
 
         const flatErrors = flattenErrors(errors);
         return (
-          <div className="grid-container">
+          <div className="grid-container" data-testid="alternative-solution-a">
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
                 classNames="margin-top-3"

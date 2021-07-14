@@ -9,9 +9,9 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
+
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
-
 import { RequestType } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';

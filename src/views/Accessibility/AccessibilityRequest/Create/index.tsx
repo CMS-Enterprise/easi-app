@@ -5,14 +5,9 @@ import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, ComboBox, Link } from '@trussworks/react-uswds';
 import { Form as FormikForm, Formik, FormikProps } from 'formik';
-import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
-import GetSystemsQuery from 'queries/GetSystems';
-import {
-  GetSystems,
-  GetSystems_systems_edges_node as SystemNode
-} from 'queries/types/GetSystems';
 
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import PlainInfo from 'components/PlainInfo';
 import { AlertText } from 'components/shared/Alert';
 import CollapsibleLink from 'components/shared/CollapsableLink';
@@ -23,6 +18,12 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { initialAccessibilityRequestFormData } from 'data/accessibility';
 import useMessage from 'hooks/useMessage';
+import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
+import GetSystemsQuery from 'queries/GetSystems';
+import {
+  GetSystems,
+  GetSystems_systems_edges_node as SystemNode
+} from 'queries/types/GetSystems';
 import { AccessibilityRequestForm } from 'types/accessibility';
 import flattenErrors from 'utils/flattenErrors';
 import accessibilitySchema from 'validations/accessibilitySchema';
@@ -94,9 +95,13 @@ const Create = () => {
     });
   }, [data]);
 
+  if (loading) {
+    return <PageLoading />;
+  }
+
   return (
     <>
-      <div className="grid-container">
+      <div className="grid-container" data-testid="create-508-request">
         <PageHeading>{t('newRequestForm.heading')}</PageHeading>
         <Formik
           initialValues={initialAccessibilityRequestFormData}
@@ -143,45 +148,43 @@ const Create = () => {
                       window.scrollTo(0, 0);
                     }}
                   >
-                    {!loading && (
-                      <FieldGroup
-                        scrollElement="intakeId"
-                        error={!!flatErrors.intakeId}
-                      >
-                        <Label htmlFor="508Request-IntakeId">
-                          {t('newRequestForm.fields.project.label')}
-                        </Label>
-                        <HelpText id="508Request-IntakeId-HelpText">
-                          {t('newRequestForm.fields.project.helpText')}
-                        </HelpText>
-                        <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
-                        <ComboBox
-                          id="508Request-IntakeComboBox"
-                          name="intakeComboBox"
-                          inputProps={{
-                            id: '508Request-IntakeId',
-                            name: 'intakeId',
-                            'aria-describedby': '508Request-IntakeId-HelpText'
-                          }}
-                          options={projectComboBoxOptions}
-                          onChange={(intakeId: any) => {
-                            const selectedSystem = systems[intakeId];
-                            if (selectedSystem) {
-                              setFieldValue('intakeId', intakeId || '');
-                              setFieldValue(
-                                'businessOwner.name',
-                                selectedSystem.businessOwner.name || ''
-                              );
-                              setFieldValue(
-                                'businessOwner.component',
-                                selectedSystem.businessOwner.component || ''
-                              );
-                              setFieldValue('requestName', selectedSystem.name);
-                            }
-                          }}
-                        />
-                      </FieldGroup>
-                    )}
+                    <FieldGroup
+                      scrollElement="intakeId"
+                      error={!!flatErrors.intakeId}
+                    >
+                      <Label htmlFor="508Request-IntakeId">
+                        {t('newRequestForm.fields.project.label')}
+                      </Label>
+                      <HelpText id="508Request-IntakeId-HelpText">
+                        {t('newRequestForm.fields.project.helpText')}
+                      </HelpText>
+                      <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
+                      <ComboBox
+                        id="508Request-IntakeComboBox"
+                        name="intakeComboBox"
+                        inputProps={{
+                          id: '508Request-IntakeId',
+                          name: 'intakeId',
+                          'aria-describedby': '508Request-IntakeId-HelpText'
+                        }}
+                        options={projectComboBoxOptions}
+                        onChange={(intakeId: any) => {
+                          const selectedSystem = systems[intakeId];
+                          if (selectedSystem) {
+                            setFieldValue('intakeId', intakeId || '');
+                            setFieldValue(
+                              'businessOwner.name',
+                              selectedSystem.businessOwner.name || ''
+                            );
+                            setFieldValue(
+                              'businessOwner.component',
+                              selectedSystem.businessOwner.component || ''
+                            );
+                            setFieldValue('requestName', selectedSystem.name);
+                          }
+                        }}
+                      />
+                    </FieldGroup>
                     <div className="tablet:grid-col-8">
                       <div className="margin-top-4">
                         <CollapsibleLink
