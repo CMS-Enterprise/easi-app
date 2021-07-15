@@ -32,6 +32,30 @@ func (s StoreTestSuite) TestMyRequests() {
 		accessibilityRequestThatIsMine, err := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &newRequest)
 		s.NoError(err)
 
+		// add a test date in the near future
+		testDate, tdErr := s.store.CreateTestDate(ctx, &models.TestDate{
+			RequestID: accessibilityRequestThatIsMine.ID,
+			TestType:  models.TestDateTestTypeRemediation,
+			Date:      time.Now().Add(time.Hour * 24),
+		})
+		s.NoError(tdErr)
+
+		// add a test date in the far future
+		_, tdErr = s.store.CreateTestDate(ctx, &models.TestDate{
+			RequestID: accessibilityRequestThatIsMine.ID,
+			TestType:  models.TestDateTestTypeRemediation,
+			Date:      time.Now().Add(time.Hour * 72),
+		})
+		s.NoError(tdErr)
+
+		// add a test date in the past
+		_, tdErr = s.store.CreateTestDate(ctx, &models.TestDate{
+			RequestID: accessibilityRequestThatIsMine.ID,
+			TestType:  models.TestDateTestTypeInitial,
+			Date:      time.Now().Add(time.Hour * -72),
+		})
+		s.NoError(tdErr)
+
 		// set status to in remediation
 		status := models.AccessibilityRequestStatusRecord{
 			Status:    models.AccessibilityRequestStatusInRemediation,
@@ -144,6 +168,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.Equal(myRequests[1].SubmittedAt, accessibilityRequestThatIsMine.CreatedAt)
 		s.Equal(myRequests[1].Status, "OPEN")
 		s.Nil(myRequests[1].LifecycleID.Ptr())
+		s.Equal(*myRequests[1].NextMeetingDate, testDate.Date)
 
 		s.Equal(myRequests[2].ID, intakeWithLifecycleID.ID)
 		s.Equal(myRequests[2].Type, model.RequestType("GOVERNANCE_REQUEST"))

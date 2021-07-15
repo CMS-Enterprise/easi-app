@@ -24,6 +24,7 @@ type Request struct {
 	Status          string
 	StatusCreatedAt *time.Time  `db:"status_created_at"`
 	LifecycleID     null.String `db:"lcid"`
+	NextMeetingDate *time.Time  `db:"next_meeting_date"`
 }
 
 // FetchMyRequests queries the DB for an accessibility requests.
@@ -35,17 +36,22 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 	requests := []Request{}
 
 	requestsSQL := `
-	SELECT
-		aras.id,
-		aras.name,
-		aras.created_at AS submitted_at,
-		'ACCESSIBILITY_REQUEST' record_type,
-		aras.status::text,
-		aras.status_created_at,
-		null lcid
-	FROM accessibility_requests_and_statuses aras
+	SELECT DISTINCT ON (requests.id) * FROM (
+		SELECT 
+			aras.id,
+			aras.name,
+			aras.created_at AS submitted_at,
+			'ACCESSIBILITY_REQUEST' record_type,
+			aras.status::text,
+			aras.status_created_at,
+			null lcid,
+			test_dates.date AS next_meeting_date
+		FROM accessibility_requests_and_statuses aras
+		LEFT JOIN test_dates ON aras.id = test_dates.request_id AND test_dates.date > NOW()
 		WHERE aras.deleted_at IS NULL
 		AND aras.eua_user_id = $1
+		ORDER BY test_dates.date ASC
+	) requests
 	UNION
 	SELECT
 		id,
@@ -54,7 +60,8 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		'GOVERNANCE_REQUEST' record_type,
 		status::text,
 		null status_created_at,
-		lcid
+		lcid,
+		null next_meeting_date
 	FROM system_intakes
 		WHERE archived_at IS NULL
 		AND system_intakes.eua_user_id = $1
