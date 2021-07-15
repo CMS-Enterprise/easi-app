@@ -99,12 +99,17 @@ func (s StoreTestSuite) TestMyRequests() {
 		_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &newRequest)
 		s.NoError(err)
 
+		tomorrow := time.Now().Add(time.Hour * 24)
+		yesterday := time.Now().Add(time.Hour * -24)
+
 		// add an intake belonging to the user
 		newIntake := testhelpers.NewSystemIntake()
 		newIntake.EUAUserID = null.StringFrom(requesterID)
 		createdAt, _ = time.Parse("2006-1-2", "2015-4-1")
 		newIntake.CreatedAt = &createdAt
 		newIntake.ProjectName = null.StringFrom("My Intake")
+		newIntake.GRBDate = &yesterday
+		newIntake.GRTDate = &tomorrow
 		createdIntake, err := s.store.CreateSystemIntake(ctx, &newIntake)
 		s.NoError(err)
 
@@ -161,6 +166,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.Equal(myRequests[0].SubmittedAt, intakeThatIsMine.SubmittedAt)
 		s.Equal(myRequests[0].Status, "INTAKE_DRAFT")
 		s.Nil(myRequests[0].LifecycleID.Ptr())
+		s.True(myRequests[0].NextMeetingDate.Equal(tomorrow))
 
 		s.Equal(myRequests[1].ID, accessibilityRequestThatIsMine.ID)
 		s.Equal(myRequests[1].Type, model.RequestType("ACCESSIBILITY_REQUEST"))
@@ -176,5 +182,6 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.Equal(myRequests[2].SubmittedAt, intakeWithLifecycleID.SubmittedAt)
 		s.Equal(myRequests[2].Status, "LCID_ISSUED")
 		s.Equal(myRequests[2].LifecycleID, null.StringFrom("B123456"))
+		s.Nil(myRequests[2].NextMeetingDate)
 	})
 }

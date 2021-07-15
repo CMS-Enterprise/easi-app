@@ -61,7 +61,10 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		status::text,
 		null status_created_at,
 		lcid,
-		null next_meeting_date
+        LEAST(
+			CASE WHEN grb_date > NOW() THEN grb_date ELSE null END,
+			CASE WHEN grt_date > NOW() THEN grt_date ELSE null END
+		) AS next_meeting_date
 	FROM system_intakes
 		WHERE archived_at IS NULL
 		AND system_intakes.eua_user_id = $1
