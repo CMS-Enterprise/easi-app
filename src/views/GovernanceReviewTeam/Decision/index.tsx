@@ -8,8 +8,8 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import { formatDateAndIgnoreTimezone } from 'utils/date';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { formatDateAndIgnoreTimezone } from 'utils/date';
 
 type DecisionProps = {
   systemIntake?: SystemIntake | null;
