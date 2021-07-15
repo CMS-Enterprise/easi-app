@@ -148,20 +148,19 @@ describe('Governance Review Team', () => {
     ).click();
 
     cy.contains('h1', 'Decision - Approved');
-    // If this line fails, you may need to clean/seed the database
-    cy.contains('.easi-review-row dt', 'Lifecycle ID')
+    cy.contains('[data-testid="review-row"] dt', 'Lifecycle ID')
       .siblings('dd')
       .invoke('text')
       .then(text => {
         expect(text.length).to.equal(6);
       });
-    cy.contains('.easi-review-row dt', 'Lifecycle ID Expiration')
+    cy.contains('[data-testid="review-row"] dt', 'Lifecycle ID Expiration')
       .siblings('dd')
       .contains('December 25 2020');
-    cy.contains('.easi-review-row dt', 'Lifecycle ID Scope')
+    cy.contains('[data-testid="review-row"] dt', 'Lifecycle ID Scope')
       .siblings('dd')
       .contains('Scope');
-    cy.contains('.easi-review-row dt', 'Next Steps')
+    cy.contains('[data-testid="review-row"] dt', 'Next Steps')
       .siblings('dd')
       .contains('Next steps');
   });

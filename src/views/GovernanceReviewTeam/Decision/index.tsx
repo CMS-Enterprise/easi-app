@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
@@ -10,6 +9,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 type DecisionProps = {
   systemIntake?: SystemIntake | null;
