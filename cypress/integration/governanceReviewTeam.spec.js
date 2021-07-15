@@ -14,6 +14,7 @@ describe('Governance Review Team', () => {
     cy.contains('button', 'Change').click();
     cy.get('input[value="Ann Rudolph"]').check({ force: true });
     cy.get('[data-testid="button"]').contains('Save').click();
+    cy.get('dd[data-testid="admin-lead"]').should('be.visible');
     cy.get('dd[data-testid="admin-lead"]').contains('Ann Rudolph');
   });
 
