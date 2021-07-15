@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
   within
 } from '@testing-library/react';
@@ -496,8 +497,8 @@ describe('AccessibilityRequestDetailPage', () => {
         const notesList = screen.getByRole('list', {
           name: /existing notes/i
         });
-        expect(await within(notesList).findAllByRole('listitem')).toHaveLength(
-          3
+        await waitFor(() =>
+          expect(within(notesList).getAllByRole('listitem')).toHaveLength(3)
         );
       });
 
