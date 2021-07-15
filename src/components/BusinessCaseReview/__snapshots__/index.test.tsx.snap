@@ -17,6 +17,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
     >
       <div
         className="easi-review-row"
+        data-testid="review-row"
       >
         <div>
           <dt
@@ -45,6 +46,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
       </div>
       <div
         className="easi-review-row"
+        data-testid="review-row"
       >
         <div>
           <dt
@@ -82,6 +84,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
     >
       <div
         className="easi-review-row"
+        data-testid="review-row"
       >
         <div
           className="margin-bottom-205 line-height-body-3"
@@ -100,6 +103,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
       </div>
       <div
         className="easi-review-row"
+        data-testid="review-row"
       >
         <div
           className="margin-bottom-205 line-height-body-3"
@@ -118,6 +122,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
       </div>
       <div
         className="easi-review-row"
+        data-testid="review-row"
       >
         <div
           className="margin-bottom-205 line-height-body-3"
@@ -136,6 +141,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
       </div>
       <div
         className="easi-review-row"
+        data-testid="review-row"
       >
         <div
           className="margin-bottom-205 line-height-body-3"
@@ -280,6 +286,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
             >
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -298,6 +305,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -316,6 +324,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -334,6 +343,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -353,6 +363,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
             </dl>
             <div
               className="easi-review-row"
+              data-testid="review-row"
             >
               <div>
                 <dt
@@ -382,6 +393,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
             </div>
             <div
               className="easi-review-row"
+              data-testid="review-row"
             >
               <div
                 className="line-height-body-3"
@@ -412,6 +424,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
             >
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -430,6 +443,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -448,6 +462,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -466,6 +481,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -485,6 +501,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               <div>
                 <div
                   className="easi-review-row"
+                  data-testid="review-row"
                 >
                   <div
                     className="line-height-body-3"
@@ -503,6 +520,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
                 </div>
                 <div
                   className="easi-review-row"
+                  data-testid="review-row"
                 >
                   <div
                     className="line-height-body-3"
@@ -522,6 +540,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -540,6 +559,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -558,6 +578,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -576,6 +597,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -594,6 +616,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -612,6 +635,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div>
                   <dt
@@ -641,6 +665,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -672,6 +697,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
             >
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -690,6 +716,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -708,6 +735,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -726,6 +754,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -745,6 +774,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               <div>
                 <div
                   className="easi-review-row"
+                  data-testid="review-row"
                 >
                   <div
                     className="line-height-body-3"
@@ -763,6 +793,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
                 </div>
                 <div
                   className="easi-review-row"
+                  data-testid="review-row"
                 >
                   <div
                     className="line-height-body-3"
@@ -782,6 +813,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -800,6 +832,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -818,6 +851,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -836,6 +870,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -854,6 +889,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -872,6 +908,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div>
                   <dt
@@ -901,6 +938,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -932,6 +970,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
             >
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -950,6 +989,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -968,6 +1008,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -986,6 +1027,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -1005,6 +1047,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               <div>
                 <div
                   className="easi-review-row"
+                  data-testid="review-row"
                 >
                   <div
                     className="line-height-body-3"
@@ -1023,6 +1066,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
                 </div>
                 <div
                   className="easi-review-row"
+                  data-testid="review-row"
                 >
                   <div
                     className="line-height-body-3"
@@ -1042,6 +1086,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -1060,6 +1105,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -1078,6 +1124,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -1096,6 +1143,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -1114,6 +1162,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
@@ -1132,6 +1181,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div>
                   <dt
@@ -1161,6 +1211,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               </div>
               <div
                 className="easi-review-row"
+                data-testid="review-row"
               >
                 <div
                   className="line-height-body-3"
