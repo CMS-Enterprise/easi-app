@@ -154,14 +154,10 @@ describe('Governance Review Team', () => {
       .then(text => {
         expect(text.length).to.equal(6);
       });
-    cy.contains('[data-testid="review-row"] dt', 'Lifecycle ID Expiration')
+    cy.contains('dt', 'Lifecycle ID Expiration')
       .siblings('dd')
       .contains('December 25 2020');
-    cy.contains('[data-testid="review-row"] dt', 'Lifecycle ID Scope')
-      .siblings('dd')
-      .contains('Scope');
-    cy.contains('[data-testid="review-row"] dt', 'Next Steps')
-      .siblings('dd')
-      .contains('Next steps');
+    cy.contains('dt', 'Lifecycle ID Scope').siblings('dd').contains('Scope');
+    cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });
 });
