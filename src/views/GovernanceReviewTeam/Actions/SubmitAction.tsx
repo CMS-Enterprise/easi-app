@@ -93,7 +93,9 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading>{t('submitAction.heading')}</PageHeading>
+            <PageHeading data-testid="grt-submit-action-view">
+              {t('submitAction.heading')}
+            </PageHeading>
             <h2>{t('submitAction.subheading')}</h2>
             <p>
               {actionName} &nbsp;
