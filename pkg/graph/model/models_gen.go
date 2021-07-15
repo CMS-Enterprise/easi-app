@@ -202,6 +202,7 @@ type Request struct {
 	Status          string      `json:"status"`
 	StatusCreatedAt *time.Time  `json:"statusCreatedAt"`
 	Lcid            *string     `json:"lcid"`
+	NextMeetingDate *time.Time  `json:"nextMeetingDate"`
 }
 
 type RequestEdge struct {
