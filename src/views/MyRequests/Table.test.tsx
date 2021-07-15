@@ -3,6 +3,7 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
+
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 
 import Table from './Table';
@@ -55,7 +56,8 @@ describe('My Requests Table', () => {
                     type: 'ACCESSIBILITY_REQUEST',
                     status: 'OPEN',
                     statusCreatedAt: '2021-05-25T19:22:40Z',
-                    lcid: null
+                    lcid: null,
+                    nextMeetingDate: null
                   }
                 },
                 {
@@ -66,7 +68,8 @@ describe('My Requests Table', () => {
                     type: 'ACCESSIBILITY_REQUEST',
                     status: 'IN_REMEDIATION',
                     statusCreatedAt: '2021-05-26T19:22:40Z',
-                    lcid: null
+                    lcid: null,
+                    nextMeetingDate: null
                   }
                 },
                 {
@@ -77,7 +80,8 @@ describe('My Requests Table', () => {
                     type: 'GOVERNANCE_REQUEST',
                     status: 'INTAKE_DRAFT',
                     statusCreatedAt: null,
-                    lcid: null
+                    lcid: null,
+                    nextMeetingDate: null
                   }
                 },
                 {
@@ -88,7 +92,8 @@ describe('My Requests Table', () => {
                     type: 'GOVERNANCE_REQUEST',
                     status: 'LCID_ISSUED',
                     statusCreatedAt: null,
-                    lcid: 'A123456'
+                    lcid: 'A123456',
+                    nextMeetingDate: null
                   }
                 }
               ]
@@ -123,7 +128,7 @@ describe('My Requests Table', () => {
     it('displays headers', async () => {
       const component = await renderComponent();
       const headers = component.find('thead').find('th');
-      expect(headers.length).toEqual(4);
+      expect(headers.length).toEqual(5);
       expect(headers.at(0).text()).toEqual('Request name');
       expect(headers.at(1).text()).toEqual('Governance');
       expect(headers.at(2).text()).toEqual('Submission date');

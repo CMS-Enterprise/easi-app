@@ -102,6 +102,16 @@ const Table = () => {
               return '';
           }
         }
+      },
+      {
+        Header: t('requestsTable.headers.nextMeetingDate'),
+        accessor: 'nextMeetingDate',
+        Cell: ({ value }: any) => {
+          if (value) {
+            return formatDate(value);
+          }
+          return '';
+        }
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
