@@ -9,6 +9,7 @@ import { DateTime } from 'luxon';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
@@ -48,7 +49,10 @@ const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
-  const { systemId, activePage } = useParams();
+  const { systemId, activePage } = useParams<{
+    systemId: string;
+    activePage: string;
+  }>();
   const { loading, data: graphData } = useQuery<
     GetSystemIntake,
     GetSystemIntakeVariables
@@ -82,11 +86,15 @@ const RequestOverview = () => {
       'easi-grt__nav-link--active': page === activePage
     });
 
+  if (loading) {
+    return <PageLoading />;
+  }
+
   return (
-    <PageWrapper className="easi-grt">
+    <PageWrapper className="easi-grt" data-testid="grt-request-overview">
       <Header />
       <MainContent>
-        {intake && <Summary intake={intake} />}
+        <Summary intake={intake} />
         <section className="grid-container grid-row margin-y-5 ">
           <nav className="tablet:grid-col-2 margin-right-2">
             <ul className="easi-grt__nav-list">
@@ -154,9 +162,6 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/intake-request"
               render={() => {
-                if (loading) {
-                  return <p>Loading...</p>;
-                }
                 return (
                   <IntakeReview systemIntake={intake} now={DateTime.local()} />
                 );
@@ -178,9 +183,6 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/dates"
               render={() => {
-                if (loading) {
-                  return <p>Loading...</p>;
-                }
                 return <Dates systemIntake={intake} />;
               }}
             />

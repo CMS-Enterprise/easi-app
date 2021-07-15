@@ -132,7 +132,9 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading>{t('governanceReviewTeam:dates.heading')}</PageHeading>
+            <PageHeading data-testid="grt-dates-view">
+              {t('governanceReviewTeam:dates.heading')}
+            </PageHeading>
             <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
             <div className="tablet:grid-col-6">
               <MandatoryFieldsAlert />
