@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
@@ -23,7 +22,7 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
-describe('The making a request page', () => {
+describe('The 508 making a request page', () => {
   it('renders without errors', () => {
     const mockStore = configureMockStore();
     const defaultStore = mockStore({
@@ -33,10 +32,10 @@ describe('The making a request page', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/system/making-a-request']}>
+      <MemoryRouter initialEntries={['/508/making-a-request']}>
         <Provider store={defaultStore}>
           <MessageProvider>
-            <Route path="/system/making-a-request">
+            <Route path="/508/making-a-request">
               <MakingARequest />
             </Route>
           </MessageProvider>
@@ -44,17 +43,6 @@ describe('The making a request page', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByTestId('making-a-system-request')).toBeInTheDocument();
-  });
-
-  it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <MakingARequest />
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(screen.getByTestId('making-a-508-request')).toBeInTheDocument();
   });
 });

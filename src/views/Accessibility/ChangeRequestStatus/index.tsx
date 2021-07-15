@@ -9,14 +9,14 @@ import {
   Radio
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import GetAccessibilityRequestForStatusChange from 'queries/GetAccessibilityRequestForStatusChange';
-import UpdateAccessibilityRequestStatus from 'queries/UpdateAccessibilityRequestStatusQuery';
 
 import PageHeading from 'components/PageHeading';
 import PlainInfo from 'components/PlainInfo';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import useMessage from 'hooks/useMessage';
+import GetAccessibilityRequestForStatusChange from 'queries/GetAccessibilityRequestForStatusChange';
+import UpdateAccessibilityRequestStatus from 'queries/UpdateAccessibilityRequestStatusQuery';
 import { AccessibilityRequestStatus } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { NotFoundPartial } from 'views/NotFound';
