@@ -49,7 +49,8 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 		FROM accessibility_requests_and_statuses aras
 		LEFT JOIN test_dates ON aras.id = test_dates.request_id AND test_dates.date > NOW()
 		WHERE aras.deleted_at IS NULL
-		AND aras.eua_user_id = $1
+			AND aras.eua_user_id = $1
+		    AND test_dates.deleted_at IS NULL
 		ORDER BY test_dates.date ASC
 	) requests
 	UNION

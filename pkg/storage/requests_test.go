@@ -19,6 +19,9 @@ func (s StoreTestSuite) TestMyRequests() {
 	requester := &authentication.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
 	ctx := appcontext.WithPrincipal(context.Background(), requester)
 
+	tomorrow := time.Now().Add(time.Hour * 24)
+	yesterday := time.Now().Add(time.Hour * -24)
+
 	s.Run("returns only 508 and intake requests tied to the current user", func() {
 		intake := testhelpers.NewSystemIntake()
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
@@ -36,7 +39,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		testDate, tdErr := s.store.CreateTestDate(ctx, &models.TestDate{
 			RequestID: accessibilityRequestThatIsMine.ID,
 			TestType:  models.TestDateTestTypeRemediation,
-			Date:      time.Now().Add(time.Hour * 24),
+			Date:      tomorrow,
 		})
 		s.NoError(tdErr)
 
@@ -53,6 +56,15 @@ func (s StoreTestSuite) TestMyRequests() {
 			RequestID: accessibilityRequestThatIsMine.ID,
 			TestType:  models.TestDateTestTypeInitial,
 			Date:      time.Now().Add(time.Hour * -72),
+		})
+		s.NoError(tdErr)
+
+		// add a deleted test date in the future
+		_, tdErr = s.store.CreateTestDate(ctx, &models.TestDate{
+			RequestID: accessibilityRequestThatIsMine.ID,
+			TestType:  models.TestDateTestTypeInitial,
+			Date:      time.Now().Add(time.Hour * 48),
+			DeletedAt: &yesterday,
 		})
 		s.NoError(tdErr)
 
@@ -98,9 +110,6 @@ func (s StoreTestSuite) TestMyRequests() {
 		newRequest.CreatedAt = &createdAt
 		_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &newRequest)
 		s.NoError(err)
-
-		tomorrow := time.Now().Add(time.Hour * 24)
-		yesterday := time.Now().Add(time.Hour * -24)
 
 		// add an intake belonging to the user
 		newIntake := testhelpers.NewSystemIntake()
