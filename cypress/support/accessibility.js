@@ -25,24 +25,7 @@ cy.accessibility = {
     cy.contains('h1', 'Upload a document to');
 
     // select document
-    cy.fixture('test.pdf').as('document');
-    cy.get('[data-testid="file-upload-input"]').then(el => {
-      const blob = Cypress.Blob.base64StringToBlob(
-        this.document,
-        'application/pdf'
-      );
-
-      const file = new File([blob], 'document.pdf', {
-        type: 'application/pdf'
-      });
-      const list = new DataTransfer();
-
-      list.items.add(file);
-      const myFileList = list.files;
-
-      el[0].files = myFileList;
-      el[0].dispatchEvent(new Event('change', { bubbles: true }));
-    });
+    cy.get('[data-testid="file-upload-input"]').attachFile('test.pdf');
 
     // enter the document type
     cy.contains('.usa-radio', 'Awarded VPAT')
@@ -52,7 +35,7 @@ cy.accessibility = {
     // click upload button
     cy.get('[data-testid="upload-document"]').click();
 
-    cy.contains('.usa-alert', 'document.pdf uploaded to');
+    cy.contains('.usa-alert', 'test.pdf uploaded to');
     // verify that the document is in the list
 
     cy.get('[data-testid="accessibility-documents-list"] tbody tr')
