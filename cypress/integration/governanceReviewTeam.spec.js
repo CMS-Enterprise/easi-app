@@ -100,7 +100,7 @@ describe('Governance Review Team', () => {
     });
   });
 
-  it.only('can issue a Lifecycle ID', () => {
+  it('can issue a Lifecycle ID', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.get('a').contains('A Completed Intake Form').click();
