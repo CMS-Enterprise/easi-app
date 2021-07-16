@@ -8,8 +8,8 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import { formatDateAndIgnoreTimezone } from 'utils/date';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { formatDateAndIgnoreTimezone } from 'utils/date';
 
 type DecisionProps = {
   systemIntake?: SystemIntake | null;
@@ -150,7 +150,9 @@ const Decision = ({ systemIntake }: DecisionProps) => {
 
   return (
     <>
-      <PageHeading>{t('governanceReviewTeam:decision.title')}</PageHeading>
+      <PageHeading data-testid="grt-decision-view">
+        {t('governanceReviewTeam:decision.title')}
+      </PageHeading>
       <p>{t('governanceReviewTeam:decision.noDecision')}</p>
     </>
   );

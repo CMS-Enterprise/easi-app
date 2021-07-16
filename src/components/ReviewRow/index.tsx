@@ -9,11 +9,7 @@ import './index.scss';
  */
 const ReviewRow = ({ children, className }: any) => {
   const classes = classnames('easi-review-row', className);
-  return (
-    <div className={classes} data-testid="review-row">
-      {children}
-    </div>
-  );
+  return <div className={classes}>{children}</div>;
 };
 
 export default ReviewRow;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import { SecureRoute } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import RequestRepository from 'components/RequestRepository';
@@ -15,9 +14,10 @@ const GovernanceReviewTeam = () => {
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
 
+  // TODO: this is causing the Routes to unexpectedly unmount
   const RenderPage = () => (
     <Switch>
-      <SecureRoute
+      <Route
         path="/governance-review-team/all"
         render={() => (
           // Changed GRT table from grid-container to just slight margins. This is take up
@@ -28,7 +28,7 @@ const GovernanceReviewTeam = () => {
           </div>
         )}
       />
-      <SecureRoute
+      <Route
         path="/governance-review-team/:systemId/:activePage"
         component={RequestOverview}
       />
