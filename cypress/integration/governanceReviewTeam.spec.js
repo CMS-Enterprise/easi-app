@@ -100,7 +100,7 @@ describe('Governance Review Team', () => {
     });
   });
 
-  it('can issue a Lifecycle ID', () => {
+  it.only('can issue a Lifecycle ID', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.get('a').contains('A Completed Intake Form').click();
@@ -149,8 +149,7 @@ describe('Governance Review Team', () => {
     ).click();
 
     cy.contains('h1', 'Decision - Approved');
-    cy.contains('[data-testid="review-row"] dt', 'Lifecycle ID')
-      .siblings('dd')
+    cy.get('[data-testid="grt-lcid"]')
       .invoke('text')
       .then(text => {
         expect(text.length).to.equal(6);
