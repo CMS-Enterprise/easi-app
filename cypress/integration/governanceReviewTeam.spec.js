@@ -13,8 +13,15 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="admin-lead"]').contains('Not Assigned');
     cy.contains('button', 'Change').click();
     cy.get('input[value="Ann Rudolph"]').check({ force: true });
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntake') {
+        req.alias = 'getSystemIntake';
+      }
+    });
+
     cy.get('[data-testid="button"]').contains('Save').click();
-    cy.get('dd[data-testid="admin-lead"]').should('be.visible');
+    cy.wait('@getSystemIntake');
     cy.get('dd[data-testid="admin-lead"]').contains('Ann Rudolph');
   });
 
