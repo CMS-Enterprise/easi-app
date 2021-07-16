@@ -228,7 +228,9 @@ const ChooseAction = ({
 
   return (
     <>
-      <PageHeading>{t('submitAction.heading')}</PageHeading>
+      <PageHeading data-testid="grt-actions-view">
+        {t('submitAction.heading')}
+      </PageHeading>
       <h2 className="margin-y-3">{t('submitAction.subheading')}</h2>
       <form onSubmit={onSubmit}>
         <ActionContext.Provider

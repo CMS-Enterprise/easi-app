@@ -3,7 +3,7 @@ describe('Governance Review Team', () => {
     cy.server();
     cy.route('GET', '/api/v1/system_intakes?status=open').as('getOpenIntakes');
     cy.localLogin({ name: 'GRTB', role: 'EASI_D_GOVTEAM' });
-    cy.wait('@getOpenIntakes').its('status').should('be', 200);
+    cy.wait('@getOpenIntakes').its('status').should('equal', 200);
   });
 
   it('can assign Admin Lead', () => {
@@ -13,7 +13,15 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="admin-lead"]').contains('Not Assigned');
     cy.contains('button', 'Change').click();
     cy.get('input[value="Ann Rudolph"]').check({ force: true });
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntake') {
+        req.alias = 'getSystemIntake';
+      }
+    });
+
     cy.get('[data-testid="button"]').contains('Save').click();
+    cy.wait('@getSystemIntake');
     cy.get('dd[data-testid="admin-lead"]').contains('Ann Rudolph');
   });
 
@@ -60,7 +68,7 @@ describe('Governance Review Team', () => {
     cy.get('#Dates-GrbDateYear').should('have.value', '2020');
 
     cy.visit('/');
-    cy.wait('@getOpenIntakes').its('status').should('be', 200);
+    cy.wait('@getOpenIntakes').its('status').should('equal', 200);
 
     cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains(
       'td',
@@ -148,21 +156,16 @@ describe('Governance Review Team', () => {
     ).click();
 
     cy.contains('h1', 'Decision - Approved');
-    cy.contains('[data-testid="review-row"] dt', 'Lifecycle ID')
-      .siblings('dd')
+    cy.get('[data-testid="grt-lcid"]')
       .invoke('text')
       .then(text => {
         expect(text.length).to.equal(6);
       });
-    cy.contains('[data-testid="review-row"] dt', 'Lifecycle ID Expiration')
+    cy.contains('dt', 'Lifecycle ID Expiration')
       .siblings('dd')
       .contains('December 25 2020');
-    cy.contains('[data-testid="review-row"] dt', 'Lifecycle ID Scope')
-      .siblings('dd')
-      .contains('Scope');
-    cy.contains('[data-testid="review-row"] dt', 'Next Steps')
-      .siblings('dd')
-      .contains('Next steps');
+    cy.contains('dt', 'Lifecycle ID Scope').siblings('dd').contains('Scope');
+    cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });
 
   it('can close a request', () => {
