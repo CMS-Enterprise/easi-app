@@ -32,7 +32,7 @@ const home = {
       type: 'Governance',
       submittedAt: 'Submission date',
       status: 'Status',
-      nextMeetingDate: 'Next meeting date'
+      nextMeetingDate: 'Upcoming meeting date'
     },
     types: {
       ACCESSIBILITY_REQUEST: 'Section 508',
