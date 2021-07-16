@@ -21,7 +21,6 @@ Array [
         >
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -50,7 +49,6 @@ Array [
         >
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -79,7 +77,6 @@ Array [
           </div>
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -108,7 +105,6 @@ Array [
           </div>
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -137,7 +133,6 @@ Array [
           </div>
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -178,7 +173,6 @@ Array [
         >
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -225,7 +219,6 @@ Array [
           </div>
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -254,7 +247,6 @@ Array [
         >
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -283,7 +275,6 @@ Array [
           </div>
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -312,7 +303,6 @@ Array [
           </div>
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
@@ -341,7 +331,6 @@ Array [
           </div>
           <div
             className="easi-review-row"
-            data-testid="review-row"
           >
             <div>
               <dt
