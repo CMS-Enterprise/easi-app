@@ -20,6 +20,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { AnythingWrongSurvey } from 'components/Survey';
+import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   UpdateSystemIntakeReviewDates,
@@ -39,7 +40,15 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
     UpdateSystemIntakeReviewDates,
     UpdateSystemIntakeReviewDatesVariables
   >(UpdateSystemIntakeReviewDatesQuery, {
-    errorPolicy: 'all'
+    errorPolicy: 'all',
+    refetchQueries: [
+      {
+        query: GetAdminNotesAndActionsQuery,
+        variables: {
+          id: systemId
+        }
+      }
+    ]
   });
 
   const { grtDate, grbDate } = systemIntake;
