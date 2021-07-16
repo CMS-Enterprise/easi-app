@@ -110,7 +110,7 @@ const Table = () => {
           if (value) {
             return formatDate(value);
           }
-          return '';
+          return 'None';
         }
       }
     ];
