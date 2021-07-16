@@ -167,4 +167,43 @@ describe('Governance Review Team', () => {
     cy.contains('dt', 'Lifecycle ID Scope').siblings('dd').contains('Scope');
     cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });
+
+  it('can close a request', () => {
+    // Selecting name based on pre-seeded data
+    // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
+    cy.get('a').contains('Closable Request').click();
+    cy.get(
+      'a[href="/governance-review-team/20cbcfbf-6459-4c96-943b-e76b83122dbf/actions"]'
+    )
+      .contains('Take an action')
+      .click();
+
+    cy.get('button[data-testid="collapsable-link"]').click();
+    cy.get('#no-governance').check({ force: true }).should('be.checked');
+
+    cy.get('button[type="submit"]').click();
+
+    cy.get('#SubmitActionForm-Feedback')
+      .type('Feedback')
+      .should('have.value', 'Feedback');
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntake') {
+        req.alias = 'getSystemIntake';
+      }
+    });
+
+    cy.get('button[type="submit"]').click();
+
+    cy.wait('@getSystemIntake');
+
+    cy.get('[data-testid="grt-status"]').contains('Closed');
+
+    cy.visit('/');
+    cy.get('[data-testid="view-closed-intakes-btn"]').click();
+    cy.get('[data-testid="20cbcfbf-6459-4c96-943b-e76b83122dbf-row"]').contains(
+      'td',
+      'Closed'
+    );
+  });
 });
