@@ -113,9 +113,7 @@ describe('Governance Review Team', () => {
     cy.get('a').contains('A Completed Intake Form').click();
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/actions"]'
-    )
-      .contains('Take an action')
-      .click();
+    ).click();
 
     cy.get('button[data-testid="collapsable-link"]').click();
     cy.get('#issue-lcid').check({ force: true }).should('be.checked');
@@ -174,9 +172,7 @@ describe('Governance Review Team', () => {
     cy.get('a').contains('Closable Request').click();
     cy.get(
       'a[href="/governance-review-team/20cbcfbf-6459-4c96-943b-e76b83122dbf/actions"]'
-    )
-      .contains('Take an action')
-      .click();
+    ).click();
 
     cy.get('button[data-testid="collapsable-link"]').click();
     cy.get('#no-governance').check({ force: true }).should('be.checked');
