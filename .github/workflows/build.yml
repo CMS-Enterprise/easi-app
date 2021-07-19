@@ -401,7 +401,7 @@ jobs:
             v1-yarn-
       - name: Create ECS task definition from template
         run: |
-          go run ./cmd/task-def/main.go --environment "$APP_ENV" --template ./config/ecs/dev-task-def.json.tmpl > task-definition.json
+          go run ./cmd/task-def/main.go --environment "$APP_ENV" --template ./config/ecs/web-task-def.json.tmpl > web-task-definition.json
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
         with:
@@ -429,7 +429,7 @@ jobs:
           ECR_REPOSITORY: easi-backend
         uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a # 1.0.22
         with:
-          task-definition: task-definition.json
+          task-definition: web-task-definition.json
           container-name: easi-app-${{ env.APP_ENV }}
           image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
       - name: Deploy to Amazon ECS service
@@ -482,7 +482,7 @@ jobs:
             #       v1-yarn-
             # - name: Create ECS task definition from template
             #   run: |
-            #     go run ./cmd/task-def/main.go --environment "$APP_ENV" --template ./config/ecs/dev-task-def.json.tmpl > task-definition.json
+            #     go run ./cmd/task-def/main.go --environment "$APP_ENV" --template ./config/ecs/web-task-def.json.tmpl > web-task-definition.json
             # - name: Configure AWS Credentials
             #   uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
             #   with:
@@ -510,7 +510,7 @@ jobs:
             #     ECR_REPOSITORY: easi-backend
             #   uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a # 1.0.22
             #   with:
-            #     task-definition: task-definition.json
+            #     task-definition: web-task-definition.json
             #     container-name: easi-app-${{ env.APP_ENV }}
             #     image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
             # - name: Deploy to Amazon ECS service
