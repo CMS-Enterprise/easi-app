@@ -11,7 +11,7 @@ on:
 env:
   EASI_APP_NODE_VERSION: '12.22.1'
   EASI_APP_GO_VERSION: '1.15.8'
-  IMAGE_TAG: ${{ actions-${{ github.event.pull_request.head.sha }} || actions-${{ github.sha }} }}
+  IMAGE_TAG: actions-${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   pre_deps:
