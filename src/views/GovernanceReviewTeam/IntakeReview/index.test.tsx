@@ -92,4 +92,19 @@ describe('The GRT intake review view', () => {
 
     expect(tree).toMatchSnapshot();
   });
+
+  it('matches the snapshot w/ increasing costs', () => {
+    const now = DateTime.local();
+    mockSystemIntake.costs.isExpectingIncrease = 'YES';
+    mockSystemIntake.costs.expectedIncreaseAmount = 'less then $1 million';
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <IntakeReview systemIntake={mockSystemIntake} now={now} />{' '}
+        </MemoryRouter>
+      )
+      .toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
 });
