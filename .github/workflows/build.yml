@@ -450,3 +450,84 @@ jobs:
           STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET_DEV }}
         run: |
           ./scripts/release_static
+
+  deploy_impl:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    needs: deploy_dev
+    runs-on: ubuntu-latest
+    environment: impl
+    env:
+      APP_ENV: impl
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+            # - name: Set up node
+            #   uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+            #   with:
+            #     node-version: ${{ env.EASI_APP_NODE_VERSION }}
+            # - name: Get yarn cache directory path
+            #   id: yarn-cache-dir-path
+            #   run: echo "::set-output name=dir::$(yarn cache dir)"
+            # - name: Configure yarn cache
+            #   uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+            #   id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+            #   with:
+            #     path: |
+            #       ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            #       ./node_modules
+            #     key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+            #     restore-keys: |
+            #       v1-yarn-
+            # - name: Create ECS task definition from template
+            #   run: |
+            #     go run ./cmd/task-def/main.go --environment "$APP_ENV" --template ./config/ecs/dev-task-def.json.tmpl > task-definition.json
+            # - name: Configure AWS Credentials
+            #   uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+            #   with:
+            #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            #     aws-region: us-west-2
+            #     role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_IMPL }}
+            #     role-duration-seconds: 1800
+            #     role-skip-session-tagging: true
+            # - name: Backup the database
+            #   run: |
+            #     ./scripts/rds-snapshot-app-db
+            # - name: Run migrations
+            #   env:
+            #     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+            #     ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+            #     ECR_REPOSITORY: easi-db-migrate
+            #   run: |
+            #     ./scripts/deploy_service "easi-app-db-migrate" "impl-ecs-manager-docker" "5" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+            #     ./scripts/db_lambda_invoke "impl-ecs-manager-docker" "5" "easi-app-db-migrate"
+            # - name: Render Amazon ECS task definition
+            #   id: render-web-container
+            #   env:
+            #     ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+            #     ECR_REPOSITORY: easi-backend
+            #   uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a # 1.0.22
+            #   with:
+            #     task-definition: task-definition.json
+            #     container-name: easi-app-${{ env.APP_ENV }}
+            #     image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+            # - name: Deploy to Amazon ECS service
+            #   uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e # 1.4.6
+            #   with:
+            #     task-definition: ${{ steps.render-web-container.outputs.task-definition }}
+            #     service: easi-app
+            #     cluster: ${{ env.APP_ENV }}-easi-app
+            #     wait-for-service-stability: true
+            # - name: Check deployed version
+            #   run: |
+            #     ./scripts/healthcheck "$IMAGE_TAG"
+            # - name: Build static assets and release to S3
+            #   env:
+            #     LD_CLIENT_ID_IMPL: ${{ secrets.LD_CLIENT_ID_IMPL }}
+            #     OKTA_CLIENT_ID_IMPL: ${{ secrets.OKTA_CLIENT_ID_IMPL }}
+            #     OKTA_SERVER_ID_IMPL: ${{ secrets.OKTA_SERVER_ID_IMPL }}
+            #     STATIC_S3_BUCKET_IMPL: ${{ secrets.STATIC_S3_BUCKET_IMPL }}
+            #   run: |
+            #     ./scripts/release_static
