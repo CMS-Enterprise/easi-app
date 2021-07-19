@@ -11,6 +11,7 @@ on:
 env:
   EASI_APP_NODE_VERSION: '12.22.1'
   EASI_APP_GO_VERSION: '1.15.8'
+  IMAGE_TAG: ${{ actions-${{ github.event.pull_request.head.sha }} || actions-${{ github.sha }} }}
 
 jobs:
   pre_deps:
@@ -179,7 +180,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-db-migrate
-          IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
         run: |
           docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" --file Dockerfile.db_migrations .
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
@@ -230,7 +230,6 @@ jobs:
           CLIENT_HOSTNAME: localhost:3000
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-db-migrate
-          IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
           GRT_EMAIL: success@simulator.amazonses.com
           ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
           OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
@@ -286,7 +285,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-backend
-          IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
           APPLICATION_VERSION: actions-${{ github.event.pull_request.head.sha }}
         run: |
           APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
@@ -350,7 +348,6 @@ jobs:
           APP_ENV: test
           AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
           OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
           OKTA_TEST_SECRET : ${{ secrets.OKTA_TEST_SECRET }}
           OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
@@ -418,7 +415,6 @@ jobs:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-db-migrate
-          IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
         run: |
           ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "6" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "6" "easi-app-db-migrate"
@@ -427,7 +423,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-backend
-          IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
         uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a # 1.0.22
         with:
           task-definition: task-definition.json
@@ -441,8 +436,6 @@ jobs:
           cluster: ${{ env.APP_ENV }}-easi-app
           wait-for-service-stability: true
       - name: Check deployed version
-        env:
-          IMAGE_TAG: actions-${{ github.event.pull_request.head.sha }}
         run: |
           ./scripts/healthcheck "$IMAGE_TAG"
       - name: Build static assets and release to S3
