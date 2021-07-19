@@ -26,7 +26,7 @@ const Review = ({ businessCase }: ReviewProps) => {
       : 'SUBMIT_BIZ_CASE';
 
   return (
-    <div className="business-case-review">
+    <div className="business-case-review" data-testid="business-case-review">
       <div className="grid-container">
         <PageHeading>Check your answers before sending</PageHeading>
       </div>
