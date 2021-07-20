@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import { formatDate } from 'utils/date';
+import { formatDate } from '../../src/utils/date';
 
 // scripts/dev db:seed
 // 508 Request UUID - 6e224030-09d5-46f7-ad04-4bb851b36eab
