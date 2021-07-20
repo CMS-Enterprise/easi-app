@@ -133,6 +133,7 @@ const RequestOverview = () => {
                 <Link
                   to={`/governance-review-team/${systemId}/actions`}
                   className={getNavLinkClasses('actions')}
+                  data-testid="grt-nav-actions-link"
                 >
                   {t('actions')}
                 </Link>
