@@ -11,7 +11,7 @@ NOW=$(date '+%s')
 pretext="$GITHUB_REF branch failure!"
 title="Build #$GITHUB_RUN_ID failed on job $GITHUB_JOB"
 message="The $GITHUB_REPOSITORY $GITHUB_REF branch broke on job $GITHUB_JOB! Contact $GITHUB_ACTOR for more information."
-github_run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_NUMBER"
+github_run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
 #####
 ## Announce in Slack channel
