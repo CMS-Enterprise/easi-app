@@ -1,25 +1,4 @@
 cy.accessibility = {
-  create508Request: () => {
-    cy.visit('/508/requests/new');
-    cy.contains('h1', 'Request 508 testing');
-    cy.contains('label', "Choose the application you'd like to test");
-    cy.get('#508Request-IntakeId')
-      .type('TACO - 000000{enter}')
-      .should('have.value', 'TACO - 000000');
-    cy.contains('button', 'Send 508 testing request').click();
-    cy.location().should(loc => {
-      expect(loc.pathname).to.match(/\/508\/requests\/.{36}/);
-    });
-    cy.contains('li', 'Home');
-    cy.contains('li', 'TACO');
-    cy.contains(
-      '.usa-alert--success',
-      '508 testing request created. We have sent you a confirmation email.'
-    );
-    cy.contains('h1', 'TACO');
-    cy.contains('h2', 'Next step: Provide your documents');
-    cy.contains('.usa-button', 'Upload a document');
-  },
   addAndRemoveDocument: () => {
     cy.get('[data-testid="upload-new-document"]').click();
     cy.contains('h1', 'Upload a document to');
