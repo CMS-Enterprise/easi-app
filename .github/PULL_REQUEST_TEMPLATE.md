@@ -39,6 +39,9 @@
 - [ ] Checked for landmarks, page heading structure and links using [rotor menu](https://github.com/trussworks/accessibility/blob/master/README.md#how-to-use-the-rotor-menu)
 - [ ] Requested a design review for user-facing changes
 - [ ] Met the acceptance criteria, or will meet them in a subsequent PR
+- [ ] Added or updated tests for BE resolvers or other functions as needed
+- [ ] Added or updated client tests for new components, parent components,
+      functions, or e2e tests as necessary
 - For any new migrations/schema changes:
   - [ ] Followed guidelines for zero-downtime deploys
   - [ ] Deployed this branch to the remote dev environment via CI
@@ -47,6 +50,7 @@
 
 - [ ] Pulled this branch locally and tested it
 - [ ] Reviewed this code and left comments
+- [ ] Checked that all code is adequately covered by tests
 - [ ] Made it clear which comments need to be addressed before this work is merged
 - [ ] Considered marking this as accepted even if there are small changes needed
 

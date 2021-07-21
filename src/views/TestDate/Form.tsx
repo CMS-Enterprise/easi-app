@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import {
   DateInputDay,
@@ -81,6 +82,9 @@ const TestDateForm = ({
             <PageHeading>
               {t(`testDateForm.header.${formType}`, { requestName })}
             </PageHeading>
+            <div className="tablet:grid-col-5">
+              <MandatoryFieldsAlert />
+            </div>
             <div className="grid-row grid-gap-lg">
               <div className="grid-col-9">
                 <Form
@@ -189,7 +193,7 @@ const TestDateForm = ({
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label">
-                        {t('testDateForm.scoreHeader')}
+                        {t('testDateForm.score.heading')}
                       </legend>
 
                       <FieldErrorMsg>
@@ -227,12 +231,16 @@ const TestDateForm = ({
                             <Label
                               htmlFor="TestDate-ScoreValue"
                               className="margin-bottom-1"
-                              aria-label={t(
-                                'testDateForm.scoreValueSRHelpText'
-                              )}
+                              aria-label={t('testDateForm.score.srHelp')}
                             >
-                              {t('testDateForm.scoreValueHeader')}
+                              {t('testDateForm.score.label')}
                             </Label>
+                            <HelpText
+                              id="TestDate-ScoreValueHelpText"
+                              className="margin-bottom-1"
+                            >
+                              {t('testDateForm.score.help')}
+                            </HelpText>
                             <FieldErrorMsg>
                               {flatErrors['score.value']}
                             </FieldErrorMsg>
@@ -252,9 +260,6 @@ const TestDateForm = ({
                                 <span className="text-bold">%</span>
                               </div>
                             </div>
-                            <HelpText id="TestDate-ScoreValueHelpText">
-                              {t('testDateForm.scoreHelpText')}
-                            </HelpText>
                           </FieldGroup>
                         </div>
                       )}

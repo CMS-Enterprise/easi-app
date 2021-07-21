@@ -1,21 +1,32 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { shallow } from 'enzyme';
-import configureMockStore from 'redux-mock-store';
+import renderer from 'react-test-renderer';
 
 import PrepareForGRB from './index';
 
-describe('The PrepareForGRB component', () => {
-  it('renders without crashing', () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({});
-    shallow(
-      <MemoryRouter initialEntries={['/']} initialIndex={0}>
-        <Provider store={store}>
+jest.mock('@okta/okta-react', () => ({
+  useOktaAuth: () => {
+    return {
+      authState: {
+        isAuthenticated: true
+      },
+      oktaAuth: {
+        getUser: async () => {},
+        logout: async () => {}
+      }
+    };
+  }
+}));
+
+describe('The prepare for GRB info page', () => {
+  it('matches the snapshot', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter>
           <PrepareForGRB />
-        </Provider>
-      </MemoryRouter>
-    );
+        </MemoryRouter>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

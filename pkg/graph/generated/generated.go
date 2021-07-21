@@ -179,6 +179,7 @@ type ComplexityRoot struct {
 
 	CreateAccessibilityRequestNotePayload struct {
 		AccessibilityRequestNote func(childComplexity int) int
+		UserErrors               func(childComplexity int) int
 	}
 
 	CreateAccessibilityRequestPayload struct {
@@ -1177,6 +1178,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CreateAccessibilityRequestNotePayload.AccessibilityRequestNote(childComplexity), true
+
+	case "CreateAccessibilityRequestNotePayload.userErrors":
+		if e.complexity.CreateAccessibilityRequestNotePayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.CreateAccessibilityRequestNotePayload.UserErrors(childComplexity), true
 
 	case "CreateAccessibilityRequestPayload.accessibilityRequest":
 		if e.complexity.CreateAccessibilityRequestPayload.AccessibilityRequest == nil {
@@ -2715,6 +2723,7 @@ type AccessibilityRequestNote {
 
 type CreateAccessibilityRequestNotePayload {
   accessibilityRequestNote: AccessibilityRequestNote!
+  userErrors: [UserError!]
 }
 
 """
@@ -6802,6 +6811,38 @@ func (ec *executionContext) _CreateAccessibilityRequestNotePayload_accessibility
 	res := resTmp.(*models.AccessibilityRequestNote)
 	fc.Result = res
 	return ec.marshalNAccessibilityRequestNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestNote(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateAccessibilityRequestNotePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestNotePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateAccessibilityRequestNotePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreateAccessibilityRequestPayload_accessibilityRequest(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestPayload) (ret graphql.Marshaler) {
@@ -15911,6 +15952,8 @@ func (ec *executionContext) _CreateAccessibilityRequestNotePayload(ctx context.C
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "userErrors":
+			out.Values[i] = ec._CreateAccessibilityRequestNotePayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

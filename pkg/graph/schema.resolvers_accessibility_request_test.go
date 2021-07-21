@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/99designs/gqlgen/client"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
@@ -127,7 +126,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 					authorName
 				}
 			}
-		}`, accessibilityRequest.ID), &resp)
+		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("HEHE"))
 
 	s.Equal(accessibilityRequest.ID.String(), resp.AccessibilityRequest.ID)
 	s.Equal(intake.ID.String(), resp.AccessibilityRequest.System.ID)
@@ -211,7 +210,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 					status
 				}
 			}
-		}`, accessibilityRequest.ID), &resp)
+		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("ABCD"))
 
 	responseDocument := resp.AccessibilityRequest.Documents[0]
 	s.Equal("AVAILABLE", responseDocument.Status)
@@ -226,7 +225,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 					status
 				}
 			}
-		}`, accessibilityRequest.ID), &resp)
+		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	responseDocument = resp.AccessibilityRequest.Documents[0]
 	s.Equal("UNAVAILABLE", responseDocument.Status)
@@ -327,7 +326,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 					path
 				}
 			}
-		}`, accessibilityRequest.ID.String()), &resp)
+		}`, accessibilityRequest.ID.String()), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	document := resp.CreateAccessibilityRequestDocument.AccessibilityRequestDocument
 
@@ -387,11 +386,7 @@ func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 						path
 					}
 			}
-		}`, accessibilityRequest.ID.String()), &resp, func(request *client.Request) {
-		principal := authentication.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true, JobCode508User: true}
-		ctx := appcontext.WithPrincipal(context.Background(), &principal)
-		request.HTTP = request.HTTP.WithContext(ctx)
-	})
+		}`, accessibilityRequest.ID.String()), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("ABCD"))
 
 	s.Equal(accessibilityRequest.ID.String(), resp.DeleteAccessibilityRequest.ID)
 	s.Nil(resp.DeleteAccessibilityRequest.UserErrors)
@@ -436,14 +431,60 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 	})
 	s.NoError(requestErr)
 
-	// The meat of the test
-	input := model.CreateAccessibilityRequestNoteInput{
-		RequestID: accessibilityRequest.ID,
-		Note:      "Here is my test note",
-	}
-	payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
-	s.NoError(err)
-	s.Equal(input.Note, payload.AccessibilityRequestNote.Note)
-	s.Equal(input.RequestID, payload.AccessibilityRequestNote.RequestID)
-	s.Equal(euaID, payload.AccessibilityRequestNote.EUAUserID)
+	s.Run("accessibility request note creation success", func() {
+		input := model.CreateAccessibilityRequestNoteInput{
+			RequestID: accessibilityRequest.ID,
+			Note:      "Here is my test note",
+		}
+		payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+		s.NoError(err)
+		s.Equal(input.Note, payload.AccessibilityRequestNote.Note)
+		s.Equal(input.RequestID, payload.AccessibilityRequestNote.RequestID)
+		s.Equal(euaID, payload.AccessibilityRequestNote.EUAUserID)
+	})
+
+	s.Run("create accessibility request note returns validation error in payload", func() {
+		input := model.CreateAccessibilityRequestNoteInput{
+			RequestID: accessibilityRequest.ID,
+			Note:      "",
+		}
+		payload, err := s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+		s.NoError(err)
+		s.Equal("Must include a non-empty note", payload.UserErrors[0].Message)
+		s.Equal((*models.AccessibilityRequestNote)(nil), payload.AccessibilityRequestNote)
+	})
+
+	s.Run("create accessibility request note - authorization error fails", func() {
+		invalidEuaID := "12345"
+		principal = authentication.EUAPrincipal{EUAID: invalidEuaID, JobCodeEASi: true, JobCode508User: true}
+		ctx = appcontext.WithPrincipal(context.Background(), &principal)
+
+		intake, intakeErr = s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+			ProjectName:            null.StringFrom("Another Project"),
+			Status:                 models.SystemIntakeStatusLCIDISSUED,
+			RequestType:            models.SystemIntakeRequestTypeNEW,
+			BusinessOwner:          null.StringFrom("Firstname Lastname"),
+			BusinessOwnerComponent: null.StringFrom("OIT"),
+		})
+		s.NoError(intakeErr)
+
+		lifecycleID, lcidErr = s.store.GenerateLifecycleID(ctx)
+		s.NoError(lcidErr)
+		intake.LifecycleID = null.StringFrom(lifecycleID)
+		_, err := s.store.UpdateSystemIntake(ctx, intake)
+		s.NoError(err)
+
+		accessibilityRequest, err = s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+			IntakeID:  intake.ID,
+			EUAUserID: "UXYZ",
+		})
+		s.NoError(err)
+
+		input := model.CreateAccessibilityRequestNoteInput{
+			RequestID: accessibilityRequest.ID,
+			Note:      "Here is my other test note",
+		}
+		_, err = s.resolver.Mutation().CreateAccessibilityRequestNote(ctx, input)
+		s.Error(err)
+	})
 }

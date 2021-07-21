@@ -1,7 +1,11 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { MemoryRouter, Route } from 'react-router-dom';
 import renderer from 'react-test-renderer';
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import configureMockStore from 'redux-mock-store';
+
+import { MessageProvider } from 'hooks/useMessage';
 
 import MakingARequest from './index';
 
@@ -20,12 +24,27 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The making a request page', () => {
-  it('renders without crashing', () => {
-    shallow(
-      <MemoryRouter>
-        <MakingARequest />
+  it('renders without errors', () => {
+    const mockStore = configureMockStore();
+    const defaultStore = mockStore({
+      auth: {
+        euaId: 'AAAA'
+      }
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/system/making-a-request']}>
+        <Provider store={defaultStore}>
+          <MessageProvider>
+            <Route path="/system/making-a-request">
+              <MakingARequest />
+            </Route>
+          </MessageProvider>
+        </Provider>
       </MemoryRouter>
     );
+
+    expect(screen.getByTestId('making-a-system-request')).toBeInTheDocument();
   });
 
   it('matches the snapshot', () => {

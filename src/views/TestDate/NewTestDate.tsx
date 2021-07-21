@@ -4,15 +4,18 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Alert } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
+
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import { useMessage } from 'hooks/useMessage';
 import CreateTestDateQuery from 'queries/CreateTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
-
-import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
-import { useMessage } from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
+
+import PageLoading from '../../components/PageLoading';
+import RequestDeleted from '../Accessibility/RequestDeleted';
 
 import Form from './Form';
 
@@ -79,13 +82,17 @@ const NewTestDate = () => {
     }).then(result => {
       if (!result.errors) {
         showMessageOnNextPage(submitConfirmation);
-        history.push(`/508/requests/${accessibilityRequestId}`);
+        history.push(`/508/requests/${accessibilityRequestId}/documents`);
       }
     });
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <PageLoading />;
+  }
+
+  if (data?.accessibilityRequest?.statusRecord.status === 'DELETED') {
+    return <RequestDeleted />;
   }
 
   return (
