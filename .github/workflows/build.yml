@@ -410,6 +410,7 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   deploy_dev:
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.event.pull_request.labels.*.name, 'deploy_dev') }}
     needs: [ lint, client_test, server_test, e2e_tests ]
     runs-on: ubuntu-latest
     environment: dev
