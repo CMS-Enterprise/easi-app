@@ -174,8 +174,8 @@ describe('Business case preferred solution form', () => {
     const costSavingsField = screen.getByRole('textbox', {
       name: /cost savings/i
     });
-    userEvent.type(costSavingsField, 'As is solution cost savings');
-    expect(costSavingsField).toHaveValue('As is solution cost savings');
+    userEvent.type(costSavingsField, 'Preferred solution cost savings');
+    expect(costSavingsField).toHaveValue('Preferred solution cost savings');
   });
 
   it('is approved by cms security', async () => {

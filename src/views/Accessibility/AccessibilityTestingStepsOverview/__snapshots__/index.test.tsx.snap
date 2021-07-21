@@ -160,7 +160,7 @@ exports[`The accessibility testing overview matches the snapshot 1`] = `
         aria-controls="easi-508-testing-exception"
         aria-expanded={false}
         className="usa-button usa-button--unstyled"
-        data-testid="button"
+        data-testid="collapsable-link"
         onClick={[Function]}
         type="button"
       >
