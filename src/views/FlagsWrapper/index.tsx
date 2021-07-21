@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
+
 import GetCurrentUserQuery from 'queries/GetCurrentUserQuery';
 import { GetCurrentUser } from 'queries/types/GetCurrentUser';
 
@@ -31,14 +32,9 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
           },
           flags: {
             sandbox: true,
-            pdfExport: true,
-            prototype508: true,
-            fileUploads: true,
-            prototypeTRB: true,
             downgradeGovTeam: false,
             downgrade508User: false,
-            downgrade508Tester: false,
-            add508Request: true
+            downgrade508Tester: false
           }
         });
 

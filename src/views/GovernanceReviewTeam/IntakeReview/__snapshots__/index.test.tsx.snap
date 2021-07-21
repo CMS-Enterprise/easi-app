@@ -2,7 +2,9 @@
 
 exports[`The GRT intake review view matches the snapshot 1`] = `
 Array [
-  <div>
+  <div
+    data-testid="intake-review"
+  >
     <h1
       aria-live="polite"
       className="easi-h1 margin-top-0"
@@ -10,337 +12,358 @@ Array [
     >
       Intake Request
     </h1>
-    <div>
-      <dl
-        title="System Request"
+    <div
+      className="easi-pdf-export"
+    >
+      <div>
+        <dl
+          title="System Request"
+        >
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Submission Date
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                September 30 2020
+              </dd>
+            </div>
+          </div>
+        </dl>
+        <hr
+          className="system-intake__hr"
+        />
+        <h2
+          className="font-heading-xl"
+        >
+          Contact Details
+        </h2>
+        <dl
+          title="Contact Details"
+        >
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Requester
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                Jane Doe
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Requester Component
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                OIT
+              </dd>
+            </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                CMS Business Owner's Name
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                Jane Doe
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                CMS Business Owner Component
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                OIT
+              </dd>
+            </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                CMS Project/Product Manager or lead
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                Jane Doe
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                CMS Project/Product manager or lead Component
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                OIT
+              </dd>
+            </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Does your project have an Information System Security Officer (ISSO)?
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                I have started collaborating with
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                N/A
+              </dd>
+            </div>
+          </div>
+        </dl>
+        <hr
+          className="system-intake__hr"
+        />
+        <h2
+          className="font-heading-xl"
+        >
+          Request Details
+        </h2>
+        <dl
+          title="Request Details"
+        >
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Project Name
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              />
+            </div>
+          </div>
+          <div
+            className="margin-bottom-205 line-height-body-3"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                What is your business need?
+              </dt>
+              <dd
+                className="description-definition margin-0 text-pre-wrap"
+              >
+                The quick brown fox jumps over the lazy dog.
+              </dd>
+            </div>
+          </div>
+          <div
+            className="margin-bottom-205 line-height-body-3"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                How are you thinking of solving it?
+              </dt>
+              <dd
+                className="description-definition margin-0 text-pre-wrap"
+              >
+                The quick brown fox jumps over the lazy dog.
+              </dd>
+            </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Do you need Enterprise Architecture (EA) support?
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+          </div>
+        </dl>
+        <hr
+          className="system-intake__hr"
+        />
+        <h2
+          className="font-heading-xl"
+        >
+          Contract Details
+        </h2>
+        <dl
+          title="Contract Details"
+        >
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Where are you in the process?
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                The quick brown fox jumps over the lazy dog.
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Does the project have funding?
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Do you expect costs for this request to increase?
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Do you already have a contract in place to support this effort?
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                I am currently working on my OAGM Acquisition Plan/IAA documents
+              </dd>
+            </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Contractor(s)
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                TrussWorks, Inc.
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Contract vehicle
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                Sole Source
+              </dd>
+            </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Period of performance
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                1/2020 to 12/2020
+              </dd>
+            </div>
+          </div>
+        </dl>
+      </div>
+      <div
+        className="easi-pdf-export__controls"
       >
-        <div
-          className="easi-review-row"
+        <button
+          className="usa-button usa-button--unstyled easi-no-print"
+          onClick={[Function]}
+          type="button"
         >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Submission Date
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              September 30 2020
-            </dd>
-          </div>
-        </div>
-      </dl>
-      <hr
-        className="system-intake__hr"
-      />
-      <h2
-        className="font-heading-xl"
-      >
-        Contact Details
-      </h2>
-      <dl
-        title="Contact Details"
-      >
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Requester
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              Jane Doe
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Requester Component
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              OIT
-            </dd>
-          </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              CMS Business Owner's Name
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              Jane Doe
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              CMS Business Owner Component
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              OIT
-            </dd>
-          </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              CMS Project/Product Manager or lead
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              Jane Doe
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              CMS Project/Product manager or lead Component
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              OIT
-            </dd>
-          </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Does your project have an Information System Security Officer (ISSO)?
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              No
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              I have started collaborating with
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              N/A
-            </dd>
-          </div>
-        </div>
-      </dl>
-      <hr
-        className="system-intake__hr"
-      />
-      <h2
-        className="font-heading-xl"
-      >
-        Request Details
-      </h2>
-      <dl
-        title="Request Details"
-      >
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Project Name
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            />
-          </div>
-        </div>
-        <div
-          className="margin-bottom-205 line-height-body-3"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              What is your business need?
-            </dt>
-            <dd
-              className="description-definition margin-0 text-pre-wrap"
-            >
-              The quick brown fox jumps over the lazy dog.
-            </dd>
-          </div>
-        </div>
-        <div
-          className="margin-bottom-205 line-height-body-3"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              How are you thinking of solving it?
-            </dt>
-            <dd
-              className="description-definition margin-0 text-pre-wrap"
-            >
-              The quick brown fox jumps over the lazy dog.
-            </dd>
-          </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Do you need Enterprise Architecture (EA) support?
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              No
-            </dd>
-          </div>
-        </div>
-      </dl>
-      <hr
-        className="system-intake__hr"
-      />
-      <h2
-        className="font-heading-xl"
-      >
-        Contract Details
-      </h2>
-      <dl
-        title="Contract Details"
-      >
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Where are you in the process?
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              The quick brown fox jumps over the lazy dog.
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Does the project have funding?
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              No
-            </dd>
-          </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Do you expect costs for this request to increase?
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              No
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Do you already have a contract in place to support this effort?
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              I am currently working on my OAGM Acquisition Plan/IAA documents
-            </dd>
-          </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Contractor(s)
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              TrussWorks, Inc.
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Contract vehicle
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              Sole Source
-            </dd>
-          </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Period of performance
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              1/2020 to 12/2020
-            </dd>
-          </div>
-        </div>
-      </dl>
+          <img
+            alt=""
+            aria-hidden="true"
+            className="margin-right-1"
+            src="download.svg"
+          />
+          Download System Intake as PDF
+        </button>
+      </div>
     </div>
     <a
       className="usa-button margin-top-5"

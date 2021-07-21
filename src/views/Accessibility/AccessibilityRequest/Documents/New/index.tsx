@@ -6,6 +6,18 @@ import { Button, Label } from '@trussworks/react-uswds';
 import axios from 'axios';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { isUndefined } from 'lodash';
+
+import FileUpload from 'components/FileUpload';
+import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
+import { RadioField } from 'components/shared/RadioField';
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import TextField from 'components/shared/TextField';
+import { useMessage } from 'hooks/useMessage';
 import { CreateAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
 import GeneratePresignedUploadURLQuery from 'queries/GeneratePresignedUploadURLQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
@@ -15,22 +27,13 @@ import {
 } from 'queries/types/CreateAccessibilityRequestDocument';
 import { GeneratePresignedUploadURL } from 'queries/types/GeneratePresignedUploadURL';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
-
-import FileUpload from 'components/FileUpload';
-import PageHeading from 'components/PageHeading';
-import Alert from 'components/shared/Alert';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import FieldGroup from 'components/shared/FieldGroup';
-import { RadioField } from 'components/shared/RadioField';
-import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
-import TextField from 'components/shared/TextField';
-import { useMessage } from 'hooks/useMessage';
 import { FileUploadForm } from 'types/files';
 import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
 import { translateDocumentCommonType } from 'utils/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { DocumentUploadValidationSchema } from 'validations/documentUploadSchema';
+
+import RequestDeleted from '../../../RequestDeleted';
 
 const New = () => {
   const history = useHistory();
@@ -66,7 +69,7 @@ const New = () => {
   ] = useState(false);
 
   if (loading) {
-    return <div>Loading</div>;
+    return <PageLoading />;
   }
 
   if (error) {
@@ -77,6 +80,10 @@ const New = () => {
     return (
       <div>{`No request found matching id: ${accessibilityRequestId}`}</div>
     );
+  }
+
+  if (data.accessibilityRequest?.statusRecord.status === 'DELETED') {
+    return <RequestDeleted />;
   }
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +147,7 @@ const New = () => {
               showMessageOnNextPage(
                 `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
               );
-              history.push(`/508/requests/${accessibilityRequestId}`);
+              history.push(`/508/requests/${accessibilityRequestId}/documents`);
             }
           })
           .catch(() => {

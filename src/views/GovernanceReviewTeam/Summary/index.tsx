@@ -9,15 +9,15 @@ import {
   Button
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
-import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
-import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
+import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 import { formatDate } from 'utils/date';
 import {
   isIntakeClosed,
@@ -151,7 +151,9 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
             </div>
             <div className="text-gray-90">
               <dt className="text-bold">{t('intake:fields.adminLead')}</dt>
-              <dd className="margin-left-0 padding-1">{getAdminLead()}</dd>
+              <dd className="margin-left-0 padding-1" data-testid="admin-lead">
+                {getAdminLead()}
+              </dd>
               <Button
                 type="button"
                 unstyled

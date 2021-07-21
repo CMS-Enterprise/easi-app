@@ -4,17 +4,18 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import { DocumentNode, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import {
-  AddGRTFeedback,
-  AddGRTFeedbackVariables
-} from 'queries/types/AddGRTFeedback';
 
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import {
+  AddGRTFeedback,
+  AddGRTFeedbackVariables
+} from 'queries/types/AddGRTFeedback';
 import { ProvideGRTFeedbackForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { provideGRTFeedbackSchema } from 'validations/actionSchema';
@@ -71,7 +72,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
           <>
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
-                testId="system-intake-errors"
+                testId="formik-validation-errors"
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
               >
@@ -86,12 +87,17 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                 })}
               </ErrorAlert>
             )}
-            <h1>{t('submitAction.heading')}</h1>
+            <h1 data-testid="provide-feedback-biz-case">
+              {t('submitAction.heading')}
+            </h1>
             <h2>{t('submitAction.subheading')}</h2>
             <p>
               {actionName} &nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
+            <div className="tablet:grid-col-6">
+              <MandatoryFieldsAlert />
+            </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form
                 onSubmit={e => {

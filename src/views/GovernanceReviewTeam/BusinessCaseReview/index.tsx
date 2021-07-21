@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
-import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
 import AlternativeAnalysisReview from 'components/BusinessCaseReview/AlternativeAnalysisReview';
 import GeneralRequestInfoReview from 'components/BusinessCaseReview/GeneralRequestInfoReview';
@@ -12,6 +11,7 @@ import GRTFeedbackView from 'components/GRTFeedbackView';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import { AnythingWrongSurvey } from 'components/Survey';
+import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
 
@@ -28,7 +28,7 @@ const BusinessCaseReview = ({
 
   if (!businessCase.id) {
     return (
-      <div>
+      <div data-testid="business-case-review-not-found">
         <PageHeading className="margin-top-0">
           {t('general:businessCase')}
         </PageHeading>
@@ -38,7 +38,7 @@ const BusinessCaseReview = ({
   }
 
   return (
-    <div>
+    <div data-testid="business-case-review">
       <PDFExport
         title="System Intake"
         filename={filename}

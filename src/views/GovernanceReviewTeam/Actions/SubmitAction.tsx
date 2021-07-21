@@ -70,7 +70,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
           <>
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
-                testId="system-intake-errors"
+                testId="formik-validation-errors"
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
               >
@@ -93,10 +93,12 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading>{t('submitAction.heading')}</PageHeading>
+            <PageHeading data-testid="grt-submit-action-view">
+              {t('submitAction.heading')}
+            </PageHeading>
             <h2>{t('submitAction.subheading')}</h2>
             <p>
-              {actionName} &nbsp;
+              {actionName}&nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">

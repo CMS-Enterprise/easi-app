@@ -36,28 +36,16 @@ func (s *Store) FetchMyRequests(ctx context.Context) ([]Request, error) {
 
 	requestsSQL := `
 	SELECT
-		accessibility_requests.id,
-		accessibility_requests.name,
-		accessibility_requests.created_at AS submitted_at,
+		aras.id,
+		aras.name,
+		aras.created_at AS submitted_at,
 		'ACCESSIBILITY_REQUEST' record_type,
-		accessibility_request_status_records.status::text,
-		accessibility_request_status_records.created_at AS status_created_at,
+		aras.status::text,
+		aras.status_created_at,
 		null lcid
-	FROM accessibility_requests
-		INNER JOIN (
-			SELECT
-				request_id,
-				max(created_at) created_at
-			FROM
-				accessibility_request_status_records arsr
-			GROUP BY request_id
-		) current_status
-			ON current_status.request_id = accessibility_requests.id
-		JOIN accessibility_request_status_records
-			ON accessibility_request_status_records.request_id = accessibility_requests.id
-			AND accessibility_request_status_records.created_at = current_status.created_at
-		WHERE accessibility_requests.deleted_at IS null
-		AND accessibility_requests.eua_user_id = $1
+	FROM accessibility_requests_and_statuses aras
+		WHERE aras.deleted_at IS NULL
+		AND aras.eua_user_id = $1
 	UNION
 	SELECT
 		id,

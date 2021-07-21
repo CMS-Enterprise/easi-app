@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   Breadcrumb,
@@ -10,33 +10,16 @@ import {
   Button,
   Link as UswdsLink
 } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import {
+  Field,
+  Form,
+  Formik,
+  FormikErrors,
+  FormikHelpers,
+  FormikProps
+} from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
-import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
-import CreateAccessibilityRequestNoteQuery from 'queries/CreateAccessibilityRequestNoteQuery';
-import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
-import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
-import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
-import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
-import {
-  CreateAccessibilityRequestNote,
-  CreateAccessibilityRequestNoteVariables
-} from 'queries/types/CreateAccessibilityRequestNote';
-import {
-  DeleteAccessibilityRequest,
-  DeleteAccessibilityRequestVariables
-} from 'queries/types/DeleteAccessibilityRequest';
-import {
-  DeleteAccessibilityRequestDocument,
-  DeleteAccessibilityRequestDocumentVariables
-} from 'queries/types/DeleteAccessibilityRequestDocument';
-import { DeleteTestDate } from 'queries/types/DeleteTestDate';
-import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
-import {
-  GetAccessibilityRequestAccessibilityTeamOnly as GetAccessibilityRequest,
-  GetAccessibilityRequestAccessibilityTeamOnlyVariables as GetAccessibilityRequestPayload
-} from 'queries/types/GetAccessibilityRequestAccessibilityTeamOnly';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import Modal from 'components/Modal';
@@ -55,10 +38,35 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextAreaField from 'components/shared/TextAreaField';
-import { TabPanel, Tabs } from 'components/Tabs';
 import TestDateCard from 'components/TestDateCard';
 import useMessage from 'hooks/useMessage';
+import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
+import CreateAccessibilityRequestNoteQuery from 'queries/CreateAccessibilityRequestNoteQuery';
+import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
+import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
+import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
+import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
+import {
+  CreateAccessibilityRequestNote,
+  CreateAccessibilityRequestNote_createAccessibilityRequestNote_userErrors as noteUserErrors,
+  CreateAccessibilityRequestNoteVariables
+} from 'queries/types/CreateAccessibilityRequestNote';
+import {
+  DeleteAccessibilityRequest,
+  DeleteAccessibilityRequestVariables
+} from 'queries/types/DeleteAccessibilityRequest';
+import {
+  DeleteAccessibilityRequestDocument,
+  DeleteAccessibilityRequestDocumentVariables
+} from 'queries/types/DeleteAccessibilityRequestDocument';
+import { DeleteTestDate } from 'queries/types/DeleteTestDate';
+import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
+import {
+  GetAccessibilityRequestAccessibilityTeamOnly as GetAccessibilityRequest,
+  GetAccessibilityRequestAccessibilityTeamOnlyVariables as GetAccessibilityRequestPayload
+} from 'queries/types/GetAccessibilityRequestAccessibilityTeamOnly';
 import { AppState } from 'reducers/rootReducer';
 import {
   CreateNoteForm,
@@ -72,11 +80,15 @@ import user from 'utils/user';
 import accessibilitySchema from 'validations/accessibilitySchema';
 import { NotFoundPartial } from 'views/NotFound';
 
+import RequestDeleted from './RequestDeleted';
+
 import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
+  const [formikErrors, setFormikErrors] = useState<FormikErrors<any>>({});
+  const [returnedUserErrors, setReturnedUserErrors] = useState<any>(null);
   const { message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
   const history = useHistory();
@@ -84,6 +96,7 @@ const AccessibilityRequestDetailPage = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
+  const { pathname } = useLocation();
 
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
@@ -91,6 +104,8 @@ const AccessibilityRequestDetailPage = () => {
   const requestQuery = isAccessibilityTeam
     ? GetAccessibilityRequestAccessibilityTeamOnlyQuery
     : GetAccessibilityRequestQuery;
+
+  const flatFormikErrors = flattenErrors(formikErrors);
 
   // TODO: typechecking is off because of conditional query
   const { loading, error, data, refetch } = useQuery<
@@ -108,7 +123,7 @@ const AccessibilityRequestDetailPage = () => {
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
 
-  const [mutateCreateNote] = useMutation<
+  const [mutateCreateNote, { error: noteMutationError }] = useMutation<
     CreateAccessibilityRequestNote,
     CreateAccessibilityRequestNoteVariables
   >(CreateAccessibilityRequestNoteQuery);
@@ -135,6 +150,12 @@ const AccessibilityRequestDetailPage = () => {
     });
   };
 
+  const resetAlerts = () => {
+    showMessage(undefined);
+    setFormikErrors({});
+    setReturnedUserErrors(null);
+  };
+
   const createNote = (
     values: CreateNoteForm,
     { resetForm }: FormikHelpers<CreateNoteForm>
@@ -147,12 +168,22 @@ const AccessibilityRequestDetailPage = () => {
           shouldSendEmail: values.shouldSendEmail
         }
       }
-    }).then(() => {
-      refetch();
-      showMessage(''); // allows screen reader to hear consecutive success message
-      showMessage(t('requestDetails.notes.confirmation', { requestName }));
-      resetForm({});
-    });
+    })
+      .then(response => {
+        const userErrors =
+          response.data?.createAccessibilityRequestNote?.userErrors;
+        if (userErrors) {
+          resetAlerts();
+          setReturnedUserErrors(userErrors);
+        }
+        if (!userErrors) {
+          refetch();
+          resetAlerts();
+          showMessage(t('requestDetails.notes.confirmation', { requestName }));
+          resetForm({});
+        }
+      })
+      .catch(() => {});
   };
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
@@ -235,6 +266,9 @@ const AccessibilityRequestDetailPage = () => {
 
   const bodyWithDocumentsTable = (
     <div data-testid="body-with-doc-table">
+      <p className="usa-sr-only" aria-live="polite">
+        {t('requestDetails.activeDocumentTab')}
+      </p>
       <h2 className="margin-top-0">{t('requestDetails.documents.label')}</h2>
       {uploadDocumentLink}
       <div className="margin-top-6">
@@ -250,6 +284,9 @@ const AccessibilityRequestDetailPage = () => {
   const bodyNoDocumentsBusinessOwner = (
     <>
       <div className="margin-bottom-3">
+        <p className="usa-sr-only" aria-live="polite">
+          {t('requestDetails.activeDocumentTab')}
+        </p>
         <h2 className="margin-y-0 font-heading-lg">
           {t('requestDetails.documents.noDocs.heading')}
         </h2>
@@ -288,6 +325,9 @@ const AccessibilityRequestDetailPage = () => {
             createdAt: formatDate(notes[0]?.createdAt)
           })}
       </h3>
+      <p className="usa-sr-only" aria-live="polite">
+        {t('requestDetails.activeNoteTab')}
+      </p>
       <Button
         className="accessibility-request__add-note-btn"
         type="button"
@@ -297,12 +337,7 @@ const AccessibilityRequestDetailPage = () => {
       >
         {t('requestDetails.notes.skipToExistingNotes')}
       </Button>
-      <div
-        role="region"
-        aria-label="add new note"
-        className="margin-y-2"
-        id="notes-form"
-      >
+      <div role="region" aria-label="add new note" id="notes-form">
         <Formik
           initialValues={{
             noteText: '',
@@ -315,29 +350,18 @@ const AccessibilityRequestDetailPage = () => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<CreateNoteForm>) => {
-            const { values, errors, setFieldValue } = formikProps;
+            const {
+              values,
+              errors,
+              setFieldValue,
+              validateForm,
+              submitForm
+            } = formikProps;
             const flatErrors = flattenErrors(errors);
             return (
               <>
-                {Object.keys(errors).length > 0 && (
-                  <ErrorAlert
-                    testId="create-accessibility-note-errors"
-                    classNames="margin-bottom-4 margin-top-4"
-                    heading="There is a problem"
-                  >
-                    {Object.keys(flatErrors).map(key => {
-                      return (
-                        <ErrorAlertMessage
-                          key={`Error.${key}`}
-                          errorKey={key}
-                          message={flatErrors[key]}
-                        />
-                      );
-                    })}
-                  </ErrorAlert>
-                )}
                 <Form className="usa-form maxw-full">
-                  <FieldGroup>
+                  <FieldGroup className="margin-top-0">
                     <Label htmlFor="CreateAccessibilityRequestNote-NoteText">
                       {t('requestDetails.notes.form.note')}
                     </Label>
@@ -364,7 +388,20 @@ const AccessibilityRequestDetailPage = () => {
                       }}
                     />
                   </FieldGroup>
-                  <Button className="margin-top-2" type="submit">
+                  <Button
+                    className="margin-top-2"
+                    type="button"
+                    onClick={() =>
+                      validateForm().then(err => {
+                        if (Object.keys(err).length > 0) {
+                          resetAlerts();
+                          setFormikErrors(err);
+                        } else {
+                          submitForm();
+                        }
+                      })
+                    }
+                  >
                     {t('requestDetails.notes.submit')}
                   </Button>
                 </Form>
@@ -411,12 +448,18 @@ const AccessibilityRequestDetailPage = () => {
     );
   }
 
+  const selectedTabContent = pathname.endsWith('/notes')
+    ? notesTab
+    : bodyWithDocumentsTable;
+
+  if (data?.accessibilityRequest?.statusRecord?.status === 'DELETED') {
+    return <RequestDeleted />;
+  }
   // What type of errors can we get/return?
   // How can we actually use the errors?
   if (error) {
     return <pre>{JSON.stringify(error, null, 2)}</pre>;
   }
-
   return (
     <div data-testid="accessibility-request-detail-page">
       <div className="bg-primary-lighter">
@@ -438,6 +481,44 @@ const AccessibilityRequestDetailPage = () => {
             >
               {message}
             </Alert>
+          )}
+          {noteMutationError && (
+            <Alert
+              className="margin-top-4"
+              type="error"
+              role="alert"
+              heading="There is a problem"
+            >
+              {t('requestDetails.notes.formErrorMessage')}
+            </Alert>
+          )}
+          {returnedUserErrors && (
+            <ErrorAlert
+              testId="create-accessibility-note-errors"
+              classNames="margin-bottom-4 margin-top-4"
+              heading="There is a problem"
+            >
+              {returnedUserErrors.map((err: noteUserErrors) => {
+                return <p key={err.message}>{err.message}</p>;
+              })}
+            </ErrorAlert>
+          )}
+          {Object.keys(flatFormikErrors).length > 0 && (
+            <ErrorAlert
+              testId="508-request-details-error"
+              classNames="margin-bottom-4 margin-top-4"
+              heading="There is a problem"
+            >
+              {Object.keys(flatFormikErrors).map(key => {
+                return (
+                  <ErrorAlertMessage
+                    key={`Error.${key}`}
+                    errorKey={key}
+                    message={flatFormikErrors[key]}
+                  />
+                );
+              })}
+            </ErrorAlert>
           )}
           <PageHeading
             aria-label={`${requestName} current status ${requestStatus}`}
@@ -464,21 +545,20 @@ const AccessibilityRequestDetailPage = () => {
           )}
         </div>
       </div>
-      <div className="grid-container margin-top-2 padding-top-6 padding-top">
+      {isAccessibilityTeam && (
+        <SecondaryNav>
+          <NavLink to={`/508/requests/${accessibilityRequestId}/documents`}>
+            Documents
+          </NavLink>
+          <NavLink to={`/508/requests/${accessibilityRequestId}/notes`}>
+            Notes
+          </NavLink>
+        </SecondaryNav>
+      )}
+      <div className="grid-container padding-top-6 padding-top">
         <div className="grid-row grid-gap-lg">
           <div className="grid-col-8">
-            {isAccessibilityTeam ? (
-              <Tabs>
-                <TabPanel id="Documents" tabName="Documents">
-                  <div className="margin-top-2">{bodyWithDocumentsTable}</div>
-                </TabPanel>
-                <TabPanel id="Notes" tabName="Notes">
-                  {notesTab}
-                </TabPanel>
-              </Tabs>
-            ) : (
-              documentsTab
-            )}
+            {isAccessibilityTeam ? selectedTabContent : documentsTab}
           </div>
           <div className="grid-col-1" />
           <div className="grid-col-3">

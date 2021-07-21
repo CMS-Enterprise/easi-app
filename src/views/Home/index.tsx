@@ -9,6 +9,7 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import LinkCard from 'components/LinkCard';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
 import useMessage from 'hooks/useMessage';
@@ -17,9 +18,6 @@ import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import Table from 'views/MyRequests/Table';
 
-import PageHeading from '../../components/PageHeading';
-
-import SystemIntakeBanners from './SystemIntakeBanners';
 import WelcomeText from './WelcomeText';
 
 import './index.scss';
@@ -56,45 +54,6 @@ const Home = () => {
       }
 
       if (user.isBasicUser(userGroups, flags)) {
-        if (flags.add508Request) {
-          return (
-            <div className="grid-container">
-              {message && (
-                <div className="grid-container margin-top-6">
-                  <Alert type="success" slim role="alert">
-                    {message}
-                  </Alert>
-                </div>
-              )}
-              <div className="tablet:grid-col-9">
-                <PageHeading>{t('home:title')}</PageHeading>
-                <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
-                  {t('home:subtitle')}
-                </p>
-                <div className="display-flex flex-row">
-                  <LinkCard
-                    link="/system/making-a-request"
-                    heading={t('home:actions.itg.heading')}
-                    className="margin-right-2"
-                  >
-                    {t('home:actions.itg.body')}
-                  </LinkCard>
-                  <LinkCard
-                    link="/508/making-a-request"
-                    heading={t('home:actions.508.heading')}
-                  >
-                    {t('home:actions.508.body')}
-                  </LinkCard>
-                </div>
-                <hr className="home__hr margin-top-4" aria-hidden />
-                <h2 className="margin-top-4">
-                  {t('home:requestsTable.heading')}
-                </h2>
-                <Table />
-              </div>
-            </div>
-          );
-        }
         return (
           <div className="grid-container">
             {message && (
@@ -104,10 +63,32 @@ const Home = () => {
                 </Alert>
               </div>
             )}
-            <div className="margin-y-6">
-              <SystemIntakeBanners />
+            <div className="tablet:grid-col-9">
+              <PageHeading>{t('home:title')}</PageHeading>
+              <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
+                {t('home:subtitle')}
+              </p>
+              <div className="display-flex flex-row">
+                <LinkCard
+                  link="/system/making-a-request"
+                  heading={t('home:actions.itg.heading')}
+                  className="margin-right-2"
+                >
+                  {t('home:actions.itg.body')}
+                </LinkCard>
+                <LinkCard
+                  link="/508/making-a-request"
+                  heading={t('home:actions.508.heading')}
+                >
+                  {t('home:actions.508.body')}
+                </LinkCard>
+              </div>
+              <hr className="home__hr margin-top-4" aria-hidden />
+              <h2 className="margin-top-4">
+                {t('home:requestsTable.heading')}
+              </h2>
+              <Table />
             </div>
-            <WelcomeText />
           </div>
         );
       }

@@ -5,9 +5,8 @@ import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
-import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
-import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import {
   DateInputDay,
@@ -22,6 +21,8 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
+import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 import { SubmitLifecycleIdForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
@@ -123,12 +124,17 @@ const IssueLifecycleId = () => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading>{t('issueLCID.heading')}</PageHeading>
+            <PageHeading data-testid="issue-lcid">
+              {t('issueLCID.heading')}
+            </PageHeading>
             <h2>{t('issueLCID.subheading')}</h2>
             <p>
               Approve request and issue Lifecycle ID{' '}
               <Link to={backLink}>Change</Link>
             </p>
+            <div className="tablet:grid-col-6">
+              <MandatoryFieldsAlert />
+            </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form
                 onSubmit={e => {
@@ -170,21 +176,29 @@ const IssueLifecycleId = () => {
                       value={false}
                     />
                     {values.newLifecycleId === false && (
-                      <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
+                      <div className="margin-bottom-1">
                         <FieldGroup
                           scrollElement="lifecycleId"
                           error={!!flatErrors.lifecycleId}
                         >
-                          <Label htmlFor="IssueLifecycleIdForm-LifecycleId">
+                          <Label
+                            htmlFor="IssueLifecycleIdForm-LifecycleId"
+                            className="margin-bottom-1"
+                          >
                             {t('issueLCID.lcid.label')}
                           </Label>
+                          <HelpText id="IssueLifecycleIdForm-LifecycleIdHelp">
+                            For example A123456 or 123456
+                          </HelpText>
                           <FieldErrorMsg>
                             {flatErrors.lifecycleId}
                           </FieldErrorMsg>
                           <Field
                             as={TextField}
+                            className="width-card-lg"
                             error={!!flatErrors.lifecycleId}
                             id="IssueLifecycleIdForm-LifecycleId"
+                            aria-describedby="IssueLifecycleIdForm-LifecycleIdHelp"
                             maxLength={7}
                             name="lifecycleId"
                           />

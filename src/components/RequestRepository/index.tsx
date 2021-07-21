@@ -371,6 +371,9 @@ const RequestRepository = () => {
               type="button"
               className="easi-request-repo__tab-btn"
               onClick={() => setActiveTable('open')}
+              aria-label={
+                activeTable === 'open' ? 'Open requests selected' : ''
+              }
             >
               Open Requests
             </button>
@@ -385,6 +388,9 @@ const RequestRepository = () => {
               className="easi-request-repo__tab-btn"
               onClick={() => setActiveTable('closed')}
               data-testid="view-closed-intakes-btn"
+              aria-label={
+                activeTable === 'closed' ? 'Closed requests selected' : ''
+              }
             >
               Closed Requests
             </button>
@@ -434,7 +440,7 @@ const RequestRepository = () => {
           {rows.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} data-testid={`${row.original.id}-row`}>
                 {row.cells.map((cell, i) => {
                   if (i === 0) {
                     return (

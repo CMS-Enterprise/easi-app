@@ -18,8 +18,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -45,8 +45,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -392,8 +392,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -447,8 +447,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -502,8 +502,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -557,8 +557,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
