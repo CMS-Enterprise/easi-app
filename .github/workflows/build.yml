@@ -693,7 +693,7 @@ jobs:
         env:
           STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
         run: |
-          ./scripts/release_storybook_static
+          ./scripts/release_storybook_static_github_actions
       - name: Announce failure
         if: ${{ failure() }}
         run: |
