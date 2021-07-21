@@ -1,0 +1,10 @@
+.accessibility-requests-table {
+    th {
+        position: relative;
+        button .fa {
+            position: absolute;
+            right: 4px;
+            top: 1.2rem;
+        }
+    }
+}
