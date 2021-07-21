@@ -2,9 +2,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import { SystemIntakeForm } from 'types/systemIntake';
+import { formatDate } from 'utils/date';
 
 type ApprovedProps = {
   intake: SystemIntakeForm;
@@ -14,7 +14,10 @@ const Approved = ({ intake }: ApprovedProps) => {
   const { t } = useTranslation('taskList');
   return (
     <>
-      <div className="easi-governance-decision__info">
+      <div
+        className="easi-governance-decision__info"
+        data-testid="grt-approved"
+      >
         <h2 className="margin-top-0">{t('decision.bizCaseApproved')}</h2>
         <dl>
           <dt>{t('decision.lcid')}</dt>
@@ -27,7 +30,7 @@ const Approved = ({ intake }: ApprovedProps) => {
         {intake.lcidExpiration && (
           <p className="text-bold">
             {t('decision.lcidExpiration', {
-              date: intake.lcidExpiration.toLocaleString(DateTime.DATE_FULL)
+              date: formatDate(intake.lcidExpiration)
             })}
           </p>
         )}
