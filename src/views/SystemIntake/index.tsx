@@ -83,7 +83,7 @@ export const SystemIntake = () => {
   }, []);
 
   return (
-    <PageWrapper className="system-intake">
+    <PageWrapper className="system-intake" data-testid="system-intake">
       <Header />
       <MainContent className="grid-container margin-bottom-5">
         <BreadcrumbBar variant="wrap">

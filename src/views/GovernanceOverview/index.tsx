@@ -24,7 +24,10 @@ const GovernanceOverview = () => {
     systemId: string;
   }>();
   return (
-    <PageWrapper className="easi-governance-overview">
+    <PageWrapper
+      className="easi-governance-overview"
+      data-testid="governance-overview"
+    >
       <Header />
       <MainContent className="grid-container margin-bottom-5">
         <BreadcrumbBar variant="wrap">
