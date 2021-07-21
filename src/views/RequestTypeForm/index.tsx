@@ -48,6 +48,7 @@ const RequestTypeForm = () => {
           name: user.name
         }
       };
+
       mutate({ variables: { input } }).then(response => {
         if (!response.errors) {
           const { id } = response.data.createSystemIntake;
@@ -75,7 +76,7 @@ const RequestTypeForm = () => {
   };
 
   return (
-    <PageWrapper>
+    <PageWrapper data-testid="request-type-form">
       <Header />
       <MainContent className="grid-container margin-bottom-5">
         <BreadcrumbBar variant="wrap">
@@ -102,7 +103,7 @@ const RequestTypeForm = () => {
               <>
                 {Object.keys(errors).length > 0 && (
                   <ErrorAlert
-                    testId="system-intake-errors"
+                    testId="formik-validation-errors"
                     classNames="margin-top-3"
                     heading="Please check and fix the following"
                   >
