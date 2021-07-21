@@ -103,7 +103,10 @@ const GovernanceTaskList = () => {
   };
 
   return (
-    <PageWrapper className="governance-task-list">
+    <PageWrapper
+      className="governance-task-list"
+      data-testid="governance-task-list"
+    >
       <Header />
       <MainContent className="grid-container margin-bottom-7">
         <div className="grid-row">
