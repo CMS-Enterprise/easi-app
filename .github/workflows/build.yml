@@ -16,6 +16,7 @@ env:
   # https://github.com/actions/checkout#Checkout-pull-request-HEAD-commit-instead-of-merge-commit).
   # For push events, where github.event.pull_request.head.sha is not defined, use github.sha.
   IMAGE_TAG: actions-${{ github.event.pull_request.head.sha || github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
   pre_deps:
@@ -58,6 +59,10 @@ jobs:
         run: yarn install
       - name: Install go modules
         run: go mod download
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   lint:
     needs: pre_deps
@@ -104,6 +109,10 @@ jobs:
         uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe # v2.0.3
         with:
           extra_args: --all-files
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   client_test:
     needs: pre_deps
@@ -131,6 +140,10 @@ jobs:
           restore-keys: |
             v1-yarn-
       - run: yarn test:coverage
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   storybook_build:
     needs: pre_deps
@@ -163,6 +176,10 @@ jobs:
           name: storybook-build
           path: storybook-static
           retention-days: 1
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   build_db_migrate_image:
     runs-on: ubuntu-latest
@@ -192,6 +209,10 @@ jobs:
         run: |
           docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" --file Dockerfile.db_migrations .
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   server_test:
     needs: [ pre_deps, build_db_migrate_image ]
@@ -268,6 +289,10 @@ jobs:
           name: backend-tests
           path: results
           retention-days: 14
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   build_server_image:
     runs-on: ubuntu-latest
@@ -300,6 +325,10 @@ jobs:
           APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
           docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   e2e_tests:
     needs: [ pre_deps, build_db_migrate_image, build_server_image ]
@@ -375,6 +404,10 @@ jobs:
           path: cypress/screenshots
           if-no-files-found: ignore
           retention-days: 14
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   deploy_dev:
     needs: [ lint, client_test, server_test, e2e_tests ]
@@ -455,6 +488,10 @@ jobs:
           STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET_DEV }}
         run: |
           ./scripts/release_static
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   deploy_impl:
     if: ${{ github.ref == 'refs/heads/master' }}
@@ -536,6 +573,10 @@ jobs:
           STATIC_S3_BUCKET_IMPL: ${{ secrets.STATIC_S3_BUCKET_IMPL }}
         run: |
           ./scripts/release_static
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   deploy_prod:
     if: ${{ github.ref == 'refs/heads/master' }}
@@ -617,6 +658,10 @@ jobs:
           STATIC_S3_BUCKET_PROD: ${{ secrets.STATIC_S3_BUCKET_PROD }}
         run: |
           ./scripts/release_static
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
 
   deploy_storybook_dev:
     if: ${{ github.ref == 'refs/heads/master' }}
@@ -648,3 +693,7 @@ jobs:
           STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
         run: |
           ./scripts/release_storybook_static
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
