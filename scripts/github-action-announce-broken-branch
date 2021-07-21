@@ -4,7 +4,7 @@ set -euo pipefail
 #####
 ## Only alert on master branch
 #####
-# [[ $GITHUB_REF = 'refs/heads/master' ]] || exit 0
+[[ $GITHUB_REF = 'refs/heads/master' ]] || exit 0
 
 NOW=$(date '+%s')
 
