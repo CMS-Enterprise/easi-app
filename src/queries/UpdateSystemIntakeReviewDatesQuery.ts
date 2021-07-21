@@ -6,8 +6,9 @@ export default gql`
   ) {
     updateSystemIntakeReviewDates(input: $input) {
       systemIntake {
-        adminLead
         id
+        grbDate
+        grtDate
       }
     }
   }

@@ -412,7 +412,7 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
                   aria-controls="take-with-you"
                   aria-expanded={false}
                   className="usa-button usa-button--unstyled"
-                  data-testid="button"
+                  data-testid="collapsable-link"
                   onClick={[Function]}
                   type="button"
                 >
@@ -433,7 +433,7 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
                   aria-controls="during-the-meeting"
                   aria-expanded={false}
                   className="usa-button usa-button--unstyled"
-                  data-testid="button"
+                  data-testid="collapsable-link"
                   onClick={[Function]}
                   type="button"
                 >

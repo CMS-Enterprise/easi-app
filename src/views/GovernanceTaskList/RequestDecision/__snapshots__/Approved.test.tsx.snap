@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Business owner task list approved view matches the snapshot 1`] = `
+Array [
+  <div
+    className="easi-governance-decision__info"
+    data-testid="grt-approved"
+  >
+    <h2
+      className="margin-top-0"
+    >
+      Your business case has been approved.
+    </h2>
+    <dl>
+      <dt>
+        Project Lifecycle ID
+      </dt>
+      <dd
+        className="margin-left-0 font-body-xl text-bold"
+      >
+        123456
+      </dd>
+    </dl>
+    <h3>
+      Lifecycle ID Scope
+    </h3>
+    <p
+      className="text-pre-wrap"
+    >
+      Test scope
+    </p>
+    <p
+      className="text-bold"
+    >
+      This ID expires on July 19 2021
+    </p>
+  </div>,
+  <h3>
+    Next steps
+  </h3>,
+  <div
+    className="usa-alert usa-alert--info"
+    data-testid="alert"
+  >
+    <div
+      className="usa-alert__body"
+    >
+      <p
+        className="usa-alert__text"
+      >
+        Finish these next steps to complete the governance review process.
+      </p>
+    </div>
+  </div>,
+  <p
+    className="text-pre-wrap"
+  >
+    Test next steps
+  </p>,
+  <h3>
+    Help us improve EASi
+  </h3>,
+  <a
+    aria-label="Open EASi survey in a new tab"
+    className="usa-link"
+    href="https://www.surveymonkey.com/r/JNYSMZP"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    Tell us what you think of this service (opens in a new tab)
+  </a>,
+  <div
+    className="margin-top-4"
+  >
+    <a
+      className="usa-link"
+      href="/governance-task-list/40e866cb-6bf4-4b1a-8fc6-bf0d8328cdfc"
+      onClick={[Function]}
+    >
+      Return to task list
+    </a>
+  </div>,
+]
+`;

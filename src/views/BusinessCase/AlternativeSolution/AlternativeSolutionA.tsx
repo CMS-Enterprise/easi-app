@@ -50,6 +50,7 @@ const AlternativeSolutionA = ({
           <div className="grid-container" data-testid="alternative-solution-a">
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
+                testId="formik-validation-errors"
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
               >
@@ -147,13 +148,9 @@ const AlternativeSolutionA = ({
                 )
                   ? 'alternative-solution-b'
                   : 'review';
-
-                // If final business case OR any field is filled
                 if (
                   businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED' &&
-                  alternativeSolutionHasFilledFields(
-                    formikRef?.current?.values?.alternativeA
-                  )
+                  alternativeSolutionHasFilledFields(values)
                 ) {
                   validateForm().then(err => {
                     if (Object.keys(err).length === 0) {

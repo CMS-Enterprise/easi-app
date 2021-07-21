@@ -52,9 +52,10 @@ const AlternativeSolutionB = ({
         const values = formikProps.values.alternativeB;
         const flatErrors = flattenErrors(errors);
         return (
-          <div className="grid-container">
+          <div className="grid-container" data-testid="alternative-solution-b">
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
+                testId="formik-validation-errors"
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
               >

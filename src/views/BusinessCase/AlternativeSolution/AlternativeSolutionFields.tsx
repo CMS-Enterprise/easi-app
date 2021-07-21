@@ -31,7 +31,7 @@ const AlternativeSolutionFields = ({
 
   return (
     <>
-      <div>
+      <div data-testid="alternative-solution-fields">
         <FieldGroup
           scrollElement={`${altId}.title`}
           error={!!flatErrors[`${altId}.title`]}
@@ -128,6 +128,7 @@ const AlternativeSolutionFields = ({
         <FieldGroup
           scrollElement={`${altId}.security.isApproved`}
           error={!!flatErrors[`${altId}.security.isApproved`]}
+          data-testid="security-approval"
         >
           <fieldset className="usa-fieldset margin-top-4">
             <legend className="usa-label">
@@ -168,6 +169,7 @@ const AlternativeSolutionFields = ({
           <FieldGroup
             scrollElement={`${altId}.security.isBeingReviewed`}
             error={!!flatErrors[`${altId}.security.isBeingReviewed`]}
+            data-testid="security-approval-in-progress"
           >
             <fieldset className="usa-fieldset margin-top-4">
               <legend className="usa-label margin-bottom-1">
@@ -331,6 +333,7 @@ const AlternativeSolutionFields = ({
         <FieldGroup
           scrollElement={`${altId}.hasUserInterface`}
           error={!!flatErrors[`${altId}.hasUserInterface`]}
+          data-testid="user-interface-group"
         >
           <fieldset className="usa-fieldset margin-top-4">
             <legend className="usa-label">
