@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#####
+## Only alert on master branch
+#####
+# [[ $GITHUB_REF = 'refs/heads/master' ]] || exit 0
+
+NOW=$(date '+%s')
+
+pretext="$GITHUB_REF branch failure!"
+title="Build #$GITHUB_RUN_ID failed on job $GITHUB_JOB"
+message="The $GITHUB_REPOSITORY $GITHUB_REF branch broke on job $GITHUB_JOB! Contact $GITHUB_ACTOR for more information."
+github_run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_NUMBER"
+
+#####
+## Announce in Slack channel
+#####
+# 'color' can be any hex code or the key words 'good', 'warning', or 'danger'
+color="warning"
+if [[ $GITHUB_JOB = *"deploy"* ]]; then
+  color="danger"
+fi
+
+slack_payload=$(
+cat <<EOM
+{
+    "channel": "#oit-easi-test-alerts",
+    "attachments": [
+        {
+            "fallback": "$message $github_run_url",
+            "color": "$color",
+            "pretext": "$pretext",
+            "author_name": "$GITHUB_ACTOR",
+            "title": "$title",
+            "title_link": "$github_run_url",
+            "text": "$message",
+            "ts": $NOW
+        }
+    ]
+}
+EOM
+)
+
+echo
+echo "Slack Payload:"
+echo "$slack_payload"
+echo
+
+curl -X POST --data-urlencode payload="$slack_payload" "$SLACK_WEBHOOK_URL"
