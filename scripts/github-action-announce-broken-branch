@@ -25,7 +25,7 @@ fi
 slack_payload=$(
 cat <<EOM
 {
-    "channel": "#oit-easi-test-alerts",
+    "channel": "#oit-easi-alerts",
     "attachments": [
         {
             "fallback": "$message $github_run_url",
