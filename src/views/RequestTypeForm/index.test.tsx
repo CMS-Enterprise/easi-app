@@ -6,7 +6,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
-import CreateSystemIntake from 'queries/SystemIntakeQueries';
+import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import SystemIntake from 'views/SystemIntake';

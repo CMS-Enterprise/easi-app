@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client';
 
-export default gql`
+// eslint-disable-next-line import/prefer-default-export
+export const CreateSystemIntake = gql`
   mutation CreateSystemIntake($input: CreateSystemIntakeInput!) {
     createSystemIntake(input: $input) {
       id

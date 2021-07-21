@@ -22,7 +22,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
-import CreateSystemIntake from 'queries/SystemIntakeQueries';
+import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
