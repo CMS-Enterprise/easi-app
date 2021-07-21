@@ -55,6 +55,8 @@ jobs:
           key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             v1-yarn-
+      - name: Simulate job failure
+        run: exit 1
       - name: Install yarn dependencies
         run: yarn install
       - name: Install go modules
