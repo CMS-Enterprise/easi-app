@@ -13,22 +13,22 @@ import (
 
 type fetchMetrics func(context context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error)
 
-// NewMetricsHandler is a constructor for MetricsHandler
-func NewMetricsHandler(base HandlerBase, fetch fetchMetrics) MetricsHandler {
-	return MetricsHandler{
+// NewSystemIntakeMetricsHandler is a constructor for SystemIntakeMetricsHandler
+func NewSystemIntakeMetricsHandler(base HandlerBase, fetch fetchMetrics) SystemIntakeMetricsHandler {
+	return SystemIntakeMetricsHandler{
 		FetchMetrics: fetch,
 		HandlerBase:  base,
 	}
 }
 
-// MetricsHandler is the handler for retrieving metrics
-type MetricsHandler struct {
+// SystemIntakeMetricsHandler is the handler for retrieving metrics
+type SystemIntakeMetricsHandler struct {
 	HandlerBase
 	FetchMetrics fetchMetrics
 }
 
 // Handle handles a web request and returns a metrics digest
-func (h MetricsHandler) Handle() http.HandlerFunc {
+func (h SystemIntakeMetricsHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
@@ -87,4 +87,21 @@ func (h MetricsHandler) Handle() http.HandlerFunc {
 			return
 		}
 	}
+}
+
+// NewAccessibilityMetricsHandler is a constructor for AccessibilityMetricsHandler
+func NewAccessibilityMetricsHandler(base HandlerBase) AccessibilityMetricsHandler {
+	return AccessibilityMetricsHandler{
+		HandlerBase: base,
+	}
+}
+
+// AccessibilityMetricsHandler is the handler for retrieving accessibility metrics
+type AccessibilityMetricsHandler struct {
+	HandlerBase
+}
+
+// Handle handles a web request and returns a metrics csv file
+func (h AccessibilityMetricsHandler) Handle() http.HandlerFunc {
+	return func(_ http.ResponseWriter, _ *http.Request) {}
 }

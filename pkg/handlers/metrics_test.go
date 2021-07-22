@@ -40,7 +40,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 		req, err := http.NewRequest("GET", u.String(), nil)
 		s.NoError(err)
 
-		MetricsHandler{
+		SystemIntakeMetricsHandler{
 			FetchMetrics: fetchMetrics,
 			HandlerBase:  s.base,
 		}.Handle()(rr, req)
@@ -118,7 +118,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 			req, err := http.NewRequest("GET", u.String(), nil)
 			s.NoError(err)
 
-			MetricsHandler{
+			SystemIntakeMetricsHandler{
 				FetchMetrics: fetchMetrics,
 				HandlerBase:  s.base,
 			}.Handle()(rr, req)
@@ -147,7 +147,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 		req, err := http.NewRequest("GET", u.String(), nil)
 		s.NoError(err)
 
-		MetricsHandler{
+		SystemIntakeMetricsHandler{
 			FetchMetrics: failFetchMetrics,
 			HandlerBase:  s.base,
 		}.Handle()(rr, req)
@@ -160,7 +160,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 		req, err := http.NewRequest("POST", metricsURL.String(), nil)
 		s.NoError(err)
 
-		MetricsHandler{
+		SystemIntakeMetricsHandler{
 			FetchMetrics: fetchMetrics,
 			HandlerBase:  s.base,
 		}.Handle()(rr, req)
