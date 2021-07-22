@@ -3,6 +3,7 @@ package storage
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
@@ -21,6 +22,14 @@ type StoreTestSuite struct {
 	db     *sqlx.DB
 	logger *zap.Logger
 	store  *Store
+}
+
+// EqualTime uses time.Time's Equal() to check for equality
+// and wraps failures with useful error messages.
+func (s StoreTestSuite) EqualTime(expected, actual time.Time) {
+	if !actual.Equal(expected) {
+		s.Failf("times were not equal", "expected %v, got %v", expected, actual)
+	}
 }
 
 func TestStoreTestSuite(t *testing.T) {
