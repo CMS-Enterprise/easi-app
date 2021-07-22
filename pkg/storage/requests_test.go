@@ -175,7 +175,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.Equal(myRequests[0].SubmittedAt, intakeThatIsMine.SubmittedAt)
 		s.Equal(myRequests[0].Status, "INTAKE_DRAFT")
 		s.Nil(myRequests[0].LifecycleID.Ptr())
-		s.True(myRequests[0].NextMeetingDate.Equal(tomorrow))
+		s.EqualTime(*myRequests[0].NextMeetingDate, tomorrow)
 
 		s.Equal(myRequests[1].ID, accessibilityRequestThatIsMine.ID)
 		s.Equal(myRequests[1].Type, model.RequestType("ACCESSIBILITY_REQUEST"))
@@ -183,7 +183,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.Equal(myRequests[1].SubmittedAt, accessibilityRequestThatIsMine.CreatedAt)
 		s.Equal(myRequests[1].Status, "OPEN")
 		s.Nil(myRequests[1].LifecycleID.Ptr())
-		s.Equal(*myRequests[1].NextMeetingDate, testDate.Date)
+		s.EqualTime(*myRequests[1].NextMeetingDate, testDate.Date)
 
 		s.Equal(myRequests[2].ID, intakeWithLifecycleID.ID)
 		s.Equal(myRequests[2].Type, model.RequestType("GOVERNANCE_REQUEST"))
