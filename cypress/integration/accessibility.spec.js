@@ -283,4 +283,57 @@ describe('Accessibility Requests', () => {
       });
     });
   });
+
+  describe('request status', () => {
+    beforeEach(() => {
+      cy.localLogin({ name: 'ADMI', role: 'EASI_D_508_USER' });
+      cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');
+      cy.get('[data-testid="page-loading"]').should('exist');
+      cy.get('[data-testid="page-loading"]').should('not.exist');
+    });
+
+    it('sets the status to In Remediation', () => {
+      cy.get('a').contains('Change').click();
+      cy.get('#RequestStatus-Remediation')
+        .check({ force: true })
+        .should('be.checked');
+      cy.get('button').contains('Change status').click();
+
+      cy.get('dd').contains('In remediation').should('exist');
+      cy.get('a').contains('Home').click();
+      cy.get('th')
+        .contains('Seeded 508 Request')
+        .parent()
+        .siblings()
+        .eq(3)
+        .within(() => {
+          cy.get('span').contains('In remediation');
+          const today = new Date().toISOString();
+          const formattedDate = formatDate(today);
+          cy.get('span').contains(`changed on ${formattedDate}`);
+        });
+    });
+
+    it('sets the status to Closed', () => {
+      cy.get('a').contains('Change').click();
+      cy.get('#RequestStatus-Closed')
+        .check({ force: true })
+        .should('be.checked');
+      cy.get('button').contains('Change status').click();
+
+      cy.get('dd').contains('Closed').should('exist');
+      cy.get('a').contains('Home').click();
+      cy.get('th')
+        .contains('Seeded 508 Request')
+        .parent()
+        .siblings()
+        .eq(3)
+        .within(() => {
+          cy.get('span').contains('Closed');
+          const today = new Date().toISOString();
+          const formattedDate = formatDate(today);
+          cy.get('span').contains(`changed on ${formattedDate}`);
+        });
+    });
+  });
 });
