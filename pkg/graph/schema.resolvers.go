@@ -993,11 +993,26 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	}
 
 	if input.Contract != nil {
+		// set the fields to the values we receive
 		intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
 		intake.Contractor = null.StringFromPtr(input.Contract.Contractor)
 		intake.ContractVehicle = null.StringFromPtr(input.Contract.Vehicle)
-		intake.ContractStartDate = input.Contract.StartDate
-		intake.ContractEndDate = input.Contract.EndDate
+		if input.Contract.StartDate != nil {
+			intake.ContractStartDate = input.Contract.StartDate
+		}
+		if input.Contract.EndDate != nil {
+			intake.ContractEndDate = input.Contract.EndDate
+		}
+
+		// in case hasContract has changed, clear the other fields
+		if input.Contract.HasContract != nil {
+			if *input.Contract.HasContract == "NOT_STARTED" || *input.Contract.HasContract == "NOT_NEEDED" {
+				intake.Contractor = null.StringFromPtr(nil)
+				intake.ContractVehicle = null.StringFromPtr(nil)
+				intake.ContractStartDate = nil
+				intake.ContractEndDate = nil
+			}
+		}
 	}
 
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
