@@ -1253,4 +1253,18 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 
 	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
 	s.Equal(respIntake.CurrentStage, "Just an idea")
+
+	fundingSource := respIntake.FundingSource
+	s.Equal(fundingSource.FundingNumber, "123456")
+	s.True(fundingSource.IsFunded)
+	s.Equal(fundingSource.Source, "Prog Ops")
+
+	costs := respIntake.Costs
+	s.Equal(costs.ExpectedIncreaseAmount, "A little bit")
+	s.Equal(costs.IsExpectingIncrease, "Yes")
+
+	contract := respIntake.Contract
+	s.Equal(contract.HasContract, "HAVE_CONTRACT")
+	s.Equal(contract.Contractor, "Best Contractor Evar")
+	s.Equal(contract.Vehicle, "Toyota Prius")
 }
