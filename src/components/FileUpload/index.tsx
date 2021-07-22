@@ -12,7 +12,8 @@ type FileUploadProps = {
   disabled?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
-} & JSX.IntrinsicElements['input'];
+  inputProps: JSX.IntrinsicElements['input'];
+};
 
 const FileUpload = (props: FileUploadProps) => {
   const {
@@ -22,7 +23,8 @@ const FileUpload = (props: FileUploadProps) => {
     // multiple = false,
     disabled = false,
     onChange,
-    onBlur
+    onBlur,
+    inputProps
   } = props;
   const [file, setFile] = useState<File>(null);
   const [error, setError] = useState(false);
@@ -118,6 +120,7 @@ const FileUpload = (props: FileUploadProps) => {
           onChange={handleChange}
           onBlur={onBlur}
           data-testid="file-upload-input"
+          {...inputProps}
         />
       </div>
       <div id="FileUpload-Description" className="sr-only">
