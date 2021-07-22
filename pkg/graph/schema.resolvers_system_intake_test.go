@@ -1194,8 +1194,6 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 		}
 	}
 
-	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
-	// but it wasn't working for me.
 	s.client.MustPost(fmt.Sprintf(
 		`mutation {
 			updateSystemIntakeContractDetails(input: {
@@ -1304,8 +1302,6 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 		}
 	}
 
-	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
-	// but it wasn't working for me.
 	s.client.MustPost(fmt.Sprintf(
 		`mutation {
 			updateSystemIntakeContractDetails(input: {
@@ -1334,4 +1330,52 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 	s.Nil(fundingSource.FundingNumber)
 	s.False(fundingSource.IsFunded)
 	s.Nil(fundingSource.Source)
+}
+
+func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				ID    string
+				Costs struct {
+					ExpectedIncreaseAmount *string
+					IsExpectingIncrease    string
+				}
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				costs: {
+					expectedIncreaseAmount: ""
+					isExpectingIncrease: "No"
+				}
+			}) {
+				systemIntake {
+					id
+					costs {
+						expectedIncreaseAmount
+						isExpectingIncrease
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
+	costs := respIntake.Costs
+	s.Nil(costs.ExpectedIncreaseAmount)
+	s.Equal(costs.IsExpectingIncrease, "No")
 }
