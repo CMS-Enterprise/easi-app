@@ -244,10 +244,15 @@ const New = () => {
                           setFieldValue('file', e.currentTarget?.files?.[0]);
                         }}
                         accept=".pdf,.doc,.docx,.xls,.xlsx"
+                        inputProps={{
+                          'aria-expanded': !!values.file,
+                          'aria-controls': 'file-type'
+                        }}
                       />
                     </FieldGroup>
                     {values.file && (
                       <FieldGroup
+                        id="file-type"
                         scrollElement="documentType.commonType"
                         error={!!flatErrors['documentType.commonType']}
                       >
