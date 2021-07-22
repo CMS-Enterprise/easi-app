@@ -962,6 +962,17 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 
 	intake.ProcessStatus = null.StringFrom(*input.CurrentStage)
 
+	intake.ExistingFunding = null.BoolFrom(*input.FundingSource.IsFunded)
+	intake.FundingSource = null.StringFrom(*input.FundingSource.Source)
+	intake.FundingNumber = null.StringFrom(*input.FundingSource.FundingNumber)
+
+	intake.CostIncreaseAmount = null.StringFrom(*input.Costs.ExpectedIncreaseAmount)
+	intake.CostIncrease = null.StringFrom(*input.Costs.IsExpectingIncrease)
+
+	intake.ExistingContract = null.StringFrom(*input.Contract.HasContract)
+	intake.Contractor = null.StringFrom(*input.Contract.Contractor)
+	intake.ContractVehicle = null.StringFrom(*input.Contract.Vehicle)
+
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
