@@ -962,21 +962,34 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 
 	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
 
-	if null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
-		intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
-		intake.FundingSource = null.StringFromPtr(input.FundingSource.Source)
-		intake.FundingNumber = null.StringFromPtr(input.FundingSource.FundingNumber)
-	}
+	if input.FundingSource != nil {
+		if null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
+			intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
+			intake.FundingSource = null.StringFromPtr(input.FundingSource.Source)
+			intake.FundingNumber = null.StringFromPtr(input.FundingSource.FundingNumber)
+		}
 
-	if !null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
-		intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
-		intake.FundingSource = null.StringFromPtr(nil)
-		intake.FundingNumber = null.StringFromPtr(nil)
+		if !null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
+			intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
+			intake.FundingSource = null.StringFromPtr(nil)
+			intake.FundingNumber = null.StringFromPtr(nil)
+		}
 	}
 
 	if input.Costs != nil {
 		intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
 		intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+
+		if input.Costs.IsExpectingIncrease != nil {
+			if *input.Costs.IsExpectingIncrease == "Yes" {
+				intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
+				intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+			}
+			if *input.Costs.IsExpectingIncrease != "Yes" {
+				intake.CostIncreaseAmount = null.StringFromPtr(nil)
+				intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+			}
+		}
 	}
 
 	if input.Contract != nil {
