@@ -960,21 +960,32 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 		return nil, err
 	}
 
-	intake.ProcessStatus = null.StringFrom(*input.CurrentStage)
+	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
 
-	intake.ExistingFunding = null.BoolFrom(*input.FundingSource.IsFunded)
-	intake.FundingSource = null.StringFrom(*input.FundingSource.Source)
-	intake.FundingNumber = null.StringFrom(*input.FundingSource.FundingNumber)
+	if null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
+		intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
+		intake.FundingSource = null.StringFromPtr(input.FundingSource.Source)
+		intake.FundingNumber = null.StringFromPtr(input.FundingSource.FundingNumber)
+	}
 
-	intake.CostIncreaseAmount = null.StringFrom(*input.Costs.ExpectedIncreaseAmount)
-	intake.CostIncrease = null.StringFrom(*input.Costs.IsExpectingIncrease)
+	if !null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
+		intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
+		intake.FundingSource = null.StringFromPtr(nil)
+		intake.FundingNumber = null.StringFromPtr(nil)
+	}
 
-	intake.ExistingContract = null.StringFrom(*input.Contract.HasContract)
-	intake.Contractor = null.StringFrom(*input.Contract.Contractor)
-	intake.ContractVehicle = null.StringFrom(*input.Contract.Vehicle)
+	if input.Costs != nil {
+		intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
+		intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+	}
 
-	intake.ContractStartDate = input.Contract.StartDate
-	intake.ContractEndDate = input.Contract.EndDate
+	if input.Contract != nil {
+		intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
+		intake.Contractor = null.StringFromPtr(input.Contract.Contractor)
+		intake.ContractVehicle = null.StringFromPtr(input.Contract.Vehicle)
+		intake.ContractStartDate = input.Contract.StartDate
+		intake.ContractEndDate = input.Contract.EndDate
+	}
 
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
 	return &model.UpdateSystemIntakePayload{
