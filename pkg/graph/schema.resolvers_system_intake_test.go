@@ -1381,3 +1381,97 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
 	s.Nil(costs.ExpectedIncreaseAmount)
 	s.Equal(costs.IsExpectingIncrease, "No")
 }
+
+func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
+	ctx := context.Background()
+
+	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
+	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:            models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:       models.SystemIntakeRequestTypeNEW,
+		ExistingContract:  null.StringFrom("HAVE_CONTRACT"),
+		Contractor:        null.StringFrom("Best Contractor Evar"),
+		ContractVehicle:   null.StringFrom("Toyota Prius"),
+		ContractStartDate: &contractStartDate,
+		ContractEndDate:   &contractEndDate,
+	})
+
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				ID           string
+				CurrentStage string
+				Contract     struct {
+					Contractor *string
+					EndDate    struct {
+						Day   *string
+						Month *string
+						Year  *string
+					}
+					HasContract string
+					StartDate   struct {
+						Day   *string
+						Month *string
+						Year  *string
+					}
+					Vehicle *string
+				}
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				contract: {
+					contractor: ""
+					startDate: null
+					hasContract: "NOT_STARTED"
+					endDate: null
+					vehicle: ""
+				}
+			}) {
+				systemIntake {
+					id
+					contract {
+						contractor
+						endDate {
+							day
+							month
+							year
+						}
+						hasContract
+						startDate {
+							day
+							month
+							year
+						}
+						vehicle
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
+	contract := respIntake.Contract
+	s.Equal(contract.HasContract, "NOT_STARTED")
+	s.Nil(contract.Contractor)
+	s.Nil(contract.Vehicle)
+
+	startDate := contract.StartDate
+	s.Nil(startDate.Day)
+	s.Nil(startDate.Month)
+	s.Nil(startDate.Year)
+
+	endDate := contract.EndDate
+	s.Nil(endDate.Day)
+	s.Nil(endDate.Month)
+	s.Nil(endDate.Year)
+}
