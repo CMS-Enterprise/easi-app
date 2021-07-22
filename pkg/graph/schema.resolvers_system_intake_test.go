@@ -1214,7 +1214,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 					contractor: "Best Contractor Evar"
 					endDate: "2022-02-03T00:00:00Z"
 					hasContract: "HAVE_CONTRACT"
-					startDate: "2021-01-02T00:00:00Z"
+					startDate: "2021-11-12T00:00:00Z"
 					vehicle: "Toyota Prius"
 				}
 			}) {
@@ -1267,4 +1267,14 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 	s.Equal(contract.HasContract, "HAVE_CONTRACT")
 	s.Equal(contract.Contractor, "Best Contractor Evar")
 	s.Equal(contract.Vehicle, "Toyota Prius")
+
+	startDate := contract.StartDate
+	s.Equal(startDate.Day, "12")
+	s.Equal(startDate.Month, "11")
+	s.Equal(startDate.Year, "2021")
+
+	endDate := contract.EndDate
+	s.Equal(endDate.Day, "3")
+	s.Equal(endDate.Month, "2")
+	s.Equal(endDate.Year, "2022")
 }
