@@ -280,6 +280,7 @@ type ComplexityRoot struct {
 		ID              func(childComplexity int) int
 		Lcid            func(childComplexity int) int
 		Name            func(childComplexity int) int
+		NextMeetingDate func(childComplexity int) int
 		Status          func(childComplexity int) int
 		StatusCreatedAt func(childComplexity int) int
 		SubmittedAt     func(childComplexity int) int
@@ -1778,6 +1779,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Request.Name(childComplexity), true
 
+	case "Request.nextMeetingDate":
+		if e.complexity.Request.NextMeetingDate == nil {
+			break
+		}
+
+		return e.complexity.Request.NextMeetingDate(childComplexity), true
+
 	case "Request.status":
 		if e.complexity.Request.Status == nil {
 			break
@@ -2641,6 +2649,7 @@ type Request {
   status: String!
   statusCreatedAt: Time
   lcid: String
+  nextMeetingDate: Time
 }
 
 type RequestsConnection {
@@ -9803,6 +9812,38 @@ func (ec *executionContext) _Request_lcid(ctx context.Context, field graphql.Col
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Request_nextMeetingDate(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NextMeetingDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _RequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.RequestEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -16460,6 +16501,8 @@ func (ec *executionContext) _Request(ctx context.Context, sel ast.SelectionSet, 
 			out.Values[i] = ec._Request_statusCreatedAt(ctx, field, obj)
 		case "lcid":
 			out.Values[i] = ec._Request_lcid(ctx, field, obj)
+		case "nextMeetingDate":
+			out.Values[i] = ec._Request_nextMeetingDate(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
