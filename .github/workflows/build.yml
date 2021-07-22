@@ -171,7 +171,7 @@ jobs:
           restore-keys: |
             v1-yarn-
       - run: yarn run build-storybook
-      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
+      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
         with:
           name: storybook-build
           path: storybook-static
@@ -284,7 +284,7 @@ jobs:
           ./scripts/testsuite
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
       - name: Upload backend test artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
         with:
           name: backend-tests
           path: results
@@ -392,13 +392,13 @@ jobs:
         run: |
           ./scripts/run-cypress-test-docker-github-actions
       - name: Upload cypress videos
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
         with:
           name: cypress-videos
           path: cypress/videos
           retention-days: 14
       - name: Upload cypress screenshots
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
         with:
           name: cypress-screenshots
           path: cypress/screenshots
