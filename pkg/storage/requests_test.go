@@ -19,8 +19,9 @@ func (s StoreTestSuite) TestMyRequests() {
 	requester := &authentication.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
 	ctx := appcontext.WithPrincipal(context.Background(), requester)
 
-	tomorrow := time.Now().Add(time.Hour * 24)
-	yesterday := time.Now().Add(time.Hour * -24)
+	// Round to microsecond to avoid truncation during roundtrip to database
+	tomorrow := time.Now().Add(time.Hour * 24).Round(time.Microsecond)
+	yesterday := time.Now().Add(time.Hour * -24).Round(time.Microsecond)
 
 	s.Run("returns only 508 and intake requests tied to the current user", func() {
 		intake := testhelpers.NewSystemIntake()
