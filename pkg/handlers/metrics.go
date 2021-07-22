@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"bytes"
 	"context"
+	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -103,5 +105,28 @@ type AccessibilityMetricsHandler struct {
 
 // Handle handles a web request and returns a metrics csv file
 func (h AccessibilityMetricsHandler) Handle() http.HandlerFunc {
-	return func(_ http.ResponseWriter, _ *http.Request) {}
+	return func(w http.ResponseWriter, r *http.Request) {
+		var data = [][]string{{"Line1", "Hello"}, {"Line2", "World"}}
+		buffer := &bytes.Buffer{} // creates IO Writer
+
+		writer := csv.NewWriter(buffer)
+
+		for _, value := range data {
+			err := writer.Write(value)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+		}
+
+		writer.Flush()
+
+		w.Header().Set("Content-Type", "text/csv")
+		w.Header().Set("Content-Disposition", "attachment;filename=AccessibilityMetrics.csv")
+		_, err := w.Write(buffer.Bytes())
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+	}
 }
