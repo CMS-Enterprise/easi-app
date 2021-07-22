@@ -14,7 +14,9 @@ const Rejected = ({ intake }: RejectedProps) => {
 
   return (
     <>
-      <h2 className="margin-top-0">{t('decision.bizCaseRejected')}</h2>
+      <h2 className="margin-top-0" data-testid="grt-rejected">
+        {t('decision.bizCaseRejected')}
+      </h2>
       <h3>{t('decision.reasons')}</h3>
       <p>{intake.rejectionReason}</p>
       {intake.decisionNextSteps && (
