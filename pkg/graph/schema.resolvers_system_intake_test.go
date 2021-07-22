@@ -1151,3 +1151,106 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.Equal(respIntake.BusinessNeed, "My need")
 	s.False(respIntake.NeedsEaSupport)
 }
+
+func (s GraphQLTestSuite) TestUpdateContractDetails() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				ID            string
+				CurrentStage  string
+				FundingSource struct {
+					FundingNumber string
+					IsFunded      bool
+					Source        string
+				}
+				Costs struct {
+					ExpectedIncreaseAmount string
+					IsExpectingIncrease    string
+				}
+				Contract struct {
+					Contractor string
+					EndDate    struct {
+						Day   string
+						Month string
+						Year  string
+					}
+					HasContract string
+					StartDate   struct {
+						Day   string
+						Month string
+						Year  string
+					}
+					Vehicle string
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				currentStage: "Just an idea"
+				fundingSource: {
+					fundingNumber: "123456"
+					isFunded: true
+					source: "Prog Ops"
+				}
+				costs: {
+					expectedIncreaseAmount: "A little bit"
+					isExpectingIncrease: "Yes"
+				}
+				contract: {
+					contractor: "Best Contractor Evar"
+					endDate: "2022-02-03T00:00:00Z"
+					hasContract: "HAVE_CONTRACT"
+					startDate: "2021-01-02T00:00:00Z"
+					vehicle: "Toyota Prius"
+				}
+			}) {
+				systemIntake {
+					id
+					currentStage
+					fundingSource {
+						fundingNumber
+						isFunded
+						source
+					}
+					costs {
+						expectedIncreaseAmount
+						isExpectingIncrease
+					}
+					contract {
+						contractor
+						endDate {
+							day
+							month
+							year
+						}
+						hasContract
+						startDate {
+							day
+							month
+							year
+						}
+						vehicle
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
+	s.Equal(respIntake.CurrentStage, "Just an idea")
+}
