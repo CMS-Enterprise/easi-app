@@ -893,7 +893,7 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
 
 	if input.Isso.IsPresent {
-		intake.ISSOName = null.StringFrom(*input.Isso.Name)
+		intake.ISSOName = null.StringFromPtr(input.Isso.Name)
 	}
 
 	if !input.Isso.IsPresent {
@@ -943,10 +943,10 @@ func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
-	intake.ProjectName = null.StringFrom(*input.RequestName)
-	intake.BusinessNeed = null.StringFrom(*input.BusinessNeed)
-	intake.Solution = null.StringFrom(*input.BusinessSolution)
-	intake.EASupportRequest = null.BoolFrom(*input.NeedsEaSupport)
+	intake.ProjectName = null.StringFromPtr(input.RequestName)
+	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
+	intake.Solution = null.StringFromPtr(input.BusinessSolution)
+	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
 
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
 	return &model.UpdateSystemIntakePayload{
