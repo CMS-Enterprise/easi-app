@@ -1336,8 +1336,10 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		Status:             models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:        models.SystemIntakeRequestTypeNEW,
+		CostIncreaseAmount: null.StringFrom("Just a little"),
+		CostIncrease:       null.StringFrom("Yes"),
 	})
 	s.NoError(intakeErr)
 
