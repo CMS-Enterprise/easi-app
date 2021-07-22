@@ -973,6 +973,9 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	intake.Contractor = null.StringFrom(*input.Contract.Contractor)
 	intake.ContractVehicle = null.StringFrom(*input.Contract.Vehicle)
 
+	intake.ContractStartDate = input.Contract.StartDate
+	intake.ContractEndDate = input.Contract.EndDate
+
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
