@@ -587,6 +587,33 @@ input UpdateSystemIntakeRequestDetailsInput {
   needsEaSupport: Boolean
 }
 
+input SystemIntakeFundingSourceInput {
+  fundingNumber: String
+  isFunded: Boolean
+  source: String
+}
+
+input SystemIntakeCostsInput {
+  expectedIncreaseAmount: String
+  isExpectingIncrease: String
+}
+
+input SystemIntakeContractInput {
+  contractor: String
+  endDate: Time
+  hasContract: String
+  startDate: Time
+  vehicle: String
+}
+
+input UpdateSystemIntakeContractDetailsInput {
+  id: UUID!
+  currentStage: String
+  fundingSource: SystemIntakeFundingSourceInput
+  costs: SystemIntakeCostsInput
+  contract: SystemIntakeContractInput
+}
+
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -782,6 +809,7 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
+  updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
 }
 
 type Query {

@@ -272,12 +272,31 @@ type SystemIntakeContract struct {
 	Vehicle     *string       `json:"vehicle"`
 }
 
+type SystemIntakeContractInput struct {
+	Contractor  *string    `json:"contractor"`
+	EndDate     *time.Time `json:"endDate"`
+	HasContract *string    `json:"hasContract"`
+	StartDate   *time.Time `json:"startDate"`
+	Vehicle     *string    `json:"vehicle"`
+}
+
 type SystemIntakeCosts struct {
 	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
 	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
 }
 
+type SystemIntakeCostsInput struct {
+	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
+	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
+}
+
 type SystemIntakeFundingSource struct {
+	FundingNumber *string `json:"fundingNumber"`
+	IsFunded      *bool   `json:"isFunded"`
+	Source        *string `json:"source"`
+}
+
+type SystemIntakeFundingSourceInput struct {
 	FundingNumber *string `json:"fundingNumber"`
 	IsFunded      *bool   `json:"isFunded"`
 	Source        *string `json:"source"`
@@ -367,6 +386,14 @@ type UpdateSystemIntakeContactDetailsInput struct {
 	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
 	Isso            *SystemIntakeISSOInput                   `json:"isso"`
 	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
+}
+
+type UpdateSystemIntakeContractDetailsInput struct {
+	ID            uuid.UUID                       `json:"id"`
+	CurrentStage  *string                         `json:"currentStage"`
+	FundingSource *SystemIntakeFundingSourceInput `json:"fundingSource"`
+	Costs         *SystemIntakeCostsInput         `json:"costs"`
+	Contract      *SystemIntakeContractInput      `json:"contract"`
 }
 
 type UpdateSystemIntakePayload struct {
