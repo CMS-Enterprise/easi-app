@@ -1278,3 +1278,60 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 	s.Equal(endDate.Month, "2")
 	s.Equal(endDate.Year, "2022")
 }
+
+func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:          models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:     models.SystemIntakeRequestTypeNEW,
+		ExistingFunding: null.BoolFrom(true),
+		FundingSource:   null.StringFrom("Prog Ops"),
+		FundingNumber:   null.StringFrom("123456"),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				ID            string
+				FundingSource struct {
+					FundingNumber *string
+					IsFunded      bool
+					Source        *string
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				fundingSource: {
+					fundingNumber: ""
+					isFunded: false
+					source: ""
+				}
+			}) {
+				systemIntake {
+					id
+					fundingSource {
+						fundingNumber
+						isFunded
+						source
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
+	fundingSource := respIntake.FundingSource
+	s.Nil(fundingSource.FundingNumber)
+	s.False(fundingSource.IsFunded)
+	s.Nil(fundingSource.Source)
+}
