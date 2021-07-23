@@ -8,7 +8,26 @@ import { formatDate } from '../../src/utils/date';
 describe('Accessibility Requests', () => {
   it('can create a request and see its details', () => {
     cy.localLogin({ name: 'A11Y' });
-    cy.accessibility.create508Request();
+
+    cy.visit('/508/requests/new');
+    cy.contains('h1', 'Request 508 testing');
+    cy.contains('label', "Choose the application you'd like to test");
+    cy.get('#508Request-IntakeId')
+      .type('TACO - 000000{enter}')
+      .should('have.value', 'TACO - 000000');
+    cy.contains('button', 'Send 508 testing request').click();
+    cy.location().should(loc => {
+      expect(loc.pathname).to.match(/\/508\/requests\/.{36}/);
+    });
+    cy.contains('li', 'Home');
+    cy.contains('li', 'TACO');
+    cy.contains(
+      '.usa-alert--success',
+      '508 testing request created. We have sent you a confirmation email.'
+    );
+    cy.contains('h1', 'TACO');
+    cy.contains('h2', 'Next step: Provide your documents');
+    cy.contains('.usa-button', 'Upload a document');
 
     cy.get('.accessibility-request__side-nav').within(() => {
       cy.contains('h2', 'Test Dates and Scores');
@@ -57,14 +76,22 @@ describe('Accessibility Requests', () => {
 
   it('adds and removes a document from a 508 request as the owner', () => {
     cy.localLogin({ name: 'CMSU' });
-    cy.accessibility.create508Request();
+    cy.seedAccessibilityRequest({ euaUserID: 'CMSU', name: 'TACO' }).then(
+      data => {
+        cy.visit(`/508/requests/${data.id}`);
+      }
+    );
     cy.accessibility.addAndRemoveDocument();
     cy.contains('h2', 'Next step: Provide your documents');
   });
 
   it('adds and removes a document from a 508 request as an admin', () => {
     cy.localLogin({ name: 'CMSU' });
-    cy.accessibility.create508Request();
+    cy.seedAccessibilityRequest({ euaUserID: 'CMSU', name: 'TACO' }).then(
+      data => {
+        cy.visit(`/508/requests/${data.id}`);
+      }
+    );
 
     cy.url().then(requestPageUrl => {
       cy.logout();
@@ -254,6 +281,59 @@ describe('Accessibility Requests', () => {
           numOfTestDates - 1
         );
       });
+    });
+  });
+
+  describe('request status', () => {
+    beforeEach(() => {
+      cy.localLogin({ name: 'ADMI', role: 'EASI_D_508_USER' });
+      cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');
+      cy.get('[data-testid="page-loading"]').should('exist');
+      cy.get('[data-testid="page-loading"]').should('not.exist');
+    });
+
+    it('sets the status to In Remediation', () => {
+      cy.get('a').contains('Change').click();
+      cy.get('#RequestStatus-Remediation')
+        .check({ force: true })
+        .should('be.checked');
+      cy.get('button').contains('Change status').click();
+
+      cy.get('dd').contains('In remediation').should('exist');
+      cy.get('a').contains('Home').click();
+      cy.get('th')
+        .contains('Seeded 508 Request')
+        .parent()
+        .siblings()
+        .eq(3)
+        .within(() => {
+          cy.get('span').contains('In remediation');
+          const today = new Date().toISOString();
+          const formattedDate = formatDate(today);
+          cy.get('span').contains(`changed on ${formattedDate}`);
+        });
+    });
+
+    it('sets the status to Closed', () => {
+      cy.get('a').contains('Change').click();
+      cy.get('#RequestStatus-Closed')
+        .check({ force: true })
+        .should('be.checked');
+      cy.get('button').contains('Change status').click();
+
+      cy.get('dd').contains('Closed').should('exist');
+      cy.get('a').contains('Home').click();
+      cy.get('th')
+        .contains('Seeded 508 Request')
+        .parent()
+        .siblings()
+        .eq(3)
+        .within(() => {
+          cy.get('span').contains('Closed');
+          const today = new Date().toISOString();
+          const formattedDate = formatDate(today);
+          cy.get('span').contains(`changed on ${formattedDate}`);
+        });
     });
   });
 });

@@ -44,7 +44,7 @@ func (c Client) newDocumentBody(
 	requestName string,
 	requestID uuid.UUID,
 ) (string, error) {
-	requestPath := path.Join("508", "requests", requestID.String())
+	requestPath := path.Join("508", "requests", requestID.String(), "documents")
 	data := newDocument{
 		DocumentType: stringifyDocumentType(commonType, otherType),
 		RequestName:  requestName,

@@ -63,7 +63,7 @@ const Home = () => {
                 </Alert>
               </div>
             )}
-            <div className="tablet:grid-col-9">
+            <div className="tablet:grid-col-10">
               <PageHeading>{t('home:title')}</PageHeading>
               <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
                 {t('home:subtitle')}

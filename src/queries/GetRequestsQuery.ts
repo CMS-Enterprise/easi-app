@@ -12,6 +12,7 @@ export default gql`
           status
           statusCreatedAt
           lcid
+          nextMeetingDate
         }
       }
     }

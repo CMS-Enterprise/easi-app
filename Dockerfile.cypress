@@ -1,3 +1,20 @@
+FROM golang:1.15.8 AS base
+
+WORKDIR /easi/
+
+FROM base AS modules
+
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+
+FROM modules AS build
+
+COPY cmd ./cmd
+COPY pkg ./pkg
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/seed ./cmd/seed
+
 FROM cypress/base:12.19.0
 
 COPY package.json /
@@ -8,6 +25,8 @@ COPY cypress.json /
 COPY tsconfig.json /
 COPY src /src
 COPY scripts/tag_minio_file /scripts/tag_minio_file
+COPY scripts/seed_database /scripts/seed_database
+COPY --from=build /easi/bin/seed /build/seed
 
 ENTRYPOINT ["/node_modules/.bin/cypress"]
 CMD ["run"]

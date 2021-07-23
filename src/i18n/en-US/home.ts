@@ -31,7 +31,8 @@ const home = {
       name: 'Request name',
       type: 'Governance',
       submittedAt: 'Submission date',
-      status: 'Status'
+      status: 'Status',
+      nextMeetingDate: 'Upcoming meeting date'
     },
     types: {
       ACCESSIBILITY_REQUEST: 'Section 508',
