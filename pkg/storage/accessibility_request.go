@@ -183,3 +183,8 @@ func (s *Store) FetchAccessibilityRequestMetrics(_ context.Context, startTime ti
 
 	return metrics, nil
 }
+
+// FetchAccessibilityMetrics fetches data about accessibility requests
+func (s *Store) FetchAccessibilityMetrics() []models.AccessibilityMetricsLine {
+	return []models.AccessibilityMetricsLine{}
+}

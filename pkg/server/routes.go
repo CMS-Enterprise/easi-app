@@ -369,7 +369,14 @@ func (s *Server) routes(
 
 	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient, princeLambdaName)).Handle())
 
-	api.Handle("/metrics/508", handlers.NewAccessibilityMetricsHandler(base).Handle())
+	api.Handle(
+		"/metrics/508",
+		handlers.NewAccessibilityMetricsHandler(
+			services.NewFetchAccessibilityMetrics(store.FetchAccessibilityMetrics),
+			base,
+		).Handle(),
+	)
+
 	if ok, _ := strconv.ParseBool(os.Getenv("DEBUG_ROUTES")); ok {
 		// useful for debugging route issues
 		_ = s.router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {

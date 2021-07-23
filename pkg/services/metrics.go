@@ -49,3 +49,12 @@ func NewFetchMetrics(
 		return metricsDigest, nil
 	}
 }
+
+// NewFetchAccessibilityMetrics builds the datatype that converts into the csv for accessibility metrics
+func NewFetchAccessibilityMetrics(
+	fetchMetrics func() []models.AccessibilityMetricsLine,
+) func() [][]string {
+	return func() [][]string {
+		return [][]string{}
+	}
+}
