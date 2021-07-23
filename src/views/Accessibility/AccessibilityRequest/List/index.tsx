@@ -47,7 +47,7 @@ const List = () => {
       .request({
         url: `${process.env.REACT_APP_API_ADDRESS}/metrics/508`,
         responseType: 'blob',
-        method: 'POST'
+        method: 'GET'
       })
       .then(response => {
         const blob = new Blob([response.data], { type: 'application/csv' });
