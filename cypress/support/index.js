@@ -17,6 +17,7 @@
 import './accessibility';
 import './businessCase';
 import './commands';
+import './seed';
 import '@cypress/code-coverage/support';
 import './login';
 import './systemIntake';

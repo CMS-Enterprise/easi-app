@@ -45,15 +45,6 @@ export const SystemIntakeReview = ({
     }
     return hasIsso;
   };
-  const expectedCosts = () => {
-    const {
-      costs: { expectedIncreaseAmount, isExpectingIncrease }
-    } = systemIntake;
-    if (expectedIncreaseAmount) {
-      return `${yesNoMap[isExpectingIncrease]}, ${expectedIncreaseAmount}`;
-    }
-    return yesNoMap[isExpectingIncrease];
-  };
 
   return (
     <div>
@@ -191,9 +182,21 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Do you expect costs for this request to increase?" />
-            <DescriptionDefinition definition={expectedCosts()} />
+            <DescriptionTerm term="Do the costs for this request exceed what you are currently spending to meet your business need?" />
+            <DescriptionDefinition
+              definition={yesNoMap[systemIntake.costs.isExpectingIncrease]}
+            />
           </div>
+          {systemIntake.costs.isExpectingIncrease === 'YES' && (
+            <div>
+              <DescriptionTerm term="Approximately how much do you expect the cost to increase?" />
+              <DescriptionDefinition
+                definition={systemIntake.costs.expectedIncreaseAmount}
+              />
+            </div>
+          )}
+        </ReviewRow>
+        <ReviewRow>
           <div>
             <DescriptionTerm term="Do you already have a contract in place to support this effort?" />
             <DescriptionDefinition

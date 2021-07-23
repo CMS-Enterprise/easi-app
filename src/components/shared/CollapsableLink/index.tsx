@@ -37,6 +37,7 @@ const CollapsableLink = ({
         aria-controls={id}
         className={classnames({ 'text-bold': isOpen })}
         unstyled
+        data-testid="collapsable-link"
       >
         <span className={arrowClassNames} />
         {isOpen ? closeLabel || label : label}
