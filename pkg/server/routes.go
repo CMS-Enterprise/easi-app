@@ -336,19 +336,6 @@ func (s *Server) routes(
 		services.NewTakeAction(
 			store.FetchSystemIntakeByID,
 			map[models.ActionType]services.ActionExecuter{
-				models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
-					serviceConfig,
-					services.AuthorizeUserIsIntakeRequester,
-					store.UpdateSystemIntake,
-					func(c context.Context, si *models.SystemIntake) (string, error) {
-						// quick adapter to retrofit the new interface to take the place
-						// of the old interface
-						err := publisher.PublishSnapshot(c, si, nil, nil, nil, nil)
-						return "", err
-					},
-					saveAction,
-					emailClient.SendSystemIntakeSubmissionEmail,
-				),
 				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
 					services.AuthorizeUserIsIntakeRequester,
