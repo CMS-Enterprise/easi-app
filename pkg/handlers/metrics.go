@@ -92,26 +92,28 @@ func (h SystemIntakeMetricsHandler) Handle() http.HandlerFunc {
 }
 
 // NewAccessibilityMetricsHandler is a constructor for AccessibilityMetricsHandler
-func NewAccessibilityMetricsHandler(base HandlerBase) AccessibilityMetricsHandler {
+func NewAccessibilityMetricsHandler(fetchMetrics func() [][]string, base HandlerBase) AccessibilityMetricsHandler {
 	return AccessibilityMetricsHandler{
-		HandlerBase: base,
+		HandlerBase:               base,
+		fetchAccessibilityMetrics: fetchMetrics,
 	}
 }
 
 // AccessibilityMetricsHandler is the handler for retrieving accessibility metrics
 type AccessibilityMetricsHandler struct {
 	HandlerBase
+	fetchAccessibilityMetrics func() [][]string
 }
 
 // Handle handles a web request and returns a metrics csv file
 func (h AccessibilityMetricsHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var data = [][]string{{"Line1", "Hello"}, {"Line2", "World"}}
+
 		buffer := &bytes.Buffer{} // creates IO Writer
 
 		writer := csv.NewWriter(buffer)
 
-		for _, value := range data {
+		for _, value := range h.fetchAccessibilityMetrics() {
 			err := writer.Write(value)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
