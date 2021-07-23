@@ -720,6 +720,10 @@ input BasicActionInput {
   intakeId: UUID!
 }
 
+input SubmitIntakeInput {
+  id: UUID!
+}
+
 type LaunchDarklySettings {
   userKey: String!
   signedHash: String!
@@ -803,6 +807,9 @@ type Mutation {
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
+  submitIntake(
+    input: SubmitIntakeInput!
+  ): UpdateSystemIntakePayload
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload

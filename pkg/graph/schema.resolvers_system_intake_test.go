@@ -1475,3 +1475,39 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	s.Nil(endDate.Month)
 	s.Nil(endDate.Year)
 }
+
+func (s GraphQLTestSuite) TestSubmitIntake() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+		EUAUserID:   null.StringFrom("TEST"),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		SubmitIntake struct {
+			SystemIntake struct {
+				ID     string
+				Status string
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			submitIntake(input: {
+				id: "%s",
+			}) {
+				systemIntake {
+					id
+					status
+				}
+			}
+		}`, intake.ID), &resp)
+
+	respIntake := resp.SubmitIntake.SystemIntake
+	s.Equal(intake.ID.String(), respIntake.ID)
+	s.Equal(string(models.SystemIntakeStatusINTAKESUBMITTED), respIntake.Status)
+}
