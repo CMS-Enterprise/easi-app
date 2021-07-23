@@ -96,6 +96,7 @@ export type SystemIntakeForm = {
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
+  id: string;
   currentStage: string;
   fundingSource: {
     isFunded: boolean | null;
