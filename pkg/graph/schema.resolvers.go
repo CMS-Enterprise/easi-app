@@ -869,11 +869,21 @@ func (r *mutationResolver) SubmitIntake(ctx context.Context, input model.SubmitI
 		return nil, err
 	}
 
+	actorEUAID := appcontext.Principal(ctx).ID()
+	actorInfo, err := r.service.FetchUserInfo(ctx, actorEUAID)
+	if err != nil {
+		return nil, err
+	}
+
 	err = r.service.SubmitIntake(
 		ctx,
 		intake,
 		&models.Action{
-			IntakeID: &input.ID,
+			IntakeID:       &input.ID,
+			ActionType:     models.ActionTypeSUBMITINTAKE,
+			ActorEUAUserID: actorEUAID,
+			ActorName:      actorInfo.CommonName,
+			ActorEmail:     actorInfo.Email,
 		})
 	if err != nil {
 		return nil, err
