@@ -8,13 +8,7 @@ import {
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
-import { FormikProps } from 'formik';
 import { DateTime } from 'luxon';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -22,13 +16,13 @@ import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
-import { AppState } from 'reducers/rootReducer';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
-  clearSystemIntake,
-  fetchSystemIntake,
-  saveSystemIntake
-} from 'types/routines';
-import { SystemIntakeForm } from 'types/systemIntake';
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
+import { AppState } from 'reducers/rootReducer';
+import { clearSystemIntake, fetchSystemIntake } from 'types/routines';
 import { NotFoundPartial } from 'views/NotFound';
 
 import Confirmation from './Confirmation';
@@ -68,14 +62,6 @@ export const SystemIntake = () => {
     }
   );
   const queryIntake = data?.systemIntake;
-
-  const dispatchSave = () => {
-    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    dispatch(
-      saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
-    );
-    current.resetForm({ values: current.values, errors: current.errors });
-  };
 
   // Handle redirect after submitting
   useEffect(() => {
@@ -148,8 +134,7 @@ export const SystemIntake = () => {
               render={() => (
                 <ContractDetails
                   formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
+                  systemIntake={queryIntake}
                 />
               )}
             />
