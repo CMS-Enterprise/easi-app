@@ -43,12 +43,6 @@ export const SystemIntake = () => {
   const dispatch = useDispatch();
   const formikRef: any = useRef();
 
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
-  const isLoading = useSelector(
-    (state: AppState) => state.systemIntake.isLoading
-  );
   const actionError = useSelector((state: AppState) => state.action.error);
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
   const prevIsSubmitting = usePrevious(isSubmitting);
@@ -61,7 +55,7 @@ export const SystemIntake = () => {
       }
     }
   );
-  const queryIntake = data?.systemIntake;
+  const systemIntake = data?.systemIntake;
 
   // Handle redirect after submitting
   useEffect(() => {
@@ -109,14 +103,14 @@ export const SystemIntake = () => {
           </Breadcrumb>
           <Breadcrumb current>Intake Request</Breadcrumb>
         </BreadcrumbBar>
-        {isLoading === false && (
+        {!loading && (
           <Switch>
             <SecureRoute
               path="/system/:systemId/contact-details"
               render={() => (
                 <ContactDetails
                   formikRef={formikRef}
-                  systemIntake={queryIntake}
+                  systemIntake={systemIntake}
                 />
               )}
             />
@@ -125,7 +119,7 @@ export const SystemIntake = () => {
               render={() => (
                 <RequestDetails
                   formikRef={formikRef}
-                  systemIntake={queryIntake}
+                  systemIntake={systemIntake}
                 />
               )}
             />
@@ -134,7 +128,7 @@ export const SystemIntake = () => {
               render={() => (
                 <ContractDetails
                   formikRef={formikRef}
-                  systemIntake={queryIntake}
+                  systemIntake={systemIntake}
                 />
               )}
             />
