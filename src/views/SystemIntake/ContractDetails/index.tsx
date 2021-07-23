@@ -1,8 +1,10 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -25,6 +27,11 @@ import TextField from 'components/shared/TextField';
 import fundingSources from 'constants/enums/fundingSources';
 import processStages from 'constants/enums/processStages';
 import { yesNoMap } from 'data/common';
+import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
+import {
+  UpdateSystemIntakeContractDetails,
+  UpdateSystemIntakeContractDetailsVariables
+} from 'queries/types/UpdateSystemIntakeContractDetails';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -32,21 +39,38 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 type ContractDetailsProps = {
   formikRef: any;
   systemIntake: SystemIntakeForm;
-  dispatchSave: () => void;
 };
 
-const ContractDetails = ({
-  formikRef,
-  systemIntake,
-  dispatchSave
-}: ContractDetailsProps) => {
+const ContractDetails = ({ formikRef, systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
 
   const initialValues: ContractDetailsForm = {
+    id: systemIntake.id,
     currentStage: systemIntake.currentStage,
-    fundingSource: systemIntake.fundingSource,
-    costs: systemIntake.costs,
-    contract: systemIntake.contract
+    fundingSource: {
+      fundingNumber: systemIntake.fundingSource.fundingNumber,
+      isFunded: systemIntake.fundingSource.isFunded,
+      source: systemIntake.fundingSource.source
+    },
+    costs: {
+      expectedIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
+      isExpectingIncrease: systemIntake.costs.isExpectingIncrease
+    },
+    contract: {
+      contractor: systemIntake.contract.contractor,
+      endDate: {
+        day: systemIntake.contract.endDate.day,
+        month: systemIntake.contract.endDate.month,
+        year: systemIntake.contract.endDate.year
+      },
+      hasContract: systemIntake.contract.hasContract,
+      startDate: {
+        day: systemIntake.contract.startDate.day,
+        month: systemIntake.contract.startDate.month,
+        year: systemIntake.contract.startDate.year
+      },
+      vehicle: systemIntake.contract.vehicle
+    }
   };
 
   const saveExitLink = (() => {
@@ -59,10 +83,48 @@ const ContractDetails = ({
     return link;
   })();
 
+  const [mutate] = useMutation<
+    UpdateSystemIntakeContractDetails,
+    UpdateSystemIntakeContractDetailsVariables
+  >(UpdateSystemIntakeContractDetailsQuery);
+
+  const convertDates = (values: ContractDetailsForm) => {
+    const startDate = DateTime.fromObject({
+      day: Number(values.contract.startDate.day),
+      month: Number(values.contract.startDate.month),
+      year: Number(values.contract.startDate.year),
+      zone: 'UTC'
+    });
+
+    const endDate = DateTime.fromObject({
+      day: Number(values.contract.endDate.day),
+      month: Number(values.contract.endDate.month),
+      year: Number(values.contract.endDate.year),
+      zone: 'UTC'
+    });
+
+    return {
+      ...values,
+      contract: {
+        ...values.contract,
+        startDate,
+        endDate
+      }
+    };
+  };
+
+  const onSubmit = (values: ContractDetailsForm) => {
+    mutate({
+      variables: {
+        input: convertDates(values)
+      }
+    });
+  };
+
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={dispatchSave}
+      onSubmit={onSubmit}
       validationSchema={SystemIntakeValidationSchema.contractDetails}
       validateOnBlur={false}
       validateOnChange={false}
@@ -850,10 +912,16 @@ const ContractDetails = ({
                   type="button"
                   outline
                   onClick={() => {
-                    dispatchSave();
-                    formikProps.setErrors({});
-                    const newUrl = 'request-details';
-                    history.push(newUrl);
+                    mutate({
+                      variables: {
+                        input: convertDates(values)
+                      }
+                    }).then(response => {
+                      if (!response.errors) {
+                        const newUrl = 'request-details';
+                        history.push(newUrl);
+                      }
+                    });
                   }}
                 >
                   Back
@@ -863,9 +931,16 @@ const ContractDetails = ({
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
-                        dispatchSave();
-                        const newUrl = 'review';
-                        history.push(newUrl);
+                        mutate({
+                          variables: {
+                            input: convertDates(values)
+                          }
+                        }).then(response => {
+                          if (!response.errors) {
+                            const newUrl = 'review';
+                            history.push(newUrl);
+                          }
+                        });
                       } else {
                         window.scrollTo(0, 0);
                       }
@@ -879,8 +954,15 @@ const ContractDetails = ({
                     type="button"
                     unstyled
                     onClick={() => {
-                      dispatchSave();
-                      history.push(saveExitLink);
+                      mutate({
+                        variables: {
+                          input: convertDates(values)
+                        }
+                      }).then(response => {
+                        if (!response.errors) {
+                          history.push(saveExitLink);
+                        }
+                      });
                     }}
                   >
                     <span>
@@ -892,7 +974,7 @@ const ContractDetails = ({
             </div>
             <AutoSave
               values={values}
-              onSave={dispatchSave}
+              onSave={() => onSubmit(values)}
               debounceDelay={1000 * 30}
             />
             <PageNumber currentPage={3} totalPages={3} />
