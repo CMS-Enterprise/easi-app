@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -862,6 +863,32 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 	}, err
 }
 
+func (r *mutationResolver) SubmitIntake(ctx context.Context, input model.SubmitIntakeInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.service.SubmitIntake(
+		ctx,
+		intake,
+		&models.Action{
+			IntakeID: &input.ID,
+		})
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err = r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error) {
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{
@@ -1448,3 +1475,13 @@ type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *mutationResolver) CreateSystemIntakeActionSubmitIntake(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}

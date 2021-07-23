@@ -215,6 +215,10 @@ type RequestsConnection struct {
 	TotalCount int            `json:"totalCount"`
 }
 
+type SubmitIntakeInput struct {
+	ID uuid.UUID `json:"id"`
+}
+
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
 	TotalCount int           `json:"totalCount"`
