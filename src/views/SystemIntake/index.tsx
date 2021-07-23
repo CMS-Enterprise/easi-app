@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, Switch, useHistory, useParams } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { Link, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { SecureRoute } from '@okta/okta-react';
 import {
@@ -15,14 +14,11 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
-import usePrevious from 'hooks/usePrevious';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
-import { AppState } from 'reducers/rootReducer';
-import { clearSystemIntake, fetchSystemIntake } from 'types/routines';
 import { NotFoundPartial } from 'views/NotFound';
 
 import Confirmation from './Confirmation';
@@ -35,17 +31,11 @@ import SystemIntakeView from './ViewOnly';
 import './index.scss';
 
 export const SystemIntake = () => {
-  const history = useHistory();
   const { systemId } = useParams<{
     systemId: string;
     formPage: string;
   }>();
-  const dispatch = useDispatch();
   const formikRef: any = useRef();
-
-  const actionError = useSelector((state: AppState) => state.action.error);
-  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
-  const prevIsSubmitting = usePrevious(isSubmitting);
 
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
     GetSystemIntakeQuery,
@@ -56,28 +46,6 @@ export const SystemIntake = () => {
     }
   );
   const systemIntake = data?.systemIntake;
-
-  // Handle redirect after submitting
-  useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !actionError) {
-      history.push(`/system/${systemId}/confirmation`);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
-
-  useEffect(() => {
-    if (systemId === 'new') {
-      history.push('/system/request-type');
-    } else {
-      dispatch(fetchSystemIntake(systemId));
-    }
-    return () => {
-      // clear system intake from store when component is unmounting
-      dispatch(clearSystemIntake());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   if (loading) {
     return <PageLoading />;
