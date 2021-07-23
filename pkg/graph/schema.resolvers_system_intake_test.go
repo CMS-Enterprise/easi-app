@@ -1206,7 +1206,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 				}
 				costs: {
 					expectedIncreaseAmount: "A little bit"
-					isExpectingIncrease: "Yes"
+					isExpectingIncrease: "YES"
 				}
 				contract: {
 					contractor: "Best Contractor Evar"
@@ -1259,7 +1259,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 
 	costs := respIntake.Costs
 	s.Equal(costs.ExpectedIncreaseAmount, "A little bit")
-	s.Equal(costs.IsExpectingIncrease, "Yes")
+	s.Equal(costs.IsExpectingIncrease, "YES")
 
 	contract := respIntake.Contract
 	s.Equal(contract.HasContract, "HAVE_CONTRACT")
@@ -1339,7 +1339,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
 		Status:             models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType:        models.SystemIntakeRequestTypeNEW,
 		CostIncreaseAmount: null.StringFrom("Just a little"),
-		CostIncrease:       null.StringFrom("Yes"),
+		CostIncrease:       null.StringFrom("YES"),
 	})
 	s.NoError(intakeErr)
 

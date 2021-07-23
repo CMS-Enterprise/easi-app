@@ -981,11 +981,11 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 		intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
 
 		if input.Costs.IsExpectingIncrease != nil {
-			if *input.Costs.IsExpectingIncrease == "Yes" {
+			if *input.Costs.IsExpectingIncrease == "YES" {
 				intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
 				intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
 			}
-			if *input.Costs.IsExpectingIncrease != "Yes" {
+			if *input.Costs.IsExpectingIncrease != "YES" {
 				intake.CostIncreaseAmount = null.StringFromPtr(nil)
 				intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
 			}
