@@ -4,11 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
-import {
-  UpdateSystemIntakeContactDetails,
-  UpdateSystemIntakeContactDetailsVariables
-} from 'queries/types/UpdateSystemIntakeContactDetails';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -24,6 +19,11 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
+import {
+  UpdateSystemIntakeContactDetails,
+  UpdateSystemIntakeContactDetailsVariables
+} from 'queries/types/UpdateSystemIntakeContactDetails';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
@@ -74,19 +74,19 @@ const ContactDetails = ({ formikRef, systemIntake }: ContactDetailsProps) => {
     id: systemIntake.id,
     requester: {
       name: systemIntake.requester.name,
-      component: systemIntake.requester.component
+      component: systemIntake.requester.component || ''
     },
     businessOwner: {
-      name: systemIntake.businessOwner.name,
-      component: systemIntake.businessOwner.component
+      name: systemIntake.businessOwner.name || '',
+      component: systemIntake.businessOwner.component || ''
     },
     productManager: {
-      name: systemIntake.productManager.name,
-      component: systemIntake.productManager.component
+      name: systemIntake.productManager.name || '',
+      component: systemIntake.productManager.component || ''
     },
     isso: {
       isPresent: systemIntake.isso.isPresent,
-      name: systemIntake.isso.name
+      name: systemIntake.isso.name || ''
     },
     governanceTeams: {
       isPresent: systemIntake.governanceTeams.isPresent,
