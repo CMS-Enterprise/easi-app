@@ -30,9 +30,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
       - name: Check deployed image for vulnerability findings - impl
-        run: bash APP_ENV=impl ./scripts/check_deployed_image_findings "easi-backend" "6"
+        with: 
+          APP_ENV: impl
+        run: bash ./scripts/check_deployed_image_findings "easi-backend" "6"
       - name: Check deployed image for vulnerability findings - prod
-        run: bash APP_ENV=prod ./scripts/check_deployed_image_findings "easi-backend" "6"
+        with:
+          APP_ENV: prod
+        run: bash ./scripts/check_deployed_image_findings "easi-backend" "6"
       - name: Announce failure
         if: ${{ failure() }}
         run: |
