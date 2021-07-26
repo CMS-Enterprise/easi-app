@@ -18,6 +18,7 @@ export interface GetRequests_requests_edges_node {
   status: string;
   statusCreatedAt: Time | null;
   lcid: string | null;
+  nextMeetingDate: Time | null;
 }
 
 export interface GetRequests_requests_edges {

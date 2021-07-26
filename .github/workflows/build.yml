@@ -1,0 +1,656 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  EASI_APP_NODE_VERSION: '12.22.1'
+  EASI_APP_GO_VERSION: '1.15.8'
+  # Set the IMAGE_TAG in a way that works for both pull_request and push events.
+  # For pull_request events, use github.event.pull_request.head.sha (see
+  # https://github.com/actions/checkout#Checkout-pull-request-HEAD-commit-instead-of-merge-commit).
+  # For push events, where github.event.pull_request.head.sha is not defined, use github.sha.
+  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  pre_deps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Set up go
+        uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8 # v2.1.3
+        with:
+          go-version: ${{ env.EASI_APP_GO_VERSION }}
+      - name: Configure go cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        with:
+          path: |
+            ~/go/pkg/mod
+          key: v1-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            v1-go-
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Install yarn dependencies
+        run: yarn install
+      - name: Install go modules
+        run: go mod download
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  lint:
+    needs: pre_deps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Set up go
+        uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8 # v2.1.3
+        with:
+          go-version: ${{ env.EASI_APP_GO_VERSION }}
+      - name: Set up python
+        uses: actions/setup-python@3105fb18c05ddd93efea5f9e0bef7a03a6e9e7df # v2.2.1
+        with:
+          python-version: '3.9'
+      - name: Configure go cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        with:
+          path: |
+            ~/go/pkg/mod
+          key: v1-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            v1-go-
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Pre-commit checks
+        uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe # v2.0.3
+        with:
+          extra_args: --all-files
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  client_test:
+    needs: pre_deps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - run: yarn test:coverage
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  storybook_build:
+    needs: pre_deps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - run: yarn run build-storybook
+      - name: Upload storybook artifact
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
+        with:
+          name: storybook-build
+          path: storybook-static
+          retention-days: 1
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  build_db_migrate_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # v1.10.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # v1.3.3
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: easi-db-migrate
+        run: |
+          docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" --file Dockerfile.db_migrations .
+          docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  server_test:
+    needs: [ pre_deps, build_db_migrate_image ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Configure go cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        with:
+          path: |
+            ~/go/pkg/mod
+          key: v1-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            v1-go-
+      - name: Set up go
+        uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8 # v2.1.3
+        with:
+          go-version: ${{ env.EASI_APP_GO_VERSION }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # v1.10.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # v1.3.3
+      - name: Run backend server tests
+        env:
+          APP_ENV: test
+          AWS_REGION: us-west-2 # easi app tests expect AWS_REGION instead of AWS_DEFAULT_REGION
+          AWS_SES_SOURCE: '"EASi Test" <no-reply-test@info.easi.cms.gov>'
+          AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
+          AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
+          CLIENT_PROTOCOL: http
+          CLIENT_PORT: 3000
+          CLIENT_HOSTNAME: localhost:3000
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: easi-db-migrate
+          GRT_EMAIL: success@simulator.amazonses.com
+          ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
+          OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          OKTA_DOMAIN: https://test.idp.idm.cms.gov
+          OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+          OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
+          OKTA_TEST_SECRET : ${{ secrets.OKTA_TEST_SECRET }}
+          OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
+          PGHOST: localhost
+          PGPORT: 5432
+          PGDATABASE: postgres
+          PGUSER: app_user
+          PGPASS: supersecretapp
+          PGSSLMODE: disable
+          DB_MAX_CONNECTIONS: 20
+          FLAG_SOURCE: LOCAL
+        run: |
+          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d db
+          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from db_migrate db_migrate
+          ./scripts/build_app
+          ./scripts/testsuite
+          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
+      - name: Upload backend test artifacts
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
+        with:
+          name: backend-tests
+          path: results
+          retention-days: 14
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  build_server_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # v1.10.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # v1.3.3
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: easi-backend
+        run: |
+          APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
+          APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
+          docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$IMAGE_TAG" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
+          docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  e2e_tests:
+    needs: [ pre_deps, build_db_migrate_image, build_server_image ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Build frontend code
+        env:
+          REACT_APP_API_ADDRESS: http://easi:8080/api/v1
+          REACT_APP_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
+          REACT_APP_APP_ENV: test
+          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+          REACT_APP_LOCAL_AUTH_ENABLED: true
+        run: yarn run build
+      - name: Login to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # v1.10.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # v1.3.3
+      - name: Run e2e cypress tests
+        env:
+          APP_ENV: test
+          AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
+          OKTA_TEST_SECRET : ${{ secrets.OKTA_TEST_SECRET }}
+          OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
+        run: |
+          ./scripts/run-cypress-test-docker-github-actions
+      - name: Upload cypress videos
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
+        with:
+          name: cypress-videos
+          path: cypress/videos
+          retention-days: 14
+      - name: Upload cypress screenshots
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  deploy_dev:
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.event.pull_request.labels.*.name, 'deploy_dev') }}
+    needs: [ lint, client_test, server_test, e2e_tests ]
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      APP_ENV: dev
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+          role-duration-seconds: 1800
+          role-skip-session-tagging: true
+      - name: Clean the database
+        run: |
+          ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
+      - name: Run migrations
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-db-migrate
+        run: |
+          ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "6" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "6" "easi-app-db-migrate"
+      - name: Deploy ECS service
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-backend
+        run: |
+          ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "6" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/healthcheck "$IMAGE_TAG"
+      - name: Build static assets and release to S3
+        env:
+          LD_CLIENT_ID_DEV: ${{ secrets.LD_CLIENT_ID_DEV }}
+          OKTA_CLIENT_ID_DEV: ${{ secrets.OKTA_CLIENT_ID_DEV }}
+          OKTA_SERVER_ID_DEV: ${{ secrets.OKTA_SERVER_ID_DEV }}
+          STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET_DEV }}
+        run: |
+          ./scripts/release_static
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  deploy_impl:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    needs: deploy_dev
+    runs-on: ubuntu-latest
+    environment: impl
+    env:
+      APP_ENV: impl
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_IMPL }}
+          role-duration-seconds: 1800
+          role-skip-session-tagging: true
+      - name: Backup the database
+        run: |
+          ./scripts/rds-snapshot-app-db
+      - name: Run migrations
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-db-migrate
+        run: |
+          ./scripts/deploy_service "easi-app-db-migrate" "impl-ecs-manager-docker" "5" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/db_lambda_invoke "impl-ecs-manager-docker" "5" "easi-app-db-migrate"
+      - name: Deploy ECS service
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-backend
+        run: |
+          ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "5" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/healthcheck "$IMAGE_TAG"
+      - name: Build static assets and release to S3
+        env:
+          LD_CLIENT_ID_IMPL: ${{ secrets.LD_CLIENT_ID_IMPL }}
+          OKTA_CLIENT_ID_IMPL: ${{ secrets.OKTA_CLIENT_ID_IMPL }}
+          OKTA_SERVER_ID_IMPL: ${{ secrets.OKTA_SERVER_ID_IMPL }}
+          STATIC_S3_BUCKET_IMPL: ${{ secrets.STATIC_S3_BUCKET_IMPL }}
+        run: |
+          ./scripts/release_static
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  deploy_prod:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    needs: deploy_impl
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      APP_ENV: prod
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_PROD }}
+          role-duration-seconds: 1800
+          role-skip-session-tagging: true
+      - name: Backup the database
+        run: |
+          ./scripts/rds-snapshot-app-db
+      - name: Run migrations
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-db-migrate
+        run: |
+          ./scripts/deploy_service "easi-app-db-migrate" "prod-ecs-manager-docker" "4" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/db_lambda_invoke "prod-ecs-manager-docker" "4" "easi-app-db-migrate"
+      - name: Deploy ECS service
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-backend
+        run: |
+          ./scripts/deploy_service "easi-app" "prod-ecs-manager-docker" "4" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/healthcheck "$IMAGE_TAG"
+      - name: Build static assets and release to S3
+        env:
+          LD_CLIENT_ID_PROD: ${{ secrets.LD_CLIENT_ID_PROD }}
+          OKTA_CLIENT_ID_PROD: ${{ secrets.OKTA_CLIENT_ID_PROD }}
+          OKTA_SERVER_ID_PROD: ${{ secrets.OKTA_SERVER_ID_PROD }}
+          STATIC_S3_BUCKET_PROD: ${{ secrets.STATIC_S3_BUCKET_PROD }}
+        run: |
+          ./scripts/release_static
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  deploy_storybook_dev:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    needs: storybook_build
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      APP_ENV: dev
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/download-artifact@3be87be14a055c47b01d3bd88f8fe02320a9bb60 # v2.0.10
+        with:
+          name: storybook-build
+          path: storybook-static
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+          role-duration-seconds: 1800
+          role-skip-session-tagging: true
+      - name: Deploy storybook assets
+        env:
+          STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
+        run: |
+          ./scripts/release_storybook_static_github_actions
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
