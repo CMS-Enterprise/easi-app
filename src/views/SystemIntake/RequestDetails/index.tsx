@@ -45,9 +45,9 @@ const RequestDetails = ({ formikRef, systemIntake }: RequestDetailsProps) => {
 
   const initialValues: RequestDetailsForm = {
     id: systemIntake.id,
-    requestName: systemIntake.requestName,
-    businessNeed: systemIntake.businessNeed,
-    businessSolution: systemIntake.businessSolution,
+    requestName: systemIntake.requestName || '',
+    businessNeed: systemIntake.businessNeed || '',
+    businessSolution: systemIntake.businessSolution || '',
     needsEaSupport: systemIntake.needsEaSupport
   };
 
