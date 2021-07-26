@@ -20,7 +20,7 @@ module.exports = (on, config) => {
   on('task', {
     generateOTP: cypressOTP
   });
-  on('task', cypressCodeCovTask);
+  cypressCodeCovTask(on, config);
 
   const options = {
     webpackOptions: {

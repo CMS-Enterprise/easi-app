@@ -1,13 +1,13 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
 import IntakeReview from './index';
 
 describe('The GRT intake review view', () => {
-  let dateSpy;
+  let dateSpy: any;
   beforeAll(() => {
     // September 30, 2020
     dateSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1601449200000);
@@ -44,7 +44,8 @@ describe('The GRT intake review view', () => {
     },
     fundingSource: {
       isFunded: false,
-      fundingNumber: ''
+      fundingNumber: '',
+      source: ''
     },
     costs: {
       expectedIncreaseAmount: '',
@@ -77,7 +78,12 @@ describe('The GRT intake review view', () => {
 
   it('renders without crashing', () => {
     const now = DateTime.local();
-    shallow(<IntakeReview systemIntake={mockSystemIntake} now={now} />);
+    render(
+      <MemoryRouter>
+        <IntakeReview systemIntake={mockSystemIntake} now={now} />
+      </MemoryRouter>
+    );
+    expect(screen.getByTestId('intake-review')).toBeInTheDocument();
   });
 
   it('matches the snapshot', () => {
@@ -91,5 +97,24 @@ describe('The GRT intake review view', () => {
       .toJSON();
 
     expect(tree).toMatchSnapshot();
+  });
+
+  it('renders increased costs data', () => {
+    const now = DateTime.local();
+    const mockIntake = {
+      ...mockSystemIntake,
+      costs: {
+        isExpectingIncrease: 'YES',
+        expectedIncreaseAmount: 'less than $1 million'
+      }
+    };
+
+    render(
+      <MemoryRouter>
+        <IntakeReview systemIntake={mockIntake} now={now} />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText(/less than \$1 million/i)).toBeInTheDocument();
   });
 });

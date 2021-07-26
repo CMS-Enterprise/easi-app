@@ -16,6 +16,8 @@ import { RequestType } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 
+import './index.scss';
+
 const Table = () => {
   const { t } = useTranslation(['home', 'intake', 'accessibility']);
   const { loading, error, data: tableData } = useQuery<
@@ -71,6 +73,7 @@ const Table = () => {
       {
         Header: t('requestsTable.headers.status'),
         accessor: 'status',
+        width: '200px',
         Cell: ({ row, value }: any) => {
           let statusString;
           switch (row.original.type) {
@@ -101,6 +104,18 @@ const Table = () => {
             default:
               return '';
           }
+        }
+      },
+      {
+        Header: t('requestsTable.headers.nextMeetingDate'),
+        accessor: 'nextMeetingDate',
+        className: 'next-meeting-date',
+        width: '180px',
+        Cell: ({ value }: any) => {
+          if (value) {
+            return formatDate(value);
+          }
+          return 'None';
         }
       }
     ];
@@ -208,7 +223,7 @@ const Table = () => {
                 <th
                   {...column.getHeaderProps()}
                   aria-sort={getColumnSortStatus(column)}
-                  style={{ whiteSpace: 'nowrap' }}
+                  style={{}}
                   scope="col"
                 >
                   <button
@@ -239,17 +254,16 @@ const Table = () => {
                 {row.cells.map((cell, i) => {
                   if (i === 0) {
                     return (
-                      <th
-                        {...cell.getCellProps()}
-                        scope="row"
-                        style={{ maxWidth: '16rem' }}
-                      >
+                      <th {...cell.getCellProps()} scope="row">
                         {cell.render('Cell')}
                       </th>
                     );
                   }
                   return (
-                    <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
+                    <td
+                      {...cell.getCellProps()}
+                      style={{ width: cell.column.width }}
+                    >
                       {cell.render('Cell')}
                     </td>
                   );

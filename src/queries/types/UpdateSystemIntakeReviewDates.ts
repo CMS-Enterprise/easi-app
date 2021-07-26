@@ -11,8 +11,9 @@ import { UpdateSystemIntakeReviewDatesInput } from "./../../types/graphql-global
 
 export interface UpdateSystemIntakeReviewDates_updateSystemIntakeReviewDates_systemIntake {
   __typename: "SystemIntake";
-  adminLead: string | null;
   id: UUID;
+  grbDate: Time | null;
+  grtDate: Time | null;
 }
 
 export interface UpdateSystemIntakeReviewDates_updateSystemIntakeReviewDates {

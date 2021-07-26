@@ -66,6 +66,13 @@ services:
       - MINIO_ACCESS_KEY
       - MINIO_SECRET_KEY
       - MINIO_HOST=minio:9000
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASS=mysecretpassword
+      - PGSSLMODE=disable
+      - DB_MAX_CONNECTIONS=20
     network_mode: 'service:easi_client'
     volumes:
       - ./cypress:/cypress

@@ -931,6 +931,7 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 			Status:          request.Status,
 			StatusCreatedAt: request.StatusCreatedAt,
 			Lcid:            request.LifecycleID.Ptr(),
+			NextMeetingDate: request.NextMeetingDate,
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,
