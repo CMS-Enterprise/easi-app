@@ -17,7 +17,7 @@ time aws rds wait db-snapshot-completed --db-instance-identifier "$db_instance_i
 
 echo
 echo "Create database snapshot for ${db_instance_identifier} with identifier ${db_snapshot_identifier}"
-aws rds create-db-snapshot --db-instance-identifier "$db_instance_identifier" --db-snapshot-identifier "$db_snapshot_identifier" --tags "${tags[@]}"
+aws rds create-db-snapshot --db-instance-identifier "$db_instance_identifier" --db-snapshot-identifier "$db_snapshot_identifier" --tags "${tags[@]}" > /dev/null
 
 echo
 echo "Wait for current database snapshot ${db_snapshot_identifier} to complete before continuing ..."
@@ -26,7 +26,6 @@ time aws rds wait db-snapshot-completed --db-snapshot-identifier "$db_snapshot_i
 echo
 echo "Describe the database snapshot ${db_snapshot_identifier}"
 db_description=$(aws rds describe-db-snapshots --db-snapshot-identifier "$db_snapshot_identifier")
-echo "${db_description}"
 db_status=$(echo "${db_description}" | jq -r ".DBSnapshots[].Status")
 if [[ "${db_status}" != "available" ]]; then
   echo

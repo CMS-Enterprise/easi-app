@@ -280,7 +280,7 @@ Array [
               <dt
                 className="text-bold margin-bottom-05"
               >
-                Do you expect costs for this request to increase?
+                Do the costs for this request exceed what you are currently spending to meet your business need?
               </dt>
               <dd
                 className="description-definition margin-0"
@@ -288,6 +288,10 @@ Array [
                 No
               </dd>
             </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
             <div>
               <dt
                 className="text-bold margin-bottom-05"

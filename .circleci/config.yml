@@ -18,8 +18,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -45,8 +45,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -392,8 +392,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -447,8 +447,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -502,8 +502,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -557,8 +557,8 @@ jobs:
           name: Setup custom environment variables
           command: |
             temp_role=$(aws sts assume-role \
-                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/circleci \
-                    --role-session-name circleci)
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/ci \
+                    --role-session-name ci)
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
@@ -587,75 +587,75 @@ workflows:
   compile:
     jobs:
       - pre_deps
-      - build_db_migrate_image
+        # - build_db_migrate_image
       - lint:
           requires:
             - pre_deps
-      - client_test:
-          requires:
-            - pre_deps
-      - deploy_storybook_dev:
-          filters:
-            branches:
-              only:
-                - master
-          requires:
-            - client_test
-      - test:
-          requires:
-            - pre_deps
-            - build_db_migrate_image
-      - build_tag_push:
-          requires:
-            - test
-      - integration_tests:
-          requires:
-            - lint
-            - client_test
-            - build_tag_push
-      - hold_dev:
-          type: approval
-          filters:
-            branches:
-              ignore:
-                - master
-      - deploy_dev:
-          requires:
-            - integration_tests
-            - hold_dev
-      - deploy_impl:
-          filters:
-            branches:
-              only:
-                - master
-          requires:
-            - deploy_dev
-      - hold_prod:
-          type: approval
-          requires:
-            - deploy_impl
-      - deploy_prod:
-          requires:
-            - hold_prod
-  weekly:
-    triggers:
-      - schedule:
-          cron: '0 2 * * 6'
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - build_db_clean_image
-
-  daily:
-    triggers:
-      - schedule:
-          cron: '0 7 * * *' # 2300 PST, 0200 EST
-          filters:
-            branches:
-              only: master
-    jobs:
-      - restart_impl_ecs_app_service
-      - restart_prod_ecs_app_service
-      - rescan_deployed_image
+              #       - client_test:
+              #           requires:
+              #             - pre_deps
+              #       - deploy_storybook_dev:
+              #           filters:
+              #             branches:
+              #               only:
+              #                 - master
+              #           requires:
+              #             - client_test
+              #       - test:
+              #           requires:
+              #             - pre_deps
+              #             - build_db_migrate_image
+              #       - build_tag_push:
+              #           requires:
+              #             - test
+              #       - integration_tests:
+              #           requires:
+              #             - lint
+              #             - client_test
+              #             - build_tag_push
+              #       - hold_dev:
+              #           type: approval
+              #           filters:
+              #             branches:
+              #               ignore:
+              #                 - master
+              #       - deploy_dev:
+              #           requires:
+              #             - integration_tests
+              #             - hold_dev
+              #       - deploy_impl:
+              #           filters:
+              #             branches:
+              #               only:
+              #                 - master
+              #           requires:
+              #             - deploy_dev
+              #       - hold_prod:
+              #           type: approval
+              #           requires:
+              #             - deploy_impl
+              #       - deploy_prod:
+              #           requires:
+              #             - hold_prod
+              #   weekly:
+              #     triggers:
+              #       - schedule:
+              #           cron: '0 2 * * 6'
+              #           filters:
+              #             branches:
+              #               only:
+              #                 - master
+              #     jobs:
+              #       - build_db_clean_image
+              #
+              #   daily:
+              #     triggers:
+              #       - schedule:
+              #           cron: '0 7 * * *' # 2300 PST, 0200 EST
+              #           filters:
+              #             branches:
+              #               only: master
+              #     jobs:
+              #       - restart_impl_ecs_app_service
+              #       - restart_prod_ecs_app_service
+              #       - rescan_deployed_image

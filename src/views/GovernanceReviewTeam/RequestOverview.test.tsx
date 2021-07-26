@@ -7,12 +7,12 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
 import RequestOverview from './RequestOverview';
 

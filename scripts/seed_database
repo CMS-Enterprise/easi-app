@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# usage: scripts/seed_database
+#
+# This script is a wrapper for calling the seed program, using a compiled version
+# if it exists and falling back to using go run if it doesn't.
+
+set -eu -o pipefail
+
+# shift
+if [[ -f build/seed ]]; then
+  build/seed "$@"
+else
+  go run cmd/seed/main.go "$@"
+fi

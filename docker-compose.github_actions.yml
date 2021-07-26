@@ -1,0 +1,56 @@
+---
+version: '3.7'
+services:
+  db_migrate:
+    image: '${ECR_REGISTRY}/easi-db-migrate:${IMAGE_TAG}'
+  db_seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.db_seed
+    environment:
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASS=mysecretpassword
+      - PGSSLMODE=disable
+      - DB_MAX_CONNECTIONS=20
+  easi:
+    image: '${ECR_REGISTRY}/easi-backend:${IMAGE_TAG}'
+    environment:
+      - APP_ENV=test
+      - EMAIL_TEMPLATE_DIR=/easi/templates
+      - SERVER_CERT
+      - SERVER_KEY
+      - LOCAL_AUTH_ENABLED=true
+      - FLAG_SOURCE=LOCAL
+  easi_client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client_circleci
+    environment:
+      - CI=true #https://github.com/facebook/create-react-app/issues/8688
+    entrypoint: ['serve', '-s', '-l', '3000']
+  cypress:
+    build:
+      context: .
+      dockerfile: Dockerfile.cypress
+    image: easi-cypress:latest
+    environment:
+      - OKTA_TEST_USERNAME
+      - OKTA_TEST_PASSWORD
+      - OKTA_TEST_SECRET
+      - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_HOST=minio:9000
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASS=mysecretpassword
+      - PGSSLMODE=disable
+      - DB_MAX_CONNECTIONS=20
+    network_mode: 'service:easi_client'
+    depends_on:
+      - easi_client

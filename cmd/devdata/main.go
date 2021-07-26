@@ -122,12 +122,34 @@ func main() {
 		i.GrtReviewEmailBody = null.StringFrom("")
 	})
 
+	makeSystemIntake("Closable Request", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("20cbcfbf-6459-4c96-943b-e76b83122dbf")
+	})
+
 	makeBusinessCase("TACO", logger, store, nil)
 
 	intake := makeSystemIntake("Draft Business Case", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusBIZCASEDRAFT
 	})
 	makeBusinessCase("Draft Business Case", logger, store, intake)
+
+	intake = makeSystemIntake("With GRB scheduled", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusREADYFORGRB
+		tomorrow := time.Now().Add(24 * time.Hour)
+		nextMonth := time.Now().Add(30 * 24 * time.Hour)
+		i.GRBDate = &tomorrow
+		i.GRTDate = &nextMonth
+	})
+	makeBusinessCase("With GRB scheduled", logger, store, intake)
+
+	intake = makeSystemIntake("With GRT scheduled", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusREADYFORGRT
+		lastMonth := time.Now().Add(-30 * 24 * time.Hour)
+		tomorrow := time.Now().Add(24 * time.Hour)
+		i.GRBDate = &lastMonth
+		i.GRTDate = &tomorrow
+	})
+	makeBusinessCase("With GRT scheduled", logger, store, intake)
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
