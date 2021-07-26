@@ -1,0 +1,18 @@
+---
+version: '3.7'
+services:
+  db:
+    image: postgres:11.10
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    ports:
+      - '5432:5432'
+  db_migrate:
+    image: '${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}'
+    environment:
+      - FLYWAY_USER=postgres
+      - FLYWAY_PASSWORD=mysecretpassword
+      - FLYWAY_URL=jdbc:postgresql://db/postgres
+      - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp
+    depends_on:
+      - db
