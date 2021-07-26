@@ -92,7 +92,7 @@ func (h SystemIntakeMetricsHandler) Handle() http.HandlerFunc {
 }
 
 // NewAccessibilityMetricsHandler is a constructor for AccessibilityMetricsHandler
-func NewAccessibilityMetricsHandler(fetchMetrics func() [][]string, base HandlerBase) AccessibilityMetricsHandler {
+func NewAccessibilityMetricsHandler(fetchMetrics func() ([][]string, error), base HandlerBase) AccessibilityMetricsHandler {
 	return AccessibilityMetricsHandler{
 		HandlerBase:               base,
 		fetchAccessibilityMetrics: fetchMetrics,
@@ -102,7 +102,7 @@ func NewAccessibilityMetricsHandler(fetchMetrics func() [][]string, base Handler
 // AccessibilityMetricsHandler is the handler for retrieving accessibility metrics
 type AccessibilityMetricsHandler struct {
 	HandlerBase
-	fetchAccessibilityMetrics func() [][]string
+	fetchAccessibilityMetrics func() ([][]string, error)
 }
 
 // Handle handles a web request and returns a metrics csv file
@@ -113,8 +113,14 @@ func (h AccessibilityMetricsHandler) Handle() http.HandlerFunc {
 
 		writer := csv.NewWriter(buffer)
 
-		for _, value := range h.fetchAccessibilityMetrics() {
-			err := writer.Write(value)
+		data, err := h.fetchAccessibilityMetrics()
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+
+		for _, value := range data {
+			err = writer.Write(value)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
@@ -125,7 +131,7 @@ func (h AccessibilityMetricsHandler) Handle() http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "text/csv")
 		w.Header().Set("Content-Disposition", "attachment;filename=AccessibilityMetrics.csv")
-		_, err := w.Write(buffer.Bytes())
+		_, err = w.Write(buffer.Bytes())
 		if err != nil {
 			h.WriteErrorResponse(r.Context(), w, err)
 			return
