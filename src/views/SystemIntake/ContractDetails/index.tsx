@@ -46,30 +46,30 @@ const ContractDetails = ({ formikRef, systemIntake }: ContractDetailsProps) => {
 
   const initialValues: ContractDetailsForm = {
     id: systemIntake.id,
-    currentStage: systemIntake.currentStage,
+    currentStage: systemIntake.currentStage || '',
     fundingSource: {
-      fundingNumber: systemIntake.fundingSource.fundingNumber,
+      fundingNumber: systemIntake.fundingSource.fundingNumber || '',
       isFunded: systemIntake.fundingSource.isFunded,
-      source: systemIntake.fundingSource.source
+      source: systemIntake.fundingSource.source || ''
     },
     costs: {
-      expectedIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
-      isExpectingIncrease: systemIntake.costs.isExpectingIncrease
+      expectedIncreaseAmount: systemIntake.costs.expectedIncreaseAmount || '',
+      isExpectingIncrease: systemIntake.costs.isExpectingIncrease || ''
     },
     contract: {
-      contractor: systemIntake.contract.contractor,
+      contractor: systemIntake.contract.contractor || '',
       endDate: {
-        day: systemIntake.contract.endDate.day,
-        month: systemIntake.contract.endDate.month,
-        year: systemIntake.contract.endDate.year
+        day: systemIntake.contract.endDate.day || '',
+        month: systemIntake.contract.endDate.month || '',
+        year: systemIntake.contract.endDate.year || ''
       },
-      hasContract: systemIntake.contract.hasContract,
+      hasContract: systemIntake.contract.hasContract || '',
       startDate: {
-        day: systemIntake.contract.startDate.day,
-        month: systemIntake.contract.startDate.month,
-        year: systemIntake.contract.startDate.year
+        day: systemIntake.contract.startDate.day || '',
+        month: systemIntake.contract.startDate.month || '',
+        year: systemIntake.contract.startDate.year || ''
       },
-      vehicle: systemIntake.contract.vehicle
+      vehicle: systemIntake.contract.vehicle || ''
     }
   };
 
