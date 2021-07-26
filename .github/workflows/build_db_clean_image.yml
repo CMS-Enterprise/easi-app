@@ -16,7 +16,7 @@ env:
   AWS_DEFAULT_REGION: us-west-2
 
 jobs:
-  pre-commit:
+  build_db_clean_image:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
