@@ -19,6 +19,10 @@ func (s StoreTestSuite) TestMyRequests() {
 	requester := &authentication.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
 	ctx := appcontext.WithPrincipal(context.Background(), requester)
 
+	// Round to microsecond to avoid truncation during roundtrip to database
+	tomorrow := time.Now().Add(time.Hour * 24).Round(time.Microsecond)
+	yesterday := time.Now().Add(time.Hour * -24).Round(time.Microsecond)
+
 	s.Run("returns only 508 and intake requests tied to the current user", func() {
 		intake := testhelpers.NewSystemIntake()
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
@@ -31,6 +35,39 @@ func (s StoreTestSuite) TestMyRequests() {
 		newRequest.Name = "My Accessibility Request"
 		accessibilityRequestThatIsMine, err := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &newRequest)
 		s.NoError(err)
+
+		// add a test date in the near future
+		testDate, tdErr := s.store.CreateTestDate(ctx, &models.TestDate{
+			RequestID: accessibilityRequestThatIsMine.ID,
+			TestType:  models.TestDateTestTypeRemediation,
+			Date:      tomorrow,
+		})
+		s.NoError(tdErr)
+
+		// add a test date in the far future
+		_, tdErr = s.store.CreateTestDate(ctx, &models.TestDate{
+			RequestID: accessibilityRequestThatIsMine.ID,
+			TestType:  models.TestDateTestTypeRemediation,
+			Date:      time.Now().Add(time.Hour * 72),
+		})
+		s.NoError(tdErr)
+
+		// add a test date in the past
+		_, tdErr = s.store.CreateTestDate(ctx, &models.TestDate{
+			RequestID: accessibilityRequestThatIsMine.ID,
+			TestType:  models.TestDateTestTypeInitial,
+			Date:      time.Now().Add(time.Hour * -72),
+		})
+		s.NoError(tdErr)
+
+		// add a deleted test date in the future
+		_, tdErr = s.store.CreateTestDate(ctx, &models.TestDate{
+			RequestID: accessibilityRequestThatIsMine.ID,
+			TestType:  models.TestDateTestTypeInitial,
+			Date:      time.Now().Add(time.Hour * 48),
+			DeletedAt: &yesterday,
+		})
+		s.NoError(tdErr)
 
 		// set status to in remediation
 		status := models.AccessibilityRequestStatusRecord{
@@ -81,6 +118,8 @@ func (s StoreTestSuite) TestMyRequests() {
 		createdAt, _ = time.Parse("2006-1-2", "2015-4-1")
 		newIntake.CreatedAt = &createdAt
 		newIntake.ProjectName = null.StringFrom("My Intake")
+		newIntake.GRBDate = &yesterday
+		newIntake.GRTDate = &tomorrow
 		createdIntake, err := s.store.CreateSystemIntake(ctx, &newIntake)
 		s.NoError(err)
 
@@ -137,6 +176,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.Equal(myRequests[0].SubmittedAt, intakeThatIsMine.SubmittedAt)
 		s.Equal(myRequests[0].Status, "INTAKE_DRAFT")
 		s.Nil(myRequests[0].LifecycleID.Ptr())
+		s.EqualTime(*myRequests[0].NextMeetingDate, tomorrow)
 
 		s.Equal(myRequests[1].ID, accessibilityRequestThatIsMine.ID)
 		s.Equal(myRequests[1].Type, model.RequestType("ACCESSIBILITY_REQUEST"))
@@ -144,6 +184,7 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.Equal(myRequests[1].SubmittedAt, accessibilityRequestThatIsMine.CreatedAt)
 		s.Equal(myRequests[1].Status, "OPEN")
 		s.Nil(myRequests[1].LifecycleID.Ptr())
+		s.EqualTime(*myRequests[1].NextMeetingDate, testDate.Date)
 
 		s.Equal(myRequests[2].ID, intakeWithLifecycleID.ID)
 		s.Equal(myRequests[2].Type, model.RequestType("GOVERNANCE_REQUEST"))
@@ -151,5 +192,6 @@ func (s StoreTestSuite) TestMyRequests() {
 		s.Equal(myRequests[2].SubmittedAt, intakeWithLifecycleID.SubmittedAt)
 		s.Equal(myRequests[2].Status, "LCID_ISSUED")
 		s.Equal(myRequests[2].LifecycleID, null.StringFrom("B123456"))
+		s.Nil(myRequests[2].NextMeetingDate)
 	})
 }
