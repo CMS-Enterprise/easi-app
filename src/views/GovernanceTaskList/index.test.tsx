@@ -89,165 +89,126 @@ describe('The Goveranance Task List', () => {
     ).toBeInTheDocument();
   });
 
-  // describe('Recompetes', () => {
-  //   it('displays "for recompete in title', async () => {
-  //     const mockStore = configureMockStore();
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           requestName: 'Easy Access to System Information',
-  //           requestType: 'RECOMPETE'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
+  describe('Recompetes', () => {
+    it('displays "for recompete in title', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            requestName: 'Easy Access to System Information',
+            requestType: 'RECOMPETE'
+          }
+        },
+        businessCase: { form: {} }
+      });
 
-  //     let component: ReactWrapper;
-  //     await act(async () => {
-  //       component = render(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-  //     component!.update();
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-  //     expect(component!.find('h1').text()).toContain(
-  //       'for re-competing a contract without any changes to systems or services'
-  //     );
-  //   });
+      expect(
+        screen.getByRole('heading', {
+          name:
+            'Get governance approval for re-competing a contract without any changes to systems or services',
+          level: 1
+        })
+      ).toBeInTheDocument();
+    });
 
-  //   it('displays not applicable steps as cannot start', async () => {
-  //     const mockStore = configureMockStore();
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           requestName: 'Easy Access to System Information',
-  //           requestType: 'RECOMPETE'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
+    it('displays not applicable steps as cannot start', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            requestName: 'Easy Access to System Information',
+            requestType: 'RECOMPETE'
+          }
+        },
+        businessCase: { form: {} }
+      });
 
-  //     let component: ReactWrapper;
-  //     await act(async () => {
-  //       component = render(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-  //     component!.update();
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
+      expect(
+        screen.getByTestId('task-list-business-case-draft').textContent
+      ).toContain('Cannot start yet');
+      expect(
+        screen.getByTestId('task-list-business-case-final').textContent
+      ).toContain('Cannot start yet');
+      expect(screen.getByTestId('task-list-grb-meeting').textContent).toContain(
+        'Cannot start yet'
+      );
+      expect(screen.getByTestId('task-list-decision').textContent).toContain(
+        'Cannot start yet'
+      );
+    });
 
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-final"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
+    it('displays steps 3, 4, and 5 as not needed once issued LCID', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            requestName: 'Easy Access to System Information',
+            requestType: 'RECOMPETE',
+            status: 'LCID_ISSUED'
+          }
+        },
+        businessCase: { form: {} }
+      });
 
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-grb-meeting"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-decision"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Cannot start yet');
-  //   });
-
-  //   it('displays steps 3, 4, and 5 as not needed once issued LCID', async () => {
-  //     const mockStore = configureMockStore();
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           requestName: 'Easy Access to System Information',
-  //           requestType: 'RECOMPETE',
-  //           status: 'LCID_ISSUED'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-
-  //     let component: ReactWrapper;
-  //     await act(async () => {
-  //       component = render(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider>
-  //         </MemoryRouter>
-  //       );
-  //     });
-  //     component!.update();
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-form"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-intake-review"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Completed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-draft"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Not needed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-business-case-final"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Not needed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-grb-meeting"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .text()
-  //     ).toEqual('Not needed');
-
-  //     expect(
-  //       component!
-  //         .find('[data-testid="task-list-decision"]')
-  //         .find('.governance-task-list__task-tag')
-  //         .exists()
-  //     ).toEqual(false);
-  //   });
-  // });
+      expect(screen.getByTestId('task-list-intake-form').textContent).toContain(
+        'Completed'
+      );
+      expect(
+        screen.getByTestId('task-list-intake-review').textContent
+      ).toContain('Completed');
+      expect(
+        screen.getByTestId('task-list-business-case-draft').textContent
+      ).toContain('Not needed');
+      expect(
+        screen.getByTestId('task-list-business-case-final').textContent
+      ).toContain('Not needed');
+      expect(screen.getByTestId('task-list-grb-meeting').textContent).toContain(
+        'Not needed'
+      );
+      expect(screen.getByTestId('task-list-decision').textContent).toContain(
+        'Read decision from board'
+      );
+    });
+  });
 
   // describe('Heading', () => {
   //   it('displays the request name', async () => {
