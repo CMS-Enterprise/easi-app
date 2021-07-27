@@ -40,7 +40,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-db-clean
           IMAGE_TAG: ${{ github.sha }}
-          TAG: $ECR_REGISTRY/$ECR_REPOSITORY:latest:-$IMAGE_TAG
+          TAG: "$ECR_REGISTRY/$ECR_REPOSITORY:latest:-$IMAGE_TAG"
         run: |
           builddir="$(git rev-parse --show-toplevel)"
           docker build --quiet --no-cache --tag "$ECR_REPOSITORY" . --file "Dockerfile.db_clean"
