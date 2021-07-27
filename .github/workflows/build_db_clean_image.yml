@@ -43,8 +43,7 @@ jobs:
         run: |
           builddir="$(git rev-parse --show-toplevel)"
           docker build --quiet --no-cache --tag "$ECR_REPOSITORY" . --file "Dockerfile.db_clean"
-          docker tag "$ECR_REPOSITORY" "$ECR_REGISTRY/$ECR_REPOSITORY:latest:-$IMAGE_TAG"
-          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest:-$IMAGE_TAG"
+          docker tag "$ECR_REPOSITORY" "$ECR_REGISTRY/$ECR_REPOSITORY:latest:-$IMAGE_TAG" && docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest:-$IMAGE_TAG"
 
 
 
