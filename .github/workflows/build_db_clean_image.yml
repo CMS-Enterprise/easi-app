@@ -43,7 +43,7 @@ jobs:
           ECR_BACKEND: "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/$repo_name"
           TAG: "$ECR_BACKEND:${3:-${GIT_SHA1}}"
         run: |
-          bash builddir="$(git rev-parse --show-toplevel)"
+          builddir="$(git rev-parse --show-toplevel)"
           docker build --quiet --no-cache --tag "$ECR_REPOSITORY" "$builddir" --file "Dockerfile.db_clean"
           docker tag "$ECR_REPOSITORY" "$TAG"
           docker push "$TAG"
