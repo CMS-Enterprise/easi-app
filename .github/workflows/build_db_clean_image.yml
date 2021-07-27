@@ -43,16 +43,4 @@ jobs:
         run: |
           builddir="$(git rev-parse --show-toplevel)"
           docker build --quiet --no-cache --tag "$ECR_REPOSITORY" . --file "Dockerfile.db_clean"
-          docker tag "$ECR_REPOSITORY" "$ECR_REGISTRY/$ECR_REPOSITORY:latest:-$IMAGE_TAG" && docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest:-$IMAGE_TAG"
-
-
-
-      # - name: Build the db cleaner image and push to ECR
-      #   env:
-      #     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      #   run: |
-      #     ./scripts/build_db_image "Dockerfile.db_clean" "easi-db-clean" "latest"
-      # - name: Announce failure
-      #   if: ${{ failure() }}
-      #   run: |
-      #     ./scripts/github-action-announce-broken-branch
+          docker tag "$ECR_REPOSITORY" "$ECR_REGISTRY/$ECR_REPOSITORY:latest" && docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
