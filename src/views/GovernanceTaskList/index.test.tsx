@@ -2,9 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-// import { mount, ReactWrapper, shallow } from 'enzyme';
 import { render, screen, within } from '@testing-library/react';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
@@ -607,401 +605,335 @@ describe('The Goveranance Task List', () => {
       ).toEqual('Cannot start yet');
     });
 
-    //   it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
-    //     const store = mockStore({
-    //       systemIntake: {
-    //         systemIntake: {
-    //           ...initialSystemIntakeForm,
-    //           status: 'BIZ_CASE_FINAL_NEEDED'
-    //         }
-    //       },
-    //       businessCase: { form: {} }
-    //     });
-    //     let component: ReactWrapper;
+    it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_FINAL_NEEDED'
+          }
+        },
+        businessCase: { form: {} }
+      });
 
-    //     await act(async () => {
-    //       component = render(
-    //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-    //           <Provider store={store}>
-    //             <MessageProvider>
-    //               <GovernanceTaskList />
-    //             </MessageProvider>
-    //           </Provider>
-    //         </MemoryRouter>
-    //       );
-    //     });
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-    //     component!.update();
-    //     expect(
-    //       component!.find('[data-testid="intake-view-link"]').exists()
-    //     ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-final"]')
-    //         .find(UswdsLink)
-    //         .text()
-    //     ).toEqual('Review and Submit');
+      expect(
+        within(screen.getByTestId('task-list-business-case-final')).getByRole(
+          'link',
+          {
+            name: 'Review and Submit'
+          }
+        )
+      ).toBeInTheDocument();
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-form"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-review"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-draft"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-final"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .exists()
-    //     ).toEqual(false);
-    //   });
+      const bizCase = screen.getByTestId('task-list-business-case-final');
+      expect(
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
+    });
 
-    //   it('renders proper buttons for BIZ_CASE_FINAL_SUBMITTED', async () => {
-    //     const store = mockStore({
-    //       systemIntake: {
-    //         systemIntake: {
-    //           ...initialSystemIntakeForm,
-    //           status: 'BIZ_CASE_FINAL_SUBMITTED'
-    //         }
-    //       },
-    //       businessCase: { form: {} }
-    //     });
-    //     let component: ReactWrapper;
+    it('renders proper buttons for BIZ_CASE_FINAL_SUBMITTED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_FINAL_SUBMITTED'
+          }
+        },
+        businessCase: { form: {} }
+      });
 
-    //     await act(async () => {
-    //       component = render(
-    //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-    //           <Provider store={store}>
-    //             <MessageProvider>
-    //               <GovernanceTaskList />
-    //             </MessageProvider>
-    //           </Provider>
-    //         </MemoryRouter>
-    //       );
-    //     });
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-    //     component!.update();
-    //     expect(
-    //       component!.find('[data-testid="intake-view-link"]').exists()
-    //     ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-final"]')
-    //         .find(UswdsLink)
-    //         .exists()
-    //     ).toEqual(false);
+      expect(
+        within(screen.getByTestId('task-list-business-case-final')).queryByRole(
+          'link',
+          {
+            name: 'Review and Submit'
+          }
+        )
+      ).not.toBeInTheDocument();
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-form"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-review"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-draft"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-final"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
-    //   });
+      expect(
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+    });
 
-    //   it('renders proper buttons for READY_FOR_GRB', async () => {
-    //     const store = mockStore({
-    //       systemIntake: {
-    //         systemIntake: {
-    //           ...initialSystemIntakeForm,
-    //           status: 'READY_FOR_GRB'
-    //         }
-    //       },
-    //       businessCase: { form: {} }
-    //     });
-    //     let component: ReactWrapper;
+    it('renders proper buttons for READY_FOR_GRB', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'READY_FOR_GRB'
+          }
+        },
+        businessCase: { form: {} }
+      });
 
-    //     await act(async () => {
-    //       component = render(
-    //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-    //           <Provider store={store}>
-    //             <MessageProvider>
-    //               <GovernanceTaskList />
-    //             </MessageProvider>
-    //           </Provider>
-    //         </MemoryRouter>
-    //       );
-    //     });
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-    //     component!.update();
-    //     expect(
-    //       component!.find('[data-testid="intake-view-link"]').exists()
-    //     ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('prepare-for-grb-btn')).toBeInTheDocument();
 
-    //     expect(
-    //       component!.find('[data-testid="prepare-for-grb-btn"]').exists()
-    //     ).toEqual(true);
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-form"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-review"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-draft"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-final"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      const bizCase = screen.getByTestId('task-list-grb-meeting');
+      expect(
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
+    });
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-grb-meeting"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .exists()
-    //     ).toEqual(false);
-    //   });
+    it('renders proper buttons for LCID_ISSUED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'LCID_ISSUED'
+          }
+        },
+        businessCase: { form: {} }
+      });
 
-    //   it('renders proper buttons for LCID_ISSUED', async () => {
-    //     const store = mockStore({
-    //       systemIntake: {
-    //         systemIntake: {
-    //           ...initialSystemIntakeForm,
-    //           status: 'LCID_ISSUED'
-    //         }
-    //       },
-    //       businessCase: { form: {} }
-    //     });
-    //     let component: ReactWrapper;
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-    //     await act(async () => {
-    //       component = render(
-    //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-    //           <Provider store={store}>
-    //             <MessageProvider>
-    //               <GovernanceTaskList />
-    //             </MessageProvider>
-    //           </Provider>
-    //         </MemoryRouter>
-    //       );
-    //     });
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('decision-cta')).toBeInTheDocument();
 
-    //     component!.update();
-    //     expect(
-    //       component!.find('[data-testid="intake-view-link"]').exists()
-    //     ).toEqual(true);
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(component!.find('[data-testid="decision-cta"]').exists()).toEqual(
-    //       true
-    //     );
+      expect(
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-form"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-review"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-draft"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      expect(
+        within(screen.getByTestId('task-list-grb-meeting')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-business-case-final"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      const bizCase = screen.getByTestId('task-list-decision');
+      expect(
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
+    });
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-grb-meeting"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+    it('renders proper buttons for NO_GOVERNANCE', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'NO_GOVERNANCE'
+          }
+        },
+        businessCase: { form: {} }
+      });
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-decision"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .exists()
-    //     ).toEqual(false);
-    //   });
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-    //   it('renders proper buttons for NO_GOVERNANCE', async () => {
-    //     const store = mockStore({
-    //       systemIntake: {
-    //         systemIntake: {
-    //           ...initialSystemIntakeForm,
-    //           status: 'NO_GOVERNANCE'
-    //         }
-    //       },
-    //       businessCase: { form: {} }
-    //     });
-    //     let component: ReactWrapper;
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('task-list-closed-alert')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('plain-text-no-governance-decision')
+      ).toBeInTheDocument();
 
-    //     await act(async () => {
-    //       component = render(
-    //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-    //           <Provider store={store}>
-    //             <MessageProvider>
-    //               <GovernanceTaskList />
-    //             </MessageProvider>
-    //           </Provider>
-    //         </MemoryRouter>
-    //       );
-    //     });
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     component!.update();
-    //     expect(
-    //       component!.find('[data-testid="intake-view-link"]').exists()
-    //     ).toEqual(true);
+      expect(
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Cannot start yet');
 
-    //     expect(
-    //       component!.find('[data-testid="task-list-closed-alert"]').exists()
-    //     ).toEqual(true);
+      expect(
+        within(screen.getByTestId('task-list-grb-meeting')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+    });
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="plain-text-no-governance-decision"]')
-    //         .exists()
-    //     ).toEqual(true);
+    it('renders proper buttons for NOT_IT_REQUEST', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'NOT_IT_REQUEST'
+          }
+        },
+        businessCase: { form: {} }
+      });
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-form"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-review"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Cannot start yet');
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('task-list-closed-alert')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('plain-text-not-it-request-decision')
+      ).toBeInTheDocument();
 
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-grb-meeting"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
-    //   });
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //   it('renders proper buttons for NOT_IT_REQUEST', async () => {
-    //     const store = mockStore({
-    //       systemIntake: {
-    //         systemIntake: {
-    //           ...initialSystemIntakeForm,
-    //           status: 'NOT_IT_REQUEST'
-    //         }
-    //       },
-    //       businessCase: { form: {} }
-    //     });
-    //     let component: ReactWrapper;
+      expect(
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
 
-    //     await act(async () => {
-    //       component = render(
-    //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-    //           <Provider store={store}>
-    //             <MessageProvider>
-    //               <GovernanceTaskList />
-    //             </MessageProvider>
-    //           </Provider>
-    //         </MemoryRouter>
-    //       );
-    //     });
-
-    //     component!.update();
-    //     expect(
-    //       component!.find('[data-testid="intake-view-link"]').exists()
-    //     ).toEqual(true);
-
-    //     expect(
-    //       component!.find('[data-testid="task-list-closed-alert"]').exists()
-    //     ).toEqual(true);
-
-    //     expect(
-    //       component!
-    //         .find('[data-testid="plain-text-not-it-request-decision"]')
-    //         .exists()
-    //     ).toEqual(true);
-
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-form"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
-
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-intake-review"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
-
-    //     expect(
-    //       component!
-    //         .find('[data-testid="task-list-grb-meeting"]')
-    //         .find('.governance-task-list__task-tag')
-    //         .text()
-    //     ).toEqual('Completed');
-    //   });
+      expect(
+        within(screen.getByTestId('task-list-grb-meeting')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+    });
   });
 });
