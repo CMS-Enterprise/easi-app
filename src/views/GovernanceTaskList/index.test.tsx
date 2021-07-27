@@ -210,80 +210,84 @@ describe('The Goveranance Task List', () => {
     });
   });
 
-  // describe('Heading', () => {
-  //   it('displays the request name', async () => {
-  //     const mockStore = configureMockStore();
-  //     const store = mockStore({
-  //       systemIntake: {
-  //         systemIntake: {
-  //           ...initialSystemIntakeForm,
-  //           requestName: 'Easy Access to System Information'
-  //         }
-  //       },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-  //     await act(async () => {
-  //       component = render(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider>
-  //         </MemoryRouter>
-  //       );
-  //     });
+  describe('Heading', () => {
+    it('displays the request name', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            requestName: 'Easy Access to System Information'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
 
-  //     expect(component!.find('h1').text()).toContain(
-  //       'for Easy Access to System Information'
-  //     );
-  //   });
+      expect(
+        screen.getByRole('heading', {
+          name: 'Get governance approval for Easy Access to System Information',
+          level: 1
+        })
+      ).toBeInTheDocument();
+    });
 
-  //   it('hides the request name', async () => {
-  //     const mockStore = configureMockStore();
-  //     const store = mockStore({
-  //       systemIntake: { systemIntake: initialSystemIntakeForm },
-  //       businessCase: { form: {} }
-  //     });
-  //     let component: ReactWrapper;
-  //     await act(async () => {
-  //       component = render(
-  //         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //           <Provider store={store}>
-  //             <MessageProvider>
-  //               <GovernanceTaskList />
-  //             </MessageProvider>
-  //           </Provider>
-  //         </MemoryRouter>
-  //       );
-  //     });
+    it('hides the request name', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: { systemIntake: initialSystemIntakeForm },
+        businessCase: { form: {} }
+      });
 
-  //     expect(component!.find('h1').text()).toEqual('Get governance approval');
-  //   });
-  // });
+      await act(async () => {
+        render(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+      expect(
+        screen.getByRole('heading', {
+          name: 'Get governance approval',
+          level: 1
+        })
+      ).toBeInTheDocument();
+    });
+  });
 
-  // it('renders the side nav actions', async () => {
-  //   const mockStore = configureMockStore();
-  //   const store = mockStore({
-  //     systemIntake: { systemIntake: {} },
-  //     businessCase: { form: {} }
-  //   });
-  //   let component: ReactWrapper;
-  //   await act(async () => {
-  //     component = render(
-  //       <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //         <Provider store={store}>
-  //           <MessageProvider>
-  //             <GovernanceTaskList />
-  //           </MessageProvider>
-  //         </Provider>
-  //       </MemoryRouter>
-  //     );
-  //   });
-  //   component!.update();
-  //   expect(component!.find('.sidenav-actions').length).toEqual(1);
-  // });
+  it('renders the side nav actions', async () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      systemIntake: { systemIntake: initialSystemIntakeForm },
+      businessCase: { form: {} }
+    });
+    await act(async () => {
+      render(
+        <MemoryRouter initialEntries={['/']} initialIndex={0}>
+          <Provider store={store}>
+            <MessageProvider>
+              <GovernanceTaskList />
+            </MessageProvider>
+          </Provider>
+        </MemoryRouter>
+      );
+    });
+    expect(screen.getByTestId('sidenav-actions')).toBeInTheDocument();
+  });
 
   // describe('Statuses', () => {
   //   const mockStore = configureMockStore();
