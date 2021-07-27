@@ -160,10 +160,15 @@ const ContractDetails = ({
                         setFieldValue('fundingSource.isFunded', true);
                       }}
                       aria-describedby="Intake-Form-ExistingFundingHelp"
+                      aria-expanded={values.fundingSource.isFunded === true}
+                      aria-controls="funding-source-container"
                       value
                     />
                     {values.fundingSource.isFunded && (
-                      <div className="margin-top-neg-2 margin-left-4 margin-bottom-1">
+                      <div
+                        id="funding-source-container"
+                        className="margin-top-neg-2 margin-left-4 margin-bottom-1"
+                      >
                         <FieldGroup
                           scrollElement="fundingSource.source"
                           error={!!flatErrors['fundingSource.source']}
@@ -299,9 +304,14 @@ const ContractDetails = ({
                       label={yesNoMap.YES}
                       value="YES"
                       aria-describedby="IntakeForm-IncreasedCostsHelp"
+                      aria-expanded={values.costs.isExpectingIncrease === 'YES'}
+                      aria-controls="expected-increase-container"
                     />
                     {values.costs.isExpectingIncrease === 'YES' && (
-                      <div className="width-mobile-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
+                      <div
+                        id="expected-increase-container"
+                        className="width-mobile-lg margin-top-neg-2 margin-left-4 margin-bottom-1"
+                      >
                         <FieldGroup
                           scrollElement="costs.expectedIncreaseAmount"
                           error={!!flatErrors['costs.expectedIncreaseAmount']}
@@ -384,9 +394,16 @@ const ContractDetails = ({
                       label="I already have a contract/InterAgency Agreement (IAA) in place"
                       value="HAVE_CONTRACT"
                       aria-describedby="IntakeForm-HasContractHelp"
+                      aria-expanded={
+                        values.contract.hasContract === 'HAVE_CONTRACT'
+                      }
+                      aria-controls="has-contract-branch-wrapper"
                     />
                     {values.contract.hasContract === 'HAVE_CONTRACT' && (
-                      <div className="margin-top-neg-2 margin-left-4 margin-bottom-2">
+                      <div
+                        id="has-contract-branch-wrapper"
+                        className="margin-top-neg-2 margin-left-4 margin-bottom-2"
+                      >
                         <FieldGroup
                           scrollElement="contract.contractor"
                           error={!!flatErrors['contract.contractor']}
@@ -588,9 +605,16 @@ const ContractDetails = ({
                       name="contract.hasContract"
                       label="I am currently working on my OAGM Acquisition Plan/IAA documents"
                       value="IN_PROGRESS"
+                      aria-expanded={
+                        values.contract.hasContract === 'IN_PROGRESS'
+                      }
+                      aria-controls="in-progress-branch-wrapper"
                     />
                     {values.contract.hasContract === 'IN_PROGRESS' && (
-                      <div className="margin-top-neg-2 margin-left-4 margin-bottom-2">
+                      <div
+                        id="in-progress-branch-wrapper"
+                        className="margin-top-neg-2 margin-left-4 margin-bottom-2"
+                      >
                         <FieldGroup
                           scrollElement="contract.contractor"
                           error={!!flatErrors['contract.contractor']}
