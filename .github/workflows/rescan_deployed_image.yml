@@ -1,15 +1,8 @@
 name: rescan_deployed_image
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-# on:
-#   schedule:
-#     - cron:  '0 6 * * *' # 2300 PST, 0200 EST
+  schedule:
+    - cron:  '0 6 * * *' # 2300 PST, 0200 EST
 
 env:
   AWS_DEFAULT_REGION: us-west-2
