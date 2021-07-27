@@ -23,15 +23,6 @@ import store from './store';
 
 import './index.scss';
 
-/**
- * Enables react axe accessibility tooling in development environments
- */
-if (process.env.NODE_ENV === 'development') {
-  import('react-axe').then(axe => {
-    axe.default(React, ReactDOM, 1000);
-  });
-}
-
 const apiHost = new URL(process.env.REACT_APP_API_ADDRESS || '').host;
 
 /**
