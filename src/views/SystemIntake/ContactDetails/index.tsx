@@ -564,7 +564,9 @@ const ContactDetails = ({ formikRef, systemIntake }: ContactDetailsProps) => {
             </div>
             <AutoSave
               values={values}
-              onSave={() => onSubmit(values)}
+              onSave={() => {
+                onSubmit(formikRef.current.values);
+              }}
               debounceDelay={1000 * 30}
             />
             <PageNumber currentPage={1} totalPages={3} />
