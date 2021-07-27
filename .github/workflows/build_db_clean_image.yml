@@ -1,8 +1,16 @@
 name: build_db_clean_image
 
 on:
-  schedule:
-    - cron:  '0 6 * * 6'
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+# on:
+#   schedule:
+#     - cron:  '0 6 * * 6'
 
 env:
   AWS_DEFAULT_REGION: us-west-2
@@ -24,12 +32,30 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
-      - name: Build the db cleaner image and push to ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@vaaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # v1.3.3
+      - name: Build, tag, and push image to Amazon ECR
         env:
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: easi-db-clean
+          IMAGE_TAG: ${{ github.sha }}
+          ECR_BACKEND: "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/$repo_name"
+          TAG: "$ECR_BACKEND:${3:-${GIT_SHA1}}"
         run: |
-          ./scripts/build_db_image "Dockerfile.db_clean" "easi-db-clean" "latest"
-      - name: Announce failure
-        if: ${{ failure() }}
-        run: |
-          ./scripts/github-action-announce-broken-branch
+          bash builddir="$(git rev-parse --show-toplevel)"
+          docker build --quiet --no-cache --tag "$ECR_REPOSITORY" "$builddir" --file "Dockerfile.db_clean"
+          docker tag "$ECR_REPOSITORY" "$TAG"
+          docker push "$TAG"
+
+
+
+      # - name: Build the db cleaner image and push to ECR
+      #   env:
+      #     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      #   run: |
+      #     ./scripts/build_db_image "Dockerfile.db_clean" "easi-db-clean" "latest"
+      # - name: Announce failure
+      #   if: ${{ failure() }}
+      #   run: |
+      #     ./scripts/github-action-announce-broken-branch
