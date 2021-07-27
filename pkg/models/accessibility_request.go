@@ -41,9 +41,9 @@ type AccessibilityRequestMetrics struct {
 
 // AccessibilityMetricsLine models a row of the 508 metrics csv
 type AccessibilityMetricsLine struct {
-	Name   string
-	LCID   string
-	Status AccessibilityRequestStatus
-	//CreatedAt time.Time
-	//StatusCreatedAt time.Time
+	Name            string
+	LCID            string
+	Status          AccessibilityRequestStatus
+	CreatedAt       time.Time `db:"created_at"`
+	StatusCreatedAt time.Time `db:"status_created_at"`
 }

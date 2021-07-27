@@ -61,12 +61,11 @@ func NewFetchAccessibilityMetrics(
 		}
 		data := [][]string{{"Request Name", "Lifecycle ID", "Request Status", "Date Opened", "Date Closed"}}
 		for _, line := range lines {
-			//dateClosedString := ""
-			//if line.Status == models.AccessibilityRequestStatusClosed {
-			//	dateClosedString = line.StatusCreatedAt.Format("01/02/2006")
-			//}
-			data = append(data, []string{line.Name, line.LCID, string(line.Status)})
-			//data = append(data, []string{line.Name, line.LCID, string(line.Status), line.CreatedAt.Format("01/02/2006"), dateClosedString})
+			dateClosedString := ""
+			if line.Status == models.AccessibilityRequestStatusClosed {
+				dateClosedString = line.StatusCreatedAt.Format("01/02/2006")
+			}
+			data = append(data, []string{line.Name, line.LCID, string(line.Status), line.CreatedAt.Format("01/02/2006"), dateClosedString})
 		}
 		return data, nil
 	}
