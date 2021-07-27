@@ -191,7 +191,7 @@ func (s *Store) FetchAccessibilityMetrics() ([]models.AccessibilityMetricsLine, 
 		FROM accessibility_requests_and_statuses
 	`
 	var metrics []models.AccessibilityMetricsLine
-	err := s.db.Get(&metrics, accessibilityMetricsSQL)
+	err := s.db.Select(&metrics, accessibilityMetricsSQL)
 
 	return metrics, err
 }
