@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 // import { mount, ReactWrapper, shallow } from 'enzyme';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import configureMockStore from 'redux-mock-store';
 
@@ -49,27 +49,45 @@ describe('The Goveranance Task List', () => {
     });
   });
 
-  // it('displays all the governance steps', async () => {
-  //   const mockStore = configureMockStore();
-  //   const store = mockStore({
-  //     systemIntake: { systemIntake: {} },
-  //     businessCase: { form: {} }
-  //   });
+  it('displays all the governance steps', async () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      systemIntake: { systemIntake: {} },
+      businessCase: { form: {} }
+    });
 
-  //   await act(async () => {
-  //     render(
-  //       <MemoryRouter initialEntries={['/']} initialIndex={0}>
-  //         <Provider store={store}>
-  //           <MessageProvider>
-  //             <GovernanceTaskList />
-  //           </MessageProvider>
-  //         </Provider>
-  //       </MemoryRouter>
-  //     );
-  //   });
-  //   const listItems = screen.getByRole('ol.governance-task-list__task-list li');
-  //   expect(listItems).toHaveLength(6);
-  // });
+    await act(async () => {
+      render(
+        <MemoryRouter initialEntries={['/']} initialIndex={0}>
+          <Provider store={store}>
+            <MessageProvider>
+              <GovernanceTaskList />
+            </MessageProvider>
+          </Provider>
+        </MemoryRouter>
+      );
+    });
+    const taskList = screen.getByTestId('task-list');
+    expect(taskList).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-intake-form')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-intake-review')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-business-case-draft')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-business-case-final')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-grb-meeting')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-decision')
+    ).toBeInTheDocument();
+  });
 
   // describe('Recompetes', () => {
   //   it('displays "for recompete in title', async () => {

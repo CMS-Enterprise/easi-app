@@ -17,9 +17,15 @@ type TaskListItemProps = {
   heading: string;
   status: string;
   children?: React.ReactNode | React.ReactNodeArray;
+  testId: string;
 };
 
-const TaskListItem = ({ heading, status, children }: TaskListItemProps) => {
+const TaskListItem = ({
+  heading,
+  status,
+  children,
+  testId
+}: TaskListItemProps) => {
   const taskListItemClasses = classnames(
     'governance-task-list__item',
     'padding-bottom-4',
@@ -30,7 +36,7 @@ const TaskListItem = ({ heading, status, children }: TaskListItemProps) => {
     }
   );
   return (
-    <li className={taskListItemClasses}>
+    <li className={taskListItemClasses} data-testid={testId}>
       <div className="governance-task-list__task-content">
         <div className="governance-task-list__task-heading-row">
           <h3 className="governance-task-list__task-heading margin-top-0">
