@@ -43,17 +43,26 @@ const TaskListItem = ({
             {heading}
           </h3>
           {status === 'CANNOT_START' && (
-            <span className="governance-task-list__task-tag governance-task-list__task-tag--na">
+            <span
+              className="governance-task-list__task-tag governance-task-list__task-tag--na"
+              data-testid="task-list-task-tag"
+            >
               Cannot start yet
             </span>
           )}
           {status === 'COMPLETED' && (
-            <span className="governance-task-list__task-tag governance-task-list__task-tag--completed">
+            <span
+              className="governance-task-list__task-tag governance-task-list__task-tag--completed"
+              data-testid="task-list-task-tag"
+            >
               Completed
             </span>
           )}
           {status === 'NOT_NEEDED' && (
-            <span className="governance-task-list__task-tag governance-task-list__task-tag--na">
+            <span
+              className="governance-task-list__task-tag governance-task-list__task-tag--na"
+              data-testid="task-list-task-tag"
+            >
               Not needed
             </span>
           )}
