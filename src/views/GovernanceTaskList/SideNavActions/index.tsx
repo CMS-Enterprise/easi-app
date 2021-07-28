@@ -20,7 +20,10 @@ const SideNavActions = ({ intake, archiveIntake }: SideNavActionsProps) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   return (
-    <div className="sidenav-actions grid-row flex-column">
+    <div
+      className="sidenav-actions grid-row flex-column"
+      data-testid="sidenav-actions"
+    >
       <div className="grid-col margin-top-105">
         <Link to="/">Save & Exit</Link>
       </div>

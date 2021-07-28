@@ -17,9 +17,15 @@ type TaskListItemProps = {
   heading: string;
   status: string;
   children?: React.ReactNode | React.ReactNodeArray;
+  testId: string;
 };
 
-const TaskListItem = ({ heading, status, children }: TaskListItemProps) => {
+const TaskListItem = ({
+  heading,
+  status,
+  children,
+  testId
+}: TaskListItemProps) => {
   const taskListItemClasses = classnames(
     'governance-task-list__item',
     'padding-bottom-4',
@@ -30,24 +36,33 @@ const TaskListItem = ({ heading, status, children }: TaskListItemProps) => {
     }
   );
   return (
-    <li className={taskListItemClasses}>
+    <li className={taskListItemClasses} data-testid={testId}>
       <div className="governance-task-list__task-content">
         <div className="governance-task-list__task-heading-row">
           <h3 className="governance-task-list__task-heading margin-top-0">
             {heading}
           </h3>
           {status === 'CANNOT_START' && (
-            <span className="governance-task-list__task-tag governance-task-list__task-tag--na">
+            <span
+              className="governance-task-list__task-tag governance-task-list__task-tag--na"
+              data-testid="task-list-task-tag"
+            >
               Cannot start yet
             </span>
           )}
           {status === 'COMPLETED' && (
-            <span className="governance-task-list__task-tag governance-task-list__task-tag--completed">
+            <span
+              className="governance-task-list__task-tag governance-task-list__task-tag--completed"
+              data-testid="task-list-task-tag"
+            >
               Completed
             </span>
           )}
           {status === 'NOT_NEEDED' && (
-            <span className="governance-task-list__task-tag governance-task-list__task-tag--na">
+            <span
+              className="governance-task-list__task-tag governance-task-list__task-tag--na"
+              data-testid="task-list-task-tag"
+            >
               Not needed
             </span>
           )}
