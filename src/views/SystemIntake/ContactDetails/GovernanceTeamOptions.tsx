@@ -27,9 +27,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
           </legend>
           {cmsGovernanceTeams.map((team: any, index: number) => {
             const teams = values.governanceTeams.teams || [];
-            const isChecked = values.governanceTeams.teams
-              .map(t => t.name)
-              .includes(team.value);
+            const isChecked = teams.map(t => t.name).includes(team.value);
             return (
               <Fragment key={team.key}>
                 <CheckboxField
