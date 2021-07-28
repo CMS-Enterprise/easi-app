@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Link, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { SecureRoute } from '@okta/okta-react';
@@ -35,7 +35,6 @@ export const SystemIntake = () => {
     systemId: string;
     formPage: string;
   }>();
-  const formikRef: any = useRef();
 
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
     GetSystemIntakeQuery,
@@ -75,30 +74,15 @@ export const SystemIntake = () => {
           <Switch>
             <SecureRoute
               path="/system/:systemId/contact-details"
-              render={() => (
-                <ContactDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                />
-              )}
+              render={() => <ContactDetails systemIntake={systemIntake} />}
             />
             <SecureRoute
               path="/system/:systemId/request-details"
-              render={() => (
-                <RequestDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                />
-              )}
+              render={() => <RequestDetails systemIntake={systemIntake} />}
             />
             <SecureRoute
               path="/system/:systemId/contract-details"
-              render={() => (
-                <ContractDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                />
-              )}
+              render={() => <ContractDetails systemIntake={systemIntake} />}
             />
             <SecureRoute
               path="/system/:systemId/review"

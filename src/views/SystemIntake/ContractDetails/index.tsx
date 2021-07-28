@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button, Link } from '@trussworks/react-uswds';
@@ -37,12 +37,12 @@ import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 type ContractDetailsProps = {
-  formikRef: any;
   systemIntake: SystemIntakeForm;
 };
 
-const ContractDetails = ({ formikRef, systemIntake }: ContractDetailsProps) => {
+const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
+  const formikRef: any = useRef();
 
   const initialValues: ContractDetailsForm = {
     id: systemIntake.id,
@@ -998,7 +998,9 @@ const ContractDetails = ({ formikRef, systemIntake }: ContractDetailsProps) => {
             </div>
             <AutoSave
               values={values}
-              onSave={() => onSubmit(values)}
+              onSave={() => {
+                onSubmit(formikRef.current.values);
+              }}
               debounceDelay={1000 * 30}
             />
             <PageNumber currentPage={3} totalPages={3} />

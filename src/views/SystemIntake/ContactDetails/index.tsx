@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -58,11 +58,11 @@ export type ContactDetailsForm = {
 };
 
 type ContactDetailsProps = {
-  formikRef: any;
   systemIntake: SystemIntakeForm;
 };
 
-const ContactDetails = ({ formikRef, systemIntake }: ContactDetailsProps) => {
+const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
+  const formikRef: any = useRef();
   const { t } = useTranslation('intake');
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
