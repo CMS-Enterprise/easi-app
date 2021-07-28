@@ -146,9 +146,12 @@ const GovernanceTaskList = () => {
                 </span>
               </Alert>
             )}
-            <ol className="governance-task-list__task-list governance-task-list__task-list--primary">
+            <ol
+              data-testid="task-list"
+              className="governance-task-list__task-list governance-task-list__task-list--primary"
+            >
               <TaskListItem
-                data-testid="task-list-intake-form"
+                testId="task-list-intake-form"
                 heading="Fill in the request form"
                 status={intakeTag(systemIntake.status)}
               >
@@ -162,7 +165,7 @@ const GovernanceTaskList = () => {
                 <IntakeDraftCta intake={systemIntake} />
               </TaskListItem>
               <TaskListItem
-                data-testid="task-list-intake-review"
+                testId="task-list-intake-review"
                 heading="Feedback from initial review"
                 status={initialReviewTag(systemIntake.status)}
               >
@@ -188,7 +191,7 @@ const GovernanceTaskList = () => {
                 </Alert>
               </TaskListItem>
               <TaskListItem
-                data-testid="task-list-business-case-draft"
+                testId="task-list-business-case-draft"
                 heading="Prepare your Business Case for the GRT"
                 status={businessCaseTag(systemIntake)}
               >
@@ -219,7 +222,7 @@ const GovernanceTaskList = () => {
                 <BusinessCaseDraftCta systemIntake={systemIntake} />
               </TaskListItem>
               <TaskListItem
-                data-testid="task-list-business-case-final"
+                testId="task-list-business-case-final"
                 heading="Submit the business case for final approval"
                 status={finalBusinessCaseTag(systemIntake)}
               >
@@ -242,7 +245,7 @@ const GovernanceTaskList = () => {
               </TaskListItem>
 
               <TaskListItem
-                data-testid="task-list-grb-meeting"
+                testId="task-list-grb-meeting"
                 heading="Attend the GRB meeting"
                 status={attendGrbMeetingTag(systemIntake)}
               >
@@ -261,7 +264,7 @@ const GovernanceTaskList = () => {
                 <AttendGrbMeetingCta intake={systemIntake} />
               </TaskListItem>
               <TaskListItem
-                data-testid="task-list-decision"
+                testId="task-list-decision"
                 heading="Decision and next steps"
                 status={decisionTag(systemIntake)}
               >
