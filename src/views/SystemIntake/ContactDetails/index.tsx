@@ -62,7 +62,7 @@ type ContactDetailsProps = {
 };
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
-  const formikRef: any = useRef();
+  const formikRef = useRef<FormikProps<ContactDetailsForm>>();
   const { t } = useTranslation('intake');
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);

@@ -41,7 +41,7 @@ type RequestDetailsProps = {
 
 const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
   const history = useHistory();
-  const formikRef: any = useRef();
+  const formikRef = useRef<FormikProps<RequestDetailsForm>>();
 
   const initialValues: RequestDetailsForm = {
     id: systemIntake.id,

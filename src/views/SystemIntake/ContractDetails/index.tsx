@@ -42,7 +42,7 @@ type ContractDetailsProps = {
 
 const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
-  const formikRef: any = useRef();
+  const formikRef = useRef<FormikProps<ContractDetailsForm>>();
 
   const initialValues: ContractDetailsForm = {
     id: systemIntake.id,
