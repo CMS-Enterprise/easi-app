@@ -386,9 +386,14 @@ const ContactDetails = ({
                       }}
                       value
                       aria-describedby="IntakeForm-ISSOHelp"
+                      aria-expanded={values.isso.isPresent === true}
+                      aria-controls="isso-name-container"
                     />
                     {values.isso.isPresent && (
-                      <div className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
+                      <div
+                        id="isso-name-container"
+                        className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1"
+                      >
                         <FieldGroup
                           scrollElement="isso.name"
                           error={!!flatErrors['isso.name']}

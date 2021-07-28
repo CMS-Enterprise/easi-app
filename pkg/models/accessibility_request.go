@@ -38,3 +38,8 @@ type AccessibilityRequestMetrics struct {
 	CreatedAndClosed        int       `json:"created_and_closed"`
 	CreatedAndInRemediation int       `json:"created_and_in_remediation"`
 }
+
+// AccessibilityMetricsLine models a row of the 508 metrics csv
+type AccessibilityMetricsLine struct {
+	Name string
+}
