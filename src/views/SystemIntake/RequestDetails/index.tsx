@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
@@ -36,12 +36,12 @@ type RequestDetailsForm = {
 };
 
 type RequestDetailsProps = {
-  formikRef: any;
   systemIntake: SystemIntakeForm;
 };
 
-const RequestDetails = ({ formikRef, systemIntake }: RequestDetailsProps) => {
+const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
   const history = useHistory();
+  const formikRef = useRef<FormikProps<RequestDetailsForm>>();
 
   const initialValues: RequestDetailsForm = {
     id: systemIntake.id,
@@ -365,7 +365,9 @@ const RequestDetails = ({ formikRef, systemIntake }: RequestDetailsProps) => {
             </div>
             <AutoSave
               values={values}
-              onSave={() => onSubmit(values)}
+              onSave={() => {
+                onSubmit(formikRef.current.values);
+              }}
               debounceDelay={1000 * 3}
             />
             <PageNumber currentPage={2} totalPages={3} />
