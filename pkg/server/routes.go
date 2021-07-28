@@ -402,6 +402,7 @@ func (s *Server) routes(
 		services.NewBackfill(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
+			store.FetchSystemIntakeByLifecycleID,
 			store.CreateSystemIntake,
 			store.UpdateSystemIntake,
 			store.CreateNote,

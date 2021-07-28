@@ -4,11 +4,13 @@ import (
 	"bytes"
 	"encoding/csv"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -24,7 +26,7 @@ const (
 	envHost     = "BACKFILL_HOST"
 	envAuth     = "BACKFILL_AUTH"
 	envDrop     = "BACKFILL_DROP"
-	healthcheck = "https://%s/api/v1/healthcheck"
+	healthcheck = "%s/api/v1/healthcheck"
 )
 
 type config struct {
@@ -64,6 +66,9 @@ func execute(cfg *config) error {
 	}
 	// fmt.Fprintf(os.Stdout, "headers: %v\n", row)
 	_ = row
+	rowCount := 0
+	createCount := 0
+	updateCount := 0
 
 	errs := []error{}
 	for err == nil {
@@ -74,6 +79,7 @@ func execute(cfg *config) error {
 			}
 			continue
 		}
+		rowCount++
 		item, rErr := convert(row)
 		if rErr != nil {
 			errs = append(errs, rErr)
@@ -82,10 +88,19 @@ func execute(cfg *config) error {
 		if item == nil {
 			continue
 		}
-		if rErr := upload(cfg.host, cfg.auth, item); rErr != nil {
+		create, rErr := upload(cfg.host, cfg.auth, item)
+		if rErr != nil {
 			errs = append(errs, rErr)
 		}
+		if create {
+			createCount++
+		} else {
+			updateCount++
+		}
 	}
+
+	fmt.Printf("%d rows processed with %d errors.\n%d creates and %d updates.\n\n", rowCount, len(errs), createCount, updateCount)
+
 	if len(errs) != 0 {
 		fmt.Fprintf(os.Stdout, "problems processing file: %v", errs)
 		return fmt.Errorf("problems processing file: %v", errs)
@@ -93,42 +108,49 @@ func execute(cfg *config) error {
 	return nil
 }
 
-func upload(host string, auth string, item *entry) error {
+func upload(host string, auth string, item *entry) (didCreate bool, err error) {
 	body, err := json.MarshalIndent(item, "", "\t")
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://%s/api/v1/backfill", host), bytes.NewReader(body))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/backfill", host), bytes.NewReader(body))
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	if ok, perr := strconv.ParseBool(os.Getenv(envDrop)); ok && perr == nil {
-		req, err = http.NewRequest("DELETE", fmt.Sprintf("https://%s/api/v1/system_intake/%s?remove=true", host, item.Intake.ID.String()), nil)
+		req, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/system_intake/%s?remove=true", host, item.Intake.ID.String()), nil)
 		if err != nil {
-			return err
+			return false, err
 		}
 	}
 
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", auth))
+	req.Header.Add("Authorization", auth)
 	// req.Write(os.Stdout)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("request failed: %v", err)
+		return false, fmt.Errorf("request failed: %v", err)
 	}
 	defer resp.Body.Close()
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return fmt.Errorf("expected 204; got %d; body %s", resp.StatusCode, err)
+		return false, fmt.Errorf("could not read reasponse: %v", err)
 	}
 
-	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("%s; expected 200/204; got %d; body %s", item.Intake.ID.String(), resp.StatusCode, content)
+	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusCreated {
+		return false, fmt.Errorf("%s; expected 201/204; got %d; body %s", item.Intake.ID.String(), resp.StatusCode, content)
 	}
-	fmt.Fprintf(os.Stdout, "processed: %s\n", item.Intake.ID.String())
-	return nil
+
+	var message string
+	if resp.StatusCode == http.StatusCreated {
+		message = "created"
+	} else {
+		message = "updated"
+	}
+	fmt.Fprintf(os.Stdout, "%s %s\n", message, item.Intake.LifecycleID.String)
+	return resp.StatusCode == http.StatusCreated, nil
 }
 
 const (
@@ -171,15 +193,16 @@ func convert(row []string) (*entry, error) {
 	data := &entry{}
 
 	// UUIDs were manually created on the spreadsheet
-	uuid, err := uuid.Parse(row[colUUID])
+	id, err := uuid.Parse(row[colUUID])
 	if err != nil {
-		return nil, err
+		// no uuid in the data, so send all zeros.
+		id = uuid.Nil
 	}
-	data.Intake.ID = uuid
+	data.Intake.ID = id
 
 	// skipping items that were marked as "Draft" in the spreadsheet
 	if strings.EqualFold("draft", row[colStatus]) {
-		fmt.Fprintf(os.Stdout, "skipping %v: status - %s\n", uuid, row[colStatus])
+		fmt.Fprintf(os.Stdout, "skipping %v: status - %s\n", id, row[colStatus])
 		return nil, nil
 	}
 	data.Intake.Status = models.SystemIntakeStatusCLOSED
@@ -213,9 +236,15 @@ func convert(row []string) (*entry, error) {
 		}
 	}
 
-	// sorted - LCIDs in spreadsheet frequently have a 1 character ALPHA prefix
-	data.Intake.LifecycleID = null.StringFrom(row[colLCID])
-	data.Intake.LifecycleScope = null.StringFrom(row[colLCIDScope])
+	// some rows contain various non-LCID values such as "n/a", so we'll only include the LCID
+	// columns if there is a valid LCID
+	if match, matchErr := regexp.MatchString(`^\w?\d{6}$`, row[colLCID]); match && matchErr == nil {
+		// LCIDs in spreadsheet frequently have a 1 character ALPHA prefix
+		data.Intake.LifecycleID = null.StringFrom(row[colLCID])
+		data.Intake.LifecycleScope = null.StringFrom(row[colLCIDScope])
+	} else {
+		return nil, errors.New("no lcid for intake")
+	}
 
 	// labelled "LCID Expires"
 	if dt, err := convertDate(row[colLCIDExp]); err == nil {
