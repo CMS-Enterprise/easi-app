@@ -161,3 +161,8 @@ func (s StoreTestSuite) TestFetchAccessibilityRequests() {
 		s.Equal(expectedNumRequests, len(requests))
 	})
 }
+
+func (s StoreTestSuite) TestFetchAccessibilityMetrics() {
+	err := s.store.DANGEROUSClearDatabaseTables()
+	s.NoError(err)
+}
