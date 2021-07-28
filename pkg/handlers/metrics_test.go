@@ -168,3 +168,52 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 		s.Equal(http.StatusMethodNotAllowed, rr.Code)
 	})
 }
+
+func (s HandlerTestSuite) TestAccessibilityMetricsHandler() {
+
+	fetchMetrics := func() ([][]string, error) {
+		return [][]string{{"Column 1", "Column 2"}, {"Field 1", "Field 2"}, {"Field 1", "Field 2"}}, nil
+	}
+
+	metricsURL := url.URL{
+		Path: "/508/metrics",
+	}
+
+	s.Run("golden path passes", func() {
+		q := metricsURL.Query()
+		u := url.URL{
+			RawQuery: q.Encode(),
+		}
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequest("GET", u.String(), nil)
+		s.NoError(err)
+
+		AccessibilityMetricsHandler{
+			fetchAccessibilityMetrics: fetchMetrics,
+			HandlerBase:               s.base,
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusOK, rr.Code)
+
+	})
+
+	s.Run("fetch error returns server error", func() {
+		failFetchMetrics := func() ([][]string, error) {
+			return [][]string{}, errors.New("failed to fetch metrics")
+		}
+		q := metricsURL.Query()
+		u := url.URL{
+			RawQuery: q.Encode(),
+		}
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequest("GET", u.String(), nil)
+		s.NoError(err)
+
+		AccessibilityMetricsHandler{
+			fetchAccessibilityMetrics: failFetchMetrics,
+			HandlerBase:               s.base,
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusInternalServerError, rr.Code)
+	})
+}

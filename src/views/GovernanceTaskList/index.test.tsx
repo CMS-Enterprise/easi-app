@@ -2,8 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
-import { mount, ReactWrapper, shallow } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
@@ -29,30 +28,14 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The Goveranance Task List', () => {
-  it('renders without crashing', () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({});
-    shallow(
-      <MemoryRouter initialEntries={['/']} initialIndex={0}>
-        <Provider store={store}>
-          <MessageProvider>
-            <GovernanceTaskList />
-          </MessageProvider>
-        </Provider>
-      </MemoryRouter>
-    );
-  });
-
-  it('displays all the governance steps', async () => {
+  it('renders without crashing', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       systemIntake: { systemIntake: {} },
       businessCase: { form: {} }
     });
-
-    let component: ReactWrapper;
     await act(async () => {
-      component = mount(
+      render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <Provider store={store}>
             <MessageProvider>
@@ -62,10 +45,46 @@ describe('The Goveranance Task List', () => {
         </MemoryRouter>
       );
     });
-    component!.update();
+  });
+
+  it('displays all the governance steps', async () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      systemIntake: { systemIntake: {} },
+      businessCase: { form: {} }
+    });
+
+    await act(async () => {
+      render(
+        <MemoryRouter initialEntries={['/']} initialIndex={0}>
+          <Provider store={store}>
+            <MessageProvider>
+              <GovernanceTaskList />
+            </MessageProvider>
+          </Provider>
+        </MemoryRouter>
+      );
+    });
+    const taskList = screen.getByTestId('task-list');
+    expect(taskList).toBeInTheDocument();
     expect(
-      component!.find('ol.governance-task-list__task-list li').length
-    ).toEqual(6);
+      within(taskList).getByTestId('task-list-intake-form')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-intake-review')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-business-case-draft')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-business-case-final')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-grb-meeting')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-decision')
+    ).toBeInTheDocument();
   });
 
   describe('Recompetes', () => {
@@ -82,9 +101,8 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
-      let component: ReactWrapper;
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -94,11 +112,14 @@ describe('The Goveranance Task List', () => {
           </MemoryRouter>
         );
       });
-      component!.update();
 
-      expect(component!.find('h1').text()).toContain(
-        'for re-competing a contract without any changes to systems or services'
-      );
+      expect(
+        screen.getByRole('heading', {
+          name:
+            'Get governance approval for re-competing a contract without any changes to systems or services',
+          level: 1
+        })
+      ).toBeInTheDocument();
     });
 
     it('displays not applicable steps as cannot start', async () => {
@@ -114,9 +135,8 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
-      let component: ReactWrapper;
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -126,35 +146,19 @@ describe('The Goveranance Task List', () => {
           </MemoryRouter>
         );
       });
-      component!.update();
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Cannot start yet');
-
+        screen.getByTestId('task-list-business-case-draft').textContent
+      ).toContain('Cannot start yet');
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-final"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Cannot start yet');
-
-      expect(
-        component!
-          .find('[data-testid="task-list-grb-meeting"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Cannot start yet');
-
-      expect(
-        component!
-          .find('[data-testid="task-list-decision"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Cannot start yet');
+        screen.getByTestId('task-list-business-case-final').textContent
+      ).toContain('Cannot start yet');
+      expect(screen.getByTestId('task-list-grb-meeting').textContent).toContain(
+        'Cannot start yet'
+      );
+      expect(screen.getByTestId('task-list-decision').textContent).toContain(
+        'Cannot start yet'
+      );
     });
 
     it('displays steps 3, 4, and 5 as not needed once issued LCID', async () => {
@@ -171,9 +175,8 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
-      let component: ReactWrapper;
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -183,48 +186,25 @@ describe('The Goveranance Task List', () => {
           </MemoryRouter>
         );
       });
-      component!.update();
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Completed');
 
+      expect(screen.getByTestId('task-list-intake-form').textContent).toContain(
+        'Completed'
+      );
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Completed');
-
+        screen.getByTestId('task-list-intake-review').textContent
+      ).toContain('Completed');
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Not needed');
-
+        screen.getByTestId('task-list-business-case-draft').textContent
+      ).toContain('Not needed');
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-final"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Not needed');
-
-      expect(
-        component!
-          .find('[data-testid="task-list-grb-meeting"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Not needed');
-
-      expect(
-        component!
-          .find('[data-testid="task-list-decision"]')
-          .find('.governance-task-list__task-tag')
-          .exists()
-      ).toEqual(false);
+        screen.getByTestId('task-list-business-case-final').textContent
+      ).toContain('Not needed');
+      expect(screen.getByTestId('task-list-grb-meeting').textContent).toContain(
+        'Not needed'
+      );
+      expect(screen.getByTestId('task-list-decision').textContent).toContain(
+        'Read decision from board'
+      );
     });
   });
 
@@ -240,9 +220,8 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -253,9 +232,12 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      expect(component!.find('h1').text()).toContain(
-        'for Easy Access to System Information'
-      );
+      expect(
+        screen.getByRole('heading', {
+          name: 'Get governance approval for Easy Access to System Information',
+          level: 1
+        })
+      ).toBeInTheDocument();
     });
 
     it('hides the request name', async () => {
@@ -264,9 +246,9 @@ describe('The Goveranance Task List', () => {
         systemIntake: { systemIntake: initialSystemIntakeForm },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
+
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -276,20 +258,23 @@ describe('The Goveranance Task List', () => {
           </MemoryRouter>
         );
       });
-
-      expect(component!.find('h1').text()).toEqual('Get governance approval');
+      expect(
+        screen.getByRole('heading', {
+          name: 'Get governance approval',
+          level: 1
+        })
+      ).toBeInTheDocument();
     });
   });
 
   it('renders the side nav actions', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
-      systemIntake: { systemIntake: {} },
+      systemIntake: { systemIntake: initialSystemIntakeForm },
       businessCase: { form: {} }
     });
-    let component: ReactWrapper;
     await act(async () => {
-      component = mount(
+      render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <Provider store={store}>
             <MessageProvider>
@@ -299,8 +284,7 @@ describe('The Goveranance Task List', () => {
         </MemoryRouter>
       );
     });
-    component!.update();
-    expect(component!.find('.sidenav-actions').length).toEqual(1);
+    expect(screen.getByTestId('sidenav-actions')).toBeInTheDocument();
   });
 
   describe('Statuses', () => {
@@ -316,10 +300,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -330,24 +313,15 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
-      expect(
-        component!.find('[data-testid="intake-start-btn"]').exists()
-      ).toEqual(true);
+      expect(screen.getByTestId('intake-start-btn')).toBeInTheDocument();
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Cannot start yet');
+        screen.getByTestId('task-list-intake-review').textContent
+      ).toContain('Cannot start yet');
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Cannot start yet');
+        screen.getByTestId('task-list-business-case-draft').textContent
+      ).toContain('Cannot start yet');
     });
 
     it('renders proper buttons for INTAKE_SUBMITTED', async () => {
@@ -360,10 +334,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -374,31 +347,20 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+
+      expect(screen.getByTestId('task-list-intake-form').textContent).toContain(
+        'Completed'
+      );
+
+      const initialReview = screen.getByTestId('task-list-intake-review');
       expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+        within(initialReview).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Completed');
-
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .exists()
-      ).toEqual(false);
-
-      expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .text()
-      ).toEqual('Cannot start yet');
+        screen.getByTestId('task-list-business-case-draft').textContent
+      ).toContain('Cannot start yet');
     });
 
     it('renders proper buttons for NEED_BIZ_CASE', async () => {
@@ -411,10 +373,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -424,36 +385,25 @@ describe('The Goveranance Task List', () => {
           </MemoryRouter>
         );
       });
-
-      component!.update();
-      expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('start-biz-case-btn')).toBeInTheDocument();
 
       expect(
-        component!.find('[data-testid="start-biz-case-btn"]').exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
+      const bizCase = screen.getByTestId('task-list-business-case-draft');
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .exists()
-      ).toEqual(false);
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
     });
 
     it('renders proper buttons for BIZ_CASE_DRAFT', async () => {
@@ -466,10 +416,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -480,35 +429,25 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
-      expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('continue-biz-case-btn')).toBeInTheDocument();
 
       expect(
-        component!.find('[data-testid="continue-biz-case-btn"]').exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
+      const bizCase = screen.getByTestId('task-list-business-case-draft');
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .exists()
-      ).toEqual(false);
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
     });
 
     it('renders proper buttons for BIZ_CASE_DRAFT_SUBMITTED', async () => {
@@ -522,10 +461,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -536,34 +474,25 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
-      expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('view-biz-case-link')).toBeInTheDocument();
 
       expect(
-        component!.find('[data-testid="view-biz-case-link"]').exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
     });
 
@@ -577,10 +506,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -591,35 +519,27 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+        screen.getByTestId('update-biz-case-draft-btn')
+      ).toBeInTheDocument();
 
       expect(
-        component!.find('[data-testid="update-biz-case-draft-btn"]').exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
+      const bizCase = screen.getByTestId('task-list-business-case-draft');
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .exists()
-      ).toEqual(false);
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
     });
 
     it('renders proper buttons for READY_FOR_GRT', async () => {
@@ -632,10 +552,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -646,59 +565,43 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
-      expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('prepare-for-grt-cta')).toBeInTheDocument();
+      expect(screen.getByTestId('view-biz-case-cta')).toBeInTheDocument();
 
       expect(
-        component!.find('[data-testid="prepare-for-grt-cta"]').exists()
-      ).toEqual(true);
-
-      expect(
-        component!.find('[data-testid="view-biz-case-cta"]').exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
+      const bizCase = screen.getByTestId('task-list-business-case-draft');
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .exists()
-      ).toEqual(false);
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-final"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Cannot start yet');
 
       expect(
-        component!
-          .find('[data-testid="task-list-grb-meeting"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-grb-meeting')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Cannot start yet');
 
       expect(
-        component!
-          .find('[data-testid="task-list-decision"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-decision')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Cannot start yet');
     });
 
@@ -712,10 +615,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -726,45 +628,39 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
-      expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-final"]')
-          .find(UswdsLink)
-          .text()
-      ).toEqual('Review and Submit');
+        within(screen.getByTestId('task-list-business-case-final')).getByRole(
+          'link',
+          {
+            name: 'Review and Submit'
+          }
+        )
+      ).toBeInTheDocument();
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
+      const bizCase = screen.getByTestId('task-list-business-case-final');
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-final"]')
-          .find('.governance-task-list__task-tag')
-          .exists()
-      ).toEqual(false);
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
     });
 
     it('renders proper buttons for BIZ_CASE_FINAL_SUBMITTED', async () => {
@@ -777,10 +673,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -791,44 +686,39 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
-      expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-final"]')
-          .find(UswdsLink)
-          .exists()
-      ).toEqual(false);
+        within(screen.getByTestId('task-list-business-case-final')).queryByRole(
+          'link',
+          {
+            name: 'Review and Submit'
+          }
+        )
+      ).not.toBeInTheDocument();
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-final"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
     });
 
@@ -842,10 +732,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -856,49 +745,37 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
-      expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('prepare-for-grb-btn')).toBeInTheDocument();
 
       expect(
-        component!.find('[data-testid="prepare-for-grb-btn"]').exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-final"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
+      const bizCase = screen.getByTestId('task-list-grb-meeting');
       expect(
-        component!
-          .find('[data-testid="task-list-grb-meeting"]')
-          .find('.governance-task-list__task-tag')
-          .exists()
-      ).toEqual(false);
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
     });
 
     it('renders proper buttons for LCID_ISSUED', async () => {
@@ -911,10 +788,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -925,56 +801,43 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
-      expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
-
-      expect(component!.find('[data-testid="decision-cta"]').exists()).toEqual(
-        true
-      );
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('decision-cta')).toBeInTheDocument();
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-draft"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-business-case-final"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-grb-meeting"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-grb-meeting')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
+      const bizCase = screen.getByTestId('task-list-decision');
       expect(
-        component!
-          .find('[data-testid="task-list-decision"]')
-          .find('.governance-task-list__task-tag')
-          .exists()
-      ).toEqual(false);
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
     });
 
     it('renders proper buttons for NO_GOVERNANCE', async () => {
@@ -987,10 +850,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -1001,40 +863,28 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('task-list-closed-alert')).toBeInTheDocument();
       expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+        screen.getByTestId('plain-text-no-governance-decision')
+      ).toBeInTheDocument();
 
       expect(
-        component!.find('[data-testid="task-list-closed-alert"]').exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="plain-text-no-governance-decision"]')
-          .exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Cannot start yet');
 
       expect(
-        component!
-          .find('[data-testid="task-list-grb-meeting"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-grb-meeting')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
     });
 
@@ -1048,10 +898,9 @@ describe('The Goveranance Task List', () => {
         },
         businessCase: { form: {} }
       });
-      let component: ReactWrapper;
 
       await act(async () => {
-        component = mount(
+        render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
               <MessageProvider>
@@ -1062,40 +911,28 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      component!.update();
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('task-list-closed-alert')).toBeInTheDocument();
       expect(
-        component!.find('[data-testid="intake-view-link"]').exists()
-      ).toEqual(true);
+        screen.getByTestId('plain-text-not-it-request-decision')
+      ).toBeInTheDocument();
 
       expect(
-        component!.find('[data-testid="task-list-closed-alert"]').exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="plain-text-not-it-request-decision"]')
-          .exists()
-      ).toEqual(true);
-
-      expect(
-        component!
-          .find('[data-testid="task-list-intake-form"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-intake-review"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
 
       expect(
-        component!
-          .find('[data-testid="task-list-grb-meeting"]')
-          .find('.governance-task-list__task-tag')
-          .text()
+        within(screen.getByTestId('task-list-grb-meeting')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
       ).toEqual('Completed');
     });
   });
