@@ -221,9 +221,14 @@ const TestDateForm = ({
                           setFieldValue('score.isPresent', true);
                         }}
                         value
+                        aria-expanded={values.score.isPresent === true}
+                        aria-controls="score-input-container"
                       />
                       {values.score.isPresent && (
-                        <div className="width-card-lg margin-left-4 margin-bottom-1">
+                        <div
+                          id="score-input-container"
+                          className="width-card-lg margin-left-4 margin-bottom-1"
+                        >
                           <FieldGroup
                             scrollElement="score.value"
                             error={!!flatErrors['score.value']}

@@ -69,3 +69,31 @@ func (s ServicesTestSuite) TestNewFetchMetrics() {
 	})
 
 }
+
+func (s ServicesTestSuite) TestNewFetchAccessibilityMetrics() {
+	fetchMetrics := func() ([]models.AccessibilityMetricsLine, error) {
+		return []models.AccessibilityMetricsLine{
+			{Name: "Name 1"},
+			{Name: "Name 2"},
+		}, nil
+	}
+
+	s.Run("golden path", func() {
+		data, err := NewFetchAccessibilityMetrics(fetchMetrics)()
+		s.NoError(err)
+
+		s.Equal([][]string{
+			{"Request Name"},
+			{"Name 1"},
+			{"Name 2"},
+		}, data)
+	})
+
+	s.Run("fails if fetchMetrics fails", func() {
+		failFetchMetrics := func() ([]models.AccessibilityMetricsLine, error) {
+			return nil, errors.New("failed to fetch metrics")
+		}
+		_, err := NewFetchAccessibilityMetrics(failFetchMetrics)()
+		s.Error(err)
+	})
+}
