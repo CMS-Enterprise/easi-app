@@ -21,6 +21,8 @@ picking up the market share.
 ## Considered Alternatives
 
 * [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/)
+
+  PROS
   * It has the most support in the industry. This means we will have better
   resources to help encourage us to write more and better tests.
   * react-testing-library uses the DOM, which means no more confusing shallow vs.
@@ -32,6 +34,13 @@ picking up the market share.
   all difficult to do in Enzyme.
   * Easy to use selectors
 
+  CONS
+  * Another library/API to learn
+  * The transition from Enzyme to RTL might get messy. We'll have tests with two
+  different libraries.
+
+* Stick with Enzyme
+
 ## Decision Outcome
 
 * [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/)
@@ -40,6 +49,16 @@ We decided to go with React Testing Library for all of the reasons above.
 We believe that it will encourage us to write more unit tests by making testing
 easier.
 
-## Pros and Cons of the Alternatives <!-- optional -->
+## Pros and Cons of the Alternatives
 
-  There were no alternatives considered.
+* Stick with Enzyme
+
+  PROS
+  * It's what we use now. We have examples on how to do things.
+  * Lots of resources online.
+
+  CONS
+  * Tests are hard to setup/write.
+  * Online resources are outdated since RTL is the preferred testing library.
+  * It's not the recommended testing suite by React.
+  * Selectors don't account for accessibility.
