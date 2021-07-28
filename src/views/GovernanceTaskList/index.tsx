@@ -11,16 +11,12 @@ import {
   Link as UswdsLink
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import {
-  GetSystemIntake,
-  GetSystemIntakeVariables
-} from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import Loading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import { ImproveEasiSurvey } from 'components/Survey';
 import {
@@ -32,6 +28,11 @@ import {
   intakeTag
 } from 'data/taskList';
 import useMessage from 'hooks/useMessage';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import {
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
 import { archiveSystemIntake } from 'types/routines';
 
 import SideNavActions from './SideNavActions';
@@ -61,8 +62,8 @@ const GovernanceTaskList = () => {
   );
   const systemIntake = data?.systemIntake;
 
-  if (loading || !systemIntake) {
-    return <p>Loading...</p>;
+  if (loading) {
+    return <Loading />;
   }
 
   const archiveIntake = () => {
