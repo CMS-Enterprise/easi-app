@@ -52,10 +52,9 @@ color="warning"
 
 slack_payload=$( jq -n \
   --arg message "$message" \
-  --arg build_url "$CIRCLE_BUILD_URL" \
+  --arg build_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
   --arg color "$color" \
   --arg pretext "$pretext" \
-  --arg user "$CIRCLE_USERNAME" \
   --arg title "$title" \
   --arg now "$NOW" \
   '{
@@ -65,7 +64,6 @@ slack_payload=$( jq -n \
             "fallback": $message,
             "color": $color,
             "pretext": $pretext,
-            "author_name": $user,
             "title": $title,
             "title_link": $build_url,
             "text": $message,
