@@ -293,6 +293,8 @@ func convert(row []string) (*entry, error) {
 		data.Intake.ExistingContract = null.StringFrom("NOT_NEEDED")
 	}
 
+	data.Intake.AdminLead = null.StringFrom(row[colAdminLead])
+
 	if row[colGRTNotes] != "" {
 		data.Notes = append(data.Notes, models.Note{
 			Content:    null.StringFrom(row[colGRTNotes]),
