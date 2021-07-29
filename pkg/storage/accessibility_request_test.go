@@ -165,4 +165,27 @@ func (s StoreTestSuite) TestFetchAccessibilityRequests() {
 func (s StoreTestSuite) TestFetchAccessibilityMetrics() {
 	err := s.store.DANGEROUSClearDatabaseTables()
 	s.NoError(err)
+
+	ctx := context.Background()
+	intake := testhelpers.NewSystemIntake()
+	_, err = s.store.CreateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	s.Run("returns correct metrics", func() {
+		newRequest1 := testhelpers.NewAccessibilityRequest(intake.ID)
+		newRequest1.Name = "My Accessibility Request 1"
+		newRequest2 := testhelpers.NewAccessibilityRequest(intake.ID)
+		newRequest2.Name = "My Accessibility Request 2"
+
+		_, err = s.store.CreateAccessibilityRequest(ctx, &newRequest1)
+		s.NoError(err)
+
+		_, err = s.store.CreateAccessibilityRequest(ctx, &newRequest2)
+		s.NoError(err)
+
+		metrics, fetchError := s.store.FetchAccessibilityMetrics()
+		s.NoError(fetchError)
+		s.Len(metrics, 2)
+		s.Equal(models.AccessibilityMetricsLine{Name: "My Accessibility Request 1"}, metrics[0])
+	})
 }
