@@ -187,9 +187,10 @@ func (s *Store) FetchAccessibilityRequestMetrics(_ context.Context, startTime ti
 // FetchAccessibilityMetrics fetches data about accessibility requests
 func (s *Store) FetchAccessibilityMetrics() ([]models.AccessibilityMetricsLine, error) {
 	const accessibilityMetricsSQL = `
-		SELECT name
-		FROM accessibility_requests_and_statuses
-	`
+		SELECT aras.name, si.lcid, aras.status, aras.created_at, aras.status_created_at
+		FROM accessibility_requests_and_statuses aras
+		JOIN system_intakes si on aras.intake_id=si.id`
+
 	var metrics []models.AccessibilityMetricsLine
 	err := s.db.Select(&metrics, accessibilityMetricsSQL)
 
