@@ -9,6 +9,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import useMessage from 'hooks/useMessage';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
@@ -35,7 +36,7 @@ const List = () => {
   );
 
   if (loading) {
-    return <div>Loading</div>;
+    return <PageLoading />;
   }
 
   if (error) {
@@ -73,7 +74,10 @@ const List = () => {
           {t('accessibility:tabs.accessibilityRequests')}
         </NavLink>
       </SecondaryNav>
-      <div className="grid-container">
+      <div
+        className="grid-container"
+        data-testid="accessibility-request-list-page"
+      >
         {message && (
           <Alert className="margin-top-4" type="success" role="alert">
             {message}
