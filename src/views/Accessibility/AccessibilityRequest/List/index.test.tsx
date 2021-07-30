@@ -9,11 +9,7 @@ import {
 } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
-// import userEvent from '@testing-library/user-event';
-import {
-  ACCESSIBILITY_ADMIN_DEV,
-  ACCESSIBILITY_TESTER_DEV
-} from 'constants/jobCodes';
+import { ACCESSIBILITY_TESTER_DEV } from 'constants/jobCodes';
 import { MessageProvider } from 'hooks/useMessage';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
 
@@ -23,9 +19,6 @@ describe('Accessibility Request List page', () => {
   const mockStore = configureMockStore();
   const testerStore = mockStore({
     auth: { groups: [ACCESSIBILITY_TESTER_DEV], isUserSet: true }
-  });
-  const adminStore = mockStore({
-    auth: { groups: [ACCESSIBILITY_ADMIN_DEV], isUserSet: true }
   });
 
   const default508RequestsQuery = {
@@ -99,22 +92,5 @@ describe('Accessibility Request List page', () => {
     expect(
       screen.getByTestId('accessibility-request-list-page')
     ).toBeInTheDocument();
-  });
-
-  it('shows the Add a new request button to a 508 tester', async () => {
-    render508RequestListPage([default508RequestsQuery], testerStore);
-    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
-    // console.log(wrapper.debug());
-    expect(
-      screen.getByRole('link', { name: /Add a new request/i })
-    ).toBeInTheDocument();
-  });
-
-  it('does not show the Add a new request button to a 508 admin', async () => {
-    render508RequestListPage([default508RequestsQuery], adminStore);
-    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
-    expect(
-      screen.queryByRole('link', { name: /A a new request/i })
-    ).not.toBeInTheDocument();
   });
 });
