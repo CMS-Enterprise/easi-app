@@ -1,16 +1,8 @@
 name: build_db_clean_image
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-
-# on:
-#   schedule:
-#     - cron:  '0 6 * * 6'
+  schedule:
+    - cron:  '0 6 * * 6'
 
 env:
   AWS_DEFAULT_REGION: us-west-2
