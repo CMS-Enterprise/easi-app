@@ -42,7 +42,6 @@ func main() {
 		auth: os.Getenv(envAuth),
 	}
 	if err := execute(cfg); err != nil {
-		fmt.Fprintf(os.Stdout, "backfill failure: %v\n", err)
 		os.Exit(1)
 	}
 }
@@ -50,7 +49,7 @@ func main() {
 func execute(cfg *config) error {
 	url := fmt.Sprintf(healthcheck, cfg.host)
 
-	/* #nosec G107 */
+	/* #nosec G107 - we need to have the URL for the API be provided at runtime */
 	if _, err := http.Get(url); err != nil {
 		return fmt.Errorf("failed healthcheck for [%s]: %w", url, err)
 	}
@@ -64,7 +63,6 @@ func execute(cfg *config) error {
 	if err != nil {
 		return fmt.Errorf("failed to read column headers for [%s]: %w", cfg.file, err)
 	}
-	// fmt.Fprintf(os.Stdout, "headers: %v\n", row)
 	_ = row
 	rowCount := 0
 	createCount := 0
@@ -127,7 +125,6 @@ func upload(host string, auth string, item *entry) (didCreate bool, err error) {
 	}
 
 	req.Header.Add("Authorization", auth)
-	// req.Write(os.Stdout)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
