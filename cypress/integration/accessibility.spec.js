@@ -53,9 +53,10 @@ describe('Accessibility Requests', () => {
   });
 
   it('has the correct page order when clicking through 508 team home page', () => {
-    cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_TESTER' });
+    cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_USER' });
 
-    cy.contains('a', 'Add a new request').click();
+    cy.contains('button', 'User A11Y').click();
+    cy.contains('button', 'Make 508 request').click();
     cy.location().should(loc => {
       expect(loc.pathname).to.eq('/508/making-a-request');
     });

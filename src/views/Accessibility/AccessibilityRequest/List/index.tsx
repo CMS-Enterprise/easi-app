@@ -1,11 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Alert } from '@trussworks/react-uswds';
 import axios from 'axios';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
 import PageHeading from 'components/PageHeading';
@@ -14,16 +11,11 @@ import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import useMessage from 'hooks/useMessage';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
 import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
-import { AppState } from 'reducers/rootReducer';
 import { downloadBlob } from 'utils/downloadFile';
-import user from 'utils/user';
 
 const List = () => {
   const { t } = useTranslation('home');
   const { message } = useMessage();
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const flags = useFlags();
-  const isAccessibilityAdmin = user.isAccessibilityAdmin(userGroups, flags);
 
   const { loading, error, data } = useQuery<GetAccessibilityRequests>(
     GetAccessibilityRequestsQuery,
@@ -97,16 +89,6 @@ const List = () => {
                 Download all requests as excel file
               </span>
             </button>
-            {!isAccessibilityAdmin && (
-              <UswdsLink
-                asCustom={Link}
-                className="usa-button display-block float-right"
-                variant="unstyled"
-                to="/508/making-a-request"
-              >
-                {t('accessibility.newRequest')}
-              </UswdsLink>
-            )}
           </div>
         </div>
         <AccessibilityRequestsTable requests={requests || []} />
