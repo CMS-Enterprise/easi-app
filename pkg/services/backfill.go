@@ -25,6 +25,12 @@ func NewBackfill(
 	authorize func(context.Context) (bool, error),
 ) func(context.Context, models.SystemIntake, []models.Note) (bool, error) {
 	return func(ctx context.Context, intake models.SystemIntake, notes []models.Note) (bool, error) {
+		if intake.LifecycleID.ValueOrZero() == "" {
+			return false, &apperrors.BadRequestError{
+				Err: errors.New("lifecycle ID is required"),
+			}
+		}
+
 		ok, err := authorize(ctx)
 		if err != nil {
 			return false, err
@@ -32,21 +38,10 @@ func NewBackfill(
 
 		fmt.Printf("%+v", intake.LifecycleID)
 
-		if intake.LifecycleID.String == "" {
-			// skip it
-			return false, nil
-		}
-
 		if !ok {
 			return false, &apperrors.ResourceNotFoundError{
 				Err:      errors.New("failed to authorize backfill creation"),
 				Resource: models.Note{},
-			}
-		}
-
-		if intake.LifecycleID.ValueOrZero() == "" {
-			return false, &apperrors.BadRequestError{
-				Err: errors.New("lifecycle ID is required"),
 			}
 		}
 
@@ -69,8 +64,7 @@ func NewBackfill(
 		}
 
 		appcontext.ZLogger(ctx).Info("creating new system intake", zap.String("lcid", intake.LifecycleID.String))
-		// invariant data for all backfill (maybe do this in transport layer, for de-normalizing fields?)
-		intake.RequestType = models.SystemIntakeRequestTypeNEW // TODO: correct RequestType?
+		intake.RequestType = models.SystemIntakeRequestTypeNEW
 		intake.Status = models.SystemIntakeStatusLCIDISSUED
 
 		// If no ID is provided, generate a new V3 UUID using the lifecycle ID. This will always result in
@@ -80,42 +74,36 @@ func NewBackfill(
 			intake.ID = uuid.NewMD5(uuid.NameSpaceOID, []byte(intake.LifecycleID.String))
 		}
 
-		if _, err = createIntake(ctx, &intake); err != nil {
-			return false, err
-		}
-
-		// this "mutate" section gets around the fact that LCID fields don't get saved on a CREATE operation
-		mutate, err := fetchIntake(ctx, intake.ID)
-		if err != nil {
+		createdIntake, createErr := createIntake(ctx, &intake)
+		if createErr != nil {
 			return false, err
 		}
 
 		hasUpdate := false
 		if intake.LifecycleID.ValueOrZero() != "" {
 			hasUpdate = true
-			mutate.LifecycleID = intake.LifecycleID
+			createdIntake.LifecycleID = intake.LifecycleID
 		}
 		if intake.LifecycleExpiresAt != nil {
 			hasUpdate = true
-			mutate.LifecycleExpiresAt = intake.LifecycleExpiresAt
+			createdIntake.LifecycleExpiresAt = intake.LifecycleExpiresAt
 		}
 		if intake.LifecycleScope.ValueOrZero() != "" {
 			hasUpdate = true
-			mutate.LifecycleScope = intake.LifecycleScope
+			createdIntake.LifecycleScope = intake.LifecycleScope
 		}
 		if intake.SubmittedAt != nil {
 			hasUpdate = true
-			mutate.SubmittedAt = intake.SubmittedAt
+			createdIntake.SubmittedAt = intake.SubmittedAt
 		}
 
 		if hasUpdate {
-			if _, err = updateIntake(ctx, mutate); err != nil {
+			if _, err = updateIntake(ctx, createdIntake); err != nil {
 				return false, err
 			}
 		}
 
 		for _, note := range notes {
-			// TODO: should this be done at transport layer
 			note.SystemIntakeID = intake.ID
 			note.AuthorEUAID = appcontext.Principal(ctx).ID()
 
