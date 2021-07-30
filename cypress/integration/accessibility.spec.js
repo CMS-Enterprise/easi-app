@@ -53,7 +53,7 @@ describe('Accessibility Requests', () => {
   });
 
   it('has the correct page order when clicking through 508 team home page', () => {
-    cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_USER' });
+    cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_TESTER' });
 
     cy.contains('a', 'Add a new request').click();
     cy.location().should(loc => {
