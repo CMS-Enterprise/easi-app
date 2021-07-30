@@ -49,3 +49,24 @@ func NewFetchMetrics(
 		return metricsDigest, nil
 	}
 }
+
+// NewFetchAccessibilityMetrics builds the datatype that converts into the csv for accessibility metrics
+func NewFetchAccessibilityMetrics(
+	fetchMetrics func() ([]models.AccessibilityMetricsLine, error),
+) func() ([][]string, error) {
+	return func() ([][]string, error) {
+		lines, err := fetchMetrics()
+		if err != nil {
+			return nil, err
+		}
+		data := [][]string{{"Request Name", "Lifecycle ID", "Request Status", "Date Opened", "Date Closed"}}
+		for _, line := range lines {
+			dateClosedString := ""
+			if line.Status == models.AccessibilityRequestStatusClosed {
+				dateClosedString = line.StatusCreatedAt.Format("01/02/2006")
+			}
+			data = append(data, []string{line.Name, line.LCID, string(line.Status), line.CreatedAt.Format("01/02/2006"), dateClosedString})
+		}
+		return data, nil
+	}
+}

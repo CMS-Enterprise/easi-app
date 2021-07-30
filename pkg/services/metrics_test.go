@@ -69,3 +69,31 @@ func (s ServicesTestSuite) TestNewFetchMetrics() {
 	})
 
 }
+
+func (s ServicesTestSuite) TestNewFetchAccessibilityMetrics() {
+	fetchMetrics := func() ([]models.AccessibilityMetricsLine, error) {
+		return []models.AccessibilityMetricsLine{
+			{Name: "Name 1", LCID: "C3PO", Status: "OPEN", CreatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC)},
+			{Name: "Name 2", LCID: "OBI1", Status: "CLOSED", CreatedAt: time.Date(2020, 01, 15, 0, 0, 0, 0, time.UTC), StatusCreatedAt: time.Date(2020, 04, 15, 0, 0, 0, 0, time.UTC)},
+		}, nil
+	}
+
+	s.Run("golden path", func() {
+		data, err := NewFetchAccessibilityMetrics(fetchMetrics)()
+		s.NoError(err)
+
+		s.Equal([][]string{
+			{"Request Name", "Lifecycle ID", "Request Status", "Date Opened", "Date Closed"},
+			{"Name 1", "C3PO", "OPEN", "01/01/2020", ""},
+			{"Name 2", "OBI1", "CLOSED", "01/15/2020", "04/15/2020"},
+		}, data)
+	})
+
+	s.Run("fails if fetchMetrics fails", func() {
+		failFetchMetrics := func() ([]models.AccessibilityMetricsLine, error) {
+			return nil, errors.New("failed to fetch metrics")
+		}
+		_, err := NewFetchAccessibilityMetrics(failFetchMetrics)()
+		s.Error(err)
+	})
+}
