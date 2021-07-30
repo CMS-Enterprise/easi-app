@@ -1,12 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Alert } from '@trussworks/react-uswds';
 import axios from 'axios';
 
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import useMessage from 'hooks/useMessage';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
@@ -28,7 +28,7 @@ const List = () => {
   );
 
   if (loading) {
-    return <div>Loading</div>;
+    return <PageLoading />;
   }
 
   if (error) {
@@ -66,7 +66,10 @@ const List = () => {
           {t('accessibility:tabs.accessibilityRequests')}
         </NavLink>
       </SecondaryNav>
-      <div className="grid-container">
+      <div
+        className="grid-container"
+        data-testid="accessibility-request-list-page"
+      >
         {message && (
           <Alert className="margin-top-4" type="success" role="alert">
             {message}
@@ -86,14 +89,6 @@ const List = () => {
                 Download all requests as excel file
               </span>
             </button>
-            <UswdsLink
-              asCustom={Link}
-              className="usa-button display-block float-right"
-              variant="unstyled"
-              to="/508/making-a-request"
-            >
-              {t('accessibility.newRequest')}
-            </UswdsLink>
           </div>
         </div>
         <AccessibilityRequestsTable requests={requests || []} />
