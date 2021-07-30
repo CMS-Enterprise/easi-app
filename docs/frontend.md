@@ -128,6 +128,31 @@ Currently, Cypress tests are written in JavaScript. The benefit in writing these
 tests in TypeScript isn't immediately apparent. If the project gravitates toward
 writing these tests in TypeScript, there is documentation in supporting that [here](https://www.cypress.io/blog/2019/05/13/code-create-react-app-v3-and-its-cypress-tests-using-typescript/).
 
+### Frontend integration/unit tests
+
+The project is now using [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
+ It originally started with Enzyme, and the decision was made to switch to RTL,
+ so there may still be tests that have not been converted.
+ (See [ADR](https://github.com/CMSgov/easi-app/blob/master/docs/adr/0028-use-react-testing-library.md)
+ for reasoning)
+
+### Code coverage
+
+  To view  client test thresholds:
+`yarn test:coverage`
+
+To view current Go test coverage, go to Github Actions `server_test`
+on the latest master build, and search for "total coverage is."
+
+There are thresholds set such that the build in Github Actions
+will fail if minimum code coverage thresholds are not met.
+The intention is that as code coverage improves, the thresholds are moved upwards.
+
+To adjust these thresholds for client tests, see the `package.json` file under `"coverageThreshold"`
+
+To adjust the threshold for Go tests, go to `scripts/testsuite`,
+and find the variable `goal_percent`.
+
 ## React Storybook
 
 This application comes equipped with [React Storybook](https://storybook.js.org).
