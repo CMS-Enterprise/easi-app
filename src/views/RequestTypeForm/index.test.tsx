@@ -6,6 +6,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
+import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskList';
@@ -33,11 +34,93 @@ jest.mock('@okta/okta-react', () => ({
 window.scrollTo = jest.fn();
 
 describe('The request type form page', () => {
+  const INTAKE_ID = '6aa61a37-d3b4-47ed-ad61-0b8f73151d74';
   const mockStore = configureMockStore();
   const store = mockStore({
     systemIntake: { systemIntake: {} },
     action: {}
   });
+
+  const mockIntakeQuery = (intakeProps?: any) => {
+    return {
+      request: {
+        query: GetSytemIntakeQuery,
+        variables: {
+          id: INTAKE_ID
+        }
+      },
+      result: {
+        data: {
+          systemIntake: {
+            id: INTAKE_ID,
+            adminLead: null,
+            businessNeed: null,
+            businessSolution: null,
+            businessOwner: {
+              component: null,
+              name: null
+            },
+            contract: {
+              contractor: null,
+              endDate: {
+                day: null,
+                month: null,
+                year: null
+              },
+              hasContract: null,
+              startDate: {
+                day: null,
+                month: null,
+                year: null
+              },
+              vehicle: null
+            },
+            costs: {
+              isExpectingIncrease: null,
+              expectedIncreaseAmount: null
+            },
+            currentStage: null,
+            decisionNextSteps: null,
+            grbDate: null,
+            grtDate: null,
+            grtFeedbacks: [],
+            governanceTeams: {
+              isPresent: false,
+              teams: null
+            },
+            isso: {
+              isPresent: false,
+              name: null
+            },
+            fundingSource: {
+              fundingNumber: null,
+              isFunded: null,
+              source: null
+            },
+            lcid: null,
+            lcidExpiresAt: null,
+            lcidScope: null,
+            needsEaSupport: null,
+            productManager: {
+              component: null,
+              name: null
+            },
+            rejectionReason: null,
+            requester: {
+              component: null,
+              email: null,
+              name: 'User ABCD'
+            },
+            requestName: '',
+            requestType: 'NEW',
+            status: 'INTAKE_DRAFT',
+            submittedAt: null,
+            ...intakeProps
+          }
+        }
+      }
+    };
+  };
 
   const renderPage = (queries: any[]) =>
     render(
@@ -90,7 +173,7 @@ describe('The request type form page', () => {
       result: {
         data: {
           createSystemIntake: {
-            id: '6aa61a37-d3b4-47ed-ad61-0b8f73151d74',
+            id: INTAKE_ID,
             status: 'INTAKE_DRAFT',
             requestType: 'NEW',
             requester: {
@@ -131,7 +214,7 @@ describe('The request type form page', () => {
       result: {
         data: {
           createSystemIntake: {
-            id: '6aa61a37-d3b4-47ed-ad61-0b8f73151d74',
+            id: INTAKE_ID,
             status: 'INTAKE_DRAFT',
             requestType: 'MAJOR_CHANGES',
             requester: {
@@ -141,8 +224,11 @@ describe('The request type form page', () => {
         }
       }
     };
+    const majorChangesIntake = mockIntakeQuery({
+      requestType: 'MAJOR_CHANGES'
+    });
 
-    renderPage([intakeMutation]);
+    renderPage([intakeMutation, majorChangesIntake]);
 
     await waitFor(() => {
       expect(screen.getByText('John Doe')).toBeInTheDocument();
@@ -172,7 +258,7 @@ describe('The request type form page', () => {
       result: {
         data: {
           createSystemIntake: {
-            id: '6aa61a37-d3b4-47ed-ad61-0b8f73151d74',
+            id: INTAKE_ID,
             status: 'INTAKE_DRAFT',
             requestType: 'RECOMPETE',
             requester: {
@@ -183,7 +269,9 @@ describe('The request type form page', () => {
       }
     };
 
-    renderPage([intakeMutation]);
+    const recompeteIntake = mockIntakeQuery({ requestType: 'RECOMPETE' });
+
+    renderPage([intakeMutation, recompeteIntake]);
 
     await waitFor(() => {
       expect(screen.getByText('John Doe')).toBeInTheDocument();
@@ -213,7 +301,7 @@ describe('The request type form page', () => {
       result: {
         data: {
           createSystemIntake: {
-            id: '6aa61a37-d3b4-47ed-ad61-0b8f73151d74',
+            id: INTAKE_ID,
             status: 'INTAKE_DRAFT',
             requestType: 'SHUTDOWN',
             requester: {
@@ -224,7 +312,9 @@ describe('The request type form page', () => {
       }
     };
 
-    renderPage([intakeMutation]);
+    const shutdownIntake = mockIntakeQuery({ requestType: 'SHUTDOWN' });
+
+    renderPage([intakeMutation, shutdownIntake]);
 
     await waitFor(() => {
       expect(screen.getByText('John Doe')).toBeInTheDocument();
@@ -236,7 +326,7 @@ describe('The request type form page', () => {
     expect(await screen.findByTestId('system-intake')).toBeInTheDocument();
   });
 
-  it('creates a shutdown intake', async () => {
+  it('renders validation errors', async () => {
     renderPage([]);
 
     await waitFor(() => {

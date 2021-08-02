@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link, Switch, useParams } from 'react-router-dom';
+import { Link, Route, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { SecureRoute } from '@okta/okta-react';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -72,33 +71,33 @@ export const SystemIntake = () => {
         </BreadcrumbBar>
         {!loading && (
           <Switch>
-            <SecureRoute
+            <Route
               path="/system/:systemId/contact-details"
               render={() => <ContactDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/request-details"
               render={() => <RequestDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/contract-details"
               render={() => <ContractDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/review"
               render={() => (
                 <Review systemIntake={systemIntake} now={DateTime.local()} />
               )}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/confirmation"
               render={() => <Confirmation />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/view"
               render={() => <SystemIntakeView systemIntake={systemIntake} />}
             />
-            <SecureRoute path="*" render={() => <NotFoundPartial />} />
+            <Route path="*" render={() => <NotFoundPartial />} />
           </Switch>
         )}
       </MainContent>
