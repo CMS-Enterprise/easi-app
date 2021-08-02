@@ -1,8 +1,16 @@
 name: restart_impl_ecs_app_service
 
 on:
-  schedule:
-    - cron:  '0 6 * * *' # 2300 PST, 0200 EST
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+# on:
+#   schedule:
+#     - cron:  '0 6 * * *' # 2300 PST, 0200 EST
 
 env:
   AWS_DEFAULT_REGION: us-west-2
