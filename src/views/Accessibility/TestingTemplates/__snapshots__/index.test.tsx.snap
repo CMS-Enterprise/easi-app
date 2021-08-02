@@ -202,7 +202,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    Download the current VPAT template (opens link in new tab)
+                    Download the current VPAT template (opens in a new tab)
                   </a>
                    
                   from the Information Technology Industry Council (ITI) website.
@@ -223,7 +223,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    Watch tutorial on how to fill out a VPAT (opens link a new tab).
+                    Watch tutorial on how to fill out a VPAT (opens in a new tab).
                   </a>
                 </p>
               </div>
