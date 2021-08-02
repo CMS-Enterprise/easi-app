@@ -18,7 +18,7 @@ env:
 jobs:
   restart_impl_ecs_app_service:
     runs-on: ubuntu-latest
-    environment: impl
+#    environment: impl
     env:
       APP_ENV: impl
     steps:
