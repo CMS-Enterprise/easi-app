@@ -31,6 +31,8 @@ jobs:
           role-duration-seconds: 1800
           role-skip-session-tagging: true
       - name: Restart ECS app service
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
           ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "5" ""
       - name: Announce failure
