@@ -18,6 +18,9 @@ env:
 jobs:
   restart_impl_ecs_app_service:
     runs-on: ubuntu-latest
+    environment: impl
+    env:
+      APP_ENV: impl
     steps:
       - name: Check out code
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
