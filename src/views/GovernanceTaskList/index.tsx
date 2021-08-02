@@ -34,6 +34,7 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import { archiveSystemIntake } from 'types/routines';
+import NotFound from 'views/NotFound';
 
 import SideNavActions from './SideNavActions';
 import {
@@ -64,6 +65,10 @@ const GovernanceTaskList = () => {
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (!systemIntake) {
+    return <NotFound />;
   }
 
   const archiveIntake = () => {

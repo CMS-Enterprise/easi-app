@@ -1,9 +1,13 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen, within } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+  within
+} from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
@@ -30,57 +34,158 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The Goveranance Task List', () => {
-  const mocks = (intakeProps: any) => {
-    return [
-      {
-        request: {
-          query: GetSytemIntakeQuery,
-          variables: {
-            id: 'sysIntakeRequest123'
-          }
-        },
-        result: {
-          data: {
-            systemIntake: {
-              id: 'sysIntakeRequest123',
-              ...intakeProps
-            }
+  const mockIntakeQuery = (intakeProps?: any) => {
+    return {
+      request: {
+        query: GetSytemIntakeQuery,
+        variables: {
+          id: 'sysIntakeRequest123'
+        }
+      },
+      result: {
+        data: {
+          systemIntake: {
+            id: 'sysIntakeRequest123',
+            adminLead: null,
+            businessNeed: null,
+            businessSolution: null,
+            businessOwner: {
+              component: null,
+              name: null
+            },
+            contract: {
+              contractor: null,
+              endDate: {
+                day: null,
+                month: null,
+                year: null
+              },
+              hasContract: null,
+              startDate: {
+                day: null,
+                month: null,
+                year: null
+              },
+              vehicle: null
+            },
+            costs: {
+              isExpectingIncrease: null,
+              expectedIncreaseAmount: null
+            },
+            currentStage: null,
+            decisionNextSteps: null,
+            grbDate: null,
+            grtDate: null,
+            grtFeedbacks: [],
+            governanceTeams: {
+              isPresent: false,
+              teams: null
+            },
+            isso: {
+              isPresent: false,
+              name: null
+            },
+            fundingSource: {
+              fundingNumber: null,
+              isFunded: null,
+              source: null
+            },
+            lcid: null,
+            lcidExpiresAt: null,
+            lcidScope: null,
+            needsEaSupport: null,
+            productManager: {
+              component: null,
+              name: null
+            },
+            rejectionReason: null,
+            requester: {
+              component: null,
+              email: null,
+              name: 'User ABCD'
+            },
+            requestName: '',
+            requestType: 'NEW',
+            status: 'INTAKE_DRAFT',
+            submittedAt: null,
+            ...intakeProps
           }
         }
       }
-    ];
+    };
   };
 
   it('renders without crashing', async () => {
     const mockStore = configureMockStore();
-    const store = mockStore({
-      systemIntake: { systemIntake: {} },
-      businessCase: { form: {} }
-    });
-    await act(async () => {
-      render(
-        <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <MockedProvider mocks={mocks({})} addTypename={false}>
+    const store = mockStore({});
+
+    render(
+      <MemoryRouter
+        initialEntries={['/governance-task-list/sysIntakeRequest123']}
+      >
+        <MockedProvider mocks={[mockIntakeQuery()]} addTypename={false}>
+          <MessageProvider>
             <Provider store={store}>
-              <MessageProvider>
+              <Route path="/governance-task-list/:systemId">
                 <GovernanceTaskList />
-              </MessageProvider>
+              </Route>
             </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      );
-    });
+          </MessageProvider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(screen.getByTestId('governance-task-list')).toBeInTheDocument();
   });
 
-  it('displays all the governance steps', async () => {
+  it('displays the request name', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({});
-    await act(async () => {
+    const mockIntake = mockIntakeQuery({
+      requestName: 'Easy Access to System Information'
+    });
+
+    render(
+      <MemoryRouter
+        initialEntries={['/governance-task-list/sysIntakeRequest123']}
+      >
+        <MockedProvider mocks={[mockIntake]} addTypename={false}>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/governance-task-list/:systemId">
+                <GovernanceTaskList />
+              </Route>
+            </MessageProvider>
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(
+      screen.getByRole('heading', {
+        name: 'Get governance approval for Easy Access to System Information',
+        level: 1
+      })
+    ).toBeInTheDocument();
+  });
+
+  describe('Recompetes', () => {
+    const mockRecompleteIntake = mockIntakeQuery({
+      requestType: 'RECOMPETE',
+      requestName: 'Easy Access to System Information'
+    });
+
+    it('displays "for recompete in title', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({});
+
       render(
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={mocks({})} addTypename={false}>
+          <MockedProvider mocks={[mockRecompleteIntake]} addTypename={false}>
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -91,70 +196,11 @@ describe('The Goveranance Task List', () => {
           </MockedProvider>
         </MemoryRouter>
       );
-      await new Promise(resolve => setTimeout(resolve, 1));
-    });
-    const taskList = screen.getByTestId('task-list');
-    expect(taskList).toBeInTheDocument();
-    expect(
-      within(taskList).getByTestId('task-list-intake-form')
-    ).toBeInTheDocument();
-    expect(
-      within(taskList).getByTestId('task-list-intake-review')
-    ).toBeInTheDocument();
-    expect(
-      within(taskList).getByTestId('task-list-business-case-draft')
-    ).toBeInTheDocument();
-    expect(
-      within(taskList).getByTestId('task-list-business-case-final')
-    ).toBeInTheDocument();
-    expect(
-      within(taskList).getByTestId('task-list-grb-meeting')
-    ).toBeInTheDocument();
-    expect(
-      within(taskList).getByTestId('task-list-decision')
-    ).toBeInTheDocument();
-  });
-
-  describe('Recompetes', () => {
-    it('displays "for recompete in title', async () => {
-      const mockStore = configureMockStore();
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            requestName: 'Easy Access to System Information',
-            requestType: 'RECOMPETE'
-          }
-        },
-        businessCase: { form: {} }
-      });
-
-      const mockWithType = mocks({
-        requestName: 'Easy Access to System Information',
-        requestType: 'RECOMPETE'
-      });
-
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithType} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(
         screen.getByRole('heading', {
-          name:
-            'Get governance approval for re-competing a contract without any changes to systems or services',
+          name: /Get governance approval for re-competing/i,
           level: 1
         })
       ).toBeInTheDocument();
@@ -162,37 +208,24 @@ describe('The Goveranance Task List', () => {
 
     it('displays not applicable steps as cannot start', async () => {
       const mockStore = configureMockStore();
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            requestName: 'Easy Access to System Information',
-            requestType: 'RECOMPETE'
-          }
-        },
-        businessCase: { form: {} }
-      });
-      const mockWithType = mocks({
-        requestName: 'Easy Access to System Information',
-        requestType: 'RECOMPETE'
-      });
+      const store = mockStore({});
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithType} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockRecompleteIntake]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(
         screen.getByTestId('task-list-business-case-draft').textContent
@@ -208,40 +241,31 @@ describe('The Goveranance Task List', () => {
       );
     });
 
-    it('displays steps 3, 4, and 5 as not needed once issued LCID', async () => {
+    it('displays steps draft/final business case and GRB meeting as not needed once issued LCID', async () => {
       const mockStore = configureMockStore();
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            requestName: 'Easy Access to System Information',
-            requestType: 'RECOMPETE',
-            status: 'LCID_ISSUED'
-          }
-        },
-        businessCase: { form: {} }
-      });
-      const mockWithType = mocks({
-        requestName: 'Easy Access to System Information',
-        requestType: 'RECOMPETE'
+      const store = mockStore({});
+
+      const mockQuery = mockIntakeQuery({
+        requestType: 'RECOMPETE',
+        status: 'LCID_ISSUED'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithType} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockQuery]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('task-list-intake-form').textContent).toContain(
         'Completed'
@@ -264,88 +288,21 @@ describe('The Goveranance Task List', () => {
     });
   });
 
-  describe('Heading', () => {
-    it('displays the request name', async () => {
-      const mockStore = configureMockStore();
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            requestName: 'Easy Access to System Information'
-          }
-        },
-        businessCase: { form: {} }
-      });
-      const mockWithName = mocks({
-        requestName: 'Easy Access to System Information'
-      });
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithName} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
-
-      expect(
-        screen.getByRole('heading', {
-          name: 'Get governance approval for Easy Access to System Information',
-          level: 1
-        })
-      ).toBeInTheDocument();
-    });
-
-    it('hides the request name', async () => {
-      const mockStore = configureMockStore();
-      const store = mockStore({
-        systemIntake: { systemIntake: initialSystemIntakeForm },
-        businessCase: { form: {} }
-      });
-
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks({})} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
-      expect(
-        screen.getByRole('heading', {
-          name: 'Get governance approval',
-          level: 1
-        })
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('renders the side nav actions', async () => {
+  describe('Statuses', () => {
     const mockStore = configureMockStore();
-    const store = mockStore({
-      systemIntake: { systemIntake: initialSystemIntakeForm },
-      businessCase: { form: {} }
-    });
-    await act(async () => {
+
+    it('renders proper buttons for INTAKE_DRAFT', async () => {
+      const store = mockStore({});
+
+      const mockWithStatus = mockIntakeQuery({
+        status: 'INTAKE_DRAFT'
+      });
+
       render(
-        <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <MockedProvider mocks={mocks({})} addTypename={false}>
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -356,45 +313,7 @@ describe('The Goveranance Task List', () => {
           </MockedProvider>
         </MemoryRouter>
       );
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    });
-    expect(screen.getByTestId('sidenav-actions')).toBeInTheDocument();
-  });
-
-  describe('Statuses', () => {
-    const mockStore = configureMockStore();
-
-    it('renders proper buttons for INTAKE_DRAFT', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'INTAKE_DRAFT'
-          }
-        },
-        businessCase: { form: {} }
-      });
-
-      const mockWithStatus = mocks({
-        status: 'INTAKE_DRAFT'
-      });
-
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-start-btn')).toBeInTheDocument();
 
@@ -410,34 +329,31 @@ describe('The Goveranance Task List', () => {
     it('renders proper buttons for INTAKE_SUBMITTED', async () => {
       const store = mockStore({
         systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'INTAKE_SUBMITTED'
-          }
+          systemIntake: {}
         },
         businessCase: { form: {} }
       });
 
-      const mockWithStatus = mocks({
+      const mockWithStatus = mockIntakeQuery({
         status: 'INTAKE_SUBMITTED'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
 
@@ -456,36 +372,29 @@ describe('The Goveranance Task List', () => {
     });
 
     it('renders proper buttons for NEED_BIZ_CASE', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'NEED_BIZ_CASE'
-          }
-        },
-        businessCase: { form: {} }
-      });
+      const store = mockStore({});
 
-      const mockWithStatus = mocks({
+      const mockWithStatus = mockIntakeQuery({
         status: 'NEED_BIZ_CASE'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(screen.getByTestId('start-biz-case-btn')).toBeInTheDocument();
 
@@ -508,35 +417,27 @@ describe('The Goveranance Task List', () => {
     });
 
     it('renders proper buttons for BIZ_CASE_DRAFT', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'BIZ_CASE_DRAFT'
-          }
-        },
-        businessCase: { form: {} }
-      });
-      const mockWithStatus = mocks({
+      const store = mockStore({});
+      const mockWithStatus = mockIntakeQuery({
         status: 'BIZ_CASE_DRAFT'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(screen.getByTestId('continue-biz-case-btn')).toBeInTheDocument();
@@ -559,6 +460,7 @@ describe('The Goveranance Task List', () => {
       ).not.toBeInTheDocument();
     });
 
+    // TODO: MISSING BUSINESS CASE ID SO VIEW BUSINESS CASE LINK NEVER SHOWS
     it('renders proper buttons for BIZ_CASE_DRAFT_SUBMITTED', async () => {
       const store = mockStore({
         systemIntake: {
@@ -571,27 +473,27 @@ describe('The Goveranance Task List', () => {
         businessCase: { form: {} }
       });
 
-      const mockWithStatus = mocks({
+      const mockWithStatus = mockIntakeQuery({
         status: 'BIZ_CASE_DRAFT_SUBMITTED',
         businessCaseId: 'ac94c1d7-48ca-4c49-9045-371b4d3062b4'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(screen.getByTestId('view-biz-case-link')).toBeInTheDocument();
@@ -616,36 +518,28 @@ describe('The Goveranance Task List', () => {
     });
 
     it('renders proper buttons for BIZ_CASE_CHANGES_NEEDED', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'BIZ_CASE_CHANGES_NEEDED'
-          }
-        },
-        businessCase: { form: {} }
-      });
+      const store = mockStore({});
 
-      const mockWithStatus = mocks({
+      const mockWithStatus = mockIntakeQuery({
         status: 'BIZ_CASE_CHANGES_NEEDED'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(
@@ -671,36 +565,28 @@ describe('The Goveranance Task List', () => {
     });
 
     it('renders proper buttons for READY_FOR_GRT', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'READY_FOR_GRT'
-          }
-        },
-        businessCase: { form: {} }
-      });
+      const store = mockStore({});
 
-      const mockWithStatus = mocks({
+      const mockWithStatus = mockIntakeQuery({
         status: 'READY_FOR_GRT'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(screen.getByTestId('prepare-for-grt-cta')).toBeInTheDocument();
@@ -743,36 +629,28 @@ describe('The Goveranance Task List', () => {
     });
 
     it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'BIZ_CASE_FINAL_NEEDED'
-          }
-        },
-        businessCase: { form: {} }
-      });
+      const store = mockStore({});
 
-      const mockWithStatus = mocks({
+      const mockWithStatus = mockIntakeQuery({
         status: 'BIZ_CASE_FINAL_NEEDED'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
 
@@ -812,34 +690,31 @@ describe('The Goveranance Task List', () => {
     it('renders proper buttons for BIZ_CASE_FINAL_SUBMITTED', async () => {
       const store = mockStore({
         systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'BIZ_CASE_FINAL_SUBMITTED'
-          }
+          systemIntake: {}
         },
         businessCase: { form: {} }
       });
 
-      const mockWithStatus = mocks({
+      const mockWithStatus = mockIntakeQuery({
         status: 'BIZ_CASE_FINAL_SUBMITTED'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
 
@@ -878,35 +753,27 @@ describe('The Goveranance Task List', () => {
     });
 
     it('renders proper buttons for READY_FOR_GRB', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'READY_FOR_GRB'
-          }
-        },
-        businessCase: { form: {} }
-      });
-      const mockWithStatus = mocks({
+      const store = mockStore({});
+      const mockWithStatus = mockIntakeQuery({
         status: 'READY_FOR_GRB'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(screen.getByTestId('prepare-for-grb-btn')).toBeInTheDocument();
@@ -942,35 +809,27 @@ describe('The Goveranance Task List', () => {
     });
 
     it('renders proper buttons for LCID_ISSUED', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'LCID_ISSUED'
-          }
-        },
-        businessCase: { form: {} }
-      });
-      const mockWithStatus = mocks({
+      const store = mockStore({});
+      const mockWithStatus = mockIntakeQuery({
         status: 'LCID_ISSUED'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(screen.getByTestId('decision-cta')).toBeInTheDocument();
@@ -1012,35 +871,27 @@ describe('The Goveranance Task List', () => {
     });
 
     it('renders proper buttons for NO_GOVERNANCE', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'NO_GOVERNANCE'
-          }
-        },
-        businessCase: { form: {} }
-      });
-      const mockWithStatus = mocks({
+      const store = mockStore({});
+      const mockWithStatus = mockIntakeQuery({
         status: 'NO_GOVERNANCE'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(screen.getByTestId('task-list-closed-alert')).toBeInTheDocument();
@@ -1068,35 +919,27 @@ describe('The Goveranance Task List', () => {
     });
 
     it('renders proper buttons for NOT_IT_REQUEST', async () => {
-      const store = mockStore({
-        systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            status: 'NOT_IT_REQUEST'
-          }
-        },
-        businessCase: { form: {} }
-      });
-      const mockWithStatus = mocks({
+      const store = mockStore({});
+      const mockWithStatus = mockIntakeQuery({
         status: 'NOT_IT_REQUEST'
       });
 
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mockWithStatus} addTypename={false}>
-              <Provider store={store}>
-                <MessageProvider>
-                  <Route path="/governance-task-list/:systemId">
-                    <GovernanceTaskList />
-                  </Route>
-                </MessageProvider>
-              </Provider>
-            </MockedProvider>
-          </MemoryRouter>
-        );
-        await new Promise(resolve => setTimeout(resolve, 1));
-      });
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
       expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
       expect(screen.getByTestId('task-list-closed-alert')).toBeInTheDocument();
