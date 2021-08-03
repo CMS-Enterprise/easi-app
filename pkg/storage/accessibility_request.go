@@ -189,6 +189,7 @@ func (s *Store) FetchAccessibilityMetrics() ([]models.AccessibilityMetricsLine, 
 	const accessibilityMetricsSQL = `
 		SELECT name
 		FROM accessibility_requests_and_statuses
+		ORDER BY created_at ASC
 	`
 	var metrics []models.AccessibilityMetricsLine
 	err := s.db.Select(&metrics, accessibilityMetricsSQL)
