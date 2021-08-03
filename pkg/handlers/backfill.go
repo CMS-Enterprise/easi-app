@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type saver func(ctx context.Context, intake models.SystemIntake, notes []models.Note) error
+type saver func(ctx context.Context, intake models.SystemIntake, notes []models.Note) (bool, error)
 
 // NewBackfillHandler is quick & dirty
 func NewBackfillHandler(base HandlerBase, s saver) BackfillHandler {
@@ -49,12 +49,18 @@ func (h BackfillHandler) Handle() http.HandlerFunc {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
-			if err := h.Saver(r.Context(), data.Intake, data.Notes); err != nil {
-				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
+
+			create, saveErr := h.Saver(r.Context(), data.Intake, data.Notes)
+			if saveErr != nil {
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: saveErr})
 				return
 			}
 			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusNoContent) // 204 No Content
+			if create {
+				w.WriteHeader(http.StatusCreated)
+			} else {
+				w.WriteHeader(http.StatusNoContent)
+			}
 		default:
 			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
 			return
