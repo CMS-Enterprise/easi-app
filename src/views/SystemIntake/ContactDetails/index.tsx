@@ -396,7 +396,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   scrollElement="isso.isPresent"
                   error={!!flatErrors['isso.isPresent']}
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    data-testid="isso-fieldset"
+                    className="usa-fieldset margin-top-4"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.isso.label')}
                     </legend>
@@ -423,7 +426,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     />
                     {values.isso.isPresent && (
                       <div
-                        id="isso-name-container"
+                        data-testid="isso-name-container"
                         className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1"
                       >
                         <FieldGroup
@@ -466,7 +469,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   scrollElement="governanceTeams.isPresent"
                   error={!!flatErrors['governanceTeams.isPresent']}
                 >
-                  <fieldset className="usa-fieldset margin-top-3 margin-bottom-105">
+                  <fieldset
+                    data-testid="governance-teams-fieldset"
+                    className="usa-fieldset margin-top-3 margin-bottom-105"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.collaboration.label')}
                     </legend>

@@ -18,7 +18,7 @@ import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
-import { NotFoundPartial } from 'views/NotFound';
+import NotFound, { NotFoundPartial } from 'views/NotFound';
 
 import Confirmation from './Confirmation';
 import ContactDetails from './ContactDetails';
@@ -49,6 +49,10 @@ export const SystemIntake = () => {
     return <PageLoading />;
   }
 
+  if (!systemIntake) {
+    return <NotFound />;
+  }
+
   return (
     <PageWrapper className="system-intake" data-testid="system-intake">
       <Header />
@@ -62,7 +66,7 @@ export const SystemIntake = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${systemIntake.id || 'new'}`}
+              to={`/governance-task-list/${systemIntake.id}`}
             >
               <span>Get governance approval</span>
             </BreadcrumbLink>
