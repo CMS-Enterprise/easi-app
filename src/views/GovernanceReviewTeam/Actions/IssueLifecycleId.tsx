@@ -215,14 +215,20 @@ const IssueLifecycleId = () => {
                     <HelpText>
                       {t('issueLCID.expirationDate.helpText')}
                     </HelpText>
+                    <FieldErrorMsg>
+                      {flatErrors.expirationDateMonth}
+                    </FieldErrorMsg>
+                    <FieldErrorMsg>
+                      {flatErrors.expirationDateDay}
+                    </FieldErrorMsg>
+                    <FieldErrorMsg>
+                      {flatErrors.expirationDateYear}
+                    </FieldErrorMsg>
                     <div className="usa-memorable-date">
                       <div className="usa-form-group usa-form-group--month">
                         <Label htmlFor="IssueLifecycleIdForm-ExpirationDateMonth">
                           {t('issueLCID.expirationDate.month')}
                         </Label>
-                        <FieldErrorMsg>
-                          {flatErrors.expirationDateMonth}
-                        </FieldErrorMsg>
                         <Field
                           as={DateInputMonth}
                           error={!!flatErrors.expirationDateMonth}
@@ -234,9 +240,6 @@ const IssueLifecycleId = () => {
                         <Label htmlFor="IssueLifecycleIdForm-ExpirationDateDay">
                           {t('issueLCID.expirationDate.day')}
                         </Label>
-                        <FieldErrorMsg>
-                          {flatErrors.expirationDateDay}
-                        </FieldErrorMsg>
                         <Field
                           as={DateInputDay}
                           error={!!flatErrors.expirationDateDay}
@@ -248,9 +251,6 @@ const IssueLifecycleId = () => {
                         <Label htmlFor="IssueLifecycleIdForm-ExpirationDateYear">
                           {t('issueLCID.expirationDate.year')}
                         </Label>
-                        <FieldErrorMsg>
-                          {flatErrors.expirationDateYear}
-                        </FieldErrorMsg>
                         <Field
                           as={DateInputYear}
                           error={!!flatErrors.expirationDateYear}
