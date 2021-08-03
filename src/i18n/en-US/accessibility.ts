@@ -290,8 +290,7 @@ const accessibility = {
         downloadVPAT: {
           heading: 'Download VPAT template',
           line1: {
-            linkText:
-              'Download the current VPAT template (opens link in new tab)',
+            linkText: 'Download the current VPAT template (opens in a new tab)',
             otherText:
               'from the Information Technology Industry Council (ITI) website.'
           },
@@ -301,7 +300,7 @@ const accessibility = {
           },
           line3: {
             linkText:
-              'Watch tutorial on how to fill out a VPAT (opens link a new tab).'
+              'Watch tutorial on how to fill out a VPAT (opens in a new tab).'
           }
         }
       }
