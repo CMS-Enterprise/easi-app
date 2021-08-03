@@ -341,6 +341,7 @@ describe('AccessibilityRequestDetailPage', () => {
             notes: [
               {
                 id: 'noteID',
+                createdAt: new Date().toISOString(),
                 authorName: 'Common Human',
                 note: 'This is very well done'
               }
@@ -466,12 +467,15 @@ describe('AccessibilityRequestDetailPage', () => {
             result: {
               data: {
                 createAccessibilityRequestNote: {
-                  id: 'noteID1',
-                  createdAt: new Date().toISOString(),
-                  authorName: 'Common Human',
-                  note: 'This is quite a success'
-                },
-                userErrors: null
+                  accessibilityRequestNote: {
+                    id: 'noteID1',
+                    createdAt: new Date().toISOString(),
+                    authorName: 'Common Human',
+                    note: 'This is quite a success',
+                    requestID: 'a11yRequest123'
+                  },
+                  userErrors: null
+                }
               }
             }
           },

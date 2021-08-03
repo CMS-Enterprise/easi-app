@@ -84,7 +84,13 @@ describe('The home page', () => {
               query: GetRequestsQuery,
               variables: { first: 20 }
             },
-            result: {}
+            result: {
+              data: {
+                requests: {
+                  edges: []
+                }
+              }
+            }
           }
         ];
         await act(async () => {
