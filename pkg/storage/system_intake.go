@@ -247,6 +247,39 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	return &intake, nil
 }
 
+// FetchSystemIntakeByLifecycleID fetches a system intake by lifecycle ID
+// It returns an error if more than one system matches the provided LCID. This is possible
+// since there isn't a uniqueness constraint in the database.
+func (s *Store) FetchSystemIntakeByLifecycleID(ctx context.Context, lifecycleID string) (*models.SystemIntake, error) {
+	intakes := []models.SystemIntake{}
+	const matchClause = `
+		WHERE system_intakes.lcid=$1
+	`
+	err := s.db.Select(&intakes, fetchSystemIntakeSQL+matchClause, lifecycleID)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch system intake %s", err),
+			zap.String("lcid", lifecycleID),
+		)
+		return nil, err
+	}
+
+	if len(intakes) > 1 {
+		return nil, &apperrors.QueryError{
+			Model:     models.SystemIntake{},
+			Operation: apperrors.QueryFetch,
+			Err:       errors.New("more than one system intake matched lcid"),
+		}
+	}
+
+	if len(intakes) == 0 {
+		return nil, nil
+	}
+
+	result := intakes[0]
+	return &result, nil
+}
+
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
