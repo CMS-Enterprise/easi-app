@@ -10,6 +10,7 @@ import {
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
+import Spinner from 'components/Spinner';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
@@ -201,7 +202,11 @@ const Table = () => {
   };
 
   if (loading) {
-    return <div>Loading</div>;
+    return (
+      <div className="text-center" data-testid="table-loading">
+        <Spinner size="xl" />;
+      </div>
+    );
   }
 
   if (error) {
