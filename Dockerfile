@@ -1,4 +1,4 @@
-FROM golang:1.15.8 AS base
+FROM golang:1.16.5 AS base
 
 WORKDIR /easi/
 
