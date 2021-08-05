@@ -79,28 +79,22 @@ func NewBackfill(
 			return false, err
 		}
 
-		hasUpdate := false
 		if intake.LifecycleID.ValueOrZero() != "" {
-			hasUpdate = true
 			createdIntake.LifecycleID = intake.LifecycleID
 		}
 		if intake.LifecycleExpiresAt != nil {
-			hasUpdate = true
 			createdIntake.LifecycleExpiresAt = intake.LifecycleExpiresAt
 		}
 		if intake.LifecycleScope.ValueOrZero() != "" {
-			hasUpdate = true
 			createdIntake.LifecycleScope = intake.LifecycleScope
 		}
 		if intake.SubmittedAt != nil {
-			hasUpdate = true
 			createdIntake.SubmittedAt = intake.SubmittedAt
 		}
+		createdIntake.AdminLead = intake.AdminLead
 
-		if hasUpdate {
-			if _, err = updateIntake(ctx, createdIntake); err != nil {
-				return false, err
-			}
+		if _, err = updateIntake(ctx, createdIntake); err != nil {
+			return false, err
 		}
 
 		for _, note := range notes {
