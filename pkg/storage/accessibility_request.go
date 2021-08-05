@@ -135,6 +135,7 @@ func (s *Store) CreateAccessibilityRequestAndInitialStatusRecord(ctx context.Con
 		RequestID: createdRequest.ID,
 		Status:    models.AccessibilityRequestStatusOpen,
 		EUAUserID: createdRequest.EUAUserID,
+		CreatedAt: createdRequest.CreatedAt,
 	})
 	if err != nil {
 		return nil, err
