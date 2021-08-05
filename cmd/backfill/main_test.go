@@ -7,6 +7,9 @@ import (
 )
 
 func TestBackfill(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
 	c := &config{
 		host: "impl.easi.cms.gov",
 		file: "",
