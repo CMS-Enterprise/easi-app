@@ -161,3 +161,43 @@ func (s StoreTestSuite) TestFetchAccessibilityRequests() {
 		s.Equal(expectedNumRequests, len(requests))
 	})
 }
+
+func (s StoreTestSuite) TestFetchAccessibilityMetrics() {
+	s.NoError(s.emptyDatabaseTables())
+
+	ctx := context.Background()
+	intake := testhelpers.NewSystemIntake()
+	_, err := s.store.CreateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	_, err = s.store.UpdateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	s.Run("returns correct metrics", func() {
+		today := time.Now().Round(time.Microsecond)
+		yesterday := time.Now().Add(time.Hour * -24).Round(time.Microsecond)
+
+		newRequest1 := testhelpers.NewAccessibilityRequest(intake.ID)
+		newRequest1.Name = "My Accessibility Request 1"
+		newRequest1.CreatedAt = &yesterday
+
+		newRequest2 := testhelpers.NewAccessibilityRequest(intake.ID)
+		newRequest2.Name = "My Accessibility Request 2"
+		newRequest2.CreatedAt = &today
+
+		_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &newRequest1)
+		s.NoError(err)
+
+		_, err = s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &newRequest2)
+		s.NoError(err)
+
+		metrics, fetchError := s.store.FetchAccessibilityMetrics()
+		s.NoError(fetchError)
+		s.Len(metrics, 2)
+
+		s.Equal("My Accessibility Request 1", metrics[0].Name)
+		s.Equal("123456", metrics[0].LCID)
+		s.Equal(models.AccessibilityRequestStatus("OPEN"), metrics[0].Status)
+		s.True(metrics[0].CreatedAt.Equal(yesterday))
+	})
+}

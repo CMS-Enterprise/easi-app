@@ -135,6 +135,7 @@ func (s *Store) CreateAccessibilityRequestAndInitialStatusRecord(ctx context.Con
 		RequestID: createdRequest.ID,
 		Status:    models.AccessibilityRequestStatusOpen,
 		EUAUserID: createdRequest.EUAUserID,
+		CreatedAt: createdRequest.CreatedAt,
 	})
 	if err != nil {
 		return nil, err
@@ -189,7 +190,8 @@ func (s *Store) FetchAccessibilityMetrics() ([]models.AccessibilityMetricsLine, 
 	const accessibilityMetricsSQL = `
 		SELECT aras.name, si.lcid, aras.status, aras.created_at, aras.status_created_at
 		FROM accessibility_requests_and_statuses aras
-		JOIN system_intakes si on aras.intake_id=si.id`
+		JOIN system_intakes si on aras.intake_id=si.id
+		ORDER BY created_at ASC`
 
 	var metrics []models.AccessibilityMetricsLine
 	err := s.db.Select(&metrics, accessibilityMetricsSQL)
