@@ -1,0 +1,291 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`My Requests Table when there are requests matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="accessibility-requests-table"
+  >
+    <table
+      class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--3-K3t"
+      data-testid="table"
+    >
+      <caption
+        class="usa-sr-only"
+      >
+        Below is a list of governance requests that are in draft or submitted.
+      </caption>
+      <thead>
+        <tr
+          role="row"
+        >
+          <th
+            aria-sort="none"
+            colspan="1"
+            role="columnheader"
+            scope="col"
+          >
+            <button
+              class="usa-button usa-button--unstyled"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+              type="button"
+            >
+              Request name
+              <span
+                class="margin-left-1 fa fa-sort caret"
+              />
+            </button>
+          </th>
+          <th
+            aria-sort="none"
+            colspan="1"
+            role="columnheader"
+            scope="col"
+          >
+            <button
+              class="usa-button usa-button--unstyled"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+              type="button"
+            >
+              Governance
+              <span
+                class="margin-left-1 fa fa-sort caret"
+              />
+            </button>
+          </th>
+          <th
+            aria-sort="descending"
+            colspan="1"
+            role="columnheader"
+            scope="col"
+          >
+            <button
+              class="usa-button usa-button--unstyled"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+              type="button"
+            >
+              Submission date
+              <span
+                class="margin-left-1 fa fa-caret-down fa-lg caret"
+              />
+            </button>
+          </th>
+          <th
+            aria-sort="none"
+            colspan="1"
+            role="columnheader"
+            scope="col"
+          >
+            <button
+              class="usa-button usa-button--unstyled"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+              type="button"
+            >
+              Status
+              <span
+                class="margin-left-1 fa fa-sort caret"
+              />
+            </button>
+          </th>
+          <th
+            aria-sort="none"
+            colspan="1"
+            role="columnheader"
+            scope="col"
+          >
+            <button
+              class="usa-button usa-button--unstyled"
+              style="cursor: pointer;"
+              title="Toggle SortBy"
+              type="button"
+            >
+              Upcoming meeting date
+              <span
+                class="margin-left-1 fa fa-sort caret"
+              />
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        role="rowgroup"
+      >
+        <tr
+          role="row"
+        >
+          <th
+            role="cell"
+            scope="row"
+          >
+            <a
+              class="usa-link"
+              href="/508/requests/123"
+            >
+              508 Test 1
+            </a>
+          </th>
+          <td
+            role="cell"
+            style="width: 150px;"
+          >
+            Section 508
+          </td>
+          <td
+            role="cell"
+            style="width: 150px;"
+          >
+            May 25 2021
+          </td>
+          <td
+            role="cell"
+            style="width: 200px;"
+          >
+            <span>
+              Open
+            </span>
+          </td>
+          <td
+            role="cell"
+            style="width: 180px;"
+          >
+            None
+          </td>
+        </tr>
+        <tr
+          role="row"
+        >
+          <th
+            role="cell"
+            scope="row"
+          >
+            <a
+              class="usa-link"
+              href="/508/requests/909"
+            >
+              508 Test 2
+            </a>
+          </th>
+          <td
+            role="cell"
+            style="width: 150px;"
+          >
+            Section 508
+          </td>
+          <td
+            role="cell"
+            style="width: 150px;"
+          >
+            May 25 2021
+          </td>
+          <td
+            role="cell"
+            style="width: 200px;"
+          >
+            <span>
+              In remediation 
+              <span
+                class="text-base-dark font-body-3xs"
+              >
+                changed on May 26 2021
+              </span>
+            </span>
+          </td>
+          <td
+            role="cell"
+            style="width: 180px;"
+          >
+            None
+          </td>
+        </tr>
+        <tr
+          role="row"
+        >
+          <th
+            role="cell"
+            scope="row"
+          >
+            <a
+              class="usa-link"
+              href="/governance-task-list/456"
+            >
+              Intake 1
+            </a>
+          </th>
+          <td
+            role="cell"
+            style="width: 150px;"
+          >
+            IT Governance
+          </td>
+          <td
+            role="cell"
+            style="width: 150px;"
+          >
+            May 22 2021
+          </td>
+          <td
+            role="cell"
+            style="width: 200px;"
+          >
+            Intake draft
+          </td>
+          <td
+            role="cell"
+            style="width: 180px;"
+          >
+            None
+          </td>
+        </tr>
+        <tr
+          role="row"
+        >
+          <th
+            role="cell"
+            scope="row"
+          >
+            <a
+              class="usa-link"
+              href="/governance-task-list/789"
+            >
+              Intake 2
+            </a>
+          </th>
+          <td
+            role="cell"
+            style="width: 150px;"
+          >
+            IT Governance
+          </td>
+          <td
+            role="cell"
+            style="width: 150px;"
+          >
+            May 20 2021
+          </td>
+          <td
+            role="cell"
+            style="width: 200px;"
+          >
+            Lifecycle ID issued: A123456
+          </td>
+          <td
+            role="cell"
+            style="width: 180px;"
+          >
+            None
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      aria-live="polite"
+      class="usa-sr-only usa-table__announcement-region"
+    >
+      Requests table sorted by Submission date descending
+    </div>
+  </div>
+</DocumentFragment>
+`;

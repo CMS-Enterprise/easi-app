@@ -8,12 +8,12 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
-import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
-import GetSystemsQuery from 'queries/GetSystems';
 import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
+import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
+import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
+import GetSystemsQuery from 'queries/GetSystems';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 
 import Create from './index';
@@ -123,7 +123,12 @@ describe('Create 508 Request page', () => {
           },
           system: {
             id: '702af838-15be-4ddd-adf0-d99fc55a1eca',
-            name: 'TACO'
+            name: 'TACO',
+            lcid: '000001',
+            businessOwner: {
+              name: 'Shane Clark',
+              component: 'OIT'
+            }
           }
         }
       }
@@ -153,7 +158,7 @@ describe('Create 508 Request page', () => {
     expect(screen.getByTestId('create-508-request')).toBeInTheDocument();
   });
 
-  it('can created a 508 testing request', async () => {
+  it('can create a 508 testing request', async () => {
     window.scrollTo = jest.fn();
 
     render(
