@@ -10,6 +10,7 @@ import {
 import userEvent from '@testing-library/user-event';
 
 import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import { UpdateSystemIntakeContactDetails } from 'queries/SystemIntakeQueries';
 
 import SystemIntake from '../index';
 
@@ -29,6 +30,8 @@ jest.mock('@okta/okta-react', () => ({
     };
   }
 }));
+
+window.scrollTo = jest.fn();
 
 describe('The intake contact details page', () => {
   const INTAKE_ID = 'ccdfdcf5-5085-4521-9f77-fa1ea324502b';
@@ -145,9 +148,72 @@ describe('The intake contact details page', () => {
   });
 
   it('fills required fields (smoke test)', async () => {
+    const updateContactDetails = {
+      request: {
+        query: UpdateSystemIntakeContactDetails,
+        variables: {
+          input: {
+            id: INTAKE_ID,
+            businessOwner: {
+              name: 'User ZYXW',
+              component: 'Office of Information Technology'
+            },
+            governanceTeams: {
+              isPresent: false,
+              teams: undefined
+            },
+            isso: {
+              isPresent: false,
+              name: ''
+            },
+            productManager: {
+              name: 'User HAHA',
+              component: 'Office of Information Technology'
+            },
+            requester: {
+              name: 'User ABCD',
+              component: 'Office of Information Technology'
+            }
+          }
+        }
+      },
+      result: {
+        data: {
+          updateSystemIntakeContactDetails: {
+            systemIntake: {
+              id: INTAKE_ID,
+              businessOwner: {
+                name: 'User ZYXW',
+                component: 'Office of Information Technology'
+              },
+              governanceTeams: {
+                isPresent: false,
+                teams: null
+              },
+              isso: {
+                isPresent: false,
+                name: null
+              },
+              productManager: {
+                name: 'User HAHA',
+                component: 'Office of Information Technology'
+              },
+              requester: {
+                name: 'User ABCD',
+                component: 'Office of Information Technology'
+              }
+            }
+          }
+        }
+      }
+    };
+
     render(
       <MemoryRouter initialEntries={[`/system/${INTAKE_ID}/contact-details`]}>
-        <MockedProvider mocks={[intakeQuery]} addTypename={false}>
+        <MockedProvider
+          mocks={[intakeQuery, updateContactDetails]}
+          addTypename={false}
+        >
           <Route path="/system/:systemId/:formPage">
             <SystemIntake />
           </Route>
@@ -218,6 +284,11 @@ describe('The intake contact details page', () => {
       name: /no/i
     });
     userEvent.click(noGovernanceTeamsRadio);
+
+    userEvent.click(screen.getByRole('button', { name: /next/i }));
+    expect(
+      await screen.findByRole('heading', { name: /request details/i, level: 1 })
+    ).toBeInTheDocument();
   });
 
   it('fills isso name', async () => {
@@ -371,5 +442,24 @@ describe('The intake contact details page', () => {
     expect(productManagerComponentDropdown).toHaveValue(
       'Office of Information Technology'
     );
+  });
+
+  it('displays formik errors', async () => {
+    render(
+      <MemoryRouter initialEntries={[`/system/${INTAKE_ID}/contact-details`]}>
+        <MockedProvider mocks={[intakeQuery]} addTypename={false}>
+          <Route path="/system/:systemId/:formPage">
+            <SystemIntake />
+          </Route>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    screen.getByRole('button', { name: /next/i }).click();
+
+    expect(
+      await screen.findByTestId('contact-details-errors')
+    ).toBeInTheDocument();
   });
 });

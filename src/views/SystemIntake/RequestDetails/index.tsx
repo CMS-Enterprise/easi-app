@@ -91,7 +91,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           <>
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
-                testId="system-intake-errors"
+                testId="request-details-errors"
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
               >
@@ -229,7 +229,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   scrollElement="needsEaSupport"
                   error={!!flatErrors.needsEaSupport}
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="ea-support"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       Does your request need Enterprise Architecture support?
                     </legend>

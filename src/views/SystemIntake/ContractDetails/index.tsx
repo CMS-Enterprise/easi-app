@@ -88,7 +88,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     UpdateSystemIntakeContractDetailsVariables
   >(UpdateSystemIntakeContractDetailsQuery);
 
-  const convertDates = (values: ContractDetailsForm) => {
+  const formatContractDetailsPayload = (values: ContractDetailsForm) => {
     const startDate = DateTime.fromObject({
       day: Number(values.contract.startDate.day),
       month: Number(values.contract.startDate.month),
@@ -116,7 +116,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const onSubmit = (values: ContractDetailsForm) => {
     mutate({
       variables: {
-        input: convertDates(values)
+        input: formatContractDetailsPayload(values)
       }
     });
   };
@@ -200,7 +200,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   scrollElement="fundingSource.isFunded"
                   error={!!flatErrors['fundingSource.isFunded']}
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="funding-source-fieldset"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       Will this project be funded out of an existing funding
                       source?
@@ -346,7 +349,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   scrollElement="conts.isExpectingIncrease"
                   error={!!flatErrors['costs.isExpectingIncrease']}
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="exceed-cost-fieldset"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       Do the costs for this request exceed what you are
                       currently spending to meet your business need?
@@ -436,7 +442,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   error={!!flatErrors['contract.hasContract']}
                   className="margin-bottom-105"
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="contract-fieldset"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       Do you already have a contract in place to support this
                       effort?
@@ -938,7 +947,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   onClick={() => {
                     mutate({
                       variables: {
-                        input: convertDates(values)
+                        input: formatContractDetailsPayload(values)
                       }
                     }).then(response => {
                       if (!response.errors) {
@@ -957,7 +966,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       if (Object.keys(err).length === 0) {
                         mutate({
                           variables: {
-                            input: convertDates(values)
+                            input: formatContractDetailsPayload(values)
                           }
                         }).then(response => {
                           if (!response.errors) {
@@ -980,7 +989,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     onClick={() => {
                       mutate({
                         variables: {
-                          input: convertDates(values)
+                          input: formatContractDetailsPayload(values)
                         }
                       }).then(response => {
                         if (!response.errors) {

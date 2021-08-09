@@ -150,7 +150,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           <>
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
-                testId="system-intake-errors"
+                testId="contact-details-errors"
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
               >

@@ -38,6 +38,7 @@ export const SystemIntake = () => {
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
     GetSystemIntakeQuery,
     {
+      nextFetchPolicy: 'cache-first',
       variables: {
         id: systemId
       }
