@@ -29,21 +29,3 @@ type AccessibilityRequest struct {
 	DeletedAt      *time.Time                          `db:"deleted_at" json:"deletedAt"`
 	DeletionReason *AccessibilityRequestDeletionReason `db:"deletion_reason" json:"deletionReason"`
 }
-
-// AccessibilityRequestMetrics models metrics about accessibility requests
-type AccessibilityRequestMetrics struct {
-	StartTime               time.Time `json:"start_time"`
-	EndTime                 time.Time `json:"end_time"`
-	CreatedAndOpen          int       `json:"created_and_open"`
-	CreatedAndClosed        int       `json:"created_and_closed"`
-	CreatedAndInRemediation int       `json:"created_and_in_remediation"`
-}
-
-// AccessibilityMetricsLine models a row of the 508 metrics csv
-type AccessibilityMetricsLine struct {
-	Name            string
-	LCID            string
-	Status          AccessibilityRequestStatus
-	CreatedAt       time.Time `db:"created_at"`
-	StatusCreatedAt time.Time `db:"status_created_at"`
-}
