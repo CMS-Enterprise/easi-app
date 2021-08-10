@@ -25,8 +25,8 @@ func (s *Store) FetchAccessibilityMetrics() ([]models.AccessibilityMetricsLine, 
 					ARRAY_AGG(test_dates.date ORDER BY test_dates.date ASC) AS test_dates,
 					ARRAY_AGG(test_dates.score ORDER BY test_dates.date ASC) AS test_scores, 
 					COUNT(test_dates.id) AS test_count,
-					COUNT(test_dates.id) FILTER (WHERE test_dates.score <= 99) AS failed_test_count,
-					MIN(test_dates.date) FILTER (WHERE test_dates.score > 99) AS earliest_passing_test_date, 
+					COUNT(test_dates.id) FILTER (WHERE test_dates.score < 100) AS failed_test_count,
+					MIN(test_dates.date) FILTER (WHERE test_dates.score = 100) AS earliest_passing_test_date, 
 					ARRAY_AGG(test_dates.score ORDER BY test_dates.date DESC) FILTER (WHERE test_dates.test_type = 'REMEDIATION') AS remediation_scores
 					FROM test_dates
 					GROUP BY (test_dates.request_id)) AS aggregates ON aggregates.request_id = aras.id
