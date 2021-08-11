@@ -67,6 +67,7 @@ func (s SESTestSuite) TestSend() {
 		err := s.sender.Send(
 			context.Background(),
 			models.NewEmailAddress("success@simulator.amazonses.com"),
+			nil,
 			"Test Subject",
 			"Test Body",
 		)

@@ -19,9 +19,10 @@ type Sender struct {
 }
 
 // Send logs an email
-func (s Sender) Send(ctx context.Context, toAddress models.EmailAddress, subject string, body string) error {
+func (s Sender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
 	appcontext.ZLogger(ctx).Info("Mock sending email",
 		zap.String("To", toAddress.String()),
+		zap.String("CC", ccAddress.String()),
 		zap.String("Subject", subject),
 		zap.String("Body", body),
 	)
