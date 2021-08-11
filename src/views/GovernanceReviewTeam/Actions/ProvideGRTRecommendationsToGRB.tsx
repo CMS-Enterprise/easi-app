@@ -113,7 +113,7 @@ const ProvideGRTRecommendationsToGRB = () => {
                     as={TextAreaField}
                     error={!!flatErrors.grtFeedback}
                     id="ProvideGRTFeedbackForm-GRTFeedback"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="grtFeedback"
                   />
                 </FieldGroup>
