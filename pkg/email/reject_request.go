@@ -42,6 +42,7 @@ func (c Client) SendRejectRequestEmail(ctx context.Context, recipient models.Ema
 	err = c.sender.Send(
 		ctx,
 		recipient,
+		&c.config.GRTEmail,
 		subject,
 		body,
 	)

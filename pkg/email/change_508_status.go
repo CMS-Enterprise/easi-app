@@ -71,6 +71,7 @@ func (c Client) SendChangeAccessibilityRequestStatusEmail(
 	err = c.sender.Send(
 		ctx,
 		c.config.AccessibilityTeamEmail,
+		nil,
 		subject,
 		body,
 	)

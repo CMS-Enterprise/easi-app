@@ -26,7 +26,7 @@ type mockSender struct {
 	body      string
 }
 
-func (s *mockSender) Send(ctx context.Context, toAddress models.EmailAddress, subject string, body string) error {
+func (s *mockSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
 	s.toAddress = toAddress
 	s.subject = subject
 	s.body = body
@@ -35,7 +35,7 @@ func (s *mockSender) Send(ctx context.Context, toAddress models.EmailAddress, su
 
 type mockFailedSender struct{}
 
-func (s *mockFailedSender) Send(ctx context.Context, toAddress models.EmailAddress, subject string, body string) error {
+func (s *mockFailedSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
 	return errors.New("sender had an error")
 }
 
