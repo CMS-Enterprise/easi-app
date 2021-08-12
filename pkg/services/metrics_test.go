@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/facebookgo/clock"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -72,9 +73,13 @@ func (s ServicesTestSuite) TestNewFetchMetrics() {
 
 func (s ServicesTestSuite) TestNewFetchAccessibilityMetrics() {
 	fetchMetrics := func() ([]models.AccessibilityMetricsLine, error) {
+		janFifth := time.Date(2020, 01, 05, 0, 0, 0, 0, time.UTC)
+		aprilTenth := time.Date(2021, 04, 10, 0, 0, 0, 0, time.UTC)
+
 		return []models.AccessibilityMetricsLine{
-			{Name: "Name 1", LCID: "C3PO", Status: "OPEN", CreatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC)},
-			{Name: "Name 2", LCID: "OBI1", Status: "CLOSED", CreatedAt: time.Date(2020, 01, 15, 0, 0, 0, 0, time.UTC), StatusCreatedAt: time.Date(2020, 04, 15, 0, 0, 0, 0, time.UTC)},
+			{Name: "Name 1", LCID: "C3PO", Status: "OPEN", CreatedAt: janFifth, InitialTestDate: null.TimeFrom(janFifth),
+				InitialTestScore: null.IntFrom(78), EarliestPassingTestDate: null.TimeFrom(aprilTenth), MostRecentRemediationScore: null.IntFrom(96), TestCount: 3, FailedTestCount: 2},
+			{Name: "Name 2", LCID: "OBI1", Status: "CLOSED", CreatedAt: janFifth, StatusCreatedAt: aprilTenth},
 		}, nil
 	}
 
@@ -83,9 +88,9 @@ func (s ServicesTestSuite) TestNewFetchAccessibilityMetrics() {
 		s.NoError(err)
 
 		s.Equal([][]string{
-			{"Request Name", "Lifecycle ID", "Request Status", "Date Opened", "Date Closed"},
-			{"Name 1", "C3PO", "OPEN", "01/01/2020", ""},
-			{"Name 2", "OBI1", "CLOSED", "01/15/2020", "04/15/2020"},
+			{"Request Name", "Lifecycle ID", "Request Status", "Date Opened", "Date Closed", "Initial Test Date", "Initial Test Score", "Date of Passing Test", "Most Recent Remediation Score", "Total Tests", "Failed Tests"},
+			{"Name 1", "C3PO", "OPEN", "01/05/2020", "", "01/05/2020", "78", "04/10/2021", "96", "3", "2"},
+			{"Name 2", "OBI1", "CLOSED", "01/05/2020", "04/10/2021", "", "", "", "", "0", "0"},
 		}, data)
 	})
 
