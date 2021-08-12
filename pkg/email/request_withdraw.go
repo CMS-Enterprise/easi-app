@@ -61,6 +61,7 @@ func (c Client) SendWithdrawRequestEmail(ctx context.Context, requestName string
 	err = c.sender.Send(
 		ctx,
 		c.config.GRTEmail,
+		nil,
 		subject,
 		body,
 	)

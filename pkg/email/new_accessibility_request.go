@@ -76,6 +76,7 @@ func (c Client) SendNewAccessibilityRequestEmail(ctx context.Context, requesterN
 	err = c.sender.Send(
 		ctx,
 		c.config.AccessibilityTeamEmail,
+		nil,
 		subject,
 		body,
 	)
@@ -95,6 +96,7 @@ func (c Client) SendNewAccessibilityRequestEmailToRequester(ctx context.Context,
 	err = c.sender.Send(
 		ctx,
 		requesterEmail,
+		nil,
 		subject,
 		body,
 	)

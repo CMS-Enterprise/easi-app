@@ -40,14 +40,20 @@ func NewSender(config Config) Sender {
 func (s Sender) Send(
 	ctx context.Context,
 	toAddress models.EmailAddress,
+	ccAddress *models.EmailAddress,
 	subject string,
 	body string,
 ) error {
+	ccAddresses := []*string{}
+	if ccAddress != nil {
+		ccAddresses = append(ccAddresses, aws.String(ccAddress.String()))
+	}
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
 			ToAddresses: []*string{
 				aws.String(toAddress.String()),
 			},
+			CcAddresses: ccAddresses,
 		},
 		Message: &ses.Message{
 			Subject: &ses.Content{

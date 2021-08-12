@@ -78,6 +78,7 @@ func (c Client) sendNewDocumentEmail(
 	err = c.sender.Send(
 		ctx,
 		recipient,
+		nil,
 		subject,
 		body,
 	)

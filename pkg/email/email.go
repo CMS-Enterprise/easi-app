@@ -45,7 +45,7 @@ type templates struct {
 
 // sender is an interface for swapping out email provider implementations
 type sender interface {
-	Send(ctx context.Context, toAddress models.EmailAddress, subject string, body string) error
+	Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error
 }
 
 // Client is an EASi SES client wrapper
@@ -180,5 +180,5 @@ func (c Client) urlFromPath(path string) string {
 // SendTestEmail sends an email to a no-reply address
 func (c Client) SendTestEmail(ctx context.Context) error {
 	testToAddress := models.NewEmailAddress("success@simulator.amazonses.com")
-	return c.sender.Send(ctx, testToAddress, "test", "test")
+	return c.sender.Send(ctx, testToAddress, nil, "test", "test")
 }
