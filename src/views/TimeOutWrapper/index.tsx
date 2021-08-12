@@ -65,7 +65,9 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         setLastRenewAt(DateTime.local());
       } else {
         localStorage.removeItem(localAuthStorageKey);
-        oktaAuth.signOut('/login');
+        oktaAuth.signOut({
+          postLogoutRedirectUri: `${window.location.origin}/login`
+        });
       }
     });
   };
@@ -95,11 +97,11 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   };
 
   useEffect(() => {
-    if (authState.isAuthenticated) {
+    if (authState?.isAuthenticated) {
       registerExpire();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState.isAuthenticated, activeSinceLastRenew]);
+  }, [authState?.isAuthenticated, activeSinceLastRenew]);
 
   // useInterval starts once the modal is open and stops when it's closed
   // Updates the minutes/seconds in the message
@@ -108,7 +110,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       const tokenExpiresIn = calculcateTokenExpiration();
       setTimeRemainingArr(formatSessionTimeRemaining(tokenExpiresIn));
     },
-    authState.isAuthenticated && isModalOpen ? oneSecond : null
+    authState?.isAuthenticated && isModalOpen ? oneSecond : null
   );
 
   // useInterval starts when a user is logged in AND the modal is not open
@@ -126,7 +128,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         setIsModalOpen(true);
       }
     },
-    authState.isAuthenticated && !isModalOpen ? oneSecond : null
+    authState?.isAuthenticated && !isModalOpen ? oneSecond : null
   );
 
   return (
