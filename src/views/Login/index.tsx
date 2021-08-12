@@ -35,12 +35,12 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (authState.isAuthenticated) {
+    if (authState?.isAuthenticated) {
       history.replace('/');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState.isAuthenticated]);
+  }, [authState?.isAuthenticated]);
 
   if (isLocalAuthEnabled() && isLocalAuth) {
     return (

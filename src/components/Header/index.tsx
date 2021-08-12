@@ -26,7 +26,7 @@ export const Header = ({ children }: HeaderProps) => {
 
   useEffect(() => {
     let isMounted = true;
-    if (authState.isAuthenticated) {
+    if (authState?.isAuthenticated) {
       oktaAuth.getUser().then((info: any) => {
         if (isMounted) {
           setUserName(info.name);
