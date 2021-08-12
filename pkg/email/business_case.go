@@ -46,6 +46,7 @@ func (c Client) SendBusinessCaseSubmissionEmail(ctx context.Context, requestName
 	err = c.sender.Send(
 		ctx,
 		c.config.GRTEmail,
+		nil,
 		subject,
 		body,
 	)
