@@ -26,7 +26,7 @@ export const Header = ({ children }: HeaderProps) => {
 
   useEffect(() => {
     let isMounted = true;
-    if (authState.isAuthenticated) {
+    if (authState?.isAuthenticated) {
       oktaAuth.getUser().then((info: any) => {
         if (isMounted) {
           setUserName(info.name);
@@ -112,7 +112,7 @@ export const Header = ({ children }: HeaderProps) => {
           <span className="fa fa-bars" />
         </button>
         <div className="navbar--container">
-          {authState.isAuthenticated ? (
+          {authState?.isAuthenticated ? (
             <div className="easi-header__dropdown-wrapper" ref={dropdownNode}>
               <button
                 aria-label={
@@ -176,7 +176,7 @@ export const Header = ({ children }: HeaderProps) => {
         </button>
         <div className="usa-nav__inner">
           {children}
-          {authState.isAuthenticated ? (
+          {authState?.isAuthenticated ? (
             <button
               type="button"
               className="easi-header__nav-link"
