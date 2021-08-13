@@ -6,7 +6,6 @@ import { localAuthStorageKey } from 'constants/localAuth';
 
 const initialAuthState = {
   isAuthenticated: false,
-  isPending: false,
   name: '',
   euaId: '',
   groups: [] as string[]
@@ -21,7 +20,6 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
     if (window.localStorage[localAuthStorageKey]) {
       const state = JSON.parse(window.localStorage[localAuthStorageKey]);
       return {
-        isPending: false,
         name: `User ${state.euaId}`,
         isAuthenticated: true,
         euaId: state.euaId,

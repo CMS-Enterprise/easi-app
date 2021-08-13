@@ -23,7 +23,7 @@ const WelcomeText = () => {
           <li key={task}>{task}</li>
         ))}
       </ul>
-      {authState.isAuthenticated ? (
+      {authState?.isAuthenticated ? (
         <UswdsLink
           className="usa-button"
           asCustom={Link}
