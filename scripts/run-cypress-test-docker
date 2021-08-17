@@ -13,18 +13,18 @@ export SERVER_KEY
 
 # Running in CI
 if [[ -n "${CI+x}" ]]; then
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml pull db_migrate easi
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml pull db_migrate easi
 
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml build --parallel
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml build --parallel
 
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up -d db
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up --exit-code-from db_migrate db_migrate
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up --exit-code-from db_seed db_seed
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up -d minio
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up --exit-code-from minio_mc minio_mc
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up -d easi easi_client
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up -d db
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up --exit-code-from db_migrate db_migrate
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up --exit-code-from db_seed db_seed
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up -d minio
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up --exit-code-from minio_mc minio_mc
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up -d easi easi_client
 
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.github_actions.yml up cypress
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up cypress
 
   docker container cp "${CYPRESS_CONTAINER}":/cypress/screenshots cypress/ || echo "No cypress screenshots copied"
   docker container cp "${CYPRESS_CONTAINER}":/cypress/videos cypress/ || echo "No cypress videos copied"
