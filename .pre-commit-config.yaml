@@ -32,8 +32,7 @@ repos:
             .github/PULL_REQUEST_TEMPLATE.md|
             node_modules/|
             vendor/|
-            docs/adr/index.md|
-            cypress_ci
+            docs/adr/index.md
           )$
       - id: circleci-validate
 
