@@ -51,6 +51,7 @@ func (c Client) SendNewAccessibilityRequestNoteEmail(
 	err = c.sender.Send(
 		ctx,
 		c.config.AccessibilityTeamEmail,
+		nil,
 		subject,
 		body,
 	)

@@ -48,7 +48,7 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
 
 const FlagsWrapper = ({ children }: WrapperProps) => {
   const { authState } = useOktaAuth();
-  const Container = authState.isAuthenticated
+  const Container = authState?.isAuthenticated
     ? UserTargetingWrapper
     : React.Fragment;
 

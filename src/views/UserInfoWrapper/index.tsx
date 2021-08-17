@@ -50,11 +50,11 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   };
 
   useEffect(() => {
-    if (authState.isAuthenticated) {
+    if (authState?.isAuthenticated) {
       storeUserInfo();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState.isAuthenticated]);
+  }, [authState?.isAuthenticated]);
 
   return <>{children}</>;
 };

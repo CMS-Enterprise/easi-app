@@ -40,6 +40,7 @@ func NewSystemIntake() models.SystemIntake {
 		CostIncreaseAmount:      null.StringFrom(""),
 		Contractor:              null.StringFrom(""),
 		ContractVehicle:         null.StringFrom(""),
+		LifecycleID:             null.StringFrom("123456"),
 		ContractStartDate:       &now,
 		ContractEndDate:         &now,
 	}

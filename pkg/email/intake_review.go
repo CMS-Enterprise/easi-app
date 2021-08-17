@@ -44,6 +44,7 @@ func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText strin
 	err = c.sender.Send(
 		ctx,
 		recipientAddress,
+		&c.config.GRTEmail,
 		subject,
 		body,
 	)

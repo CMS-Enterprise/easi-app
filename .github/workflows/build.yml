@@ -10,7 +10,7 @@ on:
 
 env:
   EASI_APP_NODE_VERSION: '12.22.1'
-  EASI_APP_GO_VERSION: '1.15.8'
+  EASI_APP_GO_VERSION: '1.16.6'
   # Set the IMAGE_TAG in a way that works for both pull_request and push events.
   # For pull_request events, use github.event.pull_request.head.sha (see
   # https://github.com/actions/checkout#Checkout-pull-request-HEAD-commit-instead-of-merge-commit).
@@ -391,7 +391,7 @@ jobs:
           OKTA_TEST_SECRET : ${{ secrets.OKTA_TEST_SECRET }}
           OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
         run: |
-          ./scripts/run-cypress-test-docker-github-actions
+          ./scripts/run-cypress-test-docker
       - name: Upload cypress videos
         if: ${{ always() }}
         uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
@@ -651,7 +651,7 @@ jobs:
         env:
           STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
         run: |
-          ./scripts/release_storybook_static_github_actions
+          ./scripts/release_storybook_static
       - name: Announce failure
         if: ${{ failure() }}
         run: |

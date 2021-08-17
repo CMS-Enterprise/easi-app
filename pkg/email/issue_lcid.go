@@ -47,6 +47,7 @@ func (c Client) SendIssueLCIDEmail(ctx context.Context, recipient models.EmailAd
 	err = c.sender.Send(
 		ctx,
 		recipient,
+		&c.config.GRTEmail,
 		subject,
 		body,
 	)

@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"go.uber.org/zap"
@@ -59,13 +60,48 @@ func NewFetchAccessibilityMetrics(
 		if err != nil {
 			return nil, err
 		}
-		data := [][]string{{"Request Name", "Lifecycle ID", "Request Status", "Date Opened", "Date Closed"}}
+		data := [][]string{{
+			"Request Name",
+			"Lifecycle ID",
+			"Request Status",
+			"Date Opened",
+			"Date Closed",
+			"Initial Test Date",
+			"Initial Test Score",
+			"Date of Passing Test",
+			"Most Recent Remediation Score",
+			"Total Tests",
+			"Failed Tests"}}
 		for _, line := range lines {
-			dateClosedString := ""
+			var dateClosed, initialTestDate, initialTestScore, dateOfPassingTest, mostRecentRemediationScore string
 			if line.Status == models.AccessibilityRequestStatusClosed {
-				dateClosedString = line.StatusCreatedAt.Format("01/02/2006")
+				dateClosed = line.StatusCreatedAt.Format("01/02/2006")
 			}
-			data = append(data, []string{line.Name, line.LCID, string(line.Status), line.CreatedAt.Format("01/02/2006"), dateClosedString})
+			if line.InitialTestDate.Valid {
+				initialTestDate = line.InitialTestDate.Time.Format("01/02/2006")
+			}
+			if line.InitialTestScore.Valid {
+				initialTestScore = strconv.Itoa(int(line.InitialTestScore.Int64))
+			}
+			if line.EarliestPassingTestDate.Valid {
+				dateOfPassingTest = line.EarliestPassingTestDate.Time.Format("01/02/2006")
+			}
+			if line.MostRecentRemediationScore.Valid {
+				mostRecentRemediationScore = strconv.Itoa(int(line.MostRecentRemediationScore.Int64))
+			}
+			data = append(data, []string{
+				line.Name,
+				line.LCID,
+				string(line.Status),
+				line.CreatedAt.Format("01/02/2006"),
+				dateClosed,
+				initialTestDate,
+				initialTestScore,
+				dateOfPassingTest,
+				mostRecentRemediationScore,
+				strconv.Itoa(line.TestCount),
+				strconv.Itoa(line.FailedTestCount),
+			})
 		}
 		return data, nil
 	}
