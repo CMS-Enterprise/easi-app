@@ -483,12 +483,12 @@ environment.
 `scripts/dev` and parts of our CI tooling rely on docker-compose. Multiple
 docker-compose files exist to support different use cases and environments.
 
-| File                        | Description                                                                                                                       |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| docker-compose.yml          | Base configuration for `db`, `db_migrate`, `easi` and `easi_client` services                                                      |
-| docker-compose.override.yml | Additional configuration for running the above services locally. Also adds configuration for `minio` and `prince` lambda services |
-| docker-compose.circleci.yml | Additional configuration for running end-to-end Cypress tests in CircleCI                                                         |
-| docker-compose.local.yml    | Additional configuration for running end-to-end Cypress tests locally                                                             |
+| File                          | Description                                                                                                                       |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| docker-compose.yml            | Base configuration for `db`, `db_migrate`, `easi` and `easi_client` services                                                      |
+| docker-compose.override.yml   | Additional configuration for running the above services locally. Also adds configuration for `minio` and `prince` lambda services |
+| docker-compose.cypress_ci.yml | Additional configuration for running end-to-end Cypress tests in Github Actions                                                   |
+| docker-compose.local.yml      | Additional configuration for running end-to-end Cypress tests locally                                                             |
 
 ### Use case: Run database and database migrations locally
 
