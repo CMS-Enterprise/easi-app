@@ -2,7 +2,7 @@
 version: '3.7'
 services:
   db_migrate:
-    image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}'
+    image: '${ECR_REGISTRY}/easi-db-migrate:${IMAGE_TAG}'
   db_seed:
     build:
       context: .
@@ -16,7 +16,7 @@ services:
       - PGSSLMODE=disable
       - DB_MAX_CONNECTIONS=20
   easi:
-    image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}'
+    image: '${ECR_REGISTRY}/easi-backend:${IMAGE_TAG}'
     environment:
       - APP_ENV=test
       - EMAIL_TEMPLATE_DIR=/easi/templates
@@ -27,9 +27,7 @@ services:
   easi_client:
     build:
       context: .
-      dockerfile: Dockerfile.client_circleci
-      args:
-        - REACT_APP_LOCAL_AUTH_ENABLED=true
+      dockerfile: Dockerfile.client_ci
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
     entrypoint: ['serve', '-s', '-l', '3000']
