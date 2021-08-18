@@ -7,12 +7,9 @@ case "$APP_ENV" in
   "dev")
     STORYBOOK_S3_BUCKET="$STORYBOOK_S3_BUCKET_DEV"
     ;;
-  "impl")
-    STORYBOOK_S3_BUCKET="$STORYBOOK_S3_BUCKET_IMPL"
-    ;;
   *)
     echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
-    echo "Allowed values: 'dev', 'impl'"
+    echo "Allowed values: 'dev'"
     exit 1
     ;;
 esac
@@ -22,7 +19,7 @@ esac
 s3_err="$(aws s3 ls "$STORYBOOK_S3_BUCKET" 1>/dev/null 2>&1)"
 if [[ -z "$s3_err" ]] ; then
   ( set -x -u ;
-    aws s3 sync --no-progress --delete /tmp/builds/storybook-static/ s3://"$STORYBOOK_S3_BUCKET"/
+    aws s3 sync --no-progress --delete storybook-static/ s3://"$STORYBOOK_S3_BUCKET"/
   )
 else
   echo "+ aws s3 ls $STORYBOOK_S3_BUCKET"
