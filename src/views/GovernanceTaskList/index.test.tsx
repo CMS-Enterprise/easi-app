@@ -12,6 +12,7 @@ import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
 import GovernanceTaskList from './index';
@@ -115,15 +116,37 @@ describe('The Goveranance Task List', () => {
     };
   };
 
+  const grtFeedback = {
+    request: {
+      query: GetGRTFeedbackQuery,
+      variables: {
+        intakeID: '1be65d1a-af87-4e6c-89b2-d2e86f1ee784'
+      }
+    },
+    result: {
+      data: {
+        systemIntake: {
+          grtFeedbacks: []
+        }
+      }
+    }
+  };
+
   it('renders without crashing', async () => {
     const mockStore = configureMockStore();
-    const store = mockStore({});
+    const store = mockStore({
+      systemIntake: { systemIntake: {} },
+      businessCase: { form: {} }
+    });
 
     render(
       <MemoryRouter
         initialEntries={['/governance-task-list/sysIntakeRequest123']}
       >
-        <MockedProvider mocks={[mockIntakeQuery()]} addTypename={false}>
+        <MockedProvider
+          mocks={[mockIntakeQuery(), grtFeedback]}
+          addTypename={false}
+        >
           <MessageProvider>
             <Provider store={store}>
               <Route path="/governance-task-list/:systemId">
@@ -163,6 +186,23 @@ describe('The Goveranance Task List', () => {
     );
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
+    const taskList = screen.getByTestId('task-list');
+    expect(taskList).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-intake-form')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-intake-review')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-business-case-draft')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-business-case-final')
+    ).toBeInTheDocument();
+    expect(
+      within(taskList).getByTestId('task-list-grb-meeting')
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
         name: 'Get governance approval for Easy Access to System Information',
@@ -185,7 +225,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockRecompleteIntake]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockRecompleteIntake, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -214,7 +257,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockRecompleteIntake]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockRecompleteIntake, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -254,7 +300,7 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockQuery]} addTypename={false}>
+          <MockedProvider mocks={[mockQuery, grtFeedback]} addTypename={false}>
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -288,6 +334,81 @@ describe('The Goveranance Task List', () => {
     });
   });
 
+  describe('Heading', () => {
+    it('displays the request name', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {}
+        },
+        businessCase: { form: {} }
+      });
+
+      const mockIntake = mockIntakeQuery({
+        requestName: 'Easy Access to System Information'
+      });
+
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider mocks={[mockIntake, grtFeedback]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+      expect(
+        screen.getByRole('heading', {
+          name: 'Get governance approval for Easy Access to System Information',
+          level: 1
+        })
+      ).toBeInTheDocument();
+    });
+
+    it('hides the request name', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: { systemIntake: initialSystemIntakeForm },
+        businessCase: { form: {} }
+      });
+
+      render(
+        <MemoryRouter
+          initialEntries={['/governance-task-list/sysIntakeRequest123']}
+        >
+          <MockedProvider
+            mocks={[mockIntakeQuery(), grtFeedback]}
+            addTypename={false}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+      expect(
+        screen.getByRole('heading', {
+          name: 'Get governance approval',
+          level: 1
+        })
+      ).toBeInTheDocument();
+    });
+  });
+
   describe('Statuses', () => {
     const mockStore = configureMockStore();
 
@@ -302,7 +423,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -342,7 +466,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -382,7 +509,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -426,7 +556,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -482,7 +615,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -528,7 +664,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -575,7 +714,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -639,7 +781,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -703,7 +848,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -762,7 +910,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -818,7 +969,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -880,7 +1034,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -928,7 +1085,10 @@ describe('The Goveranance Task List', () => {
         <MemoryRouter
           initialEntries={['/governance-task-list/sysIntakeRequest123']}
         >
-          <MockedProvider mocks={[mockWithStatus]} addTypename={false}>
+          <MockedProvider
+            mocks={[mockWithStatus, grtFeedback]}
+            addTypename={false}
+          >
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">

@@ -28,7 +28,12 @@ import {
   intakeTag
 } from 'data/taskList';
 import useMessage from 'hooks/useMessage';
+import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import {
+  GetGRTFeedback,
+  GetGRTFeedbackVariables
+} from 'queries/types/GetGRTFeedback';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
@@ -63,6 +68,17 @@ const GovernanceTaskList = () => {
   );
   const systemIntake = data?.systemIntake;
 
+  const { data: grtFeedbackData } = useQuery<
+    GetGRTFeedback,
+    GetGRTFeedbackVariables
+  >(GetGRTFeedbackQuery, {
+    variables: {
+      intakeID: systemId
+    }
+  });
+
+  const grtFeedback = grtFeedbackData?.systemIntake?.grtFeedbacks;
+
   if (loading) {
     return <Loading />;
   }
@@ -88,7 +104,7 @@ const GovernanceTaskList = () => {
       case 'BIZ_CASE_DRAFT_SUBMITTED':
         return 'Business case submitted. Waiting for feedback.';
       case 'BIZ_CASE_CHANGES_NEEDED':
-        return 'Read feedback in your email, make updates to your business case and re-submit it.';
+        return 'Review feedback and update draft business case';
       case 'READY_FOR_GRT':
         return 'Attend GRT meeting. The admin team will email you to schedule a time.';
       default:
@@ -196,6 +212,20 @@ const GovernanceTaskList = () => {
                     you need to go through a full governance process.
                   </span>
                 </Alert>
+                {grtFeedback &&
+                  grtFeedback.length > 0 &&
+                  ['NEED_BIZ_CASE', 'BIZ_CASE_DRAFT'].includes(
+                    systemIntake.status
+                  ) && (
+                    <UswdsLink
+                      className="usa-button margin-top-2"
+                      variant="unstyled"
+                      asCustom={Link}
+                      to={`/governance-task-list/${systemIntake.id}/feedback`}
+                    >
+                      Read feedback
+                    </UswdsLink>
+                  )}
               </TaskListItem>
               <TaskListItem
                 testId="task-list-business-case-draft"
@@ -226,7 +256,24 @@ const GovernanceTaskList = () => {
                     </span>
                   )}
                 </TaskListDescription>
-                <BusinessCaseDraftCta systemIntake={systemIntake} />
+                <div>
+                  {grtFeedback &&
+                    grtFeedback.length > 0 &&
+                    systemIntake.status === 'BIZ_CASE_CHANGES_NEEDED' && (
+                      <>
+                        <UswdsLink
+                          className="usa-button margin-bottom-2"
+                          variant="unstyled"
+                          asCustom={Link}
+                          to={`/governance-task-list/${systemIntake.id}/feedback`}
+                        >
+                          Read feedback
+                        </UswdsLink>
+                        <br />
+                      </>
+                    )}
+                  <BusinessCaseDraftCta systemIntake={systemIntake} />
+                </div>
               </TaskListItem>
               <TaskListItem
                 testId="task-list-business-case-final"
@@ -239,6 +286,21 @@ const GovernanceTaskList = () => {
                     meeting and submit it to the Governance Review Board.
                   </p>
                 </TaskListDescription>
+                {grtFeedback &&
+                  grtFeedback.length > 0 &&
+                  systemIntake.status === 'BIZ_CASE_FINAL_NEEDED' && (
+                    <>
+                      <UswdsLink
+                        className="usa-button margin-y-2"
+                        variant="unstyled"
+                        asCustom={Link}
+                        to={`/governance-task-list/${systemIntake.id}/feedback`}
+                      >
+                        Read feedback
+                      </UswdsLink>
+                      <br />
+                    </>
+                  )}
                 {systemIntake.status === 'BIZ_CASE_FINAL_NEEDED' && (
                   <UswdsLink
                     className="usa-button"
