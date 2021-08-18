@@ -128,7 +128,7 @@ describe('The intake request contract details', () => {
     expect(screen.getByTestId('system-intake')).toBeInTheDocument();
   });
 
-  xit('fills out required fields', async () => {
+  it('fills out required fields', async () => {
     const updateContractDetails = {
       request: {
         query: UpdateSystemIntakeContractDetails,
@@ -160,22 +160,30 @@ describe('The intake request contract details', () => {
           updateSystemIntakeContractDetails: {
             systemIntake: {
               id: INTAKE_ID,
-              contract: {
-                contractor: '',
-                endDate: null,
-                hasContract: 'NOT_NEEDED',
-                startDate: null,
-                vehicle: ''
-              },
-              costs: {
-                expectedIncreaseAmount: '',
-                isExpectingIncrease: 'NO'
-              },
               currentStage: 'Just an idea',
               fundingSource: {
-                fundingNumber: '',
+                fundingNumber: null,
                 isFunded: false,
-                source: ''
+                source: null
+              },
+              costs: {
+                expectedIncreaseAmount: null,
+                isExpectingIncrease: 'NO'
+              },
+              contract: {
+                contractor: null,
+                endDate: {
+                  day: null,
+                  month: null,
+                  year: null
+                },
+                hasContract: 'NOT_NEEDED',
+                startDate: {
+                  day: null,
+                  month: null,
+                  year: null
+                },
+                vehicle: null
               }
             }
           }
@@ -221,11 +229,29 @@ describe('The intake request contract details', () => {
     userEvent.click(haveNotStarted);
 
     screen.getByRole('button', { name: /next/i }).click();
-
     expect(
       await screen.findByRole('heading', {
         name: /check your answers before sending/i
       })
+    ).toBeInTheDocument();
+  });
+
+  it('displays formik errors', async () => {
+    render(
+      <MemoryRouter initialEntries={[`/system/${INTAKE_ID}/contract-details`]}>
+        <MockedProvider mocks={[intakeQuery]} addTypename={false}>
+          <Route path="/system/:systemId/:formPage">
+            <SystemIntake />
+          </Route>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    screen.getByRole('button', { name: /next/i }).click();
+
+    expect(
+      await screen.findByTestId('contract-details-errors')
     ).toBeInTheDocument();
   });
 });
