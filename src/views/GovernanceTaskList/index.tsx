@@ -230,7 +230,10 @@ const GovernanceTaskList = () => {
               <TaskListItem
                 testId="task-list-business-case-draft"
                 heading="Prepare your Business Case for the GRT"
-                status={businessCaseTag(systemIntake)}
+                status={businessCaseTag(
+                  systemIntake.requestType,
+                  systemIntake.status
+                )}
               >
                 <TaskListDescription>
                   <p className="margin-top-0">
@@ -272,13 +275,22 @@ const GovernanceTaskList = () => {
                         <br />
                       </>
                     )}
-                  <BusinessCaseDraftCta systemIntake={systemIntake} />
+                  <BusinessCaseDraftCta
+                    data={{
+                      id: systemIntake.id,
+                      status: systemIntake.status,
+                      businessCaseId: systemIntake.businessCaseId
+                    }}
+                  />
                 </div>
               </TaskListItem>
               <TaskListItem
                 testId="task-list-business-case-final"
                 heading="Submit the business case for final approval"
-                status={finalBusinessCaseTag(systemIntake)}
+                status={finalBusinessCaseTag(
+                  systemIntake.requestType,
+                  systemIntake.status
+                )}
               >
                 <TaskListDescription>
                   <p className="margin-top-0">
@@ -316,7 +328,10 @@ const GovernanceTaskList = () => {
               <TaskListItem
                 testId="task-list-grb-meeting"
                 heading="Attend the GRB meeting"
-                status={attendGrbMeetingTag(systemIntake)}
+                status={attendGrbMeetingTag(
+                  systemIntake.requestType,
+                  systemIntake.status
+                )}
               >
                 <TaskListDescription>
                   <p className="margin-top-0">
@@ -330,12 +345,21 @@ const GovernanceTaskList = () => {
                     </span>
                   )}
                 </TaskListDescription>
-                <AttendGrbMeetingCta intake={systemIntake} />
+                <AttendGrbMeetingCta
+                  data={{
+                    id: systemIntake.id,
+                    status: systemIntake.status,
+                    requestType: systemIntake.requestType
+                  }}
+                />
               </TaskListItem>
               <TaskListItem
                 testId="task-list-decision"
                 heading="Decision and next steps"
-                status={decisionTag(systemIntake)}
+                status={decisionTag(
+                  systemIntake.requestType,
+                  systemIntake.status
+                )}
               >
                 <TaskListDescription>
                   <p className="margin-top-0">
@@ -344,7 +368,10 @@ const GovernanceTaskList = () => {
                     address the concerns to proceed.
                   </p>
                 </TaskListDescription>
-                <DecisionCta intake={systemIntake} />
+                <DecisionCta
+                  id={systemIntake.id}
+                  status={systemIntake.status}
+                />
               </TaskListItem>
             </ol>
           </div>

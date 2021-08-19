@@ -1,5 +1,3 @@
-import { SystemIntakeForm } from 'types/systemIntake';
-
 type TagEnum = 'COMPLETED' | 'CANNOT_START' | 'NOT_NEEDED' | '';
 
 export const intakeTag = (status: string): TagEnum => {
@@ -32,15 +30,18 @@ export const initialReviewTag = (intakeStatus: string): TagEnum => {
     : 'CANNOT_START';
 };
 
-export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
-  if (intake.requestType === 'RECOMPETE') {
-    if (intake.status === 'LCID_ISSUED') {
+export const businessCaseTag = (
+  requestType: string,
+  status: string
+): TagEnum => {
+  if (requestType === 'RECOMPETE') {
+    if (status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
     }
     return 'CANNOT_START';
   }
 
-  switch (intake.status) {
+  switch (status) {
     case 'INTAKE_DRAFT':
     case 'INTAKE_SUBMITTED':
       return 'CANNOT_START';
@@ -57,15 +58,15 @@ export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
   }
 };
 
-export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
-  if (intake.requestType === 'RECOMPETE') {
-    if (intake.status === 'LCID_ISSUED') {
+export const finalBusinessCaseTag = (requestType: string, status: string) => {
+  if (requestType === 'RECOMPETE') {
+    if (status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
     }
     return 'CANNOT_START';
   }
 
-  switch (intake.status) {
+  switch (status) {
     case 'INTAKE_DRAFT':
     case 'INTAKE_SUBMITTED':
     case 'NEED_BIZ_CASE':
@@ -87,15 +88,18 @@ export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
 };
 
 // Task List Item: Attend GRB Meeting
-export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
-  if (intake.requestType === 'RECOMPETE') {
-    if (intake.status === 'LCID_ISSUED') {
+export const attendGrbMeetingTag = (
+  requestType: string,
+  status: string
+): TagEnum => {
+  if (requestType === 'RECOMPETE') {
+    if (status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
     }
     return 'CANNOT_START';
   }
 
-  switch (intake.status) {
+  switch (status) {
     case 'READY_FOR_GRB':
       return '';
     case 'LCID_ISSUED':
@@ -110,15 +114,15 @@ export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
 };
 
 // Task List Item: Decision
-export const decisionTag = (intake: SystemIntakeForm): TagEnum => {
-  if (intake.requestType === 'RECOMPETE') {
-    if (intake.status === 'LCID_ISSUED') {
+export const decisionTag = (requestType: string, status: string): TagEnum => {
+  if (requestType === 'RECOMPETE') {
+    if (status === 'LCID_ISSUED') {
       return '';
     }
     return 'CANNOT_START';
   }
 
-  switch (intake.status) {
+  switch (status) {
     case 'LCID_ISSUED':
     case 'NOT_APPROVED':
     case 'NOT_IT_REQUEST':
