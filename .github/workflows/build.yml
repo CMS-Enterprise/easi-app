@@ -7,6 +7,11 @@ on:
   pull_request:
     branches:
       - master
+      - '!dependabot/**'
+  workflow_run:
+    workflows: ["Dependabot PR Check"]
+    types:
+      - completed
 
 env:
   EASI_APP_NODE_VERSION: '12.22.1'
