@@ -7,8 +7,7 @@ on:
   pull_request:
     branches:
       - master
-    branches-ignore:
-      - 'dependabot/**'
+      - '!dependabot/**'
   workflow_run:
     workflows: ["Dependabot PR Check"]
     types:
