@@ -11,6 +11,7 @@ on:
       - '!dependabot/**'
   workflow_run:
     workflows: ["Dependabot PR Check"]
+    branches: ['dependabot/**']
     types:
       - completed
 
