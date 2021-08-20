@@ -4,16 +4,12 @@ on:
   push:
     branches:
       - master
-      - '!dependabot/**'
   pull_request:
     branches:
       - master
-      - '!dependabot/**'
-  workflow_run:
-    workflows: ["Dependabot PR Check"]
-    branches: ['dependabot/**']
-    types:
-      - completed
+  pull_request_target:
+    branches: 
+      - 'dependabot/**'
 
 env:
   EASI_APP_NODE_VERSION: '12.22.1'
