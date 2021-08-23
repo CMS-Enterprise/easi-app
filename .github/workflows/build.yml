@@ -9,7 +9,7 @@ on:
       - master
   pull_request_target:
     branches: 
-      - 'dependabot/**'
+      - master
 
 env:
   EASI_APP_NODE_VERSION: '12.22.1'
