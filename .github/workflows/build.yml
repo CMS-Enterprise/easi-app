@@ -4,13 +4,8 @@ on:
   push:
     branches:
       - master
-      - '!dependabot/**'
   pull_request:
     branches:
-      - master
-      - '!dependabot/**'
-  pull_request_target:
-    branches: 
       - master
 
 env:
