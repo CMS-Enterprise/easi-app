@@ -21,7 +21,24 @@ const taskList = {
       'Finish these next steps to complete the governance review process.'
   },
   navigation: {
+    home: 'Home',
+    governanceApproval: 'Get governance approval',
+    feedback: 'Feedback',
     returnToTaskList: 'Return to task list'
+  },
+  feedback: {
+    heading: 'Recommendations',
+    grb: {
+      heading: 'GRT recommendations to the GRB',
+      help:
+        'These are the Governance Reiew Team recommendations for the Governance Review Board'
+    },
+    businessOwner: {
+      heading: 'GRT recommendations to the Business Owner',
+      help:
+        'These are the Governance Review Team recommendations for the Business Owner'
+    },
+    descriptiveDate: 'Feedback given on {{date}}'
   }
 };
 

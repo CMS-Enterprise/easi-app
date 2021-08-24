@@ -2,11 +2,13 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, within } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 
 import GovernanceTaskList from './index';
 
@@ -28,20 +30,39 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The Goveranance Task List', () => {
+  const grtFeedback = {
+    request: {
+      query: GetGRTFeedbackQuery,
+      variables: {
+        intakeID: '1be65d1a-af87-4e6c-89b2-d2e86f1ee784'
+      }
+    },
+    result: {
+      data: {
+        systemIntake: {
+          grtFeedbacks: []
+        }
+      }
+    }
+  };
+
   it('renders without crashing', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       systemIntake: { systemIntake: {} },
       businessCase: { form: {} }
     });
+
     await act(async () => {
       render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <Provider store={store}>
-            <MessageProvider>
-              <GovernanceTaskList />
-            </MessageProvider>
-          </Provider>
+          <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
         </MemoryRouter>
       );
     });
@@ -57,14 +78,17 @@ describe('The Goveranance Task List', () => {
     await act(async () => {
       render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <Provider store={store}>
-            <MessageProvider>
-              <GovernanceTaskList />
-            </MessageProvider>
-          </Provider>
+          <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
         </MemoryRouter>
       );
     });
+
     const taskList = screen.getByTestId('task-list');
     expect(taskList).toBeInTheDocument();
     expect(
@@ -104,11 +128,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -138,11 +164,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -178,11 +206,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -223,11 +253,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -250,11 +282,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -276,11 +310,13 @@ describe('The Goveranance Task List', () => {
     await act(async () => {
       render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <Provider store={store}>
-            <MessageProvider>
-              <GovernanceTaskList />
-            </MessageProvider>
-          </Provider>
+          <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
         </MemoryRouter>
       );
     });
@@ -304,11 +340,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -338,11 +376,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -377,11 +417,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -420,11 +462,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -465,11 +509,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -510,11 +556,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -556,11 +604,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -619,11 +669,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -677,11 +729,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -736,11 +790,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -792,11 +848,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -854,11 +912,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
@@ -902,11 +962,13 @@ describe('The Goveranance Task List', () => {
       await act(async () => {
         render(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <GovernanceTaskList />
-              </MessageProvider>
-            </Provider>
+            <MockedProvider mocks={[grtFeedback]} addTypename={false}>
+              <Provider store={store}>
+                <MessageProvider>
+                  <GovernanceTaskList />
+                </MessageProvider>
+              </Provider>
+            </MockedProvider>
           </MemoryRouter>
         );
       });
