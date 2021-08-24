@@ -7,9 +7,6 @@ on:
   pull_request:
     branches:
       - master
-  pull_request_target:
-    branches: 
-      - master
 
 env:
   EASI_APP_NODE_VERSION: '12.22.1'
