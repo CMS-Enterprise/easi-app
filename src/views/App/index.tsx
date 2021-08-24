@@ -19,6 +19,7 @@ import FlagsWrapper from 'views/FlagsWrapper';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
+import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
 import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -80,6 +81,11 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId"
         exact
         component={GovernanceTaskList}
+      />
+      <SecureRoute
+        path="/governance-task-list/:systemId/feedback"
+        exact
+        component={GovernanceFeedback}
       />
       <SecureRoute
         exact
