@@ -79,36 +79,3 @@ jobs:
         if: ${{ failure() }}
         run: |
           ./scripts/github-action-announce-broken-branch
-
-  deploy_storybook_dev:
-    runs-on: ubuntu-latest
-    environment: dev
-    env:
-      APP_ENV: dev
-    steps:
-      - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/download-artifact@3be87be14a055c47b01d3bd88f8fe02320a9bb60 # v2.0.10
-        with:
-          name: storybook-build
-          path: storybook-static
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3 # v1.5.10
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
-          role-duration-seconds: 1800
-          role-skip-session-tagging: true
-      - name: Deploy storybook assets
-        env:
-          STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
-        run: |
-          ./scripts/release_storybook_static
-      - name: Announce failure
-        if: ${{ failure() }}
-        run: |
-          ./scripts/github-action-announce-broken-branch
