@@ -193,7 +193,8 @@ const governanceReviewTeam = {
       'Jaime Cadwell',
       'Alex Smith',
       'Ann Rudolph',
-      'Kyle Miller'
+      'Kyle Miller',
+      'Leilani Fields'
     ]
   }
 };
