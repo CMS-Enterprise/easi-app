@@ -640,3 +640,874 @@ func date(year, month, day int) *time.Time {
 	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 	return &date
 }
+
+func (s GraphQLTestSuite) TestUpdateContactDetails() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContactDetails struct {
+			SystemIntake struct {
+				ID            string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				ProductManager struct {
+					Name      string
+					Component string
+				}
+				Requester struct {
+					Name      string
+					Component string
+				}
+				Isso struct {
+					IsPresent bool
+					Name      null.String
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     null.String
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContactDetails(input: {
+				id: "%s",
+				businessOwner: {
+					name: "Iama Businessowner",
+					component: "CMS Office 1"
+				},
+				productManager: {
+					name: "Iama Productmanager",
+					component: "CMS Office 2"
+				},
+				requester: {
+					name: "Iama Requester",
+					component: "CMS Office 3"
+				},
+				isso: {
+					isPresent: false
+					name: null
+				},
+				governanceTeams: {
+					isPresent: false
+					teams: []
+				}
+			}) {
+				systemIntake {
+					id,
+					businessOwner {
+						name
+						component
+					}
+					productManager {
+						name
+						component
+					}
+					requester {
+						name
+						component
+					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							name
+						}
+						isPresent
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.Equal(respIntake.BusinessOwner.Name, "Iama Businessowner")
+	s.Equal(respIntake.BusinessOwner.Component, "CMS Office 1")
+
+	s.Equal(respIntake.ProductManager.Name, "Iama Productmanager")
+	s.Equal(respIntake.ProductManager.Component, "CMS Office 2")
+
+	s.Equal(respIntake.Requester.Name, "Iama Requester")
+	s.Equal(respIntake.Requester.Component, "CMS Office 3")
+
+	s.Nil(respIntake.Isso.Name.Ptr())
+	s.False(respIntake.Isso.IsPresent)
+
+	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
+	s.False(respIntake.GovernanceTeams.IsPresent)
+}
+
+func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContactDetails struct {
+			SystemIntake struct {
+				ID            string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				ProductManager struct {
+					Name      string
+					Component string
+				}
+				Requester struct {
+					Name      string
+					Component string
+				}
+				Isso struct {
+					IsPresent bool
+					Name      string
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     []struct {
+						Name         string
+						Collaborator string
+						Key          string
+					}
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContactDetails(input: {
+				id: "%s",
+				businessOwner: {
+					name: "Iama Businessowner",
+					component: "CMS Office 1"
+				},
+				productManager: {
+					name: "Iama Productmanager",
+					component: "CMS Office 2"
+				},
+				requester: {
+					name: "Iama Requester",
+					component: "CMS Office 3"
+				},
+				isso: {
+					isPresent: true,
+					name: "Iama Issoperson"
+				},
+				governanceTeams: {
+					isPresent: true,
+					teams: [
+						{ name: "Technical Review Board", key: "technicalReviewBoard", collaborator: "Iama Trbperson" },
+						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" },
+						{ name: "Enterprise Architecture", key: "enterpriseArchitecture", collaborator: "Iama Eaperson" }
+					]
+				}
+			}) {
+				systemIntake {
+					id,
+					businessOwner {
+						name
+						component
+					}
+					productManager {
+						name
+						component
+					}
+					requester {
+						name
+						component
+					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							collaborator
+							key
+						}
+						isPresent
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.Equal("Iama Issoperson", respIntake.Isso.Name)
+	s.True(respIntake.Isso.IsPresent)
+
+	s.True(respIntake.GovernanceTeams.IsPresent)
+	teams := respIntake.GovernanceTeams.Teams
+	s.Equal("Iama Eaperson", teams[0].Collaborator)
+	s.Equal("enterpriseArchitecture", teams[0].Key)
+
+	s.Equal("Iama Trbperson", teams[2].Collaborator)
+	s.Equal("technicalReviewBoard", teams[2].Key)
+
+	s.Equal("Iama Ispgperson", teams[1].Collaborator)
+	s.Equal("securityPrivacy", teams[1].Key)
+}
+
+func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	intake.ISSOName = null.StringFrom("Isso Person")
+	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
+	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
+	intake.EACollaboratorName = null.StringFrom("EA Person")
+	_, err := s.store.UpdateSystemIntake(ctx, intake)
+	s.NoError(err)
+
+	var resp struct {
+		UpdateSystemIntakeContactDetails struct {
+			SystemIntake struct {
+				ID            string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				ProductManager struct {
+					Name      string
+					Component string
+				}
+				Requester struct {
+					Name      string
+					Component string
+				}
+				Isso struct {
+					IsPresent bool
+					Name      null.String
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     null.String
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContactDetails(input: {
+				id: "%s",
+				businessOwner: {
+					name: "Iama Businessowner",
+					component: "CMS Office 1"
+				},
+				productManager: {
+					name: "Iama Productmanager",
+					component: "CMS Office 2"
+				},
+				requester: {
+					name: "Iama Requester",
+					component: "CMS Office 3"
+				},
+				isso: {
+					isPresent: false,
+					name: null
+				},
+				governanceTeams: {
+					isPresent: false,
+					teams: null
+				}
+			}) {
+				systemIntake {
+					id,
+					businessOwner {
+						name
+						component
+					}
+					productManager {
+						name
+						component
+					}
+					requester {
+						name
+						component
+					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							collaborator
+							key
+						}
+						isPresent
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.Nil(respIntake.Isso.Name.Ptr())
+	s.False(respIntake.Isso.IsPresent)
+
+	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
+	s.False(respIntake.GovernanceTeams.IsPresent)
+}
+
+func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	intake.ISSOName = null.StringFrom("Isso Person")
+	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
+	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
+	intake.EACollaboratorName = null.StringFrom("EA Person")
+	_, err := s.store.UpdateSystemIntake(ctx, intake)
+	s.NoError(err)
+
+	var resp struct {
+		UpdateSystemIntakeContactDetails struct {
+			SystemIntake struct {
+				ID            string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				ProductManager struct {
+					Name      string
+					Component string
+				}
+				Requester struct {
+					Name      string
+					Component string
+				}
+				Isso struct {
+					IsPresent bool
+					Name      null.String
+				}
+				GovernanceTeams struct {
+					IsPresent bool
+					Teams     []struct {
+						Name         string
+						Collaborator string
+						Key          string
+					}
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContactDetails(input: {
+				id: "%s",
+				businessOwner: {
+					name: "Iama Businessowner",
+					component: "CMS Office 1"
+				},
+				productManager: {
+					name: "Iama Productmanager",
+					component: "CMS Office 2"
+				},
+				requester: {
+					name: "Iama Requester",
+					component: "CMS Office 3"
+				},
+				isso: {
+					isPresent: false,
+					name: null
+				},
+				governanceTeams: {
+					isPresent: true,
+					teams: [
+						{ name: "Technical Review Board", key: "technicalReviewBoard", collaborator: "Iama Trbperson" },
+						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" }
+					]
+				}
+			}) {
+				systemIntake {
+					id,
+					businessOwner {
+						name
+						component
+					}
+					productManager {
+						name
+						component
+					}
+					requester {
+						name
+						component
+					}
+					isso {
+						name
+						isPresent
+					}
+					governanceTeams {
+						teams {
+							collaborator
+							key
+						}
+						isPresent
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.True(respIntake.GovernanceTeams.IsPresent)
+	teams := respIntake.GovernanceTeams.Teams
+	s.Equal(2, len(teams))
+	s.Equal("Iama Ispgperson", teams[0].Collaborator)
+	s.Equal("securityPrivacy", teams[0].Key)
+
+	s.Equal("Iama Trbperson", teams[1].Collaborator)
+	s.Equal("technicalReviewBoard", teams[1].Key)
+}
+
+func (s GraphQLTestSuite) TestUpdateRequestDetails() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeRequestDetails struct {
+			SystemIntake struct {
+				ID               string
+				RequestName      string
+				BusinessSolution string
+				BusinessNeed     string
+				NeedsEaSupport   bool
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeRequestDetails(input: {
+				id: "%s",
+				requestName: "My request",
+				businessSolution: "My solution",
+				businessNeed: "My need",
+				needsEaSupport: false
+			}) {
+				systemIntake {
+					id
+					requestName
+					businessSolution
+					businessNeed
+					needsEaSupport
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeRequestDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeRequestDetails.SystemIntake
+	s.Equal(respIntake.RequestName, "My request")
+	s.Equal(respIntake.BusinessSolution, "My solution")
+	s.Equal(respIntake.BusinessNeed, "My need")
+	s.False(respIntake.NeedsEaSupport)
+}
+
+func (s GraphQLTestSuite) TestUpdateContractDetails() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				ID            string
+				CurrentStage  string
+				FundingSource struct {
+					FundingNumber string
+					IsFunded      bool
+					Source        string
+				}
+				Costs struct {
+					ExpectedIncreaseAmount string
+					IsExpectingIncrease    string
+				}
+				Contract struct {
+					Contractor string
+					EndDate    struct {
+						Day   string
+						Month string
+						Year  string
+					}
+					HasContract string
+					StartDate   struct {
+						Day   string
+						Month string
+						Year  string
+					}
+					Vehicle string
+				}
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				currentStage: "Just an idea"
+				fundingSource: {
+					fundingNumber: "123456"
+					isFunded: true
+					source: "Prog Ops"
+				}
+				costs: {
+					expectedIncreaseAmount: "A little bit"
+					isExpectingIncrease: "YES"
+				}
+				contract: {
+					contractor: "Best Contractor Evar"
+					endDate: "2022-02-03T00:00:00Z"
+					hasContract: "HAVE_CONTRACT"
+					startDate: "2021-11-12T00:00:00Z"
+					vehicle: "Toyota Prius"
+				}
+			}) {
+				systemIntake {
+					id
+					currentStage
+					fundingSource {
+						fundingNumber
+						isFunded
+						source
+					}
+					costs {
+						expectedIncreaseAmount
+						isExpectingIncrease
+					}
+					contract {
+						contractor
+						endDate {
+							day
+							month
+							year
+						}
+						hasContract
+						startDate {
+							day
+							month
+							year
+						}
+						vehicle
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
+	s.Equal(respIntake.CurrentStage, "Just an idea")
+
+	fundingSource := respIntake.FundingSource
+	s.Equal(fundingSource.FundingNumber, "123456")
+	s.True(fundingSource.IsFunded)
+	s.Equal(fundingSource.Source, "Prog Ops")
+
+	costs := respIntake.Costs
+	s.Equal(costs.ExpectedIncreaseAmount, "A little bit")
+	s.Equal(costs.IsExpectingIncrease, "YES")
+
+	contract := respIntake.Contract
+	s.Equal(contract.HasContract, "HAVE_CONTRACT")
+	s.Equal(contract.Contractor, "Best Contractor Evar")
+	s.Equal(contract.Vehicle, "Toyota Prius")
+
+	startDate := contract.StartDate
+	s.Equal(startDate.Day, "12")
+	s.Equal(startDate.Month, "11")
+	s.Equal(startDate.Year, "2021")
+
+	endDate := contract.EndDate
+	s.Equal(endDate.Day, "3")
+	s.Equal(endDate.Month, "2")
+	s.Equal(endDate.Year, "2022")
+}
+
+func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:          models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:     models.SystemIntakeRequestTypeNEW,
+		ExistingFunding: null.BoolFrom(true),
+		FundingSource:   null.StringFrom("Prog Ops"),
+		FundingNumber:   null.StringFrom("123456"),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				ID            string
+				FundingSource struct {
+					FundingNumber *string
+					IsFunded      bool
+					Source        *string
+				}
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				fundingSource: {
+					fundingNumber: ""
+					isFunded: false
+					source: ""
+				}
+			}) {
+				systemIntake {
+					id
+					fundingSource {
+						fundingNumber
+						isFunded
+						source
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
+	fundingSource := respIntake.FundingSource
+	s.Nil(fundingSource.FundingNumber)
+	s.False(fundingSource.IsFunded)
+	s.Nil(fundingSource.Source)
+}
+
+func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:             models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:        models.SystemIntakeRequestTypeNEW,
+		CostIncreaseAmount: null.StringFrom("Just a little"),
+		CostIncrease:       null.StringFrom("YES"),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				ID    string
+				Costs struct {
+					ExpectedIncreaseAmount *string
+					IsExpectingIncrease    string
+				}
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				costs: {
+					expectedIncreaseAmount: ""
+					isExpectingIncrease: "No"
+				}
+			}) {
+				systemIntake {
+					id
+					costs {
+						expectedIncreaseAmount
+						isExpectingIncrease
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
+	costs := respIntake.Costs
+	s.Nil(costs.ExpectedIncreaseAmount)
+	s.Equal(costs.IsExpectingIncrease, "No")
+}
+
+func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
+	ctx := context.Background()
+
+	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
+	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:            models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:       models.SystemIntakeRequestTypeNEW,
+		ExistingContract:  null.StringFrom("HAVE_CONTRACT"),
+		Contractor:        null.StringFrom("Best Contractor Evar"),
+		ContractVehicle:   null.StringFrom("Toyota Prius"),
+		ContractStartDate: &contractStartDate,
+		ContractEndDate:   &contractEndDate,
+	})
+
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				ID           string
+				CurrentStage string
+				Contract     struct {
+					Contractor *string
+					EndDate    struct {
+						Day   *string
+						Month *string
+						Year  *string
+					}
+					HasContract string
+					StartDate   struct {
+						Day   *string
+						Month *string
+						Year  *string
+					}
+					Vehicle *string
+				}
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				contract: {
+					contractor: ""
+					startDate: null
+					hasContract: "NOT_STARTED"
+					endDate: null
+					vehicle: ""
+				}
+			}) {
+				systemIntake {
+					id
+					contract {
+						contractor
+						endDate {
+							day
+							month
+							year
+						}
+						hasContract
+						startDate {
+							day
+							month
+							year
+						}
+						vehicle
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
+	contract := respIntake.Contract
+	s.Equal(contract.HasContract, "NOT_STARTED")
+	s.Nil(contract.Contractor)
+	s.Nil(contract.Vehicle)
+
+	startDate := contract.StartDate
+	s.Nil(startDate.Day)
+	s.Nil(startDate.Month)
+	s.Nil(startDate.Year)
+
+	endDate := contract.EndDate
+	s.Nil(endDate.Day)
+	s.Nil(endDate.Month)
+	s.Nil(endDate.Year)
+}
+
+func (s GraphQLTestSuite) TestSubmitIntake() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+		EUAUserID:   null.StringFrom("TEST"),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		SubmitIntake struct {
+			SystemIntake struct {
+				ID     string
+				Status string
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			submitIntake(input: {
+				id: "%s",
+			}) {
+				systemIntake {
+					id
+					status
+				}
+			}
+		}`, intake.ID), &resp)
+
+	respIntake := resp.SubmitIntake.SystemIntake
+	s.Equal(intake.ID.String(), respIntake.ID)
+	s.Equal(string(models.SystemIntakeStatusINTAKESUBMITTED), respIntake.Status)
+}

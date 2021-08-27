@@ -36,6 +36,7 @@ type ResolverService struct {
 	IssueLifecycleID         func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	RejectIntake             func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	FetchUserInfo            func(context.Context, string) (*models.UserInfo, error)
+	SubmitIntake             func(context.Context, *models.SystemIntake, *models.Action) error
 }
 
 // NewResolver constructs a resolver
