@@ -462,7 +462,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       checked={values.contract.hasContract === 'HAVE_CONTRACT'}
                       id="IntakeForm-ContractHaveContract"
                       name="contract.hasContract"
-                      label="I already have a contract/InterAgency Agreement (IAA) in place"
+                      label="I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance"
                       value="HAVE_CONTRACT"
                       aria-describedby="IntakeForm-HasContractHelp"
                       aria-expanded={
@@ -529,10 +529,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           )}
                         >
                           <legend className="usa-label">
-                            Period of performance
+                            Period of Performance dates (include all option
+                            years)
                           </legend>
                           <HelpText className="margin-bottom-1">
-                            For example: 04 10 2020
+                            For example: 4/10/2020 - 4/9/2025
                           </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['contract.startDate.month']}
@@ -740,10 +741,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           )}
                         >
                           <legend className="usa-label">
-                            Estimated period of performance
+                            New Period of Performance dates (include all option
+                            years)
                           </legend>
                           <HelpText className="margin-bottom-1">
-                            For example: 4/10/2020
+                            For example: 4/10/2020 - 4/9/2025
                           </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['contract.startDate.month']}
