@@ -1,28 +1,24 @@
-import React, { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, Switch, useHistory, useParams } from 'react-router-dom';
-import { SecureRoute } from '@okta/okta-react';
+import React from 'react';
+import { Link, Route, Switch, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
-import { FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
-import usePrevious from 'hooks/usePrevious';
-import { AppState } from 'reducers/rootReducer';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
-  clearSystemIntake,
-  fetchSystemIntake,
-  saveSystemIntake
-} from 'types/routines';
-import { SystemIntakeForm } from 'types/systemIntake';
-import { NotFoundPartial } from 'views/NotFound';
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
+import NotFound, { NotFoundPartial } from 'views/NotFound';
 
 import Confirmation from './Confirmation';
 import ContactDetails from './ContactDetails';
@@ -34,53 +30,29 @@ import SystemIntakeView from './ViewOnly';
 import './index.scss';
 
 export const SystemIntake = () => {
-  const history = useHistory();
   const { systemId } = useParams<{
     systemId: string;
     formPage: string;
   }>();
-  const dispatch = useDispatch();
-  const formikRef: any = useRef();
 
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
-  const isLoading = useSelector(
-    (state: AppState) => state.systemIntake.isLoading
-  );
-  const actionError = useSelector((state: AppState) => state.action.error);
-  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
-  const prevIsSubmitting = usePrevious(isSubmitting);
-
-  const dispatchSave = () => {
-    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    dispatch(
-      saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
-    );
-    current.resetForm({ values: current.values, errors: current.errors });
-  };
-
-  // Handle redirect after submitting
-  useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !actionError) {
-      history.push(`/system/${systemId}/confirmation`);
+  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
+    GetSystemIntakeQuery,
+    {
+      nextFetchPolicy: 'cache-first',
+      variables: {
+        id: systemId
+      }
     }
+  );
+  const systemIntake = data?.systemIntake;
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
+  if (loading) {
+    return <PageLoading />;
+  }
 
-  useEffect(() => {
-    if (systemId === 'new') {
-      history.push('/system/request-type');
-    } else {
-      dispatch(fetchSystemIntake(systemId));
-    }
-    return () => {
-      // clear system intake from store when component is unmounting
-      dispatch(clearSystemIntake());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  if (!systemIntake) {
+    return <NotFound />;
+  }
 
   return (
     <PageWrapper className="system-intake" data-testid="system-intake">
@@ -95,60 +67,42 @@ export const SystemIntake = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${systemIntake.id || 'new'}`}
+              to={`/governance-task-list/${systemIntake.id}`}
             >
               <span>Get governance approval</span>
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb current>Intake Request</Breadcrumb>
         </BreadcrumbBar>
-        {isLoading === false && (
+        {!loading && (
           <Switch>
-            <SecureRoute
+            <Route
               path="/system/:systemId/contact-details"
-              render={() => (
-                <ContactDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
-                />
-              )}
+              render={() => <ContactDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/request-details"
-              render={() => (
-                <RequestDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
-                />
-              )}
+              render={() => <RequestDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/contract-details"
-              render={() => (
-                <ContractDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
-                />
-              )}
+              render={() => <ContractDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/review"
               render={() => (
                 <Review systemIntake={systemIntake} now={DateTime.local()} />
               )}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/confirmation"
               render={() => <Confirmation />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/view"
               render={() => <SystemIntakeView systemIntake={systemIntake} />}
             />
-            <SecureRoute path="*" render={() => <NotFoundPartial />} />
+            <Route path="*" render={() => <NotFoundPartial />} />
           </Switch>
         )}
       </MainContent>
