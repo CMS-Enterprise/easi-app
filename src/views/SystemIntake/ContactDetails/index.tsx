@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -18,6 +19,11 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
+import {
+  UpdateSystemIntakeContactDetails,
+  UpdateSystemIntakeContactDetailsVariables
+} from 'queries/types/UpdateSystemIntakeContactDetails';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
@@ -28,11 +34,9 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 export type ContactDetailsForm = {
-  requestName: string;
   requester: {
     name: string;
     component: string;
-    email: string;
   };
   businessOwner: {
     name: string;
@@ -53,16 +57,20 @@ export type ContactDetailsForm = {
 };
 
 type ContactDetailsProps = {
-  formikRef: any;
   systemIntake: SystemIntakeForm;
-  dispatchSave: () => void;
 };
 
-const ContactDetails = ({
-  formikRef,
-  systemIntake,
-  dispatchSave
-}: ContactDetailsProps) => {
+const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
+  const {
+    id,
+    requestType,
+    requester,
+    businessOwner,
+    productManager,
+    isso,
+    governanceTeams
+  } = systemIntake;
+  const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
@@ -71,13 +79,36 @@ const ContactDetails = ({
   );
 
   const initialValues: ContactDetailsForm = {
-    requestName: systemIntake.requestName,
-    requester: systemIntake.requester,
-    businessOwner: systemIntake.businessOwner,
-    productManager: systemIntake.productManager,
-    isso: systemIntake.isso,
-    governanceTeams: systemIntake.governanceTeams
+    requester: {
+      name: requester.name,
+      component: requester.component || ''
+    },
+    businessOwner: {
+      name: businessOwner.name || '',
+      component: businessOwner.component || ''
+    },
+    productManager: {
+      name: productManager.name || '',
+      component: productManager.component || ''
+    },
+    isso: {
+      isPresent: isso.isPresent,
+      name: isso.name || ''
+    },
+    governanceTeams: {
+      isPresent: governanceTeams.isPresent,
+      teams: governanceTeams.teams?.map(team => ({
+        collaborator: team.collaborator,
+        name: team.name,
+        key: team.key
+      }))
+    }
   };
+
+  const [mutate] = useMutation<
+    UpdateSystemIntakeContactDetails,
+    UpdateSystemIntakeContactDetailsVariables
+  >(UpdateSystemIntakeContactDetailsQuery);
 
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
     cmsDivisionsAndOffices.map((office: any) => (
@@ -93,18 +124,26 @@ const ContactDetails = ({
 
   const saveExitLink = (() => {
     let link = '';
-    if (systemIntake.requestType === 'SHUTDOWN') {
+    if (requestType === 'SHUTDOWN') {
       link = '/';
     } else {
-      link = `/governance-task-list/${systemIntake.id}`;
+      link = `/governance-task-list/${id}`;
     }
     return link;
   })();
 
+  const onSubmit = (values: ContactDetailsForm) => {
+    mutate({
+      variables: {
+        input: { id, ...values }
+      }
+    });
+  };
+
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={dispatchSave}
+      onSubmit={onSubmit}
       validationSchema={SystemIntakeValidationSchema.contactDetails}
       validateOnBlur={false}
       validateOnChange={false}
@@ -118,7 +157,7 @@ const ContactDetails = ({
           <>
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
-                testId="system-intake-errors"
+                testId="contact-details-errors"
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
               >
@@ -364,7 +403,10 @@ const ContactDetails = ({
                   scrollElement="isso.isPresent"
                   error={!!flatErrors['isso.isPresent']}
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    data-testid="isso-fieldset"
+                    className="usa-fieldset margin-top-4"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.isso.label')}
                     </legend>
@@ -391,7 +433,7 @@ const ContactDetails = ({
                     />
                     {values.isso.isPresent && (
                       <div
-                        id="isso-name-container"
+                        data-testid="isso-name-container"
                         className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1"
                       >
                         <FieldGroup
@@ -434,7 +476,10 @@ const ContactDetails = ({
                   scrollElement="governanceTeams.isPresent"
                   error={!!flatErrors['governanceTeams.isPresent']}
                 >
-                  <fieldset className="usa-fieldset margin-top-3 margin-bottom-105">
+                  <fieldset
+                    data-testid="governance-teams-fieldset"
+                    className="usa-fieldset margin-top-3 margin-bottom-105"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.collaboration.label')}
                     </legend>
@@ -489,9 +534,16 @@ const ContactDetails = ({
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
-                        dispatchSave();
-                        const newUrl = 'request-details';
-                        history.push(newUrl);
+                        mutate({
+                          variables: {
+                            input: { id, ...values }
+                          }
+                        }).then(response => {
+                          if (!response.errors) {
+                            const newUrl = 'request-details';
+                            history.push(newUrl);
+                          }
+                        });
                       } else {
                         window.scrollTo(0, 0);
                       }
@@ -505,8 +557,15 @@ const ContactDetails = ({
                     type="button"
                     unstyled
                     onClick={() => {
-                      dispatchSave();
-                      history.push(saveExitLink);
+                      mutate({
+                        variables: {
+                          input: { id, ...values }
+                        }
+                      }).then(response => {
+                        if (!response.errors) {
+                          history.push(saveExitLink);
+                        }
+                      });
                     }}
                   >
                     <span>
@@ -518,7 +577,9 @@ const ContactDetails = ({
             </div>
             <AutoSave
               values={values}
-              onSave={dispatchSave}
+              onSave={() => {
+                onSubmit(formikRef.current.values);
+              }}
               debounceDelay={1000 * 30}
             />
             <PageNumber currentPage={1} totalPages={3} />
