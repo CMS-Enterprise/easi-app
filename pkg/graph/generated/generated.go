@@ -261,8 +261,12 @@ type ComplexityRoot struct {
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
+		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
 		UpdateSystemIntakeAdminLead                      func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
+		UpdateSystemIntakeContactDetails                 func(childComplexity int, input model.UpdateSystemIntakeContactDetailsInput) int
+		UpdateSystemIntakeContractDetails                func(childComplexity int, input model.UpdateSystemIntakeContractDetailsInput) int
+		UpdateSystemIntakeRequestDetails                 func(childComplexity int, input model.UpdateSystemIntakeRequestDetailsInput) int
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTestDate                                   func(childComplexity int, input model.UpdateTestDateInput) int
 	}
@@ -533,8 +537,12 @@ type MutationResolver interface {
 	IssueLifecycleID(ctx context.Context, input model.IssueLifecycleIDInput) (*model.UpdateSystemIntakePayload, error)
 	MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	RejectIntake(ctx context.Context, input model.RejectIntakeInput) (*model.UpdateSystemIntakePayload, error)
+	SubmitIntake(ctx context.Context, input model.SubmitIntakeInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error)
+	UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystemIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error)
+	UpdateSystemIntakeRequestDetails(ctx context.Context, input model.UpdateSystemIntakeRequestDetailsInput) (*model.UpdateSystemIntakePayload, error)
+	UpdateSystemIntakeContractDetails(ctx context.Context, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -1643,6 +1651,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RejectIntake(childComplexity, args["input"].(model.RejectIntakeInput)), true
 
+	case "Mutation.submitIntake":
+		if e.complexity.Mutation.SubmitIntake == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_submitIntake_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SubmitIntake(childComplexity, args["input"].(model.SubmitIntakeInput)), true
+
 	case "Mutation.updateAccessibilityRequestStatus":
 		if e.complexity.Mutation.UpdateAccessibilityRequestStatus == nil {
 			break
@@ -1666,6 +1686,42 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateSystemIntakeAdminLead(childComplexity, args["input"].(model.UpdateSystemIntakeAdminLeadInput)), true
+
+	case "Mutation.updateSystemIntakeContactDetails":
+		if e.complexity.Mutation.UpdateSystemIntakeContactDetails == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeContactDetails_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeContactDetails(childComplexity, args["input"].(model.UpdateSystemIntakeContactDetailsInput)), true
+
+	case "Mutation.updateSystemIntakeContractDetails":
+		if e.complexity.Mutation.UpdateSystemIntakeContractDetails == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeContractDetails_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeContractDetails(childComplexity, args["input"].(model.UpdateSystemIntakeContractDetailsInput)), true
+
+	case "Mutation.updateSystemIntakeRequestDetails":
+		if e.complexity.Mutation.UpdateSystemIntakeRequestDetails == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeRequestDetails_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeRequestDetails(childComplexity, args["input"].(model.UpdateSystemIntakeRequestDetailsInput)), true
 
 	case "Mutation.updateSystemIntakeReviewDates":
 		if e.complexity.Mutation.UpdateSystemIntakeReviewDates == nil {
@@ -3168,6 +3224,81 @@ input CreateSystemIntakeInput {
   requester: SystemIntakeRequesterInput!
 }
 
+input SystemIntakeRequesterWithComponentInput {
+  name: String!
+  component: String!
+}
+
+input SystemIntakeBusinessOwnerInput {
+  name: String!
+  component: String!
+}
+
+input SystemIntakeProductManagerInput {
+  name: String!
+  component: String!
+}
+
+input SystemIntakeISSOInput {
+  isPresent: Boolean!
+  name: String
+}
+
+input SystemIntakeCollaboratorInput {
+  collaborator: String!
+  name: String!
+  key: String!
+}
+
+input SystemIntakeGovernanceTeamInput {
+  isPresent: Boolean!
+  teams: [SystemIntakeCollaboratorInput]
+}
+
+input UpdateSystemIntakeContactDetailsInput {
+  id: UUID!
+  requester: SystemIntakeRequesterWithComponentInput!,
+  businessOwner: SystemIntakeBusinessOwnerInput!,
+  productManager: SystemIntakeProductManagerInput!,
+  isso: SystemIntakeISSOInput!,
+  governanceTeams: SystemIntakeGovernanceTeamInput!,
+}
+
+input UpdateSystemIntakeRequestDetailsInput {
+  id: UUID!
+  requestName: String
+  businessNeed: String
+  businessSolution: String
+  needsEaSupport: Boolean
+}
+
+input SystemIntakeFundingSourceInput {
+  fundingNumber: String
+  isFunded: Boolean
+  source: String
+}
+
+input SystemIntakeCostsInput {
+  expectedIncreaseAmount: String
+  isExpectingIncrease: String
+}
+
+input SystemIntakeContractInput {
+  contractor: String
+  endDate: Time
+  hasContract: String
+  startDate: Time
+  vehicle: String
+}
+
+input UpdateSystemIntakeContractDetailsInput {
+  id: UUID!
+  currentStage: String
+  fundingSource: SystemIntakeFundingSourceInput
+  costs: SystemIntakeCostsInput
+  contract: SystemIntakeContractInput
+}
+
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -3274,6 +3405,10 @@ input BasicActionInput {
   intakeId: UUID!
 }
 
+input SubmitIntakeInput {
+  id: UUID!
+}
+
 type LaunchDarklySettings {
   userKey: String!
   signedHash: String!
@@ -3357,12 +3492,16 @@ type Mutation {
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeAdminLead(
-    input: UpdateSystemIntakeAdminLeadInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeReviewDates(
-    input: UpdateSystemIntakeReviewDatesInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  submitIntake(
+    input: SubmitIntakeInput!
+  ): UpdateSystemIntakePayload
+  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
+  updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
+  updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
 }
 
 type Query {
@@ -3801,6 +3940,21 @@ func (ec *executionContext) field_Mutation_rejectIntake_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_submitIntake_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.SubmitIntakeInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNSubmitIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSubmitIntakeInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateAccessibilityRequestStatus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3823,6 +3977,51 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeAdminLead_args(ctx 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeContactDetails_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateSystemIntakeContactDetailsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSystemIntakeContactDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeContactDetailsInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeContractDetails_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateSystemIntakeContractDetailsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSystemIntakeContractDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeContractDetailsInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeRequestDetails_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateSystemIntakeRequestDetailsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSystemIntakeRequestDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeRequestDetailsInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -9155,6 +9354,45 @@ func (ec *executionContext) _Mutation_rejectIntake(ctx context.Context, field gr
 	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_submitIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_submitIntake_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SubmitIntake(rctx, args["input"].(model.SubmitIntakeInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_updateSystemIntakeAdminLead(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9268,6 +9506,123 @@ func (ec *executionContext) _Mutation_updateSystemIntakeReviewDates(ctx context.
 			return data, nil
 		}
 		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateSystemIntakeContactDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateSystemIntakeContactDetails_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateSystemIntakeContactDetails(rctx, args["input"].(model.UpdateSystemIntakeContactDetailsInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateSystemIntakeRequestDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateSystemIntakeRequestDetails_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateSystemIntakeRequestDetails(rctx, args["input"].(model.UpdateSystemIntakeRequestDetailsInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateSystemIntakeContractDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateSystemIntakeContractDetails_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateSystemIntakeContractDetails(rctx, args["input"].(model.UpdateSystemIntakeContractDetailsInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -15002,6 +15357,290 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputSubmitIntakeInput(ctx context.Context, obj interface{}) (model.SubmitIntakeInput, error) {
+	var it model.SubmitIntakeInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeBusinessOwnerInput(ctx context.Context, obj interface{}) (model.SystemIntakeBusinessOwnerInput, error) {
+	var it model.SystemIntakeBusinessOwnerInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "component":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
+			it.Component, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeCollaboratorInput(ctx context.Context, obj interface{}) (model.SystemIntakeCollaboratorInput, error) {
+	var it model.SystemIntakeCollaboratorInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "collaborator":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collaborator"))
+			it.Collaborator, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "key":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("key"))
+			it.Key, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeContractInput(ctx context.Context, obj interface{}) (model.SystemIntakeContractInput, error) {
+	var it model.SystemIntakeContractInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "contractor":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contractor"))
+			it.Contractor, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "endDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("endDate"))
+			it.EndDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "hasContract":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasContract"))
+			it.HasContract, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "startDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("startDate"))
+			it.StartDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "vehicle":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("vehicle"))
+			it.Vehicle, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeCostsInput(ctx context.Context, obj interface{}) (model.SystemIntakeCostsInput, error) {
+	var it model.SystemIntakeCostsInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "expectedIncreaseAmount":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expectedIncreaseAmount"))
+			it.ExpectedIncreaseAmount, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "isExpectingIncrease":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isExpectingIncrease"))
+			it.IsExpectingIncrease, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeFundingSourceInput(ctx context.Context, obj interface{}) (model.SystemIntakeFundingSourceInput, error) {
+	var it model.SystemIntakeFundingSourceInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "fundingNumber":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fundingNumber"))
+			it.FundingNumber, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "isFunded":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isFunded"))
+			it.IsFunded, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "source":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("source"))
+			it.Source, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeGovernanceTeamInput(ctx context.Context, obj interface{}) (model.SystemIntakeGovernanceTeamInput, error) {
+	var it model.SystemIntakeGovernanceTeamInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "isPresent":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isPresent"))
+			it.IsPresent, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "teams":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teams"))
+			it.Teams, err = ec.unmarshalOSystemIntakeCollaboratorInput2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeISSOInput(ctx context.Context, obj interface{}) (model.SystemIntakeISSOInput, error) {
+	var it model.SystemIntakeISSOInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "isPresent":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isPresent"))
+			it.IsPresent, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeProductManagerInput(ctx context.Context, obj interface{}) (model.SystemIntakeProductManagerInput, error) {
+	var it model.SystemIntakeProductManagerInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "component":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
+			it.Component, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSystemIntakeRequesterInput(ctx context.Context, obj interface{}) (model.SystemIntakeRequesterInput, error) {
 	var it model.SystemIntakeRequesterInput
 	var asMap = obj.(map[string]interface{})
@@ -15013,6 +15652,34 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequesterInput(ctx context
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
 			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeRequesterWithComponentInput(ctx context.Context, obj interface{}) (model.SystemIntakeRequesterWithComponentInput, error) {
+	var it model.SystemIntakeRequesterWithComponentInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "component":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
+			it.Component, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15069,6 +15736,170 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx c
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
 			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeContactDetailsInput, error) {
+	var it model.UpdateSystemIntakeContactDetailsInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "requester":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requester"))
+			it.Requester, err = ec.unmarshalNSystemIntakeRequesterWithComponentInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequesterWithComponentInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "businessOwner":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("businessOwner"))
+			it.BusinessOwner, err = ec.unmarshalNSystemIntakeBusinessOwnerInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwnerInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "productManager":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("productManager"))
+			it.ProductManager, err = ec.unmarshalNSystemIntakeProductManagerInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManagerInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "isso":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isso"))
+			it.Isso, err = ec.unmarshalNSystemIntakeISSOInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeISSOInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "governanceTeams":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("governanceTeams"))
+			it.GovernanceTeams, err = ec.unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeamInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeContractDetailsInput, error) {
+	var it model.UpdateSystemIntakeContractDetailsInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "currentStage":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentStage"))
+			it.CurrentStage, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "fundingSource":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fundingSource"))
+			it.FundingSource, err = ec.unmarshalOSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourceInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "costs":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("costs"))
+			it.Costs, err = ec.unmarshalOSystemIntakeCostsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCostsInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contract":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contract"))
+			it.Contract, err = ec.unmarshalOSystemIntakeContractInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContractInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeRequestDetailsInput, error) {
+	var it model.UpdateSystemIntakeRequestDetailsInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "requestName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestName"))
+			it.RequestName, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "businessNeed":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("businessNeed"))
+			it.BusinessNeed, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "businessSolution":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("businessSolution"))
+			it.BusinessSolution, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "needsEaSupport":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("needsEaSupport"))
+			it.NeedsEaSupport, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16356,10 +17187,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_markSystemIntakeReadyForGRB(ctx, field)
 		case "rejectIntake":
 			out.Values[i] = ec._Mutation_rejectIntake(ctx, field)
+		case "submitIntake":
+			out.Values[i] = ec._Mutation_submitIntake(ctx, field)
 		case "updateSystemIntakeAdminLead":
 			out.Values[i] = ec._Mutation_updateSystemIntakeAdminLead(ctx, field)
 		case "updateSystemIntakeReviewDates":
 			out.Values[i] = ec._Mutation_updateSystemIntakeReviewDates(ctx, field)
+		case "updateSystemIntakeContactDetails":
+			out.Values[i] = ec._Mutation_updateSystemIntakeContactDetails(ctx, field)
+		case "updateSystemIntakeRequestDetails":
+			out.Values[i] = ec._Mutation_updateSystemIntakeRequestDetails(ctx, field)
+		case "updateSystemIntakeContractDetails":
+			out.Values[i] = ec._Mutation_updateSystemIntakeContractDetails(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -18452,6 +19291,11 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
+func (ec *executionContext) unmarshalNSubmitIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSubmitIntakeInput(ctx context.Context, v interface{}) (model.SubmitIntakeInput, error) {
+	res, err := ec.unmarshalInputSubmitIntakeInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNSystem2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx context.Context, sel ast.SelectionSet, v models.System) graphql.Marshaler {
 	return ec._System(ctx, sel, &v)
 }
@@ -18594,6 +19438,11 @@ func (ec *executionContext) marshalNSystemIntakeActionType2githubᚗcomᚋcmsgov
 	return v
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeBusinessOwnerInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwnerInput(ctx context.Context, v interface{}) (*model.SystemIntakeBusinessOwnerInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeBusinessOwnerInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNSystemIntakeCollaborator2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaborator(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCollaborator) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -18602,6 +19451,16 @@ func (ec *executionContext) marshalNSystemIntakeCollaborator2ᚖgithubᚗcomᚋc
 		return graphql.Null
 	}
 	return ec._SystemIntakeCollaborator(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeamInput(ctx context.Context, v interface{}) (*model.SystemIntakeGovernanceTeamInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeGovernanceTeamInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeISSOInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeISSOInput(ctx context.Context, v interface{}) (*model.SystemIntakeISSOInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeISSOInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNSystemIntakeNote2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNoteᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SystemIntakeNote) graphql.Marshaler {
@@ -18661,6 +19520,11 @@ func (ec *executionContext) marshalNSystemIntakeNoteAuthor2ᚖgithubᚗcomᚋcms
 	return ec._SystemIntakeNoteAuthor(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeProductManagerInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManagerInput(ctx context.Context, v interface{}) (*model.SystemIntakeProductManagerInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeProductManagerInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNSystemIntakeRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestType(ctx context.Context, v interface{}) (models.SystemIntakeRequestType, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.SystemIntakeRequestType(tmp)
@@ -18693,6 +19557,11 @@ func (ec *executionContext) marshalNSystemIntakeRequester2ᚖgithubᚗcomᚋcmsg
 
 func (ec *executionContext) unmarshalNSystemIntakeRequesterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequesterInput(ctx context.Context, v interface{}) (*model.SystemIntakeRequesterInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeRequesterInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeRequesterWithComponentInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequesterWithComponentInput(ctx context.Context, v interface{}) (*model.SystemIntakeRequesterWithComponentInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeRequesterWithComponentInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -18828,6 +19697,21 @@ func (ec *executionContext) marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx
 
 func (ec *executionContext) unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeAdminLeadInput, error) {
 	res, err := ec.unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateSystemIntakeContactDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeContactDetailsInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeContactDetailsInput, error) {
+	res, err := ec.unmarshalInputUpdateSystemIntakeContactDetailsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateSystemIntakeContractDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeContractDetailsInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeContractDetailsInput, error) {
+	res, err := ec.unmarshalInputUpdateSystemIntakeContractDetailsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateSystemIntakeRequestDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeRequestDetailsInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeRequestDetailsInput, error) {
+	res, err := ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -19416,11 +20300,51 @@ func (ec *executionContext) marshalOSystemIntakeCollaborator2ᚕᚖgithubᚗcom�
 	return ret
 }
 
+func (ec *executionContext) unmarshalOSystemIntakeCollaboratorInput2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx context.Context, v interface{}) ([]*model.SystemIntakeCollaboratorInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]*model.SystemIntakeCollaboratorInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalOSystemIntakeCollaboratorInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeCollaboratorInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorInput(ctx context.Context, v interface{}) (*model.SystemIntakeCollaboratorInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSystemIntakeCollaboratorInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalOSystemIntakeContract2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeContract) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._SystemIntakeContract(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeContractInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContractInput(ctx context.Context, v interface{}) (*model.SystemIntakeContractInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSystemIntakeContractInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCosts) graphql.Marshaler {
@@ -19430,11 +20354,27 @@ func (ec *executionContext) marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgov�
 	return ec._SystemIntakeCosts(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOSystemIntakeCostsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCostsInput(ctx context.Context, v interface{}) (*model.SystemIntakeCostsInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSystemIntakeCostsInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalOSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeFundingSource) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._SystemIntakeFundingSource(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourceInput(ctx context.Context, v interface{}) (*model.SystemIntakeFundingSourceInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSystemIntakeFundingSourceInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOSystemIntakeGovernanceTeam2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeam(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeGovernanceTeam) graphql.Marshaler {

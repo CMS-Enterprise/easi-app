@@ -862,6 +862,42 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 	}, err
 }
 
+func (r *mutationResolver) SubmitIntake(ctx context.Context, input model.SubmitIntakeInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	actorEUAID := appcontext.Principal(ctx).ID()
+	actorInfo, err := r.service.FetchUserInfo(ctx, actorEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.service.SubmitIntake(
+		ctx,
+		intake,
+		&models.Action{
+			IntakeID:       &input.ID,
+			ActionType:     models.ActionTypeSUBMITINTAKE,
+			ActorEUAUserID: actorEUAID,
+			ActorName:      actorInfo.CommonName,
+			ActorEmail:     actorInfo.Email,
+		})
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err = r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error) {
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{
@@ -877,6 +913,147 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 	intake, err := r.store.UpdateReviewDates(ctx, input.ID, input.GrbDate, input.GrtDate)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystemIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	intake.Requester = input.Requester.Name
+	intake.Component = null.StringFrom(input.Requester.Component)
+	intake.BusinessOwner = null.StringFrom(input.BusinessOwner.Name)
+	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
+	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
+	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
+
+	if input.Isso.IsPresent {
+		intake.ISSOName = null.StringFromPtr(input.Isso.Name)
+	}
+
+	if !input.Isso.IsPresent {
+		intake.ISSOName = null.StringFromPtr(nil)
+	}
+
+	if input.GovernanceTeams.IsPresent {
+		trbCollaboratorName := null.StringFromPtr(nil)
+		for _, team := range input.GovernanceTeams.Teams {
+			if team.Key == "technicalReviewBoard" {
+				trbCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+		}
+		intake.TRBCollaboratorName = trbCollaboratorName
+
+		oitCollaboratorName := null.StringFromPtr(nil)
+		for _, team := range input.GovernanceTeams.Teams {
+			if team.Key == "securityPrivacy" {
+				oitCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+		}
+		intake.OITSecurityCollaboratorName = oitCollaboratorName
+
+		eaCollaboratorName := null.StringFromPtr(nil)
+		for _, team := range input.GovernanceTeams.Teams {
+			if team.Key == "enterpriseArchitecture" {
+				eaCollaboratorName = null.StringFrom(team.Collaborator)
+			}
+		}
+		intake.EACollaboratorName = eaCollaboratorName
+	}
+
+	if !input.GovernanceTeams.IsPresent {
+		intake.TRBCollaboratorName = null.StringFromPtr(nil)
+		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)
+		intake.EACollaboratorName = null.StringFromPtr(nil)
+	}
+
+	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: savedIntake,
+	}, err
+}
+
+func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context, input model.UpdateSystemIntakeRequestDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	intake.ProjectName = null.StringFromPtr(input.RequestName)
+	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
+	intake.Solution = null.StringFromPtr(input.BusinessSolution)
+	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
+
+	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: savedIntake,
+	}, err
+}
+
+func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
+
+	if input.FundingSource != nil {
+		if null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
+			intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
+			intake.FundingSource = null.StringFromPtr(input.FundingSource.Source)
+			intake.FundingNumber = null.StringFromPtr(input.FundingSource.FundingNumber)
+		}
+
+		if !null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
+			intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
+			intake.FundingSource = null.StringFromPtr(nil)
+			intake.FundingNumber = null.StringFromPtr(nil)
+		}
+	}
+
+	if input.Costs != nil {
+		intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
+		intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+
+		if input.Costs.IsExpectingIncrease != nil {
+			if *input.Costs.IsExpectingIncrease == "YES" {
+				intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
+				intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+			}
+			if *input.Costs.IsExpectingIncrease != "YES" {
+				intake.CostIncreaseAmount = null.StringFromPtr(nil)
+				intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+			}
+		}
+	}
+
+	if input.Contract != nil {
+		// set the fields to the values we receive
+		intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
+		intake.Contractor = null.StringFromPtr(input.Contract.Contractor)
+		intake.ContractVehicle = null.StringFromPtr(input.Contract.Vehicle)
+		if input.Contract.StartDate != nil {
+			intake.ContractStartDate = input.Contract.StartDate
+		}
+		if input.Contract.EndDate != nil {
+			intake.ContractEndDate = input.Contract.EndDate
+		}
+
+		// in case hasContract has changed, clear the other fields
+		if input.Contract.HasContract != nil {
+			if *input.Contract.HasContract == "NOT_STARTED" || *input.Contract.HasContract == "NOT_NEEDED" {
+				intake.Contractor = null.StringFromPtr(nil)
+				intake.ContractVehicle = null.StringFromPtr(nil)
+				intake.ContractStartDate = nil
+				intake.ContractEndDate = nil
+			}
+		}
+	}
+
+	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: savedIntake,
 	}, err
 }
 

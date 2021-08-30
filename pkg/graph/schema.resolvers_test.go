@@ -153,8 +153,24 @@ func TestGraphQLTestSuite(t *testing.T) {
 		}
 		return intake, nil
 	}
+
+	submitIntake := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
+		_, err := store.CreateAction(ctx, action)
+		if err != nil {
+			return err
+		}
+
+		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
+		_, err = store.UpdateSystemIntake(ctx, intake)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
 	var resolverService ResolverService
 	resolverService.IssueLifecycleID = issueLifecycleID
+	resolverService.SubmitIntake = submitIntake
 	cedarLdapClient := local.NewCedarLdapClient(logger)
 	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
 
