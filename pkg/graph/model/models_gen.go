@@ -215,6 +215,10 @@ type RequestsConnection struct {
 	TotalCount int            `json:"totalCount"`
 }
 
+type SubmitIntakeInput struct {
+	ID uuid.UUID `json:"id"`
+}
+
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
 	TotalCount int           `json:"totalCount"`
@@ -245,12 +249,23 @@ type SystemIntakeBusinessOwner struct {
 	Name      *string `json:"name"`
 }
 
+type SystemIntakeBusinessOwnerInput struct {
+	Name      string `json:"name"`
+	Component string `json:"component"`
+}
+
 type SystemIntakeCollaborator struct {
 	Acronym      *string `json:"acronym"`
 	Collaborator *string `json:"collaborator"`
 	Key          *string `json:"key"`
 	Label        *string `json:"label"`
 	Name         *string `json:"name"`
+}
+
+type SystemIntakeCollaboratorInput struct {
+	Collaborator string `json:"collaborator"`
+	Name         string `json:"name"`
+	Key          string `json:"key"`
 }
 
 type SystemIntakeContract struct {
@@ -261,7 +276,20 @@ type SystemIntakeContract struct {
 	Vehicle     *string       `json:"vehicle"`
 }
 
+type SystemIntakeContractInput struct {
+	Contractor  *string    `json:"contractor"`
+	EndDate     *time.Time `json:"endDate"`
+	HasContract *string    `json:"hasContract"`
+	StartDate   *time.Time `json:"startDate"`
+	Vehicle     *string    `json:"vehicle"`
+}
+
 type SystemIntakeCosts struct {
+	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
+	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
+}
+
+type SystemIntakeCostsInput struct {
 	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
 	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
 }
@@ -272,13 +300,29 @@ type SystemIntakeFundingSource struct {
 	Source        *string `json:"source"`
 }
 
+type SystemIntakeFundingSourceInput struct {
+	FundingNumber *string `json:"fundingNumber"`
+	IsFunded      *bool   `json:"isFunded"`
+	Source        *string `json:"source"`
+}
+
 type SystemIntakeGovernanceTeam struct {
 	IsPresent *bool                       `json:"isPresent"`
 	Teams     []*SystemIntakeCollaborator `json:"teams"`
 }
 
+type SystemIntakeGovernanceTeamInput struct {
+	IsPresent bool                             `json:"isPresent"`
+	Teams     []*SystemIntakeCollaboratorInput `json:"teams"`
+}
+
 type SystemIntakeIsso struct {
 	IsPresent *bool   `json:"isPresent"`
+	Name      *string `json:"name"`
+}
+
+type SystemIntakeISSOInput struct {
+	IsPresent bool    `json:"isPresent"`
 	Name      *string `json:"name"`
 }
 
@@ -299,6 +343,11 @@ type SystemIntakeProductManager struct {
 	Name      *string `json:"name"`
 }
 
+type SystemIntakeProductManagerInput struct {
+	Name      string `json:"name"`
+	Component string `json:"component"`
+}
+
 type SystemIntakeRequester struct {
 	Component *string `json:"component"`
 	Email     *string `json:"email"`
@@ -307,6 +356,11 @@ type SystemIntakeRequester struct {
 
 type SystemIntakeRequesterInput struct {
 	Name string `json:"name"`
+}
+
+type SystemIntakeRequesterWithComponentInput struct {
+	Name      string `json:"name"`
+	Component string `json:"component"`
 }
 
 // Parameters for updating a 508/accessibility request's status
@@ -329,9 +383,34 @@ type UpdateSystemIntakeAdminLeadInput struct {
 	ID        uuid.UUID `json:"id"`
 }
 
+type UpdateSystemIntakeContactDetailsInput struct {
+	ID              uuid.UUID                                `json:"id"`
+	Requester       *SystemIntakeRequesterWithComponentInput `json:"requester"`
+	BusinessOwner   *SystemIntakeBusinessOwnerInput          `json:"businessOwner"`
+	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
+	Isso            *SystemIntakeISSOInput                   `json:"isso"`
+	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
+}
+
+type UpdateSystemIntakeContractDetailsInput struct {
+	ID            uuid.UUID                       `json:"id"`
+	CurrentStage  *string                         `json:"currentStage"`
+	FundingSource *SystemIntakeFundingSourceInput `json:"fundingSource"`
+	Costs         *SystemIntakeCostsInput         `json:"costs"`
+	Contract      *SystemIntakeContractInput      `json:"contract"`
+}
+
 type UpdateSystemIntakePayload struct {
 	SystemIntake *models.SystemIntake `json:"systemIntake"`
 	UserErrors   []*UserError         `json:"userErrors"`
+}
+
+type UpdateSystemIntakeRequestDetailsInput struct {
+	ID               uuid.UUID `json:"id"`
+	RequestName      *string   `json:"requestName"`
+	BusinessNeed     *string   `json:"businessNeed"`
+	BusinessSolution *string   `json:"businessSolution"`
+	NeedsEaSupport   *bool     `json:"needsEaSupport"`
 }
 
 type UpdateSystemIntakeReviewDatesInput struct {
