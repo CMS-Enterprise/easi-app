@@ -1,3 +1,4 @@
+# Build and test the app
 name: build
 
 on:
