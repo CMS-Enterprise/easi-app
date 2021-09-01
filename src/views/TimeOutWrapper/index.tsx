@@ -33,7 +33,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const [timeRemainingArr, setTimeRemainingArr] = useState([0, 'second']);
 
   const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
-  const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('seconds');
+  const twoMinutes = Duration.fromObject({ minutes: 2 }).as('seconds');
   const tenMinutes = Duration.fromObject({ minutes: 10 }).as('milliseconds');
 
   const forceRenew = async () => {
@@ -108,7 +108,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       const timeUntilTokenExpiration =
         authState?.accessToken?.expiresAt -
         DateTime.local().toSeconds() -
-        fiveMinutes;
+        twoMinutes;
 
       const timeout = setTimeout(() => {
         forceRenew();
