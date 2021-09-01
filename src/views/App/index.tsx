@@ -161,8 +161,8 @@ const App = () => {
         Skip to main content
       </button>
       <BrowserRouter>
-        <MessageProvider>
-          <AuthenticationWrapper>
+        <AuthenticationWrapper>
+          <MessageProvider>
             <FlagsWrapper>
               <UserInfoWrapper>
                 <TimeOutWrapper>
@@ -170,8 +170,8 @@ const App = () => {
                 </TimeOutWrapper>
               </UserInfoWrapper>
             </FlagsWrapper>
-          </AuthenticationWrapper>
-        </MessageProvider>
+          </MessageProvider>
+        </AuthenticationWrapper>
       </BrowserRouter>
     </>
   );

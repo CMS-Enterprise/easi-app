@@ -6,22 +6,7 @@ import { Button } from '@trussworks/react-uswds';
 import { DateTime, Duration } from 'luxon';
 
 import Modal from 'components/Modal';
-import { localAuthStorageKey } from 'constants/localAuth';
 import useInterval from 'hooks/useInterval';
-
-const accessTokenExpires = () => {
-  const token = localStorage.getItem('okta-token-storage') || '';
-  if (token === '') {
-    return Number.MAX_SAFE_INTEGER;
-  }
-  const { accessToken } = JSON.parse(token);
-  return accessToken && accessToken.expiresAt;
-};
-
-const calculcateTokenExpiration = () => {
-  const currentTime = Math.floor(Date.now() / 1000);
-  return accessTokenExpires() - currentTime;
-};
 
 type TimeOutWrapperProps = {
   children: React.ReactNode;
@@ -29,11 +14,15 @@ type TimeOutWrapperProps = {
 
 const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const [lastActiveAt, setLastActiveAt] = useState(DateTime.local());
-  const [lastRenewAt, setLastRenewAt] = useState(DateTime.local());
-  const activeSinceLastRenew = lastActiveAt > lastRenewAt;
+  const [countdown, setCountdown] = useState(
+    Duration.fromObject({ minutes: 5 }).as('seconds')
+  );
 
   useIdleTimer({
-    onAction: () => setLastActiveAt(DateTime.local()),
+    onAction: () => {
+      setLastActiveAt(DateTime.local());
+    },
+    events: ['mousedown', 'keydown'],
     debounce: 500
   });
 
@@ -45,33 +34,18 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
   const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('seconds');
+  const tenMinutes = Duration.fromObject({ minutes: 10 }).as('milliseconds');
 
   const forceRenew = async () => {
     const tokenManager = await oktaAuth.tokenManager;
     tokenManager.renew('idToken');
     tokenManager.renew('accessToken');
-    setLastActiveAt(DateTime.local());
-    setLastRenewAt(DateTime.local());
   };
 
-  const registerExpire = async () => {
-    const tokenManager = await oktaAuth.tokenManager;
-
-    // clear the old listener so we don't register millions of them
-    tokenManager.off('expired');
-    tokenManager.on('expired', (key: any) => {
-      if (activeSinceLastRenew) {
-        tokenManager.renew(key);
-        setLastRenewAt(DateTime.local());
-      } else {
-        localStorage.removeItem(localAuthStorageKey);
-        oktaAuth.signOut({
-          postLogoutRedirectUri: `${window.location.origin}/login`
-        });
-      }
-    });
-  };
-
+  /**
+   * @param timeRemaining seconds
+   * @returns [minutes, seconds]
+   */
   const formatSessionTimeRemaining = (
     timeRemaining: number
   ): [number, string] => {
@@ -93,22 +67,22 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   const handleModalExit = async () => {
     setIsModalOpen(false);
+    setLastActiveAt(DateTime.local());
+    setCountdown(Duration.fromObject({ minutes: 5 }).as('seconds'));
     forceRenew();
   };
-
-  useEffect(() => {
-    if (authState?.isAuthenticated) {
-      registerExpire();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState?.isAuthenticated, activeSinceLastRenew]);
 
   // useInterval starts once the modal is open and stops when it's closed
   // Updates the minutes/seconds in the message
   useInterval(
     () => {
-      const tokenExpiresIn = calculcateTokenExpiration();
-      setTimeRemainingArr(formatSessionTimeRemaining(tokenExpiresIn));
+      setCountdown(countdown - 1);
+      if (countdown <= 0) {
+        oktaAuth.signOut({
+          postLogoutRedirectUri: `${window.location.origin}/login`
+        });
+      }
+      setTimeRemainingArr(formatSessionTimeRemaining(countdown));
     },
     authState?.isAuthenticated && isModalOpen ? oneSecond : null
   );
@@ -118,18 +92,33 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   // Calculates the user's inactivity to display the modal
   useInterval(
     () => {
-      const tokenExpiresIn = calculcateTokenExpiration();
-      if (
-        !activeSinceLastRenew &&
-        tokenExpiresIn > 0 &&
-        tokenExpiresIn < fiveMinutes
-      ) {
-        setTimeRemainingArr(formatSessionTimeRemaining(tokenExpiresIn));
+      if (lastActiveAt.toMillis() + tenMinutes < DateTime.local().toMillis()) {
+        setTimeRemainingArr(formatSessionTimeRemaining(countdown));
         setIsModalOpen(true);
       }
     },
     authState?.isAuthenticated && !isModalOpen ? oneSecond : null
   );
+
+  // If user is authenticated and has a token, renew it forever five
+  // minutes before expiration.
+  // The user's inactivity will log the user out.
+  useEffect(() => {
+    if (authState?.isAuthenticated && authState.accessToken) {
+      const timeUntilTokenExpiration =
+        authState?.accessToken?.expiresAt -
+        DateTime.local().toSeconds() -
+        fiveMinutes;
+
+      const timeout = setTimeout(() => {
+        forceRenew();
+      }, timeUntilTokenExpiration * 1000);
+
+      return () => clearTimeout(timeout);
+    }
+    return undefined;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authState?.isAuthenticated, authState?.accessToken]);
 
   return (
     <>
