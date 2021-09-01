@@ -1,5 +1,4 @@
 # Build and test the app
-# Another comment
 name: build
 
 on:
