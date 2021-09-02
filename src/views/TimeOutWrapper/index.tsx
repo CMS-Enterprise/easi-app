@@ -17,6 +17,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const [countdown, setCountdown] = useState(
     Duration.fromObject({ minutes: 5 }).as('seconds')
   );
+  const LAST_ACTIVE_AT_KEY = 'easiLastActiveAt';
 
   useIdleTimer({
     onAction: () => {
@@ -99,28 +100,28 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     authState?.isAuthenticated && !isModalOpen ? 1000 : null
   );
 
-  // If user is authenticated and has a token, renew it forever five
-  // minutes before expiration.
-  // The user's inactivity will log the user out.
+  // Set lastActiveAt between tabs
   useEffect(() => {
-    const twoMinutes = Duration.fromObject({ minutes: 2 }).as('seconds');
+    localStorage.setItem(LAST_ACTIVE_AT_KEY, lastActiveAt.toString());
+  }, [lastActiveAt]);
 
-    if (authState?.isAuthenticated && authState.accessToken) {
-      // expiresAt is in seconds
-      const timeUntilTokenExpiration =
-        authState?.accessToken?.expiresAt -
-        DateTime.local().toSeconds() -
-        twoMinutes;
+  // Listen to lastActiveAt between tabs
+  useEffect(() => {
+    const handler = (event: StorageEvent) => {
+      if (
+        event.storageArea === localStorage &&
+        event.key === LAST_ACTIVE_AT_KEY
+      ) {
+        setLastActiveAt(parseInt(event.newValue || '0', 10));
+        setIsModalOpen(false);
+      }
+    };
 
-      const timeout = setTimeout(() => {
-        forceRenew();
-      }, timeUntilTokenExpiration * 1000);
-
-      return () => clearTimeout(timeout);
-    }
-    return undefined;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState?.isAuthenticated, authState?.accessToken]);
+    window.addEventListener('storage', handler);
+    return () => {
+      window.removeEventListener('storage', handler);
+    };
+  }, []);
 
   return (
     <>
