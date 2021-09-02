@@ -13,14 +13,14 @@ type TimeOutWrapperProps = {
 };
 
 const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
-  const [lastActiveAt, setLastActiveAt] = useState(DateTime.local());
+  const [lastActiveAt, setLastActiveAt] = useState(DateTime.local().toMillis());
   const [countdown, setCountdown] = useState(
     Duration.fromObject({ minutes: 5 }).as('seconds')
   );
 
   useIdleTimer({
     onAction: () => {
-      setLastActiveAt(DateTime.local());
+      setLastActiveAt(DateTime.local().toMillis());
     },
     events: ['mousedown', 'keydown'],
     debounce: 500
@@ -32,8 +32,6 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [timeRemainingArr, setTimeRemainingArr] = useState([0, 'second']);
 
-  const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
-  const twoMinutes = Duration.fromObject({ minutes: 2 }).as('seconds');
   const tenMinutes = Duration.fromObject({ minutes: 10 }).as('milliseconds');
 
   const forceRenew = async () => {
@@ -67,7 +65,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   const handleModalExit = async () => {
     setIsModalOpen(false);
-    setLastActiveAt(DateTime.local());
+    setLastActiveAt(DateTime.local().toMillis());
     setCountdown(Duration.fromObject({ minutes: 5 }).as('seconds'));
     forceRenew();
   };
@@ -77,6 +75,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   useInterval(
     () => {
       setCountdown(countdown - 1);
+
       if (countdown <= 0) {
         oktaAuth.signOut({
           postLogoutRedirectUri: `${window.location.origin}/login`
@@ -84,7 +83,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       }
       setTimeRemainingArr(formatSessionTimeRemaining(countdown));
     },
-    authState?.isAuthenticated && isModalOpen ? oneSecond : null
+    authState?.isAuthenticated && isModalOpen ? 1000 : null
   );
 
   // useInterval starts when a user is logged in AND the modal is not open
@@ -92,19 +91,22 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   // Calculates the user's inactivity to display the modal
   useInterval(
     () => {
-      if (lastActiveAt.toMillis() + tenMinutes < DateTime.local().toMillis()) {
+      if (lastActiveAt + tenMinutes < DateTime.local().toMillis()) {
         setTimeRemainingArr(formatSessionTimeRemaining(countdown));
         setIsModalOpen(true);
       }
     },
-    authState?.isAuthenticated && !isModalOpen ? oneSecond : null
+    authState?.isAuthenticated && !isModalOpen ? 1000 : null
   );
 
   // If user is authenticated and has a token, renew it forever five
   // minutes before expiration.
   // The user's inactivity will log the user out.
   useEffect(() => {
+    const twoMinutes = Duration.fromObject({ minutes: 2 }).as('seconds');
+
     if (authState?.isAuthenticated && authState.accessToken) {
+      // expiresAt is in seconds
       const timeUntilTokenExpiration =
         authState?.accessToken?.expiresAt -
         DateTime.local().toSeconds() -
