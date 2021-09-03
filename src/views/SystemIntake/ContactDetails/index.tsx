@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
@@ -24,6 +25,7 @@ import {
   UpdateSystemIntakeContactDetails,
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
+import { fetchSystemIntake } from 'types/routines';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
@@ -70,7 +72,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     isso,
     governanceTeams
   } = systemIntake;
-  const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
+  const formikRef = useRef<FormikProps<UpdateSystemIntakeContactDetails>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
@@ -78,7 +80,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     false
   );
 
-  const initialValues: ContactDetailsForm = {
+  const initialValues = {
     requester: {
       name: requester.name,
       component: requester.component || ''
@@ -110,6 +112,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     UpdateSystemIntakeContactDetailsVariables
   >(UpdateSystemIntakeContactDetailsQuery);
 
+  const dispatch = useDispatch();
+
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
     cmsDivisionsAndOffices.map((office: any) => (
       <Field
@@ -132,11 +136,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     return link;
   })();
 
-  const onSubmit = (values: ContactDetailsForm) => {
+  const onSubmit = values => {
+    const input = values;
+    input.governanceTeams = input.governanceTeams || [];
     mutate({
       variables: {
-        input: { id, ...values }
+        input: { id, ...input }
       }
+    }).then(() => {
+      // Refetch system intake to keep Redux fresh
+      dispatch(fetchSystemIntake(id));
     });
   };
 
