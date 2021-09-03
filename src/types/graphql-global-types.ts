@@ -195,12 +195,12 @@ export interface SystemIntakeCollaboratorInput {
 }
 
 export interface SystemIntakeGovernanceTeamInput {
-  isPresent: boolean;
+  isPresent?: boolean | null;
   teams?: (SystemIntakeCollaboratorInput | null)[] | null;
 }
 
 export interface SystemIntakeISSOInput {
-  isPresent: boolean;
+  isPresent?: boolean | null;
   name?: string | null;
 }
 

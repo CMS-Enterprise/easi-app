@@ -3240,7 +3240,7 @@ input SystemIntakeProductManagerInput {
 }
 
 input SystemIntakeISSOInput {
-  isPresent: Boolean!
+  isPresent: Boolean
   name: String
 }
 
@@ -3251,7 +3251,7 @@ input SystemIntakeCollaboratorInput {
 }
 
 input SystemIntakeGovernanceTeamInput {
-  isPresent: Boolean!
+  isPresent: Boolean
   teams: [SystemIntakeCollaboratorInput]
 }
 
@@ -15567,7 +15567,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeGovernanceTeamInput(ctx co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isPresent"))
-			it.IsPresent, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.IsPresent, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15595,7 +15595,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeISSOInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isPresent"))
-			it.IsPresent, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.IsPresent, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
