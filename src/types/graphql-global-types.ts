@@ -200,6 +200,14 @@ export interface UpdateSystemIntakeAdminLeadInput {
   id: UUID;
 }
 
+export interface UpdateSystemIntakeRequestDetailsInput {
+  id: UUID;
+  requestName?: string | null;
+  businessNeed?: string | null;
+  businessSolution?: string | null;
+  needsEaSupport?: boolean | null;
+}
+
 export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
   grtDate?: Time | null;
