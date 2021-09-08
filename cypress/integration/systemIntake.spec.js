@@ -126,7 +126,7 @@ describe('The System Intake Form', () => {
       });
   });
 
-  it.only('displays and fills conditional fields', () => {
+  it('displays and fills conditional fields', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
@@ -341,7 +341,7 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     cy.contains('h1', 'Request details');
 
@@ -350,7 +350,7 @@ describe('The System Intake Form', () => {
       .should('have.value', 'Test Request Name');
 
     cy.contains('button', 'Back').click();
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
   });
 });
 
