@@ -5,6 +5,13 @@ describe('The System Intake Form', () => {
     cy.server();
     cy.localLogin({ name: 'TEST' });
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
+        req.alias = 'updateContactDetails';
+      }
+    });
+
     cy.visit('/system/request-type');
     cy.get('#RequestType-NewSystem').check({ force: true });
     cy.contains('button', 'Continue').click();
@@ -29,7 +36,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -119,7 +126,7 @@ describe('The System Intake Form', () => {
       });
   });
 
-  it('displays and fills conditional fields', () => {
+  it.only('displays and fills conditional fields', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
@@ -147,7 +154,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -304,7 +311,7 @@ describe('The System Intake Form', () => {
   it('displays contact details error messages', () => {
     cy.contains('button', 'Next').click();
 
-    cy.get('[data-testid="system-intake-errors"]');
+    cy.get('[data-testid="contact-details-errors"]');
   });
 
   it('displays request details error messages', () => {
