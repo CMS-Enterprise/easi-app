@@ -72,7 +72,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     isso,
     governanceTeams
   } = systemIntake;
-  const formikRef = useRef<FormikProps<UpdateSystemIntakeContactDetails>>(null);
+  const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
@@ -136,17 +136,21 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     return link;
   })();
 
-  const onSubmit = values => {
-    const input = values;
-    input.governanceTeams = input.governanceTeams || [];
-    mutate({
-      variables: {
-        input: { id, ...input }
-      }
-    }).then(() => {
-      // Refetch system intake to keep Redux fresh
-      dispatch(fetchSystemIntake(id));
-    });
+  const onSubmit = (values?: ContactDetailsForm) => {
+    if (values) {
+      mutate({
+        variables: {
+          input: {
+            id,
+            ...values,
+            governanceTeams: values.governanceTeams || []
+          }
+        }
+      }).then(() => {
+        // TODO: Remove refetch system intake to keep Redux fresh
+        dispatch(fetchSystemIntake(id));
+      });
+    }
   };
 
   return (
@@ -550,6 +554,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                         }).then(response => {
                           if (!response.errors) {
                             const newUrl = 'request-details';
+                            // TODO: Remove refetch system intake to keep Redux fresh
+                            dispatch(fetchSystemIntake(id));
                             history.push(newUrl);
                           }
                         });
@@ -587,7 +593,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             <AutoSave
               values={values}
               onSave={() => {
-                onSubmit(formikRef.current.values);
+                onSubmit(formikRef?.current?.values);
               }}
               debounceDelay={1000 * 30}
             />
