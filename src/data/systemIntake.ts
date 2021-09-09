@@ -156,8 +156,8 @@ export const prepareSystemIntakeForApp = (
     return teams;
   };
 
-  const contractStartDate = DateTime.fromISO(systemIntake.contractStartDate);
-  const contractEndDate = DateTime.fromISO(systemIntake.contractEndDate);
+  const contractStartDate = parseAsDate(systemIntake.contractStartDate);
+  const contractEndDate = parseAsDate(systemIntake.contractEndDate);
 
   return {
     id: systemIntake.id || '',
