@@ -13,3 +13,40 @@ export const CreateSystemIntake = gql`
     }
   }
 `;
+
+export const UpdateSystemIntakeContractDetails = gql`
+  mutation UpdateSystemIntakeContractDetails(
+    $input: UpdateSystemIntakeContractDetailsInput!
+  ) {
+    updateSystemIntakeContractDetails(input: $input) {
+      systemIntake {
+        id
+        currentStage
+        fundingSource {
+          fundingNumber
+          isFunded
+          source
+        }
+        costs {
+          expectedIncreaseAmount
+          isExpectingIncrease
+        }
+        contract {
+          contractor
+          endDate {
+            day
+            month
+            year
+          }
+          hasContract
+          startDate {
+            day
+            month
+            year
+          }
+          vehicle
+        }
+      }
+    }
+  }
+`;

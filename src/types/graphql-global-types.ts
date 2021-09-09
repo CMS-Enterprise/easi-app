@@ -183,6 +183,25 @@ export interface RejectIntakeInput {
   reason: string;
 }
 
+export interface SystemIntakeContractInput {
+  contractor?: string | null;
+  endDate?: Time | null;
+  hasContract?: string | null;
+  startDate?: Time | null;
+  vehicle?: string | null;
+}
+
+export interface SystemIntakeCostsInput {
+  expectedIncreaseAmount?: string | null;
+  isExpectingIncrease?: string | null;
+}
+
+export interface SystemIntakeFundingSourceInput {
+  fundingNumber?: string | null;
+  isFunded?: boolean | null;
+  source?: string | null;
+}
+
 export interface SystemIntakeRequesterInput {
   name: string;
 }
@@ -198,6 +217,14 @@ export interface UpdateAccessibilityRequestStatus {
 export interface UpdateSystemIntakeAdminLeadInput {
   adminLead: string;
   id: UUID;
+}
+
+export interface UpdateSystemIntakeContractDetailsInput {
+  id: UUID;
+  currentStage?: string | null;
+  fundingSource?: SystemIntakeFundingSourceInput | null;
+  costs?: SystemIntakeCostsInput | null;
+  contract?: SystemIntakeContractInput | null;
 }
 
 export interface UpdateSystemIntakeReviewDatesInput {
