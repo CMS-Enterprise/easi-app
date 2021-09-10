@@ -13,6 +13,7 @@ import { DateTime } from 'luxon';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
@@ -102,7 +103,15 @@ export const SystemIntake = () => {
           </Breadcrumb>
           <Breadcrumb current>Intake Request</Breadcrumb>
         </BreadcrumbBar>
-        {isLoading === false && (
+        {/*
+         * TODO
+         * When the GraphQL query(ies) are implemented for Intake,
+         * this loading probably snould be moved inside of the individual
+         * pages.
+         */}
+        {isLoading ? (
+          <PageLoading />
+        ) : (
           <Switch>
             <SecureRoute
               path="/system/:systemId/contact-details"
