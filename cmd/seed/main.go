@@ -89,7 +89,7 @@ func connect() {
 		panic(ldErr)
 	}
 
-	storeInstance, storeErr := storage.NewStore(logger, dbConfig, ldClient)
+	storeInstance, storeErr := storage.NewStore(logger, dbConfig, ldClient, false)
 	if storeErr != nil {
 		panic(storeErr)
 	}

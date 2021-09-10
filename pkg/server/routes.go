@@ -146,10 +146,12 @@ func (s *Server) routes(
 		lambdaClient = lambda.New(lambdaSession, &aws.Config{})
 	}
 
+	// hardcoded for now but will change to s.Config.GetBool("DB_IAM_FLAG")
 	store, storeErr := storage.NewStore(
 		s.logger,
 		s.NewDBConfig(),
 		ldClient,
+		true,
 	)
 	if storeErr != nil {
 		s.logger.Fatal("Failed to create store", zap.Error(storeErr))

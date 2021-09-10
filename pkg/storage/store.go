@@ -4,8 +4,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
+	"github.com/aws/aws-sdk-go/aws/session"
+
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
+	iampg "github.com/transcom/mymove/pkg/iampostgres"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 )
@@ -35,6 +40,7 @@ func NewStore(
 	logger *zap.Logger,
 	config DBConfig,
 	ldClient *ld.LDClient,
+	dbIamFlag bool,
 ) (*Store, error) {
 	// LifecycleIDs are generated based on Eastern Time
 	tz, err := time.LoadLocation("America/New_York")
@@ -52,7 +58,42 @@ func NewStore(
 		config.Database,
 		config.SSLMode,
 	)
-	db, err := sqlx.Connect("postgres", dataSourceName)
+
+	var sess *session.Session
+	if dbIamFlag {
+		sess = session.Must(session.NewSession())
+	}
+
+	var dbCreds *credentials.Credentials
+	if dbIamFlag {
+		if sess != nil {
+			// We want to get the credentials from the logged in AWS session rather than create directly,
+			// because the session conflates the environment, shared, and container metadata config
+			// within NewSession.  With stscreds, we use the Secure Token Service,
+			// to assume the given role (that has rds db connect permissions).
+			dbCreds = ec2rolecreds.NewCredentials(sess)
+		}
+	}
+
+	if dbIamFlag {
+		// Set a bogus password holder. It will be replaced with an RDS auth token as the password.
+		passHolder := "*****"
+
+		iampg.EnableIAM(config.Host,
+			config.Port,
+			"us-west-2",
+			config.Username,
+			passHolder,
+			dbCreds,
+			iampg.RDSU{},
+			time.NewTicker(10*time.Minute), // Refresh every 10 minutes
+			logger,
+			make(chan bool))
+
+		config.Password = passHolder
+	}
+
+	db, err := sqlx.Connect(iampg.CustomPostgres, dataSourceName)
 	if err != nil {
 		return nil, err
 	}
