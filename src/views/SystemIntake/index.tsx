@@ -116,13 +116,7 @@ export const SystemIntake = () => {
             />
             <SecureRoute
               path="/system/:systemId/request-details"
-              render={() => (
-                <RequestDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
-                />
-              )}
+              render={() => <RequestDetails systemIntake={systemIntake} />}
             />
             <SecureRoute
               path="/system/:systemId/contract-details"
