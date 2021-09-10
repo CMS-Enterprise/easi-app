@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Switch, useHistory, useParams } from 'react-router-dom';
-import { SecureRoute } from '@okta/okta-react';
+import { Link, Route, Switch, useHistory, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -113,11 +112,11 @@ export const SystemIntake = () => {
           <PageLoading />
         ) : (
           <Switch>
-            <SecureRoute
+            <Route
               path="/system/:systemId/contact-details"
               render={() => <ContactDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/request-details"
               render={() => (
                 <RequestDetails
@@ -127,7 +126,7 @@ export const SystemIntake = () => {
                 />
               )}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/contract-details"
               render={() => (
                 <ContractDetails
@@ -137,21 +136,21 @@ export const SystemIntake = () => {
                 />
               )}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/review"
               render={() => (
                 <Review systemIntake={systemIntake} now={DateTime.local()} />
               )}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/confirmation"
               render={() => <Confirmation />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/view"
               render={() => <SystemIntakeView systemIntake={systemIntake} />}
             />
-            <SecureRoute path="*" render={() => <NotFoundPartial />} />
+            <Route path="*" render={() => <NotFoundPartial />} />
           </Switch>
         )}
       </MainContent>
