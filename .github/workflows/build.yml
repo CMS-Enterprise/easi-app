@@ -279,6 +279,7 @@ jobs:
           PGSSLMODE: disable
           DB_MAX_CONNECTIONS: 20
           FLAG_SOURCE: LOCAL
+          DB_IAM_FLAG: false
         run: |
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d db
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from db_migrate db_migrate
