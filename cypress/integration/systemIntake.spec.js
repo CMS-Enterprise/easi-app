@@ -5,6 +5,13 @@ describe('The System Intake Form', () => {
     cy.server();
     cy.localLogin({ name: 'TEST' });
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
+        req.alias = 'updateRequestDetails';
+      }
+    });
+
     cy.visit('/system/request-type');
     cy.get('#RequestType-NewSystem').check({ force: true });
     cy.contains('button', 'Continue').click();
@@ -322,7 +329,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.get('[data-testid="system-intake-errors"]');
+    cy.get('[data-testid="request-details-errors"]');
   });
 
   it('saves on back click', () => {
@@ -343,7 +350,7 @@ describe('The System Intake Form', () => {
       .should('have.value', 'Test Request Name');
 
     cy.contains('button', 'Back').click();
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateRequestDetails');
   });
 });
 
