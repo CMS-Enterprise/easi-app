@@ -350,7 +350,7 @@ describe('The System Intake Form', () => {
       .should('have.value', 'Test Request Name');
 
     cy.contains('button', 'Back').click();
-    cy.wait('@updateContactDetails');
+    cy.wait('@putSystemIntake');
   });
 });
 
