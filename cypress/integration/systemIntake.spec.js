@@ -55,68 +55,12 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
-    cy.wait(1000);
     // Review
     cy.contains('h1', 'Check your answers before sending');
 
-    cy.window()
-      .its('store')
-      .invoke('getState')
-      .its('systemIntake')
-      .its('systemIntake')
-      .should('deep.include', {
-        requestName: 'Test Request Name',
-        requester: {
-          name: 'User TEST',
-          component: 'Center for Medicare',
-          email: ''
-        },
-        businessOwner: {
-          name: 'Casey Doe',
-          component: 'Center for Medicare'
-        },
-        productManager: {
-          name: 'Casey Doe',
-          component: 'Center for Medicare'
-        },
-        isso: {
-          isPresent: false,
-          name: ''
-        },
-        governanceTeams: {
-          isPresent: false,
-          teams: []
-        },
-        fundingSource: {
-          isFunded: false,
-          fundingNumber: '',
-          source: ''
-        },
-        costs: {
-          isExpectingIncrease: 'NO',
-          expectedIncreaseAmount: ''
-        },
-        contract: {
-          hasContract: 'NOT_NEEDED',
-          contractor: '',
-          vehicle: '',
-          startDate: {
-            month: '',
-            day: '',
-            year: ''
-          },
-          endDate: {
-            month: '',
-            day: '',
-            year: ''
-          }
-        },
-        businessNeed: 'This is my business need.',
-        businessSolution: 'This is my business solution.',
-        currentStage: 'Just an idea',
-        needsEaSupport: false
-      });
+    // Submit
+    cy.contains('button', 'Send my intake request').click();
+    cy.contains('h1', 'Your Intake Request has been submitted');
   });
 
   it('displays and fills conditional fields', () => {
