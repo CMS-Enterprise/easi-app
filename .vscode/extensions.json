@@ -1,8 +1,0 @@
-{
-    "recommendations": [
-        "apollographql.vscode-apollo",
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint",
-        "golang.go"
-    ]
-  }
