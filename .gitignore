@@ -44,3 +44,5 @@ tmp
 
 # Binaries
 /bin/
+
+.vscode/*
