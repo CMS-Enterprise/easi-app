@@ -6,11 +6,6 @@ PROJECT_NAME=easi-app
 CYPRESS_CONTAINER="${PROJECT_NAME}"_cypress_1
 EASI_CONTAINER="${PROJECT_NAME}"_easi_1
 
-SERVER_CERT="$(cat ./config/tls/devlocal-https.crt)"
-SERVER_KEY="$(cat ./config/tls/devlocal-https.key)"
-export SERVER_CERT
-export SERVER_KEY
-
 # Running in CI
 if [[ -n "${CI+x}" ]]; then
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml pull db_migrate easi
