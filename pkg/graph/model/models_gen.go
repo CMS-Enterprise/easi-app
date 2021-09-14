@@ -312,7 +312,7 @@ type SystemIntakeGovernanceTeam struct {
 }
 
 type SystemIntakeGovernanceTeamInput struct {
-	IsPresent bool                             `json:"isPresent"`
+	IsPresent *bool                            `json:"isPresent"`
 	Teams     []*SystemIntakeCollaboratorInput `json:"teams"`
 }
 
@@ -322,7 +322,7 @@ type SystemIntakeIsso struct {
 }
 
 type SystemIntakeISSOInput struct {
-	IsPresent bool    `json:"isPresent"`
+	IsPresent *bool   `json:"isPresent"`
 	Name      *string `json:"name"`
 }
 

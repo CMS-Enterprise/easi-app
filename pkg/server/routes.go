@@ -357,6 +357,18 @@ func (s *Server) routes(
 					store.UpdateBusinessCase,
 					emailClient.SendBusinessCaseSubmissionEmail,
 					models.SystemIntakeStatusBIZCASEFINALSUBMITTED,
+				), models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
+					serviceConfig,
+					services.AuthorizeUserIsIntakeRequester,
+					store.UpdateSystemIntake,
+					func(c context.Context, si *models.SystemIntake) (string, error) {
+						// quick adapter to retrofit the new interface to take the place
+						// of the old interface
+						err := publisher.PublishSnapshot(c, si, nil, nil, nil, nil)
+						return "", err
+					},
+					saveAction,
+					emailClient.SendSystemIntakeSubmissionEmail,
 				),
 			},
 		),

@@ -555,7 +555,7 @@ input SystemIntakeProductManagerInput {
 }
 
 input SystemIntakeISSOInput {
-  isPresent: Boolean!
+  isPresent: Boolean
   name: String
 }
 
@@ -566,7 +566,7 @@ input SystemIntakeCollaboratorInput {
 }
 
 input SystemIntakeGovernanceTeamInput {
-  isPresent: Boolean!
+  isPresent: Boolean
   teams: [SystemIntakeCollaboratorInput]
 }
 

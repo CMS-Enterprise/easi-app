@@ -15,6 +15,15 @@ type ParentComponentProps = {
 const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
   const history = useHistory();
 
+  const authClient = new OktaAuth({
+    issuer: process.env.REACT_APP_OKTA_ISSUER,
+    clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
+    redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
+    tokenManager: {
+      autoRenew: true
+    }
+  });
+
   const handleAuthRequiredRedirect = () => {
     history.push('/signin');
   };
@@ -32,19 +41,7 @@ const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
     <DevSecurity>{children}</DevSecurity>
   ) : (
     <Security
-      oktaAuth={
-        new OktaAuth({
-          issuer: process.env.REACT_APP_OKTA_ISSUER,
-          clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
-          redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
-          responseType: ['code'],
-          tokenManager: {
-            expireEarlySeconds: 0,
-            autoRenew: false
-          },
-          pkce: true
-        })
-      }
+      oktaAuth={authClient}
       onAuthRequired={handleAuthRequiredRedirect}
       restoreOriginalUri={restoreOriginalUri}
     >
