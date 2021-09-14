@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -17,40 +19,60 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
+import {
+  UpdateSystemIntakeRequestDetails,
+  UpdateSystemIntakeRequestDetailsVariables
+} from 'queries/types/UpdateSystemIntakeRequestDetails';
+import { fetchSystemIntake } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 type RequestDetailsForm = {
   requestName: string;
-  fundingSource: {
-    isFunded: boolean | null;
-    fundingNumber: string;
-  };
   businessNeed: string;
   businessSolution: string;
   needsEaSupport: boolean | null;
 };
 
 type RequestDetailsProps = {
-  formikRef: any;
   systemIntake: SystemIntakeForm;
-  dispatchSave: () => void;
 };
 
-const RequestDetails = ({
-  formikRef,
-  systemIntake,
-  dispatchSave
-}: RequestDetailsProps) => {
+const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
+  const {
+    id,
+    requestName = '',
+    businessNeed = '',
+    businessSolution = '',
+    needsEaSupport = null
+  } = systemIntake;
   const history = useHistory();
+  const formikRef = useRef<FormikProps<RequestDetailsForm>>();
+  const dispatch = useDispatch();
 
   const initialValues: RequestDetailsForm = {
-    requestName: systemIntake.requestName,
-    fundingSource: systemIntake.fundingSource,
-    businessNeed: systemIntake.businessNeed,
-    businessSolution: systemIntake.businessSolution,
-    needsEaSupport: systemIntake.needsEaSupport
+    requestName,
+    businessNeed,
+    businessSolution,
+    needsEaSupport
+  };
+
+  const [mutate] = useMutation<
+    UpdateSystemIntakeRequestDetails,
+    UpdateSystemIntakeRequestDetailsVariables
+  >(UpdateSystemIntakeRequestDetailsQuery);
+
+  const onSubmit = (values: RequestDetailsForm) => {
+    mutate({
+      variables: {
+        input: { id, ...values }
+      }
+    }).then(() => {
+      // Refetch system intake to keep Redux fresh
+      dispatch(fetchSystemIntake(id));
+    });
   };
 
   const saveExitLink = (() => {
@@ -66,7 +88,7 @@ const RequestDetails = ({
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={dispatchSave}
+      onSubmit={onSubmit}
       validationSchema={SystemIntakeValidationSchema.requestDetails}
       validateOnBlur={false}
       validateOnChange={false}
@@ -80,7 +102,7 @@ const RequestDetails = ({
           <>
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
-                testId="system-intake-errors"
+                testId="request-details-errors"
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
               >
@@ -210,7 +232,10 @@ const RequestDetails = ({
                   scrollElement="needsEaSupport"
                   error={!!flatErrors.needsEaSupport}
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="ea-support"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       Does your request need Enterprise Architecture support?
                     </legend>
@@ -283,10 +308,19 @@ const RequestDetails = ({
                   type="button"
                   outline
                   onClick={() => {
-                    dispatchSave();
                     formikProps.setErrors({});
-                    const newUrl = 'contact-details';
-                    history.push(newUrl);
+                    mutate({
+                      variables: {
+                        input: { id, ...values }
+                      }
+                    }).then(response => {
+                      if (!response.errors) {
+                        // TEMP - will be removed when fully converted to GraphQL
+                        dispatch(fetchSystemIntake(id));
+                        const newUrl = 'contact-details';
+                        history.push(newUrl);
+                      }
+                    });
                   }}
                 >
                   Back
@@ -296,9 +330,18 @@ const RequestDetails = ({
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
-                        dispatchSave();
-                        const newUrl = 'contract-details';
-                        history.push(newUrl);
+                        mutate({
+                          variables: {
+                            input: { id, ...values }
+                          }
+                        }).then(response => {
+                          if (!response.errors) {
+                            // TEMP - will be removed when fully converted to GraphQL
+                            dispatch(fetchSystemIntake(id));
+                            const newUrl = 'contract-details';
+                            history.push(newUrl);
+                          }
+                        });
                       } else {
                         window.scrollTo(0, 0);
                       }
@@ -312,8 +355,15 @@ const RequestDetails = ({
                     type="button"
                     unstyled
                     onClick={() => {
-                      dispatchSave();
-                      history.push(saveExitLink);
+                      mutate({
+                        variables: {
+                          input: { id, ...values }
+                        }
+                      }).then(response => {
+                        if (!response.errors) {
+                          history.push(saveExitLink);
+                        }
+                      });
                     }}
                   >
                     <span>
@@ -325,8 +375,10 @@ const RequestDetails = ({
             </div>
             <AutoSave
               values={values}
-              onSave={dispatchSave}
-              debounceDelay={1000 * 30}
+              onSave={() => {
+                onSubmit(formikRef.current.values);
+              }}
+              debounceDelay={1000 * 3}
             />
             <PageNumber currentPage={2} totalPages={3} />
           </>
