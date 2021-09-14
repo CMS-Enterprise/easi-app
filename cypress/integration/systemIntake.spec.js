@@ -9,6 +9,7 @@ describe('The System Intake Form', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
         req.alias = 'updateRequestDetails';
+      }
 
       if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
         req.alias = 'updateContactDetails';
