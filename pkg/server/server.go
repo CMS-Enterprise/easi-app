@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/oklog/run"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
@@ -69,22 +68,10 @@ func NewServer(config *viper.Viper) *Server {
 
 // Serve runs the server
 func Serve(config *viper.Viper) {
-	var g run.Group
-
 	s := NewServer(config)
 
-	g.Add(func() error {
-		srv := http.Server{
-			Addr:    ":8080",
-			Handler: s,
-		}
-		s.logger.Info("Serving application on port 8080")
-		return srv.ListenAndServe()
-	}, func(error) {
-		s.logger.Info("Entered http server interrupt function")
-	})
-
-	g.Add(func() error {
+	useTLS := config.GetBool("USE_TLS")
+	if useTLS {
 		serverCert, err := tls.X509KeyPair([]byte(config.GetString("SERVER_CERT")), []byte(config.GetString("SERVER_KEY")))
 		if err != nil {
 			s.logger.Fatal("Failed to parse key pair", zap.Error(err))
@@ -98,10 +85,19 @@ func Serve(config *viper.Viper) {
 			},
 		}
 		s.logger.Info("Serving application on port 8443")
-		return srv.ListenAndServeTLS("", "")
-	}, func(error) {
-		s.logger.Info("Entered https server interrupt function")
-	})
-
-	log.Fatal(g.Run())
+		err = srv.ListenAndServeTLS("", "")
+		if err != nil {
+			s.logger.Fatal("Failed to start server on port 8443")
+		}
+	} else {
+		srv := http.Server{
+			Addr:    ":8080",
+			Handler: s,
+		}
+		s.logger.Info("Serving application on port 8080")
+		err := srv.ListenAndServe()
+		if err != nil {
+			s.logger.Fatal("Failed to start server on port 8080")
+		}
+	}
 }
