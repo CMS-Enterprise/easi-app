@@ -6,7 +6,9 @@ import { Button } from '@trussworks/react-uswds';
 import { DateTime, Duration } from 'luxon';
 
 import Modal from 'components/Modal';
+import { localAuthStorageKey } from 'constants/localAuth';
 import useInterval from 'hooks/useInterval';
+import { isLocalAuthEnabled } from 'utils/auth';
 
 type TimeOutWrapperProps = {
   children: React.ReactNode;
@@ -18,6 +20,10 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     Duration.fromObject({ minutes: 5 }).as('seconds')
   );
   const LAST_ACTIVE_AT_KEY = 'easiLastActiveAt';
+  const isLocalAuth =
+    isLocalAuthEnabled() &&
+    window.localStorage[localAuthStorageKey] &&
+    JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth;
 
   useIdleTimer({
     onAction: () => {
@@ -97,7 +103,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         setIsModalOpen(true);
       }
     },
-    authState?.isAuthenticated && !isModalOpen ? 1000 : null
+    authState?.isAuthenticated && !isModalOpen && !isLocalAuth ? 1000 : null
   );
 
   // Set lastActiveAt between tabs
