@@ -16,6 +16,8 @@ type GovernanceTeamOptionsProps = {
 
 const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
   const { values, errors } = formikProps;
+  const { teams = [] } = values.governanceTeams;
+
   return (
     <FieldArray name="governanceTeams.teams">
       {arrayHelpers => (
@@ -26,9 +28,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
             team you&apos;ve worked with.
           </legend>
           {cmsGovernanceTeams.map((team: any, index: number) => {
-            const isChecked = values.governanceTeams.teams
-              .map(t => t.name)
-              .includes(team.value);
+            const isChecked = teams.map(t => t.name).includes(team.value);
             return (
               <Fragment key={team.key}>
                 <CheckboxField
@@ -42,6 +42,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                     if (e.target.checked) {
                       arrayHelpers.push({
                         name: e.target.value,
+                        key: team.key,
                         collaborator: ''
                       });
                     } else {
@@ -58,7 +59,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                     'aria-controls': `${team.key}-Collaborator`
                   }}
                 />
-                {values.governanceTeams.teams.map((t, idx) => {
+                {teams.map((t, idx) => {
                   const { key } = team;
                   if (team.value === t.name) {
                     return (

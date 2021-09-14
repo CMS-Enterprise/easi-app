@@ -183,6 +183,17 @@ export interface RejectIntakeInput {
   reason: string;
 }
 
+export interface SystemIntakeBusinessOwnerInput {
+  name: string;
+  component: string;
+}
+
+export interface SystemIntakeCollaboratorInput {
+  collaborator: string;
+  name: string;
+  key: string;
+}
+
 export interface SystemIntakeContractInput {
   contractor?: string | null;
   endDate?: Time | null;
@@ -202,8 +213,28 @@ export interface SystemIntakeFundingSourceInput {
   source?: string | null;
 }
 
+export interface SystemIntakeGovernanceTeamInput {
+  isPresent?: boolean | null;
+  teams?: (SystemIntakeCollaboratorInput | null)[] | null;
+}
+
+export interface SystemIntakeISSOInput {
+  isPresent?: boolean | null;
+  name?: string | null;
+}
+
+export interface SystemIntakeProductManagerInput {
+  name: string;
+  component: string;
+}
+
 export interface SystemIntakeRequesterInput {
   name: string;
+}
+
+export interface SystemIntakeRequesterWithComponentInput {
+  name: string;
+  component: string;
 }
 
 /**
@@ -219,12 +250,29 @@ export interface UpdateSystemIntakeAdminLeadInput {
   id: UUID;
 }
 
+export interface UpdateSystemIntakeContactDetailsInput {
+  id: UUID;
+  requester: SystemIntakeRequesterWithComponentInput;
+  businessOwner: SystemIntakeBusinessOwnerInput;
+  productManager: SystemIntakeProductManagerInput;
+  isso: SystemIntakeISSOInput;
+  governanceTeams: SystemIntakeGovernanceTeamInput;
+}
+
 export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
   currentStage?: string | null;
   fundingSource?: SystemIntakeFundingSourceInput | null;
   costs?: SystemIntakeCostsInput | null;
   contract?: SystemIntakeContractInput | null;
+}
+
+export interface UpdateSystemIntakeRequestDetailsInput {
+  id: UUID;
+  requestName?: string | null;
+  businessNeed?: string | null;
+  businessSolution?: string | null;
+  needsEaSupport?: boolean | null;
 }
 
 export interface UpdateSystemIntakeReviewDatesInput {

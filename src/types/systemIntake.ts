@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 export type GovernanceCollaborationTeam = {
   collaborator: string;
   name: string;
+  key: string;
 };
 
 export const openIntakeStatuses = [
