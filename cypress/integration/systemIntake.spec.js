@@ -9,6 +9,9 @@ describe('The System Intake Form', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
         req.alias = 'updateRequestDetails';
+
+      if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
+        req.alias = 'updateContactDetails';
       }
     });
 
@@ -36,7 +39,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -98,7 +101,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -255,7 +258,7 @@ describe('The System Intake Form', () => {
   it('displays contact details error messages', () => {
     cy.contains('button', 'Next').click();
 
-    cy.get('[data-testid="system-intake-errors"]');
+    cy.get('[data-testid="contact-details-errors"]');
   });
 
   it('displays request details error messages', () => {
@@ -285,7 +288,7 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     cy.contains('h1', 'Request details');
 
