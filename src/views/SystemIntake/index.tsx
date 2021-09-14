@@ -1,27 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Switch, useHistory, useParams } from 'react-router-dom';
-import { SecureRoute } from '@okta/okta-react';
+import { Link, Route, Switch, useHistory, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
-import { FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
-import {
-  clearSystemIntake,
-  fetchSystemIntake,
-  saveSystemIntake
-} from 'types/routines';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { clearSystemIntake, fetchSystemIntake } from 'types/routines';
 import { NotFoundPartial } from 'views/NotFound';
 
 import Confirmation from './Confirmation';
@@ -40,7 +34,6 @@ export const SystemIntake = () => {
     formPage: string;
   }>();
   const dispatch = useDispatch();
-  const formikRef: any = useRef();
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -51,14 +44,6 @@ export const SystemIntake = () => {
   const actionError = useSelector((state: AppState) => state.action.error);
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
   const prevIsSubmitting = usePrevious(isSubmitting);
-
-  const dispatchSave = () => {
-    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    dispatch(
-      saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
-    );
-    current.resetForm({ values: current.values, errors: current.errors });
-  };
 
   // Handle redirect after submitting
   useEffect(() => {
@@ -102,47 +87,43 @@ export const SystemIntake = () => {
           </Breadcrumb>
           <Breadcrumb current>Intake Request</Breadcrumb>
         </BreadcrumbBar>
-        {isLoading === false && (
+        {/*
+         * TODO
+         * When the GraphQL query(ies) are implemented for Intake,
+         * this loading probably snould be moved inside of the individual
+         * pages.
+         */}
+        {isLoading ? (
+          <PageLoading />
+        ) : (
           <Switch>
-            <SecureRoute
+            <Route
               path="/system/:systemId/contact-details"
-              render={() => (
-                <ContactDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
-                />
-              )}
+              render={() => <ContactDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/request-details"
-              render={() => (
-                <RequestDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
-                />
-              )}
+              render={() => <RequestDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/contract-details"
               render={() => <ContractDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/review"
               render={() => (
                 <Review systemIntake={systemIntake} now={DateTime.local()} />
               )}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/confirmation"
               render={() => <Confirmation />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/view"
               render={() => <SystemIntakeView systemIntake={systemIntake} />}
             />
-            <SecureRoute path="*" render={() => <NotFoundPartial />} />
+            <Route path="*" render={() => <NotFoundPartial />} />
           </Switch>
         )}
       </MainContent>
