@@ -13,3 +13,41 @@ export const CreateSystemIntake = gql`
     }
   }
 `;
+
+export const UpdateSystemIntakeContactDetails = gql`
+  mutation UpdateSystemIntakeContactDetails(
+    $input: UpdateSystemIntakeContactDetailsInput!
+  ) {
+    updateSystemIntakeContactDetails(input: $input) {
+      systemIntake {
+        id
+        businessOwner {
+          component
+          name
+        }
+        governanceTeams {
+          isPresent
+          teams {
+            acronym
+            collaborator
+            key
+            label
+            name
+          }
+        }
+        isso {
+          isPresent
+          name
+        }
+        productManager {
+          component
+          name
+        }
+        requester {
+          component
+          name
+        }
+      }
+    }
+  }
+`;

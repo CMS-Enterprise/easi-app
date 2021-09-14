@@ -928,15 +928,13 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
 	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
 
-	if input.Isso.IsPresent {
+	if input.Isso.IsPresent != nil && *input.Isso.IsPresent {
 		intake.ISSOName = null.StringFromPtr(input.Isso.Name)
-	}
-
-	if !input.Isso.IsPresent {
+	} else {
 		intake.ISSOName = null.StringFromPtr(nil)
 	}
 
-	if input.GovernanceTeams.IsPresent {
+	if input.GovernanceTeams.IsPresent != nil {
 		trbCollaboratorName := null.StringFromPtr(nil)
 		for _, team := range input.GovernanceTeams.Teams {
 			if team.Key == "technicalReviewBoard" {
@@ -960,9 +958,7 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 			}
 		}
 		intake.EACollaboratorName = eaCollaboratorName
-	}
-
-	if !input.GovernanceTeams.IsPresent {
+	} else {
 		intake.TRBCollaboratorName = null.StringFromPtr(nil)
 		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)
 		intake.EACollaboratorName = null.StringFromPtr(nil)
