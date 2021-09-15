@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -25,28 +28,52 @@ import TextField from 'components/shared/TextField';
 import fundingSources from 'constants/enums/fundingSources';
 import processStages from 'constants/enums/processStages';
 import { yesNoMap } from 'data/common';
+import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
+import {
+  UpdateSystemIntakeContractDetails,
+  UpdateSystemIntakeContractDetailsVariables
+} from 'queries/types/UpdateSystemIntakeContractDetails';
+import { fetchSystemIntake } from 'types/routines';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 type ContractDetailsProps = {
-  formikRef: any;
   systemIntake: SystemIntakeForm;
-  dispatchSave: () => void;
 };
 
-const ContractDetails = ({
-  formikRef,
-  systemIntake,
-  dispatchSave
-}: ContractDetailsProps) => {
+const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
+  const formikRef = useRef<FormikProps<ContractDetailsForm>>();
+  const dispatch = useDispatch();
 
+  const { id, currentStage, fundingSource, costs, contract } = systemIntake;
   const initialValues: ContractDetailsForm = {
-    currentStage: systemIntake.currentStage,
-    fundingSource: systemIntake.fundingSource,
-    costs: systemIntake.costs,
-    contract: systemIntake.contract
+    currentStage: currentStage || '',
+    fundingSource: {
+      isFunded: fundingSource.isFunded,
+      fundingNumber: fundingSource.fundingNumber || '',
+      source: fundingSource.source || ''
+    },
+    costs: {
+      expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
+      isExpectingIncrease: costs.isExpectingIncrease || ''
+    },
+    contract: {
+      contractor: contract.contractor || '',
+      endDate: {
+        day: contract.endDate.day || '',
+        month: contract.endDate.month || '',
+        year: contract.endDate.year || ''
+      },
+      hasContract: contract.hasContract || '',
+      startDate: {
+        day: contract.startDate.day || '',
+        month: contract.startDate.month || '',
+        year: contract.startDate.year || ''
+      },
+      vehicle: contract.vehicle || ''
+    }
   };
 
   const saveExitLink = (() => {
@@ -59,10 +86,54 @@ const ContractDetails = ({
     return link;
   })();
 
+  const [mutate] = useMutation<
+    UpdateSystemIntakeContractDetails,
+    UpdateSystemIntakeContractDetailsVariables
+  >(UpdateSystemIntakeContractDetailsQuery);
+
+  const formatContractDetailsPayload = (values: ContractDetailsForm) => {
+    const startDate = DateTime.fromObject({
+      day: Number(values.contract.startDate.day),
+      month: Number(values.contract.startDate.month),
+      year: Number(values.contract.startDate.year),
+      zone: 'UTC'
+    });
+
+    const endDate = DateTime.fromObject({
+      day: Number(values.contract.endDate.day),
+      month: Number(values.contract.endDate.month),
+      year: Number(values.contract.endDate.year),
+      zone: 'UTC'
+    });
+
+    return {
+      id,
+      ...values,
+      contract: {
+        ...values.contract,
+        startDate,
+        endDate
+      }
+    };
+  };
+
+  const onSubmit = (values?: ContractDetailsForm) => {
+    if (values) {
+      mutate({
+        variables: {
+          input: formatContractDetailsPayload(values)
+        }
+      }).then(() => {
+        // TODO: remove in favor of graphql refetch query
+        dispatch(fetchSystemIntake(id));
+      });
+    }
+  };
+
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={dispatchSave}
+      onSubmit={onSubmit}
       validationSchema={SystemIntakeValidationSchema.contractDetails}
       validateOnBlur={false}
       validateOnChange={false}
@@ -76,7 +147,7 @@ const ContractDetails = ({
           <>
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
-                testId="system-intake-errors"
+                testId="contract-details-errors"
                 classNames="margin-top-3"
                 heading="Please check and fix the following"
               >
@@ -138,7 +209,10 @@ const ContractDetails = ({
                   scrollElement="fundingSource.isFunded"
                   error={!!flatErrors['fundingSource.isFunded']}
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="funding-source-fieldset"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       Will this project be funded out of an existing funding
                       source?
@@ -284,7 +358,10 @@ const ContractDetails = ({
                   scrollElement="conts.isExpectingIncrease"
                   error={!!flatErrors['costs.isExpectingIncrease']}
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="exceed-cost-fieldset"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       Do the costs for this request exceed what you are
                       currently spending to meet your business need?
@@ -374,7 +451,10 @@ const ContractDetails = ({
                   error={!!flatErrors['contract.hasContract']}
                   className="margin-bottom-105"
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="contract-fieldset"
+                  >
                     <legend className="usa-label margin-bottom-1">
                       Do you already have a contract in place to support this
                       effort?
@@ -876,10 +956,19 @@ const ContractDetails = ({
                   type="button"
                   outline
                   onClick={() => {
-                    dispatchSave();
                     formikProps.setErrors({});
-                    const newUrl = 'request-details';
-                    history.push(newUrl);
+                    mutate({
+                      variables: {
+                        input: formatContractDetailsPayload(values)
+                      }
+                    }).then(res => {
+                      if (!res.errors) {
+                        // TODO: remove in favor of graphql refetch query
+                        dispatch(fetchSystemIntake(id));
+                        const newUrl = 'request-details';
+                        history.push(newUrl);
+                      }
+                    });
                   }}
                 >
                   Back
@@ -889,9 +978,18 @@ const ContractDetails = ({
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
-                        dispatchSave();
-                        const newUrl = 'review';
-                        history.push(newUrl);
+                        mutate({
+                          variables: {
+                            input: formatContractDetailsPayload(values)
+                          }
+                        }).then(res => {
+                          if (!res.errors) {
+                            // TODO: remove in favor of graphql refetch query
+                            dispatch(fetchSystemIntake(id));
+                            const newUrl = 'review';
+                            history.push(newUrl);
+                          }
+                        });
                       } else {
                         window.scrollTo(0, 0);
                       }
@@ -905,8 +1003,17 @@ const ContractDetails = ({
                     type="button"
                     unstyled
                     onClick={() => {
-                      dispatchSave();
-                      history.push(saveExitLink);
+                      mutate({
+                        variables: {
+                          input: formatContractDetailsPayload(values)
+                        }
+                      }).then(res => {
+                        if (!res.errors) {
+                          // TODO: remove in favor of graphql refetch query
+                          dispatch(fetchSystemIntake(id));
+                          history.push(saveExitLink);
+                        }
+                      });
                     }}
                   >
                     <span>
@@ -918,8 +1025,10 @@ const ContractDetails = ({
             </div>
             <AutoSave
               values={values}
-              onSave={dispatchSave}
-              debounceDelay={1000 * 30}
+              onSave={() => {
+                onSubmit(formikRef?.current?.values);
+              }}
+              debounceDelay={1000 * 3}
             />
             <PageNumber currentPage={3} totalPages={3} />
           </>
