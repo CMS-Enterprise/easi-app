@@ -17,18 +17,23 @@ require (
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jmoiron/sqlx v1.3.4
+	github.com/kr/pretty v0.3.0 // indirect
 	github.com/launchdarkly/eventsource v1.6.1 // indirect
 	github.com/lestrrat-go/jwx v1.0.2 // indirect
 	github.com/lib/pq v1.10.3
+	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/pquerna/otp v1.2.0
+	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
-	github.com/transcom/mymove v0.0.0-20210910172706-2ee5f997c05b // indirect
 	github.com/vektah/gqlparser/v2 v2.1.0
 	go.uber.org/zap v1.19.1
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
+	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect
+	golang.org/x/text v0.3.7 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.0.1
 	gopkg.in/launchdarkly/go-server-sdk.v5 v5.0.2
 )

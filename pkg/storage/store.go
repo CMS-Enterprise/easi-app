@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 
-	iampg "github.com/cmsgov/easi-app/pkg/iampostgress"
+	iampg "github.com/cmsgov/easi-app/pkg/iampostgres"
 
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
