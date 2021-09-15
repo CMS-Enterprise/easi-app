@@ -14,6 +14,10 @@ describe('The System Intake Form', () => {
       if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
         req.alias = 'updateContactDetails';
       }
+
+      if (req.body.operationName === 'UpdateSystemIntakeContractDetails') {
+        req.alias = 'updateContractDetails';
+      }
     });
 
     cy.visit('/system/request-type');
@@ -168,7 +172,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContractDetails');
 
     // Review
     cy.contains('h1', 'Check your answers before sending');
