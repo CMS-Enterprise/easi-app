@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, Switch, useHistory, useParams } from 'react-router-dom';
 import {
@@ -6,7 +6,6 @@ import {
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
-import { FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
@@ -16,12 +15,7 @@ import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
-import {
-  clearSystemIntake,
-  fetchSystemIntake,
-  saveSystemIntake
-} from 'types/routines';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { clearSystemIntake, fetchSystemIntake } from 'types/routines';
 import { NotFoundPartial } from 'views/NotFound';
 
 import Confirmation from './Confirmation';
@@ -40,7 +34,6 @@ export const SystemIntake = () => {
     formPage: string;
   }>();
   const dispatch = useDispatch();
-  const formikRef: any = useRef();
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -51,14 +44,6 @@ export const SystemIntake = () => {
   const actionError = useSelector((state: AppState) => state.action.error);
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
   const prevIsSubmitting = usePrevious(isSubmitting);
-
-  const dispatchSave = () => {
-    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    dispatch(
-      saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
-    );
-    current.resetForm({ values: current.values, errors: current.errors });
-  };
 
   // Handle redirect after submitting
   useEffect(() => {
@@ -122,13 +107,7 @@ export const SystemIntake = () => {
             />
             <Route
               path="/system/:systemId/contract-details"
-              render={() => (
-                <ContractDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
-                />
-              )}
+              render={() => <ContractDetails systemIntake={systemIntake} />}
             />
             <Route
               path="/system/:systemId/review"

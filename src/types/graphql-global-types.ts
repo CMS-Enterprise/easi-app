@@ -194,6 +194,25 @@ export interface SystemIntakeCollaboratorInput {
   key: string;
 }
 
+export interface SystemIntakeContractInput {
+  contractor?: string | null;
+  endDate?: Time | null;
+  hasContract?: string | null;
+  startDate?: Time | null;
+  vehicle?: string | null;
+}
+
+export interface SystemIntakeCostsInput {
+  expectedIncreaseAmount?: string | null;
+  isExpectingIncrease?: string | null;
+}
+
+export interface SystemIntakeFundingSourceInput {
+  fundingNumber?: string | null;
+  isFunded?: boolean | null;
+  source?: string | null;
+}
+
 export interface SystemIntakeGovernanceTeamInput {
   isPresent?: boolean | null;
   teams?: (SystemIntakeCollaboratorInput | null)[] | null;
@@ -238,6 +257,14 @@ export interface UpdateSystemIntakeContactDetailsInput {
   productManager: SystemIntakeProductManagerInput;
   isso: SystemIntakeISSOInput;
   governanceTeams: SystemIntakeGovernanceTeamInput;
+}
+
+export interface UpdateSystemIntakeContractDetailsInput {
+  id: UUID;
+  currentStage?: string | null;
+  fundingSource?: SystemIntakeFundingSourceInput | null;
+  costs?: SystemIntakeCostsInput | null;
+  contract?: SystemIntakeContractInput | null;
 }
 
 export interface UpdateSystemIntakeRequestDetailsInput {
