@@ -3,8 +3,8 @@ module github.com/cmsgov/easi-app
 go 1.16
 
 require (
-	github.com/99designs/gqlgen v0.13.0
-	github.com/aws/aws-sdk-go v1.40.43
+	github.com/99designs/gqlgen v0.14.0
+	github.com/aws/aws-sdk-go v1.34.28
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.20.1
 	github.com/go-openapi/runtime v0.19.31
@@ -28,10 +28,10 @@ require (
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
-	github.com/vektah/gqlparser/v2 v2.1.0
-	go.uber.org/zap v1.19.1
-	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
-	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect
+	github.com/vektah/gqlparser/v2 v2.2.0
+	go.uber.org/zap v1.17.0
+	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
+	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.0.1
