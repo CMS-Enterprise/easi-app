@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/99designs/gqlgen v0.13.0
-	github.com/aws/aws-sdk-go v1.40.40
+	github.com/aws/aws-sdk-go v1.40.43
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.20.1
 	github.com/go-openapi/runtime v0.19.31
@@ -25,7 +25,7 @@ require (
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
-	github.com/transcom/mymove v0.0.0-20210910172706-2ee5f997c05b
+	github.com/transcom/mymove v0.0.0-20210910172706-2ee5f997c05b // indirect
 	github.com/vektah/gqlparser/v2 v2.1.0
 	go.uber.org/zap v1.19.1
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e

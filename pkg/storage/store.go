@@ -8,9 +8,10 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 
+	iampg "github.com/cmsgov/easi-app/pkg/iampostgress"
+
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
-	iampg "github.com/transcom/mymove/pkg/iampostgres"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 )
