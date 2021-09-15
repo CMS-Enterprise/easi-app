@@ -5,6 +5,21 @@ describe('The System Intake Form', () => {
     cy.server();
     cy.localLogin({ name: 'TEST' });
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
+        req.alias = 'updateRequestDetails';
+      }
+
+      if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
+        req.alias = 'updateContactDetails';
+      }
+
+      if (req.body.operationName === 'UpdateSystemIntakeContractDetails') {
+        req.alias = 'updateContractDetails';
+      }
+    });
+
     cy.visit('/system/request-type');
     cy.get('#RequestType-NewSystem').check({ force: true });
     cy.contains('button', 'Continue').click();
@@ -29,7 +44,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -55,68 +70,12 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
-    cy.wait(1000);
     // Review
     cy.contains('h1', 'Check your answers before sending');
 
-    cy.window()
-      .its('store')
-      .invoke('getState')
-      .its('systemIntake')
-      .its('systemIntake')
-      .should('deep.include', {
-        requestName: 'Test Request Name',
-        requester: {
-          name: 'User TEST',
-          component: 'Center for Medicare',
-          email: ''
-        },
-        businessOwner: {
-          name: 'Casey Doe',
-          component: 'Center for Medicare'
-        },
-        productManager: {
-          name: 'Casey Doe',
-          component: 'Center for Medicare'
-        },
-        isso: {
-          isPresent: false,
-          name: ''
-        },
-        governanceTeams: {
-          isPresent: false,
-          teams: []
-        },
-        fundingSource: {
-          isFunded: false,
-          fundingNumber: '',
-          source: ''
-        },
-        costs: {
-          isExpectingIncrease: 'NO',
-          expectedIncreaseAmount: ''
-        },
-        contract: {
-          hasContract: 'NOT_NEEDED',
-          contractor: '',
-          vehicle: '',
-          startDate: {
-            month: '',
-            day: '',
-            year: ''
-          },
-          endDate: {
-            month: '',
-            day: '',
-            year: ''
-          }
-        },
-        businessNeed: 'This is my business need.',
-        businessSolution: 'This is my business solution.',
-        currentStage: 'Just an idea',
-        needsEaSupport: false
-      });
+    // Submit
+    cy.contains('button', 'Send my intake request').click();
+    cy.contains('h1', 'Your Intake Request has been submitted');
   });
 
   it('displays and fills conditional fields', () => {
@@ -147,7 +106,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -213,7 +172,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContractDetails');
 
     // Review
     cy.contains('h1', 'Check your answers before sending');
@@ -304,7 +263,7 @@ describe('The System Intake Form', () => {
   it('displays contact details error messages', () => {
     cy.contains('button', 'Next').click();
 
-    cy.get('[data-testid="system-intake-errors"]');
+    cy.get('[data-testid="contact-details-errors"]');
   });
 
   it('displays request details error messages', () => {
@@ -322,7 +281,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.get('[data-testid="system-intake-errors"]');
+    cy.get('[data-testid="request-details-errors"]');
   });
 
   it('saves on back click', () => {
@@ -334,7 +293,7 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     cy.contains('h1', 'Request details');
 
@@ -343,7 +302,7 @@ describe('The System Intake Form', () => {
       .should('have.value', 'Test Request Name');
 
     cy.contains('button', 'Back').click();
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateRequestDetails');
   });
 });
 
