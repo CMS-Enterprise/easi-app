@@ -27,10 +27,10 @@ const Approved = ({ intake }: ApprovedProps) => {
         </dl>
         <h3>{t('decision.lcidScope')}</h3>
         <p className="text-pre-wrap">{intake.lcidScope}</p>
-        {intake.lcidExpiration && (
+        {intake.lcidExpiresAt && (
           <p className="text-bold">
             {t('decision.lcidExpiration', {
-              date: formatDate(intake.lcidExpiration)
+              date: formatDate(intake.lcidExpiresAt)
             })}
           </p>
         )}
