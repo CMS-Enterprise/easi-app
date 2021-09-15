@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Switch, useHistory, useParams } from 'react-router-dom';
-import { SecureRoute } from '@okta/okta-react';
+import { Link, Route, Switch, useHistory, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -13,6 +12,7 @@ import { DateTime } from 'luxon';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
@@ -102,29 +102,25 @@ export const SystemIntake = () => {
           </Breadcrumb>
           <Breadcrumb current>Intake Request</Breadcrumb>
         </BreadcrumbBar>
-        {isLoading === false && (
+        {/*
+         * TODO
+         * When the GraphQL query(ies) are implemented for Intake,
+         * this loading probably snould be moved inside of the individual
+         * pages.
+         */}
+        {isLoading ? (
+          <PageLoading />
+        ) : (
           <Switch>
-            <SecureRoute
+            <Route
               path="/system/:systemId/contact-details"
-              render={() => (
-                <ContactDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
-                />
-              )}
+              render={() => <ContactDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/request-details"
-              render={() => (
-                <RequestDetails
-                  formikRef={formikRef}
-                  systemIntake={systemIntake}
-                  dispatchSave={dispatchSave}
-                />
-              )}
+              render={() => <RequestDetails systemIntake={systemIntake} />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/contract-details"
               render={() => (
                 <ContractDetails
@@ -134,21 +130,21 @@ export const SystemIntake = () => {
                 />
               )}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/review"
               render={() => (
                 <Review systemIntake={systemIntake} now={DateTime.local()} />
               )}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/confirmation"
               render={() => <Confirmation />}
             />
-            <SecureRoute
+            <Route
               path="/system/:systemId/view"
               render={() => <SystemIntakeView systemIntake={systemIntake} />}
             />
-            <SecureRoute path="*" render={() => <NotFoundPartial />} />
+            <Route path="*" render={() => <NotFoundPartial />} />
           </Switch>
         )}
       </MainContent>

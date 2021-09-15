@@ -3,6 +3,13 @@ describe('The Task List', () => {
     cy.server();
     cy.localLogin({ name: 'TEST' });
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
+        req.alias = 'updateContactDetails';
+      }
+    });
+
     cy.visit('/system/request-type');
     cy.get('#RequestType-NewSystem').check({ force: true });
     cy.contains('button', 'Continue').click();
@@ -21,7 +28,7 @@ describe('The Task List', () => {
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
-    cy.wait('@putSystemIntake');
+    cy.wait('@updateContactDetails');
 
     cy.contains('h1', 'Request details');
 
