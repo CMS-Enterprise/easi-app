@@ -71,6 +71,7 @@ func GetCurrentPass() string {
 }
 
 func updateDSN(dsn string) (string, error) {
+	fmt.Printf("pass holder set to %s when update DSN called \n", iamConfig.passHolder)
 	if !strings.Contains(dsn, iamConfig.passHolder) {
 		return "", errors.New("DSN does not contain password holder")
 	}
@@ -122,6 +123,7 @@ func EnableIAM(host string, port string, region string, user string, passTemplat
 	// Lets enable and configure the DSN settings
 	iamConfig.useIAM = true
 	iamConfig.passHolder = passTemplate
+	fmt.Printf("passholder set to %s\n", iamConfig.passHolder)
 	iamConfig.logger = logger
 
 	errorMessagesChan := make(chan error)
