@@ -156,8 +156,8 @@ export const prepareSystemIntakeForApp = (
     return teams;
   };
 
-  const contractStartDate = DateTime.fromISO(systemIntake.contractStartDate);
-  const contractEndDate = DateTime.fromISO(systemIntake.contractEndDate);
+  const contractStartDate = parseAsDate(systemIntake.contractStartDate);
+  const contractEndDate = parseAsDate(systemIntake.contractEndDate);
 
   return {
     id: systemIntake.id || '',
@@ -329,7 +329,7 @@ export const isIntakeStarted = (intake: SystemIntakeForm) => {
     intake.isso.isPresent ||
     intake.isso.name ||
     intake.governanceTeams.isPresent ||
-    intake.governanceTeams.teams.length > 0 ||
+    (intake.governanceTeams.teams && intake.governanceTeams.teams.length > 0) ||
     intake.fundingSource.isFunded ||
     intake.fundingSource.fundingNumber ||
     intake.fundingSource.source ||

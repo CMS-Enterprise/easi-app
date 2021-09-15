@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
+import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import GovernanceOverview from 'views/GovernanceOverview';
@@ -35,7 +36,7 @@ window.scrollTo = jest.fn();
 describe('The request type form page', () => {
   const mockStore = configureMockStore();
   const store = mockStore({
-    systemIntake: { systemIntake: {} },
+    systemIntake: { systemIntake: initialSystemIntakeForm },
     action: {}
   });
 
@@ -236,7 +237,7 @@ describe('The request type form page', () => {
     expect(await screen.findByTestId('system-intake')).toBeInTheDocument();
   });
 
-  it('creates a shutdown intake', async () => {
+  it('executes request type validations', async () => {
     renderPage([]);
 
     await waitFor(() => {

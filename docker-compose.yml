@@ -2,7 +2,7 @@
 version: '3.7'
 services:
   db:
-    image: postgres:11.10
+    image: postgres:11.12
     command: ['postgres', '-c', 'log_statement=all', '-c', 'max_connections=25']
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
@@ -54,6 +54,7 @@ services:
       - MINIO_ADDRESS=http://minio:9000
       - SERVER_CERT
       - SERVER_KEY
+      - USE_TLS
     depends_on:
       - db_migrate
   easi_client:

@@ -44,11 +44,8 @@ export const SystemIntake = () => {
       }
     }
   );
-  const systemIntake = data?.systemIntake;
 
-  if (loading) {
-    return <PageLoading />;
-  }
+  const systemIntake = data?.systemIntake;
 
   if (!systemIntake) {
     return <NotFound />;
@@ -74,7 +71,15 @@ export const SystemIntake = () => {
           </Breadcrumb>
           <Breadcrumb current>Intake Request</Breadcrumb>
         </BreadcrumbBar>
-        {!loading && (
+        {/*
+         * TODO
+         * When the GraphQL query(ies) are implemented for Intake,
+         * this loading probably snould be moved inside of the individual
+         * pages.
+         */}
+        {loading ? (
+          <PageLoading />
+        ) : (
           <Switch>
             <Route
               path="/system/:systemId/contact-details"
