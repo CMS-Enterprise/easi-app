@@ -1,3 +1,5 @@
+import { AuthState } from '@okta/okta-auth-js';
+
 import {
   ACCESSIBILITY_ADMIN_DEV,
   ACCESSIBILITY_ADMIN_PROD,
@@ -78,6 +80,10 @@ export const isBasicUser = (groups: Array<String> = [], flags: Flags) => {
   }
   return false;
 };
+
+export interface EasiAuthState extends AuthState {
+  groups?: string[];
+}
 
 const user = {
   isGrtReviewer,
