@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 
 	iampg "github.com/cmsgov/easi-app/pkg/iampostgres"
@@ -61,7 +61,8 @@ func NewStore(
 			// because the session conflates the environment, shared, and container metadata config
 			// within NewSession.  With stscreds, we use the Secure Token Service,
 			// to assume the given role (that has rds db connect permissions).
-			dbCreds = ec2rolecreds.NewCredentials(sess)
+			// dbCreds = ec2rolecreds.NewCredentials(sess)
+			dbCreds = stscreds.NewCredentials(sess, "app_user_iam")
 		}
 	}
 
