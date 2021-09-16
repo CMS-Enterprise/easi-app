@@ -92,6 +92,12 @@ export interface GetSystemIntake_systemIntake_requester {
   name: string;
 }
 
+export interface GetSystemIntake_systemIntake_lastAdminNote {
+  __typename: "LastAdminNote";
+  content: string | null;
+  createdAt: Time | null;
+}
+
 export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
@@ -119,7 +125,15 @@ export interface GetSystemIntake_systemIntake {
   requestName: string | null;
   requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
+  grtReviewEmailBody: string | null;
+  decidedAt: Time | null;
+  businessCaseId: UUID | null;
   submittedAt: Time | null;
+  updatedAt: Time;
+  createdAt: Time;
+  archivedAt: Time | null;
+  euaUserId: string;
+  lastAdminNote: GetSystemIntake_systemIntake_lastAdminNote;
 }
 
 export interface GetSystemIntake {

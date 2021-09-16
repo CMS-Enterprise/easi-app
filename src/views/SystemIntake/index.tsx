@@ -47,7 +47,7 @@ export const SystemIntake = () => {
 
   const systemIntake = data?.systemIntake;
 
-  if (!systemIntake) {
+  if (!loading && !systemIntake) {
     return <NotFound />;
   }
 
@@ -64,7 +64,7 @@ export const SystemIntake = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${systemIntake.id}`}
+              to={`/governance-task-list/${systemId}`}
             >
               <span>Get governance approval</span>
             </BreadcrumbLink>
