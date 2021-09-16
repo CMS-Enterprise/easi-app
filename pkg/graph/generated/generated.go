@@ -13895,6 +13895,41 @@ func (ec *executionContext) ___Directive_args(ctx context.Context, field graphql
 	return ec.marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValueᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) ___Directive_isRepeatable(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "__Directive",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsRepeatable, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) ___EnumValue_name(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -14847,7 +14882,10 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Context, obj interface{}) (model.AddGRTFeedbackInput, error) {
 	var it model.AddGRTFeedbackInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -14883,7 +14921,10 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 
 func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, obj interface{}) (model.BasicActionInput, error) {
 	var it model.BasicActionInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -14911,7 +14952,10 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 
 func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityRequestDocumentInput, error) {
 	var it model.CreateAccessibilityRequestDocumentInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -14979,7 +15023,10 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 
 func (ec *executionContext) unmarshalInputCreateAccessibilityRequestInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityRequestInput, error) {
 	var it model.CreateAccessibilityRequestInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15007,7 +15054,10 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestInput(ctx co
 
 func (ec *executionContext) unmarshalInputCreateAccessibilityRequestNoteInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityRequestNoteInput, error) {
 	var it model.CreateAccessibilityRequestNoteInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15043,7 +15093,10 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestNoteInput(ct
 
 func (ec *executionContext) unmarshalInputCreateSystemIntakeInput(ctx context.Context, obj interface{}) (model.CreateSystemIntakeInput, error) {
 	var it model.CreateSystemIntakeInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15071,7 +15124,10 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeInput(ctx context.Co
 
 func (ec *executionContext) unmarshalInputCreateSystemIntakeNoteInput(ctx context.Context, obj interface{}) (model.CreateSystemIntakeNoteInput, error) {
 	var it model.CreateSystemIntakeNoteInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15107,7 +15163,10 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeNoteInput(ctx contex
 
 func (ec *executionContext) unmarshalInputCreateTestDateInput(ctx context.Context, obj interface{}) (model.CreateTestDateInput, error) {
 	var it model.CreateTestDateInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15151,7 +15210,10 @@ func (ec *executionContext) unmarshalInputCreateTestDateInput(ctx context.Contex
 
 func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestDocumentInput(ctx context.Context, obj interface{}) (model.DeleteAccessibilityRequestDocumentInput, error) {
 	var it model.DeleteAccessibilityRequestDocumentInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15171,7 +15233,10 @@ func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestDocumentInpu
 
 func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestInput(ctx context.Context, obj interface{}) (model.DeleteAccessibilityRequestInput, error) {
 	var it model.DeleteAccessibilityRequestInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15199,7 +15264,10 @@ func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestInput(ctx co
 
 func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Context, obj interface{}) (model.DeleteTestDateInput, error) {
 	var it model.DeleteTestDateInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15219,7 +15287,10 @@ func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Contex
 
 func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	var it model.GeneratePresignedUploadURLInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15255,7 +15326,10 @@ func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx co
 
 func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Context, obj interface{}) (model.IssueLifecycleIDInput, error) {
 	var it model.IssueLifecycleIDInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15315,7 +15389,10 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 
 func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context, obj interface{}) (model.RejectIntakeInput, error) {
 	var it model.RejectIntakeInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15359,7 +15436,10 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 
 func (ec *executionContext) unmarshalInputSubmitIntakeInput(ctx context.Context, obj interface{}) (model.SubmitIntakeInput, error) {
 	var it model.SubmitIntakeInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15379,7 +15459,10 @@ func (ec *executionContext) unmarshalInputSubmitIntakeInput(ctx context.Context,
 
 func (ec *executionContext) unmarshalInputSystemIntakeBusinessOwnerInput(ctx context.Context, obj interface{}) (model.SystemIntakeBusinessOwnerInput, error) {
 	var it model.SystemIntakeBusinessOwnerInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15407,7 +15490,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeBusinessOwnerInput(ctx con
 
 func (ec *executionContext) unmarshalInputSystemIntakeCollaboratorInput(ctx context.Context, obj interface{}) (model.SystemIntakeCollaboratorInput, error) {
 	var it model.SystemIntakeCollaboratorInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15443,7 +15529,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeCollaboratorInput(ctx cont
 
 func (ec *executionContext) unmarshalInputSystemIntakeContractInput(ctx context.Context, obj interface{}) (model.SystemIntakeContractInput, error) {
 	var it model.SystemIntakeContractInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15495,7 +15584,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeContractInput(ctx context.
 
 func (ec *executionContext) unmarshalInputSystemIntakeCostsInput(ctx context.Context, obj interface{}) (model.SystemIntakeCostsInput, error) {
 	var it model.SystemIntakeCostsInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15523,7 +15615,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeCostsInput(ctx context.Con
 
 func (ec *executionContext) unmarshalInputSystemIntakeFundingSourceInput(ctx context.Context, obj interface{}) (model.SystemIntakeFundingSourceInput, error) {
 	var it model.SystemIntakeFundingSourceInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15559,7 +15654,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeFundingSourceInput(ctx con
 
 func (ec *executionContext) unmarshalInputSystemIntakeGovernanceTeamInput(ctx context.Context, obj interface{}) (model.SystemIntakeGovernanceTeamInput, error) {
 	var it model.SystemIntakeGovernanceTeamInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15587,7 +15685,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeGovernanceTeamInput(ctx co
 
 func (ec *executionContext) unmarshalInputSystemIntakeISSOInput(ctx context.Context, obj interface{}) (model.SystemIntakeISSOInput, error) {
 	var it model.SystemIntakeISSOInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15615,7 +15716,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeISSOInput(ctx context.Cont
 
 func (ec *executionContext) unmarshalInputSystemIntakeProductManagerInput(ctx context.Context, obj interface{}) (model.SystemIntakeProductManagerInput, error) {
 	var it model.SystemIntakeProductManagerInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15643,7 +15747,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeProductManagerInput(ctx co
 
 func (ec *executionContext) unmarshalInputSystemIntakeRequesterInput(ctx context.Context, obj interface{}) (model.SystemIntakeRequesterInput, error) {
 	var it model.SystemIntakeRequesterInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15663,7 +15770,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequesterInput(ctx context
 
 func (ec *executionContext) unmarshalInputSystemIntakeRequesterWithComponentInput(ctx context.Context, obj interface{}) (model.SystemIntakeRequesterWithComponentInput, error) {
 	var it model.SystemIntakeRequesterWithComponentInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15691,7 +15801,10 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequesterWithComponentInpu
 
 func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestStatus(ctx context.Context, obj interface{}) (model.UpdateAccessibilityRequestStatus, error) {
 	var it model.UpdateAccessibilityRequestStatus
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15719,7 +15832,10 @@ func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestStatus(ctx c
 
 func (ec *executionContext) unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeAdminLeadInput, error) {
 	var it model.UpdateSystemIntakeAdminLeadInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15747,7 +15863,10 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx c
 
 func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeContactDetailsInput, error) {
 	var it model.UpdateSystemIntakeContactDetailsInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15807,7 +15926,10 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 
 func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeContractDetailsInput, error) {
 	var it model.UpdateSystemIntakeContractDetailsInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15859,7 +15981,10 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput
 
 func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeRequestDetailsInput, error) {
 	var it model.UpdateSystemIntakeRequestDetailsInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15911,7 +16036,10 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 
 func (ec *executionContext) unmarshalInputUpdateSystemIntakeReviewDatesInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeReviewDatesInput, error) {
 	var it model.UpdateSystemIntakeReviewDatesInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -15947,7 +16075,10 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeReviewDatesInput(ctx
 
 func (ec *executionContext) unmarshalInputUpdateTestDateInput(ctx context.Context, obj interface{}) (model.UpdateTestDateInput, error) {
 	var it model.UpdateTestDateInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -18528,6 +18659,11 @@ func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "isRepeatable":
+			out.Values[i] = ec.___Directive_isRepeatable(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -18805,6 +18941,13 @@ func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚕᚖgithubᚗ
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -18892,6 +19035,13 @@ func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcom�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -18939,6 +19089,13 @@ func (ec *executionContext) marshalNAccessibilityRequestNote2ᚕᚖgithubᚗcom�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19116,6 +19273,13 @@ func (ec *executionContext) marshalNGRTFeedback2ᚕᚖgithubᚗcomᚋcmsgovᚋea
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19213,6 +19377,13 @@ func (ec *executionContext) marshalNRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋea
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19288,6 +19459,12 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
 	}
 
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19344,6 +19521,13 @@ func (ec *executionContext) marshalNSystemEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeas
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19405,6 +19589,13 @@ func (ec *executionContext) marshalNSystemIntakeAction2ᚕᚖgithubᚗcomᚋcmsg
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19497,6 +19688,13 @@ func (ec *executionContext) marshalNSystemIntakeNote2ᚕᚖgithubᚗcomᚋcmsgov
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19615,6 +19813,13 @@ func (ec *executionContext) marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasi�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19773,6 +19978,13 @@ func (ec *executionContext) marshalN__Directive2ᚕgithubᚗcomᚋ99designsᚋgq
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19846,6 +20058,13 @@ func (ec *executionContext) marshalN__DirectiveLocation2ᚕstringᚄ(ctx context
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19895,6 +20114,13 @@ func (ec *executionContext) marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋg
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -19936,6 +20162,13 @@ func (ec *executionContext) marshalN__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgen�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -20137,6 +20370,13 @@ func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋ
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -20297,6 +20537,13 @@ func (ec *executionContext) marshalOSystemIntakeCollaborator2ᚕᚖgithubᚗcom�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -20517,6 +20764,13 @@ func (ec *executionContext) marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasi
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -20557,6 +20811,13 @@ func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgq
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -20597,6 +20858,13 @@ func (ec *executionContext) marshalO__Field2ᚕgithubᚗcomᚋ99designsᚋgqlgen
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -20637,6 +20905,13 @@ func (ec *executionContext) marshalO__InputValue2ᚕgithubᚗcomᚋ99designsᚋg
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -20684,6 +20959,13 @@ func (ec *executionContext) marshalO__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgen�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
