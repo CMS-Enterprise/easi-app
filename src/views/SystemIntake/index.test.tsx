@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import {
@@ -6,6 +7,7 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
+import configureMockStore from 'redux-mock-store';
 
 import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
@@ -41,6 +43,7 @@ describe('The System Intake page', () => {
       data: {
         systemIntake: {
           id: INTAKE_ID,
+          euaUserId: 'ABCD',
           adminLead: null,
           businessNeed: null,
           businessSolution: null,
@@ -102,7 +105,17 @@ describe('The System Intake page', () => {
           requestName: '',
           requestType: 'NEW',
           status: 'INTAKE_DRAFT',
-          submittedAt: null
+          createdAt: null,
+          submittedAt: null,
+          updatedAt: null,
+          archivedAt: null,
+          decidedAt: null,
+          businessCaseId: null,
+          lastAdminNote: {
+            content: null,
+            createdAt: null
+          },
+          grtReviewEmailBody: null
         }
       }
     }
@@ -158,26 +171,35 @@ describe('The System Intake page', () => {
   });
 
   it('renders intake review page', async () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      auth: {
+        euaId: 'ABCD'
+      },
+      systemIntake: { systemIntake: {} },
+      action: {}
+    });
     render(
       <MemoryRouter initialEntries={[`/system/${INTAKE_ID}/review`]}>
         <MockedProvider mocks={[intakeQuery]} addTypename={false}>
-          <Route path="/system/:systemId/:formPage">
-            <SystemIntake />
-          </Route>
+          <Provider store={store}>
+            <Route path="/system/:systemId/:formPage">
+              <SystemIntake />
+            </Route>
+          </Provider>
         </MockedProvider>
       </MemoryRouter>
     );
-    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(
-      screen.getByRole('heading', {
+      await screen.findByRole('heading', {
         name: /check your answers before sending/i,
         level: 1
       })
     ).toBeInTheDocument();
   });
 
-  it('renders intake review page', async () => {
+  it('renders confirmation page', async () => {
     render(
       <MemoryRouter initialEntries={[`/system/${INTAKE_ID}/confirmation`]}>
         <MockedProvider mocks={[intakeQuery]} addTypename={false}>
