@@ -2,9 +2,7 @@ import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
 
 describe('The System Intake Form', () => {
   beforeEach(() => {
-    cy.server();
     cy.localLogin({ name: 'TEST' });
-    cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
 
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
