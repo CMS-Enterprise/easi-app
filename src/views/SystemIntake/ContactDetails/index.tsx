@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
@@ -20,12 +19,12 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
 import {
   UpdateSystemIntakeContactDetails,
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
-import { fetchSystemIntake } from 'types/routines';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
@@ -82,7 +81,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   const initialValues = {
     requester: {
-      name: requester.name,
+      name: requester.name || '',
       component: requester.component || ''
     },
     businessOwner: {
@@ -110,9 +109,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const [mutate] = useMutation<
     UpdateSystemIntakeContactDetails,
     UpdateSystemIntakeContactDetailsVariables
-  >(UpdateSystemIntakeContactDetailsQuery);
-
-  const dispatch = useDispatch();
+  >(UpdateSystemIntakeContactDetailsQuery, {
+    refetchQueries: [
+      {
+        query: GetSystemIntakeQuery,
+        variables: {
+          id
+        }
+      }
+    ]
+  });
 
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
     cmsDivisionsAndOffices.map((office: any) => (
@@ -146,9 +152,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             governanceTeams: values.governanceTeams || []
           }
         }
-      }).then(() => {
-        // TODO: Remove refetch system intake to keep Redux fresh
-        dispatch(fetchSystemIntake(id));
       });
     }
   };
@@ -554,8 +557,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                         }).then(response => {
                           if (!response.errors) {
                             const newUrl = 'request-details';
-                            // TODO: Remove refetch system intake to keep Redux fresh
-                            dispatch(fetchSystemIntake(id));
                             history.push(newUrl);
                           }
                         });
@@ -595,7 +596,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               onSave={() => {
                 onSubmit(formikRef?.current?.values);
               }}
-              debounceDelay={1000 * 30}
+              debounceDelay={3000}
             />
             <PageNumber currentPage={1} totalPages={3} />
           </>

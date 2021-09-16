@@ -45,7 +45,7 @@ export type RequestType = 'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN';
  */
 export type SystemIntakeForm = {
   id: string;
-  euaUserID: string;
+  euaUserId: string;
   requestName: string;
   status: SystemIntakeStatus;
   requestType: RequestType;

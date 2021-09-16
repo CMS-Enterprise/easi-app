@@ -528,6 +528,10 @@ type SystemIntake {
   trbCollaborator: String
   trbCollaboratorName: String
   updatedAt: Time!
+  grtReviewEmailBody: String
+  decidedAt: Time
+  businessCaseId: UUID
+  lastAdminNote: LastAdminNote!
 }
 
 input SystemIntakeRequesterInput {
@@ -681,6 +685,11 @@ input RejectIntakeInput {
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
+}
+
+type LastAdminNote {
+  content: String
+  createdAt: Time
 }
 
 enum GRTFeedbackType {

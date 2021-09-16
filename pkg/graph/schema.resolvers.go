@@ -1446,6 +1446,17 @@ func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *mod
 	return obj.TRBCollaboratorName.Ptr(), nil
 }
 
+func (r *systemIntakeResolver) GrtReviewEmailBody(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.GrtReviewEmailBody.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error) {
+	return &model.LastAdminNote{
+		Content:   obj.LastAdminNoteContent.Ptr(),
+		CreatedAt: obj.LastAdminNoteCreatedAt,
+	}, nil
+}
+
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
 func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
 	return &accessibilityRequestResolver{r}
