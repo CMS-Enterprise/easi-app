@@ -183,6 +183,10 @@ export interface RejectIntakeInput {
   reason: string;
 }
 
+export interface SubmitIntakeInput {
+  id: UUID;
+}
+
 export interface SystemIntakeBusinessOwnerInput {
   name: string;
   component: string;
