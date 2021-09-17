@@ -1,7 +1,5 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { shallow } from 'enzyme';
-import configureMockStore from 'redux-mock-store';
 
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
 
@@ -16,15 +14,7 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The Login page', () => {
-  const mockStore = configureMockStore();
-  const store = mockStore();
-
-  const renderLogin = () =>
-    shallow(
-      <Provider store={store}>
-        <Login />
-      </Provider>
-    );
+  const renderLogin = () => shallow(<Login />);
 
   it('renders without crashing', () => {
     expect(renderLogin).not.toThrow();
