@@ -1054,8 +1054,8 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 				governanceTeams: {
 					isPresent: true,
 					teams: [
-						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" },
-						{ name: "Technical Review Board", key: "technicalReviewBoard", collaborator: "Iama Trbperson" }
+						{ name: "Technical Review Board", key: "technicalReviewBoard", collaborator: "Iama Trbperson" },
+						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" }
 					]
 				}
 			}) {
@@ -1094,11 +1094,11 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	s.True(respIntake.GovernanceTeams.IsPresent)
 	teams := respIntake.GovernanceTeams.Teams
 	s.Equal(2, len(teams))
-	s.Equal("Iama Ispgperson", teams[0].Collaborator)
-	s.Equal("securityPrivacy", teams[0].Key)
+	s.Equal("Iama Trbperson", teams[0].Collaborator)
+	s.Equal("technicalReviewBoard", teams[0].Key)
 
-	s.Equal("Iama Trbperson", teams[1].Collaborator)
-	s.Equal("technicalReviewBoard", teams[1].Key)
+	s.Equal("Iama Ispgperson", teams[1].Collaborator)
+	s.Equal("securityPrivacy", teams[1].Key)
 }
 
 func (s GraphQLTestSuite) TestUpdateRequestDetails() {
