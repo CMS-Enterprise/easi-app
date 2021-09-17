@@ -1,14 +1,15 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useOktaAuth } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
-import { AppState } from 'reducers/rootReducer';
-import user from 'utils/user';
+import user, { EasiAuthState } from 'utils/user';
 
 const UserInfo = () => {
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const { authState }: { authState: EasiAuthState | null } = useOktaAuth();
+
+  const userGroups = authState?.groups || [];
+  const isUserSet = authState?.isAuthenticated;
   const flags = useFlags();
 
   if (isUserSet) {
