@@ -438,9 +438,9 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.True(resp.SystemIntake.GovernanceTeams.IsPresent)
-	s.Equal(eaName, resp.SystemIntake.GovernanceTeams.Teams[0].Collaborator)
+	s.Equal(trbName, resp.SystemIntake.GovernanceTeams.Teams[0].Collaborator)
 	s.Equal(oitName, resp.SystemIntake.GovernanceTeams.Teams[1].Collaborator)
-	s.Equal(trbName, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
+	s.Equal(eaName, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
 }
 
 func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
