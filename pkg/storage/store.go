@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 
 	iampg "github.com/cmsgov/easi-app/pkg/iampostgres"
@@ -54,15 +53,15 @@ func NewStore(
 		sess = session.Must(session.NewSession())
 	}
 
-	var dbCreds *credentials.Credentials
+	var creds *credentials.Credentials
 	if dbIamFlag {
 		if sess != nil {
 			// We want to get the credentials from the logged in AWS session rather than create directly,
 			// because the session conflates the environment, shared, and container metadata config
 			// within NewSession.  With stscreds, we use the Secure Token Service,
 			// to assume the given role (that has rds db connect permissions).
-			// dbCreds = ec2rolecreds.NewCredentials(sess)
-			dbCreds = stscreds.NewCredentials(sess, "app_user_iam")
+			// dbCreds = stscreds.NewCredentials(sess, "app_user_iam")
+			creds = sess.Config.Credentials
 		}
 	}
 
@@ -77,7 +76,7 @@ func NewStore(
 			"us-west-2",
 			config.Username,
 			passHolder,
-			dbCreds,
+			creds,
 			iampg.RDSU{},
 			time.NewTicker(10*time.Minute), // Refresh every 10 minutes
 			logger,
