@@ -182,6 +182,11 @@ type IssueLifecycleIDInput struct {
 	Scope     string    `json:"scope"`
 }
 
+type LastAdminNote struct {
+	Content   *string    `json:"content"`
+	CreatedAt *time.Time `json:"createdAt"`
+}
+
 type LaunchDarklySettings struct {
 	UserKey    string `json:"userKey"`
 	SignedHash string `json:"signedHash"`

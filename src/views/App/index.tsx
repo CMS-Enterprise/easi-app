@@ -102,6 +102,7 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/request-decision"
         component={RequestDecision}
       />
+      <Redirect exact from="/system/new" to="/system/request-type" />
       <Redirect
         exact
         from="/system/:systemId"

@@ -168,7 +168,7 @@ const RequestRepository = () => {
 
   const lcidExpirationDateColumn = {
     Header: t('intake:fields.lcidExpirationDate'),
-    accessor: 'lcidExpiration',
+    accessor: 'lcidExpiresAt',
     Cell: ({ value }: any) => {
       if (value) {
         return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);

@@ -438,9 +438,9 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.True(resp.SystemIntake.GovernanceTeams.IsPresent)
-	s.Equal(eaName, resp.SystemIntake.GovernanceTeams.Teams[0].Collaborator)
+	s.Equal(trbName, resp.SystemIntake.GovernanceTeams.Teams[0].Collaborator)
 	s.Equal(oitName, resp.SystemIntake.GovernanceTeams.Teams[1].Collaborator)
-	s.Equal(trbName, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
+	s.Equal(eaName, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
 }
 
 func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
@@ -861,14 +861,14 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 
 	s.True(respIntake.GovernanceTeams.IsPresent)
 	teams := respIntake.GovernanceTeams.Teams
-	s.Equal("Iama Eaperson", teams[0].Collaborator)
-	s.Equal("enterpriseArchitecture", teams[0].Key)
-
-	s.Equal("Iama Trbperson", teams[2].Collaborator)
-	s.Equal("technicalReviewBoard", teams[2].Key)
+	s.Equal("Iama Trbperson", teams[0].Collaborator)
+	s.Equal("technicalReviewBoard", teams[0].Key)
 
 	s.Equal("Iama Ispgperson", teams[1].Collaborator)
 	s.Equal("securityPrivacy", teams[1].Key)
+
+	s.Equal("Iama Eaperson", teams[2].Collaborator)
+	s.Equal("enterpriseArchitecture", teams[2].Key)
 }
 
 func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
@@ -1094,11 +1094,11 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	s.True(respIntake.GovernanceTeams.IsPresent)
 	teams := respIntake.GovernanceTeams.Teams
 	s.Equal(2, len(teams))
-	s.Equal("Iama Ispgperson", teams[0].Collaborator)
-	s.Equal("securityPrivacy", teams[0].Key)
+	s.Equal("Iama Trbperson", teams[0].Collaborator)
+	s.Equal("technicalReviewBoard", teams[0].Key)
 
-	s.Equal("Iama Trbperson", teams[1].Collaborator)
-	s.Equal("technicalReviewBoard", teams[1].Key)
+	s.Equal("Iama Ispgperson", teams[1].Collaborator)
+	s.Equal("securityPrivacy", teams[1].Key)
 }
 
 func (s GraphQLTestSuite) TestUpdateRequestDetails() {

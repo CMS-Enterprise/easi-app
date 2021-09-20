@@ -1305,18 +1305,18 @@ func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.Sy
 func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error) {
 	var teams []*model.SystemIntakeCollaborator
 
-	if len(obj.EACollaboratorName.String) > 0 {
-		key := "enterpriseArchitecture"
-		label := "Enterprise Architecture (EA)"
-		acronym := "EA"
-		name := "Enterprise Architecture"
+	if len(obj.TRBCollaboratorName.String) > 0 {
+		key := "technicalReviewBoard"
+		label := "Technical Review Board (TRB)"
+		acronym := "TRB"
+		name := "Technical Review Board"
 
 		teams = append(teams, &model.SystemIntakeCollaborator{
 			Key:          &key,
 			Label:        &label,
 			Acronym:      &acronym,
 			Name:         &name,
-			Collaborator: obj.EACollaboratorName.Ptr(),
+			Collaborator: obj.TRBCollaboratorName.Ptr(),
 		})
 	}
 
@@ -1335,18 +1335,18 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		})
 	}
 
-	if len(obj.TRBCollaboratorName.String) > 0 {
-		key := "technicalReviewBoard"
-		label := "Technical Review Board (TRB)"
-		acronym := "TRB"
-		name := "Technical Review Board"
+	if len(obj.EACollaboratorName.String) > 0 {
+		key := "enterpriseArchitecture"
+		label := "Enterprise Architecture (EA)"
+		acronym := "EA"
+		name := "Enterprise Architecture"
 
 		teams = append(teams, &model.SystemIntakeCollaborator{
 			Key:          &key,
 			Label:        &label,
 			Acronym:      &acronym,
 			Name:         &name,
-			Collaborator: obj.TRBCollaboratorName.Ptr(),
+			Collaborator: obj.EACollaboratorName.Ptr(),
 		})
 	}
 
@@ -1444,6 +1444,17 @@ func (r *systemIntakeResolver) TrbCollaborator(ctx context.Context, obj *models.
 
 func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.TRBCollaboratorName.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) GrtReviewEmailBody(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.GrtReviewEmailBody.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error) {
+	return &model.LastAdminNote{
+		Content:   obj.LastAdminNoteContent.Ptr(),
+		CreatedAt: obj.LastAdminNoteCreatedAt,
+	}, nil
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.

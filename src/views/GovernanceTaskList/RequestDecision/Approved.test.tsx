@@ -14,7 +14,7 @@ describe('Business owner task list approved view', () => {
     id: '40e866cb-6bf4-4b1a-8fc6-bf0d8328cdfc',
     lcid: '123456',
     lcidScope: 'Test scope',
-    lcidExpiration: DateTime.fromISO('2021-07-19T07:00:00.000Z'),
+    lcidExpiresAt: DateTime.fromISO('2021-07-19T07:00:00.000Z'),
     decisionNextSteps: 'Test next steps'
   };
   it('renders without errors', () => {
