@@ -1,15 +1,15 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
+import * as OktaReact from '@okta/okta-react';
 import {
   render,
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureMockStore from 'redux-mock-store';
 
+import { ACCESSIBILITY_ADMIN_DEV } from 'constants/jobCodes';
 import { MessageProvider } from 'hooks/useMessage';
 import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
 import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
@@ -18,15 +18,39 @@ import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityReq
 
 import Create from './index';
 
-describe('Create 508 Request page', () => {
-  const mockStore = configureMockStore();
-  const defaultStore = mockStore({
-    auth: {
-      euaId: 'AAAA',
-      groups: ['EASI_D_508_USER']
+beforeEach(() => {
+  jest.resetModules();
+});
+
+jest.mock('@okta/okta-react');
+
+function mockOkta(mockGroups: string[]) {
+  OktaReact.useOktaAuth.mockReturnValue({
+    authState: {
+      isAuthenticated: true,
+      accessToken: {
+        claims: {
+          groups: mockGroups,
+          sub: 'AAAA'
+        }
+      },
+      idToken: {
+        claims: {
+          name: 'A Person'
+        }
+      }
+    },
+    oktaAuth: {
+      getUser: () =>
+        Promise.resolve({
+          name: 'John Doe',
+          sub: 'AAAA'
+        })
     }
   });
+}
 
+describe('Create 508 Request page', () => {
   const defaultQuery = {
     request: {
       query: GetSystemsQuery,
@@ -77,29 +101,6 @@ describe('Create 508 Request page', () => {
     }
   };
 
-  const create508Request = {
-    request: {
-      query: CreateAccessibilityRequestQuery,
-      variables: {
-        input: {
-          name: 'TACO',
-          intakeID: '702af838-15be-4ddd-adf0-d99fc55a1eca'
-        }
-      }
-    },
-    result: {
-      data: {
-        createAccessibilityRequest: {
-          accessibilityRequest: {
-            id: 'bc142c4d-fc41-499c-ac31-482d6eb09e01',
-            name: 'TACO'
-          },
-          userErrors: null
-        }
-      }
-    }
-  };
-
   const get508RequestQuery = {
     request: {
       query: GetAccessibilityRequestAccessibilityTeamOnlyQuery,
@@ -140,15 +141,15 @@ describe('Create 508 Request page', () => {
   };
 
   it('renders without errors', async () => {
+    mockOkta([ACCESSIBILITY_ADMIN_DEV]);
+
     render(
       <MemoryRouter initialEntries={['/508/requests/new']}>
         <MessageProvider>
           <MockedProvider mocks={[defaultQuery]} addTypename={false}>
-            <Provider store={defaultStore}>
-              <Route path="/508/requests/new">
-                <Create />
-              </Route>
-            </Provider>
+            <Route path="/508/requests/new">
+              <Create />
+            </Route>
           </MockedProvider>
         </MessageProvider>
       </MemoryRouter>
@@ -158,8 +159,33 @@ describe('Create 508 Request page', () => {
     expect(screen.getByTestId('create-508-request')).toBeInTheDocument();
   });
 
-  it('can create a 508 testing request', async () => {
+  it.only('can create a 508 testing request', async () => {
     window.scrollTo = jest.fn();
+
+    mockOkta([ACCESSIBILITY_ADMIN_DEV]);
+
+    const create508Request = {
+      request: {
+        query: CreateAccessibilityRequestQuery,
+        variables: {
+          input: {
+            name: 'TACO',
+            intakeID: '702af838-15be-4ddd-adf0-d99fc55a1eca'
+          }
+        }
+      },
+      result: {
+        data: {
+          createAccessibilityRequest: {
+            accessibilityRequest: {
+              id: 'bc142c4d-fc41-499c-ac31-482d6eb09e01',
+              name: 'TACO'
+            },
+            userErrors: null
+          }
+        }
+      }
+    };
 
     render(
       <MemoryRouter initialEntries={['/508/requests/new']}>
@@ -168,27 +194,28 @@ describe('Create 508 Request page', () => {
             mocks={[defaultQuery, create508Request, get508RequestQuery]}
             addTypename={false}
           >
-            <Provider store={defaultStore}>
-              <Route path="/508/requests/new">
-                <Create />
-              </Route>
-              <Route path="/508/requests/:accessibilityRequestId/documents">
-                <AccessibilityRequestDetailPage />
-              </Route>
-            </Provider>
+            <Route path="/508/requests/new">
+              <Create />
+            </Route>
+            <Route path="/508/requests/:accessibilityRequestId/documents">
+              <AccessibilityRequestDetailPage />
+            </Route>
           </MockedProvider>
         </MessageProvider>
       </MemoryRouter>
     );
+
     await waitForPageLoad();
 
     const comboBoxInput = screen.getByRole('combobox', {
       name: /application/i
     });
+
     userEvent.type(comboBoxInput, 'TACO - 000000{enter}');
     expect(comboBoxInput).toHaveValue('TACO - 000000');
 
     screen.getByRole('button', { name: /send 508 testing request/i }).click();
+
     await screen.findByTestId('page-loading');
 
     expect(
@@ -200,15 +227,14 @@ describe('Create 508 Request page', () => {
   });
 
   it('renders validation errors', async () => {
+    mockOkta([ACCESSIBILITY_ADMIN_DEV]);
     render(
       <MemoryRouter initialEntries={['/508/requests/new']}>
         <MessageProvider>
           <MockedProvider mocks={[defaultQuery]} addTypename={false}>
-            <Provider store={defaultStore}>
-              <Route path="/508/requests/new">
-                <Create />
-              </Route>
-            </Provider>
+            <Route path="/508/requests/new">
+              <Create />
+            </Route>
           </MockedProvider>
         </MessageProvider>
       </MemoryRouter>

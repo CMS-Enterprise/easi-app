@@ -22,7 +22,17 @@ function mockOkta(mockGroups: string[]) {
   OktaReact.useOktaAuth.mockReturnValue({
     authState: {
       isAuthenticated: true,
-      groups: mockGroups
+      accessToken: {
+        claims: {
+          groups: mockGroups,
+          sub: 'AAAA'
+        }
+      },
+      idToken: {
+        claims: {
+          name: 'A Person'
+        }
+      }
     },
     oktaAuth: {
       getUser: () =>

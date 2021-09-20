@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { AuthTransaction, OktaAuth } from '@okta/okta-auth-js';
+import { AuthState, AuthTransaction, OktaAuth } from '@okta/okta-auth-js';
 import { OktaContext } from '@okta/okta-react';
 
 import { localAuthStorageKey } from 'constants/localAuth';
 
 const initialAuthState = {
-  isAuthenticated: false,
-  name: '',
-  euaId: '',
-  groups: [] as string[]
+  isAuthenticated: false
 };
 
 type ParentComponentProps = {
@@ -22,14 +19,33 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
       return {
         name: `User ${state.euaId}`,
         isAuthenticated: true,
-        euaId: state.euaId,
-        groups: state.jobCodes
+        accessToken: {
+          tokenType: '',
+          userinfoUrl: '',
+          expiresAt: Number.MIN_SAFE_INTEGER,
+          accessToken: '',
+          authorizeUrl: '',
+          scopes: [],
+          claims: {
+            groups: state.jobCodes,
+            sub: state.euaId
+          }
+        },
+        idToken: {
+          claims: {
+            name: 'A Person',
+            preferedUsername: state.euaId,
+            sub: '0123456789abcde'
+          }
+        }
       };
     }
     return initialAuthState;
   };
 
-  const [authState, setAuthState] = useState(getStateFromLocalStorage);
+  const [authState, setAuthState] = useState<AuthState>(
+    getStateFromLocalStorage
+  );
   const oktaAuth = new OktaAuth({
     // to appease the OktaAuth constructor
     issuer: 'https://fakewebsite.pqr',
@@ -48,10 +64,8 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
   };
   oktaAuth.getUser = () => {
     return Promise.resolve({
-      name: authState.name,
-      sub: '',
-      euaId: authState.euaId,
-      groups: authState.groups
+      name: authState.idToken?.claims?.name || '',
+      sub: authState.accessToken?.claims?.sub || ''
     });
   };
   oktaAuth.tokenManager.off = () => {};

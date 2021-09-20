@@ -5,13 +5,13 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
 import RequestRepository from 'components/RequestRepository';
-import user, { EasiAuthState } from 'utils/user';
+import user from 'utils/user';
 import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
 import NotFound from 'views/NotFound';
 
 const GovernanceReviewTeam = () => {
-  const { authState }: { authState: EasiAuthState | null } = useOktaAuth();
-  const userGroups = authState?.groups || [];
+  const { authState } = useOktaAuth();
+  const userGroups = authState?.accessToken?.claims?.groups || [];
   const isUserSet = authState?.isAuthenticated;
 
   const flags = useFlags();

@@ -13,7 +13,7 @@ import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
 import useMessage from 'hooks/useMessage';
-import user, { EasiAuthState } from 'utils/user';
+import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import Table from 'views/MyRequests/Table';
 
@@ -24,11 +24,11 @@ import './index.scss';
 export const HomeContent = () => {
   const { t } = useTranslation();
 
-  const { authState }: { authState: EasiAuthState | null } = useOktaAuth();
+  const { authState } = useOktaAuth();
   const flags = useFlags();
   const { message } = useMessage();
 
-  const userGroups = authState?.groups || [];
+  const userGroups = authState?.accessToken?.claims?.groups || [];
   const isUserSet = authState?.isAuthenticated;
 
   if (isUserSet) {

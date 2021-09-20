@@ -1,7 +1,7 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
+import * as OktaReact from '@okta/okta-react';
 import {
   render,
   screen,
@@ -10,9 +10,8 @@ import {
   within
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureMockStore from 'redux-mock-store';
 
-import { ACCESSIBILITY_TESTER_DEV } from 'constants/jobCodes';
+import { ACCESSIBILITY_TESTER_DEV, BASIC_USER_PROD } from 'constants/jobCodes';
 import { MessageProvider } from 'hooks/useMessage';
 import CreateAccessibilityRequestNote from 'queries/CreateAccessibilityRequestNoteQuery';
 import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
@@ -20,14 +19,38 @@ import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 
 import AccessibilityRequestDetailPage from './AccessibilityRequestDetailPage';
 
-describe('AccessibilityRequestDetailPage', () => {
-  const mockStore = configureMockStore();
-  const defaultStore = mockStore({
-    auth: {
-      euaId: 'AAAA'
+beforeEach(() => {
+  jest.resetModules();
+});
+
+jest.mock('@okta/okta-react');
+
+function mockOkta(mockGroups: string[]) {
+  OktaReact.useOktaAuth.mockReturnValue({
+    authState: {
+      isAuthenticated: true,
+      accessToken: {
+        claims: {
+          groups: mockGroups,
+          sub: 'AAAA'
+        }
+      },
+      idToken: {
+        claims: {
+          name: 'A Person'
+        }
+      }
+    },
+    oktaAuth: {
+      getUser: () =>
+        Promise.resolve({
+          name: 'John Doe'
+        })
     }
   });
+}
 
+describe('AccessibilityRequestDetailPage', () => {
   const default508RequestQuery = {
     request: {
       query: GetAccessibilityRequestQuery,
@@ -57,23 +80,23 @@ describe('AccessibilityRequestDetailPage', () => {
     }
   };
 
-  const render508DocumentsPage = (mocks: any[], store: any) =>
+  const render508DocumentsPage = (mocks: any[]) => {
     render(
       <MemoryRouter initialEntries={['/508/requests/a11yRequest123/documents']}>
         <MockedProvider mocks={mocks} addTypename={false}>
-          <Provider store={store}>
-            <Route path="/508/requests/:accessibilityRequestId/documents">
-              <MessageProvider>
-                <AccessibilityRequestDetailPage />
-              </MessageProvider>
-            </Route>
-          </Provider>
+          <Route path="/508/requests/:accessibilityRequestId/documents">
+            <MessageProvider>
+              <AccessibilityRequestDetailPage />
+            </MessageProvider>
+          </Route>
         </MockedProvider>
       </MemoryRouter>
     );
+  };
 
   it('renders without crashing', async () => {
-    render508DocumentsPage([default508RequestQuery], defaultStore);
+    mockOkta([BASIC_USER_PROD]);
+    render508DocumentsPage([default508RequestQuery]);
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -112,7 +135,8 @@ describe('AccessibilityRequestDetailPage', () => {
       }
     };
 
-    render508DocumentsPage([deleted508RequestQuery], defaultStore);
+    mockOkta([BASIC_USER_PROD]);
+    render508DocumentsPage([deleted508RequestQuery]);
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -204,7 +228,8 @@ describe('AccessibilityRequestDetailPage', () => {
     };
 
     it('renders Next step if no documents', async () => {
-      render508DocumentsPage([withoutDocsQuery], defaultStore);
+      mockOkta([BASIC_USER_PROD]);
+      render508DocumentsPage([withoutDocsQuery]);
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -217,7 +242,8 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     it('renders the AccessibilityDocumentList when documents exist', async () => {
-      render508DocumentsPage([withDocsQuery], defaultStore);
+      mockOkta([BASIC_USER_PROD]);
+      render508DocumentsPage([withDocsQuery]);
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -351,26 +377,22 @@ describe('AccessibilityRequestDetailPage', () => {
       }
     };
 
-    const testerStore = mockStore({
-      auth: { groups: [ACCESSIBILITY_TESTER_DEV], isUserSet: true }
-    });
-
     const render508NotesPage = (mocks: any[]) =>
       render(
         <MemoryRouter initialEntries={['/508/requests/a11yRequest123/notes']}>
           <MockedProvider mocks={mocks} addTypename={false}>
-            <Provider store={testerStore}>
-              <Route path="/508/requests/:accessibilityRequestId/notes">
-                <MessageProvider>
-                  <AccessibilityRequestDetailPage />
-                </MessageProvider>
-              </Route>
-            </Provider>
+            <Route path="/508/requests/:accessibilityRequestId/notes">
+              <MessageProvider>
+                <AccessibilityRequestDetailPage />
+              </MessageProvider>
+            </Route>
           </MockedProvider>
         </MemoryRouter>
       );
+
     it("doesn't render table if there are no documents", async () => {
-      render508DocumentsPage([defaultQuery], testerStore);
+      mockOkta([BASIC_USER_PROD]);
+      render508DocumentsPage([defaultQuery]);
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -380,7 +402,8 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     it('renders table if there are documents', async () => {
-      render508DocumentsPage([withDocsQuery], testerStore);
+      mockOkta([ACCESSIBILITY_TESTER_DEV]);
+      render508DocumentsPage([withDocsQuery]);
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -390,6 +413,7 @@ describe('AccessibilityRequestDetailPage', () => {
     });
 
     it('can view existing notes', async () => {
+      mockOkta([ACCESSIBILITY_TESTER_DEV]);
       render508NotesPage([withNotesQuery]);
 
       await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
@@ -482,6 +506,7 @@ describe('AccessibilityRequestDetailPage', () => {
           withNotesQueryWithNewNote
         ];
 
+        mockOkta([ACCESSIBILITY_TESTER_DEV]);
         render508NotesPage(createNoteMocks);
 
         await waitForElementToBeRemoved(() =>
@@ -507,6 +532,7 @@ describe('AccessibilityRequestDetailPage', () => {
       });
 
       it('shows an error alert when there is a note form validation error', async () => {
+        mockOkta([ACCESSIBILITY_TESTER_DEV]);
         render508NotesPage([defaultQuery]);
 
         await waitForElementToBeRemoved(() =>
@@ -548,6 +574,7 @@ describe('AccessibilityRequestDetailPage', () => {
           }
         ];
 
+        mockOkta([ACCESSIBILITY_TESTER_DEV]);
         render508NotesPage(errorMocks);
 
         await waitForElementToBeRemoved(() =>
@@ -566,6 +593,7 @@ describe('AccessibilityRequestDetailPage', () => {
           within(alert).getByText(/Error saving note./i)
         ).toBeInTheDocument();
       });
+
       it('shows an error alert message for userErrors returned from the server', async () => {
         const userErrorMocks = [
           defaultQuery,
@@ -596,6 +624,7 @@ describe('AccessibilityRequestDetailPage', () => {
           }
         ];
 
+        mockOkta([ACCESSIBILITY_TESTER_DEV]);
         render508NotesPage(userErrorMocks);
 
         await waitForElementToBeRemoved(() =>

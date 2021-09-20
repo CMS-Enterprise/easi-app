@@ -13,7 +13,7 @@ import {
   REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY,
   REPORT_PROBLEM_BASIC_USER_SURVEY
 } from 'constants/externalUrls';
-import user, { EasiAuthState } from 'utils/user';
+import user from 'utils/user';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 import NewTestDateView from 'views/TestDate/NewTestDate';
 import UpdateTestDateView from 'views/TestDate/UpdateTestDate';
@@ -161,8 +161,8 @@ const PageTemplate = ({
 };
 
 const Accessibility = () => {
-  const { authState }: { authState: EasiAuthState | null } = useOktaAuth();
-  const userGroups = authState?.groups || [];
+  const { authState } = useOktaAuth();
+  const userGroups = authState?.accessToken?.claims?.groups || [];
   const isUserSet = authState?.isAuthenticated;
 
   const flags = useFlags();

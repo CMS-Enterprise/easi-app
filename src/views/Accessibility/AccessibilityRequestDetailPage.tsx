@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
+import { useOktaAuth } from '@okta/okta-react';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -67,7 +67,6 @@ import {
   GetAccessibilityRequestAccessibilityTeamOnly as GetAccessibilityRequest,
   GetAccessibilityRequestAccessibilityTeamOnlyVariables as GetAccessibilityRequestPayload
 } from 'queries/types/GetAccessibilityRequestAccessibilityTeamOnly';
-import { AppState } from 'reducers/rootReducer';
 import {
   CreateNoteForm,
   DeleteAccessibilityRequestForm
@@ -98,8 +97,10 @@ const AccessibilityRequestDetailPage = () => {
   }>();
   const { pathname } = useLocation();
 
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
+  const { authState } = useOktaAuth();
+  const userGroups = authState?.accessToken?.claims?.groups || [];
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
+  const userEuaId = authState?.accessToken?.claims?.sub || '';
 
   const requestQuery = isAccessibilityTeam
     ? GetAccessibilityRequestAccessibilityTeamOnlyQuery
@@ -127,8 +128,6 @@ const AccessibilityRequestDetailPage = () => {
     CreateAccessibilityRequestNote,
     CreateAccessibilityRequestNoteVariables
   >(CreateAccessibilityRequestNoteQuery);
-
-  const userEuaId = useSelector((state: AppState) => state.auth.euaId);
 
   const removeRequest = (values: DeleteAccessibilityRequestForm) => {
     mutateDeleteRequest({

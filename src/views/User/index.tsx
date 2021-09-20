@@ -3,12 +3,12 @@ import { useOktaAuth } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
-import user, { EasiAuthState } from 'utils/user';
+import user from 'utils/user';
 
 const UserInfo = () => {
-  const { authState }: { authState: EasiAuthState | null } = useOktaAuth();
+  const { authState } = useOktaAuth();
 
-  const userGroups = authState?.groups || [];
+  const userGroups = authState?.accessToken?.claims?.groups || [];
   const isUserSet = authState?.isAuthenticated;
   const flags = useFlags();
 
