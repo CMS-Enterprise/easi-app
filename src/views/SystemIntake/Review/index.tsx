@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import PageHeading from 'components/PageHeading';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
-import usePrevious from 'hooks/usePrevious';
-import { AppState } from 'reducers/rootReducer';
-import { postAction } from 'types/routines';
+import { SubmitIntake as SubmitIntakeQuery } from 'queries/SystemIntakeQueries';
+import {
+  SubmitIntake,
+  SubmitIntakeVariables
+} from 'queries/types/SubmitIntake';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 type ReviewProps = {
@@ -18,19 +20,11 @@ type ReviewProps = {
 
 const Review = ({ systemIntake, now }: ReviewProps) => {
   const history = useHistory();
-  const dispatch = useDispatch();
 
-  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
-  const error = useSelector((state: AppState) => state.action.error);
-  const prevIsSubmitting = usePrevious(isSubmitting);
-
-  useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !error) {
-      history.push('/');
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
+  const [mutate, mutationResult] = useMutation<
+    SubmitIntake,
+    SubmitIntakeVariables
+  >(SubmitIntakeQuery);
 
   return (
     <div className="system-intake__review">
@@ -59,14 +53,17 @@ const Review = ({ systemIntake, now }: ReviewProps) => {
       </Button>
       <Button
         type="submit"
-        disabled={isSubmitting}
+        disabled={mutationResult.loading}
         onClick={() =>
-          dispatch(
-            postAction({
-              actionType: 'SUBMIT_INTAKE',
-              intakeId: systemIntake.id
-            })
-          )
+          mutate({
+            variables: {
+              input: { id: systemIntake.id }
+            }
+          }).then(response => {
+            if (!response.errors) {
+              history.push(`/system/${systemIntake.id}/confirmation`);
+            }
+          })
         }
       >
         Send my intake request

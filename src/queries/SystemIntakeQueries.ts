@@ -103,3 +103,14 @@ export const UpdateSystemIntakeContactDetails = gql`
     }
   }
 `;
+
+export const SubmitIntake = gql`
+  mutation SubmitIntake($input: SubmitIntakeInput!) {
+    submitIntake(input: $input) {
+      systemIntake {
+        status
+        id
+      }
+    }
+  }
+`;
