@@ -6,6 +6,7 @@ on:
 
 env:
   AWS_DEFAULT_REGION: us-west-2
+  DOCKER_BUILDKIT: 1
 
 jobs:
   build_db_clean_image:
