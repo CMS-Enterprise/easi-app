@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button, Link } from '@trussworks/react-uswds';
@@ -28,12 +27,12 @@ import TextField from 'components/shared/TextField';
 import fundingSources from 'constants/enums/fundingSources';
 import processStages from 'constants/enums/processStages';
 import { yesNoMap } from 'data/common';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
 import {
   UpdateSystemIntakeContractDetails,
   UpdateSystemIntakeContractDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContractDetails';
-import { fetchSystemIntake } from 'types/routines';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -44,8 +43,7 @@ type ContractDetailsProps = {
 
 const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
-  const formikRef = useRef<FormikProps<ContractDetailsForm>>();
-  const dispatch = useDispatch();
+  const formikRef = useRef<FormikProps<ContractDetailsForm>>(null);
 
   const { id, currentStage, fundingSource, costs, contract } = systemIntake;
   const initialValues: ContractDetailsForm = {
@@ -89,7 +87,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const [mutate] = useMutation<
     UpdateSystemIntakeContractDetails,
     UpdateSystemIntakeContractDetailsVariables
-  >(UpdateSystemIntakeContractDetailsQuery);
+  >(UpdateSystemIntakeContractDetailsQuery, {
+    refetchQueries: [
+      {
+        query: GetSystemIntakeQuery,
+        variables: {
+          id
+        }
+      }
+    ]
+  });
 
   const formatContractDetailsPayload = (values: ContractDetailsForm) => {
     const startDate = DateTime.fromObject({
@@ -123,9 +130,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         variables: {
           input: formatContractDetailsPayload(values)
         }
-      }).then(() => {
-        // TODO: remove in favor of graphql refetch query
-        dispatch(fetchSystemIntake(id));
       });
     }
   };
@@ -963,10 +967,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       }
                     }).then(res => {
                       if (!res.errors) {
-                        // TODO: remove in favor of graphql refetch query
-                        dispatch(fetchSystemIntake(id));
-                        const newUrl = 'request-details';
-                        history.push(newUrl);
+                        history.push('request-details');
                       }
                     });
                   }}
@@ -984,10 +985,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           }
                         }).then(res => {
                           if (!res.errors) {
-                            // TODO: remove in favor of graphql refetch query
-                            dispatch(fetchSystemIntake(id));
-                            const newUrl = 'review';
-                            history.push(newUrl);
+                            history.push('review');
                           }
                         });
                       } else {
@@ -1009,8 +1007,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                         }
                       }).then(res => {
                         if (!res.errors) {
-                          // TODO: remove in favor of graphql refetch query
-                          dispatch(fetchSystemIntake(id));
                           history.push(saveExitLink);
                         }
                       });
@@ -1028,7 +1024,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               onSave={() => {
                 onSubmit(formikRef?.current?.values);
               }}
-              debounceDelay={1000 * 3}
+              debounceDelay={3000}
             />
             <PageNumber currentPage={3} totalPages={3} />
           </>

@@ -10,7 +10,7 @@ describe('The system intake data modifiers', () => {
   describe('convertIntakesToCSV', () => {
     it('converts empty intake', () => {
       expect(convertIntakeToCSV(initialSystemIntakeForm)).toMatchObject({
-        euaUserID: '',
+        euaUserId: '',
         requester: {
           name: '',
           component: ''
@@ -63,7 +63,7 @@ describe('The system intake data modifiers', () => {
       const mockIntake = {
         ...initialSystemIntakeForm,
         id: 'addaa218-34d3-4dd8-a12f-38f6ff33b22d',
-        euaUserID: 'ABCD',
+        euaUserId: 'ABCD',
         submittedAt: DateTime.fromObject({
           year: 2020,
           month: 6,
@@ -172,7 +172,7 @@ describe('The system intake data modifiers', () => {
       };
 
       expect(convertIntakeToCSV(mockIntake)).toMatchObject({
-        euaUserID: 'ABCD',
+        euaUserId: 'ABCD',
         requester: {
           name: 'Christopher Hui',
           component: 'Division of Pop Corners',

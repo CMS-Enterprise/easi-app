@@ -231,6 +231,11 @@ type ComplexityRoot struct {
 		UserErrors func(childComplexity int) int
 	}
 
+	LastAdminNote struct {
+		Content   func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
+	}
+
 	LaunchDarklySettings struct {
 		SignedHash func(childComplexity int) int
 		UserKey    func(childComplexity int) int
@@ -323,6 +328,7 @@ type ComplexityRoot struct {
 		AdminLead                   func(childComplexity int) int
 		ArchivedAt                  func(childComplexity int) int
 		BusinessCase                func(childComplexity int) int
+		BusinessCaseID              func(childComplexity int) int
 		BusinessNeed                func(childComplexity int) int
 		BusinessOwner               func(childComplexity int) int
 		BusinessSolution            func(childComplexity int) int
@@ -330,6 +336,7 @@ type ComplexityRoot struct {
 		Costs                       func(childComplexity int) int
 		CreatedAt                   func(childComplexity int) int
 		CurrentStage                func(childComplexity int) int
+		DecidedAt                   func(childComplexity int) int
 		DecisionNextSteps           func(childComplexity int) int
 		EaCollaborator              func(childComplexity int) int
 		EaCollaboratorName          func(childComplexity int) int
@@ -339,8 +346,10 @@ type ComplexityRoot struct {
 		GRTDate                     func(childComplexity int) int
 		GovernanceTeams             func(childComplexity int) int
 		GrtFeedbacks                func(childComplexity int) int
+		GrtReviewEmailBody          func(childComplexity int) int
 		ID                          func(childComplexity int) int
 		Isso                        func(childComplexity int) int
+		LastAdminNote               func(childComplexity int) int
 		Lcid                        func(childComplexity int) int
 		LcidScope                   func(childComplexity int) int
 		LifecycleExpiresAt          func(childComplexity int) int
@@ -590,6 +599,10 @@ type SystemIntakeResolver interface {
 
 	TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
+
+	GrtReviewEmailBody(ctx context.Context, obj *models.SystemIntake) (*string, error)
+
+	LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error)
 }
 
 type executableSchema struct {
@@ -1349,6 +1362,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
 
+	case "LastAdminNote.content":
+		if e.complexity.LastAdminNote.Content == nil {
+			break
+		}
+
+		return e.complexity.LastAdminNote.Content(childComplexity), true
+
+	case "LastAdminNote.createdAt":
+		if e.complexity.LastAdminNote.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.LastAdminNote.CreatedAt(childComplexity), true
+
 	case "LaunchDarklySettings.signedHash":
 		if e.complexity.LaunchDarklySettings.SignedHash == nil {
 			break
@@ -1982,6 +2009,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.BusinessCase(childComplexity), true
 
+	case "SystemIntake.businessCaseId":
+		if e.complexity.SystemIntake.BusinessCaseID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.BusinessCaseID(childComplexity), true
+
 	case "SystemIntake.businessNeed":
 		if e.complexity.SystemIntake.BusinessNeed == nil {
 			break
@@ -2030,6 +2064,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.CurrentStage(childComplexity), true
+
+	case "SystemIntake.decidedAt":
+		if e.complexity.SystemIntake.DecidedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.DecidedAt(childComplexity), true
 
 	case "SystemIntake.decisionNextSteps":
 		if e.complexity.SystemIntake.DecisionNextSteps == nil {
@@ -2094,6 +2135,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.GrtFeedbacks(childComplexity), true
 
+	case "SystemIntake.grtReviewEmailBody":
+		if e.complexity.SystemIntake.GrtReviewEmailBody == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrtReviewEmailBody(childComplexity), true
+
 	case "SystemIntake.id":
 		if e.complexity.SystemIntake.ID == nil {
 			break
@@ -2107,6 +2155,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.Isso(childComplexity), true
+
+	case "SystemIntake.lastAdminNote":
+		if e.complexity.SystemIntake.LastAdminNote == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.LastAdminNote(childComplexity), true
 
 	case "SystemIntake.lcid":
 		if e.complexity.SystemIntake.Lcid == nil {
@@ -3213,6 +3268,10 @@ type SystemIntake {
   trbCollaborator: String
   trbCollaboratorName: String
   updatedAt: Time!
+  grtReviewEmailBody: String
+  decidedAt: Time
+  businessCaseId: UUID
+  lastAdminNote: LastAdminNote!
 }
 
 input SystemIntakeRequesterInput {
@@ -3366,6 +3425,11 @@ input RejectIntakeInput {
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
+}
+
+type LastAdminNote {
+  content: String
+  createdAt: Time
 }
 
 enum GRTFeedbackType {
@@ -7766,6 +7830,70 @@ func (ec *executionContext) _GeneratePresignedUploadURLPayload_userErrors(ctx co
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _LastAdminNote_content(ctx context.Context, field graphql.CollectedField, obj *model.LastAdminNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LastAdminNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Content, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _LastAdminNote_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.LastAdminNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LastAdminNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _LaunchDarklySettings_userKey(ctx context.Context, field graphql.CollectedField, obj *model.LaunchDarklySettings) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -11927,6 +12055,137 @@ func (ec *executionContext) _SystemIntake_updatedAt(ctx context.Context, field g
 	res := resTmp.(*time.Time)
 	fc.Result = res
 	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_grtReviewEmailBody(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GrtReviewEmailBody(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_decidedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DecidedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_businessCaseId(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BusinessCaseID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*uuid.UUID)
+	fc.Result = res
+	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_lastAdminNote(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().LastAdminNote(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.LastAdminNote)
+	fc.Result = res
+	return ec.marshalNLastAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLastAdminNote(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
@@ -17219,6 +17478,32 @@ func (ec *executionContext) _GeneratePresignedUploadURLPayload(ctx context.Conte
 	return out
 }
 
+var lastAdminNoteImplementors = []string{"LastAdminNote"}
+
+func (ec *executionContext) _LastAdminNote(ctx context.Context, sel ast.SelectionSet, obj *model.LastAdminNote) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, lastAdminNoteImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("LastAdminNote")
+		case "content":
+			out.Values[i] = ec._LastAdminNote_content(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._LastAdminNote_createdAt(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var launchDarklySettingsImplementors = []string{"LaunchDarklySettings"}
 
 func (ec *executionContext) _LaunchDarklySettings(ctx context.Context, sel ast.SelectionSet, obj *model.LaunchDarklySettings) graphql.Marshaler {
@@ -18045,6 +18330,35 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "grtReviewEmailBody":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_grtReviewEmailBody(ctx, field, obj)
+				return res
+			})
+		case "decidedAt":
+			out.Values[i] = ec._SystemIntake_decidedAt(ctx, field, obj)
+		case "businessCaseId":
+			out.Values[i] = ec._SystemIntake_businessCaseId(ctx, field, obj)
+		case "lastAdminNote":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_lastAdminNote(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -19316,6 +19630,20 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 func (ec *executionContext) unmarshalNIssueLifecycleIdInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐIssueLifecycleIDInput(ctx context.Context, v interface{}) (model.IssueLifecycleIDInput, error) {
 	res, err := ec.unmarshalInputIssueLifecycleIdInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNLastAdminNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLastAdminNote(ctx context.Context, sel ast.SelectionSet, v model.LastAdminNote) graphql.Marshaler {
+	return ec._LastAdminNote(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNLastAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLastAdminNote(ctx context.Context, sel ast.SelectionSet, v *model.LastAdminNote) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._LastAdminNote(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLaunchDarklySettings(ctx context.Context, sel ast.SelectionSet, v *model.LaunchDarklySettings) graphql.Marshaler {
