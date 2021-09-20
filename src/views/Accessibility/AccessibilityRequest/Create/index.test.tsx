@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import * as OktaReact from '@okta/okta-react';
 import {
@@ -159,7 +159,7 @@ describe('Create 508 Request page', () => {
     expect(screen.getByTestId('create-508-request')).toBeInTheDocument();
   });
 
-  it.only('can create a 508 testing request', async () => {
+  it('can create a 508 testing request', async () => {
     window.scrollTo = jest.fn();
 
     mockOkta([ACCESSIBILITY_ADMIN_DEV]);
@@ -194,12 +194,14 @@ describe('Create 508 Request page', () => {
             mocks={[defaultQuery, create508Request, get508RequestQuery]}
             addTypename={false}
           >
-            <Route path="/508/requests/new">
-              <Create />
-            </Route>
-            <Route path="/508/requests/:accessibilityRequestId/documents">
-              <AccessibilityRequestDetailPage />
-            </Route>
+            <Switch>
+              <Route exact path="/508/requests/new">
+                <Create />
+              </Route>
+              <Route path="/508/requests/:accessibilityRequestId/documents">
+                <AccessibilityRequestDetailPage />
+              </Route>
+            </Switch>
           </MockedProvider>
         </MessageProvider>
       </MemoryRouter>
