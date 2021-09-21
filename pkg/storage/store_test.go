@@ -67,7 +67,7 @@ func TestStoreTestSuite(t *testing.T) {
 	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
 	assert.NoError(t, err)
 
-	store, err := NewStore(logger, dbConfig, ldClient, false)
+	store, err := NewStore(logger, dbConfig, ldClient, false, "")
 	if err != nil {
 		fmt.Printf("Failed to get new database: %v", err)
 		t.Fail()

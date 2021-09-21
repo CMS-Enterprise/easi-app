@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 
 	iampg "github.com/cmsgov/easi-app/pkg/iampostgres"
@@ -41,6 +42,7 @@ func NewStore(
 	config DBConfig,
 	ldClient *ld.LDClient,
 	dbIamFlag bool,
+	dbIamRoleArn string,
 ) (*Store, error) {
 	// LifecycleIDs are generated based on Eastern Time
 	tz, err := time.LoadLocation("America/New_York")
@@ -60,8 +62,7 @@ func NewStore(
 			// because the session conflates the environment, shared, and container metadata config
 			// within NewSession.  With stscreds, we use the Secure Token Service,
 			// to assume the given role (that has rds db connect permissions).
-			// dbCreds = stscreds.NewCredentials(sess, "app_user_iam")
-			creds = sess.Config.Credentials
+			creds = stscreds.NewCredentials(sess, dbIamRoleArn)
 		}
 	}
 

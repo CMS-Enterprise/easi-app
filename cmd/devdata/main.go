@@ -40,7 +40,7 @@ func main() {
 		panic(ldErr)
 	}
 
-	store, storeErr := storage.NewStore(logger, dbConfig, ldClient, false)
+	store, storeErr := storage.NewStore(logger, dbConfig, ldClient, false, "")
 	if storeErr != nil {
 		panic(storeErr)
 	}

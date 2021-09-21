@@ -151,6 +151,7 @@ func (s *Server) routes(
 		s.NewDBConfig(),
 		ldClient,
 		s.Config.GetBool("DB_IAM_FLAG"),
+		s.Config.GetString("DB_IAM_ROLE_ARN"),
 	)
 	if storeErr != nil {
 		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
