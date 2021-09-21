@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
@@ -19,12 +18,12 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
 import {
   UpdateSystemIntakeRequestDetails,
   UpdateSystemIntakeRequestDetailsVariables
 } from 'queries/types/UpdateSystemIntakeRequestDetails';
-import { fetchSystemIntake } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -43,36 +42,42 @@ type RequestDetailsProps = {
 const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
   const {
     id,
-    requestName = '',
-    businessNeed = '',
-    businessSolution = '',
-    needsEaSupport = null
-  } = systemIntake;
-  const history = useHistory();
-  const formikRef = useRef<FormikProps<RequestDetailsForm>>();
-  const dispatch = useDispatch();
-
-  const initialValues: RequestDetailsForm = {
     requestName,
     businessNeed,
     businessSolution,
+    needsEaSupport
+  } = systemIntake;
+  const formikRef = useRef<FormikProps<RequestDetailsForm>>(null);
+  const history = useHistory();
+
+  const initialValues: RequestDetailsForm = {
+    requestName: requestName || '',
+    businessNeed: businessNeed || '',
+    businessSolution: businessSolution || '',
     needsEaSupport
   };
 
   const [mutate] = useMutation<
     UpdateSystemIntakeRequestDetails,
     UpdateSystemIntakeRequestDetailsVariables
-  >(UpdateSystemIntakeRequestDetailsQuery);
-
-  const onSubmit = (values: RequestDetailsForm) => {
-    mutate({
-      variables: {
-        input: { id, ...values }
+  >(UpdateSystemIntakeRequestDetailsQuery, {
+    refetchQueries: [
+      {
+        query: GetSystemIntakeQuery,
+        variables: {
+          id
+        }
       }
-    }).then(() => {
-      // Refetch system intake to keep Redux fresh
-      dispatch(fetchSystemIntake(id));
-    });
+    ]
+  });
+
+  const onSubmit = (values?: RequestDetailsForm) => {
+    if (values)
+      mutate({
+        variables: {
+          input: { id, ...values }
+        }
+      });
   };
 
   const saveExitLink = (() => {
@@ -315,8 +320,6 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                       }
                     }).then(response => {
                       if (!response.errors) {
-                        // TEMP - will be removed when fully converted to GraphQL
-                        dispatch(fetchSystemIntake(id));
                         const newUrl = 'contact-details';
                         history.push(newUrl);
                       }
@@ -336,8 +339,6 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                           }
                         }).then(response => {
                           if (!response.errors) {
-                            // TEMP - will be removed when fully converted to GraphQL
-                            dispatch(fetchSystemIntake(id));
                             const newUrl = 'contract-details';
                             history.push(newUrl);
                           }
@@ -376,9 +377,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             <AutoSave
               values={values}
               onSave={() => {
-                onSubmit(formikRef.current.values);
+                onSubmit(formikRef?.current?.values);
               }}
-              debounceDelay={1000 * 3}
+              debounceDelay={3000}
             />
             <PageNumber currentPage={2} totalPages={3} />
           </>

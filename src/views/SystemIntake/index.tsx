@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, Route, Switch, useHistory, useParams } from 'react-router-dom';
+import React from 'react';
+import { Link, Route, Switch, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -13,10 +13,12 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
-import usePrevious from 'hooks/usePrevious';
-import { AppState } from 'reducers/rootReducer';
-import { clearSystemIntake, fetchSystemIntake } from 'types/routines';
-import { NotFoundPartial } from 'views/NotFound';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import {
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
+import NotFound, { NotFoundPartial } from 'views/NotFound';
 
 import Confirmation from './Confirmation';
 import ContactDetails from './ContactDetails';
@@ -28,44 +30,26 @@ import SystemIntakeView from './ViewOnly';
 import './index.scss';
 
 export const SystemIntake = () => {
-  const history = useHistory();
   const { systemId } = useParams<{
     systemId: string;
     formPage: string;
   }>();
-  const dispatch = useDispatch();
 
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
-  const isLoading = useSelector(
-    (state: AppState) => state.systemIntake.isLoading
-  );
-  const actionError = useSelector((state: AppState) => state.action.error);
-  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
-  const prevIsSubmitting = usePrevious(isSubmitting);
-
-  // Handle redirect after submitting
-  useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !actionError) {
-      history.push(`/system/${systemId}/confirmation`);
+  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
+    GetSystemIntakeQuery,
+    {
+      nextFetchPolicy: 'cache-first',
+      variables: {
+        id: systemId
+      }
     }
+  );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
+  const systemIntake = data?.systemIntake;
 
-  useEffect(() => {
-    if (systemId === 'new') {
-      history.push('/system/request-type');
-    } else {
-      dispatch(fetchSystemIntake(systemId));
-    }
-    return () => {
-      // clear system intake from store when component is unmounting
-      dispatch(clearSystemIntake());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  if (!loading && !systemIntake) {
+    return <NotFound />;
+  }
 
   return (
     <PageWrapper className="system-intake" data-testid="system-intake">
@@ -80,7 +64,7 @@ export const SystemIntake = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${systemIntake.id || 'new'}`}
+              to={`/governance-task-list/${systemId}`}
             >
               <span>Get governance approval</span>
             </BreadcrumbLink>
@@ -93,7 +77,7 @@ export const SystemIntake = () => {
          * this loading probably snould be moved inside of the individual
          * pages.
          */}
-        {isLoading ? (
+        {loading ? (
           <PageLoading />
         ) : (
           <Switch>

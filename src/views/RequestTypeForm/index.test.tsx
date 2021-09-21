@@ -7,6 +7,7 @@ import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskList';
@@ -199,6 +200,7 @@ describe('The request type form page', () => {
   });
 
   it('creates a shutdown intake', async () => {
+    const INTAKE_ID = '6aa61a37-d3b4-47ed-ad61-0b8f73151d74';
     const intakeMutation = {
       request: {
         query: CreateSystemIntake,
@@ -214,7 +216,7 @@ describe('The request type form page', () => {
       result: {
         data: {
           createSystemIntake: {
-            id: '6aa61a37-d3b4-47ed-ad61-0b8f73151d74',
+            id: INTAKE_ID,
             status: 'INTAKE_DRAFT',
             requestType: 'SHUTDOWN',
             requester: {
@@ -225,7 +227,96 @@ describe('The request type form page', () => {
       }
     };
 
-    renderPage([intakeMutation]);
+    const intakeQuery = {
+      request: {
+        query: GetSystemIntakeQuery,
+        variables: {
+          id: INTAKE_ID
+        }
+      },
+      result: {
+        data: {
+          systemIntake: {
+            id: INTAKE_ID,
+            euaUserId: 'ABCD',
+            adminLead: null,
+            businessNeed: null,
+            businessSolution: null,
+            businessOwner: {
+              component: null,
+              name: null
+            },
+            contract: {
+              contractor: null,
+              endDate: {
+                day: null,
+                month: null,
+                year: null
+              },
+              hasContract: null,
+              startDate: {
+                day: null,
+                month: null,
+                year: null
+              },
+              vehicle: null
+            },
+            costs: {
+              isExpectingIncrease: null,
+              expectedIncreaseAmount: null
+            },
+            currentStage: null,
+            decisionNextSteps: null,
+            grbDate: null,
+            grtDate: null,
+            grtFeedbacks: [],
+            governanceTeams: {
+              isPresent: false,
+              teams: null
+            },
+            isso: {
+              isPresent: false,
+              name: null
+            },
+            fundingSource: {
+              fundingNumber: null,
+              isFunded: null,
+              source: null
+            },
+            lcid: null,
+            lcidExpiresAt: null,
+            lcidScope: null,
+            needsEaSupport: null,
+            productManager: {
+              component: null,
+              name: null
+            },
+            rejectionReason: null,
+            requester: {
+              component: null,
+              email: null,
+              name: 'User ABCD'
+            },
+            requestName: '',
+            requestType: 'NEW',
+            status: 'INTAKE_DRAFT',
+            createdAt: null,
+            submittedAt: null,
+            updatedAt: null,
+            archivedAt: null,
+            decidedAt: null,
+            businessCaseId: null,
+            lastAdminNote: {
+              content: null,
+              createdAt: null
+            },
+            grtReviewEmailBody: null
+          }
+        }
+      }
+    };
+
+    renderPage([intakeMutation, intakeQuery]);
 
     await waitFor(() => {
       expect(screen.getByText('John Doe')).toBeInTheDocument();

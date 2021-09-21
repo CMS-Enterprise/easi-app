@@ -59,6 +59,7 @@ describe('Submit Action', () => {
       data: {
         systemIntake: {
           id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+          euaUserId: 'ABCD',
           adminLead: null,
           businessNeed: 'Test business need',
           businessSolution: 'Test business solution',
@@ -120,7 +121,17 @@ describe('Submit Action', () => {
           requestName: 'TACO',
           requestType: 'NEW',
           status: 'INTAKE_SUBMITTED',
-          submittedAt: null
+          createdAt: null,
+          submittedAt: null,
+          updatedAt: null,
+          archivedAt: null,
+          decidedAt: null,
+          businessCaseId: null,
+          lastAdminNote: {
+            content: null,
+            createdAt: null
+          },
+          grtReviewEmailBody: null
         }
       }
     }

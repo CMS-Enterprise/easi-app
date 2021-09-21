@@ -19,7 +19,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/launchdarkly/eventsource v1.6.1 // indirect
 	github.com/lestrrat-go/jwx v1.0.2 // indirect
-	github.com/lib/pq v1.5.2
+	github.com/lib/pq v1.10.3
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/pquerna/otp v1.2.0
 	github.com/spf13/cobra v1.2.1

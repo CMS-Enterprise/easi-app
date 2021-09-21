@@ -75,7 +75,18 @@ export default gql`
       requestName
       requestType
       status
+      grtReviewEmailBody
+      decidedAt
+      businessCaseId
       submittedAt
+      updatedAt
+      createdAt
+      archivedAt
+      euaUserId
+      lastAdminNote {
+        content
+        createdAt
+      }
     }
   }
 `;
