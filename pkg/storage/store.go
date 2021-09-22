@@ -97,6 +97,8 @@ func NewStore(
 		config.SSLMode,
 	)
 
+	config.Password = iampg.GetCurrentPass()
+
 	db, err := sqlx.Connect(iampg.CustomPostgres, dataSourceName)
 	if err != nil {
 		return nil, err
