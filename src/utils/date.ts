@@ -23,13 +23,17 @@ export const formatDate = (date: string | DateTime) => {
 };
 
 type ContractDate = {
-  day: string;
-  month: string;
-  year: string;
+  day: string | null;
+  month: string | null;
+  year: string | null;
 };
 
 export const formatContractDate = (date: ContractDate): string => {
   const { month, day, year } = date;
+  if (!month || !day || !year) {
+    return '';
+  }
+
   const parts = [month, day, year];
   return parts.filter((value: string) => value && value.length > 0).join('/');
 };

@@ -6,7 +6,6 @@ import {
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -71,15 +70,8 @@ export const SystemIntake = () => {
           </Breadcrumb>
           <Breadcrumb current>Intake Request</Breadcrumb>
         </BreadcrumbBar>
-        {/*
-         * TODO
-         * When the GraphQL query(ies) are implemented for Intake,
-         * this loading probably snould be moved inside of the individual
-         * pages.
-         */}
-        {loading ? (
-          <PageLoading />
-        ) : (
+        {loading && <PageLoading />}
+        {!!systemIntake && (
           <Switch>
             <Route
               path="/system/:systemId/contact-details"
@@ -95,9 +87,7 @@ export const SystemIntake = () => {
             />
             <Route
               path="/system/:systemId/review"
-              render={() => (
-                <Review systemIntake={systemIntake} now={DateTime.local()} />
-              )}
+              render={() => <Review systemIntake={systemIntake} />}
             />
             <Route
               path="/system/:systemId/confirmation"

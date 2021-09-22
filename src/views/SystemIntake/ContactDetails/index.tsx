@@ -21,14 +21,11 @@ import TextField from 'components/shared/TextField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   UpdateSystemIntakeContactDetails,
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
-import {
-  GovernanceCollaborationTeam,
-  SystemIntakeForm
-} from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
@@ -53,12 +50,18 @@ export type ContactDetailsForm = {
   };
   governanceTeams: {
     isPresent: boolean | null;
-    teams: GovernanceCollaborationTeam[];
+    teams:
+      | {
+          collaborator: string;
+          key: string;
+          name: string;
+        }[]
+      | null;
   };
 };
 
 type ContactDetailsProps = {
-  systemIntake: SystemIntakeForm;
+  systemIntake: SystemIntake;
 };
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
@@ -98,11 +101,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     },
     governanceTeams: {
       isPresent: governanceTeams.isPresent,
-      teams: governanceTeams.teams?.map(team => ({
-        collaborator: team.collaborator,
-        name: team.name,
-        key: team.key
-      }))
+      teams:
+        governanceTeams.teams?.map(team => ({
+          collaborator: team.collaborator,
+          name: team.name,
+          key: team.key
+        })) || []
     }
   };
 

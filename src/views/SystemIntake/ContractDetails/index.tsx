@@ -29,16 +29,17 @@ import processStages from 'constants/enums/processStages';
 import { yesNoMap } from 'data/common';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   UpdateSystemIntakeContractDetails,
   UpdateSystemIntakeContractDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContractDetails';
-import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
+import { ContractDetailsForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 type ContractDetailsProps = {
-  systemIntake: SystemIntakeForm;
+  systemIntake: SystemIntake;
 };
 
 const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {

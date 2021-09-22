@@ -3169,9 +3169,9 @@ type ContractDate {
 
 type SystemIntakeContract {
   contractor: String
-  endDate: ContractDate
+  endDate: ContractDate!
   hasContract: String
-  startDate: ContractDate
+  startDate: ContractDate!
   vehicle: String
 }
 
@@ -3187,11 +3187,11 @@ type SystemIntakeFundingSource {
 }
 
 type SystemIntakeCollaborator {
-  acronym: String
-  collaborator: String
-  key: String
-  label: String
-  name: String
+  acronym: String!
+  collaborator: String!
+  key: String!
+  label: String!
+  name: String!
 }
 
 type SystemIntakeGovernanceTeam {
@@ -3233,23 +3233,23 @@ type SystemIntake {
   archivedAt: Time
   businessCase: BusinessCase
   businessNeed: String
-  businessOwner: SystemIntakeBusinessOwner
+  businessOwner: SystemIntakeBusinessOwner!
   businessSolution: String
-  contract: SystemIntakeContract
-  costs: SystemIntakeCosts
+  contract: SystemIntakeContract!
+  costs: SystemIntakeCosts!
   createdAt: Time!
   currentStage: String
   decisionNextSteps: String
   eaCollaborator: String
   eaCollaboratorName: String
   euaUserId: String!
-  fundingSource: SystemIntakeFundingSource
-  governanceTeams: SystemIntakeGovernanceTeam
+  fundingSource: SystemIntakeFundingSource!
+  governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
   grtFeedbacks: [GRTFeedback!]!
   id: UUID!
-  isso: SystemIntakeISSO
+  isso: SystemIntakeISSO!
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
@@ -3257,7 +3257,7 @@ type SystemIntake {
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
-  productManager: SystemIntakeProductManager
+  productManager: SystemIntakeProductManager!
   projectAcronym: String
   rejectionReason: String
   requestName: String
@@ -10935,11 +10935,14 @@ func (ec *executionContext) _SystemIntake_businessOwner(ctx context.Context, fie
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.SystemIntakeBusinessOwner)
 	fc.Result = res
-	return ec.marshalOSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwner(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwner(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_businessSolution(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -10999,11 +11002,14 @@ func (ec *executionContext) _SystemIntake_contract(ctx context.Context, field gr
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.SystemIntakeContract)
 	fc.Result = res
-	return ec.marshalOSystemIntakeContract2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeContract2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_costs(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -11031,11 +11037,14 @@ func (ec *executionContext) _SystemIntake_costs(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.SystemIntakeCosts)
 	fc.Result = res
-	return ec.marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -11261,11 +11270,14 @@ func (ec *executionContext) _SystemIntake_fundingSource(ctx context.Context, fie
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.SystemIntakeFundingSource)
 	fc.Result = res
-	return ec.marshalOSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_governanceTeams(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -11293,11 +11305,14 @@ func (ec *executionContext) _SystemIntake_governanceTeams(ctx context.Context, f
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.SystemIntakeGovernanceTeam)
 	fc.Result = res
-	return ec.marshalOSystemIntakeGovernanceTeam2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeam(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeGovernanceTeam2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeam(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_grbDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -11459,11 +11474,14 @@ func (ec *executionContext) _SystemIntake_isso(ctx context.Context, field graphq
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.SystemIntakeIsso)
 	fc.Result = res
-	return ec.marshalOSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_lcid(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -11718,11 +11736,14 @@ func (ec *executionContext) _SystemIntake_productManager(ctx context.Context, fi
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.SystemIntakeProductManager)
 	fc.Result = res
-	return ec.marshalOSystemIntakeProductManager2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeProductManager2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_projectAcronym(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -12554,11 +12575,14 @@ func (ec *executionContext) _SystemIntakeCollaborator_acronym(ctx context.Contex
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeCollaborator_collaborator(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCollaborator) (ret graphql.Marshaler) {
@@ -12586,11 +12610,14 @@ func (ec *executionContext) _SystemIntakeCollaborator_collaborator(ctx context.C
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeCollaborator_key(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCollaborator) (ret graphql.Marshaler) {
@@ -12618,11 +12645,14 @@ func (ec *executionContext) _SystemIntakeCollaborator_key(ctx context.Context, f
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeCollaborator_label(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCollaborator) (ret graphql.Marshaler) {
@@ -12650,11 +12680,14 @@ func (ec *executionContext) _SystemIntakeCollaborator_label(ctx context.Context,
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeCollaborator_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCollaborator) (ret graphql.Marshaler) {
@@ -12682,11 +12715,14 @@ func (ec *executionContext) _SystemIntakeCollaborator_name(ctx context.Context, 
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeContract_contractor(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
@@ -12746,11 +12782,14 @@ func (ec *executionContext) _SystemIntakeContract_endDate(ctx context.Context, f
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.ContractDate)
 	fc.Result = res
-	return ec.marshalOContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx, field.Selections, res)
+	return ec.marshalNContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeContract_hasContract(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
@@ -12810,11 +12849,14 @@ func (ec *executionContext) _SystemIntakeContract_startDate(ctx context.Context,
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.ContractDate)
 	fc.Result = res
-	return ec.marshalOContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx, field.Selections, res)
+	return ec.marshalNContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeContract_vehicle(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
@@ -18008,6 +18050,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_businessOwner(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "businessSolution":
@@ -18030,6 +18075,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_contract(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "costs":
@@ -18041,6 +18089,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_costs(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "createdAt":
@@ -18115,6 +18166,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_fundingSource(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "governanceTeams":
@@ -18126,6 +18180,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_governanceTeams(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "grbDate":
@@ -18160,6 +18217,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_isso(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "lcid":
@@ -18242,6 +18302,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_productManager(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "projectAcronym":
@@ -18490,14 +18553,29 @@ func (ec *executionContext) _SystemIntakeCollaborator(ctx context.Context, sel a
 			out.Values[i] = graphql.MarshalString("SystemIntakeCollaborator")
 		case "acronym":
 			out.Values[i] = ec._SystemIntakeCollaborator_acronym(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "collaborator":
 			out.Values[i] = ec._SystemIntakeCollaborator_collaborator(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "key":
 			out.Values[i] = ec._SystemIntakeCollaborator_key(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "label":
 			out.Values[i] = ec._SystemIntakeCollaborator_label(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "name":
 			out.Values[i] = ec._SystemIntakeCollaborator_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -18524,10 +18602,16 @@ func (ec *executionContext) _SystemIntakeContract(ctx context.Context, sel ast.S
 			out.Values[i] = ec._SystemIntakeContract_contractor(ctx, field, obj)
 		case "endDate":
 			out.Values[i] = ec._SystemIntakeContract_endDate(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "hasContract":
 			out.Values[i] = ec._SystemIntakeContract_hasContract(ctx, field, obj)
 		case "startDate":
 			out.Values[i] = ec._SystemIntakeContract_startDate(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "vehicle":
 			out.Values[i] = ec._SystemIntakeContract_vehicle(ctx, field, obj)
 		default:
@@ -19498,6 +19582,16 @@ func (ec *executionContext) marshalNBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeas
 	return ec._BusinessOwner(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx context.Context, sel ast.SelectionSet, v *model.ContractDate) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ContractDate(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNCreateAccessibilityRequestDocumentInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentInput(ctx context.Context, v interface{}) (model.CreateAccessibilityRequestDocumentInput, error) {
 	res, err := ec.unmarshalInputCreateAccessibilityRequestDocumentInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -19957,6 +20051,20 @@ func (ec *executionContext) marshalNSystemIntakeActionType2githubᚗcomᚋcmsgov
 	return v
 }
 
+func (ec *executionContext) marshalNSystemIntakeBusinessOwner2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwner(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeBusinessOwner) graphql.Marshaler {
+	return ec._SystemIntakeBusinessOwner(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwner(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeBusinessOwner) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeBusinessOwner(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNSystemIntakeBusinessOwnerInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwnerInput(ctx context.Context, v interface{}) (*model.SystemIntakeBusinessOwnerInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeBusinessOwnerInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
@@ -19972,9 +20080,79 @@ func (ec *executionContext) marshalNSystemIntakeCollaborator2ᚖgithubᚗcomᚋc
 	return ec._SystemIntakeCollaborator(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNSystemIntakeContract2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeContract) graphql.Marshaler {
+	return ec._SystemIntakeContract(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeContract2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeContract) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeContract(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeCosts2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeCosts) graphql.Marshaler {
+	return ec._SystemIntakeCosts(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCosts) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeCosts(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeFundingSource2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeFundingSource) graphql.Marshaler {
+	return ec._SystemIntakeFundingSource(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeFundingSource) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeFundingSource(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeGovernanceTeam2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeam(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeGovernanceTeam) graphql.Marshaler {
+	return ec._SystemIntakeGovernanceTeam(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeGovernanceTeam2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeam(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeGovernanceTeam) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeGovernanceTeam(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeamInput(ctx context.Context, v interface{}) (*model.SystemIntakeGovernanceTeamInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeGovernanceTeamInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeISSO2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeIsso) graphql.Marshaler {
+	return ec._SystemIntakeISSO(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeIsso) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeISSO(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeISSOInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeISSOInput(ctx context.Context, v interface{}) (*model.SystemIntakeISSOInput, error) {
@@ -20044,6 +20222,20 @@ func (ec *executionContext) marshalNSystemIntakeNoteAuthor2ᚖgithubᚗcomᚋcms
 		return graphql.Null
 	}
 	return ec._SystemIntakeNoteAuthor(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeProductManager2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeProductManager) graphql.Marshaler {
+	return ec._SystemIntakeProductManager(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeProductManager2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeProductManager) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeProductManager(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeProductManagerInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManagerInput(ctx context.Context, v interface{}) (*model.SystemIntakeProductManagerInput, error) {
@@ -20598,13 +20790,6 @@ func (ec *executionContext) marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgo
 	return ec._BusinessCaseSolution(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx context.Context, sel ast.SelectionSet, v *model.ContractDate) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._ContractDate(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -20821,13 +21006,6 @@ func (ec *executionContext) marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasi
 	return ec._SystemIntake(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwner(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeBusinessOwner) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SystemIntakeBusinessOwner(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOSystemIntakeCollaborator2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SystemIntakeCollaborator) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -20907,26 +21085,12 @@ func (ec *executionContext) unmarshalOSystemIntakeCollaboratorInput2ᚖgithubᚗ
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSystemIntakeContract2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeContract) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SystemIntakeContract(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOSystemIntakeContractInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContractInput(ctx context.Context, v interface{}) (*model.SystemIntakeContractInput, error) {
 	if v == nil {
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputSystemIntakeContractInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCosts) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SystemIntakeCosts(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeCostsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCostsInput(ctx context.Context, v interface{}) (*model.SystemIntakeCostsInput, error) {
@@ -20937,13 +21101,6 @@ func (ec *executionContext) unmarshalOSystemIntakeCostsInput2ᚖgithubᚗcomᚋc
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeFundingSource) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SystemIntakeFundingSource(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourceInput(ctx context.Context, v interface{}) (*model.SystemIntakeFundingSourceInput, error) {
 	if v == nil {
 		return nil, nil
@@ -20952,32 +21109,11 @@ func (ec *executionContext) unmarshalOSystemIntakeFundingSourceInput2ᚖgithub�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSystemIntakeGovernanceTeam2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeam(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeGovernanceTeam) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SystemIntakeGovernanceTeam(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeIsso) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SystemIntakeISSO(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNote(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeNote) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._SystemIntakeNote(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOSystemIntakeProductManager2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeProductManager) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SystemIntakeProductManager(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx context.Context, sel ast.SelectionSet, v *models.TestDate) graphql.Marshaler {

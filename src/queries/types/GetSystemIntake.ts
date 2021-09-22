@@ -32,9 +32,9 @@ export interface GetSystemIntake_systemIntake_contract_startDate {
 export interface GetSystemIntake_systemIntake_contract {
   __typename: "SystemIntakeContract";
   contractor: string | null;
-  endDate: GetSystemIntake_systemIntake_contract_endDate | null;
+  endDate: GetSystemIntake_systemIntake_contract_endDate;
   hasContract: string | null;
-  startDate: GetSystemIntake_systemIntake_contract_startDate | null;
+  startDate: GetSystemIntake_systemIntake_contract_startDate;
   vehicle: string | null;
 }
 
@@ -53,11 +53,11 @@ export interface GetSystemIntake_systemIntake_grtFeedbacks {
 
 export interface GetSystemIntake_systemIntake_governanceTeams_teams {
   __typename: "SystemIntakeCollaborator";
-  acronym: string | null;
-  collaborator: string | null;
-  key: string | null;
-  label: string | null;
-  name: string | null;
+  acronym: string;
+  collaborator: string;
+  key: string;
+  label: string;
+  name: string;
 }
 
 export interface GetSystemIntake_systemIntake_governanceTeams {
@@ -104,22 +104,22 @@ export interface GetSystemIntake_systemIntake {
   adminLead: string | null;
   businessNeed: string | null;
   businessSolution: string | null;
-  businessOwner: GetSystemIntake_systemIntake_businessOwner | null;
-  contract: GetSystemIntake_systemIntake_contract | null;
-  costs: GetSystemIntake_systemIntake_costs | null;
+  businessOwner: GetSystemIntake_systemIntake_businessOwner;
+  contract: GetSystemIntake_systemIntake_contract;
+  costs: GetSystemIntake_systemIntake_costs;
   currentStage: string | null;
   decisionNextSteps: string | null;
   grbDate: Time | null;
   grtDate: Time | null;
   grtFeedbacks: GetSystemIntake_systemIntake_grtFeedbacks[];
-  governanceTeams: GetSystemIntake_systemIntake_governanceTeams | null;
-  isso: GetSystemIntake_systemIntake_isso | null;
-  fundingSource: GetSystemIntake_systemIntake_fundingSource | null;
+  governanceTeams: GetSystemIntake_systemIntake_governanceTeams;
+  isso: GetSystemIntake_systemIntake_isso;
+  fundingSource: GetSystemIntake_systemIntake_fundingSource;
   lcid: string | null;
   lcidExpiresAt: Time | null;
   lcidScope: string | null;
   needsEaSupport: boolean | null;
-  productManager: GetSystemIntake_systemIntake_productManager | null;
+  productManager: GetSystemIntake_systemIntake_productManager;
   rejectionReason: string | null;
   requester: GetSystemIntake_systemIntake_requester;
   requestName: string | null;
