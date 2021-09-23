@@ -144,6 +144,7 @@ func logEnableIAMFailed(logger Logger, errorMessagesChan chan error) {
 func (d RDSPostgresDriver) Open(dsn string) (_ driver.Conn, err error) {
 	logger.Info("Entered Open function")
 	if iamConfig.useIAM {
+		logger.Info("calling updateDSN")
 		dsn, err = updateDSN(dsn)
 		if err != nil {
 			return nil, err
