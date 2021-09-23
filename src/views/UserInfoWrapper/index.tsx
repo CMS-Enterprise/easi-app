@@ -28,24 +28,12 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
       };
       dispatch(setUser(user));
     } else {
-      const tokenManager = await oktaAuth.tokenManager;
-      const accessToken = await tokenManager.get('accessToken');
-      const idToken = await tokenManager.get('idToken');
-      if (accessToken && idToken) {
-        const accessTokenValue = accessToken.value;
-        const decodedBearerToken = JSON.parse(
-          atob(accessTokenValue.split('.')[1])
-        );
-
-        const idTokenValue = idToken.value;
-        const decodedIdToken = JSON.parse(atob(idTokenValue.split('.')[1]));
-        const user = {
-          name: (decodedIdToken && decodedIdToken.name) || '',
-          euaId: (decodedIdToken && decodedIdToken.preferred_username) || '',
-          groups: (decodedBearerToken && decodedBearerToken.groups) || []
-        };
-        dispatch(setUser(user));
-      }
+      const user = {
+        name: authState?.idToken?.claims.name,
+        euaId: authState?.idToken?.claims.preferred_username,
+        groups: authState?.accessToken?.claims.groups || []
+      };
+      dispatch(setUser(user));
     }
   };
 
