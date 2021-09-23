@@ -9,18 +9,16 @@ import {
 } from 'components/shared/DescriptionGroup';
 import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDate } from 'utils/date';
 
 type SystemIntakeReviewProps = {
-  systemIntake: SystemIntakeForm;
-  now: DateTime;
+  systemIntake: SystemIntake;
 };
 
 export const SystemIntakeReview = ({
-  systemIntake,
-  now
+  systemIntake
 }: SystemIntakeReviewProps) => {
   const { contract } = systemIntake;
 
@@ -56,7 +54,7 @@ export const SystemIntakeReview = ({
               definition={
                 systemIntake.submittedAt
                   ? formatDate(systemIntake.submittedAt)
-                  : now.toLocaleString(DateTime.DATE_MED)
+                  : DateTime.local().toLocaleString(DateTime.DATE_MED)
               }
             />
           </div>
@@ -115,7 +113,7 @@ export const SystemIntakeReview = ({
           <div>
             <DescriptionTerm term="I have started collaborating with" />
             {systemIntake.governanceTeams.isPresent ? (
-              systemIntake.governanceTeams.teams.map(team => (
+              (systemIntake.governanceTeams.teams || []).map(team => (
                 <DescriptionDefinition
                   key={`GovernanceTeam-${team.name.split(' ').join('-')}`}
                   definition={`${team.name}, ${team.collaborator}`}
@@ -184,7 +182,10 @@ export const SystemIntakeReview = ({
           <div>
             <DescriptionTerm term="Do the costs for this request exceed what you are currently spending to meet your business need?" />
             <DescriptionDefinition
-              definition={yesNoMap[systemIntake.costs.isExpectingIncrease]}
+              definition={
+                systemIntake.costs.isExpectingIncrease &&
+                yesNoMap[systemIntake.costs.isExpectingIncrease]
+              }
             />
           </div>
           {systemIntake.costs.isExpectingIncrease === 'YES' && (
@@ -207,21 +208,17 @@ export const SystemIntakeReview = ({
           </div>
         </ReviewRow>
         {['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-          systemIntake.contract.hasContract
+          systemIntake.contract.hasContract || ''
         ) && (
           <>
             <ReviewRow>
               <div>
                 <DescriptionTerm term="Contractor(s)" />
-                <DescriptionDefinition
-                  definition={systemIntake.contract.contractor}
-                />
+                <DescriptionDefinition definition={contract.contractor} />
               </div>
               <div>
                 <DescriptionTerm term="Contract vehicle" />
-                <DescriptionDefinition
-                  definition={systemIntake.contract.vehicle}
-                />
+                <DescriptionDefinition definition={contract.vehicle} />
               </div>
             </ReviewRow>
             <ReviewRow>

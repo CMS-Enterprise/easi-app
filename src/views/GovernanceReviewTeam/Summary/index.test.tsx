@@ -1,11 +1,8 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { mount, ReactWrapper } from 'enzyme';
-import configureMockStore from 'redux-mock-store';
-
-import { initialSystemIntakeForm } from 'data/systemIntake';
+import { render, screen, within } from '@testing-library/react';
+import { DateTime } from 'luxon';
 
 import Summary from '.';
 
@@ -26,48 +23,84 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
-const renderComponent = (intake: any) => {
-  const mockStore = configureMockStore();
-  return mount(
-    <MemoryRouter>
-      <Provider store={mockStore()}>
-        <MockedProvider>
-          <Summary intake={intake} />
-        </MockedProvider>
-      </Provider>
-    </MemoryRouter>
-  );
-};
+const INTAKE_ID = 'ccdfdcf5-5085-4521-9f77-fa1ea324502b';
 
 describe('The GRT Review page', () => {
   it('shows open status', async () => {
-    const intake = {
-      ...initialSystemIntakeForm,
-      status: 'INTAKE_SUBMITTED'
-    };
-    const component: ReactWrapper = renderComponent(intake);
-    expect(component!.find('[data-testid="grt-status"]').text()).toEqual(
-      'Open'
+    render(
+      <MemoryRouter>
+        <MockedProvider>
+          <Summary
+            id={INTAKE_ID}
+            requester={{
+              name: 'John Doe',
+              component: 'Office of Information Technology'
+            }}
+            requestName="Request Name"
+            requestType="NEW"
+            status="INTAKE_SUBMITTED"
+            adminLead={null}
+            submittedAt={DateTime.local()}
+            lcid={null}
+          />
+        </MockedProvider>
+      </MemoryRouter>
     );
+
+    expect(
+      within(screen.getByTestId('grt-status')).getByText('Open')
+    ).toBeInTheDocument();
   });
 
   it('shows closed status', async () => {
-    const intake = {
-      ...initialSystemIntakeForm,
-      status: 'LCID_ISSUED'
-    };
-    const component: ReactWrapper = renderComponent(intake);
-    expect(component!.find('[data-testid="grt-status"]').text()).toEqual(
-      'Closed'
+    render(
+      <MemoryRouter>
+        <MockedProvider>
+          <Summary
+            id={INTAKE_ID}
+            requester={{
+              name: 'John Doe',
+              component: 'Office of Information Technology'
+            }}
+            requestName="Request Name"
+            requestType="NEW"
+            status="LCID_ISSUED"
+            adminLead={null}
+            submittedAt={DateTime.local()}
+            lcid={null}
+          />
+        </MockedProvider>
+      </MemoryRouter>
     );
+
+    expect(
+      within(screen.getByTestId('grt-status')).getByText('Closed')
+    ).toBeInTheDocument();
   });
 
   it('shows lifecycle id if it exists', async () => {
-    const intake = {
-      ...initialSystemIntakeForm,
-      lcid: '12345'
-    };
-    const component: ReactWrapper = renderComponent(intake);
-    expect(component.find('[data-testid="grt-lcid"]').text()).toEqual('12345');
+    render(
+      <MemoryRouter>
+        <MockedProvider>
+          <Summary
+            id={INTAKE_ID}
+            requester={{
+              name: 'John Doe',
+              component: 'Office of Information Technology'
+            }}
+            requestName="Request Name"
+            requestType="NEW"
+            status="LCID_ISSUED"
+            adminLead={null}
+            submittedAt={DateTime.local()}
+            lcid="123456"
+          />
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      within(screen.getByTestId('grt-lcid')).getByText('123456')
+    ).toBeInTheDocument();
   });
 });

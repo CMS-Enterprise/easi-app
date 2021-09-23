@@ -20,11 +20,11 @@ import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   UpdateSystemIntakeRequestDetails,
   UpdateSystemIntakeRequestDetailsVariables
 } from 'queries/types/UpdateSystemIntakeRequestDetails';
-import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
@@ -36,7 +36,7 @@ type RequestDetailsForm = {
 };
 
 type RequestDetailsProps = {
-  systemIntake: SystemIntakeForm;
+  systemIntake: SystemIntake;
 };
 
 const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {

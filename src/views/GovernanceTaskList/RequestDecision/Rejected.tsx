@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
-import { SystemIntakeForm } from 'types/systemIntake';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 type RejectedProps = {
-  intake: SystemIntakeForm;
+  intake: SystemIntake;
 };
 
 const Rejected = ({ intake }: RejectedProps) => {
+  const { id, rejectionReason, decisionNextSteps } = intake;
   const { t } = useTranslation('taskList');
 
   return (
@@ -18,11 +19,11 @@ const Rejected = ({ intake }: RejectedProps) => {
         {t('decision.bizCaseRejected')}
       </h2>
       <h3>{t('decision.reasons')}</h3>
-      <p>{intake.rejectionReason}</p>
-      {intake.decisionNextSteps && (
+      <p>{rejectionReason}</p>
+      {decisionNextSteps && (
         <>
           <h3>{t('decision.nextSteps')}</h3>
-          <p className="text-pre-wrap">{intake.decisionNextSteps}</p>
+          <p className="text-pre-wrap">{decisionNextSteps}</p>
         </>
       )}
       <h3>{t('general:feedback.improvement')}</h3>
@@ -36,7 +37,7 @@ const Rejected = ({ intake }: RejectedProps) => {
       </UswdsLink>
 
       <div className="margin-top-4">
-        <UswdsLink asCustom={Link} to={`/governance-task-list/${intake.id}`}>
+        <UswdsLink asCustom={Link} to={`/governance-task-list/${id}`}>
           {t('navigation.returnToTaskList')}
         </UswdsLink>
       </div>

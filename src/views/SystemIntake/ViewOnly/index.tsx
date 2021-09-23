@@ -1,13 +1,12 @@
 import React from 'react';
-import { DateTime } from 'luxon';
 
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 type SystemIntakeViewOnlyProps = {
-  systemIntake: SystemIntakeForm;
+  systemIntake: SystemIntake;
 };
 
 const SystemIntakeView = ({ systemIntake }: SystemIntakeViewOnlyProps) => {
@@ -20,10 +19,7 @@ const SystemIntakeView = ({ systemIntake }: SystemIntakeViewOnlyProps) => {
         filename={filename}
         label="Download System Intake as PDF"
       >
-        <SystemIntakeReview
-          systemIntake={systemIntake}
-          now={DateTime.local()}
-        />
+        <SystemIntakeReview systemIntake={systemIntake} />
       </PDFExport>
     </>
   );
