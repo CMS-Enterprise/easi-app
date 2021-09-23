@@ -149,8 +149,8 @@ func (d RDSPostgresDriver) Open(dsn string) (_ driver.Conn, err error) {
 		if err != nil {
 			return nil, err
 		}
+		fmt.Println("return driver open")
 	}
-	fmt.Println("postgres open called")
 	return d.Driver.Open(dsn)
 }
 
