@@ -1,4 +1,4 @@
-import { SystemIntakeForm } from 'types/systemIntake';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 type TagEnum = 'COMPLETED' | 'CANNOT_START' | 'NOT_NEEDED' | '';
 
@@ -32,7 +32,7 @@ export const initialReviewTag = (intakeStatus: string): TagEnum => {
     : 'CANNOT_START';
 };
 
-export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
+export const businessCaseTag = (intake: SystemIntake): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
     if (intake.status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
@@ -57,7 +57,7 @@ export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
   }
 };
 
-export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
+export const finalBusinessCaseTag = (intake: SystemIntake) => {
   if (intake.requestType === 'RECOMPETE') {
     if (intake.status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
@@ -87,7 +87,7 @@ export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
 };
 
 // Task List Item: Attend GRB Meeting
-export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
+export const attendGrbMeetingTag = (intake: SystemIntake): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
     if (intake.status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
@@ -110,7 +110,7 @@ export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
 };
 
 // Task List Item: Decision
-export const decisionTag = (intake: SystemIntakeForm): TagEnum => {
+export const decisionTag = (intake: SystemIntake): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
     if (intake.status === 'LCID_ISSUED') {
       return '';
