@@ -103,20 +103,11 @@ func NewStore(
 
 	}
 
-	db, err := sqlx.Open(iampg.CustomPostgres, dataSourceName)
+	db, err := sqlx.Connect(iampg.CustomPostgres, dataSourceName)
 	if err != nil {
 		return nil, err
 	}
 	db.SetMaxOpenConns(config.MaxConnections)
-
-	logger.Info("Starting database ping....")
-	err = db.Ping()
-	if err != nil {
-		logger.Warn("Failed to ping DB connection", zap.Error(err))
-		return nil, err
-	}
-
-	logger.Info("...DB ping successful!")
 
 	return &Store{
 		db:        db,
