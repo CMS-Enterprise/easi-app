@@ -149,7 +149,6 @@ func (d RDSPostgresDriver) Open(dsn string) (_ driver.Conn, err error) {
 		}
 	}
 
-	fmt.Print("returning from Open function")
 	return d.Driver.Open(dsn)
 }
 
