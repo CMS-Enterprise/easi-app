@@ -2,23 +2,21 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import PageHeading from 'components/PageHeading';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import { SubmitIntake as SubmitIntakeQuery } from 'queries/SystemIntakeQueries';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   SubmitIntake,
   SubmitIntakeVariables
 } from 'queries/types/SubmitIntake';
-import { SystemIntakeForm } from 'types/systemIntake';
 
 type ReviewProps = {
-  systemIntake: SystemIntakeForm;
-  now: DateTime;
+  systemIntake: SystemIntake;
 };
 
-const Review = ({ systemIntake, now }: ReviewProps) => {
+const Review = ({ systemIntake }: ReviewProps) => {
   const history = useHistory();
 
   const [mutate, mutationResult] = useMutation<
@@ -29,7 +27,7 @@ const Review = ({ systemIntake, now }: ReviewProps) => {
   return (
     <div className="system-intake__review">
       <PageHeading>Check your answers before sending</PageHeading>
-      <SystemIntakeReview systemIntake={systemIntake} now={now} />
+      <SystemIntakeReview systemIntake={systemIntake} />
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">What happens next?</h2>
       <p>

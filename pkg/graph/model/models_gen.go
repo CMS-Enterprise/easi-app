@@ -260,11 +260,11 @@ type SystemIntakeBusinessOwnerInput struct {
 }
 
 type SystemIntakeCollaborator struct {
-	Acronym      *string `json:"acronym"`
-	Collaborator *string `json:"collaborator"`
-	Key          *string `json:"key"`
-	Label        *string `json:"label"`
-	Name         *string `json:"name"`
+	Acronym      string `json:"acronym"`
+	Collaborator string `json:"collaborator"`
+	Key          string `json:"key"`
+	Label        string `json:"label"`
+	Name         string `json:"name"`
 }
 
 type SystemIntakeCollaboratorInput struct {

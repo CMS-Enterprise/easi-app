@@ -2,20 +2,18 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import { AnythingWrongSurvey } from 'components/Survey';
 import SystemIntakeReview from 'components/SystemIntakeReview';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 type IntakeReviewProps = {
-  systemIntake: SystemIntakeForm;
-  now: DateTime;
+  systemIntake: SystemIntake;
 };
 
-const IntakeReview = ({ systemIntake, now }: IntakeReviewProps) => {
+const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `System intake for ${systemIntake.requestName}.pdf`;
 
@@ -27,7 +25,7 @@ const IntakeReview = ({ systemIntake, now }: IntakeReviewProps) => {
         filename={filename}
         label="Download System Intake as PDF"
       >
-        <SystemIntakeReview systemIntake={systemIntake} now={now} />
+        <SystemIntakeReview systemIntake={systemIntake} />
       </PDFExport>
       <UswdsLink
         className="usa-button margin-top-5"

@@ -429,9 +429,9 @@ type ContractDate {
 
 type SystemIntakeContract {
   contractor: String
-  endDate: ContractDate
+  endDate: ContractDate!
   hasContract: String
-  startDate: ContractDate
+  startDate: ContractDate!
   vehicle: String
 }
 
@@ -447,11 +447,11 @@ type SystemIntakeFundingSource {
 }
 
 type SystemIntakeCollaborator {
-  acronym: String
-  collaborator: String
-  key: String
-  label: String
-  name: String
+  acronym: String!
+  collaborator: String!
+  key: String!
+  label: String!
+  name: String!
 }
 
 type SystemIntakeGovernanceTeam {
@@ -493,23 +493,23 @@ type SystemIntake {
   archivedAt: Time
   businessCase: BusinessCase
   businessNeed: String
-  businessOwner: SystemIntakeBusinessOwner
+  businessOwner: SystemIntakeBusinessOwner!
   businessSolution: String
-  contract: SystemIntakeContract
-  costs: SystemIntakeCosts
+  contract: SystemIntakeContract!
+  costs: SystemIntakeCosts!
   createdAt: Time!
   currentStage: String
   decisionNextSteps: String
   eaCollaborator: String
   eaCollaboratorName: String
   euaUserId: String!
-  fundingSource: SystemIntakeFundingSource
-  governanceTeams: SystemIntakeGovernanceTeam
+  fundingSource: SystemIntakeFundingSource!
+  governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
   grtFeedbacks: [GRTFeedback!]!
   id: UUID!
-  isso: SystemIntakeISSO
+  isso: SystemIntakeISSO!
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
@@ -517,7 +517,7 @@ type SystemIntake {
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
-  productManager: SystemIntakeProductManager
+  productManager: SystemIntakeProductManager!
   projectAcronym: String
   rejectionReason: String
   requestName: String

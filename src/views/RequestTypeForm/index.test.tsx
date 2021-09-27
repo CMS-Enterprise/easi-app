@@ -33,6 +33,98 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 window.scrollTo = jest.fn();
+const INTAKE_ID = '6aa61a37-d3b4-47ed-ad61-0b8f73151d74';
+const intakeQuery = (intakeData: any) => {
+  return {
+    request: {
+      query: GetSystemIntakeQuery,
+      variables: {
+        id: INTAKE_ID
+      }
+    },
+    result: {
+      data: {
+        systemIntake: {
+          id: INTAKE_ID,
+          adminLead: '',
+          businessNeed: '',
+          businessSolution: '',
+          businessOwner: {
+            component: '',
+            name: ''
+          },
+          contract: {
+            contractor: null,
+            endDate: {
+              day: null,
+              month: null,
+              year: null
+            },
+            hasContract: '',
+            startDate: {
+              day: null,
+              month: null,
+              year: null
+            },
+            vehicle: null
+          },
+          costs: {
+            isExpectingIncrease: null,
+            expectedIncreaseAmount: null
+          },
+          currentStage: null,
+          decisionNextSteps: null,
+          grbDate: null,
+          grtDate: null,
+          grtFeedbacks: [],
+          governanceTeams: {
+            isPresent: null,
+            teams: null
+          },
+          isso: {
+            isPresent: null,
+            name: null
+          },
+          fundingSource: {
+            fundingNumber: null,
+            isFunded: null,
+            source: null
+          },
+          lcid: null,
+          lcidExpiresAt: null,
+          lcidScope: null,
+          needsEaSupport: null,
+          productManager: {
+            component: null,
+            name: null
+          },
+          rejectionReason: null,
+          requester: {
+            component: null,
+            email: null,
+            name: null
+          },
+          requestName: null,
+          requestType: 'NEW',
+          status: 'INTAKE_DRAFT',
+          grtReviewEmailBody: null,
+          decidedAt: null,
+          businessCaseId: null,
+          submittedAt: null,
+          updatedAt: '2021-09-22T18:25:59Z',
+          createdAt: '2021-09-21T20:06:29Z',
+          archivedAt: null,
+          euaUserId: 'ASDF',
+          lastAdminNote: {
+            content: null,
+            createdAt: null
+          },
+          ...intakeData
+        }
+      }
+    }
+  };
+};
 
 describe('The request type form page', () => {
   const mockStore = configureMockStore();
@@ -92,7 +184,7 @@ describe('The request type form page', () => {
       result: {
         data: {
           createSystemIntake: {
-            id: '6aa61a37-d3b4-47ed-ad61-0b8f73151d74',
+            id: INTAKE_ID,
             status: 'INTAKE_DRAFT',
             requestType: 'NEW',
             requester: {
@@ -133,7 +225,7 @@ describe('The request type form page', () => {
       result: {
         data: {
           createSystemIntake: {
-            id: '6aa61a37-d3b4-47ed-ad61-0b8f73151d74',
+            id: INTAKE_ID,
             status: 'INTAKE_DRAFT',
             requestType: 'MAJOR_CHANGES',
             requester: {
@@ -144,7 +236,7 @@ describe('The request type form page', () => {
       }
     };
 
-    renderPage([intakeMutation]);
+    renderPage([intakeMutation, intakeQuery({ requestType: 'MAJOR_CHANGES' })]);
 
     await waitFor(() => {
       expect(screen.getByText('John Doe')).toBeInTheDocument();
@@ -174,7 +266,7 @@ describe('The request type form page', () => {
       result: {
         data: {
           createSystemIntake: {
-            id: '6aa61a37-d3b4-47ed-ad61-0b8f73151d74',
+            id: INTAKE_ID,
             status: 'INTAKE_DRAFT',
             requestType: 'RECOMPETE',
             requester: {
@@ -185,7 +277,7 @@ describe('The request type form page', () => {
       }
     };
 
-    renderPage([intakeMutation]);
+    renderPage([intakeMutation, intakeQuery({ requestType: 'RECOMPETE' })]);
 
     await waitFor(() => {
       expect(screen.getByText('John Doe')).toBeInTheDocument();
@@ -200,7 +292,6 @@ describe('The request type form page', () => {
   });
 
   it('creates a shutdown intake', async () => {
-    const INTAKE_ID = '6aa61a37-d3b4-47ed-ad61-0b8f73151d74';
     const intakeMutation = {
       request: {
         query: CreateSystemIntake,
@@ -227,96 +318,7 @@ describe('The request type form page', () => {
       }
     };
 
-    const intakeQuery = {
-      request: {
-        query: GetSystemIntakeQuery,
-        variables: {
-          id: INTAKE_ID
-        }
-      },
-      result: {
-        data: {
-          systemIntake: {
-            id: INTAKE_ID,
-            euaUserId: 'ABCD',
-            adminLead: null,
-            businessNeed: null,
-            businessSolution: null,
-            businessOwner: {
-              component: null,
-              name: null
-            },
-            contract: {
-              contractor: null,
-              endDate: {
-                day: null,
-                month: null,
-                year: null
-              },
-              hasContract: null,
-              startDate: {
-                day: null,
-                month: null,
-                year: null
-              },
-              vehicle: null
-            },
-            costs: {
-              isExpectingIncrease: null,
-              expectedIncreaseAmount: null
-            },
-            currentStage: null,
-            decisionNextSteps: null,
-            grbDate: null,
-            grtDate: null,
-            grtFeedbacks: [],
-            governanceTeams: {
-              isPresent: false,
-              teams: null
-            },
-            isso: {
-              isPresent: false,
-              name: null
-            },
-            fundingSource: {
-              fundingNumber: null,
-              isFunded: null,
-              source: null
-            },
-            lcid: null,
-            lcidExpiresAt: null,
-            lcidScope: null,
-            needsEaSupport: null,
-            productManager: {
-              component: null,
-              name: null
-            },
-            rejectionReason: null,
-            requester: {
-              component: null,
-              email: null,
-              name: 'User ABCD'
-            },
-            requestName: '',
-            requestType: 'NEW',
-            status: 'INTAKE_DRAFT',
-            createdAt: null,
-            submittedAt: null,
-            updatedAt: null,
-            archivedAt: null,
-            decidedAt: null,
-            businessCaseId: null,
-            lastAdminNote: {
-              content: null,
-              createdAt: null
-            },
-            grtReviewEmailBody: null
-          }
-        }
-      }
-    };
-
-    renderPage([intakeMutation, intakeQuery]);
+    renderPage([intakeMutation, intakeQuery({})]);
 
     await waitFor(() => {
       expect(screen.getByText('John Doe')).toBeInTheDocument();

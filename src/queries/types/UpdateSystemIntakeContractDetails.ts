@@ -39,9 +39,9 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract {
   __typename: "SystemIntakeContract";
   contractor: string | null;
-  endDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_endDate | null;
+  endDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_endDate;
   hasContract: string | null;
-  startDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_startDate | null;
+  startDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_startDate;
   vehicle: string | null;
 }
 
@@ -49,9 +49,9 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
   __typename: "SystemIntake";
   id: UUID;
   currentStage: string | null;
-  fundingSource: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_fundingSource | null;
-  costs: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_costs | null;
-  contract: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract | null;
+  fundingSource: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_fundingSource;
+  costs: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_costs;
+  contract: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract;
 }
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails {

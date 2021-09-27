@@ -3,14 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
 
-import { SystemIntakeForm } from 'types/systemIntake';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { formatDate } from 'utils/date';
 
 type ApprovedProps = {
-  intake: SystemIntakeForm;
+  intake: SystemIntake;
 };
 
 const Approved = ({ intake }: ApprovedProps) => {
+  const { id, lcid, lcidScope, lcidExpiresAt, decisionNextSteps } = intake;
   const { t } = useTranslation('taskList');
   return (
     <>
@@ -21,27 +22,25 @@ const Approved = ({ intake }: ApprovedProps) => {
         <h2 className="margin-top-0">{t('decision.bizCaseApproved')}</h2>
         <dl>
           <dt>{t('decision.lcid')}</dt>
-          <dd className="margin-left-0 font-body-xl text-bold">
-            {intake.lcid}
-          </dd>
+          <dd className="margin-left-0 font-body-xl text-bold">{lcid}</dd>
         </dl>
         <h3>{t('decision.lcidScope')}</h3>
-        <p className="text-pre-wrap">{intake.lcidScope}</p>
-        {intake.lcidExpiresAt && (
+        <p className="text-pre-wrap">{lcidScope}</p>
+        {lcidExpiresAt && (
           <p className="text-bold">
             {t('decision.lcidExpiration', {
-              date: formatDate(intake.lcidExpiresAt)
+              date: formatDate(lcidExpiresAt)
             })}
           </p>
         )}
       </div>
 
-      {intake.decisionNextSteps && (
+      {decisionNextSteps && (
         <>
           <h3>{t('decision.nextSteps')}</h3>
           <Alert type="info">{t('decision.completeNextSteps')}</Alert>
 
-          <p className="text-pre-wrap">{intake.decisionNextSteps}</p>
+          <p className="text-pre-wrap">{decisionNextSteps}</p>
         </>
       )}
       <h3>{t('general:feedback.improvement')}</h3>
@@ -55,7 +54,7 @@ const Approved = ({ intake }: ApprovedProps) => {
       </UswdsLink>
 
       <div className="margin-top-4">
-        <UswdsLink asCustom={Link} to={`/governance-task-list/${intake.id}`}>
+        <UswdsLink asCustom={Link} to={`/governance-task-list/${id}`}>
           {t('navigation.returnToTaskList')}
         </UswdsLink>
       </div>

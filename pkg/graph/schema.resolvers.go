@@ -1312,11 +1312,11 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		name := "Technical Review Board"
 
 		teams = append(teams, &model.SystemIntakeCollaborator{
-			Key:          &key,
-			Label:        &label,
-			Acronym:      &acronym,
-			Name:         &name,
-			Collaborator: obj.TRBCollaboratorName.Ptr(),
+			Key:          key,
+			Label:        label,
+			Acronym:      acronym,
+			Name:         name,
+			Collaborator: obj.TRBCollaboratorName.String,
 		})
 	}
 
@@ -1327,11 +1327,11 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		name := "OIT's Security and Privacy Group"
 
 		teams = append(teams, &model.SystemIntakeCollaborator{
-			Key:          &key,
-			Label:        &label,
-			Acronym:      &acronym,
-			Name:         &name,
-			Collaborator: obj.OITSecurityCollaboratorName.Ptr(),
+			Key:          key,
+			Label:        label,
+			Acronym:      acronym,
+			Name:         name,
+			Collaborator: obj.OITSecurityCollaboratorName.String,
 		})
 	}
 
@@ -1342,11 +1342,11 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		name := "Enterprise Architecture"
 
 		teams = append(teams, &model.SystemIntakeCollaborator{
-			Key:          &key,
-			Label:        &label,
-			Acronym:      &acronym,
-			Name:         &name,
-			Collaborator: obj.EACollaboratorName.Ptr(),
+			Key:          key,
+			Label:        label,
+			Acronym:      acronym,
+			Name:         name,
+			Collaborator: obj.EACollaboratorName.String,
 		})
 	}
 

@@ -16,7 +16,7 @@ type GovernanceTeamOptionsProps = {
 
 const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
   const { values, errors } = formikProps;
-  const { teams = [] } = values.governanceTeams;
+  const teams = values.governanceTeams.teams || [];
 
   return (
     <FieldArray name="governanceTeams.teams">
@@ -47,10 +47,12 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                       });
                     } else {
                       const removeIndex = values.governanceTeams.teams
-                        .map(t => t.name)
+                        ?.map(t => t.name)
                         .indexOf(e.target.value);
 
-                      arrayHelpers.remove(removeIndex);
+                      if (removeIndex) {
+                        arrayHelpers.remove(removeIndex);
+                      }
                     }
                   }}
                   value={team.value}
