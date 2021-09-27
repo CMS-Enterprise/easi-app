@@ -16,11 +16,10 @@ require (
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/jmoiron/sqlx v1.3.4
+	github.com/jmoiron/sqlx v1.2.0
 	github.com/launchdarkly/eventsource v1.6.1 // indirect
 	github.com/lestrrat-go/jwx v1.0.2 // indirect
 	github.com/lib/pq v1.10.3
-	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/pquerna/otp v1.2.0
 	github.com/spf13/cobra v1.2.1
