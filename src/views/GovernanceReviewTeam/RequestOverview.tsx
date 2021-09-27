@@ -201,8 +201,8 @@ const RequestOverview = () => {
                 exact
                 render={() => (
                   <ChooseAction
+                    systemIntake={systemIntake}
                     businessCase={businessCase}
-                    systemIntakeType={systemIntake.requestType}
                   />
                 )}
               />
