@@ -78,8 +78,8 @@ func NewStore(
 			creds = stscreds.NewCredentials(sess, dbIamRoleArn)
 		}
 		dbEndpoint := fmt.Sprintf("%s:%s", config.Host, config.Port)
-		authToken, err := rdsutils.BuildAuthToken(dbEndpoint, "us-west-2", config.Username, creds)
-		if err != nil {
+		authToken, authErr := rdsutils.BuildAuthToken(dbEndpoint, "us-west-2", config.Username, creds)
+		if authErr != nil {
 			log.Fatalf("failed to build auth token %v", err)
 		}
 
