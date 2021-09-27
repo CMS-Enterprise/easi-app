@@ -11,7 +11,6 @@ require (
 	github.com/go-openapi/strfmt v0.20.2
 	github.com/go-openapi/swag v0.19.15
 	github.com/go-openapi/validate v0.20.2
-	github.com/gobuffalo/pop/v5 v5.3.4
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.7.4
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
@@ -21,6 +20,7 @@ require (
 	github.com/launchdarkly/eventsource v1.6.1 // indirect
 	github.com/lestrrat-go/jwx v1.0.2 // indirect
 	github.com/lib/pq v1.10.3
+	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/pquerna/otp v1.2.0
 	github.com/spf13/cobra v1.2.1
