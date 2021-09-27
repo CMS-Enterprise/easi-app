@@ -66,9 +66,28 @@ func NewStore(
 		}
 	}
 
+	dataSourceName := fmt.Sprintf(
+		"host=%s port=%s user=%s "+
+			"password=%s dbname=%s sslmode=%s",
+		config.Host,
+		config.Port,
+		config.Username,
+		config.Password,
+		config.Database,
+		config.SSLMode,
+	)
+
 	if dbIamFlag {
-		// Set correct iam user
 		config.Username = "app_user_iam"
+		if sess != nil {
+			// We want to get the credentials from the logged in AWS session rather than create directly,
+			// because the session conflates the environment, shared, and container metadata config
+			// within NewSession.  With stscreds, we use the Secure Token Service,
+			// to assume the given role (that has rds db connect permissions).
+			creds = stscreds.NewCredentials(sess, dbIamRoleArn)
+		}
+
+		fmt.Printf("datasource name created")
 		// Set a bogus password holder. It will be replaced with an RDS auth token as the password.
 		passHolder := "*****"
 
@@ -84,23 +103,10 @@ func NewStore(
 			make(chan bool))
 
 		config.Password = passHolder
-	}
 
-	dataSourceName := fmt.Sprintf(
-		"host=%s port=%s user=%s "+
-			"password=%s dbname=%s sslmode=%s",
-		config.Host,
-		config.Port,
-		config.Username,
-		config.Password,
-		config.Database,
-		config.SSLMode,
-	)
-
-	if dbIamFlag {
-
-		config.Password = iampg.GetCurrentPass()
-
+		dataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
+			config.Host, config.Port, config.Username, config.Password, config.Database,
+		)
 	}
 
 	db, err := sqlx.Connect(iampg.CustomPostgres, dataSourceName)
