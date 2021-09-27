@@ -231,7 +231,6 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
         RejectIntake
       ];
 
-      console.debug(flags);
       if (flags.lcidExtension) {
         if (systemIntake.status === SystemIntakeStatus.LCID_ISSUED) {
           availableActions.unshift(ExtendLifecycleID);
