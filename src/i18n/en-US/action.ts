@@ -48,7 +48,7 @@ const action = {
     }
   },
   extendLcid: {
-    backLink: 'Change',
+    back: 'Change',
     heading: 'Actions on request',
     subheading: 'How to proceed?',
     action: 'Extend Lifecycle ID expiration date',
