@@ -116,7 +116,7 @@ func NewStore(
 		)
 	}
 
-	db, err := sqlx.Open("postgres", dataSourceName)
+	db, err := sqlx.Open(iampg.CustomPostgres, dataSourceName)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func NewStore(
 		dataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 			config.Host, config.Port, config.Username, authToken, config.Database,
 		)
-		db, err = sqlx.Connect("postgres", dataSourceName)
+		db, err = sqlx.Connect(iampg.CustomPostgres, dataSourceName)
 		if err != nil {
 			return nil, err
 		}
