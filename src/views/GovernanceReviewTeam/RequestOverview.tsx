@@ -320,17 +320,18 @@ const RequestOverview = () => {
                 path="/governance-review-team/:systemId/actions/issue-lcid"
                 render={() => <IssueLifecycleId />}
               />
-              {flags.lcidExtension && (
-                <Route
-                  path="/governance-review-team/:systemId/actions/extend-lcid"
-                  render={() => (
-                    <ExtendLifecycleId
-                      lcid={data.systemIntake?.lcid || ''}
-                      lcidExpiresAt={data.systemIntake?.lcidExpiresAt}
-                    />
-                  )}
-                />
-              )}
+              {flags.lcidExtension &&
+                data?.systemIntake?.status === 'LCID_ISSUED' && (
+                  <Route
+                    path="/governance-review-team/:systemId/actions/extend-lcid"
+                    render={() => (
+                      <ExtendLifecycleId
+                        lcid={data.systemIntake?.lcid || ''}
+                        lcidExpiresAt={data.systemIntake?.lcidExpiresAt}
+                      />
+                    )}
+                  />
+                )}
               <Route
                 path="/governance-review-team/:systemId/actions/not-approved"
                 render={() => <RejectIntake />}
