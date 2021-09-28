@@ -20,7 +20,7 @@ const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
     clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
     redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
     tokenManager: {
-      autoRenew: true
+      autoRenew: false
     }
   });
 
