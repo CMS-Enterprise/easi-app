@@ -16,9 +16,8 @@ type TimeOutWrapperProps = {
 
 const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const [lastActiveAt, setLastActiveAt] = useState(DateTime.local().toMillis());
-  const [countdown, setCountdown] = useState(
-    Duration.fromObject({ minutes: 5 }).as('seconds')
-  );
+  const [expirationTime, setExpirationTime] = useState(0);
+
   const LAST_ACTIVE_AT_KEY = 'easiLastActiveAt';
   const isLocalAuth =
     isLocalAuthEnabled() &&
@@ -73,7 +72,6 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const handleModalExit = async () => {
     setIsModalOpen(false);
     setLastActiveAt(DateTime.local().toMillis());
-    setCountdown(Duration.fromObject({ minutes: 5 }).as('seconds'));
     forceRenew();
   };
 
@@ -81,14 +79,14 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   // Updates the minutes/seconds in the message
   useInterval(
     () => {
-      setCountdown(countdown - 1);
-
-      if (countdown <= 0) {
+      const now = DateTime.local().toSeconds();
+      const isSessionExpired = now - expirationTime > 0;
+      setTimeRemainingArr(formatSessionTimeRemaining(expirationTime - now));
+      if (isSessionExpired) {
         oktaAuth.signOut({
           postLogoutRedirectUri: `${window.location.origin}/login`
         });
       }
-      setTimeRemainingArr(formatSessionTimeRemaining(countdown));
     },
     authState?.isAuthenticated && isModalOpen ? 1000 : null
   );
@@ -99,12 +97,40 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   useInterval(
     () => {
       if (lastActiveAt + tenMinutes < DateTime.local().toMillis()) {
-        setTimeRemainingArr(formatSessionTimeRemaining(countdown));
+        const now = DateTime.local();
+        const expiration = Math.floor(now.plus({ minutes: 5 }).toSeconds());
+        setExpirationTime(expiration);
+        setTimeRemainingArr(
+          formatSessionTimeRemaining(expiration - now.toSeconds())
+        );
         setIsModalOpen(true);
       }
     },
     authState?.isAuthenticated && !isModalOpen && !isLocalAuth ? 1000 : null
   );
+
+  // If user is authenticated and has a token, renew it forever one
+  // minute before expiration.
+  // The user's inactivity will log the user out.
+  useEffect(() => {
+    const twoMinutes = Duration.fromObject({ minutes: 1 }).as('seconds');
+
+    if (authState?.isAuthenticated && authState.accessToken) {
+      // expiresAt is in seconds
+      const timeUntilTokenExpiration =
+        authState?.accessToken?.expiresAt -
+        DateTime.local().toSeconds() -
+        twoMinutes;
+
+      const timeout = setTimeout(() => {
+        forceRenew();
+      }, timeUntilTokenExpiration * 1000);
+
+      return () => clearTimeout(timeout);
+    }
+    return undefined;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authState?.isAuthenticated, authState?.accessToken]);
 
   // Set lastActiveAt between tabs
   useEffect(() => {

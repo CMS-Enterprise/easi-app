@@ -5,13 +5,13 @@ import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { isIntakeOpen } from 'utils/systemIntake';
 
 import './index.scss';
 
 type SideNavActionsProps = {
-  intake: SystemIntakeForm;
+  intake: SystemIntake;
   archiveIntake: () => void;
 };
 

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -28,9 +27,10 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
-import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import { fetchBusinessCase } from 'types/routines';
 import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedbackToBusinessOwner';
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
+import NotFound from 'views/NotFound';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -53,45 +53,53 @@ const RequestOverview = () => {
     systemId: string;
     activePage: string;
   }>();
-  const { loading, data: graphData } = useQuery<
-    GetSystemIntake,
-    GetSystemIntakeVariables
-  >(GetSystemIntakeQuery, {
-    variables: {
-      id: systemId
+
+  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
+    GetSystemIntakeQuery,
+    {
+      variables: {
+        id: systemId
+      }
     }
-  });
-
-  const intake = graphData?.systemIntake;
-
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
   );
+
+  const systemIntake = data?.systemIntake;
 
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
   );
 
   useEffect(() => {
-    dispatch(fetchSystemIntake(systemId));
-  }, [dispatch, systemId]);
-
-  useEffect(() => {
-    if (systemIntake.businessCaseId) {
+    if (systemIntake?.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
-  }, [dispatch, systemIntake.businessCaseId]);
+  }, [dispatch, systemIntake?.businessCaseId]);
 
   const getNavLinkClasses = (page: string) =>
     classnames('easi-grt__nav-link', {
       'easi-grt__nav-link--active': page === activePage
     });
 
+  if (!loading && !systemIntake) {
+    return <NotFound />;
+  }
+
   return (
     <PageWrapper className="easi-grt" data-testid="grt-request-overview">
       <Header />
       <MainContent>
-        {!loading && <Summary intake={intake} />}
+        {systemIntake && (
+          <Summary
+            id={systemIntake.id}
+            requester={systemIntake.requester}
+            requestName={systemIntake.requestName || ''}
+            requestType={systemIntake.requestType}
+            status={systemIntake.status}
+            adminLead={systemIntake.adminLead}
+            submittedAt={systemIntake.submittedAt}
+            lcid={systemIntake.lcid}
+          />
+        )}
         <section className="grid-container grid-row margin-y-5 ">
           <nav className="tablet:grid-col-2 margin-right-2">
             <ul className="easi-grt__nav-list">
@@ -156,21 +164,17 @@ const RequestOverview = () => {
               </li>
             </ul>
           </nav>
-          {loading ? (
+          {loading && (
             <div className="margin-x-auto">
               <PageLoading />
             </div>
-          ) : (
+          )}
+          {!loading && !!systemIntake && (
             <section className="tablet:grid-col-9">
               <Route
                 path="/governance-review-team/:systemId/intake-request"
                 render={() => {
-                  return (
-                    <IntakeReview
-                      systemIntake={intake}
-                      now={DateTime.local()}
-                    />
-                  );
+                  return <IntakeReview systemIntake={systemIntake} />;
                 }}
               />
               <Route
@@ -178,7 +182,7 @@ const RequestOverview = () => {
                 render={() => (
                   <BusinessCaseReview
                     businessCase={businessCase}
-                    grtFeedbacks={intake?.grtFeedbacks}
+                    grtFeedbacks={systemIntake.grtFeedbacks}
                   />
                 )}
               />
@@ -189,12 +193,12 @@ const RequestOverview = () => {
               <Route
                 path="/governance-review-team/:systemId/dates"
                 render={() => {
-                  return <Dates systemIntake={intake} />;
+                  return <Dates systemIntake={systemIntake} />;
                 }}
               />
               <Route
                 path="/governance-review-team/:systemId/decision"
-                render={() => <Decision systemIntake={intake} />}
+                render={() => <Decision systemIntake={systemIntake} />}
               />
               <Route
                 path="/governance-review-team/:systemId/actions"

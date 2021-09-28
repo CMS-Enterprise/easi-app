@@ -17,11 +17,11 @@ export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetai
 
 export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_governanceTeams_teams {
   __typename: "SystemIntakeCollaborator";
-  acronym: string | null;
-  collaborator: string | null;
-  key: string | null;
-  label: string | null;
-  name: string | null;
+  acronym: string;
+  collaborator: string;
+  key: string;
+  label: string;
+  name: string;
 }
 
 export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_governanceTeams {
@@ -51,10 +51,10 @@ export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetai
 export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
-  businessOwner: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_businessOwner | null;
-  governanceTeams: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_governanceTeams | null;
-  isso: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_isso | null;
-  productManager: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_productManager | null;
+  businessOwner: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_businessOwner;
+  governanceTeams: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_governanceTeams;
+  isso: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_isso;
+  productManager: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_productManager;
   requester: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_requester;
 }
 
