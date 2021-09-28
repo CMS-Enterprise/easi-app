@@ -122,10 +122,11 @@ func NewStore(
 		dataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 			config.Host, config.Port, config.Username, config.Password, config.Database,
 		)
-		db, err = sqlx.Connect("postgres", dataSourceName)
-		if err != nil {
-			return nil, err
-		}
+	}
+
+	db, err = sqlx.Connect("postgres", dataSourceName)
+	if err != nil {
+		return nil, err
 	}
 
 	db.SetMaxOpenConns(config.MaxConnections)
