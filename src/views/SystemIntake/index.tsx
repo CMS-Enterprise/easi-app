@@ -45,7 +45,7 @@ export const SystemIntake = () => {
   );
 
   const systemIntake = data?.systemIntake;
-  console.log(systemIntake, loading);
+
   if (!loading && !systemIntake) {
     return <NotFound />;
   }
