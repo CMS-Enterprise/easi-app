@@ -45,7 +45,7 @@ export const SystemIntake = () => {
   );
 
   const systemIntake = data?.systemIntake;
-
+  console.log(systemIntake, loading);
   if (!loading && !systemIntake) {
     return <NotFound />;
   }
@@ -71,7 +71,7 @@ export const SystemIntake = () => {
           <Breadcrumb current>Intake Request</Breadcrumb>
         </BreadcrumbBar>
         {loading && <PageLoading />}
-        {!!systemIntake && (
+        {!loading && !!systemIntake && (
           <Switch>
             <Route
               path="/system/:systemId/contact-details"
