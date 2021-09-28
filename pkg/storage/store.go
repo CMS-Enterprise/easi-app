@@ -109,9 +109,6 @@ func NewStore(
 		// 	log.Fatalf("failed to build auth token %v", err)
 		// }
 
-		dataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
-			config.Host, config.Port, config.Username, passHolder, config.Database,
-		)
 	}
 
 	// db, err := sqlx.Connect("postgres", dataSourceName)
