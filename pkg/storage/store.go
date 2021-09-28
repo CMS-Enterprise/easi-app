@@ -114,18 +114,14 @@ func NewStore(
 		)
 	}
 
-	db, err := sqlx.Open(iampg.CustomPostgres, dataSourceName)
-	if err != nil {
-		return nil, err
-	}
+	// db, err := sqlx.Connect("postgres", dataSourceName)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
+	var db *sqlx.DB
 	if dbIamFlag {
 		config.Password = iampg.GetCurrentPass()
-		// dbEndpoint := fmt.Sprintf("%s:%s", config.Host, config.Port)
-		// authToken, authErr := rdsutils.BuildAuthToken(dbEndpoint, "us-west-2", config.Username, creds)
-		// if authErr != nil {
-		// 	log.Fatalf("failed to build auth token %v", err)
-		// }
 		dataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 			config.Host, config.Port, config.Username, config.Password, config.Database,
 		)
