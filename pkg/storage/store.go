@@ -2,13 +2,11 @@ package storage
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/rds/rdsutils"
 
 	iampg "github.com/cmsgov/easi-app/pkg/iampostgres"
 
@@ -123,15 +121,15 @@ func NewStore(
 
 	if dbIamFlag {
 		config.Password = iampg.GetCurrentPass()
-		dbEndpoint := fmt.Sprintf("%s:%s", config.Host, config.Port)
-		authToken, authErr := rdsutils.BuildAuthToken(dbEndpoint, "us-west-2", config.Username, creds)
-		if authErr != nil {
-			log.Fatalf("failed to build auth token %v", err)
-		}
+		// dbEndpoint := fmt.Sprintf("%s:%s", config.Host, config.Port)
+		// authToken, authErr := rdsutils.BuildAuthToken(dbEndpoint, "us-west-2", config.Username, creds)
+		// if authErr != nil {
+		// 	log.Fatalf("failed to build auth token %v", err)
+		// }
 		dataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
-			config.Host, config.Port, config.Username, authToken, config.Database,
+			config.Host, config.Port, config.Username, config.Password, config.Database,
 		)
-		db, err = sqlx.Connect(iampg.CustomPostgres, dataSourceName)
+		db, err = sqlx.Connect("postgres", dataSourceName)
 		if err != nil {
 			return nil, err
 		}
