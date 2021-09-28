@@ -47,6 +47,25 @@ const action = {
       year: 'Year'
     }
   },
+  extendLcid: {
+    backLink: 'Change',
+    heading: 'Actions on request',
+    subheading: 'How to proceed?',
+    action: 'Extend Lifecycle ID expiration date',
+    currentLcid: 'Lifecycle ID',
+    currentLcidExpiration: 'Current expiration date',
+    newLcidExpiration: 'new expiration date',
+    expirationDate: {
+      label: 'Expiration Date',
+      helpText: 'For example 08 02 1776',
+      month: 'Month',
+      day: 'Day',
+      year: 'Year'
+    },
+    submissionInfo:
+      'An email will automatically be sent to the Business Owner letting them know of the new expiration date.',
+    submit: 'Extend Lifecycle ID expiration date'
+  },
   rejectIntake: {
     backLink: 'Change',
     heading: 'Actions on request',

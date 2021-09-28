@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -33,6 +34,7 @@ import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/P
 import NotFound from 'views/NotFound';
 
 import ChooseAction from './Actions/ChooseAction';
+import ExtendLifecycleId from './Actions/ExtendLifecycleId';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
 import RejectIntake from './Actions/RejectIntake';
 import SubmitAction from './Actions/SubmitAction';
@@ -49,6 +51,7 @@ const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
+  const flags = useFlags();
   const { systemId, activePage } = useParams<{
     systemId: string;
     activePage: string;
@@ -317,6 +320,17 @@ const RequestOverview = () => {
                 path="/governance-review-team/:systemId/actions/issue-lcid"
                 render={() => <IssueLifecycleId />}
               />
+              {flags.lcidExtension && (
+                <Route
+                  path="/governance-review-team/:systemId/actions/extend-lcid"
+                  render={() => (
+                    <ExtendLifecycleId
+                      lcid={data.systemIntake?.lcid || ''}
+                      lcidExpiresAt={data.systemIntake?.lcidExpiresAt}
+                    />
+                  )}
+                />
+              )}
               <Route
                 path="/governance-review-team/:systemId/actions/not-approved"
                 render={() => <RejectIntake />}
