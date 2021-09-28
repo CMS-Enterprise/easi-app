@@ -3267,7 +3267,7 @@ type SystemIntake {
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
-  updatedAt: Time!
+  updatedAt: Time
   grtReviewEmailBody: String
   decidedAt: Time
   businessCaseId: UUID
@@ -12068,14 +12068,11 @@ func (ec *executionContext) _SystemIntake_updatedAt(ctx context.Context, field g
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_grtReviewEmailBody(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -18390,9 +18387,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			})
 		case "updatedAt":
 			out.Values[i] = ec._SystemIntake_updatedAt(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "grtReviewEmailBody":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {

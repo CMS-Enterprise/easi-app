@@ -527,7 +527,7 @@ type SystemIntake {
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
-  updatedAt: Time!
+  updatedAt: Time
   grtReviewEmailBody: String
   decidedAt: Time
   businessCaseId: UUID
