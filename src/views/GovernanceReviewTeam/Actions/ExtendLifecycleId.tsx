@@ -41,9 +41,7 @@ const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
     newExpirationYear: ''
   };
 
-  const handleSubmit = () => {
-    console.log('submitting');
-  };
+  const handleSubmit = () => {};
 
   return (
     <Formik
