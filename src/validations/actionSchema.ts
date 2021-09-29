@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 export const actionSchema = Yup.object().shape({
@@ -33,6 +34,48 @@ export const lifecycleIdSchema = Yup.object().shape({
       )
       .required('Please enter the existing Lifecycle ID')
   })
+});
+
+export const extendLifecycleIdSchema = Yup.object().shape({
+  newExpirationMonth: Yup.string().trim().required('Please include a month'),
+  newExpirationDay: Yup.string().trim().required('Please include a day'),
+  newExpirationYear: Yup.string().trim().required('Please include a year'),
+  validDate: Yup.string().when(
+    [
+      'newExpirationMonth',
+      'newExpirationDay',
+      'newExpirationYear',
+      'currentExpiresAt'
+    ],
+    {
+      is: (
+        newExpirationMonth: string,
+        newExpirationDay: string,
+        newExpirationYear: string,
+        currentExpiresAt: string
+      ) => {
+        const newExpiration = DateTime.fromObject({
+          month: Number(newExpirationMonth) || 0,
+          day: Number(newExpirationDay) || 0,
+          year: Number(newExpirationYear) || 0
+        });
+
+        const oldExpiration = DateTime.fromISO(currentExpiresAt) || 0;
+        if (
+          newExpiration.isValid &&
+          newExpiration.toMillis() > oldExpiration.toMillis()
+        ) {
+          return true;
+        }
+        return false;
+      },
+      otherwise: Yup.string().test(
+        'validDate',
+        'Enter a valid expiration date that is later than the current expiration date',
+        () => false
+      )
+    }
+  )
 });
 
 export const rejectIntakeSchema = Yup.object().shape({
