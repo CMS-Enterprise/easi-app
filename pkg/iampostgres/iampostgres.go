@@ -107,7 +107,7 @@ func refreshRDSIAM(host string, port string, region string, user string, creds *
 			}
 
 			iamConfig.currentPassMutex.Lock()
-			iamConfig.currentIamPass = url.QueryEscape(authToken)
+			iamConfig.currentIamPass = authToken
 			iamConfig.currentPassMutex.Unlock()
 			logger.Info("Successfully generated new IAM token")
 			<-ticker.C
