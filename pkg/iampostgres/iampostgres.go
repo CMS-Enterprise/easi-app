@@ -8,7 +8,6 @@ import (
 	"database/sql/driver"
 	"errors"
 	"fmt"
-	"net/url"
 	"strings"
 	"sync"
 	"time"
