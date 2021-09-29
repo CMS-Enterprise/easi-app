@@ -1012,9 +1012,12 @@ gopkg.in/ghodss/yaml.v1 v1.0.0/go.mod h1:HDvRMPQLqycKPs9nWLuzZWxsxRzISLCRORiDpBU
 gopkg.in/ini.v1 v1.62.0/go.mod h1:pNLf8WUiyNEtQjuu5G5vTm06TEv9tsIgeAvK8hOrP4k=
 gopkg.in/ini.v1 v1.63.2 h1:tGK/CyBg7SMzb60vP1M03vNZ3VDu3wGQJwn7Sxi9r3c=
 gopkg.in/ini.v1 v1.63.2/go.mod h1:pNLf8WUiyNEtQjuu5G5vTm06TEv9tsIgeAvK8hOrP4k=
+gopkg.in/launchdarkly/go-jsonstream.v1 v1.0.1 h1:aZHvMDAS+M6/0sRMkDBQ8MyLGsTQrNgN5evu5e8UYpQ=
+gopkg.in/launchdarkly/go-jsonstream.v1 v1.0.1/go.mod h1:YefdBjfITIP8D9BJLVbssFctHkJnQXhv+TiRdTV0Jr4=
 gopkg.in/launchdarkly/go-sdk-common.v2 v2.0.0/go.mod h1:4l1+/AtknK5Sx6YTO9XDqrCbAXj8FgwpI2U/x6ZBIM4=
-gopkg.in/launchdarkly/go-sdk-common.v2 v2.0.1 h1:Uc+vrDSZESJG2F1Hrro8pnPlOSfLDJOMPRgVp5K0+Ro=
 gopkg.in/launchdarkly/go-sdk-common.v2 v2.0.1/go.mod h1:4l1+/AtknK5Sx6YTO9XDqrCbAXj8FgwpI2U/x6ZBIM4=
+gopkg.in/launchdarkly/go-sdk-common.v2 v2.4.0 h1:uA7it+cSIDIF4AhLoaLvQ5h9TxvSSVmn/CsJiAqrm4E=
+gopkg.in/launchdarkly/go-sdk-common.v2 v2.4.0/go.mod h1:P2+C6CHteys+lEDd6298QszCsMhjdYrfzBd6dg//CHA=
 gopkg.in/launchdarkly/go-sdk-events.v1 v1.0.0 h1:4RFAe4vGFeMOfSYS89bi7Qrmldm0pdgFbGyF6vVYQY4=
 gopkg.in/launchdarkly/go-sdk-events.v1 v1.0.0/go.mod h1:t/86BM8V7FETICTMQ8umFoC/bM2Gvx7akU9bQRD9UaE=
 gopkg.in/launchdarkly/go-server-sdk-evaluation.v1 v1.0.1 h1:h2IfUn6gWAqjDYfu/LfdPicUgT+/Ys87z4hk2t2m0Xc=
