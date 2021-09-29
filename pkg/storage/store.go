@@ -76,7 +76,7 @@ func NewStore(
 		config.Database,
 		config.SSLMode,
 	)
-
+	driver := "postgres"
 	if dbIamFlag {
 		config.Username = "app_user_iam"
 		if sess != nil {
@@ -103,39 +103,17 @@ func NewStore(
 			make(chan bool))
 
 		config.Password = passHolder
-		// dbEndpoint := fmt.Sprintf("%s:%s", config.Host, config.Port)
-		// authToken, authErr := rdsutils.BuildAuthToken(dbEndpoint, "us-west-2", config.Username, creds)
-		// if authErr != nil {
-		// 	log.Fatalf("failed to build auth token %v", err)
-		// }
 		dataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 			config.Host, config.Port, config.Username, config.Password, config.Database,
 		)
+		driver = iampg.CustomPostgres
 
 	}
 
-	db, err := sqlx.Connect(iampg.CustomPostgres, dataSourceName)
+	db, err := sqlx.Connect(driver, dataSourceName)
 	if err != nil {
 		return nil, err
 	}
-
-	// var db *sqlx.DB
-	// if dbIamFlag {
-	// 	config.Password = iampg.GetCurrentPass()
-	// 	// dbEndpoint := fmt.Sprintf("%s:%s", config.Host, config.Port)
-	// 	// authToken, authErr := rdsutils.BuildAuthToken(dbEndpoint, "us-west-2", config.Username, creds)
-	// 	// if authErr != nil {
-	// 	// 	log.Fatalf("failed to build auth token %v", err)
-	// 	// }
-	// 	dataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
-	// 		config.Host, config.Port, config.Username, config.Password, config.Database,
-	// 	)
-	// }
-
-	// db, err = sqlx.Connect("postgres", dataSourceName)
-	// if err != nil {
-	// 	return nil, err
-	// }
 
 	db.SetMaxOpenConns(config.MaxConnections)
 
