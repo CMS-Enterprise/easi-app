@@ -1,8 +1,5 @@
 package graph
 
-// This file will be automatically regenerated based on the schema, any resolver implementations
-// will be copied through when generating and any unknown code will be moved to the end.
-
 import (
 	"context"
 	"errors"
@@ -1054,6 +1051,12 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 }
 
 func (r *mutationResolver) ExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error) {
+	requesterEUAID := appcontext.Principal(ctx).ID()
+	requesterInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
+	if err != nil {
+		return nil, err
+	}
+
 	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
@@ -1070,6 +1073,17 @@ func (r *mutationResolver) ExtendLifecycleID(ctx context.Context, input model.Ex
 	updatedIntake, updateErr := r.store.UpdateSystemIntake(ctx, intake)
 	if updateErr != nil {
 		return nil, updateErr
+	}
+
+	err = r.emailClient.SendExtendLCIDEmail(
+		ctx,
+		requesterInfo.Email,
+		input.ID,
+		intake.ProjectName.String,
+		input.ExpirationDate,
+	)
+	if err != nil {
+		return nil, err
 	}
 
 	return &model.ExtendLifecycleIDPayload{
