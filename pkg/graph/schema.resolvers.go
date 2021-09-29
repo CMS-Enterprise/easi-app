@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1055,7 +1054,27 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 }
 
 func (r *mutationResolver) ExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if input.ExpirationDate == nil {
+		return &model.ExtendLifecycleIDPayload{
+			UserErrors: []*model.UserError{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}},
+		}, nil
+	}
+
+	intake.LifecycleExpiresAt = input.ExpirationDate
+
+	updatedIntake, updateErr := r.store.UpdateSystemIntake(ctx, intake)
+	if updateErr != nil {
+		return nil, updateErr
+	}
+
+	return &model.ExtendLifecycleIDPayload{
+		SystemIntake: updatedIntake,
+	}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {

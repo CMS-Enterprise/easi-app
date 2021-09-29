@@ -1511,3 +1511,105 @@ func (s GraphQLTestSuite) TestSubmitIntake() {
 	s.Equal(intake.ID.String(), respIntake.ID)
 	s.Equal(string(models.SystemIntakeStatusINTAKESUBMITTED), respIntake.Status)
 }
+
+func (s GraphQLTestSuite) TestExtendLifecycleId() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:             models.SystemIntakeStatusLCIDISSUED,
+		RequestType:        models.SystemIntakeRequestTypeNEW,
+		EUAUserID:          null.StringFrom("TEST"),
+		LifecycleID:        null.StringFrom("123456"),
+		LifecycleExpiresAt: date(2021, 12, 1),
+	})
+	s.NoError(intakeErr)
+
+	type userErrors []struct {
+		Message string
+		Path    []string
+	}
+
+	var resp struct {
+		ExtendLifecycleID struct {
+			SystemIntake struct {
+				ID            string
+				LcidExpiresAt string
+				Lcid          string
+			}
+			UserErrors userErrors
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			extendLifecycleId(input: {
+				id: "%s",
+				expirationDate: "%s",
+			}) {
+				systemIntake {
+					id
+					lcid
+					lcidExpiresAt
+				}
+				userErrors {
+					message
+					path
+				}
+			}
+		}`, intake.ID, date(2025, 12, 1).Format(time.RFC3339)), &resp)
+
+	s.Equal(0, len(resp.ExtendLifecycleID.UserErrors))
+
+	respIntake := resp.ExtendLifecycleID.SystemIntake
+	s.Equal(intake.ID.String(), respIntake.ID)
+	s.Equal("2025-12-01T00:00:00Z", respIntake.LcidExpiresAt)
+}
+
+func (s GraphQLTestSuite) TestExtendLifecycleIdRequiresExpirationDate() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:             models.SystemIntakeStatusLCIDISSUED,
+		RequestType:        models.SystemIntakeRequestTypeNEW,
+		EUAUserID:          null.StringFrom("TEST"),
+		LifecycleID:        null.StringFrom("123456"),
+		LifecycleExpiresAt: date(2021, 12, 1),
+	})
+	s.NoError(intakeErr)
+
+	type userErrors []struct {
+		Message string
+		Path    []string
+	}
+
+	var resp struct {
+		ExtendLifecycleID struct {
+			SystemIntake struct {
+				ID            string
+				LcidExpiresAt string
+				Lcid          string
+			}
+			UserErrors userErrors
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			extendLifecycleId(input: {
+				id: "%s",
+			}) {
+				systemIntake {
+					id
+					lcid
+					lcidExpiresAt
+				}
+				userErrors {
+					message
+					path
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Empty(resp.ExtendLifecycleID.SystemIntake.ID)
+	s.Equal(userErrors{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}}, resp.ExtendLifecycleID.UserErrors)
+}
