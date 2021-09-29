@@ -150,6 +150,18 @@ func main() {
 		i.GRTDate = &tomorrow
 	})
 	makeBusinessCase("With GRT scheduled", logger, store, intake)
+
+	intake = makeSystemIntake("With LCID Issued", logger, store, func(i *models.SystemIntake) {
+		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour)
+		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
+		i.LifecycleID = null.StringFrom("210001")
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.SubmittedAt = &submittedAt
+	})
+	makeBusinessCase("With LCID Issued", logger, store, intake, func(c *models.BusinessCase) {
+		c.Status = models.BusinessCaseStatusCLOSED
+	})
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {

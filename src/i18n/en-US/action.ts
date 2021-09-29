@@ -16,7 +16,8 @@ const action = {
     rejectIntake: 'Project not approved by GRB',
     sendEmail: 'Send email',
     guideReceivedClose: 'Decomission guide received. Close the request',
-    notRespondingClose: 'Project team not responding. Close the request'
+    notRespondingClose: 'Project team not responding. Close the request',
+    extendLifecycleID: 'Extend Lifecycle ID expiration date'
   },
   issueLCID: {
     backLink: 'Change',

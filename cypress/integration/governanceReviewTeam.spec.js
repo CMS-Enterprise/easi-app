@@ -198,4 +198,15 @@ describe('Governance Review Team', () => {
       'Closed'
     );
   });
+
+  it('can extend a Lifecycle ID', () => {
+    cy.get('button').contains('Closed Requests').click();
+
+    cy.get('a').contains('With LCID Issued').click();
+
+    cy.get('a').contains('Actions').click();
+
+    cy.get('#extend-lcid').check({ force: true }).should('be.checked');
+    // cy.get('button[type="submit"]').click();
+  });
 });

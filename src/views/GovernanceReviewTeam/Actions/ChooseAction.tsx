@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { kebabCase } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
@@ -9,6 +10,7 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
+import { SystemIntakeStatus } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 
 type ActionContextType = {
@@ -52,16 +54,18 @@ const ActionRadioOption = ({ label, route }: ActionRadioOptionProps) => {
 };
 
 type ChooseActionProps = {
+  systemIntake: {
+    status: SystemIntakeStatus;
+    lcid: string;
+    requestType: RequestType;
+  };
   businessCase: BusinessCaseModel;
-  systemIntakeType: RequestType;
 };
 
-const ChooseAction = ({
-  businessCase,
-  systemIntakeType
-}: ChooseActionProps) => {
+const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
+  const flags = useFlags();
 
   const businessCaseExists = !!businessCase.id;
   const [actionRoute, setActionRoute] = useState('');
@@ -194,36 +198,54 @@ const ChooseAction = ({
     />
   );
 
+  const extendLifecycleIDRoute = 'extend-lcid';
+  const ExtendLifecycleID = (
+    <ActionRadioOption
+      key={extendLifecycleIDRoute}
+      label={t('actions.extendLifecycleID')}
+      route={extendLifecycleIDRoute}
+    />
+  );
+
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
-  if (systemIntakeType === 'SHUTDOWN') {
-    availableActions = [
-      SendEmail,
-      GuideReceivedClose,
-      NotRespondingClose,
-      NotITRequest
-    ];
-    availableHiddenActions = [];
-  } else if (businessCaseExists) {
-    availableActions = [BizCaseNeedsChanges];
-    availableHiddenActions = [
-      ReadyForGRT,
-      ReadyForGRB,
-      ProvideFeedbackKeepDraft,
-      ProvideFeedbackNeedFinal,
-      IssueLifecycleId,
-      NoFurtherGovernance,
-      RejectIntake
-    ];
-  } else {
-    availableActions = [NotITRequest, NeedBizCase];
-    availableHiddenActions = [
-      ReadyForGRT,
-      ProvideFeedbackNeedBizCase,
-      ReadyForGRB,
-      NoFurtherGovernance,
-      IssueLifecycleId
-    ];
+
+  if (systemIntake.requestType) {
+    if (systemIntake.requestType === 'SHUTDOWN') {
+      availableActions = [
+        SendEmail,
+        GuideReceivedClose,
+        NotRespondingClose,
+        NotITRequest
+      ];
+      availableHiddenActions = [];
+    } else if (businessCaseExists) {
+      availableActions = [BizCaseNeedsChanges];
+      availableHiddenActions = [
+        ReadyForGRT,
+        ReadyForGRB,
+        ProvideFeedbackKeepDraft,
+        ProvideFeedbackNeedFinal,
+        IssueLifecycleId,
+        NoFurtherGovernance,
+        RejectIntake
+      ];
+
+      if (flags.lcidExtension) {
+        if (systemIntake.status === SystemIntakeStatus.LCID_ISSUED) {
+          availableActions.unshift(ExtendLifecycleID);
+        }
+      }
+    } else {
+      availableActions = [NotITRequest, NeedBizCase];
+      availableHiddenActions = [
+        ReadyForGRT,
+        ProvideFeedbackNeedBizCase,
+        ReadyForGRB,
+        NoFurtherGovernance,
+        IssueLifecycleId
+      ];
+    }
   }
 
   return (
