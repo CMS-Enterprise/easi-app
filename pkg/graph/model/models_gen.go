@@ -162,6 +162,16 @@ type DeleteTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+type ExtendLifecycleIDInput struct {
+	ID             uuid.UUID  `json:"id"`
+	ExpirationDate *time.Time `json:"expirationDate"`
+}
+
+type ExtendLifecycleIDPayload struct {
+	SystemIntake *models.SystemIntake `json:"systemIntake"`
+	UserErrors   []*UserError         `json:"userErrors"`
+}
+
 type GeneratePresignedUploadURLInput struct {
 	FileName string `json:"fileName"`
 	MimeType string `json:"mimeType"`

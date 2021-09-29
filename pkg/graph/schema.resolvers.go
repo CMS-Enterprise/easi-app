@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1051,6 +1052,10 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
 	}, err
+}
+
+func (r *mutationResolver) ExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
