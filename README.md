@@ -278,7 +278,7 @@ There are multiple ways to run the Cypress tests:
   the Cypress tests. The `APP_ENV` environment variable should be set to `test`.
 - `APP_ENV=test ./scripts/run-cypress-test-docker` : Run the Cypress tests,
   database, migrations, backend, and frontend locally in Docker, similar to how
-  they run in CircleCI. Running the tests in this way takes time, but is useful
+  they run in CI. Running the tests in this way takes time, but is useful
   for troubleshooting integration test failures in CI.
 
 ## Optional Setup
@@ -297,13 +297,6 @@ export FLAG_SOURCE=LAUNCH_DARKLY
 
 These values can be obtained from the LaunchDarkly settings page or from
 1Password.
-
-### CircleCI
-
-If you want to make changes to the CircleCI configuration, you will need to
-install the `circleci` cli tool so that the changes can be validated by
-pre-commit: `brew install circleci`. This should be done automatically by
-`scripts/dev prereqs`.
 
 ### 1Password
 
