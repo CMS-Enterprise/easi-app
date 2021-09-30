@@ -618,12 +618,12 @@ input UpdateSystemIntakeContractDetailsInput {
   contract: SystemIntakeContractInput
 }
 
-input ExtendLifecycleIdInput {
+input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
 }
 
-type ExtendLifecycleIdPayload {
+type CreateSystemIntakeActionExtendLifecycleIdPayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
@@ -807,8 +807,8 @@ type Mutation {
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionExtendLifecycleId(
-    input: ExtendLifecycleIdInput!
-  ): ExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
+    input: CreateSystemIntakeActionExtendLifecycleIdInput!
+  ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake

@@ -187,6 +187,11 @@ type ComplexityRoot struct {
 		UserErrors           func(childComplexity int) int
 	}
 
+	CreateSystemIntakeActionExtendLifecycleIDPayload struct {
+		SystemIntake func(childComplexity int) int
+		UserErrors   func(childComplexity int) int
+	}
+
 	CreateTestDatePayload struct {
 		TestDate   func(childComplexity int) int
 		UserErrors func(childComplexity int) int
@@ -217,11 +222,6 @@ type ComplexityRoot struct {
 		Phase          func(childComplexity int) int
 		Solution       func(childComplexity int) int
 		Year           func(childComplexity int) int
-	}
-
-	ExtendLifecycleIDPayload struct {
-		SystemIntake func(childComplexity int) int
-		UserErrors   func(childComplexity int) int
 	}
 
 	GRTFeedback struct {
@@ -256,7 +256,7 @@ type ComplexityRoot struct {
 		CreateSystemIntake                               func(childComplexity int, input model.CreateSystemIntakeInput) int
 		CreateSystemIntakeActionBusinessCaseNeeded       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionBusinessCaseNeedsChanges func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionExtendLifecycleID        func(childComplexity int, input model.ExtendLifecycleIDInput) int
+		CreateSystemIntakeActionExtendLifecycleID        func(childComplexity int, input model.CreateSystemIntakeActionExtendLifecycleIDInput) int
 		CreateSystemIntakeActionGuideReceievedClose      func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNoGovernanceNeeded       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNotItRequest             func(childComplexity int, input model.BasicActionInput) int
@@ -543,7 +543,7 @@ type MutationResolver interface {
 	CreateSystemIntakeActionNotRespondingClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionReadyForGrt(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error)
+	CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.CreateSystemIntakeActionExtendLifecycleIDInput) (*model.CreateSystemIntakeActionExtendLifecycleIDPayload, error)
 	CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error)
 	CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
@@ -1229,6 +1229,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateAccessibilityRequestPayload.UserErrors(childComplexity), true
 
+	case "CreateSystemIntakeActionExtendLifecycleIdPayload.systemIntake":
+		if e.complexity.CreateSystemIntakeActionExtendLifecycleIDPayload.SystemIntake == nil {
+			break
+		}
+
+		return e.complexity.CreateSystemIntakeActionExtendLifecycleIDPayload.SystemIntake(childComplexity), true
+
+	case "CreateSystemIntakeActionExtendLifecycleIdPayload.userErrors":
+		if e.complexity.CreateSystemIntakeActionExtendLifecycleIDPayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.CreateSystemIntakeActionExtendLifecycleIDPayload.UserErrors(childComplexity), true
+
 	case "CreateTestDatePayload.testDate":
 		if e.complexity.CreateTestDatePayload.TestDate == nil {
 			break
@@ -1326,20 +1340,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.EstimatedLifecycleCost.Year(childComplexity), true
-
-	case "ExtendLifecycleIdPayload.systemIntake":
-		if e.complexity.ExtendLifecycleIDPayload.SystemIntake == nil {
-			break
-		}
-
-		return e.complexity.ExtendLifecycleIDPayload.SystemIntake(childComplexity), true
-
-	case "ExtendLifecycleIdPayload.userErrors":
-		if e.complexity.ExtendLifecycleIDPayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.ExtendLifecycleIDPayload.UserErrors(childComplexity), true
 
 	case "GRTFeedback.createdAt":
 		if e.complexity.GRTFeedback.CreatedAt == nil {
@@ -1529,7 +1529,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionExtendLifecycleID(childComplexity, args["input"].(model.ExtendLifecycleIDInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionExtendLifecycleID(childComplexity, args["input"].(model.CreateSystemIntakeActionExtendLifecycleIDInput)), true
 
 	case "Mutation.createSystemIntakeActionGuideReceievedClose":
 		if e.complexity.Mutation.CreateSystemIntakeActionGuideReceievedClose == nil {
@@ -3391,12 +3391,12 @@ input UpdateSystemIntakeContractDetailsInput {
   contract: SystemIntakeContractInput
 }
 
-input ExtendLifecycleIdInput {
+input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
 }
 
-type ExtendLifecycleIdPayload {
+type CreateSystemIntakeActionExtendLifecycleIdPayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
@@ -3580,8 +3580,8 @@ type Mutation {
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionExtendLifecycleId(
-    input: ExtendLifecycleIdInput!
-  ): ExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
+    input: CreateSystemIntakeActionExtendLifecycleIdInput!
+  ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
@@ -3813,10 +3813,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionBusinessCaseN
 func (ec *executionContext) field_Mutation_createSystemIntakeActionExtendLifecycleId_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.ExtendLifecycleIDInput
+	var arg0 model.CreateSystemIntakeActionExtendLifecycleIDInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNExtendLifecycleIdInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐExtendLifecycleIDInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateSystemIntakeActionExtendLifecycleIdInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeActionExtendLifecycleIDInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -7242,6 +7242,70 @@ func (ec *executionContext) _CreateAccessibilityRequestPayload_userErrors(ctx co
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CreateSystemIntakeActionExtendLifecycleIdPayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.CreateSystemIntakeActionExtendLifecycleIDPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateSystemIntakeActionExtendLifecycleIdPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemIntake, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntake)
+	fc.Result = res
+	return ec.marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateSystemIntakeActionExtendLifecycleIdPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateSystemIntakeActionExtendLifecycleIDPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateSystemIntakeActionExtendLifecycleIdPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CreateTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.CreateTestDatePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7697,70 +7761,6 @@ func (ec *executionContext) _EstimatedLifecycleCost_year(ctx context.Context, fi
 	res := resTmp.(models.LifecycleCostYear)
 	fc.Result = res
 	return ec.marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ExtendLifecycleIdPayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.ExtendLifecycleIDPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ExtendLifecycleIdPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SystemIntake, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.SystemIntake)
-	fc.Result = res
-	return ec.marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ExtendLifecycleIdPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.ExtendLifecycleIDPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ExtendLifecycleIdPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GRTFeedback_id(ctx context.Context, field graphql.CollectedField, obj *models.GRTFeedback) (ret graphql.Marshaler) {
@@ -9090,7 +9090,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionExtendLifecycleId(
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionExtendLifecycleID(rctx, args["input"].(model.ExtendLifecycleIDInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionExtendLifecycleID(rctx, args["input"].(model.CreateSystemIntakeActionExtendLifecycleIDInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -9110,10 +9110,10 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionExtendLifecycleId(
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*model.ExtendLifecycleIDPayload); ok {
+		if data, ok := tmp.(*model.CreateSystemIntakeActionExtendLifecycleIDPayload); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.ExtendLifecycleIDPayload`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.CreateSystemIntakeActionExtendLifecycleIDPayload`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9122,9 +9122,9 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionExtendLifecycleId(
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.ExtendLifecycleIDPayload)
+	res := resTmp.(*model.CreateSystemIntakeActionExtendLifecycleIDPayload)
 	fc.Result = res
-	return ec.marshalOExtendLifecycleIdPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐExtendLifecycleIDPayload(ctx, field.Selections, res)
+	return ec.marshalOCreateSystemIntakeActionExtendLifecycleIdPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeActionExtendLifecycleIDPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createSystemIntakeNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -15577,6 +15577,37 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestNoteInput(ct
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycleIdInput(ctx context.Context, obj interface{}) (model.CreateSystemIntakeActionExtendLifecycleIDInput, error) {
+	var it model.CreateSystemIntakeActionExtendLifecycleIDInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "expirationDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expirationDate"))
+			it.ExpirationDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateSystemIntakeInput(ctx context.Context, obj interface{}) (model.CreateSystemIntakeInput, error) {
 	var it model.CreateSystemIntakeInput
 	asMap := map[string]interface{}{}
@@ -15762,37 +15793,6 @@ func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Contex
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
 			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputExtendLifecycleIdInput(ctx context.Context, obj interface{}) (model.ExtendLifecycleIDInput, error) {
-	var it model.ExtendLifecycleIDInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "expirationDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expirationDate"))
-			it.ExpirationDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17511,6 +17511,32 @@ func (ec *executionContext) _CreateAccessibilityRequestPayload(ctx context.Conte
 	return out
 }
 
+var createSystemIntakeActionExtendLifecycleIdPayloadImplementors = []string{"CreateSystemIntakeActionExtendLifecycleIdPayload"}
+
+func (ec *executionContext) _CreateSystemIntakeActionExtendLifecycleIdPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateSystemIntakeActionExtendLifecycleIDPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createSystemIntakeActionExtendLifecycleIdPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateSystemIntakeActionExtendLifecycleIdPayload")
+		case "systemIntake":
+			out.Values[i] = ec._CreateSystemIntakeActionExtendLifecycleIdPayload_systemIntake(ctx, field, obj)
+		case "userErrors":
+			out.Values[i] = ec._CreateSystemIntakeActionExtendLifecycleIdPayload_userErrors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var createTestDatePayloadImplementors = []string{"CreateTestDatePayload"}
 
 func (ec *executionContext) _CreateTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateTestDatePayload) graphql.Marshaler {
@@ -17669,32 +17695,6 @@ func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast
 			out.Values[i] = ec._EstimatedLifecycleCost_solution(ctx, field, obj)
 		case "year":
 			out.Values[i] = ec._EstimatedLifecycleCost_year(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var extendLifecycleIdPayloadImplementors = []string{"ExtendLifecycleIdPayload"}
-
-func (ec *executionContext) _ExtendLifecycleIdPayload(ctx context.Context, sel ast.SelectionSet, obj *model.ExtendLifecycleIDPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, extendLifecycleIdPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("ExtendLifecycleIdPayload")
-		case "systemIntake":
-			out.Values[i] = ec._ExtendLifecycleIdPayload_systemIntake(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._ExtendLifecycleIdPayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -19848,6 +19848,11 @@ func (ec *executionContext) unmarshalNCreateAccessibilityRequestNoteInput2github
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateSystemIntakeActionExtendLifecycleIdInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeActionExtendLifecycleIDInput(ctx context.Context, v interface{}) (model.CreateSystemIntakeActionExtendLifecycleIDInput, error) {
+	res, err := ec.unmarshalInputCreateSystemIntakeActionExtendLifecycleIdInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateSystemIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeInput(ctx context.Context, v interface{}) (model.CreateSystemIntakeInput, error) {
 	res, err := ec.unmarshalInputCreateSystemIntakeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -19886,11 +19891,6 @@ func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcms
 		return graphql.Null
 	}
 	return ec._EstimatedLifecycleCost(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNExtendLifecycleIdInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐExtendLifecycleIDInput(ctx context.Context, v interface{}) (model.ExtendLifecycleIDInput, error) {
-	res, err := ec.unmarshalInputExtendLifecycleIdInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNGRTFeedback2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedbackᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GRTFeedback) graphql.Marshaler {
@@ -21057,6 +21057,13 @@ func (ec *executionContext) marshalOCreateAccessibilityRequestPayload2ᚖgithub�
 	return ec._CreateAccessibilityRequestPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCreateSystemIntakeActionExtendLifecycleIdPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeActionExtendLifecycleIDPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateSystemIntakeActionExtendLifecycleIDPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateSystemIntakeActionExtendLifecycleIdPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateTestDatePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -21137,13 +21144,6 @@ func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋ
 	}
 
 	return ret
-}
-
-func (ec *executionContext) marshalOExtendLifecycleIdPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐExtendLifecycleIDPayload(ctx context.Context, sel ast.SelectionSet, v *model.ExtendLifecycleIDPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._ExtendLifecycleIdPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOGRTFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedbackType(ctx context.Context, v interface{}) (models.GRTFeedbackType, error) {

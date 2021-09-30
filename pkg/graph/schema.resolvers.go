@@ -730,9 +730,9 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 	}, err
 }
 
-func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.CreateSystemIntakeActionExtendLifecycleIDInput) (*model.CreateSystemIntakeActionExtendLifecycleIDPayload, error) {
 	if input.ExpirationDate == nil {
-		return &model.ExtendLifecycleIDPayload{
+		return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
 			UserErrors: []*model.UserError{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}},
 		}, nil
 	}
@@ -748,7 +748,7 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		return nil, err
 	}
 
-	return &model.ExtendLifecycleIDPayload{
+	return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
 		SystemIntake: intake,
 	}, nil
 }
