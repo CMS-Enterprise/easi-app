@@ -34,6 +34,8 @@ import {
 import { AppState } from 'reducers/rootReducer';
 import { formatDate } from 'utils/date';
 
+import './index.scss';
+
 type NoteForm = {
   note: string;
 };
@@ -127,10 +129,10 @@ const Notes = () => {
               <dl>
                 <dt>Lifecycle ID</dt>
                 <dd>{data.systemIntake?.lcid}</dd>
-                <dt>New Expiration Date</dt>
-                <dd>{lcidExpirationChange.newDate}</dd>
-                <dt>Previous Expiration Date</dt>
-                <dd>{lcidExpirationChange.previousDate}</dd>
+                <dt>{t('notes.newExpirationDate')}</dt>
+                <dd>{formatDate(lcidExpirationChange.newDate)}</dd>
+                <dt>{t('notes.oldExpirationDate')}</dt>
+                <dd>{formatDate(lcidExpirationChange.previousDate)}</dd>
               </dl>
             )}
             {feedback && (
