@@ -256,6 +256,7 @@ type ComplexityRoot struct {
 		CreateSystemIntake                               func(childComplexity int, input model.CreateSystemIntakeInput) int
 		CreateSystemIntakeActionBusinessCaseNeeded       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionBusinessCaseNeedsChanges func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionExtendLifecycleID        func(childComplexity int, input model.ExtendLifecycleIDInput) int
 		CreateSystemIntakeActionGuideReceievedClose      func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNoGovernanceNeeded       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNotItRequest             func(childComplexity int, input model.BasicActionInput) int
@@ -267,7 +268,6 @@ type ComplexityRoot struct {
 		DeleteAccessibilityRequest                       func(childComplexity int, input model.DeleteAccessibilityRequestInput) int
 		DeleteAccessibilityRequestDocument               func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
 		DeleteTestDate                                   func(childComplexity int, input model.DeleteTestDateInput) int
-		ExtendLifecycleID                                func(childComplexity int, input model.ExtendLifecycleIDInput) int
 		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
@@ -543,6 +543,7 @@ type MutationResolver interface {
 	CreateSystemIntakeActionNotRespondingClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionReadyForGrt(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error)
 	CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error)
 	CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
@@ -558,7 +559,6 @@ type MutationResolver interface {
 	UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystemIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeRequestDetails(ctx context.Context, input model.UpdateSystemIntakeRequestDetailsInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeContractDetails(ctx context.Context, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error)
-	ExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -1519,6 +1519,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSystemIntakeActionBusinessCaseNeedsChanges(childComplexity, args["input"].(model.BasicActionInput)), true
 
+	case "Mutation.createSystemIntakeActionExtendLifecycleId":
+		if e.complexity.Mutation.CreateSystemIntakeActionExtendLifecycleID == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSystemIntakeActionExtendLifecycleId_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSystemIntakeActionExtendLifecycleID(childComplexity, args["input"].(model.ExtendLifecycleIDInput)), true
+
 	case "Mutation.createSystemIntakeActionGuideReceievedClose":
 		if e.complexity.Mutation.CreateSystemIntakeActionGuideReceievedClose == nil {
 			break
@@ -1650,18 +1662,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteTestDate(childComplexity, args["input"].(model.DeleteTestDateInput)), true
-
-	case "Mutation.extendLifecycleId":
-		if e.complexity.Mutation.ExtendLifecycleID == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_extendLifecycleId_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.ExtendLifecycleID(childComplexity, args["input"].(model.ExtendLifecycleIDInput)), true
 
 	case "Mutation.generatePresignedUploadURL":
 		if e.complexity.Mutation.GeneratePresignedUploadURL == nil {
@@ -3579,6 +3579,9 @@ type Mutation {
   createSystemIntakeActionSendEmail(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionExtendLifecycleId(
+    input: ExtendLifecycleIdInput!
+  ): ExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
@@ -3609,7 +3612,6 @@ type Mutation {
   updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
-  extendLifecycleId(input: ExtendLifecycleIdInput!): ExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
 }
 
 type Query {
@@ -3808,6 +3810,21 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionBusinessCaseN
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createSystemIntakeActionExtendLifecycleId_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.ExtendLifecycleIDInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNExtendLifecycleIdInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐExtendLifecycleIDInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createSystemIntakeActionGuideReceievedClose_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3980,21 +3997,6 @@ func (ec *executionContext) field_Mutation_deleteTestDate_args(ctx context.Conte
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNDeleteTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDateInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_extendLifecycleId_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.ExtendLifecycleIDInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNExtendLifecycleIdInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐExtendLifecycleIDInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -9062,6 +9064,69 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionSendEmail(ctx cont
 	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_createSystemIntakeActionExtendLifecycleId(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createSystemIntakeActionExtendLifecycleId_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateSystemIntakeActionExtendLifecycleID(rctx, args["input"].(model.ExtendLifecycleIDInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.ExtendLifecycleIDPayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.ExtendLifecycleIDPayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.ExtendLifecycleIDPayload)
+	fc.Result = res
+	return ec.marshalOExtendLifecycleIdPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐExtendLifecycleIDPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_createSystemIntakeNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9885,69 +9950,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeContractDetails(ctx cont
 	res := resTmp.(*model.UpdateSystemIntakePayload)
 	fc.Result = res
 	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_extendLifecycleId(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_extendLifecycleId_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().ExtendLifecycleID(rctx, args["input"].(model.ExtendLifecycleIDInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*model.ExtendLifecycleIDPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.ExtendLifecycleIDPayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.ExtendLifecycleIDPayload)
-	fc.Result = res
-	return ec.marshalOExtendLifecycleIdPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐExtendLifecycleIDPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -17867,6 +17869,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createSystemIntakeActionReadyForGRT(ctx, field)
 		case "createSystemIntakeActionSendEmail":
 			out.Values[i] = ec._Mutation_createSystemIntakeActionSendEmail(ctx, field)
+		case "createSystemIntakeActionExtendLifecycleId":
+			out.Values[i] = ec._Mutation_createSystemIntakeActionExtendLifecycleId(ctx, field)
 		case "createSystemIntakeNote":
 			out.Values[i] = ec._Mutation_createSystemIntakeNote(ctx, field)
 		case "createSystemIntake":
@@ -17897,8 +17901,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_updateSystemIntakeRequestDetails(ctx, field)
 		case "updateSystemIntakeContractDetails":
 			out.Values[i] = ec._Mutation_updateSystemIntakeContractDetails(ctx, field)
-		case "extendLifecycleId":
-			out.Values[i] = ec._Mutation_extendLifecycleId(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

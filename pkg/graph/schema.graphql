@@ -806,6 +806,9 @@ type Mutation {
   createSystemIntakeActionSendEmail(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionExtendLifecycleId(
+    input: ExtendLifecycleIdInput!
+  ): ExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
@@ -836,7 +839,6 @@ type Mutation {
   updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
-  extendLifecycleId(input: ExtendLifecycleIdInput!): ExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
 }
 
 type Query {

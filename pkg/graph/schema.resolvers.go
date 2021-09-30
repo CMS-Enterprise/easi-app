@@ -730,6 +730,29 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 	}, err
 }
 
+func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error) {
+	if input.ExpirationDate == nil {
+		return &model.ExtendLifecycleIDPayload{
+			UserErrors: []*model.UserError{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}},
+		}, nil
+	}
+
+	intake, err := r.service.CreateActionExtendLifecycleID(
+		ctx, &models.Action{
+			IntakeID:   &input.ID,
+			ActionType: models.ActionTypeEXTENDLCID,
+		}, input.ID, input.ExpirationDate,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.ExtendLifecycleIDPayload{
+		SystemIntake: intake,
+	}, nil
+}
+
 func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error) {
 	note, err := r.store.CreateNote(ctx, &models.Note{
 		AuthorEUAID:    appcontext.Principal(ctx).ID(),
@@ -1051,30 +1074,6 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
 	}, err
-}
-
-func (r *mutationResolver) ExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error) {
-	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	if input.ExpirationDate == nil {
-		return &model.ExtendLifecycleIDPayload{
-			UserErrors: []*model.UserError{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}},
-		}, nil
-	}
-
-	intake.LifecycleExpiresAt = input.ExpirationDate
-
-	updatedIntake, updateErr := r.store.UpdateSystemIntake(ctx, intake)
-	if updateErr != nil {
-		return nil, updateErr
-	}
-
-	return &model.ExtendLifecycleIDPayload{
-		SystemIntake: updatedIntake,
-	}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
