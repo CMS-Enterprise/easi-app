@@ -105,7 +105,14 @@ const Notes = () => {
 
   const actionsByTimestamp =
     data?.systemIntake?.actions.map(action => {
-      const { id, createdAt, type, actor, feedback } = action;
+      const {
+        id,
+        createdAt,
+        type,
+        actor,
+        feedback,
+        lcidExpirationChange
+      } = action;
       return {
         createdAt,
         element: (
@@ -116,6 +123,16 @@ const Notes = () => {
             )} at ${DateTime.fromISO(createdAt).toLocaleString(
               DateTime.TIME_SIMPLE
             )}`}</NoteByline>
+            {lcidExpirationChange && (
+              <dl>
+                <dt>Lifecycle ID</dt>
+                <dd>{data.systemIntake?.lcid}</dd>
+                <dt>New Expiration Date</dt>
+                <dd>{lcidExpirationChange.newDate}</dd>
+                <dt>Previous Expiration Date</dt>
+                <dd>{lcidExpirationChange.previousDate}</dd>
+              </dl>
+            )}
             {feedback && (
               <div className="margin-top-2">
                 <CollapsableLink
