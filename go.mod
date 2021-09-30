@@ -21,7 +21,7 @@ require (
 	github.com/lestrrat-go/jwx v1.0.2 // indirect
 	github.com/lib/pq v1.10.3
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
-	github.com/pquerna/otp v1.2.0
+	github.com/pquerna/otp v1.3.0
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.9.0
 	github.com/stretchr/testify v1.7.0
