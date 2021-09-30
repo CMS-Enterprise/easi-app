@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -16,6 +18,11 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import CreateSystemIntakeActionExtendLifecycleIdQuery from 'queries/CreateSystemIntakeActionExtendLifecycleIdQuery';
+import {
+  CreateSystemIntakeActionExtendLifecycleId,
+  CreateSystemIntakeActionExtendLifecycleIdVariables
+} from 'queries/types/CreateSystemIntakeActionExtendLifecycleId';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import { extendLifecycleIdSchema } from 'validations/actionSchema';
@@ -31,9 +38,13 @@ type ExtendLifecycleIdProps = {
   lcid: string;
   lcidExpiresAt: string;
 };
+
+const RADIX = 10;
+
 const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
   const { t } = useTranslation('action');
   const { systemId } = useParams<{ systemId: string }>();
+  const history = useHistory();
   const initialValues: ExtendLCIDForm = {
     currentExpiresAt: lcidExpiresAt,
     newExpirationDay: '',
@@ -41,7 +52,35 @@ const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
     newExpirationYear: ''
   };
 
-  const handleSubmit = () => {};
+  const [extendLifecycleID, extendLifecycleIDStatus] = useMutation<
+    CreateSystemIntakeActionExtendLifecycleId,
+    CreateSystemIntakeActionExtendLifecycleIdVariables
+  >(CreateSystemIntakeActionExtendLifecycleIdQuery);
+
+  const handleSubmit = (values: ExtendLCIDForm) => {
+    const {
+      newExpirationMonth = '',
+      newExpirationDay = '',
+      newExpirationYear = ''
+    } = values;
+    const expiresAt = DateTime.utc(
+      parseInt(newExpirationYear, RADIX),
+      parseInt(newExpirationMonth, RADIX),
+      parseInt(newExpirationDay, RADIX)
+    );
+    extendLifecycleID({
+      variables: {
+        input: {
+          id: systemId,
+          expirationDate: expiresAt
+        }
+      }
+    }).then(response => {
+      if (!response.errors) {
+        history.push(`/governance-review-team/${systemId}/notes`);
+      }
+    });
+  };
 
   return (
     <Formik
@@ -159,7 +198,11 @@ const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
                 <p className="margin-top-6 line-height-body-3">
                   {t('extendLcid.submissionInfo')}
                 </p>
-                <Button className="margin-y-2" type="submit">
+                <Button
+                  className="margin-y-2"
+                  type="submit"
+                  disabled={extendLifecycleIDStatus.loading}
+                >
                   {t('extendLcid.submit')}
                 </Button>
               </Form>
