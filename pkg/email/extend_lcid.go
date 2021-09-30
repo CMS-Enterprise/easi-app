@@ -4,25 +4,25 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"time"
 	"path"
-	"uuid"
+	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-
 type extendLCID struct {
-	RequestName string
+	RequestName  string
 	NewExpiresAt string
 	DecisionLink string
 }
 
 func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time) (string, error) {
-	decisionPath := path.Join("governance-task-list", systemIntakeID.String(),  "request-decision")
+	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := extendLCID{
-		RequestName: requestName,
+		RequestName:  requestName,
 		NewExpiresAt: newExpiresAt.Format("January 2, 2006"),
 		DecisionLink: c.urlFromPath(decisionPath),
 	}
@@ -38,6 +38,7 @@ func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requestName string, new
 	return b.String(), nil
 }
 
+// SendExtendLCIDEmail sends an email for extending an LCID
 func (c Client) SendExtendLCIDEmail(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time) error {
 	subject := "Lifecycle ID expiration date extended"
 	body, err := c.extendLCIDBody(systemIntakeID, requestName, newExpiresAt)

@@ -1,0 +1,1 @@
+ALTER TYPE action_type ADD VALUE 'EXTEND_LCID';

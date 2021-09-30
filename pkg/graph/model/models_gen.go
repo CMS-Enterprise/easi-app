@@ -108,6 +108,16 @@ type CreateAccessibilityRequestPayload struct {
 	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
+type CreateSystemIntakeActionExtendLifecycleIDInput struct {
+	ID             uuid.UUID  `json:"id"`
+	ExpirationDate *time.Time `json:"expirationDate"`
+}
+
+type CreateSystemIntakeActionExtendLifecycleIDPayload struct {
+	SystemIntake *models.SystemIntake `json:"systemIntake"`
+	UserErrors   []*UserError         `json:"userErrors"`
+}
+
 type CreateSystemIntakeInput struct {
 	RequestType models.SystemIntakeRequestType `json:"requestType"`
 	Requester   *SystemIntakeRequesterInput    `json:"requester"`
@@ -160,16 +170,6 @@ type DeleteTestDateInput struct {
 type DeleteTestDatePayload struct {
 	TestDate   *models.TestDate `json:"testDate"`
 	UserErrors []*UserError     `json:"userErrors"`
-}
-
-type ExtendLifecycleIDInput struct {
-	ID             uuid.UUID  `json:"id"`
-	ExpirationDate *time.Time `json:"expirationDate"`
-}
-
-type ExtendLifecycleIDPayload struct {
-	SystemIntake *models.SystemIntake `json:"systemIntake"`
-	UserErrors   []*UserError         `json:"userErrors"`
 }
 
 type GeneratePresignedUploadURLInput struct {

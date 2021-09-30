@@ -1,5 +1,8 @@
 package graph
 
+// This file will be automatically regenerated based on the schema, any resolver implementations
+// will be copied through when generating and any unknown code will be moved to the end.
+
 import (
 	"context"
 	"errors"
@@ -727,6 +730,47 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 	}, err
 }
 
+func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.CreateSystemIntakeActionExtendLifecycleIDInput) (*model.CreateSystemIntakeActionExtendLifecycleIDPayload, error) {
+	requesterEUAID := appcontext.Principal(ctx).ID()
+	requesterInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	if input.ExpirationDate == nil {
+		return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
+			UserErrors: []*model.UserError{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}},
+		}, nil
+	}
+
+	intake, err := r.service.CreateActionExtendLifecycleID(
+		ctx, &models.Action{
+			IntakeID:   &input.ID,
+			ActionType: models.ActionTypeEXTENDLCID,
+		}, input.ID, input.ExpirationDate,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendExtendLCIDEmail(
+		ctx,
+		requesterInfo.Email,
+		input.ID,
+		intake.ProjectName.String,
+		input.ExpirationDate,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
+		SystemIntake: intake,
+	}, nil
+}
+
 func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error) {
 	note, err := r.store.CreateNote(ctx, &models.Note{
 		AuthorEUAID:    appcontext.Principal(ctx).ID(),
@@ -1048,47 +1092,6 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
 	}, err
-}
-
-func (r *mutationResolver) ExtendLifecycleID(ctx context.Context, input model.ExtendLifecycleIDInput) (*model.ExtendLifecycleIDPayload, error) {
-	requesterEUAID := appcontext.Principal(ctx).ID()
-	requesterInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
-	if err != nil {
-		return nil, err
-	}
-
-	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	if input.ExpirationDate == nil {
-		return &model.ExtendLifecycleIDPayload{
-			UserErrors: []*model.UserError{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}},
-		}, nil
-	}
-
-	intake.LifecycleExpiresAt = input.ExpirationDate
-
-	updatedIntake, updateErr := r.store.UpdateSystemIntake(ctx, intake)
-	if updateErr != nil {
-		return nil, updateErr
-	}
-
-	err = r.emailClient.SendExtendLCIDEmail(
-		ctx,
-		requesterInfo.Email,
-		input.ID,
-		intake.ProjectName.String,
-		input.ExpirationDate,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.ExtendLifecycleIDPayload{
-		SystemIntake: updatedIntake,
-	}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
