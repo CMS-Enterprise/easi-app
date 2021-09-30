@@ -618,6 +618,16 @@ input UpdateSystemIntakeContractDetailsInput {
   contract: SystemIntakeContractInput
 }
 
+input CreateSystemIntakeActionExtendLifecycleIdInput {
+  id: UUID!
+  expirationDate: Time
+}
+
+type CreateSystemIntakeActionExtendLifecycleIdPayload {
+  systemIntake: SystemIntake
+  userErrors: [UserError!]
+}
+
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -796,6 +806,9 @@ type Mutation {
   createSystemIntakeActionSendEmail(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionExtendLifecycleId(
+    input: CreateSystemIntakeActionExtendLifecycleIdInput!
+  ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake

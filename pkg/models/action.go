@@ -25,6 +25,8 @@ const (
 	ActionTypePROVIDEFEEDBACKNEEDBIZCASE ActionType = "PROVIDE_FEEDBACK_NEED_BIZ_CASE"
 	// ActionTypeISSUELCID captures enum value ISSUE_LCID
 	ActionTypeISSUELCID ActionType = "ISSUE_LCID"
+	// ActionTypeEXTENDLCID captures enum value EXTEND_LCID
+	ActionTypeEXTENDLCID ActionType = "EXTEND_LCID"
 	// ActionTypeCREATEBIZCASE captures enum value CREATE_BIZ_CASE
 	ActionTypeCREATEBIZCASE ActionType = "CREATE_BIZ_CASE"
 	// ActionTypeSUBMITBIZCASE captures enum value SUBMIT_BIZ_CASE

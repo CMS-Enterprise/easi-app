@@ -730,6 +730,29 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 	}, err
 }
 
+func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.CreateSystemIntakeActionExtendLifecycleIDInput) (*model.CreateSystemIntakeActionExtendLifecycleIDPayload, error) {
+	if input.ExpirationDate == nil {
+		return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
+			UserErrors: []*model.UserError{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}},
+		}, nil
+	}
+
+	intake, err := r.service.CreateActionExtendLifecycleID(
+		ctx, &models.Action{
+			IntakeID:   &input.ID,
+			ActionType: models.ActionTypeEXTENDLCID,
+		}, input.ID, input.ExpirationDate,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
+		SystemIntake: intake,
+	}, nil
+}
+
 func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error) {
 	note, err := r.store.CreateNote(ctx, &models.Note{
 		AuthorEUAID:    appcontext.Principal(ctx).ID(),

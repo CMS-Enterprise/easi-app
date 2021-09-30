@@ -1511,3 +1511,130 @@ func (s GraphQLTestSuite) TestSubmitIntake() {
 	s.Equal(intake.ID.String(), respIntake.ID)
 	s.Equal(string(models.SystemIntakeStatusINTAKESUBMITTED), respIntake.Status)
 }
+
+func (s GraphQLTestSuite) TestExtendLifecycleId() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:             models.SystemIntakeStatusLCIDISSUED,
+		RequestType:        models.SystemIntakeRequestTypeNEW,
+		EUAUserID:          null.StringFrom("TEST"),
+		LifecycleID:        null.StringFrom("123456"),
+		LifecycleExpiresAt: date(2021, 12, 1),
+	})
+	s.NoError(intakeErr)
+
+	type userErrors []struct {
+		Message string
+		Path    []string
+	}
+
+	var resp struct {
+		CreateSystemIntakeActionExtendLifecycleID struct {
+			SystemIntake struct {
+				ID            string
+				LcidExpiresAt string
+				Lcid          string
+				Actions       []struct {
+					ID    string
+					Type  string
+					Actor struct {
+						Name  string
+						Email string
+					}
+					Feedback string
+				}
+			}
+			UserErrors userErrors
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			createSystemIntakeActionExtendLifecycleId(input: {
+				id: "%s",
+				expirationDate: "%s",
+			}) {
+				systemIntake {
+					id
+					lcid
+					lcidExpiresAt
+					actions {
+						type
+						actor {
+							name
+							email
+						}
+						feedback
+					}
+				}
+				userErrors {
+					message
+					path
+				}
+			}
+		}`, intake.ID, date(2025, 12, 1).Format(time.RFC3339)), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("WWWW"))
+
+	s.Equal(0, len(resp.CreateSystemIntakeActionExtendLifecycleID.UserErrors))
+
+	respIntake := resp.CreateSystemIntakeActionExtendLifecycleID.SystemIntake
+	s.Equal(intake.ID.String(), respIntake.ID)
+	s.Equal("2025-12-01T00:00:00Z", respIntake.LcidExpiresAt)
+
+	s.Equal(1, len(respIntake.Actions))
+	action := respIntake.Actions[0]
+	s.Equal("EXTEND_LCID", action.Type)
+	s.Equal("wwww Doe", action.Actor.Name)
+	s.Equal("WWWW@local.fake", action.Actor.Email)
+
+	// TODO verify that email was sent
+}
+
+func (s GraphQLTestSuite) TestExtendLifecycleIdRequiresExpirationDate() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:             models.SystemIntakeStatusLCIDISSUED,
+		RequestType:        models.SystemIntakeRequestTypeNEW,
+		EUAUserID:          null.StringFrom("TEST"),
+		LifecycleID:        null.StringFrom("123456"),
+		LifecycleExpiresAt: date(2021, 12, 1),
+	})
+	s.NoError(intakeErr)
+
+	type userErrors []struct {
+		Message string
+		Path    []string
+	}
+
+	var resp struct {
+		CreateSystemIntakeActionExtendLifecycleID struct {
+			SystemIntake struct {
+				ID            string
+				LcidExpiresAt string
+				Lcid          string
+			}
+			UserErrors userErrors
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			createSystemIntakeActionExtendLifecycleId(input: {
+				id: "%s",
+			}) {
+				systemIntake {
+					id
+					lcid
+					lcidExpiresAt
+				}
+				userErrors {
+					message
+					path
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Empty(resp.CreateSystemIntakeActionExtendLifecycleID.SystemIntake.ID)
+	s.Equal(userErrors{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}}, resp.CreateSystemIntakeActionExtendLifecycleID.UserErrors)
+}
