@@ -199,14 +199,48 @@ describe('Governance Review Team', () => {
     );
   });
 
-  it('can extend a Lifecycle ID', () => {
+  it.only('can extend a Lifecycle ID', () => {
+    cy.intercept('GET', '/api/v1/system_intakes?status=closed', req => {
+      req.alias = 'getClosedRequests';
+    });
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetAdminNotesAndActions') {
+        req.alias = 'getAdminNotesAndActions';
+      }
+    });
+
     cy.get('button').contains('Closed Requests').click();
 
+    cy.wait('@getClosedRequests');
     cy.get('a').contains('With LCID Issued').click();
 
     cy.get('a').contains('Actions').click();
 
     cy.get('#extend-lcid').check({ force: true }).should('be.checked');
-    // cy.get('button[type="submit"]').click();
+    cy.get('button[type="submit"]').click();
+
+    cy.get('dt').contains('Current expiration date');
+    cy.get('legend').contains('New expiration date');
+
+    cy.get('#ExtendLifecycleId-NewExpirationMonth')
+      .type('08')
+      .should('have.value', '08');
+    cy.get('#ExtendLifecycleId-NewExpirationDay')
+      .type('31')
+      .should('have.value', '31');
+    cy.get('#ExtendLifecycleId-NewExpirationYear')
+      .type('2028')
+      .should('have.value', '2028');
+    cy.get('button[type="submit"]').click();
+
+    cy.wait('@getAdminNotesAndActions');
+    cy.get('h1').contains('Admin team notes');
+    cy.get('p').contains('Lifecycle ID extended');
+    cy.get('dd').contains('August 30 2028');
+    cy.get('dd').contains('October 30 2021');
+
+    cy.get('a').contains('Decision').click();
+    cy.get('dd').contains('August 31 2028');
   });
 });
