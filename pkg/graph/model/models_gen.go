@@ -246,12 +246,13 @@ type SystemEdge struct {
 
 // An action taken on a system intake, often resulting in a change in status.
 type SystemIntakeAction struct {
-	ID           uuid.UUID                `json:"id"`
-	SystemIntake *models.SystemIntake     `json:"systemIntake"`
-	Type         SystemIntakeActionType   `json:"type"`
-	Actor        *SystemIntakeActionActor `json:"actor"`
-	Feedback     *string                  `json:"feedback"`
-	CreatedAt    time.Time                `json:"createdAt"`
+	ID                   uuid.UUID                         `json:"id"`
+	SystemIntake         *models.SystemIntake              `json:"systemIntake"`
+	Type                 SystemIntakeActionType            `json:"type"`
+	Actor                *SystemIntakeActionActor          `json:"actor"`
+	Feedback             *string                           `json:"feedback"`
+	LcidExpirationChange *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange"`
+	CreatedAt            time.Time                         `json:"createdAt"`
 }
 
 type SystemIntakeActionActor struct {
@@ -339,6 +340,11 @@ type SystemIntakeIsso struct {
 type SystemIntakeISSOInput struct {
 	IsPresent *bool   `json:"isPresent"`
 	Name      *string `json:"name"`
+}
+
+type SystemIntakeLCIDExpirationChange struct {
+	PreviousDate time.Time `json:"previousDate"`
+	NewDate      time.Time `json:"newDate"`
 }
 
 type SystemIntakeNote struct {
@@ -553,6 +559,7 @@ const (
 	SystemIntakeActionTypeBizCaseNeedsChanges            SystemIntakeActionType = "BIZ_CASE_NEEDS_CHANGES"
 	SystemIntakeActionTypeCreateBizCase                  SystemIntakeActionType = "CREATE_BIZ_CASE"
 	SystemIntakeActionTypeGUIDEReceivedClose             SystemIntakeActionType = "GUIDE_RECEIVED_CLOSE"
+	SystemIntakeActionTypeExtendLcid                     SystemIntakeActionType = "EXTEND_LCID"
 	SystemIntakeActionTypeIssueLcid                      SystemIntakeActionType = "ISSUE_LCID"
 	SystemIntakeActionTypeNeedBizCase                    SystemIntakeActionType = "NEED_BIZ_CASE"
 	SystemIntakeActionTypeNoGovernanceNeeded             SystemIntakeActionType = "NO_GOVERNANCE_NEEDED"
@@ -574,6 +581,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 	SystemIntakeActionTypeBizCaseNeedsChanges,
 	SystemIntakeActionTypeCreateBizCase,
 	SystemIntakeActionTypeGUIDEReceivedClose,
+	SystemIntakeActionTypeExtendLcid,
 	SystemIntakeActionTypeIssueLcid,
 	SystemIntakeActionTypeNeedBizCase,
 	SystemIntakeActionTypeNoGovernanceNeeded,
@@ -593,7 +601,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 
 func (e SystemIntakeActionType) IsValid() bool {
 	switch e {
-	case SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeReject, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase, SystemIntakeActionTypeSubmitIntake:
+	case SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeReject, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase, SystemIntakeActionTypeSubmitIntake:
 		return true
 	}
 	return false
