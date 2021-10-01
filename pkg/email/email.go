@@ -34,6 +34,7 @@ type templates struct {
 	namedRequestWithdrawTemplate               templateCaller
 	unnamedRequestWithdrawTemplate             templateCaller
 	issueLCIDTemplate                          templateCaller
+	extendLCIDTemplate                         templateCaller
 	rejectRequestTemplate                      templateCaller
 	newAccessibilityRequestTemplate            templateCaller
 	newAccessibilityRequestToRequesterTemplate templateCaller
@@ -109,6 +110,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(issueLCIDTemplateName)
 	}
 	appTemplates.issueLCIDTemplate = issueLCIDTemplate
+
+	extendLCIDTemplateName := "extend_lcid.gohtml"
+	extendLCIDTemplate := rawTemplates.Lookup(extendLCIDTemplateName)
+	if extendLCIDTemplate == nil {
+		return Client{}, templateError(extendLCIDTemplateName)
+	}
+	appTemplates.extendLCIDTemplate = extendLCIDTemplate
 
 	rejectRequestTemplateName := "reject_request.gohtml"
 	rejectRequestTemplate := rawTemplates.Lookup(rejectRequestTemplateName)
