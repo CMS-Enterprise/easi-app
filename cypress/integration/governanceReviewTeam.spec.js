@@ -199,7 +199,7 @@ describe('Governance Review Team', () => {
     );
   });
 
-  it.only('can extend a Lifecycle ID', () => {
+  it('can extend a Lifecycle ID', () => {
     cy.intercept('GET', '/api/v1/system_intakes?status=closed', req => {
       req.alias = 'getClosedRequests';
     });
