@@ -210,41 +210,39 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
 
-  if (systemIntake.requestType) {
-    if (systemIntake.requestType === 'SHUTDOWN') {
-      availableActions = [
-        SendEmail,
-        GuideReceivedClose,
-        NotRespondingClose,
-        NotITRequest
-      ];
-      availableHiddenActions = [];
-    } else if (businessCaseExists) {
-      availableActions = [BizCaseNeedsChanges];
-      availableHiddenActions = [
-        ReadyForGRT,
-        ReadyForGRB,
-        ProvideFeedbackKeepDraft,
-        ProvideFeedbackNeedFinal,
-        IssueLifecycleId,
-        NoFurtherGovernance,
-        RejectIntake
-      ];
+  if (systemIntake.requestType === 'SHUTDOWN') {
+    availableActions = [
+      SendEmail,
+      GuideReceivedClose,
+      NotRespondingClose,
+      NotITRequest
+    ];
+    availableHiddenActions = [];
+  } else if (businessCaseExists) {
+    availableActions = [BizCaseNeedsChanges];
+    availableHiddenActions = [
+      ReadyForGRT,
+      ReadyForGRB,
+      ProvideFeedbackKeepDraft,
+      ProvideFeedbackNeedFinal,
+      IssueLifecycleId,
+      NoFurtherGovernance,
+      RejectIntake
+    ];
+  } else {
+    availableActions = [NotITRequest, NeedBizCase];
+    availableHiddenActions = [
+      ReadyForGRT,
+      ProvideFeedbackNeedBizCase,
+      ReadyForGRB,
+      NoFurtherGovernance,
+      IssueLifecycleId
+    ];
+  }
 
-      if (flags.lcidExtension) {
-        if (systemIntake.status === SystemIntakeStatus.LCID_ISSUED) {
-          availableActions.unshift(ExtendLifecycleID);
-        }
-      }
-    } else {
-      availableActions = [NotITRequest, NeedBizCase];
-      availableHiddenActions = [
-        ReadyForGRT,
-        ProvideFeedbackNeedBizCase,
-        ReadyForGRB,
-        NoFurtherGovernance,
-        IssueLifecycleId
-      ];
+  if (flags.lcidExtension) {
+    if (systemIntake.status === SystemIntakeStatus.LCID_ISSUED) {
+      availableActions.unshift(ExtendLifecycleID);
     }
   }
 
