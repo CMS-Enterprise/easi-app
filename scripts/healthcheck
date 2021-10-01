@@ -2,7 +2,7 @@
 #
 # wait some time for the easi health check http endpoint to return the expected version
 
-tag="${1:-${CIRCLE_SHA1}}"
+tag="${1:-${GITHUB_SHA}}"
 
 if [[ "$APP_ENV" != "prod" ]] ; then
   url_prefix="${APP_ENV}."
