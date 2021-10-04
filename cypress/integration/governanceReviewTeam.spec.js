@@ -199,7 +199,7 @@ describe('Governance Review Team', () => {
     );
   });
 
-  it.only('can extend a Lifecycle ID', () => {
+  it('can extend a Lifecycle ID', () => {
     cy.intercept('GET', '/api/v1/system_intakes?status=closed', req => {
       req.alias = 'getClosedRequests';
     });
@@ -237,8 +237,8 @@ describe('Governance Review Team', () => {
     cy.wait('@getAdminNotesAndActions');
     cy.get('h1').contains('Admin team notes');
     cy.get('p').contains('Lifecycle ID extended');
-    cy.get('dd').contains('August 30 2028');
-    cy.get('dd').contains('October 30 2021');
+    cy.get('dd').contains('August 31 2028');
+    cy.get('dd').contains('October 31 2021');
 
     cy.get('a').contains('Decision').click();
     cy.get('dd').contains('August 31 2028');
