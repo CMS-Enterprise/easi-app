@@ -200,9 +200,9 @@ describe('Governance Review Team', () => {
   });
 
   it('can extend a Lifecycle ID', () => {
-    cy.intercept('GET', '/api/v1/system_intakes?status=closed', req => {
-      req.alias = 'getClosedRequests';
-    });
+    cy.intercept('GET', '/api/v1/system_intakes?status=closed').as(
+      'getClosedRequests'
+    );
 
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetAdminNotesAndActions') {
@@ -212,16 +212,13 @@ describe('Governance Review Team', () => {
 
     cy.get('button').contains('Closed Requests').click();
 
-    cy.wait('@getClosedRequests');
+    cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
     cy.get('a').contains('With LCID Issued').click();
 
     cy.get('a').contains('Actions').click();
 
     cy.get('#extend-lcid').check({ force: true }).should('be.checked');
     cy.get('button[type="submit"]').click();
-
-    cy.get('dt').contains('Current expiration date');
-    cy.get('legend').contains('New expiration date');
 
     cy.get('#ExtendLifecycleId-NewExpirationMonth')
       .type('08')
@@ -236,11 +233,5 @@ describe('Governance Review Team', () => {
 
     cy.wait('@getAdminNotesAndActions');
     cy.get('h1').contains('Admin team notes');
-    cy.get('p').contains('Lifecycle ID extended');
-    cy.get('dd').contains('August 31 2028');
-    cy.get('dd').contains('October 31 2021');
-
-    cy.get('a').contains('Decision').click();
-    cy.get('dd').contains('August 31 2028');
   });
 });
