@@ -130,6 +130,11 @@ export interface CreateAccessibilityRequestNoteInput {
   shouldSendEmail: boolean;
 }
 
+export interface CreateSystemIntakeActionExtendLifecycleIdInput {
+  id: UUID;
+  expirationDate?: Time | null;
+}
+
 export interface CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType;
   requester: SystemIntakeRequesterInput;

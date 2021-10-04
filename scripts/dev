@@ -46,7 +46,6 @@ needs "psql", install_with: "brew install postgresql"
 needs "air", install_with: "go get -u github.com/cosmtrek/air"
 needs "gotest", install_with: "go get -u github.com/rakyll/gotest"
 needs "goimports", install_with: "go get -u golang.org/x/tools/cmd/goimports"
-needs "circleci", install_with: "brew install circleci"
 needs "pgcli", install_with: "brew install pgcli"
 
 # Gracefully handle folks trying to explore using common help flags

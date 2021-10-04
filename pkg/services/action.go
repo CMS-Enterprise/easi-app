@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -353,6 +354,63 @@ func NewCreateActionUpdateStatus(
 		if err != nil {
 			return nil, err
 		}
+
+		return intake, err
+	}
+}
+
+// NewCreateActionExtendLifecycleID returns a function that
+// persists an action and updates an intake's LCID
+func NewCreateActionExtendLifecycleID(
+	config Config,
+	saveAction func(context.Context, *models.Action) error,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
+	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
+) func(context.Context, *models.Action, uuid.UUID, *time.Time) (*models.SystemIntake, error) {
+	return func(
+		ctx context.Context,
+		action *models.Action,
+		id uuid.UUID,
+		expirationDate *time.Time,
+	) (*models.SystemIntake, error) {
+
+		intake, err := fetchSystemIntake(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+
+		actionErr := saveAction(ctx, action)
+		if actionErr != nil {
+			return nil, actionErr
+		}
+
+		intake.LifecycleExpiresAt = expirationDate
+
+		_, updateErr := updateSystemIntake(ctx, intake)
+		if updateErr != nil {
+			return nil, updateErr
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		// err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+		// if err != nil {
+		// 	return nil, err
+		// }
 
 		return intake, err
 	}

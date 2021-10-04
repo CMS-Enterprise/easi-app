@@ -30,7 +30,6 @@ repos:
             vendor/|
             docs/adr/index.md
           )$
-      - id: circleci-validate
 
   - repo: git://github.com/golangci/golangci-lint
     rev: v1.41.1

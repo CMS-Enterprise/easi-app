@@ -89,7 +89,6 @@ const GovernanceTaskList = () => {
     grtDate,
     grbDate
   } = systemIntake || {};
-
   useEffect(() => {
     if (businessCaseId) {
       dispatch(fetchBusinessCase(businessCaseId));
@@ -125,11 +124,12 @@ const GovernanceTaskList = () => {
 
   // The meeting date is "scheduled" until the next day since there is no time
   // associated with meeting dates.
-  const getMeetingDate = (date: DateTime | null): string => {
-    if (date) {
-      return date.plus({ day: 1 }).toMillis() > DateTime.local().toMillis()
-        ? `Scheduled for ${date.toLocaleString(DateTime.DATE_FULL)}`
-        : `Attended on ${date.toLocaleString(DateTime.DATE_FULL)}`;
+  const getMeetingDate = (date: string): string => {
+    const dateTime = DateTime.fromISO(date);
+    if (dateTime.isValid) {
+      return dateTime.plus({ day: 1 }).toMillis() > DateTime.local().toMillis()
+        ? `Scheduled for ${dateTime.toLocaleString(DateTime.DATE_FULL)}`
+        : `Attended on ${dateTime.toLocaleString(DateTime.DATE_FULL)}`;
     }
     return '';
   };
@@ -156,7 +156,7 @@ const GovernanceTaskList = () => {
           </BreadcrumbBar>
         </div>
         {loading && <PageLoading />}
-        {systemIntake && (
+        {!loading && !!systemIntake && (
           <div className="grid-row">
             <div className="tablet:grid-col-9">
               <PageHeading>

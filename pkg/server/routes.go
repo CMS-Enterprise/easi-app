@@ -198,6 +198,14 @@ func (s *Server) routes(
 					store.UpdateBusinessCase,
 				),
 			),
+			CreateActionExtendLifecycleID: services.NewCreateActionExtendLifecycleID(
+				serviceConfig,
+				saveAction,
+				cedarLDAPClient.FetchUserInfo,
+				store.FetchSystemIntakeByID,
+				store.UpdateSystemIntake,
+				emailClient.SendSystemIntakeReviewEmail,
+			),
 			IssueLifecycleID: services.NewUpdateLifecycleFields(
 				serviceConfig,
 				services.AuthorizeRequireGRTJobCode,

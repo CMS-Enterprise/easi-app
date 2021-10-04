@@ -27,6 +27,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -143,6 +144,8 @@ func TestGraphQLTestSuite(t *testing.T) {
 		t.FailNow()
 	}
 
+	cedarLdapClient := local.NewCedarLdapClient(logger)
+
 	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
 		return next(ctx)
 	}}
@@ -168,11 +171,25 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return nil
 	}
 
+	saveAction := services.NewSaveAction(
+		store.CreateAction,
+		cedarLdapClient.FetchUserInfo,
+	)
+
+	serviceConfig := services.NewConfig(logger, ldClient)
+
 	var resolverService ResolverService
 	resolverService.IssueLifecycleID = issueLifecycleID
 	resolverService.SubmitIntake = submitIntake
-	cedarLdapClient := local.NewCedarLdapClient(logger)
 	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
+	resolverService.CreateActionExtendLifecycleID = services.NewCreateActionExtendLifecycleID(
+		serviceConfig,
+		saveAction,
+		cedarLdapClient.FetchUserInfo,
+		store.FetchSystemIntakeByID,
+		store.UpdateSystemIntake,
+		emailClient.SendSystemIntakeReviewEmail,
+	)
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})

@@ -71,7 +71,7 @@ export const SystemIntake = () => {
           <Breadcrumb current>Intake Request</Breadcrumb>
         </BreadcrumbBar>
         {loading && <PageLoading />}
-        {!!systemIntake && (
+        {!loading && !!systemIntake && (
           <Switch>
             <Route
               path="/system/:systemId/contact-details"
