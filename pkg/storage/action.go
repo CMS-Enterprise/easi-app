@@ -29,7 +29,9 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 		    actor_eua_user_id,
 			intake_id,
 			feedback,
-			created_at
+			created_at,
+			lcid_expiration_change_new_date,
+			lcid_expiration_change_previous_date
 		)
 		VALUES (
 			:id,
@@ -39,7 +41,9 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 			:actor_eua_user_id,
 		    :intake_id,
 			:feedback,
-		    :created_at
+		    :created_at,
+			:lcid_expiration_change_new_date,
+			:lcid_expiration_change_previous_date	
 		)`
 	_, err := s.db.NamedExec(
 		createActionSQL,

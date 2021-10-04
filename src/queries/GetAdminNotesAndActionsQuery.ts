@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export default gql`
   query GetAdminNotesAndActions($id: UUID!) {
     systemIntake(id: $id) {
+      lcid
       notes {
         id
         createdAt
@@ -17,6 +18,10 @@ export default gql`
         createdAt
         feedback
         type
+        lcidExpirationChange {
+          previousDate
+          newDate
+        }
         actor {
           name
           email

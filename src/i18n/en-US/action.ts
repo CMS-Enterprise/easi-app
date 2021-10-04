@@ -56,7 +56,7 @@ const action = {
     currentLcid: 'Lifecycle ID',
     currentLcidExpiration: 'Current expiration date',
     expirationDate: {
-      label: 'New Expiration Date',
+      label: 'New expiration date',
       helpText: 'For example 08 02 1776',
       month: 'Month',
       day: 'Day',
