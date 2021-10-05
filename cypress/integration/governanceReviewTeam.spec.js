@@ -1,4 +1,10 @@
 describe('Governance Review Team', () => {
+  cy.intercept('POST', '/api/graph/query', req => {
+    if (req.body.operationName === 'GetSystemIntake') {
+      req.alias = 'getSystemIntake';
+    }
+  });
+
   beforeEach(() => {
     cy.server();
     cy.route('GET', '/api/v1/system_intakes?status=open').as('getOpenIntakes');
@@ -26,6 +32,12 @@ describe('Governance Review Team', () => {
   });
 
   it('can add GRT/GRB dates', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeReviewDates') {
+        req.alias = 'updateDates';
+      }
+    });
+
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.get('a').contains('A Completed Intake Form').click();
@@ -48,12 +60,15 @@ describe('Governance Review Team', () => {
       .should('have.value', '2020');
 
     cy.get('button[type="submit"]').click();
+    cy.wait('@updateDates').its('response.statusCode').should('eq', 200);
 
     cy.location().should(loc => {
       expect(loc.pathname).to.eq(
         '/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
       );
     });
+
+    cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
 
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
@@ -178,12 +193,6 @@ describe('Governance Review Team', () => {
     cy.get('#SubmitActionForm-Feedback')
       .type('Feedback')
       .should('have.value', 'Feedback');
-
-    cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'GetSystemIntake') {
-        req.alias = 'getSystemIntake';
-      }
-    });
 
     cy.get('button[type="submit"]').click();
 
