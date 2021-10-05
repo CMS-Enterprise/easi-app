@@ -1,0 +1,51 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  EASI_APP_NODE_VERSION: '12.22.1'
+  EASI_APP_GO_VERSION: '1.16.6'
+  # Set the IMAGE_TAG in a way that works for both pull_request and push events.
+  # For pull_request events, use github.event.pull_request.head.sha (see
+  # https://github.com/actions/checkout#Checkout-pull-request-HEAD-commit-instead-of-merge-commit).
+  # For push events, where github.event.pull_request.head.sha is not defined, use github.sha.
+  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  DOCKER_BUILDKIT: 1
+  wokring-directory: .
+
+jobs: 
+  anti_virus:
+      runs-on: ubuntu-latest
+      steps:
+        - run: apt-get update && apt-get install -y clamav curl git ssh
+        - name: Check out code
+          uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+          with:
+            ref: ${{ github.event.pull_request.head.sha }}
+        - run: clamscan --version
+        - run: mkdir -p /store && chown clamav /store
+        # - run: cp -v /root/project/anti-virus/whitelist-*.{fp,ign2} /store
+        - run:
+            name: freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store
+            command: for i in $(seq 1 5); do freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store && s=0 && break || s=$? && sleep 5; done; (exit $s)
+        - run: >
+            clamscan \
+              --recursive \
+              --infected \
+              --detect-pua=yes \
+              --exclude-pua=NetTool \
+              --exclude-pua=PWTool \
+              --max-scansize=300M \
+              --max-filesize=100M \
+              --max-recursion=30 \
+              --max-files=50000 \
+              --tempdir=/tmp \
+              --database=/store \
+              . \
