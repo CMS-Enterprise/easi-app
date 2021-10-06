@@ -1,18 +1,6 @@
 name: build
 
-on: [workflow_dispatch]
-
-env:
-  EASI_APP_NODE_VERSION: '12.22.1'
-  EASI_APP_GO_VERSION: '1.16.6'
-  # Set the IMAGE_TAG in a way that works for both pull_request and push events.
-  # For pull_request events, use github.event.pull_request.head.sha (see
-  # https://github.com/actions/checkout#Checkout-pull-request-HEAD-commit-instead-of-merge-commit).
-  # For push events, where github.event.pull_request.head.sha is not defined, use github.sha.
-  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  DOCKER_BUILDKIT: 1
-  wokring-directory: .
+on: workflow_dispatch
 
 jobs: 
   anti_virus:
