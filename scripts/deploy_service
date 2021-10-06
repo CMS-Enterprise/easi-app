@@ -13,7 +13,7 @@ image_uri="${5:-}"
 ecr_backend="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com"
 
 if [[ -n "$image" ]]; then
-  image_tag="$ecr_backend/$image:${CIRCLE_SHA1-$(git rev-parse HEAD)}"
+  image_tag="$ecr_backend/$image:${GITHUB_SHA-$(git rev-parse HEAD)}"
 fi
 
 if [[ -n "$image_uri" ]]; then
