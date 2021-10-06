@@ -383,6 +383,8 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # v1.3.3
+      - name: Cypress instrumentation
+        run: npx nyc instrument --compact=false src instrumented
       - name: Run e2e cypress tests
         env:
           APP_ENV: test
