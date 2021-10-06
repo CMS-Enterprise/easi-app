@@ -94,6 +94,7 @@
     "build-storybook": "build-storybook -s public"
   },
   "nyc": {
+    "report-dir": "cypress-coverage",
     "reporter": [
       "html",
       "text"
