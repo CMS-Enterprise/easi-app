@@ -15,6 +15,7 @@ const taskList = {
     lcid: 'Project Lifecycle ID',
     lcidScope: 'Lifecycle ID Scope',
     lcidExpiration: 'This ID expires on {{date}}',
+    costBaseline: 'Project Cost Baseline',
     reasons: 'Reasons',
     nextSteps: 'Next steps',
     completeNextSteps:

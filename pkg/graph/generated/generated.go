@@ -357,6 +357,7 @@ type ComplexityRoot struct {
 		Isso                        func(childComplexity int) int
 		LastAdminNote               func(childComplexity int) int
 		Lcid                        func(childComplexity int) int
+		LcidCostBaseline            func(childComplexity int) int
 		LcidScope                   func(childComplexity int) int
 		LifecycleExpiresAt          func(childComplexity int) int
 		NeedsEaSupport              func(childComplexity int) int
@@ -599,6 +600,7 @@ type SystemIntakeResolver interface {
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 	Notes(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeNote, error)
 	OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -2209,6 +2211,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.Lcid(childComplexity), true
 
+	case "SystemIntake.lcidCostBaseline":
+		if e.complexity.SystemIntake.LcidCostBaseline == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.LcidCostBaseline(childComplexity), true
+
 	case "SystemIntake.lcidScope":
 		if e.complexity.SystemIntake.LcidScope == nil {
 			break
@@ -3313,6 +3322,7 @@ type SystemIntake {
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
+  lcidCostBaseline: String
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
@@ -3490,6 +3500,7 @@ input IssueLifecycleIdInput {
   lcid: String
   nextSteps: String
   scope: String!
+  costBaseline: String
 }
 
 input RejectIntakeInput {
@@ -11802,6 +11813,38 @@ func (ec *executionContext) _SystemIntake_lcidScope(ctx context.Context, field g
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntake_lcidCostBaseline(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().LcidCostBaseline(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SystemIntake_needsEaSupport(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -16034,6 +16077,14 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			if err != nil {
 				return it, err
 			}
+		case "costBaseline":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("costBaseline"))
+			it.CostBaseline, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -18624,6 +18675,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_lcidScope(ctx, field, obj)
+				return res
+			})
+		case "lcidCostBaseline":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_lcidCostBaseline(ctx, field, obj)
 				return res
 			})
 		case "needsEaSupport":

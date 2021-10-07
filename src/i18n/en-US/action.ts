@@ -33,6 +33,9 @@ const action = {
     scopeLabel: 'Scope of Lifecycle ID',
     scopeHelpText:
       'Tell the requester what is covered by this Lifecycle ID and what work it limits the project team to.',
+    costBaselineLabel: 'Project Cost Baseline (Optional)',
+    costBaselineHelpText:
+      'Enter the current cost baseline for the project for the first two planned fiscal years of the project',
     lcid: {
       new: 'Generate a new Lifecycle ID',
       helpText:

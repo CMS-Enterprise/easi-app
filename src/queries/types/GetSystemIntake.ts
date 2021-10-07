@@ -118,6 +118,7 @@ export interface GetSystemIntake_systemIntake {
   lcid: string | null;
   lcidExpiresAt: Time | null;
   lcidScope: string | null;
+  lcidCostBaseline: string | null;
   needsEaSupport: boolean | null;
   productManager: GetSystemIntake_systemIntake_productManager;
   rejectionReason: string | null;

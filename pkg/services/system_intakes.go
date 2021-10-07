@@ -283,6 +283,7 @@ func NewUpdateLifecycleFields(
 		existing.LifecycleExpiresAt = intake.LifecycleExpiresAt
 		existing.LifecycleScope = intake.LifecycleScope
 		existing.DecisionNextSteps = intake.DecisionNextSteps
+		existing.LifecycleCostBaseline = intake.LifecycleCostBaseline
 
 		// if a LCID wasn't passed in, we generate one
 		if existing.LifecycleID.ValueOrZero() == "" {
@@ -309,6 +310,7 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
+		// TODO: put cost baseline in email?
 		err = sendIssueLCIDEmail(
 			ctx,
 			requesterInfo.Email,

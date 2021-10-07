@@ -184,12 +184,13 @@ type GeneratePresignedUploadURLPayload struct {
 }
 
 type IssueLifecycleIDInput struct {
-	ExpiresAt time.Time `json:"expiresAt"`
-	Feedback  string    `json:"feedback"`
-	IntakeID  uuid.UUID `json:"intakeId"`
-	Lcid      *string   `json:"lcid"`
-	NextSteps *string   `json:"nextSteps"`
-	Scope     string    `json:"scope"`
+	ExpiresAt    time.Time `json:"expiresAt"`
+	Feedback     string    `json:"feedback"`
+	IntakeID     uuid.UUID `json:"intakeId"`
+	Lcid         *string   `json:"lcid"`
+	NextSteps    *string   `json:"nextSteps"`
+	Scope        string    `json:"scope"`
+	CostBaseline *string   `json:"costBaseline"`
 }
 
 type LastAdminNote struct {
