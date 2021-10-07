@@ -329,7 +329,7 @@ jobs:
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       - name: Check for vulnerability scan findings
         run: |
-          ./scripts/check_ecr_findings "easi-backend" "$IMAGE_TAG" "6"
+          ./scripts/check_ecr_findings "easi-backend" "$IMAGE_TAG" "7"
       - name: Announce failure
         if: ${{ failure() }}
         run: |
