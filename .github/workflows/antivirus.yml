@@ -13,7 +13,7 @@ jobs:
             ref: ${{ github.event.pull_request.head.sha }}
         - run: clamscan --version
         - run: mkdir -p /store && chown clamav /store
-        - run: freshclam --config-file /etc/clamav/freshclam.conf --datadir="/store"
+        - run: freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store
         - run: >
             clamscan \
               --recursive \
