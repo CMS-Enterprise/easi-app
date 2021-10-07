@@ -1,4 +1,4 @@
-name: antivirus-scan
+name: antivirus
 
 on: workflow_dispatch
 
