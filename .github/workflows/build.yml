@@ -327,6 +327,9 @@ jobs:
           APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
           docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$IMAGE_TAG" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Check for vulnerability scan findings
+        run: |
+          ./scripts/check_ecr_findings "easi-backend" "$IMAGE_TAG" "7"
       - name: Announce failure
         if: ${{ failure() }}
         run: |

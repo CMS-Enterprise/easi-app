@@ -25,11 +25,11 @@ jobs:
       - name: Check deployed image for vulnerability findings - impl
         env: 
           APP_ENV: impl
-        run: bash ./scripts/check_deployed_image_findings "easi-backend" "6"
+        run: bash ./scripts/check_deployed_image_findings "easi-backend" "7"
       - name: Check deployed image for vulnerability findings - prod
         env:
           APP_ENV: prod
-        run: bash ./scripts/check_deployed_image_findings "easi-backend" "6"
+        run: bash ./scripts/check_deployed_image_findings "easi-backend" "7"
       - name: Announce failure
         if: ${{ failure() }}
         run: ./scripts/github-action-announce-broken-branch
