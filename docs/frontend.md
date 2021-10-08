@@ -73,14 +73,18 @@ All of the frontend React code lives in the `src` directory.
 ```text
 ├── src
 │   ├── actions                   # Redux action creators
+│   ├── assets                    # Static assets (e.g. PDFs, docs, etc.)
 │   ├── components                # Common "EASi specific" React components
 │   │   └── shared                # Utility components (e.g. button, spinner)
 │   ├── constants                 # Application constants (e.g. Redux action types)
 │   ├── reducers                  # Redux reducers
+│   ├── queries                   # Graphql queries/reducers and generated types
 │   ├── sagas                     # Redux sagas
 │   ├── services                  # Async actions or API calls
 │   ├── types                     # TypeScript interfaces and alias types
+│   ├── utils                     # Utility functions (e.g. date format, currency)
 │   └── views                     # Page or layout components
+│   │   └── App                   # Application entry point (main routes, app setup)
 │   ├── index.scss                # Entry point for all SCSS files
 │   ├── index.tsx                 # Entry point to inject React into HTML
 │   ├── store.ts                  # Initialization for Redux store
