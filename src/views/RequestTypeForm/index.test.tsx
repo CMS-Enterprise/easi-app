@@ -93,6 +93,7 @@ const intakeQuery = (intakeData: any) => {
           lcid: null,
           lcidExpiresAt: null,
           lcidScope: null,
+          lcidCostBaseline: null,
           needsEaSupport: null,
           productManager: {
             component: null,
