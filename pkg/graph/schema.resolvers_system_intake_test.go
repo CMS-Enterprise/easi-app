@@ -600,6 +600,7 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 				Lcid              string
 				LcidExpiresAt     string
 				LcidScope         string
+				LcidCostBaseline  string
 				DecisionNextSteps string
 				Status            string
 			}
@@ -615,14 +616,16 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 				expiresAt: "2021-03-18T00:00:00Z",
 				scope: "Your scope",
 				feedback: "My feedback",
-				lcid: ""
-				nextSteps: "Your next steps"
+				lcid: "",
+				nextSteps: "Your next steps",
+				costBaseline: "Test cost baseline"
 			}) {
 				systemIntake {
 					id
 					lcid
 					lcidExpiresAt
 					lcidScope
+					lcidCostBaseline
 					decisionNextSteps
 					status
 				}
@@ -634,6 +637,8 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 	respIntake := resp.IssueLifecycleID.SystemIntake
 	s.Equal(respIntake.LcidExpiresAt, "2021-03-18T00:00:00Z")
 	s.Equal(respIntake.Lcid, "654321B")
+	s.Equal(respIntake.LcidCostBaseline, "Test cost baseline")
+
 }
 
 func date(year, month, day int) *time.Time {
