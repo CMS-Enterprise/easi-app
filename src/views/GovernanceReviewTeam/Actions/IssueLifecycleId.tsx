@@ -294,7 +294,7 @@ const IssueLifecycleId = () => {
                     name="nextSteps"
                   />
                 </FieldGroup>
-                <FieldGroup scrollElement="costBaseline">
+                <FieldGroup>
                   <Label htmlFor="IssueLifecycleIdForm-CostBaseline">
                     {t('issueLCID.costBaselineLabel')}
                   </Label>

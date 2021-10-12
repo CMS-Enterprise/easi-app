@@ -104,6 +104,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
           lcid: null,
           lcidExpiresAt: null,
           lcidScope: null,
+          lcidCostBaseline: null,
           needsEaSupport: true,
           productManager: {
             component: 'Center for Program Integrity',

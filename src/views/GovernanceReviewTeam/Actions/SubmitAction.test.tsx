@@ -107,6 +107,7 @@ describe('Submit Action', () => {
           lcid: null,
           lcidExpiresAt: null,
           lcidScope: null,
+          lcidCostBaseline: null,
           needsEaSupport: true,
           productManager: {
             component: 'Center for Program Integrity',
