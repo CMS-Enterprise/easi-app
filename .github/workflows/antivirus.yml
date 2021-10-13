@@ -13,10 +13,7 @@ jobs:
             ref: ${{ github.event.pull_request.head.sha }}
         - run: clamscan --version
         - run: mkdir -p /store && chown clamav /store
-        # - run: cp -v /root/project/anti-virus/whitelist-*.{fp,ign2} /store
-        - run:
-            name: freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store
-            command: for i in $(seq 1 5); do freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store && s=0 && break || s=$? && sleep 5; done; (exit $s)
+        - run: freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store
         - run: >
             clamscan \
               --recursive \
