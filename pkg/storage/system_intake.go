@@ -182,6 +182,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			lcid_expires_at = :lcid_expires_at,
 			lcid_scope = :lcid_scope,
 			decision_next_steps = :decision_next_steps,
+			lcid_cost_baseline = :lcid_cost_baseline,
 			rejection_reason = :rejection_reason,
 			admin_lead = :admin_lead
 		WHERE system_intakes.id = :id

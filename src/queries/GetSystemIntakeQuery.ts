@@ -61,6 +61,7 @@ export default gql`
       lcid
       lcidExpiresAt
       lcidScope
+      lcidCostBaseline
       needsEaSupport
       productManager {
         component

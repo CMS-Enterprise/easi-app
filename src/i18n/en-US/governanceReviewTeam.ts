@@ -168,6 +168,7 @@ const governanceReviewTeam = {
     lcidExpiration: 'Lifecycle ID Expiration',
     scope: 'Lifecycle ID Scope',
     nextSteps: 'Next Steps',
+    costBaseline: 'Project Cost Baseline',
     rejectionReason: 'Rejection Reason',
     decisionSectionTitle: 'Decision Details',
     descriptionNotItRequest: 'Request was marked "Not an IT Request"',

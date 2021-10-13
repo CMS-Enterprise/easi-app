@@ -91,6 +91,7 @@ describe('The System Intake page', () => {
           lcid: null,
           lcidExpiresAt: null,
           lcidScope: null,
+          lcidCostBaseline: null,
           needsEaSupport: null,
           productManager: {
             component: null,

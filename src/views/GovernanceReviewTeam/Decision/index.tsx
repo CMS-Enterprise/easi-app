@@ -69,6 +69,19 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             />
           </div>
         </ReviewRow>
+        {systemIntake?.lcidCostBaseline && (
+          <ReviewRow>
+            <div>
+              <DescriptionTerm
+                term={t('governanceReviewTeam:decision.costBaseline')}
+              />
+              <DescriptionDefinition
+                className="text-pre-wrap"
+                definition={systemIntake?.lcidCostBaseline}
+              />
+            </div>
+          </ReviewRow>
+        )}
       </DescriptionList>
     </>
   );

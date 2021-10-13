@@ -124,6 +124,7 @@ describe('Governance Review Team', () => {
           lcid: null,
           lcidExpiresAt: null,
           lcidScope: null,
+          lcidCostBaseline: null,
           needsEaSupport: true,
           productManager: {
             component: 'Center for Program Integrity',

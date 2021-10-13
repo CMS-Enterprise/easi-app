@@ -850,11 +850,12 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 	intake, err := r.service.IssueLifecycleID(
 		ctx,
 		&models.SystemIntake{
-			ID:                 input.IntakeID,
-			LifecycleExpiresAt: &input.ExpiresAt,
-			LifecycleScope:     null.StringFrom(input.Scope),
-			DecisionNextSteps:  null.StringFrom(*input.NextSteps),
-			LifecycleID:        null.StringFrom(*input.Lcid),
+			ID:                    input.IntakeID,
+			LifecycleExpiresAt:    &input.ExpiresAt,
+			LifecycleScope:        null.StringFrom(input.Scope),
+			DecisionNextSteps:     null.StringFrom(*input.NextSteps),
+			LifecycleID:           null.StringFrom(*input.Lcid),
+			LifecycleCostBaseline: null.StringFromPtr(input.CostBaseline),
 		},
 		&models.Action{
 			IntakeID: &input.IntakeID,
@@ -1423,6 +1424,10 @@ func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntak
 
 func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.LifecycleScope.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.LifecycleCostBaseline.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
