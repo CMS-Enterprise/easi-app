@@ -5,6 +5,8 @@ on: workflow_dispatch
 jobs: 
   anti_virus:
       runs-on: ubuntu-latest
+      container:
+        image: clamav/clamav:0.104.0
       steps:
         - run: apt-get update && apt-get install -y clamav curl git ssh
         - name: Check out code
