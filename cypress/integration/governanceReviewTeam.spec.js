@@ -36,7 +36,7 @@ describe('Governance Review Team', () => {
 
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
-    cy.get('a').contains('A Completed Intake Form').click();
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
     ).click();
@@ -94,7 +94,7 @@ describe('Governance Review Team', () => {
   it('can add a note', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
-    cy.get('a').contains('A Completed Intake Form').click();
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
     ).click();
@@ -121,7 +121,7 @@ describe('Governance Review Team', () => {
   it('can issue a Lifecycle ID', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
-    cy.get('a').contains('A Completed Intake Form').click();
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
     cy.get('button[data-testid="collapsable-link"]').click();
@@ -178,7 +178,7 @@ describe('Governance Review Team', () => {
   it('can close a request', () => {
     // Selecting name based on pre-seeded data
     // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
-    cy.get('a').contains('Closable Request').click();
+    cy.contains('a', 'Closable Request').should('be.visible').click();
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
     cy.get('button[data-testid="collapsable-link"]').click();
@@ -218,9 +218,9 @@ describe('Governance Review Team', () => {
     cy.get('button').contains('Closed Requests').click();
 
     cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
-    cy.get('a').contains('With LCID Issued').click();
+    cy.contains('a', 'With LCID Issued').should('be.visible').click();
 
-    cy.get('a').contains('Actions').click();
+    cy.contains('a', 'Actions').should('be.visible').click();
 
     cy.get('#extend-lcid').check({ force: true }).should('be.checked');
     cy.get('button[type="submit"]').click();
