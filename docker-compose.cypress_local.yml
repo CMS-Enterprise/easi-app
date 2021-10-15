@@ -58,6 +58,7 @@ services:
       context: .
       dockerfile: Dockerfile.cypress
     image: easi-cypress:latest
+    #working_dir: easi-app
     environment:
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD
@@ -76,5 +77,6 @@ services:
     network_mode: 'service:easi_client'
     volumes:
       - ./cypress:/cypress
+      - ./.nyc_output:/.nyc_output
     depends_on:
       - easi_client
