@@ -36,7 +36,6 @@ services:
       context: .
       dockerfile: Dockerfile.cypress
     image: easi-cypress:latest
-    working_dir: $PWD:/cypress
     environment:
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD
