@@ -52,9 +52,10 @@ services:
       - PGSSLMODE=disable
       - DB_MAX_CONNECTIONS=20
     network_mode: 'service:easi_client'
-    working_dir: /.
+    working_dir: $PWD:/easi-app
     volumes:
-      - $PWD:.
+      - $PWD:/easi-app
+      - ./cypress:/cypress
       - ./.nyc_output:/.nyc_output
     depends_on:
       - easi_client
