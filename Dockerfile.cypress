@@ -28,7 +28,6 @@ COPY scripts/tag_minio_file /scripts/tag_minio_file
 COPY scripts/seed_database /scripts/seed_database
 COPY --from=build /easi/bin/seed /build/seed
 RUN npx nyc instrument --compact=false src instrumented
-COPY .nyc_output /.nyc_output
 
 ENTRYPOINT ["/node_modules/.bin/cypress"]
 CMD ["run"]
