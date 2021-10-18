@@ -29,5 +29,5 @@ COPY scripts/seed_database /scripts/seed_database
 COPY --from=build /easi/bin/seed /build/seed
 RUN npx nyc instrument --compact=false src instrumented
 
-ENTRYPOINT ["/node_modules/.bin/cypress"]
-CMD ["run"]
+ENTRYPOINT ["."]
+CMD ["./node_modules/.bin/cypress run"]

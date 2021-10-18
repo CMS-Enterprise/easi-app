@@ -53,7 +53,6 @@ services:
       - DB_MAX_CONNECTIONS=20
     network_mode: 'service:easi_client'
     volumes:
-      - $PWD:/easi-app_cypress_1
       - ./cypress:/cypress
       - ./.nyc_output:/.nyc_output
     depends_on:
