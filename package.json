@@ -6,7 +6,7 @@
     "@apollo/client": "^3.4.4",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@craco/craco": "^6.0.0",
-    "@cypress/code-coverage": "^3.911",
+    "@cypress/code-coverage": "^3.9.11",
     "@okta/okta-auth-js": "^5.3.1",
     "@okta/okta-react": "^6.1.0",
     "@okta/okta-signin-widget": "^5.7.1",
