@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -120,7 +120,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -151,7 +151,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -188,7 +188,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Login to Docker Hub
@@ -222,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Configure go cache
@@ -301,7 +301,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Login to Docker Hub
@@ -340,7 +340,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -425,7 +425,7 @@ jobs:
       APP_ENV: dev
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -495,7 +495,7 @@ jobs:
       APP_ENV: impl
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -565,7 +565,7 @@ jobs:
       APP_ENV: prod
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -635,7 +635,7 @@ jobs:
       APP_ENV: dev
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/download-artifact@3be87be14a055c47b01d3bd88f8fe02320a9bb60 # v2.0.10
