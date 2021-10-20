@@ -20,6 +20,19 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
+  anti_virus:
+    runs-on: ubuntu-latest
+    container:
+      image: clamav/clamav:0.104.0
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: clamscan --version
+      - run: mkdir -p /store && chown clamav /store
+      - run: freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store
+      - run: clamscan --recursive --infected --detect-pua=yes --exclude-pua=NetTool --exclude-pua=PWTool --max-scansize=300M --max-filesize=100M --max-recursion=30 --max-files=50000 --tempdir=/tmp --database=/store .
   pre_deps:
     runs-on: ubuntu-latest
     steps:
