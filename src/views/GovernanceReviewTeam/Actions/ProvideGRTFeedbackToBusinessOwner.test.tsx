@@ -145,6 +145,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
     result: {
       data: {
         systemIntake: {
+          lcid: null,
           notes: [],
           actions: []
         }

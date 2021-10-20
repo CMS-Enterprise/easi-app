@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { SecureRoute } from '@okta/okta-react';
 import { Link } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -30,7 +29,7 @@ import MakingARequest from './MakingARequest';
 import TestingTemplates from './TestingTemplates';
 
 const NewRequest = (
-  <SecureRoute
+  <Route
     key="create-508-request"
     path="/508/requests/new"
     exact
@@ -38,7 +37,7 @@ const NewRequest = (
   />
 );
 const AllRequests = (
-  <SecureRoute
+  <Route
     key="list-508-requests"
     path="/508/requests/all"
     exact
@@ -47,7 +46,7 @@ const AllRequests = (
 );
 
 const AccessibilityTestingOverview = (
-  <SecureRoute
+  <Route
     key="508-request-testing-overview"
     path="/508/testing-overview"
     exact
@@ -56,7 +55,7 @@ const AccessibilityTestingOverview = (
 );
 
 const MakingANewRequest = (
-  <SecureRoute
+  <Route
     key="making-a-508-request"
     path="/508/making-a-request"
     exact
@@ -65,7 +64,7 @@ const MakingANewRequest = (
 );
 
 const AccessibilityTestingTemplates = (
-  <SecureRoute
+  <Route
     key="508-testing-templates"
     path="/508/templates"
     exact
@@ -74,21 +73,21 @@ const AccessibilityTestingTemplates = (
 );
 
 const NewDocument = (
-  <SecureRoute
+  <Route
     key="upload-508-document"
     path="/508/requests/:accessibilityRequestId/documents/new"
     component={AccessibilityRequestsDocumentsNew}
   />
 );
 const UpdateTestDate = (
-  <SecureRoute
+  <Route
     key="update-508-test-date"
     path="/508/requests/:accessibilityRequestId/test-date/:testDateId"
     component={UpdateTestDateView}
   />
 );
 const NewTestDate = (
-  <SecureRoute
+  <Route
     key="new-508-test-date"
     path="/508/requests/:accessibilityRequestId/test-date"
     component={NewTestDateView}
@@ -96,7 +95,7 @@ const NewTestDate = (
 );
 
 const RequestStatusChange = (
-  <SecureRoute
+  <Route
     key="change-508-request-status"
     path="/508/requests/:accessibilityRequestId/change-status"
     component={ChangeRequestStatus}
@@ -113,7 +112,7 @@ const DocumentsRedirect = (
 );
 
 const RequestDetails = (
-  <SecureRoute
+  <Route
     exact
     key="508-request-detail"
     path={[
