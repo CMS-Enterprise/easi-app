@@ -33,6 +33,12 @@ const Approved = ({ intake }: ApprovedProps) => {
             })}
           </p>
         )}
+        {intake?.lcidCostBaseline && (
+          <>
+            <h3 className="margin-top-0">{t('decision.costBaseline')}</h3>
+            <p>{intake.lcidCostBaseline}</p>
+          </>
+        )}
       </div>
 
       {decisionNextSteps && (

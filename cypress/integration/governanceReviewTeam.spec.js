@@ -1,9 +1,17 @@
 describe('Governance Review Team', () => {
   beforeEach(() => {
-    cy.server();
-    cy.route('GET', '/api/v1/system_intakes?status=open').as('getOpenIntakes');
+    cy.intercept('GET', '/api/v1/system_intakes?status=open').as(
+      'getOpenIntakes'
+    );
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntake') {
+        req.alias = 'getSystemIntake';
+      }
+    });
+
     cy.localLogin({ name: 'GRTB', role: 'EASI_D_GOVTEAM' });
-    cy.wait('@getOpenIntakes').its('status').should('equal', 200);
+    cy.wait('@getOpenIntakes').its('response.statusCode').should('eq', 200);
   });
 
   it('can assign Admin Lead', () => {
@@ -14,21 +22,21 @@ describe('Governance Review Team', () => {
     cy.contains('button', 'Change').click();
     cy.get('input[value="Ann Rudolph"]').check({ force: true });
 
-    cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'GetSystemIntake') {
-        req.alias = 'getSystemIntake';
-      }
-    });
-
     cy.get('[data-testid="button"]').contains('Save').click();
-    cy.wait('@getSystemIntake');
+    cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
     cy.get('dd[data-testid="admin-lead"]').contains('Ann Rudolph');
   });
 
   it('can add GRT/GRB dates', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeReviewDates') {
+        req.alias = 'updateDates';
+      }
+    });
+
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
-    cy.get('a').contains('A Completed Intake Form').click();
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
     ).click();
@@ -48,12 +56,15 @@ describe('Governance Review Team', () => {
       .should('have.value', '2020');
 
     cy.get('button[type="submit"]').click();
+    cy.wait('@updateDates').its('response.statusCode').should('eq', 200);
 
     cy.location().should(loc => {
       expect(loc.pathname).to.eq(
         '/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
       );
     });
+
+    cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
 
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
@@ -68,7 +79,7 @@ describe('Governance Review Team', () => {
     cy.get('#Dates-GrbDateYear').should('have.value', '2020');
 
     cy.visit('/');
-    cy.wait('@getOpenIntakes').its('status').should('equal', 200);
+    cy.wait('@getOpenIntakes').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains(
       'td',
@@ -83,7 +94,7 @@ describe('Governance Review Team', () => {
   it('can add a note', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
-    cy.get('a').contains('A Completed Intake Form').click();
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
     ).click();
@@ -110,7 +121,7 @@ describe('Governance Review Team', () => {
   it('can issue a Lifecycle ID', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
-    cy.get('a').contains('A Completed Intake Form').click();
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
     cy.get('button[data-testid="collapsable-link"]').click();
@@ -167,7 +178,7 @@ describe('Governance Review Team', () => {
   it('can close a request', () => {
     // Selecting name based on pre-seeded data
     // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
-    cy.get('a').contains('Closable Request').click();
+    cy.contains('a', 'Closable Request').should('be.visible').click();
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
     cy.get('button[data-testid="collapsable-link"]').click();
@@ -179,15 +190,9 @@ describe('Governance Review Team', () => {
       .type('Feedback')
       .should('have.value', 'Feedback');
 
-    cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'GetSystemIntake') {
-        req.alias = 'getSystemIntake';
-      }
-    });
-
     cy.get('button[type="submit"]').click();
 
-    cy.wait('@getSystemIntake');
+    cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-testid="grt-status"]').contains('Closed');
 
@@ -213,9 +218,9 @@ describe('Governance Review Team', () => {
     cy.get('button').contains('Closed Requests').click();
 
     cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
-    cy.get('a').contains('With LCID Issued').click();
+    cy.contains('a', 'With LCID Issued').should('be.visible').click();
 
-    cy.get('a').contains('Actions').click();
+    cy.contains('a', 'Actions').should('be.visible').click();
 
     cy.get('#extend-lcid').check({ force: true }).should('be.checked');
     cy.get('button[type="submit"]').click();

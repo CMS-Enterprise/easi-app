@@ -115,6 +115,7 @@ describe('The Goveranance Task List', () => {
             lcid: null,
             lcidExpiresAt: null,
             lcidScope: null,
+            lcidCostBaseline: null,
             needsEaSupport: null,
             productManager: {
               component: null,

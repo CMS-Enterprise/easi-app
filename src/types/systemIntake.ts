@@ -84,6 +84,7 @@ export type SystemIntakeForm = {
   lcid: string;
   lcidExpiresAt: DateTime | null;
   lcidScope: string;
+  lcidCostBaseline: string | null;
   decisionNextSteps: string;
   rejectionReason: string;
   grtDate: DateTime | null;

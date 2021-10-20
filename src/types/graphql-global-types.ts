@@ -180,6 +180,7 @@ export interface IssueLifecycleIdInput {
   lcid?: string | null;
   nextSteps?: string | null;
   scope: string;
+  costBaseline?: string | null;
 }
 
 export interface RejectIntakeInput {

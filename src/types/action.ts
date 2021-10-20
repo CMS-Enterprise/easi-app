@@ -63,6 +63,7 @@ export type SubmitLifecycleIdForm = {
   expirationDateYear?: string;
   scope?: string;
   nextSteps?: string;
+  costBaseline?: string;
   feedback?: string;
 };
 
