@@ -1,6 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import {
+  Button,
+  Label,
+  Radio,
+  Textarea,
+  TextInput
+} from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
@@ -13,10 +19,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import Label from 'components/shared/Label';
-import { RadioField } from 'components/shared/RadioField';
-import TextAreaField from 'components/shared/TextAreaField';
-import TextField from 'components/shared/TextField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
@@ -124,7 +126,7 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.title']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors['preferredSolution.title']}
                     id="BusinessCase-PreferredSolutionTitle"
                     maxLength={50}
@@ -163,7 +165,7 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.summary']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors['preferredSolution.summary']}
                     id="BusinessCase-PreferredSolutionSummary"
                     maxLength={2000}
@@ -196,7 +198,7 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.acquisitionApproach']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={
                       !!flatErrors['preferredSolution.acquisitionApproach']
                     }
@@ -227,7 +229,7 @@ const PreferredSolution = ({
                       {flatErrors['preferredSolution.security.isApproved']}
                     </FieldErrorMsg>
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={
                         values.preferredSolution.security.isApproved === true
                       }
@@ -243,7 +245,7 @@ const PreferredSolution = ({
                     />
 
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={
                         values.preferredSolution.security.isApproved === false
                       }
@@ -289,7 +291,7 @@ const PreferredSolution = ({
                         }
                       </FieldErrorMsg>
                       <Field
-                        as={RadioField}
+                        as={Radio}
                         checked={
                           values.preferredSolution.security.isBeingReviewed ===
                           'YES'
@@ -301,7 +303,7 @@ const PreferredSolution = ({
                         aria-describedby="BusinessCase-PreferredSolutionApprovalHelp"
                       />
                       <Field
-                        as={RadioField}
+                        as={Radio}
                         checked={
                           values.preferredSolution.security.isBeingReviewed ===
                           'NO'
@@ -312,7 +314,7 @@ const PreferredSolution = ({
                         value="NO"
                       />
                       <Field
-                        as={RadioField}
+                        as={Radio}
                         checked={
                           values.preferredSolution.security.isBeingReviewed ===
                           'NOT_SURE'
@@ -339,7 +341,7 @@ const PreferredSolution = ({
                     </FieldErrorMsg>
 
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={
                         values.preferredSolution.hosting.type === 'cloud'
                       }
@@ -375,7 +377,7 @@ const PreferredSolution = ({
                             {flatErrors['preferredSolution.hosting.location']}
                           </FieldErrorMsg>
                           <Field
-                            as={TextField}
+                            as={TextInput}
                             error={
                               !!flatErrors['preferredSolution.hosting.location']
                             }
@@ -405,7 +407,7 @@ const PreferredSolution = ({
                             }
                           </FieldErrorMsg>
                           <Field
-                            as={TextField}
+                            as={TextInput}
                             error={
                               !!flatErrors[
                                 'preferredSolution.hosting.cloudServiceType'
@@ -419,7 +421,7 @@ const PreferredSolution = ({
                       </>
                     )}
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={
                         values.preferredSolution.hosting.type === 'dataCenter'
                       }
@@ -454,7 +456,7 @@ const PreferredSolution = ({
                           {flatErrors['preferredSolution.hosting.location']}
                         </FieldErrorMsg>
                         <Field
-                          as={TextField}
+                          as={TextInput}
                           error={
                             !!flatErrors['preferredSolution.hosting.location']
                           }
@@ -465,7 +467,7 @@ const PreferredSolution = ({
                       </FieldGroup>
                     )}
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={values.preferredSolution.hosting.type === 'none'}
                       id="BusinessCase-PreferredSolutionHostingNone"
                       name="preferredSolution.hosting.type"
@@ -496,7 +498,7 @@ const PreferredSolution = ({
                     </FieldErrorMsg>
 
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={
                         values.preferredSolution.hasUserInterface === 'YES'
                       }
@@ -506,7 +508,7 @@ const PreferredSolution = ({
                       value="YES"
                     />
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={
                         values.preferredSolution.hasUserInterface === 'NO'
                       }
@@ -517,7 +519,7 @@ const PreferredSolution = ({
                     />
 
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={
                         values.preferredSolution.hasUserInterface === 'NOT_SURE'
                       }
@@ -547,7 +549,7 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.pros']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors['preferredSolution.pros']}
                     id="BusinessCase-PreferredSolutionPros"
                     maxLength={2000}
@@ -578,7 +580,7 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.cons']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors['preferredSolution.cons']}
                     id="BusinessCase-PreferredSolutionCons"
                     maxLength={2000}
@@ -643,7 +645,7 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.costSavings']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors['preferredSolution.costSavings']}
                     id="BusinessCase-PreferredSolutionCostSavings"
                     maxLength={2000}

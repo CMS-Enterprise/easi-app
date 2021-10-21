@@ -1,8 +1,8 @@
 import React from 'react';
+import { Checkbox, Label, TextInput } from '@trussworks/react-uswds';
 import { Field, FieldArray } from 'formik';
 import { DateTime } from 'luxon';
 
-import CheckboxField from 'components/shared/CheckboxField/';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -10,8 +10,6 @@ import {
 } from 'components/shared/DescriptionGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
-import Label from 'components/shared/Label';
-import TextField from 'components/shared/TextField';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
 import { getFiscalYear } from 'utils/date';
 import formatDollars from 'utils/formatDollars';
@@ -56,7 +54,7 @@ const Phase = ({
               </legend>
 
               <Field
-                as={CheckboxField}
+                as={Checkbox}
                 checked={values.development.isPresent}
                 id={`BusinessCase-${formikKey}.Year${year}.development.isPresent`}
                 name={`${formikKey}.year${year}.development.isPresent`}
@@ -82,7 +80,7 @@ const Phase = ({
                   </Label>
                   <FieldErrorMsg>{errors?.development?.cost}</FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!errors?.development?.cost}
                     className="width-card-lg"
                     id={`BusinessCase-${formikKey}.Year${year}.development.cost`}
@@ -95,7 +93,7 @@ const Phase = ({
               )}
 
               <Field
-                as={CheckboxField}
+                as={Checkbox}
                 checked={values.operationsMaintenance.isPresent}
                 id={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.isPresent`}
                 name={`${formikKey}.year${year}.operationsMaintenance.isPresent`}
@@ -123,7 +121,7 @@ const Phase = ({
                     {errors?.operationsMaintenance?.cost}
                   </FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!errors?.operationsMaintenance?.cost}
                     className="width-card-lg"
                     id={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.cost`}
@@ -136,7 +134,7 @@ const Phase = ({
               )}
 
               <Field
-                as={CheckboxField}
+                as={Checkbox}
                 checked={values.other.isPresent}
                 id={`BusinessCase-${formikKey}.Year${year}.other.isPresent`}
                 name={`${formikKey}.year${year}.other.isPresent`}
@@ -162,7 +160,7 @@ const Phase = ({
                   </Label>
                   <FieldErrorMsg>{errors?.other?.cost}</FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!errors?.other?.cost}
                     className="width-card-lg"
                     id={`BusinessCase-${formikKey}.Year${year}.other.cost`}

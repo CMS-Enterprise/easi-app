@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Button, Label, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
@@ -11,8 +11,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import Label from 'components/shared/Label';
-import TextField from 'components/shared/TextField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -100,7 +98,7 @@ const GeneralRequestInfo = ({
                   <Label htmlFor="BusinessCase-RequestName">Project Name</Label>
                   <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors.requestName}
                     id="BusinessCase-RequestName"
                     maxLength={50}
@@ -115,7 +113,7 @@ const GeneralRequestInfo = ({
                   <Label htmlFor="BusinessCase-RequesterName">Requester</Label>
                   <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors['requester.name']}
                     id="BusinessCase-RequesterName"
                     maxLength={50}
@@ -134,7 +132,7 @@ const GeneralRequestInfo = ({
                     {flatErrors['businessOwner.name']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors['businessOwner.name']}
                     id="BusinessCase-BusinessOwnerName"
                     maxLength={50}
@@ -157,7 +155,7 @@ const GeneralRequestInfo = ({
                   </FieldErrorMsg>
                   <div className="width-card-lg">
                     <Field
-                      as={TextField}
+                      as={TextInput}
                       error={!!flatErrors['requester.phoneNumber']}
                       id="BusinessCase-RequesterPhoneNumber"
                       maxLength={20}

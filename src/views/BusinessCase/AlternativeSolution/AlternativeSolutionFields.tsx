@@ -1,4 +1,5 @@
 import React from 'react';
+import { Label, Radio, Textarea, TextInput } from '@trussworks/react-uswds';
 import { Field, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
@@ -6,10 +7,6 @@ import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import Label from 'components/shared/Label';
-import { RadioField } from 'components/shared/RadioField';
-import TextAreaField from 'components/shared/TextAreaField';
-import TextField from 'components/shared/TextField';
 import { yesNoMap } from 'data/common';
 import flattenErrors from 'utils/flattenErrors';
 
@@ -41,7 +38,7 @@ const AlternativeSolutionFields = ({
           </Label>
           <FieldErrorMsg>{flatErrors[`${altId}.title`]}</FieldErrorMsg>
           <Field
-            as={TextField}
+            as={TextInput}
             error={!!flatErrors[`${altId}.title`]}
             id={`BusinessCase-${altId}Title`}
             maxLength={50}
@@ -78,7 +75,7 @@ const AlternativeSolutionFields = ({
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.summary`]}</FieldErrorMsg>
           <Field
-            as={TextAreaField}
+            as={Textarea}
             error={!!flatErrors[`${altId}.summary`]}
             id={`BusinessCase-${altId}Summary`}
             maxLength={2000}
@@ -110,7 +107,7 @@ const AlternativeSolutionFields = ({
             {flatErrors[`${altId}.acquisitionApproach`]}
           </FieldErrorMsg>
           <Field
-            as={TextAreaField}
+            as={Textarea}
             error={flatErrors[`${altId}.acquisitionApproach`]}
             id={`BusinessCase-${altId}AcquisitionApproach`}
             maxLength={2000}
@@ -139,7 +136,7 @@ const AlternativeSolutionFields = ({
               {flatErrors[`${altId}.security.isApproved`]}
             </FieldErrorMsg>
             <Field
-              as={RadioField}
+              as={Radio}
               checked={values[`${altId}`].security.isApproved === true}
               id={`BusinessCase-${altId}SecurityApproved`}
               name={`${altId}.security.isApproved`}
@@ -151,7 +148,7 @@ const AlternativeSolutionFields = ({
             />
 
             <Field
-              as={RadioField}
+              as={Radio}
               checked={values[`${altId}`].security.isApproved === false}
               id={`BusinessCase-${altId}SecurityNotApproved`}
               name={`${altId}.security.isApproved`}
@@ -184,7 +181,7 @@ const AlternativeSolutionFields = ({
                 {flatErrors[`${altId}.security.isBeingReviewed`]}
               </FieldErrorMsg>
               <Field
-                as={RadioField}
+                as={Radio}
                 checked={values[`${altId}`].security.isBeingReviewed === 'YES'}
                 id={`BusinessCase-${altId}SecurityIsBeingReviewedYed`}
                 name={`${altId}.security.isBeingReviewed`}
@@ -193,7 +190,7 @@ const AlternativeSolutionFields = ({
                 aria-describedby={`BusinessCase-${altId}SecurityReviewHelp`}
               />
               <Field
-                as={RadioField}
+                as={Radio}
                 checked={values[`${altId}`].security.isBeingReviewed === 'NO'}
                 id={`BusinessCase-${altId}SecurityIsBeingReviewedNo`}
                 name={`${altId}.security.isBeingReviewed`}
@@ -201,7 +198,7 @@ const AlternativeSolutionFields = ({
                 value="NO"
               />
               <Field
-                as={RadioField}
+                as={Radio}
                 checked={
                   values[`${altId}`].security.isBeingReviewed === 'NOT_SURE'
                 }
@@ -225,7 +222,7 @@ const AlternativeSolutionFields = ({
             <FieldErrorMsg>{flatErrors[`${altId}.hosting.type`]}</FieldErrorMsg>
 
             <Field
-              as={RadioField}
+              as={Radio}
               checked={values[`${altId}`].hosting.type === 'cloud'}
               id={`BusinessCase-${altId}HostingCloud`}
               name={`${altId}.hosting.type`}
@@ -251,7 +248,7 @@ const AlternativeSolutionFields = ({
                     {flatErrors[`${altId}.hosting.location`]}
                   </FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors[`${altId}.hosting.location`]}
                     id={`BusinessCase-${altId}CloudLocation`}
                     maxLength={50}
@@ -271,7 +268,7 @@ const AlternativeSolutionFields = ({
                     {flatErrors[`${altId}.hosting.cloudServiceType`]}
                   </FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors[`${altId}.hosting.cloudServiceType`]}
                     id={`BusinessCase-${altId}CloudServiceType`}
                     maxLength={50}
@@ -281,7 +278,7 @@ const AlternativeSolutionFields = ({
               </>
             )}
             <Field
-              as={RadioField}
+              as={Radio}
               checked={values[`${altId}`].hosting.type === 'dataCenter'}
               id={`BusinessCase-${altId}HostingDataCenter`}
               name={`${altId}.hosting.type`}
@@ -306,7 +303,7 @@ const AlternativeSolutionFields = ({
                   {flatErrors[`${altId}.hosting.location`]}
                 </FieldErrorMsg>
                 <Field
-                  as={TextField}
+                  as={TextInput}
                   error={!!flatErrors[`${altId}.hosting.location`]}
                   id={`BusinessCase-${altId}DataCenterLocation`}
                   maxLength={50}
@@ -315,7 +312,7 @@ const AlternativeSolutionFields = ({
               </FieldGroup>
             )}
             <Field
-              as={RadioField}
+              as={Radio}
               checked={values[`${altId}`].hosting.type === 'none'}
               id={`BusinessCase-${altId}HostingNone`}
               name={`${altId}.hosting.type`}
@@ -344,7 +341,7 @@ const AlternativeSolutionFields = ({
             </FieldErrorMsg>
 
             <Field
-              as={RadioField}
+              as={Radio}
               checked={values[`${altId}`].hasUserInterface === 'YES'}
               id={`BusinessCase-${altId}HasUserInferfaceYes`}
               name={`${altId}.hasUserInterface`}
@@ -352,7 +349,7 @@ const AlternativeSolutionFields = ({
               value="YES"
             />
             <Field
-              as={RadioField}
+              as={Radio}
               checked={values[`${altId}`].hasUserInterface === 'NO'}
               id={`BusinessCase-${altId}HasUserInferfaceNo`}
               name={`${altId}.hasUserInterface`}
@@ -361,7 +358,7 @@ const AlternativeSolutionFields = ({
             />
 
             <Field
-              as={RadioField}
+              as={Radio}
               checked={values[`${altId}`].hasUserInterface === 'NOT_SURE'}
               id={`BusinessCase-${altId}HasUserInferfaceNotSure`}
               name={`${altId}.hasUserInterface`}
@@ -384,7 +381,7 @@ const AlternativeSolutionFields = ({
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.pros`]}</FieldErrorMsg>
           <Field
-            as={TextAreaField}
+            as={Textarea}
             error={!!flatErrors[`${altId}.pros`]}
             id={`BusinessCase-${altId}Pros`}
             maxLength={2000}
@@ -410,7 +407,7 @@ const AlternativeSolutionFields = ({
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.cons`]}</FieldErrorMsg>
           <Field
-            as={TextAreaField}
+            as={Textarea}
             error={!!flatErrors[`${altId}.cons`]}
             id={`BusinessCase-${altId}Cons`}
             maxLength={2000}
@@ -471,7 +468,7 @@ const AlternativeSolutionFields = ({
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.costSavings`]}</FieldErrorMsg>
           <Field
-            as={TextAreaField}
+            as={Textarea}
             error={!!flatErrors[`${altId}.costSavings`]}
             id={`BusinessCase-${altId}CostSavings`}
             maxLength={2000}
