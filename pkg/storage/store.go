@@ -56,15 +56,6 @@ func NewStore(
 	}
 
 	var creds *credentials.Credentials
-	if dbIamFlag {
-		if sess != nil {
-			// We want to get the credentials from the logged in AWS session rather than create directly,
-			// because the session conflates the environment, shared, and container metadata config
-			// within NewSession.  With stscreds, we use the Secure Token Service,
-			// to assume the given role (that has rds db connect permissions).
-			creds = stscreds.NewCredentials(sess, dbIamRoleArn)
-		}
-	}
 
 	dataSourceName := fmt.Sprintf(
 		"host=%s port=%s user=%s "+
