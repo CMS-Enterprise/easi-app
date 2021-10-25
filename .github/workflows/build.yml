@@ -33,6 +33,11 @@ jobs:
       - run: mkdir -p /store && chown clamav /store
       - run: freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store
       - run: clamscan --recursive --infected --detect-pua=yes --max-scansize=300M --max-filesize=100M --max-recursion=30 --max-files=50000 --tempdir=/tmp --database=/store .
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
   pre_deps:
     runs-on: ubuntu-latest
     steps:
