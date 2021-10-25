@@ -78,7 +78,6 @@ func NewStore(
 			creds = stscreds.NewCredentials(sess, dbIamRoleArn)
 		}
 
-		fmt.Printf("datasource name created")
 		// Set a bogus password holder. It will be replaced with an RDS auth token as the password.
 		passHolder := "*****"
 
