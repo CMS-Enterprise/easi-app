@@ -45,10 +45,8 @@ func main() {
 		panic(storeErr)
 	}
 
-	for i := 0; i < 5; i++ {
-		makeAccessibilityRequest("TACO", store)
-		makeAccessibilityRequest("Big Project", store)
-	}
+	makeAccessibilityRequest("TACO", store)
+	makeAccessibilityRequest("Big Project", store)
 
 	now := time.Now()
 	yyyy, mm, dd := now.Date()

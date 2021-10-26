@@ -513,6 +513,7 @@ type SystemIntake {
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
+  lcidCostBaseline: String
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
@@ -632,6 +633,7 @@ enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
   GUIDE_RECEIVED_CLOSE
+  EXTEND_LCID
   ISSUE_LCID
   NEED_BIZ_CASE
   NO_GOVERNANCE_NEEDED
@@ -658,8 +660,14 @@ type SystemIntakeAction {
   type: SystemIntakeActionType!
   actor: SystemIntakeActionActor!
   feedback: String
+  lcidExpirationChange: SystemIntakeLCIDExpirationChange
   createdAt: Time!
 }
+
+type SystemIntakeLCIDExpirationChange {
+  previousDate: Time!
+  newDate: Time!
+ }
 
 type SystemIntakeActionActor {
   name: String!
@@ -683,6 +691,7 @@ input IssueLifecycleIdInput {
   lcid: String
   nextSteps: String
   scope: String!
+  costBaseline: String
 }
 
 input RejectIntakeInput {

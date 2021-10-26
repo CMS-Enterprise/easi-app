@@ -9,8 +9,8 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 
-import RemediationPlanDoc from 'assets/files/CMS508RemediationPlanTemplate_AppName-a.pdf';
-import TestPlanDoc from 'assets/files/Section508TestPlanTemplate_AppName-a.pdf';
+import RemediationPlanDoc from 'assets/files/CMS508RemediationPlanTemplate.pdf';
+import TestPlanDoc from 'assets/files/Section508TestPlanTemplate.pdf';
 import PageHeading from 'components/PageHeading';
 
 import './index.scss';

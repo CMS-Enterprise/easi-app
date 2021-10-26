@@ -60,6 +60,7 @@ const IssueLifecycleId = () => {
       expirationDateYear = '',
       nextSteps,
       scope,
+      costBaseline,
       lifecycleId
     } = values;
     const expiresAt = DateTime.utc(
@@ -72,6 +73,7 @@ const IssueLifecycleId = () => {
       expiresAt: expiresAt.toISO(),
       nextSteps,
       scope,
+      costBaseline,
       lcid: lifecycleId,
       feedback
     };
@@ -290,6 +292,18 @@ const IssueLifecycleId = () => {
                     id="IssueLifecycleIdForm-NextSteps"
                     maxLength={3000}
                     name="nextSteps"
+                  />
+                </FieldGroup>
+                <FieldGroup>
+                  <Label htmlFor="IssueLifecycleIdForm-CostBaseline">
+                    {t('issueLCID.costBaselineLabel')}
+                  </Label>
+                  <HelpText>{t('issueLCID.costBaselineHelpText')}</HelpText>
+                  <Field
+                    as={TextAreaField}
+                    id="IssueLifecycleIdForm-CostBaseline"
+                    maxLength={3000}
+                    name="costBaseline"
                   />
                 </FieldGroup>
                 <FieldGroup

@@ -48,6 +48,7 @@ export enum RequestType {
 export enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES = "BIZ_CASE_NEEDS_CHANGES",
   CREATE_BIZ_CASE = "CREATE_BIZ_CASE",
+  EXTEND_LCID = "EXTEND_LCID",
   GUIDE_RECEIVED_CLOSE = "GUIDE_RECEIVED_CLOSE",
   ISSUE_LCID = "ISSUE_LCID",
   NEED_BIZ_CASE = "NEED_BIZ_CASE",
@@ -179,6 +180,7 @@ export interface IssueLifecycleIdInput {
   lcid?: string | null;
   nextSteps?: string | null;
   scope: string;
+  costBaseline?: string | null;
 }
 
 export interface RejectIntakeInput {

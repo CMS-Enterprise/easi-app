@@ -117,6 +117,7 @@ const governanceReviewTeam = {
       PROVIDE_FEEDBACK_NEED_BIZ_CASE:
         'Provided GRT Feedback and progressed to business case',
       ISSUE_LCID: 'Issued Lifecycle ID with no further governance',
+      EXTEND_LCID: 'Lifecycle ID extended',
       BIZ_CASE_NEEDS_CHANGES:
         'Requested business case changes (not ready for GRT)',
       PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT:
@@ -134,7 +135,9 @@ const governanceReviewTeam = {
       GUIDE_RECEIVED_CLOSE: 'Guide received. Closed the request.'
     },
     showEmail: 'Show Email',
-    hideEmail: 'Hide Email'
+    hideEmail: 'Hide Email',
+    newExpirationDate: 'New expiration date',
+    oldExpirationDate: 'Old expiration date'
   },
   dates: {
     heading: 'Dates',
@@ -165,6 +168,7 @@ const governanceReviewTeam = {
     lcidExpiration: 'Lifecycle ID Expiration',
     scope: 'Lifecycle ID Scope',
     nextSteps: 'Next Steps',
+    costBaseline: 'Project Cost Baseline',
     rejectionReason: 'Rejection Reason',
     decisionSectionTitle: 'Decision Details',
     descriptionNotItRequest: 'Request was marked "Not an IT Request"',

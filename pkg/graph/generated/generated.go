@@ -357,6 +357,7 @@ type ComplexityRoot struct {
 		Isso                        func(childComplexity int) int
 		LastAdminNote               func(childComplexity int) int
 		Lcid                        func(childComplexity int) int
+		LcidCostBaseline            func(childComplexity int) int
 		LcidScope                   func(childComplexity int) int
 		LifecycleExpiresAt          func(childComplexity int) int
 		NeedsEaSupport              func(childComplexity int) int
@@ -377,12 +378,13 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeAction struct {
-		Actor        func(childComplexity int) int
-		CreatedAt    func(childComplexity int) int
-		Feedback     func(childComplexity int) int
-		ID           func(childComplexity int) int
-		SystemIntake func(childComplexity int) int
-		Type         func(childComplexity int) int
+		Actor                func(childComplexity int) int
+		CreatedAt            func(childComplexity int) int
+		Feedback             func(childComplexity int) int
+		ID                   func(childComplexity int) int
+		LcidExpirationChange func(childComplexity int) int
+		SystemIntake         func(childComplexity int) int
+		Type                 func(childComplexity int) int
 	}
 
 	SystemIntakeActionActor struct {
@@ -430,6 +432,11 @@ type ComplexityRoot struct {
 	SystemIntakeIsso struct {
 		IsPresent func(childComplexity int) int
 		Name      func(childComplexity int) int
+	}
+
+	SystemIntakeLCIDExpirationChange struct {
+		NewDate      func(childComplexity int) int
+		PreviousDate func(childComplexity int) int
 	}
 
 	SystemIntakeNote struct {
@@ -593,6 +600,7 @@ type SystemIntakeResolver interface {
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 	Notes(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeNote, error)
 	OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -2203,6 +2211,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.Lcid(childComplexity), true
 
+	case "SystemIntake.lcidCostBaseline":
+		if e.complexity.SystemIntake.LcidCostBaseline == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.LcidCostBaseline(childComplexity), true
+
 	case "SystemIntake.lcidScope":
 		if e.complexity.SystemIntake.LcidScope == nil {
 			break
@@ -2349,6 +2364,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeAction.ID(childComplexity), true
+
+	case "SystemIntakeAction.lcidExpirationChange":
+		if e.complexity.SystemIntakeAction.LcidExpirationChange == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAction.LcidExpirationChange(childComplexity), true
 
 	case "SystemIntakeAction.systemIntake":
 		if e.complexity.SystemIntakeAction.SystemIntake == nil {
@@ -2524,6 +2546,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeIsso.Name(childComplexity), true
+
+	case "SystemIntakeLCIDExpirationChange.newDate":
+		if e.complexity.SystemIntakeLCIDExpirationChange.NewDate == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDExpirationChange.NewDate(childComplexity), true
+
+	case "SystemIntakeLCIDExpirationChange.previousDate":
+		if e.complexity.SystemIntakeLCIDExpirationChange.PreviousDate == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDExpirationChange.PreviousDate(childComplexity), true
 
 	case "SystemIntakeNote.author":
 		if e.complexity.SystemIntakeNote.Author == nil {
@@ -3286,6 +3322,7 @@ type SystemIntake {
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
+  lcidCostBaseline: String
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
@@ -3405,6 +3442,7 @@ enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
   GUIDE_RECEIVED_CLOSE
+  EXTEND_LCID
   ISSUE_LCID
   NEED_BIZ_CASE
   NO_GOVERNANCE_NEEDED
@@ -3431,8 +3469,14 @@ type SystemIntakeAction {
   type: SystemIntakeActionType!
   actor: SystemIntakeActionActor!
   feedback: String
+  lcidExpirationChange: SystemIntakeLCIDExpirationChange
   createdAt: Time!
 }
+
+type SystemIntakeLCIDExpirationChange {
+  previousDate: Time!
+  newDate: Time!
+ }
 
 type SystemIntakeActionActor {
   name: String!
@@ -3456,6 +3500,7 @@ input IssueLifecycleIdInput {
   lcid: String
   nextSteps: String
   scope: String!
+  costBaseline: String
 }
 
 input RejectIntakeInput {
@@ -11768,6 +11813,38 @@ func (ec *executionContext) _SystemIntake_lcidScope(ctx context.Context, field g
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntake_lcidCostBaseline(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().LcidCostBaseline(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SystemIntake_needsEaSupport(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -12566,6 +12643,38 @@ func (ec *executionContext) _SystemIntakeAction_feedback(ctx context.Context, fi
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntakeAction_lcidExpirationChange(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeAction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LcidExpirationChange, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.SystemIntakeLCIDExpirationChange)
+	fc.Result = res
+	return ec.marshalOSystemIntakeLCIDExpirationChange2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeLCIDExpirationChange(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SystemIntakeAction_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -13362,6 +13471,76 @@ func (ec *executionContext) _SystemIntakeISSO_name(ctx context.Context, field gr
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousDate(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeLCIDExpirationChange) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDExpirationChange",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PreviousDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newDate(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeLCIDExpirationChange) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDExpirationChange",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NewDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeNote_author(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNote) (ret graphql.Marshaler) {
@@ -15895,6 +16074,14 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scope"))
 			it.Scope, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "costBaseline":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("costBaseline"))
+			it.CostBaseline, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18490,6 +18677,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_lcidScope(ctx, field, obj)
 				return res
 			})
+		case "lcidCostBaseline":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_lcidCostBaseline(ctx, field, obj)
+				return res
+			})
 		case "needsEaSupport":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -18707,6 +18905,8 @@ func (ec *executionContext) _SystemIntakeAction(ctx context.Context, sel ast.Sel
 			}
 		case "feedback":
 			out.Values[i] = ec._SystemIntakeAction_feedback(ctx, field, obj)
+		case "lcidExpirationChange":
+			out.Values[i] = ec._SystemIntakeAction_lcidExpirationChange(ctx, field, obj)
 		case "createdAt":
 			out.Values[i] = ec._SystemIntakeAction_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -18961,6 +19161,38 @@ func (ec *executionContext) _SystemIntakeISSO(ctx context.Context, sel ast.Selec
 			out.Values[i] = ec._SystemIntakeISSO_isPresent(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._SystemIntakeISSO_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeLCIDExpirationChangeImplementors = []string{"SystemIntakeLCIDExpirationChange"}
+
+func (ec *executionContext) _SystemIntakeLCIDExpirationChange(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeLCIDExpirationChange) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeLCIDExpirationChangeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeLCIDExpirationChange")
+		case "previousDate":
+			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_previousDate(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "newDate":
+			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_newDate(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -21360,6 +21592,13 @@ func (ec *executionContext) unmarshalOSystemIntakeFundingSourceInput2ᚖgithub�
 	}
 	res, err := ec.unmarshalInputSystemIntakeFundingSourceInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeLCIDExpirationChange2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeLCIDExpirationChange(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeLCIDExpirationChange) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeLCIDExpirationChange(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNote(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeNote) graphql.Marshaler {

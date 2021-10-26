@@ -126,6 +126,7 @@ type SystemIntake struct {
 	LifecycleID                 null.String             `json:"lcid" db:"lcid"`
 	LifecycleExpiresAt          *time.Time              `json:"lcidExpiresAt" db:"lcid_expires_at" gqlgen:"lcidExpiresAt"`
 	LifecycleScope              null.String             `json:"lcidScope" db:"lcid_scope"`
+	LifecycleCostBaseline       null.String             `json:"lcidCostBaseline" db:"lcid_cost_baseline"`
 	DecisionNextSteps           null.String             `json:"decisionNextSteps" db:"decision_next_steps"`
 	RejectionReason             null.String             `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                   null.String             `json:"adminLead" db:"admin_lead"`

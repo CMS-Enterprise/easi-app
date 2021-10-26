@@ -32,7 +32,9 @@ import {
   GetAdminNotesAndActionsVariables
 } from 'queries/types/GetAdminNotesAndActions';
 import { AppState } from 'reducers/rootReducer';
-import { formatDate } from 'utils/date';
+import { formatDate, formatDateAndIgnoreTimezone } from 'utils/date';
+
+import './index.scss';
 
 type NoteForm = {
   note: string;
@@ -105,7 +107,14 @@ const Notes = () => {
 
   const actionsByTimestamp =
     data?.systemIntake?.actions.map(action => {
-      const { id, createdAt, type, actor, feedback } = action;
+      const {
+        id,
+        createdAt,
+        type,
+        actor,
+        feedback,
+        lcidExpirationChange
+      } = action;
       return {
         createdAt,
         element: (
@@ -116,6 +125,22 @@ const Notes = () => {
             )} at ${DateTime.fromISO(createdAt).toLocaleString(
               DateTime.TIME_SIMPLE
             )}`}</NoteByline>
+            {lcidExpirationChange && (
+              <dl>
+                <dt>Lifecycle ID</dt>
+                <dd>{data.systemIntake?.lcid}</dd>
+                <dt>{t('notes.newExpirationDate')}</dt>
+                <dd>
+                  {formatDateAndIgnoreTimezone(lcidExpirationChange.newDate)}
+                </dd>
+                <dt>{t('notes.oldExpirationDate')}</dt>
+                <dd>
+                  {formatDateAndIgnoreTimezone(
+                    lcidExpirationChange.previousDate
+                  )}
+                </dd>
+              </dl>
+            )}
             {feedback && (
               <div className="margin-top-2">
                 <CollapsableLink

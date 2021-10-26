@@ -13,6 +13,9 @@ describe('Alternative Solution Fields', () => {
       <Formik
         initialValues={{ alternativeA: defaultProposedSolution }}
         onSubmit={() => {}}
+        validateOnBlur={false}
+        validateOnChange={false}
+        validateOnMount={false}
         innerRef={jest.fn()}
       >
         {(formikProps: FormikProps<any>) => (
@@ -35,7 +38,7 @@ describe('Alternative Solution Fields', () => {
     ).toBeInTheDocument();
   });
 
-  it('fill deepest question branch', async () => {
+  it('fill deepest question branch', () => {
     renderFields();
 
     const titleField = screen.getByRole('textbox', {

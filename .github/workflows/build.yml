@@ -20,11 +20,29 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
+  anti_virus:
+    runs-on: ubuntu-latest
+    container:
+      image: clamav/clamav:0.104.0
+    steps:
+      - name: Check out code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: clamscan --version
+      - run: mkdir -p /store && chown clamav /store
+      - run: freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store
+      - run: clamscan --recursive --infected --detect-pua=yes --max-scansize=300M --max-filesize=100M --max-recursion=30 --max-files=50000 --tempdir=/tmp --database=/store .
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
   pre_deps:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -70,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -120,7 +138,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -151,7 +169,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -188,7 +206,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Login to Docker Hub
@@ -222,7 +240,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Configure go cache
@@ -302,7 +320,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Login to Docker Hub
@@ -328,6 +346,9 @@ jobs:
           APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
           docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$IMAGE_TAG" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Check for vulnerability scan findings
+        run: |
+          ./scripts/check_ecr_findings "easi-backend" "$IMAGE_TAG" "7"
       - name: Announce failure
         if: ${{ failure() }}
         run: |
@@ -338,7 +359,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -416,14 +437,14 @@ jobs:
 
   deploy_dev:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.event.pull_request.labels.*.name, 'deploy_dev') }}
-    needs: [ lint, client_test, server_test, e2e_tests ]
+    needs: [ lint, client_test, server_test, e2e_tests, anti_virus ]
     runs-on: ubuntu-latest
     environment: dev
     env:
       APP_ENV: dev
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -493,7 +514,7 @@ jobs:
       APP_ENV: impl
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -563,7 +584,7 @@ jobs:
       APP_ENV: prod
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -633,7 +654,7 @@ jobs:
       APP_ENV: dev
     steps:
       - name: Check out code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/download-artifact@3be87be14a055c47b01d3bd88f8fe02320a9bb60 # v2.0.10
