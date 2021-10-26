@@ -27,6 +27,6 @@ require (
 	github.com/vektah/gqlparser/v2 v2.2.0
 	go.uber.org/zap v1.19.1
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
-	gopkg.in/launchdarkly/go-sdk-common.v2 v2.4.0
+	gopkg.in/launchdarkly/go-sdk-common.v2 v2.5.0
 	gopkg.in/launchdarkly/go-server-sdk.v5 v5.6.0
 )
