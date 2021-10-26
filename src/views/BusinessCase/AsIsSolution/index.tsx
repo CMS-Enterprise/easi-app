@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Button, Label, Textarea, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
@@ -13,9 +13,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
-import TextField from 'components/shared/TextField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { AsIsSolutionForm, BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -114,7 +111,7 @@ const AsIsSolution = ({
                     {flatErrors['asIsSolution.title']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors['asIsSolution.title']}
                     id="BusinessCase-AsIsSolutionTitle"
                     maxLength={50}
@@ -154,7 +151,7 @@ const AsIsSolution = ({
                     {flatErrors['asIsSolution.summary']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors['asIsSolution.summary']}
                     id="BusinessCase-AsIsSolutionSummary"
                     maxLength={2000}
@@ -185,7 +182,7 @@ const AsIsSolution = ({
                     {flatErrors['asIsSolution.pros']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors['asIsSolution.pros']}
                     id="BusinessCase-AsIsSolutionPros"
                     maxLength={2000}
@@ -216,7 +213,7 @@ const AsIsSolution = ({
                     {flatErrors['asIsSolution.cons']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors['asIsSolution.cons']}
                     id="BusinessCase-AsIsSolutionCons"
                     maxLength={2000}
@@ -284,7 +281,7 @@ const AsIsSolution = ({
                     {flatErrors['asIsSolution.costSavings']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors['asIsSolution.costSavings']}
                     id="BusinessCase-AsIsSolutionCostSavings"
                     maxLength={2000}
