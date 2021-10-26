@@ -50,13 +50,6 @@ func NewStore(
 		return nil, err
 	}
 
-	var sess *session.Session
-	if dbIamFlag {
-		sess = session.Must(session.NewSession())
-	}
-
-	var creds *credentials.Credentials
-
 	dataSourceName := fmt.Sprintf(
 		"host=%s port=%s user=%s "+
 			"password=%s dbname=%s sslmode=%s",
@@ -68,13 +61,15 @@ func NewStore(
 		config.SSLMode,
 	)
 	driver := "postgres"
+	var creds *credentials.Credentials
+	var sess *session.Session
+
 	if dbIamFlag {
 		config.Username = "app_user_iam"
+		sess = session.Must(session.NewSession())
 		if sess != nil {
-			// We want to get the credentials from the logged in AWS session rather than create directly,
-			// because the session conflates the environment, shared, and container metadata config
-			// within NewSession.  With stscreds, we use the Secure Token Service,
-			// to assume the given role (that has rds db connect permissions).
+			// We need to use stscreds to assume the given role (that has rds db connect permissions).
+			// even though in this case we are assuming the current role. Will not have the needed credentials without assuming this role
 			creds = stscreds.NewCredentials(sess, dbIamRoleArn)
 		}
 

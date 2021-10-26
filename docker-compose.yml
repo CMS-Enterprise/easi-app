@@ -42,6 +42,7 @@ services:
       - PGPORT=5432
       - PGDATABASE=postgres
       - PGUSER=app_user
+      - DB_IAM_FLAG=false
       - PGPASS=supersecretapp
       - PGSSLMODE=disable
       - DB_MAX_CONNECTIONS=20
