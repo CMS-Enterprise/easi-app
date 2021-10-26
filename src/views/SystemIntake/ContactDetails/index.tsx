@@ -2,22 +2,24 @@ import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Button } from '@trussworks/react-uswds';
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  Label,
+  Radio,
+  TextInput
+} from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
-import CheckboxField from 'components/shared/CheckboxField';
-import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import Label from 'components/shared/Label';
-import { RadioField } from 'components/shared/RadioField';
-import TextField from 'components/shared/TextField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -126,14 +128,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
     cmsDivisionsAndOffices.map((office: any) => (
-      <Field
-        as={DropdownItem}
-        key={`${fieldId}-${office.acronym}`}
-        name={
-          office.acronym ? `${office.name} (${office.acronym})` : office.name
-        }
-        value={office.name}
-      />
+      <option key={`${fieldId}-${office.acronym}`} value={office.name}>
+        {office.acronym ? `${office.name} (${office.acronym})` : office.name}
+      </option>
     ));
 
   const saveExitLink = (() => {
@@ -210,7 +207,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   </Label>
                   <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors['requester.name']}
                     id="IntakeForm-Requester"
                     maxLength={50}
@@ -231,8 +228,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['requester.component']}
                   </FieldErrorMsg>
                   <Field
-                    as={DropdownField}
-                    error={!!flatErrors['requester.component']}
+                    as={Dropdown}
                     id="IntakeForm-RequesterComponent"
                     name="requester.component"
                     onChange={(e: any) => {
@@ -251,12 +247,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       setFieldValue('requester.component', e.target.value);
                     }}
                   >
-                    <Field
-                      as={DropdownItem}
-                      name="Select an option"
-                      value=""
-                      disabled
-                    />
+                    <option value="" disabled>
+                      Select an option
+                    </option>
                     {cmsDivionsAndOfficesOptions('RequesterComponent')}
                   </Field>
                 </FieldGroup>
@@ -276,7 +269,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {t('contactDetails.businessOwner.helpText')}
                   </HelpText>
                   <Field
-                    as={CheckboxField}
+                    as={Checkbox}
                     id="IntakeForm-IsBusinessOwnerSameAsRequester"
                     label="CMS Business Owner is same as requester"
                     name="isBusinessOwnerSameAsRequester"
@@ -301,7 +294,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['businessOwner.name']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors['businessOwner.name']}
                     disabled={isReqAndBusOwnerSame}
                     id="IntakeForm-BusinessOwner"
@@ -323,18 +316,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['businessOwner.component']}
                   </FieldErrorMsg>
                   <Field
-                    as={DropdownField}
+                    as={Dropdown}
                     disabled={isReqAndBusOwnerSame}
-                    error={!!flatErrors['businessOwner.component']}
                     id="IntakeForm-BusinessOwnerComponent"
                     name="businessOwner.component"
                   >
-                    <Field
-                      as={DropdownItem}
-                      name="Select an option"
-                      value=""
-                      disabled
-                    />
+                    <option value="" disabled>
+                      Select an option
+                    </option>
                     {cmsDivionsAndOfficesOptions('BusinessOwnerComponent')}
                   </Field>
                 </FieldGroup>
@@ -354,7 +343,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {t('contactDetails.productManager.helpText')}
                   </HelpText>
                   <Field
-                    as={CheckboxField}
+                    as={Checkbox}
                     id="IntakeForm-IsProductManagerSameAsRequester"
                     label="CMS Project/Product Manager, or lead is same as requester"
                     name="isProductManagerSameAsRequester"
@@ -379,7 +368,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['productManager.name']}
                   </FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors['productManager.name']}
                     id="IntakeForm-ProductManager"
                     maxLength={50}
@@ -401,19 +390,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['productManager.component']}
                   </FieldErrorMsg>
                   <Field
-                    as={DropdownField}
-                    error={!!flatErrors['productManager.component']}
+                    as={Dropdown}
                     id="IntakeForm-ProductManagerComponent"
                     label="Product Manager Component"
                     name="productManager.component"
                     disabled={isReqAndProductManagerSame}
                   >
-                    <Field
-                      as={DropdownItem}
-                      name="Select an option"
-                      value=""
-                      disabled
-                    />
+                    <option value="" disabled>
+                      Select an option
+                    </option>
                     {cmsDivionsAndOfficesOptions('ProductManagerComponent')}
                   </Field>
                 </FieldGroup>
@@ -438,7 +423,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     </FieldErrorMsg>
 
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={values.isso.isPresent === true}
                       id="IntakeForm-HasIssoYes"
                       name="isso.isPresent"
@@ -467,7 +452,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             {flatErrors['isso.name']}
                           </FieldErrorMsg>
                           <Field
-                            as={TextField}
+                            as={TextInput}
                             error={!!flatErrors['isso.name']}
                             id="IntakeForm-IssoName"
                             maxLength={50}
@@ -477,7 +462,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       </div>
                     )}
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={values.isso.isPresent === false}
                       id="IntakeForm-HasIssoNo"
                       name="isso.isPresent"
@@ -511,7 +496,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     </FieldErrorMsg>
 
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={values.governanceTeams.isPresent === true}
                       id="IntakeForm-YesGovernanceTeams"
                       name="governanceTeams.isPresent"
@@ -536,7 +521,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     </div>
 
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={values.governanceTeams.isPresent === false}
                       id="IntakeForm-NoGovernanceTeam"
                       name="governanceTeams.isPresent"

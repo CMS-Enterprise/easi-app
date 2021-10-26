@@ -1,7 +1,13 @@
 import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Button } from '@trussworks/react-uswds';
+import {
+  Button,
+  Label,
+  Radio,
+  Textarea,
+  TextInput
+} from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
@@ -14,10 +20,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import Label from 'components/shared/Label';
-import { RadioField } from 'components/shared/RadioField';
-import TextAreaField from 'components/shared/TextAreaField';
-import TextField from 'components/shared/TextField';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -144,7 +146,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   <Label htmlFor="IntakeForm-RequestName">Project Name</Label>
                   <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                   <Field
-                    as={TextField}
+                    as={TextInput}
                     error={!!flatErrors.requestName}
                     id="IntakeForm-RequestName"
                     maxLength={50}
@@ -191,7 +193,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors.businessNeed}
                     id="IntakeForm-BusinessNeed"
                     maxLength={2000}
@@ -219,7 +221,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
                   <Field
-                    as={TextAreaField}
+                    as={Textarea}
                     error={!!flatErrors.businessSolution}
                     id="IntakeForm-BusinessSolution"
                     maxLength={2000}
@@ -250,7 +252,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                     </HelpText>
                     <FieldErrorMsg>{flatErrors.needsEaSupport}</FieldErrorMsg>
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={values.needsEaSupport === true}
                       id="IntakeForm-NeedsEaSupportYes"
                       name="needsEaSupport"
@@ -263,7 +265,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                     />
 
                     <Field
-                      as={RadioField}
+                      as={Radio}
                       checked={values.needsEaSupport === false}
                       id="IntakeForm-NeedsEaSupportNo"
                       name="needsEaSupport"

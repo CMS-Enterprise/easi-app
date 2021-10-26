@@ -49,8 +49,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                       const removeIndex = values.governanceTeams.teams
                         ?.map(t => t.name)
                         .indexOf(e.target.value);
-
-                      if (removeIndex) {
+                      if (typeof removeIndex === 'number' && removeIndex > -1) {
                         arrayHelpers.remove(removeIndex);
                       }
                     }
