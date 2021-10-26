@@ -120,7 +120,7 @@ const AlternativeSolutionFields = ({
           <CharacterCounter
             id={`BusinessCase-${altId}AcquisitionApproachCounter`}
             characterCount={
-              2000 - values[`${altId}`].acquisitionApproach.length
+              2000 - (values[`${altId}`]?.acquisitionApproach?.length || 0)
             }
           />
         </FieldGroup>
@@ -393,7 +393,7 @@ const AlternativeSolutionFields = ({
           />
           <CharacterCounter
             id={`BusinessCase-${altId}ProsCounter`}
-            characterCount={2000 - values[`${altId}`].pros.length}
+            characterCount={2000 - (values[`${altId}`]?.pros?.length || 0)}
           />
         </FieldGroup>
 
@@ -419,7 +419,7 @@ const AlternativeSolutionFields = ({
           />
           <CharacterCounter
             id={`BusinessCase-${altId}ConsCounter`}
-            characterCount={2000 - values[`${altId}`].cons.length}
+            characterCount={2000 - (values[`${altId}`]?.cons?.length || 0)}
           />
         </FieldGroup>
       </div>
@@ -480,7 +480,9 @@ const AlternativeSolutionFields = ({
           />
           <CharacterCounter
             id={`BusinessCase-${altId}CostSavingsCounter`}
-            characterCount={2000 - values[`${altId}`].costSavings.length}
+            characterCount={
+              2000 - (values[`${altId}`]?.costSavings?.length || 0)
+            }
           />
         </FieldGroup>
       </div>

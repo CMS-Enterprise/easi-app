@@ -163,7 +163,9 @@ const AsIsSolution = ({
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionSummaryCounter"
-                    characterCount={2000 - values.asIsSolution.summary.length}
+                    characterCount={
+                      2000 - (values.asIsSolution?.summary?.length || 0)
+                    }
                   />
                 </FieldGroup>
 
@@ -194,7 +196,9 @@ const AsIsSolution = ({
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionProsCounter"
-                    characterCount={2000 - values.asIsSolution.pros.length}
+                    characterCount={
+                      2000 - (values.asIsSolution?.pros?.length || 0)
+                    }
                   />
                 </FieldGroup>
 
@@ -225,7 +229,9 @@ const AsIsSolution = ({
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionConsCounter"
-                    characterCount={2000 - values.asIsSolution.cons.length}
+                    characterCount={
+                      2000 - (values.asIsSolution?.cons?.length || 0)
+                    }
                   />
                 </FieldGroup>
               </div>
@@ -294,7 +300,7 @@ const AsIsSolution = ({
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionCostSavingsCounter"
                     characterCount={
-                      2000 - values.asIsSolution.costSavings.length
+                      2000 - (values.asIsSolution?.costSavings?.length || 0)
                     }
                   />
                 </FieldGroup>

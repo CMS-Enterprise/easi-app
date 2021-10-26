@@ -173,7 +173,7 @@ const PreferredSolution = ({
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionSummaryCounter"
                     characterCount={
-                      2000 - values.preferredSolution.summary.length
+                      2000 - (values.preferredSolution?.summary?.length || 0)
                     }
                   />
                 </FieldGroup>
@@ -208,7 +208,9 @@ const PreferredSolution = ({
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionAcquisitionApproachCounter"
                     characterCount={
-                      2000 - values.preferredSolution.acquisitionApproach.length
+                      2000 -
+                      (values.preferredSolution?.acquisitionApproach?.length ||
+                        0)
                     }
                   />
                 </FieldGroup>
@@ -556,7 +558,9 @@ const PreferredSolution = ({
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionProsCounter"
-                    characterCount={2000 - values.preferredSolution.pros.length}
+                    characterCount={
+                      2000 - (values.preferredSolution?.pros?.length || 0)
+                    }
                   />
                 </FieldGroup>
 
@@ -587,7 +591,9 @@ const PreferredSolution = ({
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionConsCounter"
-                    characterCount={2000 - values.preferredSolution.cons.length}
+                    characterCount={
+                      2000 - (values.preferredSolution?.cons?.length || 0)
+                    }
                   />
                 </FieldGroup>
               </div>
@@ -653,7 +659,8 @@ const PreferredSolution = ({
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionCostSavingsCounter"
                     characterCount={
-                      2000 - values.preferredSolution.costSavings.length
+                      2000 -
+                      (values.preferredSolution?.costSavings?.length || 0)
                     }
                   />
                 </FieldGroup>
