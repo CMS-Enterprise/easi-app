@@ -2,7 +2,8 @@
 
 <!--
     If applicable, insert the Jira story number in the markdown header above
-    The hyperlink will be filled in by GitHub magic
+    The hyperlink will be filled in by GitHub autolinks:
+    https://github.com/CMSgov/easi-app/settings/key_links
 --->
 
 ## Changes proposed in this pull request
@@ -21,7 +22,11 @@
     Is there anything you would like reviewers to give additional scrutiny?
 --->
 
-## Setup
+## Setup & How to test
+
+- Pull the branch locally and test it
+- Check that all code is adequately covered by tests
+- Make comments, even if it's minor!
 
 <!--
     Add any steps or code to run in this section to help others run your code:
@@ -31,45 +36,20 @@
     ```
 --->
 
-## Code Review Verification Steps
+## PR Author Review Checklist
 
-### As the original developer, I have
-
-- [ ] Tested user-facing changes with voice-over
-- [ ] Checked for landmarks, page heading structure and links using [rotor menu](https://github.com/trussworks/accessibility/blob/master/README.md#how-to-use-the-rotor-menu)
-- [ ] Requested a design review for user-facing changes
-- [ ] Met the acceptance criteria, or will meet them in a subsequent PR
-- [ ] Added or updated tests for BE resolvers or other functions as needed
+- [ ] Met the ticket's acceptance criteria, or will meet them in a subsequent PR
+- [ ] Added or updated tests for backend resolvers or other functions as needed
 - [ ] Added or updated client tests for new components, parent components,
-      functions, or e2e tests as necessary
+functions, or e2e tests as necessary
+- [ ] Tested user-facing changes with voice-over and
+the [rotor menu](https://support.apple.com/guide/voiceover/with-the-voiceover-rotor-mchlp2719/mac)
 - For any new migrations/schema changes:
   - [ ] Followed guidelines for zero-downtime deploys
   - [ ] Deployed this branch to the remote dev environment via CI
 
-### As the code reviewer, I have
-
-- [ ] Pulled this branch locally and tested it
-- [ ] Reviewed this code and left comments
-- [ ] Checked that all code is adequately covered by tests
-- [ ] Made it clear which comments need to be addressed before this work is merged
-- [ ] Considered marking this as accepted even if there are small changes needed
-
-### As a designer, I have
-
-- [ ] Checked in the design translated visually
-- [ ] Checked behavior
-- [ ] Checked different states (empty, one, some, error)
-- [ ] Checked accessibility against criteria
-- [ ] Checked for landmarks, page heading structure, and links
-- [ ] Tried to break the intended flow
-
 ## Screenshots
 
-If this PR makes visible UI changes, an image of the finished UI can help reviewers
-and casual observers understand the context of the changes.
-A before image is optional and can be included at the submitter's discretion.
-
-Consider using an animated image to show an entire workflow.
-You may want to use GIPHY CAPTURE for this! 📸
-
-_Please frame images to show useful context but also highlight the affected regions._
+<!--
+    If this PR benefits from showing any visual components, put any screenshots here!
+-->
