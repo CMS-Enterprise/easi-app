@@ -3,6 +3,31 @@
 This repository contains the application code for the CMS EASi (Easy Access to
 System Information).
 
+## Repository Structure
+
+This repository has several major subfolders:
+
+- `.github` contains GitHub-related configuration; notably, `.github/workflows`
+contains the workflow definitions for CI/CD through GitHub Actions.
+- `.storybook` contains configuration for [Storybook](https://storybook.js.org/),
+which can be used for viewing and designing React components in isolation.
+- `.vscode` contains settings and suggested extensions for developing in VS Code.
+- `cmd` contains Go CLI scripts for various utilities.
+- `config/tls` contains certificates that need to be trusted by the EASi backend.
+- `cypress` contains end-to-end/functional tests using [Cypress][https://www.cypress.io/],
+as well as necessary configuration.
+- `docs` contains general documentation for the EASi application;
+the `docs/adr` subfolder contains records of architectural decisions,
+while `docs/operations` contains information on operational procedures
+such as deploying the application.
+- `migrations` contains SQL files that together define the database schema;
+these are deployed using [Flyway](https://flywaydb.org/).
+- `pkg` contains the Go source code for the application's backend.
+- `public` contains static assets for the frontend.
+- `scripts` contains Bash and Ruby scripts
+used for various development and operational tasks.
+- `src` contains the TypeScript source code for the application's React frontend.
+
 ## Overview
 
 This application is made up of the following main components:
