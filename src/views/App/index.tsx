@@ -32,6 +32,7 @@ import PrivacyPolicy from 'views/PrivacyPolicy';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
+import SystemProfile from 'views/SystemProfile';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
@@ -56,6 +57,9 @@ const AppRoutes = () => {
       <Route path="/signin" exact component={Login} />
       <SecureRoute path="/user-diagnostics" component={UserInfo} />
       <SecureRoute path="/my-requests" component={MyRequests} />
+
+      {/* System Profile Routes */}
+      <SecureRoute path="/system-profile" component={SystemProfile} />
 
       {/* 508 / Accessibility Team Routes */}
       <SecureRoute path="/508" component={Accessibility} />

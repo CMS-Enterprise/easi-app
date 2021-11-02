@@ -16,6 +16,7 @@ import home from './home';
 import intake from './intake';
 import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
+import systemProfile from './systemProfile';
 import termsAndConditions from './termsAndConditions';
 
 const enUS = {
@@ -34,6 +35,7 @@ const enUS = {
   home,
   intake,
   makingARequest,
+  systemProfile,
   privacyPolicy,
   taskList,
   termsAndConditions

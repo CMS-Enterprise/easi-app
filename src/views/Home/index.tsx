@@ -72,15 +72,25 @@ const Home = () => {
                 <LinkCard
                   link="/system/making-a-request"
                   heading={t('home:actions.itg.heading')}
-                  className="margin-right-2"
+                  className="margin-right-2 equal-flex"
                 >
                   {t('home:actions.itg.body')}
                 </LinkCard>
                 <LinkCard
                   link="/508/making-a-request"
                   heading={t('home:actions.508.heading')}
+                  className="margin-right-2 equal-flex"
                 >
                   {t('home:actions.508.body')}
+                </LinkCard>
+                <LinkCard
+                  link="/system-profile"
+                  // heading={t('home:actions.508.heading')}
+                  heading="System Profile"
+                  className="equal-flex"
+                >
+                  {/* {t('home:actions.508.body')} */}
+                  View all Systems at a Glance.
                 </LinkCard>
               </div>
               <hr className="home__hr margin-top-4" aria-hidden />
