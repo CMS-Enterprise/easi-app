@@ -17,7 +17,7 @@ const SystemProfileHome = () => {
   const { t } = useTranslation('systemProfile');
 
   return (
-    <PageWrapper data-testid="making-a-system-request">
+    <PageWrapper data-testid="system-profile">
       <Header />
       <MainContent className="grid-container line-height-body-5 margin-bottom-5">
         <BreadcrumbBar variant="wrap">

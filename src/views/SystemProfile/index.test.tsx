@@ -23,7 +23,7 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
-describe('The making a request page', () => {
+describe('The system profile page', () => {
   it('renders without errors', () => {
     const mockStore = configureMockStore();
     const defaultStore = mockStore({
@@ -33,10 +33,10 @@ describe('The making a request page', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/system/making-a-request']}>
+      <MemoryRouter initialEntries={['/system-profile']}>
         <Provider store={defaultStore}>
           <MessageProvider>
-            <Route path="/system/making-a-request">
+            <Route path="/system-profile">
               <SystemProfileHome />
             </Route>
           </MessageProvider>
@@ -44,7 +44,7 @@ describe('The making a request page', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByTestId('making-a-system-request')).toBeInTheDocument();
+    expect(screen.getByTestId('system-profile')).toBeInTheDocument();
   });
 
   it('matches the snapshot', () => {
