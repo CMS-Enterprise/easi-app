@@ -1,7 +1,6 @@
 # Deploying the EASi Application
 
-EASi code changes are deployed automatically through GitHub Actions.
-After a merge or commit to `master`, the `build` workflow will trigger;
+EASi code changes are deployed automatically through GitHub Actions. After a merge or commit to `master`, the `build` workflow will trigger;
 see [`.github/workflows/build.yml`](../.github/workflows/build.yml).
 This will run a series of checks and tests; if all pass,
 the application will be automatically deployed to the dev environment,
