@@ -83,15 +83,15 @@ const Home = () => {
                 >
                   {t('home:actions.508.body')}
                 </LinkCard>
-                <LinkCard
-                  link="/system-profile"
-                  // heading={t('home:actions.508.heading')}
-                  heading="System Profile"
-                  className="equal-flex"
-                >
-                  {/* {t('home:actions.508.body')} */}
-                  View all Systems at a Glance.
-                </LinkCard>
+                {flags.systemProfile && (
+                  <LinkCard
+                    link="/system-profile"
+                    heading={t('home:actions.systemProfile.heading')}
+                    className="equal-flex"
+                  >
+                    {t('home:actions.systemProfile.body')}
+                  </LinkCard>
+                )}
               </div>
               <hr className="home__hr margin-top-4" aria-hidden />
               <h2 className="margin-top-4">

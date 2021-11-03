@@ -11,13 +11,15 @@ const home = {
   actions: {
     itg: {
       heading: 'IT Governance',
-      body:
-        'Includes applying for a lifecycle ID, recompetes and decommissioning a system'
+      body: 'Includes applying for a lifecycle ID, recompetes and decommissioning a system'
     },
     '508': {
       heading: 'Section 508 compliance',
-      body:
-        'Learn about the process and make a request for 508 testing of your application'
+      body: 'Learn about the process and make a request for 508 testing of your application'
+    },
+    systemProfile: {
+      heading: 'System profile',
+      body: 'View all systems at a glance'
     }
   },
   requestsTable: {

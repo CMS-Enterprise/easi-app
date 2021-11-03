@@ -4,6 +4,7 @@ export type Flags = {
   downgrade508User: boolean;
   downgrade508Tester: boolean;
   lcidExtension: boolean;
+  systemProfile: boolean;
 };
 
 export type FlagsState = {
