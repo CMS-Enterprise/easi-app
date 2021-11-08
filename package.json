@@ -47,6 +47,7 @@
     "lodash": "^4.17.21",
     "luxon": "^1.22.0",
     "no-scroll": "^2.1.1",
+    "node-sass": "^6.0.1",
     "nyc": "^15.0.0",
     "react": "^17.0.2",
     "react-autosuggest": "^9.4.3",
