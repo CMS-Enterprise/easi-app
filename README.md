@@ -71,25 +71,42 @@ Some additional tools are required to work with the application source directly
 on the host machine. These operations can theoretically be done within Docker as
 well, but we haven't yet had the opportunity to migrate everything into it.
 
-_Note: The `scripts/dev` utility is written in Ruby, which is installed by
-default on macOS <= 11.4. The script uses only standard lib dependencies and
-should work without installing a Ruby interpreter or other libraries._
+_Note: The `scripts/dev` utility is written in Ruby. MacOS users will have Ruby installed by default; users of other operating systems may need to install it. See the "Dependencies" section below._
 
-### Homebrew
+## Development Environment Setup
 
-Install [Homebrew](https://brew.sh) using the following command:
+Developers need a Unix-ish environment for local development. This README provides instructions for developing on MacOS and Windows+WSL2 (using Ubuntu).
 
-`/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+We recommend using VS Code as the code editor of choice.
 
-### Git
+In general, the necessary tools are:
+- Bash
+- A standard C toolchain (notably, a C compiler and `make`)
+- Git
+- Docker
+- Go
+- [Go analysis tools](https://github.com/golang/vscode-go/blob/master/docs/tools.md): `gopls`, `dlv`, `dlv-dap`, `gopkgs`, `go-outline`, `goplay`, `gomodifytags`, `impl`, `gotests`, `staticcheck`
+- Node.js
+- Yarn
+- Ruby
+- Python
+- `direnv`
 
-Install git using `brew install git`. If you haven't already, follow the steps
-in the
-[Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/blob/main/developing/vcs/tools.md#git)
-to configure git on your machine.
+### Basic Prerequisites
+
+**MacOS**: Developers will need [Homebrew](https://brew.sh) to install dependencies, which can be installed with `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
+
+**Windows**: Developers will need to install WSL2, set up an Ubuntu distro, then configure VS Code to work with WSL2.
+- In Powershell running as admin, run `wsl --install`.
+- Reboot your computer to finish WSL installation.
+- In a regular Powershell window, run `wsl --set-default-version 2`, then run `wsl --install -d Ubuntu`.
+- In VSCode, install the [Remote - WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) (ID: `ms-vscode-remote.remote-sdl`).
+
+For developers on Windows+WSL2, all installation instructions below should be run from within the Ubuntu environment, except for setting up Docker.
 
 ### Bash
 
+**MacOS**: Developers will need to install the `bash` shell.
 - Ensure you are using the latest version of bash for this project:
 
   - Install it with Homebrew: `brew install bash`
@@ -108,22 +125,44 @@ to configure git on your machine.
     and changing the `PATH`. Then source your profile with `source ~/.bashrc` or
     `~/.bash_profile` to ensure that your terminal has it.
 
-### Docker and docker-compose
+**Windows+WSL**: Ubuntu set up with WSL already has Bash as its default shell.
 
-To set up docker on your local machine:
+### C Toolchain
 
+The Go analysis tools and the frontend package `node-sass` depend on having a basic C toolchain installed.
+
+**MacOS**: Developers should have this installed by default.
+
+**Windows+WSL**: Developers can install this with `sudo apt install build-essential`.
+
+### Git
+
+**MacOS**: `brew install git`
+
+**Windows+WSL**: The default Ubuntu installation should have a recent version of Git installed. To install the latest version of Git, see [the official installation instructions](https://git-scm.com/download/linux).
+
+
+### Docker (with docker-compose)
+
+**MacOS**:
 ```console
 brew cask install docker
 brew install docker-completion docker-compose docker-compose-completion
 ```
-
 Now you will need to start the Docker service: run Spotlight and type in
 "docker", then select "Docker Desktop" in the results.
 
-**Note: The project does not work with the new docker compose v2 release that
-will ship as a part of the main docker command.**
+**Windows+WSL**:
+- Install [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop).
+- Enable WSL2 integration with the installed Ubuntu distro.
+  - Open Docker Desktop
+  - Click the gear icon to open settings
+  - Under Resources -> WSL Integration, enable the switch for "Ubuntu" under the "Enable integration with additional distros" heading.
 
 ### Go
+
+**MacOS**:
+Install the latest version of Go with `brew install go`.
 
 You'll need a recent version of Go. We've had very few issues with using
 different versions of Go on the project. Most developers use homebrew and run

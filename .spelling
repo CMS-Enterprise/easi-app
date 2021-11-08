@@ -123,6 +123,7 @@ booleans
 enums
 hostname
 macOS
+MacOS
 playbook
 homebrew
 launchdarkly
@@ -147,3 +148,9 @@ uncomment
 cypress_ci.yml
 subfolder
 subfolders
+Unix-ish
+Powershell
+distro
+distros
+Node.js
+VSCode
