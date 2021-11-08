@@ -26,7 +26,7 @@ jobs:
       image: clamav/clamav:0.104.0
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - run: clamscan --version
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -88,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -138,7 +138,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -169,7 +169,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -206,7 +206,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Login to Docker Hub
@@ -240,7 +240,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Configure go cache
@@ -319,7 +319,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Login to Docker Hub
@@ -358,7 +358,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -443,7 +443,7 @@ jobs:
       APP_ENV: dev
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -513,7 +513,7 @@ jobs:
       APP_ENV: impl
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -583,7 +583,7 @@ jobs:
       APP_ENV: prod
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
@@ -653,7 +653,7 @@ jobs:
       APP_ENV: dev
     steps:
       - name: Check out code
-        uses: actions/checkout@1e204e9a9253d643386038d443f96446fa156a97 # v2.3.4
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/download-artifact@3be87be14a055c47b01d3bd88f8fe02320a9bb60 # v2.0.10
