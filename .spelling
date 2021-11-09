@@ -136,6 +136,7 @@ startup
 pkg
 11.4.
 v2
+v16
 JS
 AirBnb
 Enzyme.js
@@ -154,3 +155,4 @@ distro
 distros
 Node.js
 VSCode
+npm
