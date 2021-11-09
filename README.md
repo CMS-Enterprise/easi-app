@@ -102,7 +102,7 @@ In general, the necessary tools are:
 - In a regular Powershell window, run `wsl --set-default-version 2`, then run `wsl --install -d Ubuntu`.
 - In VSCode, install the [Remote - WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) (ID: `ms-vscode-remote.remote-sdl`).
 
-For developers on Windows+WSL2, all installation instructions below should be run from within the Ubuntu environment, except for setting up Docker.
+For developers on Windows+WSL, this repository should be cloned onto the Ubuntu filesystem. All installation instructions below should be run from within the Ubuntu environment, except for setting up Docker.
 
 ### Bash
 
@@ -247,6 +247,14 @@ export PATH="$PATH:$HOME/.local/bin"
 ### Installing frontend dependencies
 
 To install the frontend's dependencies, run `yarn install --frozen-lockfile --ignore-engines`. The `--frozen-lockfile` flag will install the exact versions of all dependencies that are specified in `yarn.lock`; the `--ignore-engines` flag is necessary with Node 16 due to [this `react-uswds` issue](https://github.com/trussworks/react-uswds/issues/1582).
+
+### VSCode-specific tools
+
+**Windows+WSL:** From the Ubuntu command line, navigate to the root of this repository, then run `code .` to open VS Code with this repository opened.
+
+**All developers:**
+- VS Code will recommend installing the extensions specified in [`.vscode/extensions.json`](./.vscode/extensions.json). Install all of them.
+- The Go extension should prompt you to install the analysis tools it uses. Install all of them. See [these instructions](https://github.com/golang/vscode-go/blob/master/README.md#tools) for more details.
 
 ## Starting the application
 
