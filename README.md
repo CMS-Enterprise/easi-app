@@ -71,25 +71,42 @@ Some additional tools are required to work with the application source directly
 on the host machine. These operations can theoretically be done within Docker as
 well, but we haven't yet had the opportunity to migrate everything into it.
 
-_Note: The `scripts/dev` utility is written in Ruby, which is installed by
-default on macOS <= 11.4. The script uses only standard lib dependencies and
-should work without installing a Ruby interpreter or other libraries._
+_Note: The `scripts/dev` utility is written in Ruby. MacOS users will have Ruby installed by default; users of other operating systems may need to install it. See the "Dependencies" section below._
 
-### Homebrew
+## Development Environment Setup
 
-Install [Homebrew](https://brew.sh) using the following command:
+Developers need a Unix-ish environment for local development. This README provides instructions for developing on MacOS and Windows+WSL2 (using Ubuntu).
 
-`/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+We recommend using VS Code as the code editor of choice.
 
-### Git
+In general, the necessary tools are:
+- Bash
+- A standard C toolchain (notably, a C compiler and `make`)
+- Git
+- Docker
+- Go
+- [Go analysis tools](https://github.com/golang/vscode-go/blob/master/docs/tools.md): `gopls`, `dlv`, `dlv-dap`, `gopkgs`, `go-outline`, `goplay`, `gomodifytags`, `impl`, `gotests`, `staticcheck`
+- Node.js
+- Yarn
+- Ruby
+- [`direnv`](https://direnv.net/)
+- [`pre-commit`](https://pre-commit.com/) (Installation requires Python)
 
-Install git using `brew install git`. If you haven't already, follow the steps
-in the
-[Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/blob/main/developing/vcs/tools.md#git)
-to configure git on your machine.
+### Basic Prerequisites
+
+**MacOS:** Developers will need [Homebrew](https://brew.sh) to install dependencies, which can be installed with `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
+
+**Windows:** Developers will need to install WSL2, set up an Ubuntu distro, then configure VS Code to work with WSL2.
+- In Powershell running as admin, run `wsl --install`.
+- Reboot your computer to finish WSL installation.
+- In a regular Powershell window, run `wsl --set-default-version 2`, then run `wsl --install -d Ubuntu`.
+- In VSCode, install the [Remote - WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) (ID: `ms-vscode-remote.remote-sdl`).
+
+For developers on Windows+WSL, this repository should be cloned onto the Ubuntu filesystem. All installation instructions below should be run from within the Ubuntu environment, except for setting up Docker.
 
 ### Bash
 
+**MacOS:** Developers will need to install the `bash` shell.
 - Ensure you are using the latest version of bash for this project:
 
   - Install it with Homebrew: `brew install bash`
@@ -108,46 +125,92 @@ to configure git on your machine.
     and changing the `PATH`. Then source your profile with `source ~/.bashrc` or
     `~/.bash_profile` to ensure that your terminal has it.
 
-### Docker and docker-compose
+**Windows+WSL:** Ubuntu set up with WSL already has Bash as its default shell.
 
-To set up docker on your local machine:
+### C Toolchain
 
+The Go analysis tools and the frontend package `node-sass` depend on having a basic C toolchain installed.
+
+**MacOS:** Developers should have this installed by default.
+
+**Windows+WSL:** Developers can install this with `sudo apt install build-essential`.
+
+### Git
+
+**MacOS:** `brew install git`
+
+**Windows+WSL:** The default Ubuntu installation should have a recent version of Git installed. To install the latest version of Git, see [the official installation instructions](https://git-scm.com/download/linux).
+
+
+### Docker (with docker-compose)
+
+**MacOS:**
 ```console
 brew cask install docker
 brew install docker-completion docker-compose docker-compose-completion
 ```
-
 Now you will need to start the Docker service: run Spotlight and type in
 "docker", then select "Docker Desktop" in the results.
 
-**Note: The project does not work with the new docker compose v2 release that
-will ship as a part of the main docker command.**
+**Windows+WSL:**
+- Install [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop).
+- Enable WSL2 integration with the installed Ubuntu distro.
+  - Open Docker Desktop
+  - Click the gear icon to open settings
+  - Under Resources -> WSL Integration, enable the switch for "Ubuntu" under the "Enable integration with additional distros" heading.
 
 ### Go
 
-You'll need a recent version of Go. We've had very few issues with using
-different versions of Go on the project. Most developers use homebrew and run
-`brew install go` to use whatever the latest version is.
+**MacOS:**
+Install the latest version of Go with `brew install go`.
 
-Be sure to add `$GOPATH/bin` to your `PATH` so that executables installed with
-the go tooling can be found. Add the following to your `.bash_profile`:
+**Windows+WSL:**
+- Download the `.tar.gz` file for the latest version of Go for Linux from [the official Go site](https://golang.org/doc/install), making sure to save it to the Ubuntu filesystem. The easiest way to do this is to copy the download link, then use `wget` to download it on the command line, i.e. `wget https://golang.org/dl/go1.17.3.linux-amd64.tar.gz`. This will download the `.tar.gz` to the current directory.
+- From the directory containing the `.tar.gz` file, extract it to `/usr/local/go`, i.e. with `sudo tar -C /usr/local -xzf go1.17.3.linux-amd64.tar.gz`.
+- Add `/usr/local/go/bin` to your `PATH`. The easiest way to do this is to add the following to your `~/.bashrc` file:
 
 ```bash
-export PATH=$(go env GOPATH)/bin:$PATH
+export PATH="$PATH:/usr/local/go/bin"
 ```
+
+### Go tooling
+
+Both MacOS and Windows+WSL developers will need to add the `GOBIN` environment variable (which defaults to `$GOPATH/bin`) to their `PATH`, so tools installed with `go install` can be called from the command line. Add the following to your `~/.bashrc` file:
+
+```bash
+export PATH="$PATH:$(go env GOPATH)/bin"
+```
+
+### Node.js/npm
+
+We currently support Node.js v16 for this repo; Node 17 support is currently blocked by [this `create-react-app` issue](https://github.com/facebook/create-react-app/issues/11562). 
+
+The easiest way to install this specific version of Node/npm is to use [`nvm`](https://github.com/nvm-sh/nvm). To install `nvm`, run 
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+```
+Reload your shell, then run `nvm install 16`.
 
 ### Yarn
 
-We use Yarn to manage our JavaScript dependencies. Most developers install it
-with `brew install yarn`.
+We use [Yarn](https://yarnpkg.com/) to manage our JavaScript dependencies. It can be installed with `npm install --global yarn`.
 
-### direnv
+### Ruby
 
-- Run `brew install direnv` to install this tool.
+**MacOS:** Ruby should be installed by default.
+
+**Windows+WSL:** Install Ruby with `sudo apt install ruby-full`.
+
+### Direnv
+
+**MacOS:** Install with `brew install direnv`.
+
+**Windows+WSL:** Install with `sudo apt install direnv`.
+
+**All developers:**
 - Add the following line at the very end of your `~/.bashrc` file:
   `eval "$(direnv hook bash)"`
-  - Refer to [instructions for other shells](https://direnv.net/docs/hook.html)
-    if you're using a shell other than bash.
+  - Refer to [instructions for other shells](https://direnv.net/docs/hook.html) if you're using a shell other than bash.
 - Restart your shell.
 - To allow direnv in the project directory `direnv allow`.
 
@@ -163,33 +226,35 @@ direnv: unloading
 $
 ```
 
-For additional documentation of this tool, see also:
+### Setting up pre-commit Git hooks
 
-- The [official site](https://direnv.net/)
-- Truss'
-  [Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/tree/master/developing/direnv)
+This repo uses [`pre-commit`](https://pre-commit.com/) to manage pre-commit Git hooks for maintaining several quality and stylistic standards; see [`.pre-commit-config.yaml`](./.pre-commit-config.yaml) for details.
 
-## Code checkout
+**MacOS:** Install with `brew install pre-commit`.
 
-You can checkout this repository by running
-`git clone git@github.com:cmsgov/easi-app.git`. Please check out the code in a
-directory like `~/Projects/easi-app` and NOT in your `$GOPATH`. As an example:
-
+**Windows+WSL:**: 
+- First install Python's `pip` package manager with `sudo apt install python3-pip`.
+- Then, install `pre-commit` with `pip install pre-commit`. This should install `pre-commit` in the `~/.local/bin` directory.
+- Add this directory to your `PATH`. Add the following to `~/.bashrc`:
 ```bash
-mkdir -p ~/Projects
-git clone git@github.com:cmsgov/easi-app.git
-cd easi-app
+export PATH="$PATH:$HOME/.local/bin"
 ```
 
-You will then find the code at `~/Projects/easi-app`.
+**All developers:**
+- From the root of this repo, run `pre-commit install` to set up a Git pre-commit hook in `.git/hooks/pre-commit`.
+- Then, run `pre-commit install-hooks` to install the environments for this project's specific hooks.
 
-### pre-commit
+### Installing frontend dependencies
 
-- Run `pre-commit install` to install a pre-commit hook into
-  `./git/hooks/pre-commit`.
-  - This is different than `brew install pre-commit` and must be done so that
-    the hook will check files you are about to commit to the repository.
-- Next install the pre-commit hook libraries with `pre-commit install-hooks`.
+To install the frontend's dependencies, run `yarn install --frozen-lockfile --ignore-engines`. The `--frozen-lockfile` flag will install the exact versions of all dependencies that are specified in `yarn.lock`; the `--ignore-engines` flag is necessary with Node 16 due to [this `react-uswds` issue](https://github.com/trussworks/react-uswds/issues/1582).
+
+### VSCode-specific tools
+
+**Windows+WSL:** From the Ubuntu command line, navigate to the root of this repository, then run `code .` to open VS Code with this repository opened.
+
+**All developers:**
+- VS Code will recommend installing the extensions specified in [`.vscode/extensions.json`](./.vscode/extensions.json). Install all of them.
+- The Go extension should prompt you to install the analysis tools it uses. Install all of them. See [these instructions](https://github.com/golang/vscode-go/blob/master/README.md#tools) for more details.
 
 ## Starting the application
 
