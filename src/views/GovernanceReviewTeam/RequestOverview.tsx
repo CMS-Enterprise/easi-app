@@ -42,6 +42,7 @@ import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
 import IntakeReview from './IntakeReview';
+import LifecycleID from './LifecycleID';
 import Notes from './Notes';
 import Summary from './Summary';
 
@@ -137,6 +138,15 @@ const RequestOverview = () => {
                   {t('decision.title')}
                 </Link>
               </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/lcid`}
+                  aria-label={t('aria.openLcid')}
+                  className={getNavLinkClasses('lcid')}
+                >
+                  {t('decision.lcid')}
+                </Link>
+              </li>
             </ul>
             <hr />
             <ul className="easi-grt__nav-list">
@@ -202,6 +212,10 @@ const RequestOverview = () => {
               <Route
                 path="/governance-review-team/:systemId/decision"
                 render={() => <Decision systemIntake={systemIntake} />}
+              />
+              <Route
+                path="/governance-review-team/:systemId/lcid"
+                render={() => <LifecycleID systemIntake={systemIntake} />}
               />
               <Route
                 path="/governance-review-team/:systemId/actions"
@@ -320,8 +334,10 @@ const RequestOverview = () => {
                 path="/governance-review-team/:systemId/actions/issue-lcid"
                 render={() => <IssueLifecycleId />}
               />
+              {/* Only display extend LCID action if status is LCID_ISSUED or there has been an lcid issued in the past */}
               {flags.lcidExtension &&
-                data?.systemIntake?.status === 'LCID_ISSUED' && (
+                (data?.systemIntake?.status === 'LCID_ISSUED' ||
+                  data?.systemIntake?.lcid != null) && (
                   <Route
                     path="/governance-review-team/:systemId/actions/extend-lcid"
                     render={() => (

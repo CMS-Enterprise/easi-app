@@ -154,7 +154,8 @@ const governanceReviewTeam = {
     openIntake: 'Open intake request',
     openBusiness: 'Open business case',
     openNotes: 'Open admin team notes',
-    openDecision: 'Open decision'
+    openDecision: 'Open decision',
+    openLcid: 'Open LCID'
   },
   back: {
     allRequests: 'Back to all requests'

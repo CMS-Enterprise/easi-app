@@ -241,7 +241,11 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
   }
 
   if (flags.lcidExtension) {
-    if (systemIntake.status === SystemIntakeStatus.LCID_ISSUED) {
+    // Only display extend LCID action if status is LCID_ISSUED or there has been an lcid issued in the past
+    if (
+      systemIntake.status === SystemIntakeStatus.LCID_ISSUED ||
+      systemIntake.lcid != null
+    ) {
       availableActions.unshift(ExtendLifecycleID);
     }
   }

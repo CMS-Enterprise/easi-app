@@ -391,6 +391,10 @@ func NewCreateActionExtendLifecycleID(
 
 		intake.LifecycleExpiresAt = expirationDate
 
+		// NJD: TODO - set scope, next steps, etc. as well
+
+		intake.Status = models.SystemIntakeStatusLCIDISSUED
+
 		_, updateErr := updateSystemIntake(ctx, intake)
 		if updateErr != nil {
 			return nil, updateErr
