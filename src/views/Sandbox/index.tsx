@@ -40,12 +40,10 @@ const Sandbox = () => {
             body={
               <>
                 <p>
-                  Section 508 of the Rehabilitation Act (29 U.S.C. § 794d), as
-                  amended by the Workforce Investment Act of 1998 (P.L. 105-220)
-                  requires federal agencies to develop, procure, maintain and
-                  use information and communications technology (ICT) that is
-                  accessible to people with disabilities - regardless of whether
-                  or not they work for the federal government.
+                  Section 508 of the Rehabilitation Act requires federal
+                  agencies to develop, procure, maintain and use information and
+                  communications technology (ICT) that is accessible to people
+                  with disabilities.
                 </p>
                 <a href="/sandbox">Learn more about 508 Compliance</a>
               </>
