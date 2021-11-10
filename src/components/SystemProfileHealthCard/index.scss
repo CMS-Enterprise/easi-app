@@ -1,0 +1,5 @@
+// We reset the default padding of GridContainer because <Card>s have a default padding.
+.resetGridPadding {
+	padding-left: 0;
+	padding-right: 0;
+}
