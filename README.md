@@ -24,10 +24,8 @@ This repository has several major subfolders:
 
 This application is made up of the following main components:
 
-- A Go backend that provides REST and GraphQL APIs. More information on the
-  packages within that program can be found in the
-  [pkg documentation](./pkg/README.md).
-- A React frontend that uses [Apollo](https://www.apollographql.com/docs/react/)
+- A Go backend that provides REST and GraphQL APIs. More information on the packages within that program can be found in [`pkg/README.md`](./pkg/README.md).
+- A React frontend that uses [Apollo](https://www.apollographql.com/docs/react/). More information on the frontend structure can be found in [`src/README.md`](./src/README.md).
 - A few lambda functions for PDF generation and file upload virus scanning
 
 We generally use Docker Compose to orchestrate running these components during
