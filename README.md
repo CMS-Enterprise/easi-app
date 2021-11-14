@@ -441,9 +441,10 @@ These values can be found in 1Password.
 
 ### GraphQL Playground
 
-You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL
-playground while the Go backend is running. **You will need to enter
-`/api/graph/query` as the query path in the UI for this to work.**
+You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL playground while the Go backend is running. You will need to enter `/api/graph/query` as the query path in the UI for this to work. You'll also need to add the following to HTTP Headers (in the lower-left) to avoid auth errors:
+```
+{ "Authorization":"Local {\"favorLocalAuth\":true}"}
+```
 
 ### Accessing the application over Tailscale
 
