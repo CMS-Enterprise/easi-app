@@ -369,18 +369,16 @@ There are multiple ways to run the Cypress tests:
 
 ### LaunchDarkly
 
-The app uses LaunchDarkly to control feature flags in deployed environments. By
-default the application run in offline mode and uses default values for all
-flags. To enable loading the flags from LaunchDarkly, add the following to
-`.envrc.local`:
+The app uses LaunchDarkly to control feature flags in deployed environments. By default the application run in offline mode and uses default values for all flags. To enable loading the flags from LaunchDarkly, add the following to `.envrc.local`:
 
 ```bash
 export LD_SDK_KEY=sdk-0123456789
 export FLAG_SOURCE=LAUNCH_DARKLY
 ```
 
-These values can be obtained from the LaunchDarkly settings page or from
-1Password.
+These values can be obtained from the LaunchDarkly settings page or from 1Password.
+
+To modify the default flags being used, edit [`src/views/FlagsWrapper/index.tsx`](./src/views/FlagsWrapper/index.tsx). In the call to `asyncWithLDProvider()` inside `useEffect()`, modify the values being passed as the `flags` option.
 
 ### 1Password
 
