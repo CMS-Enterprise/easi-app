@@ -104,6 +104,8 @@ In general, the necessary tools are:
 
 For developers on Windows+WSL, this repository should be cloned onto the Ubuntu filesystem. All installation instructions below should be run from within the Ubuntu environment, except for setting up Docker.
 
+When working on the terminal in WSL, you may see the occasional `ERROR: UtilConnectToInteropServer:307` error message. This is caused by [this WSL issue](https://github.com/microsoft/WSL/issues/5065). The easiest fix is to define a Bash function from [this comment](https://github.com/microsoft/WSL/issues/5065#issuecomment-682198412) on that issue, then run that function whenever you see that error.
+
 ### Bash
 
 **MacOS:** Developers will need to install the `bash` shell.
