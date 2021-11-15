@@ -24,10 +24,8 @@ This repository has several major subfolders:
 
 This application is made up of the following main components:
 
-- A Go backend that provides REST and GraphQL APIs. More information on the
-  packages within that program can be found in the
-  [pkg documentation](./pkg/README.md).
-- A React frontend that uses [Apollo](https://www.apollographql.com/docs/react/)
+- A Go backend that provides REST and GraphQL APIs. More information on the packages within that program can be found in [`pkg/README.md`](./pkg/README.md).
+- A React frontend that uses [Apollo](https://www.apollographql.com/docs/react/). More information on the frontend structure can be found in [`src/README.md`](./src/README.md).
 - A few lambda functions for PDF generation and file upload virus scanning
 
 We generally use Docker Compose to orchestrate running these components during
@@ -103,6 +101,8 @@ In general, the necessary tools are:
 - In VSCode, install the [Remote - WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) (ID: `ms-vscode-remote.remote-sdl`).
 
 For developers on Windows+WSL, this repository should be cloned onto the Ubuntu filesystem. All installation instructions below should be run from within the Ubuntu environment, except for setting up Docker.
+
+When working on the terminal in WSL, you may see the occasional `ERROR: UtilConnectToInteropServer:307` error message. This is caused by [this WSL issue](https://github.com/microsoft/WSL/issues/5065). The easiest fix is to define a Bash function from [this comment](https://github.com/microsoft/WSL/issues/5065#issuecomment-682198412) on that issue, then run that function whenever you see that error.
 
 ### Bash
 
@@ -367,18 +367,16 @@ There are multiple ways to run the Cypress tests:
 
 ### LaunchDarkly
 
-The app uses LaunchDarkly to control feature flags in deployed environments. By
-default the application run in offline mode and uses default values for all
-flags. To enable loading the flags from LaunchDarkly, add the following to
-`.envrc.local`:
+The app uses LaunchDarkly to control feature flags in deployed environments. By default the application run in offline mode and uses default values for all flags. To enable loading the flags from LaunchDarkly, add the following to `.envrc.local`:
 
 ```bash
 export LD_SDK_KEY=sdk-0123456789
 export FLAG_SOURCE=LAUNCH_DARKLY
 ```
 
-These values can be obtained from the LaunchDarkly settings page or from
-1Password.
+These values can be obtained from the LaunchDarkly settings page or from 1Password.
+
+To modify the default flags being used, edit [`src/views/FlagsWrapper/index.tsx`](./src/views/FlagsWrapper/index.tsx). In the call to `asyncWithLDProvider()` inside `useEffect()`, modify the values being passed as the `flags` option.
 
 ### 1Password
 
@@ -439,9 +437,10 @@ These values can be found in 1Password.
 
 ### GraphQL Playground
 
-You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL
-playground while the Go backend is running. **You will need to enter
-`/api/graph/query` as the query path in the UI for this to work.**
+You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL playground while the Go backend is running. You will need to enter `/api/graph/query` as the query path in the UI for this to work. You'll also need to add the following to HTTP Headers (in the lower-left) to avoid auth errors:
+```
+{ "Authorization":"Local {\"favorLocalAuth\":true}"}
+```
 
 ### Accessing the application over Tailscale
 
