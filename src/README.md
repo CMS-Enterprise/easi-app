@@ -10,7 +10,7 @@ The frontend code is organized into several major subfolders:
   - `index.test.tsx` - unit tests for the component.
   - `index.stories.tsx` - setup to make the component available in Storybook.
 - `constants` contains various constant values used throughout the application.
-- `data` (TODO not sure how to describe this folder)
+- `data` contains definitions of default React state for some components, as well as helper methods for working with data in React state and Redux reducers.
 - `hooks` contains custom hooks used for common tasks throughout the application.
 - `i18n` contains text used throughout the application that may need to be translatable for internationalization.
 - `images` contains static image files used in the site.
