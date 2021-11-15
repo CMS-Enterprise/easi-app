@@ -75,7 +75,7 @@ jobs:
           restore-keys: |
             v1-yarn-
       - name: Install yarn dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
       - name: Install go modules
         run: go mod download
       - name: Announce failure
