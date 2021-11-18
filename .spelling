@@ -160,3 +160,5 @@ npm
 codegen
 stylesheet
 stylesheets
+Analytics
+client.go
