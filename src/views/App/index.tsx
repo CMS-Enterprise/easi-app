@@ -32,6 +32,7 @@ import PrivacyPolicy from 'views/PrivacyPolicy';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
+import SystemRepositoryTable from 'views/SystemRepositoryTable';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
@@ -67,6 +68,8 @@ const AppRoutes = () => {
       />
 
       {/* Requester / Business Owner Routes */}
+      <SecureRoute path="/system-profile" component={SystemRepositoryTable} />
+
       <SecureRoute path="/system/making-a-request" component={MakingARequest} />
       <SecureRoute
         exact
