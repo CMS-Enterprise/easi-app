@@ -9,7 +9,6 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
-import { formatDateAndIgnoreTimezone } from 'utils/date';
 
 type DecisionProps = {
   systemIntake?: SystemIntake | null;
@@ -23,66 +22,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
       <PageHeading>
         {t('governanceReviewTeam:decision.titleApproved')}
       </PageHeading>
-      <DescriptionList
-        title={t('governanceReviewTeam:decision.decisionSectionTitle')}
-      >
-        <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('governanceReviewTeam:decision.lcid')} />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={systemIntake?.lcid}
-            />
-          </div>
-        </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm
-              term={t('governanceReviewTeam:decision.lcidExpiration')}
-            />
-            <DescriptionDefinition
-              definition={
-                systemIntake?.lcidExpiresAt
-                  ? formatDateAndIgnoreTimezone(systemIntake?.lcidExpiresAt)
-                  : ''
-              }
-            />
-          </div>
-        </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('governanceReviewTeam:decision.scope')} />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={systemIntake?.lcidScope}
-            />
-          </div>
-        </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm
-              term={t('governanceReviewTeam:decision.nextSteps')}
-            />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={systemIntake?.decisionNextSteps}
-            />
-          </div>
-        </ReviewRow>
-        {systemIntake?.lcidCostBaseline && (
-          <ReviewRow>
-            <div>
-              <DescriptionTerm
-                term={t('governanceReviewTeam:decision.costBaseline')}
-              />
-              <DescriptionDefinition
-                className="text-pre-wrap"
-                definition={systemIntake?.lcidCostBaseline}
-              />
-            </div>
-          </ReviewRow>
-        )}
-      </DescriptionList>
+      <p>{t('governanceReviewTeam:decision.lcidIssued')}</p>
     </>
   );
 

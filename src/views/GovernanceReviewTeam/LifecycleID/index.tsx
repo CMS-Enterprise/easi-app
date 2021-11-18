@@ -20,13 +20,15 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
 
   const Issued = () => (
     <>
-      <PageHeading>{t('governanceReviewTeam:decision.lcid')}</PageHeading>
+      <PageHeading>{t('governanceReviewTeam:lifecycleID.title')}</PageHeading>
       <DescriptionList
         title={t('governanceReviewTeam:decision.decisionSectionTitle')}
       >
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('governanceReviewTeam:decision.lcid')} />
+            <DescriptionTerm
+              term={t('governanceReviewTeam:lifecycleID.title')}
+            />
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake?.lcid}
@@ -36,7 +38,7 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
         <ReviewRow>
           <div>
             <DescriptionTerm
-              term={t('governanceReviewTeam:decision.lcidExpiration')}
+              term={t('governanceReviewTeam:lifecycleID.expiration')}
             />
             <DescriptionDefinition
               definition={
@@ -49,7 +51,9 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('governanceReviewTeam:decision.scope')} />
+            <DescriptionTerm
+              term={t('governanceReviewTeam:lifecycleID.scope')}
+            />
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake?.lcidScope}
@@ -59,7 +63,7 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
         <ReviewRow>
           <div>
             <DescriptionTerm
-              term={t('governanceReviewTeam:decision.nextSteps')}
+              term={t('governanceReviewTeam:lifecycleID.nextSteps')}
             />
             <DescriptionDefinition
               className="text-pre-wrap"
@@ -71,7 +75,7 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
           <ReviewRow>
             <div>
               <DescriptionTerm
-                term={t('governanceReviewTeam:decision.costBaseline')}
+                term={t('governanceReviewTeam:lifecycleID.costBaseline')}
               />
               <DescriptionDefinition
                 className="text-pre-wrap"
@@ -89,10 +93,13 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
     return <Issued />;
   }
 
-  // NJD - TODO: flesh this out
+  // If intake doesn't have LCID, display notice
   return (
     <>
-      <div>No LCID</div>
+      <PageHeading data-testid="grt-decision-view">
+        {t('governanceReviewTeam:lifecycleID.title')}
+      </PageHeading>
+      <p>{t('governanceReviewTeam:lifecycleID.noLCID')}</p>
     </>
   );
 };

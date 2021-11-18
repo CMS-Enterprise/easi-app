@@ -144,7 +144,7 @@ const RequestOverview = () => {
                   aria-label={t('aria.openLcid')}
                   className={getNavLinkClasses('lcid')}
                 >
-                  {t('decision.lcid')}
+                  {t('lifecycleID.title')}
                 </Link>
               </li>
             </ul>
