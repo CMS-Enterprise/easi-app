@@ -89,6 +89,7 @@ In general, the necessary tools are:
 - Ruby
 - [`direnv`](https://direnv.net/)
 - [`pre-commit`](https://pre-commit.com/) (Installation requires Python)
+- `psql` (Postgres command-line client)
 
 ### Basic Prerequisites
 
@@ -232,7 +233,7 @@ This repo uses [`pre-commit`](https://pre-commit.com/) to manage pre-commit Git 
 
 **MacOS:** Install with `brew install pre-commit`.
 
-**Windows+WSL:**: 
+**Windows+WSL:** 
 - First install Python's `pip` package manager with `sudo apt install python3-pip`.
 - Then, install `pre-commit` with `pip install pre-commit`. This should install `pre-commit` in the `~/.local/bin` directory.
 - Add this directory to your `PATH`. Add the following to `~/.bashrc`:
@@ -243,6 +244,14 @@ export PATH="$PATH:$HOME/.local/bin"
 **All developers:**
 - From the root of this repo, run `pre-commit install` to set up a Git pre-commit hook in `.git/hooks/pre-commit`.
 - Then, run `pre-commit install-hooks` to install the environments for this project's specific hooks.
+
+### psql
+
+The Postgres command-line client is needed for running database-related scripting commands, but the database server doesn't need to be installed; it can be handled with Docker.
+
+**MacOS:** Install with `brew install postgres`. This installs the Postgres server as well; if this is an issue, see [this StackOverflow Q&A](https://stackoverflow.com/questions/44654216/correct-way-to-install-psql-without-full-postgres-on-macos) for alternatives.
+
+**Windows+WSL:** Install with `sudo apt install postgresql-client`. 
 
 ### Installing frontend dependencies
 
