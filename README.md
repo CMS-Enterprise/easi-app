@@ -365,6 +365,9 @@ There are multiple ways to run the Cypress tests:
 
 - Run `yarn cypress run` to run the tests in the CLI.
 - To have a slightly more interactive experience, you can instead run `yarn cypress open`.
+  - Windows+WSL users will need some additional setup to run graphical applications from within WSL.
+    - Option 1: Use the preview features available in Windows Insiders build. See [Microsoft docs](https://docs.microsoft.com/en-us/windows/wsl/tutorials/gui-apps).
+    - Option 2: Set up an X server on Windows and configure WSL to use it. See [this article](https://wilcovanes.ch/articles/setting-up-the-cypress-gui-in-wsl2-ubuntu-for-windows-10/) for details.
   - Note: the database, frontend, and backend must be running prior to starting the Cypress tests.
   - Before each testing run, run `scripts/dev db:clean && scripts/dev db:seed` to reset the database to a pre-seeded state.
   - The `APP_ENV` environment variable should be set to `test`.
