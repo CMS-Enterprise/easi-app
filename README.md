@@ -363,10 +363,11 @@ Run `scripts/dev test:js`.
 
 There are multiple ways to run the Cypress tests:
 
-- Run `yarn run cypress run` to run the tests in the CLI. To have a slightly
-  more interactive experience, you can instead run `yarn run cypress open`.
-  Note: the database, frontend, and backend must be running prior to starting
-  the Cypress tests. The `APP_ENV` environment variable should be set to `test`.
+- Run `yarn cypress run` to run the tests in the CLI.
+- To have a slightly more interactive experience, you can instead run `yarn cypress open`.
+  - Note: the database, frontend, and backend must be running prior to starting the Cypress tests.
+  - Before each testing run, run `scripts/dev db:clean && scripts/dev db:seed` to reset the database to a pre-seeded state.
+  - The `APP_ENV` environment variable should be set to `test`.
 - `APP_ENV=test ./scripts/run-cypress-test-docker` : Run the Cypress tests,
   database, migrations, backend, and frontend locally in Docker, similar to how
   they run in CI. Running the tests in this way takes time, but is useful
