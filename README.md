@@ -89,6 +89,7 @@ In general, the necessary tools are:
 - Ruby
 - [`direnv`](https://direnv.net/)
 - [`pre-commit`](https://pre-commit.com/) (Installation requires Python)
+- `psql` (Postgres command-line client)
 
 ### Basic Prerequisites
 
@@ -201,6 +202,7 @@ We use [Yarn](https://yarnpkg.com/) to manage our JavaScript dependencies. It ca
 
 **Windows+WSL:** Install Ruby with `sudo apt install ruby-full`.
 
+(#direnv)
 ### Direnv
 
 **MacOS:** Install with `brew install direnv`.
@@ -232,7 +234,7 @@ This repo uses [`pre-commit`](https://pre-commit.com/) to manage pre-commit Git 
 
 **MacOS:** Install with `brew install pre-commit`.
 
-**Windows+WSL:**: 
+**Windows+WSL:** 
 - First install Python's `pip` package manager with `sudo apt install python3-pip`.
 - Then, install `pre-commit` with `pip install pre-commit`. This should install `pre-commit` in the `~/.local/bin` directory.
 - Add this directory to your `PATH`. Add the following to `~/.bashrc`:
@@ -243,6 +245,14 @@ export PATH="$PATH:$HOME/.local/bin"
 **All developers:**
 - From the root of this repo, run `pre-commit install` to set up a Git pre-commit hook in `.git/hooks/pre-commit`.
 - Then, run `pre-commit install-hooks` to install the environments for this project's specific hooks.
+
+### psql
+
+The Postgres command-line client is needed for running database-related scripting commands, but the database server doesn't need to be installed; it can be handled with Docker.
+
+**MacOS:** Install with `brew install postgres`. This installs the Postgres server as well; if this is an issue, see [this StackOverflow Q&A](https://stackoverflow.com/questions/44654216/correct-way-to-install-psql-without-full-postgres-on-macos) for alternatives.
+
+**Windows+WSL:** Install with `sudo apt install postgresql-client`. 
 
 ### Installing frontend dependencies
 
@@ -354,10 +364,15 @@ Run `scripts/dev test:js`.
 
 There are multiple ways to run the Cypress tests:
 
-- Run `yarn run cypress run` to run the tests in the CLI. To have a slightly
-  more interactive experience, you can instead run `yarn run cypress open`.
-  Note: the database, frontend, and backend must be running prior to starting
-  the Cypress tests. The `APP_ENV` environment variable should be set to `test`.
+- Run `yarn cypress run` to run the tests in the CLI.
+- To have a more interactive experience, you can instead run `yarn cypress open`.
+  - Windows+WSL users will need some additional setup to run graphical applications from within WSL.
+    - Option 1: Use the preview features available in Windows Insiders build. See [Microsoft docs](https://docs.microsoft.com/en-us/windows/wsl/tutorials/gui-apps).
+    - Option 2: Set up an X server on Windows and configure WSL to use it. See [this article](https://wilcovanes.ch/articles/setting-up-the-cypress-gui-in-wsl2-ubuntu-for-windows-10/) for details.
+  - Note: the database, frontend, and backend must be running prior to starting the Cypress tests. Use `scripts/dev up` to start them.
+  - Before each testing run, run `scripts/dev db:clean && scripts/dev db:seed` to reset the database to a pre-seeded state.
+  - The `APP_ENV` environment variable should be set to `test` in `.envrc.local`. After creating `.envrc.local` if necessary and adding `APP_ENV=test` to it, run `direnv allow` to enable it. (See [instructions above](#direnv) on `direnv` usage)
+  - Running `login.spec.js` requires the environment variables `OKTA_TEST_USERNAME`, `OKTA_TEST_PASSWORD`, and `OKTA_TEST_SECRET` to be set in `.envrc.local`. The values can be found in 1Password, as mentioned in the [Authentication section](#authentication).
 - `APP_ENV=test ./scripts/run-cypress-test-docker` : Run the Cypress tests,
   database, migrations, backend, and frontend locally in Docker, similar to how
   they run in CI. Running the tests in this way takes time, but is useful
@@ -415,6 +430,7 @@ manually run these commands.
 
 ## Development and Debugging
 
+(#authentication)
 ### Authentication
 
 The application has two authentication modes. The main mode is to use Okta to
@@ -433,7 +449,7 @@ export OKTA_TEST_PASSWORD=
 export OKTA_TEST_SECRET=
 ```
 
-These values can be found in 1Password.
+These values can be found in 1Password under "CMS IDM Test Account".
 
 ### GraphQL Playground
 
