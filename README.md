@@ -202,6 +202,7 @@ We use [Yarn](https://yarnpkg.com/) to manage our JavaScript dependencies. It ca
 
 **Windows+WSL:** Install Ruby with `sudo apt install ruby-full`.
 
+(#direnv)
 ### Direnv
 
 **MacOS:** Install with `brew install direnv`.
@@ -370,7 +371,7 @@ There are multiple ways to run the Cypress tests:
     - Option 2: Set up an X server on Windows and configure WSL to use it. See [this article](https://wilcovanes.ch/articles/setting-up-the-cypress-gui-in-wsl2-ubuntu-for-windows-10/) for details.
   - Note: the database, frontend, and backend must be running prior to starting the Cypress tests. Use `scripts/dev up` to start them.
   - Before each testing run, run `scripts/dev db:clean && scripts/dev db:seed` to reset the database to a pre-seeded state.
-  - The `APP_ENV` environment variable should be set to `test` in `.envrc.local`. After creating `.envrc.local` if necessary and adding `APP_ENV=test` to it, run `direnv allow` to enable it. (See instructions above on `direnv` usage)
+  - The `APP_ENV` environment variable should be set to `test` in `.envrc.local`. After creating `.envrc.local` if necessary and adding `APP_ENV=test` to it, run `direnv allow` to enable it. (See [instructions above](#direnv) on `direnv` usage)
 - `APP_ENV=test ./scripts/run-cypress-test-docker` : Run the Cypress tests,
   database, migrations, backend, and frontend locally in Docker, similar to how
   they run in CI. Running the tests in this way takes time, but is useful
