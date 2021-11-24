@@ -2,12 +2,6 @@
 
 ## Tools / Helpers
 
-### Swagger Generation
-
-```terminal
-swagger generate client -f cedar_intake.yml -c ./gen/client -m ./gen/models
-```
-
 ### Convert JSON to YAML
 
 ```terminal
