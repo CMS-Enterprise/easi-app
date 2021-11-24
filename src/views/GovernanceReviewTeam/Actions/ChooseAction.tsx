@@ -56,7 +56,7 @@ const ActionRadioOption = ({ label, route }: ActionRadioOptionProps) => {
 type ChooseActionProps = {
   systemIntake: {
     status: SystemIntakeStatus;
-    lcid: string;
+    lcid: string | null;
     requestType: RequestType;
   };
   businessCase: BusinessCaseModel;
