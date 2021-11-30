@@ -15,7 +15,7 @@ interface SystemSummary {
   name: string;
   ownerName: string;
   ownerOffice: CMSOfficeAcronym;
-  productionStatus: 'GOOD' | 'WARNING' | 'ERROR'; // TODO - replace with enum, put in src/types or src/constants/enums
+  productionStatus: 'GOOD' | 'WARNING' | 'ERROR'; // TODO - eventually replace with enum (in src/types or src/constants/enums), or system health report
 }
 
 // TODO - replace with dynamic data fetched from backend
