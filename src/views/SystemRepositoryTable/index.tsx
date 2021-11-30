@@ -130,8 +130,9 @@ export const SystemRepositoryTable = () => {
                       <th
                         {...column.getHeaderProps(
                           column.getSortByToggleProps()
-                        )} /* TODO scope */
+                        )}
                         aria-sort={getColumnSortStatus(column)}
+                        scope="col"
                       >
                         {column.render('Header')}
                         <span
