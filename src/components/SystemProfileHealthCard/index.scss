@@ -1,5 +1,25 @@
 // We reset the default padding of GridContainer because <Card>s have a default padding.
-.resetGridPadding {
+.grid-no-padding {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
+}
+
+.system-health-center-text {
+	text-align: center;
+}
+
+.system-health-icon-success {
+	color: green;
+}
+
+.system-health-icon-warning {
+	color: #ff9321;
+}
+
+.system-health-icon-fail {
+	color: red;
+}
+
+.system-health-icon-default {
+	color: #000000;
 }

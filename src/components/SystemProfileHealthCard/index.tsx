@@ -1,3 +1,9 @@
+/**
+ * TODO: This component is not complete. It was prototyped as part of
+ * https://jiraent.cms.gov/browse/EASI-1368, but has not undergone any 508 testing,
+ * UX review, etc.
+ */
+
 import React from 'react';
 import {
   Card,
@@ -24,23 +30,23 @@ export const SystemProfileHealthCard = (
 ) => {
   const { heading, body, footer, status, statusText } = props;
 
-  let iconColor = '';
-  let iconClassname = '';
+  let iconColorClassName = '';
+  let faIconColorClassName = '';
   switch (status) {
     case 'success':
-      iconColor = 'green';
-      iconClassname = 'fa-check-circle';
+      iconColorClassName = 'system-health-icon-success';
+      faIconColorClassName = 'fa-check-circle';
       break;
     case 'warning':
-      iconColor = '#ff9321';
-      iconClassname = 'fa-exclamation-circle';
+      iconColorClassName = 'system-health-icon-warning';
+      faIconColorClassName = 'fa-exclamation-circle';
       break;
     case 'fail':
-      iconColor = 'red';
-      iconClassname = 'fa-times-circle';
+      iconColorClassName = 'system-health-icon-fail';
+      faIconColorClassName = 'fa-times-circle';
       break;
     default:
-      iconColor = '#000000';
+      iconColorClassName = 'system-health-icon-default';
       break;
   }
 
@@ -51,13 +57,17 @@ export const SystemProfileHealthCard = (
           <h2 className="usa-card__heading">{heading}</h2>
         </CardHeader>
         <CardBody>
-          <GridContainer className="resetGridPadding">
+          <GridContainer className="grid-no-padding">
             <Grid row>
               <Grid desktop={{ col: 9 }}>{body}</Grid>
-              <Grid desktop={{ col: 3 }} style={{ textAlign: 'center' }}>
+              <Grid desktop={{ col: 3 }} className="system-health-center-text">
                 <i
-                  style={{ color: iconColor }}
-                  className={classnames('fa', 'fa-5x', iconClassname)}
+                  className={classnames(
+                    'fa',
+                    'fa-5x',
+                    faIconColorClassName,
+                    iconColorClassName
+                  )}
                 />
                 <br />
                 {statusText}
