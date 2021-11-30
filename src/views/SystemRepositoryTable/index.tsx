@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Column, useTable } from 'react-table';
 import { Table } from '@trussworks/react-uswds';
 
@@ -6,6 +7,7 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import { CMSOfficeAcronym } from 'constants/enums/cmsDivisionsAndOffices';
 
 interface SystemSummary {
@@ -38,6 +40,8 @@ const dummySystems: SystemSummary[] = [
 ];
 
 export const SystemRepositoryTable = () => {
+  const { t } = useTranslation();
+
   const columns: Array<Column<SystemSummary>> = useMemo(() => {
     return [
       {
@@ -72,32 +76,43 @@ export const SystemRepositoryTable = () => {
     <PageWrapper>
       <Header />
       <MainContent>
-        <Table bordered={false} fullWidth {...getTableProps()}>
-          {/* TODO <caption> */}
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th {...column.getHeaderProps()} /* TODO aria-sort, scope */>
-                    {column.render('Header')}
-                  </th>
+        <>
+          <SecondaryNav>
+            <NavLink to="/system-profile">
+              {t('systemProfile:tabs.systemProfile')}
+            </NavLink>
+          </SecondaryNav>
+          <div className="grid-container">
+            <Table bordered={false} fullWidth {...getTableProps()}>
+              {/* TODO <caption> */}
+              <thead>
+                {headerGroups.map(headerGroup => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map(column => (
+                      <th
+                        {...column.getHeaderProps()} /* TODO aria-sort, scope */
+                      >
+                        {column.render('Header')}
+                      </th>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(row => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => (
-                    <th {...cell.getCellProps()}>{cell.render('Cell')}</th>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {rows.map(row => {
+                  prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map(cell => (
+                        <th {...cell.getCellProps()}>{cell.render('Cell')}</th>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </div>
+        </>
       </MainContent>
       <Footer />
     </PageWrapper>
