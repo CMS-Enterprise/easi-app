@@ -3,6 +3,7 @@ const systemProfile = {
     systemProfile: 'System Profile'
   },
   systemTable: {
+    caption: 'List of Systems',
     header: {
       systemName: 'System Name',
       systemOwner: 'System Owner',

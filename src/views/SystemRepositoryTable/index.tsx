@@ -93,6 +93,7 @@ export const SystemRepositoryTable = () => {
     return 'none';
   };
 
+  // TODO - should we use this across the board for sortable tables, i.e. GRT requests, 508 requests?
   const getHeaderSortIcon = (
     isSorted: boolean,
     isSortedDesc: boolean | undefined
@@ -119,7 +120,9 @@ export const SystemRepositoryTable = () => {
           </SecondaryNav>
           <div className="grid-container">
             <Table bordered={false} fullWidth {...getTableProps()}>
-              {/* TODO <caption> */}
+              <caption className="usa-sr-only">
+                {t('systemTable.caption')}
+              </caption>
               <thead>
                 {headerGroups.map(headerGroup => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
