@@ -168,6 +168,11 @@ describe('Governance Review Team', () => {
       .then(text => {
         expect(text.length).to.equal(6);
       });
+    cy.contains('p', 'LCID issued');
+
+    cy.get(
+      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/lcid"]'
+    ).click();
     cy.contains('dt', 'Lifecycle ID Expiration')
       .siblings('dd')
       .contains('December 25 2020');
