@@ -17,6 +17,8 @@ services:
       - db
   easi:
     environment:
+      - CEDAR_API_KEY
+      - CEDAR_API_URL
       - APP_ENV
       - APPLICATION_VERSION
       - APPLICATION_DATETIME

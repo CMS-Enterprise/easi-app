@@ -25,6 +25,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
+	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
@@ -81,7 +82,7 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to create LaunchDarkly client", zap.Error(err))
 	}
 
-	// set up CEDAR client
+	// set up CEDAR intake client
 	publisher := cedarintake.NewClient(
 		s.Config.GetString(appconfig.CEDARAPIURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
@@ -101,6 +102,22 @@ func (s *Server) routes(
 	)
 	if s.environment.Local() || s.environment.Test() {
 		cedarLDAPClient = local.NewCedarLdapClient(s.logger)
+	}
+
+	// set up CEDAR core API client
+	coreClient := cedarcore.NewClient(
+		s.Config.GetString(appconfig.CEDARAPIURL),
+		s.Config.GetString(appconfig.CEDARAPIKey),
+		ldClient,
+	)
+
+	if s.environment.Local() || s.environment.Test() {
+		systemSummary, sserr := coreClient.GetSystemSummary(context.Background())
+		if sserr != nil {
+			s.logger.Error("Failed to get system summary", zap.Error(sserr))
+		} else {
+			s.logger.Info("System Summary", zap.Any("systemSummary", systemSummary))
+		}
 	}
 
 	// set up Email Client
