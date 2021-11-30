@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column, useTable } from 'react-table';
+import { Column, HeaderGroup, useSortBy, useTable } from 'react-table';
 import { Table } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -67,10 +68,46 @@ export const SystemRepositoryTable = () => {
     headerGroups,
     rows,
     prepareRow
-  } = useTable({
-    columns,
-    data: useMemo(() => dummySystems, [])
-  });
+  } = useTable(
+    {
+      columns,
+      data: useMemo(() => dummySystems, []),
+      initialState: {
+        sortBy: [{ id: 'systemName', desc: false }]
+      }
+    },
+    useSortBy
+  );
+
+  // TODO - copied from src/components/RequestRepository/index.tsx. is this something we should generalize & reuse?
+  const getColumnSortStatus = <T extends {}>(
+    column: HeaderGroup<T>
+  ): 'descending' | 'ascending' | 'none' => {
+    if (column.isSorted) {
+      if (column.isSortedDesc) {
+        return 'descending';
+      }
+      return 'ascending';
+    }
+
+    return 'none';
+  };
+
+  const getHeaderSortIcon = (
+    isSorted: boolean,
+    isSortedDesc: boolean | undefined
+  ) => {
+    const marginClassName = 'margin-left-1';
+    if (!isSorted) {
+      return classnames(marginClassName, 'fa fa-sort caret');
+    }
+
+    if (isSortedDesc) {
+      return classnames(marginClassName, 'fa fa-caret-down');
+    }
+
+    return classnames(marginClassName, 'fa fa-caret-up');
+  };
 
   return (
     <PageWrapper>
@@ -90,9 +127,18 @@ export const SystemRepositoryTable = () => {
                   <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map(column => (
                       <th
-                        {...column.getHeaderProps()} /* TODO aria-sort, scope */
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
+                        )} /* TODO scope */
+                        aria-sort={getColumnSortStatus(column)}
                       >
                         {column.render('Header')}
+                        <span
+                          className={getHeaderSortIcon(
+                            column.isSorted,
+                            column.isSortedDesc
+                          )}
+                        />
                       </th>
                     ))}
                   </tr>
