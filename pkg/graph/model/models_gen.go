@@ -18,13 +18,11 @@ type AccessibilityRequestDocumentType struct {
 }
 
 type AccessibilityRequestEdge struct {
-	Cursor string                       `json:"cursor"`
-	Node   *models.AccessibilityRequest `json:"node"`
+	Node *models.AccessibilityRequest `json:"node"`
 }
 
 type AccessibilityRequestsConnection struct {
-	Edges      []*AccessibilityRequestEdge `json:"edges"`
-	TotalCount int                         `json:"totalCount"`
+	Edges []*AccessibilityRequestEdge `json:"edges"`
 }
 
 type AddGRTFeedbackInput struct {
@@ -222,13 +220,11 @@ type Request struct {
 }
 
 type RequestEdge struct {
-	Cursor string   `json:"cursor"`
-	Node   *Request `json:"node"`
+	Node *Request `json:"node"`
 }
 
 type RequestsConnection struct {
-	Edges      []*RequestEdge `json:"edges"`
-	TotalCount int            `json:"totalCount"`
+	Edges []*RequestEdge `json:"edges"`
 }
 
 type SubmitIntakeInput struct {
@@ -236,13 +232,11 @@ type SubmitIntakeInput struct {
 }
 
 type SystemConnection struct {
-	Edges      []*SystemEdge `json:"edges"`
-	TotalCount int           `json:"totalCount"`
+	Edges []*SystemEdge `json:"edges"`
 }
 
 type SystemEdge struct {
-	Cursor string         `json:"cursor"`
-	Node   *models.System `json:"node"`
+	Node *models.System `json:"node"`
 }
 
 // An action taken on a system intake, often resulting in a change in status.

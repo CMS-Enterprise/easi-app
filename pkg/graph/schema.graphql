@@ -25,11 +25,9 @@ type Request {
 
 type RequestsConnection {
   edges: [RequestEdge!]!
-  totalCount: Int!
 }
 
 type RequestEdge {
-  cursor: String!
   node: Request!
 }
 
@@ -158,11 +156,9 @@ type AccessibilityRequestDocument {
 
 type SystemConnection {
   edges: [SystemEdge!]!
-  totalCount: Int!
 }
 
 type SystemEdge {
-  cursor: String!
   node: System!
 }
 
@@ -204,11 +200,9 @@ type GeneratePresignedUploadURLPayload {
 
 type AccessibilityRequestsConnection {
   edges: [AccessibilityRequestEdge!]!
-  totalCount: Int!
 }
 
 type AccessibilityRequestEdge {
-  cursor: String!
   node: AccessibilityRequest!
 }
 
