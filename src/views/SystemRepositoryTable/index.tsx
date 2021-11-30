@@ -41,26 +41,26 @@ const dummySystems: SystemSummary[] = [
 ];
 
 export const SystemRepositoryTable = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('systemProfile');
 
   const columns: Array<Column<SystemSummary>> = useMemo(() => {
     return [
       {
-        Header: 'System Name', // TODO i18n
+        Header: t<string>('systemTable.header.systemName'),
         accessor: summary => `System ${summary.name}`,
         id: 'systemName'
       },
       {
-        Header: 'System Owner', // TODO i18n
+        Header: t<string>('systemTable.header.systemOwner'),
         accessor: summary => `${summary.ownerName}, ${summary.ownerOffice}`,
         id: 'systemOwner'
       },
       {
-        Header: 'Production Status', // TODO i18n
+        Header: t<string>('systemTable.header.productionStatus'),
         accessor: 'productionStatus'
       }
     ];
-  }, []); // TODO when system data is dynamically fetched, this dependency list may need to be changed
+  }, [t]); // TODO when system data is dynamically fetched, this dependency list may need to be changed
 
   const {
     getTableProps,
@@ -115,9 +115,7 @@ export const SystemRepositoryTable = () => {
       <MainContent>
         <>
           <SecondaryNav>
-            <NavLink to="/system-profile">
-              {t('systemProfile:tabs.systemProfile')}
-            </NavLink>
+            <NavLink to="/system-profile">{t('tabs.systemProfile')}</NavLink>
           </SecondaryNav>
           <div className="grid-container">
             <Table bordered={false} fullWidth {...getTableProps()}>
