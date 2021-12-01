@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -25,6 +26,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
+
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -110,15 +112,6 @@ func (s *Server) routes(
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		ldClient,
 	)
-
-	if s.environment.Local() || s.environment.Test() {
-		systemSummary, sserr := coreClient.GetSystemSummary(context.Background())
-		if sserr != nil {
-			s.logger.Error("Failed to get system summary", zap.Error(sserr))
-		} else {
-			s.logger.Info("System Summary", zap.Any("systemSummary", systemSummary))
-		}
-	}
 
 	// set up Email Client
 	sesConfig := s.NewSESConfig()
@@ -320,6 +313,22 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
+	s.router.HandleFunc("/system-info-DEBUG", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		systemSummary, sserr := coreClient.GetSystemSummary(context.Background())
+		if sserr != nil {
+			s.logger.Error("Failed to get system summary", zap.Error(sserr))
+			_, werr := w.Write([]byte("ERROR"))
+			if werr != nil {
+				s.logger.Error("Failed to write response", zap.Error(werr))
+			}
+		} else {
+			summaryJSON, _ := json.Marshal(systemSummary)
+			_, werr := w.Write(summaryJSON)
+			if werr != nil {
+				s.logger.Error("Failed to write response", zap.Error(werr))
+			}
+		}
+	}))
 
 	businessCaseHandler := handlers.NewBusinessCaseHandler(
 		base,
