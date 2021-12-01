@@ -21,7 +21,7 @@ import (
 
 const (
 	cedarCoreEnabledKey     = "cedarCoreEnabled"
-	cedarCoreEnabledDefault = true
+	cedarCoreEnabledDefault = false
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
@@ -80,7 +80,6 @@ type Client struct {
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 func (c *Client) GetSystemSummary(ctx context.Context) (coremodels.SystemSummaryResponse, error) {
 	if !c.cedarCoreEnabled(ctx) {
-		fmt.Println("CEDAR CORE IS DISABLED")
 		return coremodels.SystemSummaryResponse{}, nil
 	}
 
