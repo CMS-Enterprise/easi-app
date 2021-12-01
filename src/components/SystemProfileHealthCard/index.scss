@@ -8,16 +8,19 @@
 	text-align: center;
 }
 
+/**
+ * These color() values come from https://designsystem.digital.gov/design-tokens/color/state-tokens/
+ */
 .system-health-icon-success {
-	color: green;
+	color: color('success');
 }
 
 .system-health-icon-warning {
-	color: #ff9321;
+	color: color('warning');
 }
 
 .system-health-icon-fail {
-	color: red;
+	color: color('error');
 }
 
 .system-health-icon-default {

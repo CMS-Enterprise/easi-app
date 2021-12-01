@@ -16,9 +16,9 @@
   font-weight: bold;
 }
 
-// Without this, <Card> components appear to render the <li> with a bullet point
+// <Card> components (which have .usa-card) are <li> elements, and render a bullet point without this.
 .usa-card {
-  display: block
+  list-style-type: none;
 }
 
 // Textarea

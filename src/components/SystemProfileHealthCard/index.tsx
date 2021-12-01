@@ -15,13 +15,15 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import { iconStatus } from 'types/iconStatus';
+
 import './index.scss';
 
 type SystemProfileHealthCardProps = {
   heading: string;
   body: React.ReactNode | string;
   footer: React.ReactNode | string;
-  status: 'success' | 'warning' | 'fail';
+  status: iconStatus;
   statusText: string;
 };
 
