@@ -107,11 +107,11 @@ end
 
 ### Tasks
 
-def up(*args)
+def up(frontend_included, *args)
   environment = {
     "COMPOSE_HTTP_TIMEOUT" => "120"
   }
-  command = "docker-compose up --build"
+  command = "docker-compose #{"--profile frontend" if frontend_included } up --build"
 
   if args.any?
     command = "#{command} #{args.join(' ')}"
@@ -120,18 +120,33 @@ def up(*args)
   sh(environment, command, verbose: true)
 
   wait_for_success("Waiting for the back end to build...", "curl --silent --output /dev/null -m 1 localhost:8080/api/v1/healthcheck")
-  wait_for_success("Waiting for the front end to build...", "curl --silent --output /dev/null -m 1 localhost:3000")
+
+  if frontend_included
+    wait_for_success("Waiting for the front end to build...", "curl --silent --output /dev/null -m 1 localhost:3000")
+  end
 end
 
 desc "Starts all services in the project"
 task :up do
-  up("-d")
+  up(true, "-d")
 end
 
 namespace :up do
   desc "Starts all services in the project in the foreground"
   task :watch do
-    up
+    up(true)
+  end
+
+  desc "Starts all services except the frontend (runs more quickly, if frontend isn't needed)"
+  task :backend do
+    up(false, "-d")
+  end
+
+  desc "Starts all services in the foreground except the frontend (runs more quickly, if frontend isn't needed)"
+  namespace :backend do
+    task :watch do
+      up(false)
+    end
   end
 end
 

@@ -24,6 +24,7 @@ services:
     environment:
       - LOCAL_AUTH_ENABLED
   easi_client:
+    profiles: ["frontend"]
     build:
       context: .
       dockerfile: Dockerfile.client
