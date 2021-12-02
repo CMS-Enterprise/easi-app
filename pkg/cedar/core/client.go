@@ -43,13 +43,6 @@ func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Cli
 
 	hc := http.DefaultClient
 
-	// Uncomment the following if you're having trouble with TLS locally
-	// hc := &http.Client{
-	// 	Transport: &http.Transport{
-	// 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	// 	},
-	// }
-
 	return &Client{
 		cedarCoreEnabled: fnEmit,
 		auth: httptransport.APIKeyAuth(
