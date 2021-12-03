@@ -32,6 +32,7 @@ import PrivacyPolicy from 'views/PrivacyPolicy';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
+import SystemProfileHealth from 'views/SystemProfileHealth';
 import SystemRepositoryTable from 'views/SystemRepositoryTable';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
@@ -141,6 +142,13 @@ const AppRoutes = () => {
 
       {/* Misc Routes */}
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+      {flags.sandbox && (
+        <Route
+          path="/sandbox/:systemId"
+          exact
+          component={SystemProfileHealth}
+        />
+      )}
 
       <Route path="/implicit/callback" component={LoginCallback} />
 

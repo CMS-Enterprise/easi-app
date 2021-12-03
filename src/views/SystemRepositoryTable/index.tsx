@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column, HeaderGroup, useSortBy, useTable } from 'react-table';
-import { Table } from '@trussworks/react-uswds';
+import { Link } from 'react-router-dom';
+import { Column, HeaderGroup, Row, useSortBy, useTable } from 'react-table';
+import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import Footer from 'components/Footer';
@@ -9,50 +10,30 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
-import { CMSOfficeAcronym } from 'constants/enums/cmsDivisionsAndOffices';
-
-interface SystemSummary {
-  name: string;
-  ownerName: string;
-  ownerOffice: CMSOfficeAcronym;
-  productionStatus: 'GOOD' | 'WARNING' | 'ERROR'; // TODO - eventually replace with enum (in src/types or src/constants/enums), or system health report
-}
-
-// TODO - replace with dynamic data fetched from backend
-const dummySystems: SystemSummary[] = [
-  {
-    name: 'ABC123',
-    ownerName: 'Jane Doe',
-    ownerOffice: 'CMMI',
-    productionStatus: 'GOOD'
-  },
-  {
-    name: 'XYZ789',
-    ownerName: 'John Doe',
-    ownerOffice: 'OIT',
-    productionStatus: 'ERROR'
-  },
-  {
-    name: '8675309',
-    ownerName: 'Jennifer Doe',
-    ownerOffice: 'CCIIO',
-    productionStatus: 'WARNING'
-  }
-];
+import { mockSystemInfo, SystemInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo with dynamic data fetched from backend
 
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
 
-  const columns: Array<Column<SystemSummary>> = useMemo(() => {
+  const columns = useMemo<Column<SystemInfo>[]>(() => {
     return [
       {
         Header: t<string>('systemTable.header.systemName'),
-        accessor: summary => `System ${summary.name}`,
-        id: 'systemName'
+        accessor: (systemInfo: SystemInfo) => `System ${systemInfo.name}`,
+        id: 'systemName',
+        Cell: ({ row }: { row: Row<SystemInfo> }) => {
+          const systemInfo = row.original;
+          return (
+            <UswdsLink asCustom={Link} to={`/sandbox/${systemInfo.id}`}>
+              {systemInfo.name}
+            </UswdsLink>
+          );
+        }
       },
       {
         Header: t<string>('systemTable.header.systemOwner'),
-        accessor: summary => `${summary.ownerName}, ${summary.ownerOffice}`,
+        accessor: (systemInfo: SystemInfo) =>
+          `${systemInfo.ownerName}, ${systemInfo.ownerOffice}`,
         id: 'systemOwner'
       },
       {
@@ -71,7 +52,7 @@ export const SystemRepositoryTable = () => {
   } = useTable(
     {
       columns,
-      data: useMemo(() => dummySystems, []),
+      data: useMemo(() => mockSystemInfo, []),
       initialState: {
         sortBy: [{ id: 'systemName', desc: false }]
       }

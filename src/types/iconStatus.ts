@@ -1,1 +1,1 @@
-export type iconStatus = 'success' | 'warning' | 'fail';
+export type IconStatus = 'success' | 'warning' | 'fail';
