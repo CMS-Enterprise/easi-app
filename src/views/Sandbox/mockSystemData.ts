@@ -6,7 +6,7 @@ export interface SystemInfo {
   name: string;
   ownerName: string;
   ownerOffice: CMSOfficeAcronym;
-  productionStatus: IconStatus;
+  productionStatus: IconStatus; // TODO - this may not correspond to a field in CEDAR. maybe make it depend on ATO+508+TRB status?
   atoStatus: IconStatus;
   atoStatusText: string;
   section508Status: IconStatus;
