@@ -10,6 +10,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import SystemHealthIcon from 'components/SystemHealthIcon';
 import { mockSystemInfo, SystemInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo with dynamic data fetched from backend
 
 export const SystemRepositoryTable = () => {
@@ -21,14 +22,11 @@ export const SystemRepositoryTable = () => {
         Header: t<string>('systemTable.header.systemName'),
         accessor: (systemInfo: SystemInfo) => `System ${systemInfo.name}`,
         id: 'systemName',
-        Cell: ({ row }: { row: Row<SystemInfo> }) => {
-          const systemInfo = row.original;
-          return (
-            <UswdsLink asCustom={Link} to={`/sandbox/${systemInfo.id}`}>
-              {systemInfo.name}
-            </UswdsLink>
-          );
-        }
+        Cell: ({ row }: { row: Row<SystemInfo> }) => (
+          <UswdsLink asCustom={Link} to={`/sandbox/${row.original.id}`}>
+            {row.original.name}
+          </UswdsLink>
+        )
       },
       {
         Header: t<string>('systemTable.header.systemOwner'),
@@ -38,7 +36,13 @@ export const SystemRepositoryTable = () => {
       },
       {
         Header: t<string>('systemTable.header.productionStatus'),
-        accessor: 'productionStatus'
+        accessor: 'productionStatus',
+        Cell: ({ row }: { row: Row<SystemInfo> }) => (
+          <SystemHealthIcon
+            status={row.original.productionStatus}
+            size="medium"
+          />
+        )
       }
     ];
   }, [t]); // TODO when system data is dynamically fetched, this dependency list may need to be changed
