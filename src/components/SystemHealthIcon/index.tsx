@@ -3,19 +3,15 @@ import classnames from 'classnames';
 
 import { IconStatus } from 'types/iconStatus';
 
-import './index.scss';
-
 type SystemHealthIconProps = {
   status: IconStatus;
   size: 'medium' | 'xl';
+  label?: string;
 };
 
-const SystemHealthIcon = ({ status, size }: SystemHealthIconProps) => {
+const SystemHealthIcon = ({ status, size, label }: SystemHealthIconProps) => {
   const classes = classnames(
-    {
-      fa: size !== 'medium',
-      'fa-med': size === 'medium'
-    },
+    'fa',
     {
       'system-health-icon-success': status === 'success',
       'system-health-icon-warning': status === 'warning',
@@ -28,9 +24,18 @@ const SystemHealthIcon = ({ status, size }: SystemHealthIconProps) => {
     },
     {
       'fa-5x': size === 'xl'
+    },
+    {
+      'margin-right-05': label !== undefined && size === 'medium'
     }
   );
-  return <i className={classes} />;
+
+  return (
+    <>
+      <i className={classes} />
+      {label}
+    </>
+  );
 };
 
 export default SystemHealthIcon;

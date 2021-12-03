@@ -7,7 +7,7 @@ const systemProfile = {
     header: {
       systemName: 'System Name',
       systemOwner: 'System Owner',
-      productionStatus: 'ProductionStatus'
+      productionStatus: 'Production Status'
     }
   }
 };

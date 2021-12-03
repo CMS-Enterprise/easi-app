@@ -11,8 +11,21 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import SystemHealthIcon from 'components/SystemHealthIcon';
-import { sortByStatus } from 'types/iconStatus';
+import { IconStatus, sortByStatus } from 'types/iconStatus';
 import { mockSystemInfo, SystemInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo with dynamic data fetched from backend
+
+// TODO - if we want to keep this text past the prototype state, it needs to use translation
+const mapStatusToDescription = (status: IconStatus): string => {
+  switch (status) {
+    case 'success':
+      return 'Fully operational';
+    case 'warning':
+      return 'Degraded functionality';
+    case 'fail':
+    default:
+      return 'Inoperative';
+  }
+};
 
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
@@ -51,6 +64,7 @@ export const SystemRepositoryTable = () => {
           <SystemHealthIcon
             status={row.original.productionStatus}
             size="medium"
+            label={mapStatusToDescription(row.original.productionStatus)}
           />
         ),
         sortType: sortRowsByStatus
