@@ -11,10 +11,20 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import SystemHealthIcon from 'components/SystemHealthIcon';
+import { sortByStatus } from 'types/iconStatus';
 import { mockSystemInfo, SystemInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo with dynamic data fetched from backend
 
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
+
+  const sortRowsByStatus = useMemo(
+    () => (rowA: Row<SystemInfo>, rowB: Row<SystemInfo>) =>
+      sortByStatus(
+        rowA.original.productionStatus,
+        rowB.original.productionStatus
+      ),
+    []
+  );
 
   const columns = useMemo<Column<SystemInfo>[]>(() => {
     return [
@@ -42,10 +52,11 @@ export const SystemRepositoryTable = () => {
             status={row.original.productionStatus}
             size="medium"
           />
-        )
+        ),
+        sortType: sortRowsByStatus
       }
     ];
-  }, [t]); // TODO when system data is dynamically fetched, this dependency list may need to be changed
+  }, [t, sortRowsByStatus]); // TODO when system data is dynamically fetched, this dependency list may need to be changed
 
   const {
     getTableProps,
@@ -58,7 +69,7 @@ export const SystemRepositoryTable = () => {
       columns,
       data: useMemo(() => mockSystemInfo, []),
       initialState: {
-        sortBy: [{ id: 'systemName', desc: false }]
+        sortBy: useMemo(() => [{ id: 'systemName', desc: false }], [])
       }
     },
     useSortBy
