@@ -154,21 +154,28 @@ const governanceReviewTeam = {
     openIntake: 'Open intake request',
     openBusiness: 'Open business case',
     openNotes: 'Open admin team notes',
-    openDecision: 'Open decision'
+    openDecision: 'Open decision',
+    openLcid: 'Open LCID'
   },
   back: {
     allRequests: 'Back to all requests'
+  },
+  lifecycleID: {
+    title: 'Lifecycle ID',
+    noLCID: 'No Lifecycle ID has been issued',
+    expiration: 'Lifecycle ID Expiration',
+    scope: 'Lifecycle ID Scope',
+    nextSteps: 'Next Steps',
+    costBaseline: 'Project Cost Baseline'
   },
   decision: {
     title: 'Decision',
     titleApproved: 'Decision - Approved',
     titleRejected: 'Decision - Rejected',
     titleClosed: 'Decision - Closed',
-    lcid: 'Lifecycle ID',
-    lcidExpiration: 'Lifecycle ID Expiration',
-    scope: 'Lifecycle ID Scope',
+    lcidIssued:
+      'LCID issued, see Lifecycle ID tab for more detailed information',
     nextSteps: 'Next Steps',
-    costBaseline: 'Project Cost Baseline',
     rejectionReason: 'Rejection Reason',
     decisionSectionTitle: 'Decision Details',
     descriptionNotItRequest: 'Request was marked "Not an IT Request"',
