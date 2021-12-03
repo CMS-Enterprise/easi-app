@@ -15,8 +15,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
-	coremodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
 	"github.com/cmsgov/easi-app/pkg/flags"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 const (
@@ -71,22 +71,50 @@ type Client struct {
 }
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
-func (c *Client) GetSystemSummary(ctx context.Context) (coremodels.SystemSummaryResponse, error) {
-	if !c.cedarCoreEnabled(ctx) {
-		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return coremodels.SystemSummaryResponse{}, nil
-	}
+func (c *Client) GetSystemSummary(ctx context.Context) (models.CedarSystemSummary, error) {
+	// if !c.cedarCoreEnabled(ctx) {
+	// 	appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+	// 	return models.CedarSystemSummary{}, nil
+	// }
 
 	params := apisystems.NewSystemSummaryFindListParams()
 	params.HTTPClient = c.hc
 
 	resp, err := c.sdk.System.SystemSummaryFindList(params, c.auth)
 	if err != nil {
-		return coremodels.SystemSummaryResponse{}, err
-	}
-	if resp.Payload == nil {
-		return coremodels.SystemSummaryResponse{}, fmt.Errorf("no body received")
+		return models.CedarSystemSummary{}, err
 	}
 
-	return *resp.Payload, nil
+	if resp.Payload == nil {
+		return models.CedarSystemSummary{}, fmt.Errorf("no body received")
+	}
+
+	// Temp solution that involves using struct tags to marshal
+	// and unmarshal, rather than typing out each property name
+	// and looping.
+	//
+	// rawPayload, _ := json.Marshal(resp.Payload)
+	// retVal := models.CedarSystemSummary{}
+	// json.Unmarshal(rawPayload, &retVal)
+
+	retVal := models.CedarSystemSummary{
+		Count:         *resp.Payload.Count,
+		SystemSummary: []models.CedarSystem{},
+	}
+
+	for _, sys := range resp.Payload.SystemSummary {
+		retVal.SystemSummary = append(retVal.SystemSummary, models.CedarSystem{
+			ID:                      *sys.ID,
+			Name:                    *sys.Name,
+			Description:             sys.Description,
+			Acronym:                 sys.Acronym,
+			Status:                  sys.Status,
+			BusinessOwnerOrg:        sys.BusinessOwnerOrg,
+			BusinessOwnerOrgComp:    sys.BusinessOwnerOrgComp,
+			SystemMaintainerOrg:     sys.SystemMaintainerOrg,
+			SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
+		})
+	}
+
+	return retVal, nil
 }
