@@ -73,6 +73,7 @@ type Client struct {
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 func (c *Client) GetSystemSummary(ctx context.Context) (coremodels.SystemSummaryResponse, error) {
 	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return coremodels.SystemSummaryResponse{}, nil
 	}
 

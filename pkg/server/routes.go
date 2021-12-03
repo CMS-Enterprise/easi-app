@@ -314,7 +314,7 @@ func (s *Server) routes(
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 	s.router.HandleFunc("/system-info-DEBUG", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		systemSummary, sserr := coreClient.GetSystemSummary(context.Background())
+		systemSummary, sserr := coreClient.GetSystemSummary(r.Context())
 		if sserr != nil {
 			s.logger.Error("Failed to get system summary", zap.Error(sserr))
 			_, werr := w.Write([]byte("ERROR"))
