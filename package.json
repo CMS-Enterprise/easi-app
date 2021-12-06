@@ -11,7 +11,7 @@
     "@okta/okta-react": "^6.1.0",
     "@okta/okta-signin-widget": "^5.7.1",
     "@trussworks/react-uswds": "^1.17.0",
-    "@types/classnames": "^2.2.9",
+    "@types/classnames": "^2.3.1",
     "@types/enzyme": "^3.10.3",
     "@types/jest": "26.0.23",
     "@types/lodash": "^4.14.149",
