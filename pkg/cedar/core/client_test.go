@@ -9,7 +9,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	coremodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type ClientTestSuite struct {
@@ -41,7 +41,7 @@ func (s ClientTestSuite) TestClient() {
 		resp, err := c.GetSystemSummary(ctx)
 		s.NoError(err)
 
-		blankSummary := coremodels.SystemSummaryResponse{}
+		blankSummary := models.CedarSystemSummary{}
 		s.Equal(resp, blankSummary)
 	})
 
