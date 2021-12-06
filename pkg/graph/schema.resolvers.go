@@ -747,7 +747,7 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		ctx, &models.Action{
 			IntakeID:   &input.ID,
 			ActionType: models.ActionTypeEXTENDLCID,
-		}, input.ID, input.ExpirationDate,
+		}, input.ID, input.ExpirationDate, input.NextSteps, input.Scope, input.CostBaseline,
 	)
 
 	if err != nil {

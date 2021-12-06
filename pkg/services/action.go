@@ -368,12 +368,15 @@ func NewCreateActionExtendLifecycleID(
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
-) func(context.Context, *models.Action, uuid.UUID, *time.Time) (*models.SystemIntake, error) {
+) func(context.Context, *models.Action, uuid.UUID, *time.Time, *string, string, *string) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
 		action *models.Action,
 		id uuid.UUID,
 		expirationDate *time.Time,
+		nextSteps *string,
+		scope string,
+		costBaseline *string,
 	) (*models.SystemIntake, error) {
 
 		intake, err := fetchSystemIntake(ctx, id)
@@ -394,6 +397,10 @@ func NewCreateActionExtendLifecycleID(
 		// TODO: set scope, next steps, etc. as well
 
 		intake.Status = models.SystemIntakeStatusLCIDISSUED
+
+		intake.LifecycleScope = null.StringFrom(scope)
+		intake.DecisionNextSteps = null.StringFromPtr(nextSteps)
+		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)
 
 		_, updateErr := updateSystemIntake(ctx, intake)
 		if updateErr != nil {

@@ -616,6 +616,9 @@ input UpdateSystemIntakeContractDetailsInput {
 input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
+  nextSteps: String
+  scope: String!
+  costBaseline: String
 }
 
 type CreateSystemIntakeActionExtendLifecycleIdPayload {

@@ -3377,6 +3377,9 @@ input UpdateSystemIntakeContractDetailsInput {
 input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
+  nextSteps: String
+  scope: String!
+  costBaseline: String
 }
 
 type CreateSystemIntakeActionExtendLifecycleIdPayload {
@@ -15514,6 +15517,30 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expirationDate"))
 			it.ExpirationDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "nextSteps":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
+			it.NextSteps, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "scope":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scope"))
+			it.Scope, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "costBaseline":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("costBaseline"))
+			it.CostBaseline, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}

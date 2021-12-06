@@ -109,6 +109,9 @@ type CreateAccessibilityRequestPayload struct {
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
 	ID             uuid.UUID  `json:"id"`
 	ExpirationDate *time.Time `json:"expirationDate"`
+	NextSteps      *string    `json:"nextSteps"`
+	Scope          string     `json:"scope"`
+	CostBaseline   *string    `json:"costBaseline"`
 }
 
 type CreateSystemIntakeActionExtendLifecycleIDPayload struct {

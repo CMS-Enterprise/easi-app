@@ -18,6 +18,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionExtendLifecycleIdQuery from 'queries/CreateSystemIntakeActionExtendLifecycleIdQuery';
 import {
   CreateSystemIntakeActionExtendLifecycleId,
@@ -32,16 +33,31 @@ type ExtendLCIDForm = {
   newExpirationDay: string;
   newExpirationMonth: string;
   newExpirationYear: string;
+  currentScope: string;
+  newScope: string;
+  currentNextSteps: string;
+  newNextSteps: string;
+  currentCostBaseline: string;
+  newCostBaseline: string;
 };
 
 type ExtendLifecycleIdProps = {
   lcid: string;
   lcidExpiresAt: string;
+  lcidScope: string;
+  lcidNextSteps: string;
+  lcidCostBaseline: string;
 };
 
 const RADIX = 10;
 
-const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
+const ExtendLifecycleId = ({
+  lcid,
+  lcidExpiresAt,
+  lcidScope,
+  lcidNextSteps,
+  lcidCostBaseline
+}: ExtendLifecycleIdProps) => {
   const { t } = useTranslation('action');
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
@@ -49,7 +65,13 @@ const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
     currentExpiresAt: lcidExpiresAt,
     newExpirationDay: '',
     newExpirationMonth: '',
-    newExpirationYear: ''
+    newExpirationYear: '',
+    currentScope: lcidScope,
+    newScope: '',
+    currentNextSteps: lcidNextSteps,
+    newNextSteps: '',
+    currentCostBaseline: lcidCostBaseline,
+    newCostBaseline: ''
   };
 
   const [extendLifecycleID, extendLifecycleIDStatus] = useMutation<
@@ -61,7 +83,10 @@ const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
     const {
       newExpirationMonth = '',
       newExpirationDay = '',
-      newExpirationYear = ''
+      newExpirationYear = '',
+      newScope = '',
+      newNextSteps = '',
+      newCostBaseline = ''
     } = values;
     const expiresAt = DateTime.utc(
       parseInt(newExpirationYear, RADIX),
@@ -72,7 +97,10 @@ const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
       variables: {
         input: {
           id: systemId,
-          expirationDate: expiresAt
+          expirationDate: expiresAt,
+          scope: newScope,
+          nextSteps: newNextSteps,
+          costBaseline: newCostBaseline
         }
       }
     }).then(response => {
@@ -139,8 +167,24 @@ const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
                 <dd className="margin-left-0 margin-bottom-2">
                   {formatDateAndIgnoreTimezone(lcidExpiresAt)}
                 </dd>
+                <dt className="text-bold margin-bottom-1">
+                  {t('extendLcid.currentScope')}
+                </dt>
+                <dd className="margin-left-0 margin-bottom-2">{lcidScope}</dd>
+                <dt className="text-bold margin-bottom-1">
+                  {t('extendLcid.currentNextSteps')}
+                </dt>
+                <dd className="margin-left-0 margin-bottom-2">
+                  {lcidNextSteps}
+                </dd>
+                <dt className="text-bold margin-bottom-1">
+                  {t('extendLcid.currentCostBaseline')}
+                </dt>
+                <dd className="margin-left-0 margin-bottom-2">
+                  {lcidCostBaseline || t('extendLcid.noCostBaseline')}
+                </dd>
               </dl>
-
+              <hr />
               <Form>
                 <FieldGroup>
                   <fieldset className="usa-fieldset margin-top-2">
@@ -194,6 +238,49 @@ const ExtendLifecycleId = ({ lcid, lcidExpiresAt }: ExtendLifecycleIdProps) => {
                       </div>
                     </div>
                   </fieldset>
+                </FieldGroup>
+                <FieldGroup scrollElement="scope" error={!!flatErrors.scope}>
+                  <Label htmlFor="IssueLifecycleIdForm-Scope">
+                    {t('issueLCID.scopeLabel')}
+                  </Label>
+                  <HelpText>{t('issueLCID.scopeHelpText')}</HelpText>
+                  <FieldErrorMsg>{flatErrors.scope}</FieldErrorMsg>
+                  <Field
+                    as={TextAreaField}
+                    error={!!flatErrors.scope}
+                    id="IssueLifecycleIdForm-Scope"
+                    maxLength={3000}
+                    name="newScope"
+                  />
+                </FieldGroup>
+                <FieldGroup
+                  scrollElement="nextSteps"
+                  error={!!flatErrors.nextSteps}
+                >
+                  <Label htmlFor="IssueLifecycleIdForm-NextSteps">
+                    {t('issueLCID.nextStepsLabel')}
+                  </Label>
+                  <HelpText>{t('issueLCID.nextStepsHelpText')}</HelpText>
+                  <FieldErrorMsg>{flatErrors.nextSteps}</FieldErrorMsg>
+                  <Field
+                    as={TextAreaField}
+                    error={!!flatErrors.nextSteps}
+                    id="IssueLifecycleIdForm-NextSteps"
+                    maxLength={3000}
+                    name="newNextSteps"
+                  />
+                </FieldGroup>
+                <FieldGroup>
+                  <Label htmlFor="IssueLifecycleIdForm-CostBaseline">
+                    {t('issueLCID.costBaselineLabel')}
+                  </Label>
+                  <HelpText>{t('issueLCID.costBaselineHelpText')}</HelpText>
+                  <Field
+                    as={TextAreaField}
+                    id="IssueLifecycleIdForm-CostBaseline"
+                    maxLength={3000}
+                    name="newCostBaseline"
+                  />
                 </FieldGroup>
                 <p className="margin-top-6 line-height-body-3">
                   {t('extendLcid.submissionInfo')}

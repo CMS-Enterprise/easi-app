@@ -344,6 +344,13 @@ const RequestOverview = () => {
                       <ExtendLifecycleId
                         lcid={data.systemIntake?.lcid || ''}
                         lcidExpiresAt={data.systemIntake?.lcidExpiresAt}
+                        lcidScope={data.systemIntake?.lcidScope || ''}
+                        lcidNextSteps={
+                          data.systemIntake?.decisionNextSteps || ''
+                        }
+                        lcidCostBaseline={
+                          data.systemIntake?.lcidCostBaseline || ''
+                        }
                       />
                     )}
                   />
