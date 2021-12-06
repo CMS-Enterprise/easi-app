@@ -72,14 +72,16 @@ type Client struct {
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 func (c *Client) GetSystemSummary(ctx context.Context) (models.CedarSystemSummary, error) {
-	// if !c.cedarCoreEnabled(ctx) {
-	// 	appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-	// 	return models.CedarSystemSummary{}, nil
-	// }
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return models.CedarSystemSummary{}, nil
+	}
 
+	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindListParams()
 	params.HTTPClient = c.hc
 
+	// Make the API call
 	resp, err := c.sdk.System.SystemSummaryFindList(params, c.auth)
 	if err != nil {
 		return models.CedarSystemSummary{}, err
@@ -89,19 +91,13 @@ func (c *Client) GetSystemSummary(ctx context.Context) (models.CedarSystemSummar
 		return models.CedarSystemSummary{}, fmt.Errorf("no body received")
 	}
 
-	// Temp solution that involves using struct tags to marshal
-	// and unmarshal, rather than typing out each property name
-	// and looping.
-	//
-	// rawPayload, _ := json.Marshal(resp.Payload)
-	// retVal := models.CedarSystemSummary{}
-	// json.Unmarshal(rawPayload, &retVal)
-
+	// Convert the auto-generated struct to our own pkg/models struct
 	retVal := models.CedarSystemSummary{
 		Count:         *resp.Payload.Count,
 		SystemSummary: []models.CedarSystem{},
 	}
 
+	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
 		retVal.SystemSummary = append(retVal.SystemSummary, models.CedarSystem{
 			ID:                      *sys.ID,
