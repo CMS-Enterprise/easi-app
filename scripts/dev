@@ -364,16 +364,16 @@ multitask test: ["test:go", "test:js"]
 namespace :test do
   desc "Runs Go tests"
   task :go => "db:clean" do
-    sh "gotest -short -count=1 -p=1 ./..."
+    sh "go test -short -count=1 -p=1 ./..."
   end
   namespace :go do
     desc "Runs Go tests, including long ones"
     task :long => "db:clean" do
-      sh "gotest -count=1 -p=1 ./..."
+      sh "go test -count=1 -p=1 ./..."
     end
-    desc "Run targeted Go tests (pass packages as additional options)"
+    desc "Run targeted Go tests (pass path to package folder as additional options)"
     task :only => ["db:clean", :consume_args] do |t, args|
-      sh "gotest", "-short", "-count=1", "-v", "-p=1", *args
+      sh "go", "test", "-short", "-count=1", "-v", "-p=1", *args
     end
   end
 
