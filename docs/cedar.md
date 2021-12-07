@@ -50,3 +50,21 @@ This tool is not executed as part of any build process, and should be run manual
 ```terminal
 swagger generate client -f cedar_intake.yml -c ./gen/client -m ./gen/models
 ```
+
+### Connecting to CEDAR when running locally
+
+Make sure the `cedarCoreEnabled` LaunchDarkly flag is set to true. If you're not connected to LaunchDarkly during local development, in [`pkg/cedar/core/client.go`](../pkg/cedar/core/client.go), set `cedarCoreEnabledDefault = true`.
+
+`.envrc.local` will need to define environment variables for connecting to and authenticating with CEDAR. Add the following:
+
+```
+export CEDAR_API_URL="webmethods-apigw.cedarimpl.cms.gov"
+export CEDAR_API_KEY=[insert API key from 1Password here]
+```
+
+Additionally, if you're using the `openconnect-tinyproxy` VPN container for selective proxying, add the following to your `.envrc.local` file to instruct Go to use the proxy:
+
+```
+export HTTP_PROXY=http://host.docker.internal:8888
+export HTTPS_PROXY=http://host.docker.internal:8888
+```

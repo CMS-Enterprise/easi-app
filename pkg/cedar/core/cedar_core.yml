@@ -1,0 +1,3111 @@
+swagger: "2.0"
+info:
+  description: "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API's. \n These interfaces contain CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User.\n"
+  version: 1.0.0
+  title: CEDAR Core API
+  termsOfService: https://www.cedardev.cms.gov/
+  contact:
+    email: EnterpriseArchitecture@cms.hhs.gov
+host: cdrprdapigw1.awscloud.cms.local:5555
+basePath: /gateway/CEDAR Core API/1.0.0
+tags:
+  - name: authority to operate
+    description: CMS authority to operate (ATO) data from CFACTS
+  - name: budget
+    description: CMS budget projects funding a particular system
+  - name: component
+    description: CMS components
+  - name: contract
+    description: CMS contracts funded by budget projects
+  - name: cost type
+    description: CMS cost types
+  - name: data center
+    description: Data centers hosting CMS systems
+  - name: deployment
+    description: CMS deployment of a system
+  - name: domain model
+    description: Domain heirarchy areas that categorize CMS and Federal agencies' assets
+  - name: enumeration
+    description: CMS system enumerations
+  - name: exchange
+    description: CMS data exchanges
+  - name: organization
+    description: CMS oganizations
+  - name: person
+    description: CMS people
+  - name: role
+    description: CEDAR role assignments and types
+  - name: stakeholder
+    description: CMS stakeholders
+  - name: support contact
+    description: CMS suport contacts
+  - name: system
+    description: CMS system information
+  - name: user
+    description: CEDAR system users
+schemes:
+  - http
+security:
+  - apiKey: []
+paths:
+  /enumeration:
+    get:
+      tags:
+        - enumeration
+      summary: Retrieve a list of enumerations based on a list of enumeration names passed in.
+      description: Retrieve a list of enumerations based on a list of enumeration names passed in.
+      operationId: enumerationFindList
+      produces:
+        - application/json
+      parameters:
+        - name: application
+          in: query
+          description: Application where the object or role exists.
+          required: true
+          type: string
+        - name: names
+          in: query
+          description: An array of name of enumerations.
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EnumerationFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /user/username/{username}:
+    get:
+      tags:
+        - user
+      summary: Retrieve an existing user in a CEDAR system based on the user name. This interface takes username.
+      description: Retrieve an existing user in a CEDAR system based on the user name. This interface takes username.
+      operationId: userFindByUsername
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          description: Username of user to retrieve.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    put:
+      tags:
+        - user
+      summary: Update a list existing user in a CEDAR system. This interface takes an array of User documents.
+      description: Update a list existing user in a CEDAR system. This interface takes an array of User documents.
+      operationId: userNameUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          description: Username of user to update.
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: User information to be updated in CEDAR.
+          required: true
+          schema:
+            $ref: '#/definitions/UserUpdateRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /contract:
+    get:
+      tags:
+        - contract
+      summary: Retrieve a list of contracts based on query criteria. If a SystemId is passed, the contract(s) for that system are returned. If no query data is passed in, all contracts for the current year are returned.
+      description: Retrieve a list of contracts based on query criteria. If a SystemId is passed, the contract(s) for that system are returned. If no query data is passed in, all contracts for the current year are returned.
+      operationId: contractFind
+      produces:
+        - application/json
+      parameters:
+        - name: systemId
+          in: query
+          description: ID of the system that the contract is associated with
+          required: false
+          type: string
+        - name: keyword
+          in: query
+          description: A keyword to be used in the query
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ContractFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    post:
+      tags:
+        - contract
+      summary: Add a new contract(s) to the Alfabet system. This interface takes an arrary of Contract documents.
+      description: Add a new contract(s) to the Alfabet system. This interface takes an arrary of Contract documents.
+      operationId: contractAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: An array of Contracts to be added to CEDAR Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/ContractAddRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    put:
+      tags:
+        - contract
+      summary: Update an array of contract(s) in the Alfabet system. This interface takes an arrary of Contract documents. If the input budgetsOnly is set to false, this interface will also update any associated Contract Deliverable records.
+      description: Update an array of contract(s) in the Alfabet system. This interface takes an arrary of Contract documents. If the input budgetsOnly is set to false, this interface will also update any associated Contract Deliverable records.
+      operationId: contractUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: budgetsOnly
+          in: query
+          description: Whether only the budgets portion of the contract should be updated or if set to false, the Contract Deliverable records will also be updated.
+          required: false
+          type: boolean
+        - in: body
+          name: body
+          description: An array of contracts to be updated in Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/ContractUpdateRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    delete:
+      tags:
+        - contract
+      summary: Delete a list of contracts based on an array of contarct ids.
+      description: Delete a list of contracts based on an array of contarct ids.
+      operationId: contractDeleteList
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: An array of contract ids.
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /system/summary/{id}:
+    get:
+      tags:
+        - system
+      summary: Retrieve a system summary based on the provided id.
+      description: Retrieve a system summary based on the provided id.
+      operationId: systemSummaryFindById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of system to retrieve.
+          required: true
+          type: string
+        - name: state
+          in: query
+          description: System state
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: System status
+          required: false
+          type: string
+        - name: version
+          in: query
+          description: System versions
+          required: false
+          type: string
+        - name: includeInSurvey
+          in: query
+          description: Include only system census eligible systems
+          required: false
+          type: boolean
+        - name: idsOnly
+          in: query
+          description: Return only system ids and names
+          required: false
+          type: boolean
+        - name: belongsTo
+          in: query
+          description: Return only sub-systems of the system ID provided
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SystemSummaryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /person/{id}:
+    get:
+      tags:
+        - person
+      summary: Retrieve an existing person or a sigle person record based on the users EUA id.
+      description: Retrieve an existing person or a sigle person record based on the users EUA id.
+      operationId: personFindById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of person to retrieve.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Person'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /domainModelName:
+    get:
+      tags:
+        - domain model
+      summary: Retrieves a list of available domain reference models
+      description: Retrieves a list of available domain reference models
+      operationId: domainModelNameFindList
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/DomainModelNameFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /domainModelLevel:
+    get:
+      tags:
+        - domain model
+      summary: Retrieves the model levels associated with a specific domain reference models
+      description: Retrieves the hierarchy levels associated with a specific domain reference models
+      operationId: domainModelLevelFindList
+      produces:
+        - application/json
+      parameters:
+        - name: model
+          in: query
+          description: The name of specific reference model to return. A value from the GET /domainModelName endpoint.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/DomainModelLevelFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /costType:
+    get:
+      tags:
+        - cost type
+      summary: Retrieve a list of cost types
+      description: Retrieve a list of cost types
+      operationId: costTypeFindList
+      produces:
+        - application/json
+      parameters:
+        - name: application
+          in: query
+          description: Application where the object or role exists.
+          required: true
+          type: string
+        - name: name
+          in: query
+          description: The name of a specific group of cost types
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CostTypeFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /system/detail/{id}:
+    get:
+      tags:
+        - system
+      summary: Retrieve an existing system based on the provided id.
+      description: Retrieve an existing system based on the provided id.
+      operationId: systemDetailFindById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of system to retrieve.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SystemDetail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /supportContact:
+    get:
+      tags:
+        - support contact
+      summary: Retrieve a list of supportContacts based on the inputs passed in.
+      description: Retrieve a list of supportContact records to Alfabet. This interface takes in id, application id, name, title, url, phone and email.
+      operationId: supportContactFindList
+      produces:
+        - application/json
+      parameters:
+        - name: application
+          in: query
+          description: The applications id.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SupportContactFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    post:
+      tags:
+        - support contact
+      summary: 'Add a supportContact record to Alfabet. '
+      description: Add a supportContact record to Alfabet. This interface takes in id, application id, name, title, url, phone and email.
+      operationId: supportContactAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: supportContact information to be added to Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/SupportContactAddRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    delete:
+      tags:
+        - support contact
+      summary: Delete a list of supportContacts by ID.
+      description: Delete a list of supportContacts record to Alfabet. This interface takes an array of supportContact id's.
+      operationId: supportContactDeleteList
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: An array of ids support contacts.
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /authorityToOperate:
+    get:
+      tags:
+        - authority to operate
+      summary: Retrieve a list of ATO's based on query criteria
+      description: An Authority to Operate (ATO) is official documentation that an IT asset within a defined boundary has met FISMA security requirements for a limited period of time. ATO security boundaries can encompass business systems, data centers, cloud service provider enclaves, or other IT assets.
+      operationId: authorityToOperateFindList
+      produces:
+        - application/json
+      parameters:
+        - name: uuid
+          in: query
+          description: UUID of the ATO
+          required: false
+          type: string
+        - name: fismaSystemAcronym
+          in: query
+          description: The system's FISMA acronym.
+          required: false
+          type: string
+        - name: tlcPhase
+          in: query
+          description: A system's lifecycle phase.
+          required: false
+          type: string
+        - name: containsPersonallyIdentifiableInformation
+          in: query
+          description: Does the system collect, maintain, use or share Personally Identifiable Information (PII)?
+          required: false
+          type: boolean
+        - name: isProtectedHealthInformation
+          in: query
+          description: Is the data maintained in this FISMA system considered electronic Protected Health Information (PHI)?
+          required: false
+          type: boolean
+        - name: dispositionDateAfter
+          in: query
+          description: ATO's with a retirement or disposition date after the date provided
+          required: false
+          type: string
+          format: date
+        - name: dispositionDateBefore
+          in: query
+          description: ATO's with a retirement or disposition date before the date provided
+          required: false
+          type: string
+          format: date
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/AuthorityToOperateFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /stakeholder:
+    get:
+      tags:
+        - stakeholder
+      summary: Retrieve a list of stakeholders. This interface takes in id, name, version, state, status and idsOnly.
+      description: Retrieve a list of stakeholders. This interface takes in id, name, version, state, status and idsOnly.
+      operationId: stakeholderFindList
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: Stakeholder ID.
+          required: false
+          type: string
+        - name: name
+          in: query
+          description: Stakeholder name.
+          required: false
+          type: string
+        - name: version
+          in: query
+          description: Stakeholder version.
+          required: false
+          type: string
+        - name: state
+          in: query
+          description: Stakeholder state.
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: Stakeholder status.
+          required: false
+          type: string
+        - name: idsOnly
+          in: query
+          description: Return only stakeholder ids and names.
+          required: false
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/StakeholderFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /domainModel:
+    get:
+      tags:
+        - domain model
+      summary: Retrieves reference model information about Enterprise Architecture assets
+      description: 'The Federal Enterprise Architecture Framework (FEAF) v2 describes a suite of tools to help government planners implement the Common Approach. At its core is the Consolidated Reference Model (CRM), which equips OMB and Federal agencies with a common language and framework to describe and analyze investments. It consists of a set of interrelated “reference models” that describe the six subarchitecture domains in the framework: Strategy, Business, Data, Applications, Infrastructure, Security: https://obamawhitehouse.archives.gov/sites/default/files/omb/assets/egov_docs/fea_v2.pdf'
+      operationId: domainModelFindList
+      produces:
+        - application/json
+      parameters:
+        - name: model
+          in: query
+          description: The name of specific model to return. A value from the GET /domainModelName endpoint.
+          required: true
+          type: string
+        - name: domainModelLevel
+          in: query
+          description: The name of a specific model level to return. A value from the GET /domainModelLevel endpoint. If provided, only entries for this specific level of the domain model and its children are returned
+          required: false
+          type: string
+        - name: domainModelEntry
+          in: query
+          description: The name of a specific model value to return. If provided, only entries for this specific value of the domain model and its children are returned
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/DomainModelFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /deployment:
+    get:
+      tags:
+        - deployment
+      summary: Retrieve a list of deployments based on query criteria (systemId, state, status and deploymentType).
+      description: Retrieve a list of deployments based on query criteria (systemId, state, status and deploymentType).
+      operationId: deploymentFindList
+      produces:
+        - application/json
+      parameters:
+        - name: systemId
+          in: query
+          description: ID of the system that the deployment is associated with.
+          required: true
+          type: string
+        - name: state
+          in: query
+          description: Deployment state.
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: Deployment status.
+          required: false
+          type: string
+        - name: deploymentType
+          in: query
+          description: Deployment type.
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/DeploymentFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    post:
+      tags:
+        - deployment
+      summary: Add a list of new deployment records to Alfabet. This interface takes in an array of deployments.
+      description: Add a list of new deployment records to Alfabet.  This interface takes in an array of deployments.
+      operationId: deploymentAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Deployment list to be added to CEDAR
+          required: true
+          schema:
+            $ref: '#/definitions/DeploymentAddRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    put:
+      tags:
+        - deployment
+      summary: Update a list of new deployment records to Alfabet.  This interface takes in an array of deployment documents.
+      description: Update a list of new deployment records to Alfabet. This interface takes in an array of deployment documents.
+      operationId: deploymentUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Deployment list to be updated in Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/DeploymentUpdateRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    delete:
+      tags:
+        - deployment
+      summary: Delete a list of deployments based on the ids passed in. This interface takes an array of deploymentIds.
+      description: Delete a list of deployments based on the ids passed in. This interface takes an array of deploymentIds.
+      operationId: deploymentDeleteList
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: An array of deploymentIds.
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /component:
+    get:
+      tags:
+        - component
+      summary: Retrieve a component
+      description: Retrieve a component record based on the id parameter that is passed in.
+      operationId: componentFind
+      produces:
+        - application/json
+      parameters:
+        - name: componentId
+          in: query
+          description: ID of the component to retrieve.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ComponentFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    post:
+      tags:
+        - component
+      summary: This interface takes in a Component record and adds that to Alfabet.
+      description: This interface takes in a Component record and adds that to Alfabet.
+      operationId: componentAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Component record to be added to Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/ComponentAddRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ComponentAddResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    delete:
+      tags:
+        - component
+      summary: Deletes a component within Alfabet based on the ID that is passed in.
+      description: Deletes a component within Alfabet based on the ID that is passed in.
+      operationId: componentDelete
+      produces:
+        - application/json
+      parameters:
+        - name: componentId
+          in: query
+          description: ID of the component to deleted.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /budget:
+    get:
+      tags:
+        - budget
+      summary: Retrieve a list of budgets based on query criteria listed in the parameters section. Passing a SystemId will cause the interface to return the budget(s) for just that system. Setting onlyIds to true will only return the id's, whereas if not set, the response will also include projectId, systemId, fundingId and funding. This interface has a limit of 5000 records.
+      description: Retrieve a list of budgets based on query criteria listed in the parameters section. Passing a SystemId will cause the interface to return the budget(s) for just that system. Setting onlyIds to true will only return the id's, whereas if not set, the response will also include projectId, systemId, fundingId and funding. This interface has a limit of 5000 records.
+      operationId: budgetFind
+      produces:
+        - application/json
+      parameters:
+        - name: systemId
+          in: query
+          description: ID of the system that the budget is associated with. Adding this parameter will instruct the interface to only return the system matching the systemId.
+          required: false
+          type: string
+        - name: projectTitle
+          in: query
+          description: Project Title string to search. Adding this parameter will  instruct the interface to only return the system matching the systemId.
+          required: false
+          type: string
+        - name: projectId
+          in: query
+          description: Project Id string to search. Adding this parameter will  instruct the interface to only return the system matching the projectId.
+          required: false
+          type: string
+        - name: onlyIds
+          in: query
+          description: Whether the call will return simply the IDs. If not set, the response will also include projectId, systemId, fundingId and funding.
+          required: false
+          type: boolean
+        - name: idsOnly
+          in: query
+          description: Whether the call will return simply the IDs.  If not set, the response will also include projectId, systemId, fundingId and funding.
+          required: false
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BudgetFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    post:
+      tags:
+        - budget
+      summary: Add new budget(s) to the Alfabet system. This interface takes an array of one or more budget documents (id, projectId, systemId, fundingId and funding).
+      description: Add new budget(s) to the Alfabet system. This interface takes an array of one or more budgets (id, projectId, systemId, fundingId and funding).
+      operationId: budgetAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Budget(s) to be added to CEDAR.  This required input in a list of Budget documents.
+          required: true
+          schema:
+            $ref: '#/definitions/BudgetAddRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    put:
+      tags:
+        - budget
+      summary: Update a existing budget with Alfabet. The input requires an array of one or more budget documents (id, projectId, systemId, fundingId and funding).
+      description: Update a existing budget with Alfabet. The input requires an array of one or more budget documents (id, projectId, systemId, fundingId and funding).
+      operationId: budgetUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Budgets to be updated in CEDAR. This required input in a list of Budget documents (id, projectId, systemId, fundingId and funding).
+          required: true
+          schema:
+            $ref: '#/definitions/BudgetUpdateRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    delete:
+      tags:
+        - budget
+      summary: Deletes a list of budgets based on an array of budget ids.
+      description: Deletes a list of budgets based on an array of budget ids.
+      operationId: budgetDeleteList
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: An array of budget ID's that are to be deleted.
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /person:
+    get:
+      tags:
+        - person
+      summary: Retrieve a list of persons based on the inputs passed in.
+      description: Retrieve a list of persons based on the inputs passed in.
+      operationId: personFindList
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: A person's EUA id.
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: A person's username.
+          required: false
+          type: string
+        - name: firstName
+          in: query
+          description: A person's first name.
+          required: false
+          type: string
+        - name: lastName
+          in: query
+          description: A person's last name.
+          required: false
+          type: string
+        - name: phone
+          in: query
+          description: A person's phone number.
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: A person's email.
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PersonFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    post:
+      tags:
+        - person
+      summary: Add a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.
+      description: Add a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.
+      operationId: personAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Person information to be added to Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/Person'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    put:
+      tags:
+        - person
+      summary: Update a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.
+      description: Update a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.
+      operationId: personUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Person information to be updated in Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/Person'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /role:
+    get:
+      tags:
+        - role
+      summary: 'Finds a list of role assignments based on an object''s ID and/or role type. '
+      description: 'Finds a list of role assignments based on an object''s ID. If objectId and roleTypeId are both provided, a list of role assignments for only those specific role type IDs are returned. If roleId is provided, then objectId and roleTypeId should not be provided and a specific role assignment is returned. '
+      operationId: roleFindById
+      produces:
+        - application/json
+      parameters:
+        - name: application
+          in: query
+          description: Application where the object or role exists.
+          required: true
+          type: string
+        - name: roleId
+          in: query
+          description: ID of a specific role assignment.
+          required: false
+          type: string
+        - name: objectId
+          in: query
+          description: ID of the object that roles are assigned to.
+          required: false
+          type: string
+        - name: roleTypeId
+          in: query
+          description: ID of a specific role type to be returned. Used with objectId to limit search results.
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/RoleFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+    post:
+      tags:
+        - role
+      summary: Add role assignments to a CEDAR application. This interface takes in objectId, roleTypeId AND either assigneeId, assigneeUserName or assigneeOrgId are required.
+      description: Add role assignments to a CEDAR application. This interface takes in objectId, roleTypeId AND either assigneeId, assigneeUserName or assigneeOrgId are required.
+      operationId: roleAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Role assignment information to be added to a CEDAR application.
+          required: true
+          schema:
+            $ref: '#/definitions/RoleAddRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    delete:
+      tags:
+        - role
+      summary: Deletes a list of role assignments by ID. This interface takes an application name and an array of roleIds.
+      description: Deletes a list of role assignments by ID. This interface takes an application name and an array of roleIds.
+      operationId: roleDeleteList
+      produces:
+        - application/json
+      parameters:
+        - name: application
+          in: query
+          description: The application where the role assignment should be deleted
+          required: true
+          type: string
+        - name: id
+          in: query
+          description: An ID of a role assignment within a specific application
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /role/type/{application}:
+    get:
+      tags:
+        - role
+      summary: Finds a list of role types available within an application. This interface takes in application.
+      description: Finds a list of role types available within an application. This interface takes in application.
+      operationId: roleTypeFind
+      produces:
+        - application/json
+      parameters:
+        - name: application
+          in: path
+          description: ID of the object that roles are assigned to.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/RoleTypeFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /user/id/{id}:
+    get:
+      tags:
+        - user
+      summary: Retrieve an existing user from a CEDAR application. This interface takes an id.
+      description: Retrieve an existing user from a CEDAR application. This interface takes an id.
+      operationId: userFindById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to retrieve.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    put:
+      tags:
+        - user
+      summary: Update a list existing user in a CEDAR application.This interface takes an arrary of User documents.
+      description: Update a list existing user in a CEDAR application.This interface takes an arrary of User documents.
+      operationId: userIdUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to update.
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: User information to be updated in CEDAR.
+          required: true
+          schema:
+            $ref: '#/definitions/UserUpdateRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /exchange/{id}:
+    get:
+      tags:
+        - exchange
+      summary: Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.
+      description: Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.
+      operationId: exchangeFindById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of exchange to retrieve.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Exchange'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /system/summary:
+    get:
+      tags:
+        - system
+      summary: Retrieve a system summary list. This interface takes in state, status, version, includeInSurvey, idsOnly and belongsTo.
+      description: Retrieve a system summary list. This interface takes in state, status, version, includeInSurvey, idsOnly and belongsTo.
+      operationId: systemSummaryFindList
+      produces:
+        - application/json
+      parameters:
+        - name: state
+          in: query
+          description: System state.
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: System status.
+          required: false
+          type: string
+        - name: version
+          in: query
+          description: System versions.
+          required: false
+          type: string
+        - name: includeInSurvey
+          in: query
+          description: Include only system census eligible systems.
+          required: false
+          type: boolean
+        - name: idsOnly
+          in: query
+          description: Return only system ids and names.
+          required: false
+          type: boolean
+        - name: belongsTo
+          in: query
+          description: Return only sub-systems of the system ID provided.
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SystemSummaryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /user:
+    get:
+      tags:
+        - user
+      summary: Retrieve a list of users from a CEDAR application. This interface takes in application, id, userName, firstName, lastName, phone and email.
+      description: Retrieve a list of users from a CEDAR application. This interface takes in application, id, userName, firstName, lastName, phone and email.
+      operationId: userFindList
+      produces:
+        - application/json
+      parameters:
+        - name: application
+          in: query
+          description: Application the user belongs to.
+          required: true
+          type: string
+        - name: id
+          in: query
+          description: A user's id.
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: A user's username.
+          required: false
+          type: string
+        - name: firstName
+          in: query
+          description: A user's first name.
+          required: false
+          type: string
+        - name: lastName
+          in: query
+          description: A user's last name.
+          required: false
+          type: string
+        - name: phone
+          in: query
+          description: A user's phone number.
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: A users's email.
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UserFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    post:
+      tags:
+        - user
+      summary: Add users to a CEDAR application. This interface takes an array of User documents.
+      description: Add users to a CEDAR application. This interface takes an array of User documents.
+      operationId: userAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: User information to be added to a CEDAR application.
+          required: true
+          schema:
+            $ref: '#/definitions/UserAddRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+  /dataCenter:
+    get:
+      tags:
+        - data center
+      summary: Retrieve a list of data centers based on query criteria (id, name, version, state, status and idsOnly). If idsOnlys is true, only the id and name will be returned.
+      description: Retrieve a list of data centers based on query criteria (id, name, version, state, status and idsOnly). If idsOnlys is true, only the id and name will be returned.
+      operationId: dataCenterFindList
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: Data center ID.
+          required: false
+          type: string
+        - name: name
+          in: query
+          description: Data center name.
+          required: false
+          type: string
+        - name: version
+          in: query
+          description: Data center version.
+          required: false
+          type: string
+        - name: state
+          in: query
+          description: Data center state.
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: Data center status.
+          required: false
+          type: string
+        - name: idsOnly
+          in: query
+          description: Return only data center ids and names.
+          required: false
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/DataCenterFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /exchange:
+    get:
+      tags:
+        - exchange
+      summary: Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.
+      description: Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.
+      operationId: exchangeFindList
+      produces:
+        - application/json
+      parameters:
+        - name: systemId
+          in: query
+          description: ID of the system that the data exchange is associated with.
+          required: true
+          type: string
+        - name: direction
+          in: query
+          description: The direction of the data exchange, relative to the systemId provided.
+          required: true
+          type: string
+        - name: version
+          in: query
+          description: Version of the data exchanges to be retrieved.
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ExchangeFindResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    post:
+      tags:
+        - exchange
+      summary: Add a list of data exchange records to Alfabet. This interface takes in an array of exchanges.
+      description: Add a list of data exchange records to Alfabet. This interface takes in an array of exchanges.
+      operationId: exchangeAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Data exchange array to be added to Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/ExchangeAddRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    put:
+      tags:
+        - exchange
+      summary: Update a list of data exchange records to Alfabet. This interface takes in an array of exchanges.
+      description: Update a list of data exchange records to Alfabet. This interface takes in an array of exchanges.
+      operationId: exchangeUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Data exchange array to be updated in Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/ExchangeUpdateRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    delete:
+      tags:
+        - exchange
+      summary: Delete a list of data exchanges by ID. This interface takes an array of exchange ids.
+      description: Delete a list of data exchanges by ID. This interface takes an array of exchange ids.
+      operationId: exchangeDeleteList
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: An array of ids data exchanges.
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+  /system/detail:
+    post:
+      tags:
+        - system
+      summary: Add a new system to Alfabet. This interface takes id, name, description, acronym and status.
+      description: Add a new system to Alfabet. This interface takes id, name, description, acronym and status.
+      operationId: systemDetailAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: System information to be added to Alfabet.
+          required: true
+          schema:
+            $ref: '#/definitions/SystemDetail'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+    put:
+      tags:
+        - system
+      summary: Update an existing system within Alfabet. This interface takes id, name, description, acronym and status.
+      description: Update an existing system within Alfabet. This interface takes id, name, description, acronym and status.
+      operationId: systemDetailUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: System information to be updated in CEDAR
+          required: true
+          schema:
+            $ref: '#/definitions/SystemDetail'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Response'
+securityDefinitions:
+  apiKey:
+    type: apiKey
+    name: x-Gateway-APIKey
+    in: header
+definitions:
+  AuthorityToOperate:
+    type: object
+    properties:
+      tlcPhase:
+        type: string
+        example: Initiate
+      eAuthenticationLevel:
+        type: string
+        example: "3"
+      countOfTotalPrivilegedUserPopulation:
+        type: integer
+        format: int32
+      isAccessedByNonOrganizationalUsers:
+        type: boolean
+      contingencyPlanCompletionDate:
+        type: string
+        format: date
+        example: "2021-10-13T00:00:00.000Z"
+      recoveryPointObjective:
+        type: integer
+        format: int32
+      fips199OverallImpactRating:
+        type: integer
+        format: int32
+      isPiiLimitedToUserNameAndPass:
+        type: boolean
+      contingencyPlanDocumentation:
+        type: array
+        items:
+          type: string
+          example: Contingency Plan Test.docx
+      recoveryTimeObjective:
+        type: integer
+        format: int32
+      uuid:
+        type: string
+        example: 806F9F07-C3A5-4EE6-9C6A-C8D50585B7EA
+      fismaSystemAcronym:
+        type: string
+        example: CEDAR
+      isProtectedHealthInformation:
+        type: boolean
+      piaCompletionDate:
+        type: string
+        format: date
+        example: "2021-10-13T00:00:00.000Z"
+      countOfTotalNonPrivilegedUserPopulation:
+        type: integer
+        format: int32
+      fismaSystemName:
+        type: string
+        example: Acumen Web Portals
+      systemOfRecordsNotice:
+        type: array
+        items:
+          type: string
+          example: 03-39-9932
+      actualDispositionDate:
+        type: string
+        format: date
+        example: "2021-10-13T00:00:00.000Z"
+      containsPersonallyIdentifiableInformation:
+        type: boolean
+      cedarId:
+        type: string
+        example: 157-3632-0
+  RoleAddRequest:
+    type: object
+    required:
+      - Roles
+      - application
+    properties:
+      application:
+        type: string
+        enum:
+          - all
+          - alfabet
+      Roles:
+        type: array
+        items:
+          $ref: '#/definitions/Role'
+  BudgetFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+      Budgets:
+        type: array
+        items:
+          $ref: '#/definitions/Budget'
+  SystemSummary:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      acronym:
+        type: string
+        example: CMSS
+      systemMaintainerOrg:
+        type: string
+        example: OIT
+      description:
+        type: string
+        example: This is a CMS System decription
+      version:
+        type: string
+        example: "1.0"
+      nextVersionId:
+        type: string
+        example: 326-1-0
+      previousVersionId:
+        type: string
+        example: 326-3-0
+      businessOwnerOrg:
+        type: string
+        example: Center for Medicare Management
+      name:
+        type: string
+        example: CMS System
+      businessOwnerOrgComp:
+        type: string
+        example: CM-(FFS)
+      id:
+        type: string
+        example: 326-2-0
+      state:
+        type: string
+        example: Active
+      systemMaintainerOrgComp:
+        type: string
+        example: Enterprise Architecture and Data Group
+      status:
+        type: string
+        example: Approved
+  DomainModelLevelFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      DomainModelLevels:
+        type: array
+        items:
+          type: string
+      count:
+        type: integer
+        format: int32
+  RoleType:
+    type: object
+    required:
+      - application
+      - id
+      - name
+    properties:
+      application:
+        type: string
+        enum:
+          - all
+          - alfabet
+      name:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+  Deployment:
+    type: object
+    required:
+      - id
+      - name
+      - systemId
+    properties:
+      systemId:
+        type: string
+        example: 326-1-0
+      endDate:
+        type: string
+        format: date
+      isHotSite:
+        type: string
+        example: yes
+      description:
+        type: string
+      contractorName:
+        type: string
+        example: Acumen
+      systemVersion:
+        type: string
+        example: "1"
+      hasProductionData:
+        type: string
+        example: yes
+      replicatedSystemElements:
+        type: array
+        items:
+          type: string
+          example: System Server Software
+      deploymentType:
+        type: string
+        enum:
+          - COOP DR
+          - Development
+          - Implementation
+          - Integration
+          - Production
+          - Testing
+          - Training
+          - Validation
+          - Other
+      DataCenter:
+        $ref: '#/definitions/DataCenter'
+      systemName:
+        type: string
+        example: Health Insurance and Oversight System
+      deploymentElementId:
+        type: string
+        example: 69-1-0
+      name:
+        type: string
+        example: Accountable Care Organization Management System v.1.0 (COOP DR)
+      id:
+        type: string
+        example: 351-1-0
+      state:
+        type: string
+        enum:
+          - active
+          - planned
+          - retired
+      startDate:
+        type: string
+        format: date
+      status:
+        type: string
+        enum:
+          - approved
+          - draft
+      wanType:
+        type: string
+        example: Internet - Contractor
+  ContractAddRequest:
+    type: object
+    required:
+      - Contracts
+    properties:
+      Contracts:
+        type: array
+        items:
+          $ref: '#/definitions/Contract'
+  RoleFindResponse:
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int32
+      Roles:
+        type: array
+        items:
+          $ref: '#/definitions/Role'
+  Stakeholder:
+    type: object
+    required:
+      - id
+    properties:
+      name:
+        type: string
+        example: Food and Drug Administration (FDA)
+      description:
+        type: string
+      id:
+        type: string
+        example: 152-3-0
+      state:
+        type: string
+        enum:
+          - active
+          - planned
+          - retired
+      version:
+        type: string
+        example: "1"
+      status:
+        type: string
+        enum:
+          - approved
+          - draft
+  DomainModelNameFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+      DomainModelNames:
+        type: array
+        items:
+          type: string
+  BudgetIds:
+    type: object
+    required:
+      - projectId
+    properties:
+      contractDeliverableId:
+        type: string
+        description: Contract deliverable ID tying this budget project to the contract
+      id:
+        type: string
+        example: 589-329-0
+        description: OFM budget internal ID in system of record
+      projectId:
+        type: string
+        example: "000010"
+        description: OFM budget project ID in system of record
+  ComponentAddRequest:
+    type: object
+    properties:
+      responsibleUser:
+        type: string
+      endDate:
+        type: string
+      catalog:
+        type: string
+      cms_technopedia_edition:
+        type: string
+      cms_technopedia_licensable:
+        type: string
+      description:
+        type: string
+      cms_technopedia_release:
+        type: string
+      cms_technopedia_versiongroup:
+        type: string
+      version:
+        type: string
+      platform:
+        type: string
+      cms_technopedia_version:
+        type: string
+      vendorProduct:
+        type: string
+      cms_technopedia_servicepack:
+        type: string
+      vendor:
+        type: string
+      cms_technopedia_component:
+        type: string
+      cms_technopedia_release_id:
+        type: string
+      name:
+        type: string
+      cms_technopedia_build_version:
+        type: string
+      category:
+        type: string
+      cms_end_of_support_date:
+        type: string
+      startDate:
+        type: string
+      status:
+        type: string
+  EnumerationFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+      Enumerations:
+        type: array
+        items:
+          $ref: '#/definitions/Enumeration'
+  BudgetAddRequest:
+    type: object
+    required:
+      - Budgets
+    properties:
+      Budgets:
+        type: array
+        items:
+          $ref: '#/definitions/Budget'
+  SupportContact:
+    type: object
+    properties:
+      application:
+        type: string
+      phone:
+        type: string
+      name:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      url:
+        type: string
+      email:
+        type: string
+  Exchange:
+    type: object
+    properties:
+      connectionFrequency:
+        type: array
+        items:
+          type: string
+          example: ""
+      toOwnerId:
+        type: string
+        example: 326-762-0
+      sharedViaApi:
+        type: boolean
+      exchangeVersion:
+        type: string
+        example: "1"
+      toOwnerName:
+        type: string
+        example: Account Management
+      containsPii:
+        type: boolean
+      exchangeStartDate:
+        type: string
+        format: date
+      exchangeState:
+        type: string
+        example: Active
+      exchangeEndDate:
+        type: string
+        format: date
+      fromOwnerId:
+        type: string
+        example: 326-762-0
+      dataExchangeAgreement:
+        type: string
+        example: ""
+      isBeneficiaryMailingFile:
+        type: boolean
+      dataFormat:
+        type: string
+        example: ""
+      dataFormatOther:
+        type: string
+      toOwnerType:
+        type: string
+        enum:
+          - application
+          - organization
+      containsBeneficiaryAddress:
+        type: boolean
+      fromOwnerName:
+        type: string
+        example: Account Management
+      exchangeId:
+        type: string
+        example: 139-1178-0
+      numOfRecords:
+        type: string
+        example: 100,000 – 1 Million
+      exchangeRetiredDate:
+        type: string
+        format: date
+      exchangeDescription:
+        type: string
+        example: Reference data on vendors acting on behalf of insurance issuers
+      containsPhi:
+        type: boolean
+      exchangeName:
+        type: string
+        example: Acumen Web Portals 1.0 >> Drug Data Processing System 1.0
+      fromOwnerType:
+        type: string
+        enum:
+          - application
+          - organization
+      typeOfData:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              example: ""
+            id:
+              type: string
+              example: ""
+      containsBankingData:
+        type: boolean
+  Role:
+    type: object
+    required:
+      - application
+      - objectId
+      - roleTypeId
+    properties:
+      assigneePhone:
+        type: string
+      roleTypeId:
+        type: string
+        description: ID of the role type
+      roleTypeDesc:
+        type: string
+        description: Description of the role type
+      assigneeOrgId:
+        type: string
+        description: ID of the role assignee, if an organization
+      roleId:
+        type: string
+        description: ID of the role assignment
+      assigneeFirstName:
+        type: string
+      assigneeUserName:
+        type: string
+        description: Username of the role assignee, if a person
+      assigneeEmail:
+        type: string
+      assigneeOrgName:
+        type: string
+      assigneeDesc:
+        type: string
+      assigneeId:
+        type: string
+        description: ID of the role assignee, if a person
+      objectType:
+        type: string
+        description: The type of object the role is assigned to
+      roleTypeName:
+        type: string
+        description: Name of the role type
+      application:
+        type: string
+        description: Application where the role assignment exists
+      assigneeLastName:
+        type: string
+      assigneeType:
+        type: string
+        enum:
+          - organization
+          - person
+      objectId:
+        type: string
+        description: ID of the object the role is assiged to
+  UserFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+      Users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+  UserAddRequest:
+    type: object
+    required:
+      - Users
+      - application
+    properties:
+      application:
+        type: string
+        enum:
+          - all
+          - alfabet
+      Users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+  DeploymentFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+      Deployments:
+        type: array
+        items:
+          $ref: '#/definitions/Deployment'
+  SystemSummaryResponse:
+    type: object
+    required:
+      - count
+    properties:
+      SystemSummary:
+        type: array
+        items:
+          $ref: '#/definitions/SystemSummary'
+      count:
+        type: integer
+        format: int32
+  ContractFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+      Contracts:
+        type: array
+        items:
+          $ref: '#/definitions/Contract'
+  ExchangeAddRequest:
+    type: object
+    required:
+      - Exchanges
+    properties:
+      Exchanges:
+        type: array
+        items:
+          $ref: '#/definitions/Exchange'
+  DataCenterFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      DataCenters:
+        type: array
+        items:
+          $ref: '#/definitions/DataCenter'
+      count:
+        type: integer
+        format: int32
+  AuthorityToOperateFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      AuthorityToOperateList:
+        type: array
+        items:
+          $ref: '#/definitions/AuthorityToOperate'
+      count:
+        type: integer
+        format: int32
+  Contract:
+    type: object
+    required:
+      - awardId
+      - id
+      - parentAwardId
+    properties:
+      budgetIds:
+        type: array
+        items:
+          $ref: '#/definitions/BudgetIds'
+      awardId:
+        type: string
+        example: HHSM500201600052I
+        description: Contract number
+      systemId:
+        type: string
+        example: 123-45-678
+        description: System which this budget funds
+      tbmCostPool:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              example: ""
+            id:
+              type: string
+              example: ""
+      contractDeliverableId:
+        type: string
+        example: 11-22-333
+      description:
+        type: string
+        example: Strategic partners acquisition readiness
+        description: Contract description
+      id:
+        type: string
+        example: 18-3-0
+      parentAwardId:
+        type: string
+        example: HHSM500201600052I
+        description: Parent contract number
+      tbmItTowerCategory:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              example: ""
+            id:
+              type: string
+              example: ""
+  Person:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      phone:
+        type: string
+      id:
+        type: string
+      userName:
+        type: string
+      email:
+        type: string
+  DeploymentUpdateRequest:
+    type: object
+    required:
+      - Deployments
+    properties:
+      Deployments:
+        type: array
+        items:
+          $ref: '#/definitions/Deployment'
+  User:
+    type: object
+    required:
+      - application
+      - id
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      application:
+        type: string
+      phone:
+        type: string
+      id:
+        type: string
+      userName:
+        type: string
+      email:
+        type: string
+  CostTypeFindResponse:
+    type: object
+    properties:
+      name:
+        type: string
+        example: TBM Towers
+      id:
+        type: string
+        example: 143-16-0
+      CostTypes:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Application
+            id:
+              type: string
+              example: 143-16-0
+  ComponentFindResponse:
+    type: object
+    properties:
+      responsibleUser:
+        type: string
+      catalog:
+        type: string
+      cms_technopedia_edition:
+        type: string
+      ictObject:
+        type: string
+      cms_technopedia_licensable:
+        type: string
+      description:
+        type: string
+      cms_technopedia_release:
+        type: string
+      cms_technopedia_versiongroup:
+        type: string
+      platform:
+        type: string
+      cms_technopedia_version:
+        type: string
+      vendorProduct:
+        type: string
+      cms_technopedia_servicepack:
+        type: string
+      vendor:
+        type: string
+      cms_technopedia_component:
+        type: string
+      cms_technopedia_release_id:
+        type: string
+      name:
+        type: string
+      cms_technopedia_build_version:
+        type: string
+      cms_end_of_support_date:
+        type: string
+      status:
+        type: string
+  ExchangeUpdateRequest:
+    type: object
+    required:
+      - Exchanges
+    properties:
+      Exchanges:
+        type: array
+        items:
+          $ref: '#/definitions/Exchange'
+  BudgetUpdateRequest:
+    type: object
+    required:
+      - Budgets
+    properties:
+      Budgets:
+        type: array
+        items:
+          $ref: '#/definitions/Budget'
+  Budget:
+    type: object
+    required:
+      - projectId
+    properties:
+      systemId:
+        type: string
+        example: 123-45-678
+        description: System which this budget funds
+      funding:
+        type: string
+        example: Most of this funding is directly and only for this system (over 80%)
+        description: Description of the allocation of this budget to the system in question
+      fundingId:
+        type: string
+        example: 123-45-678
+        description: Cross-reference ID for relationship between budget project and application in system of record
+      id:
+        type: string
+        example: 589-329-0
+        description: OFM budget internal ID in system of record
+      projectId:
+        type: string
+        example: "000010"
+        description: OFM budget project ID in system of record
+      projectTitle:
+        type: string
+        example: CMS Accountable Care Organizations
+        description: Title of this project
+  SystemDetail:
+    type: object
+    required:
+      - id
+    properties:
+      acronym:
+        type: string
+      name:
+        type: string
+        example: CMS System
+      description:
+        type: string
+      id:
+        type: string
+        example: 326-1-0
+      status:
+        type: string
+        example: Active
+  UserUpdateRequest:
+    type: object
+    required:
+      - Users
+      - application
+    properties:
+      application:
+        type: string
+        enum:
+          - all
+          - alfabet
+      Users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+  SupportContactFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      SupportContacts:
+        type: array
+        items:
+          $ref: '#/definitions/SupportContact'
+      count:
+        type: integer
+        format: int32
+  ExchangeFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+      Exchanges:
+        type: array
+        items:
+          $ref: '#/definitions/Exchange'
+  DomainModelFindResponse:
+    type: object
+  Enumeration:
+    type: object
+    properties:
+      values:
+        type: array
+        items:
+          type: object
+          properties:
+            description:
+              type: string
+            value:
+              type: string
+      name:
+        type: string
+      caption:
+        type: string
+      description:
+        type: string
+  RoleTypeFindResponse:
+    type: object
+    properties:
+      RoleTypes:
+        type: array
+        items:
+          $ref: '#/definitions/RoleType'
+      count:
+        type: integer
+        format: int32
+  DeploymentAddRequest:
+    type: object
+    required:
+      - Deployments
+    properties:
+      Deployments:
+        type: array
+        items:
+          $ref: '#/definitions/Deployment'
+  SupportContactAddRequest:
+    type: object
+    required:
+      - SupportContacts
+    properties:
+      SupportContacts:
+        type: array
+        items:
+          $ref: '#/definitions/SupportContact'
+  ComponentAddResponse:
+    type: object
+    properties:
+      refstr:
+        type: string
+  Response:
+    type: object
+    properties:
+      result:
+        type: string
+      message:
+        type: array
+        items:
+          type: string
+  DataCenter:
+    type: object
+    properties:
+      zip:
+        type: string
+        example: "10002"
+      endDate:
+        type: string
+        format: date
+      address2:
+        type: string
+        example: suite 100
+      city:
+        type: string
+        example: New York
+      address1:
+        type: string
+        example: 123 main street
+      description:
+        type: string
+      addressState:
+        type: string
+        example: NY
+      version:
+        type: string
+        example: "1"
+      name:
+        type: string
+        example: CMS Baltimore Data Center - EDC4
+      id:
+        type: string
+        example: 55-1-0
+      state:
+        type: string
+        enum:
+          - active
+          - planned
+          - retired
+      startDate:
+        type: string
+        format: date
+      status:
+        type: string
+        enum:
+          - approved
+          - draft
+  PersonFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      Persons:
+        type: array
+        items:
+          $ref: '#/definitions/Person'
+      count:
+        type: integer
+        format: int32
+  ContractUpdateRequest:
+    type: object
+    required:
+      - Contracts
+    properties:
+      Contracts:
+        type: array
+        items:
+          $ref: '#/definitions/Contract'
+  StakeholderFindResponse:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+      Stakeholders:
+        type: array
+        items:
+          $ref: '#/definitions/Stakeholder'
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io

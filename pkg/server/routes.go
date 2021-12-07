@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -25,6 +26,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
+
+	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
@@ -81,7 +84,7 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to create LaunchDarkly client", zap.Error(err))
 	}
 
-	// set up CEDAR client
+	// set up CEDAR intake client
 	publisher := cedarintake.NewClient(
 		s.Config.GetString(appconfig.CEDARAPIURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
@@ -102,6 +105,13 @@ func (s *Server) routes(
 	if s.environment.Local() || s.environment.Test() {
 		cedarLDAPClient = local.NewCedarLdapClient(s.logger)
 	}
+
+	// set up CEDAR core API client
+	coreClient := cedarcore.NewClient(
+		s.Config.GetString(appconfig.CEDARAPIURL),
+		s.Config.GetString(appconfig.CEDARAPIKey),
+		ldClient,
+	)
 
 	// set up Email Client
 	sesConfig := s.NewSESConfig()
@@ -303,6 +313,22 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
+	s.router.HandleFunc("/system-info-DEBUG", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		systemSummary, sserr := coreClient.GetSystemSummary(r.Context())
+		if sserr != nil {
+			s.logger.Error("Failed to get system summary", zap.Error(sserr))
+			_, werr := w.Write([]byte("ERROR"))
+			if werr != nil {
+				s.logger.Error("Failed to write response", zap.Error(werr))
+			}
+		} else {
+			summaryJSON, _ := json.Marshal(systemSummary)
+			_, werr := w.Write(summaryJSON)
+			if werr != nil {
+				s.logger.Error("Failed to write response", zap.Error(werr))
+			}
+		}
+	}))
 
 	businessCaseHandler := handlers.NewBusinessCaseHandler(
 		base,

@@ -17,6 +17,10 @@ services:
       - db
   easi:
     environment:
+      - CEDAR_API_KEY
+      - CEDAR_API_URL
+      - HTTP_PROXY
+      - HTTPS_PROXY
       - APP_ENV
       - APPLICATION_VERSION
       - APPLICATION_DATETIME
