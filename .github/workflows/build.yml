@@ -46,7 +46,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # v2.1.5
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # v2.1.5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Set up go
@@ -92,7 +92,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # v2.1.5
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # v2.1.5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Set up go
@@ -142,7 +142,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # v2.1.5
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # v2.1.5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
@@ -173,7 +173,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # v2.1.5
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # v2.1.5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
@@ -362,7 +362,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # v2.1.5
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # v2.1.5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
@@ -447,7 +447,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # v2.1.5
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # v2.1.5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
@@ -517,7 +517,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # v2.1.5
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # v2.1.5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
@@ -587,7 +587,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up node
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # v2.1.5
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # v2.1.5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
