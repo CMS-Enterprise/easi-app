@@ -179,9 +179,9 @@ jobs:
               <details>
                 <summary>TypeScript compile errors</summary>
 
-                ```shell
+                \`\`\`shell
                 ${typeScriptLog}
-                ```
+                \`\`\`
               </details>
             `;
 
