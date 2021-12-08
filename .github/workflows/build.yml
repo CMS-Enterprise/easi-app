@@ -161,6 +161,7 @@ jobs:
             v1-yarn-
       - name: Run typechecking
         run: yarn build:ts
+        continue-on-error: true
 
   client_test:
     needs: pre_deps
