@@ -1,3 +1,9 @@
+/**
+ * TODO: This component is not complete. It was prototyped as part of
+ * https://jiraent.cms.gov/browse/EASI-1367, but has not undergone any 508 testing,
+ * UX review, etc.
+ */
+
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
