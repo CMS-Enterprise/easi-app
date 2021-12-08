@@ -3,6 +3,8 @@ import classnames from 'classnames';
 
 import { IconStatus } from 'types/iconStatus';
 
+import './index.scss';
+
 type SystemHealthIconProps = {
   status: IconStatus;
   size: 'medium' | 'xl';
