@@ -67,7 +67,7 @@
     "redux-saga": "^1.1.1",
     "redux-saga-routines": "^3.2.2",
     "sass-loader": "10.2.0",
-    "typescript": "3.7.5",
+    "typescript": "^4.5.2",
     "uswds": "^2.10.3",
     "wait-on": "^5.2.1",
     "yup": "^0.32.8"
@@ -75,6 +75,7 @@
   "scripts": {
     "start": "craco -r @cypress/instrument-cra start",
     "build": "CI=true craco build",
+    "build:ts": "tsc",
     "test": "craco test",
     "test:coverage": "craco test --coverage --watchAll=false",
     "eject": "react-scripts eject",
