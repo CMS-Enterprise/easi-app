@@ -170,10 +170,11 @@ jobs:
       - name: Post comment with TypeScript type errors
         uses: actions/github-script@v5
         if: ${{ steps.typechecker.outcome == 'failure' }}
-        with:
+        env:
           tsLog: ${{ steps.typechecker.outputs.tsTypeCheckOutput }}
+        with:
           script: |
-            const typeScriptLog = env.tsLog;
+            const typeScriptLog = process.env.tsLog;
             const commentBody = `
               <details>
                 <summary>TypeScript compile errors</summary>
