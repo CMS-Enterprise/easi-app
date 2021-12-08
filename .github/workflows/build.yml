@@ -164,17 +164,17 @@ jobs:
         run: |
           yarn build:ts 2>&1 | tee test.log
           result_code=${PIPESTATUS[0]}
-          echo "::set-output name=tsTypeCheckOutput::$(cat test.log)"
+          echo 'TS_LOG<<EOF' >> $GITHUB_ENV
+          cat test.log >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
           exit $result_code
         continue-on-error: true
       - name: Post comment with TypeScript type errors
         uses: actions/github-script@v5
         if: ${{ steps.typechecker.outcome == 'failure' }}
-        env:
-          tsLog: ${{ steps.typechecker.outputs.tsTypeCheckOutput }}
         with:
           script: |
-            const typeScriptLog = process.env.tsLog;
+            const typeScriptLog = process.env.TS_LOG;
             const commentBody = `
               <details>
                 <summary>TypeScript compile errors</summary>
