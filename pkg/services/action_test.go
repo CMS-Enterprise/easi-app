@@ -152,7 +152,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(nil, err)
-		s.Equal(2, submitEmailCount)
+		s.Equal(1, submitEmailCount)
 	})
 
 	s.Run("returns error when intake has already been submitted", func() {
@@ -165,7 +165,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		err := submitSystemIntake(ctx, &alreadySubmittedIntake, &action)
 
 		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(2, submitEmailCount)
+		s.Equal(1, submitEmailCount)
 	})
 
 	s.Run("returns query error if update fails", func() {
