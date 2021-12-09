@@ -109,13 +109,16 @@ func NewSubmitSystemIntake(
 			return err
 		}
 
+		// Send SystemIntake to CEDAR Intake API
 		intake.SubmittedAt = &updatedTime
 		alfabetID, validateAndSubmitErr := validateAndSubmit(ctx, intake)
 		if validateAndSubmitErr != nil {
-			return validateAndSubmitErr
+			appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(validateAndSubmitErr))
+		} else {
+			intake.AlfabetID = null.StringFrom(alfabetID)
 		}
-		intake.AlfabetID = null.StringFrom(alfabetID)
 
+		// Store in the `actions` table
 		err = saveAction(ctx, action)
 		if err != nil {
 			return &apperrors.QueryError{
@@ -125,6 +128,7 @@ func NewSubmitSystemIntake(
 			}
 		}
 
+		// Update the SystemIntake in the DB
 		intake, err = update(ctx, intake)
 		if err != nil {
 			return &apperrors.QueryError{
@@ -133,6 +137,7 @@ func NewSubmitSystemIntake(
 				Operation: apperrors.QuerySave,
 			}
 		}
+
 		// only send an email when everything went ok
 		err = emailReviewer(ctx, intake.ProjectName.String, intake.ID)
 		if err != nil {
