@@ -136,27 +136,10 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
-	s.Run("returns nil and sends email even if validation fails", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
-		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		failValidationSubmit := func(_ context.Context, intake *models.SystemIntake) (string, error) {
-			return "", &apperrors.ValidationError{
-				Err:     errors.New("validation failed on these fields: ID"),
-				ModelID: intake.ID.String(),
-				Model:   intake,
-			}
-		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failValidationSubmit, saveAction, sendSubmitEmail)
-		err := submitSystemIntake(ctx, &intake, &action)
-
-		s.IsType(nil, err)
-		s.Equal(1, submitEmailCount)
-	})
-
 	s.Run("returns nil and sends email even if submission fails", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		failValidationSubmit := func(_ context.Context, intake *models.SystemIntake) (string, error) {
+		failSubmitToCEDAR := func(_ context.Context, intake *models.SystemIntake) (string, error) {
 			return "", &apperrors.ExternalAPIError{
 				Err:       errors.New("CEDAR return result: unexpected failure"),
 				ModelID:   intake.ID.String(),
@@ -165,7 +148,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 				Source:    "CEDAR",
 			}
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failValidationSubmit, saveAction, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failSubmitToCEDAR, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(nil, err)

@@ -83,7 +83,7 @@ func NewSubmitSystemIntake(
 	config Config,
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
+	submitToCEDAR func(context.Context, *models.SystemIntake) (string, error),
 	saveAction func(context.Context, *models.Action) error,
 	emailReviewer func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
 ) ActionExecuter {
@@ -111,9 +111,9 @@ func NewSubmitSystemIntake(
 
 		// Send SystemIntake to CEDAR Intake API
 		intake.SubmittedAt = &updatedTime
-		alfabetID, validateAndSubmitErr := validateAndSubmit(ctx, intake)
-		if validateAndSubmitErr != nil {
-			appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(validateAndSubmitErr))
+		alfabetID, submitToCEDARErr := submitToCEDAR(ctx, intake)
+		if submitToCEDARErr != nil {
+			appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
 		} else {
 			intake.AlfabetID = null.StringFrom(alfabetID)
 		}
