@@ -136,7 +136,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
-	s.Run("returns error when validation fails", func() {
+	s.Run("returns nil and sends email even if validation fails", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
 		failValidationSubmit := func(_ context.Context, intake *models.SystemIntake) (string, error) {
@@ -149,11 +149,11 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failValidationSubmit, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
-		s.IsType(&apperrors.ValidationError{}, err)
-		s.Equal(0, submitEmailCount)
+		s.IsType(nil, err)
+		s.Equal(1, submitEmailCount)
 	})
 
-	s.Run("returns error when submission fails", func() {
+	s.Run("returns nil and sends email even if submission fails", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
 		failValidationSubmit := func(_ context.Context, intake *models.SystemIntake) (string, error) {
@@ -168,8 +168,8 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failValidationSubmit, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
-		s.IsType(&apperrors.ExternalAPIError{}, err)
-		s.Equal(0, submitEmailCount)
+		s.IsType(nil, err)
+		s.Equal(2, submitEmailCount)
 	})
 
 	s.Run("returns error when intake has already been submitted", func() {
@@ -182,7 +182,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		err := submitSystemIntake(ctx, &alreadySubmittedIntake, &action)
 
 		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(0, submitEmailCount)
+		s.Equal(2, submitEmailCount)
 	})
 
 	s.Run("returns query error if update fails", func() {
