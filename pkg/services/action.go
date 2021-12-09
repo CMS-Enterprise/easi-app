@@ -115,6 +115,11 @@ func NewSubmitSystemIntake(
 		if submitToCEDARErr != nil {
 			appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
 		} else {
+			// If submission to CEDAR was successful, update the intake with the alfabetID
+			// AlfabetID can be null if:
+			// - The intake was not submitted to CEDAR (due to the feature flag being off
+			// or the Intake being imported from SharePoint)
+			// - An error is encountered when sending the data to CEDAR.
 			intake.AlfabetID = null.StringFrom(alfabetID)
 		}
 
