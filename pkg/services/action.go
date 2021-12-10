@@ -83,7 +83,7 @@ func NewSubmitSystemIntake(
 	config Config,
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
+	submitToCEDAR func(context.Context, *models.SystemIntake) (string, error),
 	saveAction func(context.Context, *models.Action) error,
 	emailReviewer func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
 ) ActionExecuter {
@@ -109,13 +109,21 @@ func NewSubmitSystemIntake(
 			return err
 		}
 
+		// Send SystemIntake to CEDAR Intake API
 		intake.SubmittedAt = &updatedTime
-		alfabetID, validateAndSubmitErr := validateAndSubmit(ctx, intake)
-		if validateAndSubmitErr != nil {
-			return validateAndSubmitErr
+		alfabetID, submitToCEDARErr := submitToCEDAR(ctx, intake)
+		if submitToCEDARErr != nil {
+			appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
+		} else {
+			// If submission to CEDAR was successful, update the intake with the alfabetID
+			// AlfabetID can be null if:
+			// - The intake was not submitted to CEDAR (due to the feature flag being off
+			// or the Intake being imported from SharePoint)
+			// - An error is encountered when sending the data to CEDAR.
+			intake.AlfabetID = null.StringFrom(alfabetID)
 		}
-		intake.AlfabetID = null.StringFrom(alfabetID)
 
+		// Store in the `actions` table
 		err = saveAction(ctx, action)
 		if err != nil {
 			return &apperrors.QueryError{
@@ -125,6 +133,7 @@ func NewSubmitSystemIntake(
 			}
 		}
 
+		// Update the SystemIntake in the DB
 		intake, err = update(ctx, intake)
 		if err != nil {
 			return &apperrors.QueryError{
@@ -133,6 +142,7 @@ func NewSubmitSystemIntake(
 				Operation: apperrors.QuerySave,
 			}
 		}
+
 		// only send an email when everything went ok
 		err = emailReviewer(ctx, intake.ProjectName.String, intake.ID)
 		if err != nil {
