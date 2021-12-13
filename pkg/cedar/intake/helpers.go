@@ -15,8 +15,6 @@ import (
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 )
 
-const iso8601 = "2006-01-02 15:04:05Z07:00"
-
 // pStr is a quick helper for turning a string into a string-pointer
 // inline, without having to clutter your mainline code with the
 // indirection, e.g. when building a type and assigning properties
@@ -37,12 +35,12 @@ func pDate(t *time.Time) *string {
 
 // pDate turns a Time pointer into either an empty string in the
 // negative case, or to a string rin CEDAR's preferred
-// ISO8601 format, e.g. "2006-01-02 15:04:05Z"
+// ISO8601 format, e.g. "2006-01-02T15:04:05Z"
 func pDateTime(t *time.Time) *string {
 	val := ""
 	if t != nil {
 		// val = strfmt.DateTime(*t).String()
-		val = t.UTC().Format(iso8601)
+		val = t.UTC().Format(time.RFC3339)
 	}
 	return pStr(val)
 }
