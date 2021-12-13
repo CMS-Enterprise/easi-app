@@ -133,6 +133,8 @@ jobs:
         run: |
           ./scripts/github-action-announce-broken-branch
 
+  # Runs TypeScript typechecker on frontend codebase; reports any type errors as a comment on a PR
+  # For now, doesn't fail the build
   client_typecheck:
     needs: lint
     runs-on: ubuntu-latest
@@ -164,6 +166,8 @@ jobs:
             v1-yarn-
       - name: Run typechecking
         id: typechecker
+        # Uses GitHub environment files to store typechecker output and pass to next stage
+        # see https://github.com/actions/toolkit/blob/main/docs/commands.md#environment-files
         run: |
           yarn build:ts 2>&1 | tee test.log
           result_code=${PIPESTATUS[0]}
