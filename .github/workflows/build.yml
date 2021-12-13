@@ -177,13 +177,16 @@ jobs:
         if: ${{ steps.typechecker.outcome == 'failure' }}
         with:
           script: |
-            const typeScriptLog = process.env.TS_LOG;
+            const rawTypeScriptLog = process.env.TS_LOG;
+            const escapedNewline = encodeURIComponent("\n");
+            const escapedLog = rawTypeScriptLog.replace(/\n/g, escapedNewline);
+
             const commentBody = `
               <details>
                 <summary>TypeScript compile errors</summary>
 
                 \`\`\`shell
-                ${typeScriptLog}
+                ${escapedLog}
                 \`\`\`
               </details>
             `;
@@ -194,6 +197,8 @@ jobs:
               repo: context.repo.repo,
               body: commentBody
             });
+      - name: Typecheck with marketplace action
+        uses: gozala/typescript-error-reporter-action@v1.0.5
 
   client_test:
     needs: pre_deps
