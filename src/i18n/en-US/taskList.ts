@@ -10,6 +10,11 @@ const taskList = {
   decision: {
     bizCaseApproved: 'Your business case has been approved.',
     bizCaseRejected: 'Your business case has been rejected.',
+    aboutThisLcid: 'About this LCID',
+    tempLcidExplanation:
+      'You have been issued a Lifecycle ID, but you still have more steps to complete before your business case is fully approved.',
+    tempLcidNextSteps:
+      'You have some steps left before your request is fully processed, review the information on this page and then return to the task list to continue your request',
     notItRequest: 'Not an IT Request',
     noGovernanceNeeded: 'No further governance needed',
     lcid: 'Project Lifecycle ID',

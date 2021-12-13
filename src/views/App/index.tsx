@@ -20,6 +20,7 @@ import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
+import LcidInfo from 'views/GovernanceTaskList/LcidInfo';
 import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -102,6 +103,11 @@ const AppRoutes = () => {
         exact
         path="/governance-task-list/:systemId/request-decision"
         component={RequestDecision}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/lcid-info"
+        component={LcidInfo}
       />
       <Redirect exact from="/system/new" to="/system/request-type" />
       <Redirect

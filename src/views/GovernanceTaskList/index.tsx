@@ -39,6 +39,7 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import { archiveSystemIntake, fetchBusinessCase } from 'types/routines';
+import { intakeHasDecision, isIntakeOpen } from 'utils/systemIntake';
 import NotFound from 'views/NotFound';
 
 import SideNavActions from './SideNavActions';
@@ -169,17 +170,40 @@ const GovernanceTaskList = () => {
                   </span>
                 )}
               </PageHeading>
-              {['NO_GOVERNANCE', 'NOT_IT_REQUEST'].includes(status || '') && (
+              {/* If intake has been closed w/ a decision - display an alert directing user to the decision information at the bottom of the page */}
+              {intakeHasDecision(systemIntake.status) && (
                 <Alert
                   type="warning"
                   className="margin-bottom-5"
                   data-testid="task-list-closed-alert"
                 >
                   <span>
-                    The governance team closed your request, you can view their
+                    A decision has been made for this request, you can view the
                     decision at the bottom of this page. Please check the email
                     sent to you for further information.
                   </span>
+                </Alert>
+              )}
+              {/* If intake has had an LCID issued but is currently in an open status - display alert directing user to LCID info */}
+              {systemIntake.lcid && isIntakeOpen(systemIntake.status) && (
+                <Alert
+                  type="info"
+                  noIcon
+                  heading="Lifecycle ID Information"
+                  className="margin-bottom-5"
+                  data-testid="lcid-issued-alert"
+                >
+                  <>
+                    <span>LCID: {systemIntake.lcid}</span>
+                    <br />
+                    <UswdsLink
+                      variant="unstyled"
+                      asCustom={Link}
+                      to={`/governance-task-list/${id}/lcid-info`}
+                    >
+                      Read about this LCID
+                    </UswdsLink>
+                  </>
                 </Alert>
               )}
               <ol
