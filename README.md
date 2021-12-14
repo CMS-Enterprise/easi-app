@@ -467,7 +467,7 @@ You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL p
 { "Authorization":"Local {\"favorLocalAuth\":true}"}
 ```
 
-Additionally, you can add EUA job codes, for use when querying endpoints such as `systemIntake` that require them. The syntax is:
+Additionally, you can define EUA job codes in the `Authorization` header that will be used when querying endpoints such as `systemIntake` that require them. The syntax is:
 ```
 { "Authorization":"Local {\"favorLocalAuth\":true, \"jobCodes\":[\"EASI_D_GOVTEAM\"]}"}
 ```
