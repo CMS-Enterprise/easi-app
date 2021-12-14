@@ -71,10 +71,10 @@ type Client struct {
 }
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
-func (c *Client) GetSystemSummary(ctx context.Context) (models.CedarSystemSummary, error) {
+func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return models.CedarSystemSummary{}, nil
+		return []*models.CedarSystem{}, nil
 	}
 
 	// Construct the parameters
@@ -84,22 +84,19 @@ func (c *Client) GetSystemSummary(ctx context.Context) (models.CedarSystemSummar
 	// Make the API call
 	resp, err := c.sdk.System.SystemSummaryFindList(params, c.auth)
 	if err != nil {
-		return models.CedarSystemSummary{}, err
+		return []*models.CedarSystem{}, err
 	}
 
 	if resp.Payload == nil {
-		return models.CedarSystemSummary{}, fmt.Errorf("no body received")
+		return []*models.CedarSystem{}, fmt.Errorf("no body received")
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct
-	retVal := models.CedarSystemSummary{
-		Count:         *resp.Payload.Count,
-		SystemSummary: []models.CedarSystem{},
-	}
+	retVal := []*models.CedarSystem{}
 
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
-		retVal.SystemSummary = append(retVal.SystemSummary, models.CedarSystem{
+		retVal = append(retVal, &models.CedarSystem{
 			ID:                      *sys.ID,
 			Name:                    *sys.Name,
 			Description:             sys.Description,

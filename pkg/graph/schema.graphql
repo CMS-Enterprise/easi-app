@@ -31,6 +31,18 @@ type RequestEdge {
   node: Request!
 }
 
+type CedarSystem {
+  id: String!
+  name: String!
+  description: String
+	acronym: String
+	status: String
+	businessOwnerOrg: String
+	businessOwnerOrgComp: String
+	systemMaintainerOrg: String
+	systemMaintainerOrgComp: String
+}
+
 """
 An accessibility request represents a system that needs to go through
 the 508 process.
@@ -854,6 +866,8 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
+  cedarSystem(id: String!): CedarSystem
+  cedarSystems: [CedarSystem]
 }
 
 """

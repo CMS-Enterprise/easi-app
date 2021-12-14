@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -251,6 +250,7 @@ func (s *Server) routes(
 		&s3Client,
 		&emailClient,
 		ldClient,
+		coreClient,
 	)
 	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
 		hasRole, err := services.HasRole(ctx, role)
@@ -313,22 +313,6 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
-	s.router.HandleFunc("/system-info-DEBUG", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		systemSummary, sserr := coreClient.GetSystemSummary(r.Context())
-		if sserr != nil {
-			s.logger.Error("Failed to get system summary", zap.Error(sserr))
-			_, werr := w.Write([]byte("ERROR"))
-			if werr != nil {
-				s.logger.Error("Failed to write response", zap.Error(werr))
-			}
-		} else {
-			summaryJSON, _ := json.Marshal(systemSummary)
-			_, werr := w.Write(summaryJSON)
-			if werr != nil {
-				s.logger.Error("Failed to write response", zap.Error(werr))
-			}
-		}
-	}))
 
 	businessCaseHandler := handlers.NewBusinessCaseHandler(
 		base,

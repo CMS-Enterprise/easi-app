@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1204,6 +1205,17 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 		},
 	}
 	return &currentUser, nil
+}
+
+func (r *queryResolver) CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
+	fmt.Println("query resolver: cedar systems")
+	cedarSystems, _ := r.cedarCoreClient.GetSystemSummary(ctx)
+	fmt.Println("systems", cedarSystems)
+	return cedarSystems, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
