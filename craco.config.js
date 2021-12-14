@@ -12,5 +12,8 @@ module.exports = {
         ]
       }
     }
-  ]
+  ],
+  typescript: {
+    enableTypeChecking: false
+  }
 };

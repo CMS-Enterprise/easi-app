@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -190,6 +191,10 @@ describe('Create 508 Request page', () => {
 
     screen.getByRole('button', { name: /send 508 testing request/i }).click();
     await screen.findByTestId('page-loading');
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('page-loading')).not.toBeInTheDocument();
+    });
 
     expect(
       screen.getByText(/508 testing request created/i)
