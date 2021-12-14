@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import renderer, { act } from 'react-test-renderer';
 import { shallow } from 'enzyme';
 
 import GovernanceOverview from './index';
@@ -12,7 +12,11 @@ jest.mock('@okta/okta-react', () => ({
         isAuthenticated: true
       },
       oktaAuth: {
-        getUser: async () => {},
+        getUser: async () => {
+          return {
+            name: 'John Doe'
+          };
+        },
         logout: async () => {}
       }
     };
@@ -43,7 +47,7 @@ describe('The governance overview page', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('matches the snapshot (w/ id param)', () => {
+  it('matches the snapshot (w/ id param)', async () => {
     const tree = renderer
       .create(
         <MemoryRouter
@@ -57,6 +61,7 @@ describe('The governance overview page', () => {
       )
       .toJSON();
 
+    await act(async () => {});
     expect(tree).toMatchSnapshot();
   });
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import renderer from 'react-test-renderer';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -16,7 +16,11 @@ jest.mock('@okta/okta-react', () => ({
         isAuthenticated: true
       },
       oktaAuth: {
-        getUser: async () => {},
+        getUser: async () => {
+          return {
+            name: 'John Doe'
+          };
+        },
         logout: async () => {}
       }
     };
@@ -24,7 +28,7 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The making a request page', () => {
-  it('renders without errors', () => {
+  it('renders without errors', async () => {
     const mockStore = configureMockStore();
     const defaultStore = mockStore({
       auth: {
@@ -44,7 +48,9 @@ describe('The making a request page', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByTestId('making-a-system-request')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('making-a-system-request')).toBeInTheDocument();
+    });
   });
 
   it('matches the snapshot', () => {
