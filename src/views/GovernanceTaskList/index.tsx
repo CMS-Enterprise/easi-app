@@ -236,19 +236,23 @@ const GovernanceTaskList = () => {
                       direct you to go through the remaining steps.
                     </p>
                   </TaskListDescription>
-                  <Alert type="info">
-                    <span>
-                      To help with that review, someone from the IT Governance
-                      team will schedule a phone call with you and Enterprise
-                      Architecture (EA).
-                    </span>
-                    <br />
-                    <br />
-                    <span>
-                      After that phone call, the governance team will decide if
-                      you need to go through a full governance process.
-                    </span>
-                  </Alert>
+                  {['INTAKE_DRAFT', 'INTAKE_SUBMITTED'].includes(
+                    status || ''
+                  ) && (
+                    <Alert type="info">
+                      <span>
+                        To help with that review, someone from the IT Governance
+                        team will schedule a phone call with you and Enterprise
+                        Architecture (EA).
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        After that phone call, the governance team will decide
+                        if you need to go through a full governance process.
+                      </span>
+                    </Alert>
+                  )}
                   {grtFeedback &&
                     grtFeedback.length > 0 &&
                     ['NEED_BIZ_CASE', 'BIZ_CASE_DRAFT'].includes(
