@@ -1207,12 +1207,18 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 }
 
 func (r *queryResolver) CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error) {
-	cedarSystem, _ := r.cedarCoreClient.GetSystem(ctx, id)
+	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, id)
+	if err != nil {
+		return nil, err
+	}
 	return cedarSystem, nil
 }
 
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	cedarSystems, _ := r.cedarCoreClient.GetSystemSummary(ctx)
+	cedarSystems, err := r.cedarCoreClient.GetSystemSummary(ctx)
+	if err != nil {
+		return nil, err
+	}
 	return cedarSystems, nil
 }
 

@@ -44,22 +44,4 @@ func (s ClientTestSuite) TestClient() {
 		blankSummary := models.CedarSystemSummary{}
 		s.Equal(resp, blankSummary)
 	})
-
-	// s.Run("functional test", func() {
-	// 	c := NewClient(
-	// 		"webmethods-apigw.cedardev.cms.gov",
-	// 		"n/a", // TODO: pull in from env var?
-	// 		ldClient,
-	// 	)
-	// 	c.emitToCedar = func(context.Context) bool { return true }
-
-	// 	err := c.CheckConnection(ctx)
-	// 	s.NoError(err)
-
-	// 	si := testhelpers.NewSystemIntake()
-	// 	si.CreatedAt = si.ContractStartDate
-	// 	si.UpdatedAt = si.ContractStartDate
-	// 	err = c.PublishSnapshot(ctx, &si, nil, nil, nil, nil)
-	// 	s.NoError(err)
-	// })
 }

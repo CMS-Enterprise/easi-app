@@ -112,7 +112,7 @@ func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, e
 	return retVal, nil
 }
 
-// GetSystemSummary makes a GET call to the /system/summary endpoint
+// GetSystem makes a GET call to the /system/summary/{id} endpoint
 func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
