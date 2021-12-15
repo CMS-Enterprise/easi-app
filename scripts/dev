@@ -152,12 +152,12 @@ end
 
 desc "Stops all services in the project"
 task :down do
-  sh "docker-compose down"
+  sh "docker-compose --profile frontend down"
 end
 
 desc "Restart the specified container"
 task restart: :consume_args do |t, args|
-  yml = `docker-compose config`
+  yml = `docker-compose --profile frontend config`
   config = YAML.load(yml)["services"]
   services = config.keys.sort
 
@@ -179,7 +179,7 @@ task :tailscale do
   environment = {
     "COMPOSE_HTTP_TIMEOUT" => "120"
   }
-  command = "docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.tailscale.yml up"
+  command = "docker-compose --profile frontend -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.tailscale.yml up"
   sh(environment, command, verbose: true)
 end
 

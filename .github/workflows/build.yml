@@ -133,6 +133,72 @@ jobs:
         run: |
           ./scripts/github-action-announce-broken-branch
 
+  # Runs TypeScript typechecker on frontend codebase; reports any type errors as a comment on a PR
+  # For now, doesn't fail the build
+  client_typecheck:
+    needs: lint
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Check out code
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Run typechecking
+        id: typechecker
+        # Uses GitHub environment files to store typechecker output and pass to next stage
+        # see https://github.com/actions/toolkit/blob/main/docs/commands.md#environment-files
+        run: |
+          yarn build:ts 2>&1 | tee test.log
+          result_code=${PIPESTATUS[0]}
+          echo 'TS_LOG<<EOF' >> $GITHUB_ENV
+          cat test.log >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+          exit $result_code
+        continue-on-error: true
+      - name: Post comment with TypeScript type errors
+        uses: actions/github-script@v5
+        if: ${{ steps.typechecker.outcome == 'failure' }}
+        with:
+          script: |
+            const typeScriptLog = process.env.TS_LOG;
+
+            const commentBody = `
+            <details>
+            <summary>TypeScript compile errors</summary>
+
+            \`\`\`shell
+            ${typeScriptLog}
+            \`\`\`
+            </details>`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
+
   client_test:
     needs: pre_deps
     runs-on: ubuntu-latest
