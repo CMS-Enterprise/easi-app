@@ -36,12 +36,20 @@ func (s ClientTestSuite) TestClient() {
 		s.NotNil(c)
 	})
 
-	s.Run("LD defaults protects invocation", func() {
+	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
 		c := NewClient("fake", "fake", ldClient)
 		resp, err := c.GetSystemSummary(ctx)
 		s.NoError(err)
 
-		blankSummary := models.CedarSystem{}
+		blankSummary := []*models.CedarSystem{}
 		s.Equal(resp, blankSummary)
+	})
+	s.Run("LD defaults protects invocation of GetSystem", func() {
+		c := NewClient("fake", "fake", ldClient)
+		resp, err := c.GetSystem(ctx, "fake")
+		s.NoError(err)
+
+		blankSummary := models.CedarSystem{}
+		s.Equal(*resp, blankSummary)
 	})
 }
