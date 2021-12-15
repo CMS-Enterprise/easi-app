@@ -31,6 +31,10 @@ type RequestEdge {
   node: Request!
 }
 
+"""
+CedarSystem represents the response from the /system/detail endpoint from the CEDAR Core API.
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
 type CedarSystem {
   id: String!
   name: String!
