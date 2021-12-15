@@ -41,7 +41,7 @@ func (s ClientTestSuite) TestClient() {
 		resp, err := c.GetSystemSummary(ctx)
 		s.NoError(err)
 
-		blankSummary := models.CedarSystemSummary{}
+		blankSummary := models.CedarSystem{}
 		s.Equal(resp, blankSummary)
 	})
 }
