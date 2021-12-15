@@ -22,6 +22,17 @@ Array [
   >
     Test next steps
   </p>,
+  <div
+    className="margin-top-4"
+  >
+    <a
+      className="usa-button margin-bottom-2"
+      href="/governance-task-list/40e866cb-6bf4-4b1a-8fc6-bf0d8328cdfc"
+      onClick={[Function]}
+    >
+      Return to task list
+    </a>
+  </div>,
   <h3>
     Help us improve EASi
   </h3>,
@@ -34,16 +45,5 @@ Array [
   >
     Tell us what you think of this service (opens in a new tab)
   </a>,
-  <div
-    className="margin-top-4"
-  >
-    <a
-      className="usa-link"
-      href="/governance-task-list/40e866cb-6bf4-4b1a-8fc6-bf0d8328cdfc"
-      onClick={[Function]}
-    >
-      Return to task list
-    </a>
-  </div>,
 ]
 `;

@@ -102,13 +102,24 @@ const LcidInfo = () => {
                   </dd>
                 </dl>
               </div>
-              <Alert type="warning">{t('decision.tempLcidNextSteps')}</Alert>
               <h2>{t('decision.nextSteps')}</h2>
+              <Alert type="warning">{t('decision.tempLcidNextSteps')}</Alert>
               {systemIntake.decisionNextSteps && (
                 <p className="text-pre-wrap">
                   {systemIntake.decisionNextSteps}
                 </p>
               )}
+              <div className="margin-top-4">
+                <UswdsLink
+                  className="usa-button margin-bottom-2"
+                  variant="unstyled"
+                  asCustom={Link}
+                  to={`/governance-task-list/${systemIntake.id}`}
+                >
+                  {t('navigation.returnToTaskList')}
+                </UswdsLink>
+              </div>
+
               <h2>{t('general:feedback.improvement')}</h2>
               <UswdsLink
                 href="https://www.surveymonkey.com/r/JNYSMZP"
@@ -118,15 +129,6 @@ const LcidInfo = () => {
               >
                 {t('general:feedback.whatYouThink')}
               </UswdsLink>
-
-              <div className="margin-top-4">
-                <UswdsLink
-                  asCustom={Link}
-                  to={`/governance-task-list/${systemIntake.id}`}
-                >
-                  {t('navigation.returnToTaskList')}
-                </UswdsLink>
-              </div>
             </div>
             <div className="tablet:grid-col-1" />
             <div className="tablet:grid-col-2">
