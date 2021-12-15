@@ -111,3 +111,41 @@ func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, e
 
 	return retVal, nil
 }
+
+// GetSystemSummary makes a GET call to the /system/summary endpoint
+func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem, error) {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return &models.CedarSystem{}, nil
+	}
+
+	// Construct the parameters
+	params := apisystems.NewSystemSummaryFindByIDParams()
+	params.SetID(id)
+	params.HTTPClient = c.hc
+
+	// Make the API call
+	resp, err := c.sdk.System.SystemSummaryFindByID(params, c.auth)
+	if err != nil {
+		return &models.CedarSystem{}, err
+	}
+
+	if resp.Payload == nil {
+		return &models.CedarSystem{}, fmt.Errorf("no body received")
+	}
+
+	responseArray := resp.Payload.SystemSummary
+
+	// Convert the auto-generated struct to our own pkg/models struct
+	return &models.CedarSystem{
+		ID:                      *responseArray[0].ID,
+		Name:                    *responseArray[0].Name,
+		Description:             responseArray[0].Description,
+		Acronym:                 responseArray[0].Acronym,
+		Status:                  responseArray[0].Status,
+		BusinessOwnerOrg:        responseArray[0].BusinessOwnerOrg,
+		BusinessOwnerOrgComp:    responseArray[0].BusinessOwnerOrgComp,
+		SystemMaintainerOrg:     responseArray[0].SystemMaintainerOrg,
+		SystemMaintainerOrgComp: responseArray[0].SystemMaintainerOrgComp,
+	}, nil
+}
