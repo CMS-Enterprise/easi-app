@@ -1206,6 +1206,22 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 	return &currentUser, nil
 }
 
+func (r *queryResolver) CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error) {
+	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return cedarSystem, nil
+}
+
+func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
+	cedarSystems, err := r.cedarCoreClient.GetSystemSummary(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return cedarSystems, nil
+}
+
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
 	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
 	if actionsErr != nil {

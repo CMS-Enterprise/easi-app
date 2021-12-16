@@ -22,6 +22,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -146,6 +147,8 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	cedarLdapClient := local.NewCedarLdapClient(logger)
 
+	cedarCoreClient := cedarcore.NewClient("fake", "fake", ldClient)
+
 	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
 		return next(ctx)
 	}}
@@ -191,7 +194,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 		emailClient.SendSystemIntakeReviewEmail,
 	)
 
-	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient)
+	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
