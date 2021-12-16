@@ -7,12 +7,19 @@
 // START Enums and Input Objects
 //==============================================================
 
+/**
+ * Denotes the reason a 508/accessibility request was deleted
+ */
 export enum AccessibilityRequestDeletionReason {
   INCORRECT_APPLICATION_AND_LIFECYCLE_ID = "INCORRECT_APPLICATION_AND_LIFECYCLE_ID",
   NO_TESTING_NEEDED = "NO_TESTING_NEEDED",
   OTHER = "OTHER",
 }
 
+/**
+ * Represents the common options for document type that is attached to a
+ * 508/accessibility request
+ */
 export enum AccessibilityRequestDocumentCommonType {
   AWARDED_VPAT = "AWARDED_VPAT",
   OTHER = "OTHER",
@@ -22,12 +29,19 @@ export enum AccessibilityRequestDocumentCommonType {
   TEST_RESULTS = "TEST_RESULTS",
 }
 
+/**
+ * Indicates the status of a document that has been attached to 508/accessibility
+ * request, which will be scanned for viruses before it is made available
+ */
 export enum AccessibilityRequestDocumentStatus {
   AVAILABLE = "AVAILABLE",
   PENDING = "PENDING",
   UNAVAILABLE = "UNAVAILABLE",
 }
 
+/**
+ * Indicates the status of a 508/accessibility request
+ */
 export enum AccessibilityRequestStatus {
   CLOSED = "CLOSED",
   DELETED = "DELETED",
@@ -35,11 +49,17 @@ export enum AccessibilityRequestStatus {
   OPEN = "OPEN",
 }
 
+/**
+ * TODO
+ */
 export enum GRTFeedbackType {
   BUSINESS_OWNER = "BUSINESS_OWNER",
   GRB = "GRB",
 }
 
+/**
+ * Indicates the type of a request being made with the EASi system
+ */
 export enum RequestType {
   ACCESSIBILITY_REQUEST = "ACCESSIBILITY_REQUEST",
   GOVERNANCE_REQUEST = "GOVERNANCE_REQUEST",
@@ -67,6 +87,9 @@ export enum SystemIntakeActionType {
   SUBMIT_INTAKE = "SUBMIT_INTAKE",
 }
 
+/**
+ * TODO
+ */
 export enum SystemIntakeRequestType {
   MAJOR_CHANGES = "MAJOR_CHANGES",
   NEW = "NEW",
@@ -74,6 +97,9 @@ export enum SystemIntakeRequestType {
   SHUTDOWN = "SHUTDOWN",
 }
 
+/**
+ * TODO
+ */
 export enum SystemIntakeStatus {
   BIZ_CASE_CHANGES_NEEDED = "BIZ_CASE_CHANGES_NEEDED",
   BIZ_CASE_DRAFT = "BIZ_CASE_DRAFT",
@@ -94,22 +120,34 @@ export enum SystemIntakeStatus {
   WITHDRAWN = "WITHDRAWN",
 }
 
+/**
+ * The type of test added to a 508/accessibility request
+ */
 export enum TestDateTestType {
   INITIAL = "INITIAL",
   REMEDIATION = "REMEDIATION",
 }
 
+/**
+ * TODO
+ */
 export interface AddGRTFeedbackInput {
   emailBody: string;
   feedback: string;
   intakeID: UUID;
 }
 
+/**
+ * TODO
+ */
 export interface BasicActionInput {
   feedback: string;
   intakeId: UUID;
 }
 
+/**
+ * The input data used for adding a document to a 508/accessibility request
+ */
 export interface CreateAccessibilityRequestDocumentInput {
   commonDocumentType: AccessibilityRequestDocumentCommonType;
   mimeType: string;
@@ -120,33 +158,51 @@ export interface CreateAccessibilityRequestDocumentInput {
   url: string;
 }
 
+/**
+ * The data needed to initialize a 508/accessibility request
+ */
 export interface CreateAccessibilityRequestInput {
   intakeID: UUID;
   name: string;
 }
 
+/**
+ * The data used when adding a note to a 508/accessibiiity request
+ */
 export interface CreateAccessibilityRequestNoteInput {
   requestID: UUID;
   note: string;
   shouldSendEmail: boolean;
 }
 
+/**
+ * TODO
+ */
 export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID;
   expirationDate?: Time | null;
 }
 
+/**
+ * TODO
+ */
 export interface CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType;
   requester: SystemIntakeRequesterInput;
 }
 
+/**
+ * TODO
+ */
 export interface CreateSystemIntakeNoteInput {
   content: string;
   authorName: string;
   intakeId: UUID;
 }
 
+/**
+ * The input required to add a test date/score to a 508/accessibility request
+ */
 export interface CreateTestDateInput {
   date: Time;
   requestID: UUID;
@@ -154,25 +210,40 @@ export interface CreateTestDateInput {
   testType: TestDateTestType;
 }
 
+/**
+ * The input used to delete a document from a 508/accessibility request
+ */
 export interface DeleteAccessibilityRequestDocumentInput {
   id: UUID;
 }
 
+/**
+ * The input data needed to delete a 508/accessibility request
+ */
 export interface DeleteAccessibilityRequestInput {
   id: UUID;
   reason: AccessibilityRequestDeletionReason;
 }
 
+/**
+ * The input required to delete a test date/score
+ */
 export interface DeleteTestDateInput {
   id: UUID;
 }
 
+/**
+ * TODO
+ */
 export interface GeneratePresignedUploadURLInput {
   fileName: string;
   mimeType: string;
   size: number;
 }
 
+/**
+ * TODO
+ */
 export interface IssueLifecycleIdInput {
   expiresAt: Time;
   feedback: string;
@@ -183,6 +254,9 @@ export interface IssueLifecycleIdInput {
   costBaseline?: string | null;
 }
 
+/**
+ * TODO
+ */
 export interface RejectIntakeInput {
   feedback: string;
   intakeId: UUID;
@@ -190,21 +264,33 @@ export interface RejectIntakeInput {
   reason: string;
 }
 
+/**
+ * TODO
+ */
 export interface SubmitIntakeInput {
   id: UUID;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeBusinessOwnerInput {
   name: string;
   component: string;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeCollaboratorInput {
   collaborator: string;
   name: string;
   key: string;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeContractInput {
   contractor?: string | null;
   endDate?: Time | null;
@@ -213,36 +299,57 @@ export interface SystemIntakeContractInput {
   vehicle?: string | null;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeCostsInput {
   expectedIncreaseAmount?: string | null;
   isExpectingIncrease?: string | null;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeFundingSourceInput {
   fundingNumber?: string | null;
   isFunded?: boolean | null;
   source?: string | null;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeGovernanceTeamInput {
   isPresent?: boolean | null;
   teams?: (SystemIntakeCollaboratorInput | null)[] | null;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeISSOInput {
   isPresent?: boolean | null;
   name?: string | null;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeProductManagerInput {
   name: string;
   component: string;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeRequesterInput {
   name: string;
 }
 
+/**
+ * TODO
+ */
 export interface SystemIntakeRequesterWithComponentInput {
   name: string;
   component: string;
@@ -256,11 +363,17 @@ export interface UpdateAccessibilityRequestStatus {
   status: AccessibilityRequestStatus;
 }
 
+/**
+ * TODO
+ */
 export interface UpdateSystemIntakeAdminLeadInput {
   adminLead: string;
   id: UUID;
 }
 
+/**
+ * TODO
+ */
 export interface UpdateSystemIntakeContactDetailsInput {
   id: UUID;
   requester: SystemIntakeRequesterWithComponentInput;
@@ -270,6 +383,9 @@ export interface UpdateSystemIntakeContactDetailsInput {
   governanceTeams: SystemIntakeGovernanceTeamInput;
 }
 
+/**
+ * TODO
+ */
 export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
   currentStage?: string | null;
@@ -278,6 +394,9 @@ export interface UpdateSystemIntakeContractDetailsInput {
   contract?: SystemIntakeContractInput | null;
 }
 
+/**
+ * TODO
+ */
 export interface UpdateSystemIntakeRequestDetailsInput {
   id: UUID;
   requestName?: string | null;
@@ -286,12 +405,18 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   needsEaSupport?: boolean | null;
 }
 
+/**
+ * TODO
+ */
 export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
   grtDate?: Time | null;
   id: UUID;
 }
 
+/**
+ * The input required to update a test date/score
+ */
 export interface UpdateTestDateInput {
   date: Time;
   id: UUID;

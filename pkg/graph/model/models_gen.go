@@ -12,34 +12,42 @@ import (
 	"github.com/google/uuid"
 )
 
+// Denotes type of a document that is attached to a 508/accessibility request,
+// which can be one of a number of common types, or another user-specified type
 type AccessibilityRequestDocumentType struct {
 	CommonType           models.AccessibilityRequestDocumentCommonType `json:"commonType"`
 	OtherTypeDescription *string                                       `json:"otherTypeDescription"`
 }
 
+// TODO
 type AccessibilityRequestEdge struct {
 	Node *models.AccessibilityRequest `json:"node"`
 }
 
+// TODO
 type AccessibilityRequestsConnection struct {
 	Edges []*AccessibilityRequestEdge `json:"edges"`
 }
 
+// TODO
 type AddGRTFeedbackInput struct {
 	EmailBody string    `json:"emailBody"`
 	Feedback  string    `json:"feedback"`
 	IntakeID  uuid.UUID `json:"intakeID"`
 }
 
+// TODO
 type AddGRTFeedbackPayload struct {
 	ID *uuid.UUID `json:"id"`
 }
 
+// TODO
 type BasicActionInput struct {
 	Feedback string    `json:"feedback"`
 	IntakeID uuid.UUID `json:"intakeId"`
 }
 
+// TODO
 type BusinessCaseAsIsSolution struct {
 	Cons        *string `json:"cons"`
 	CostSavings *string `json:"costSavings"`
@@ -64,12 +72,14 @@ type BusinessCaseSolution struct {
 	Title                   *string `json:"title"`
 }
 
+// TODO
 type ContractDate struct {
 	Day   *string `json:"day"`
 	Month *string `json:"month"`
 	Year  *string `json:"year"`
 }
 
+// The input data used for adding a document to a 508/accessibility request
 type CreateAccessibilityRequestDocumentInput struct {
 	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
 	MimeType                     string                                        `json:"mimeType"`
@@ -80,53 +90,64 @@ type CreateAccessibilityRequestDocumentInput struct {
 	URL                          string                                        `json:"url"`
 }
 
+// The payload containing the input data used for adding a document to a
+// 508/accessibility request
 type CreateAccessibilityRequestDocumentPayload struct {
 	AccessibilityRequestDocument *models.AccessibilityRequestDocument `json:"accessibilityRequestDocument"`
 	UserErrors                   []*UserError                         `json:"userErrors"`
 }
 
+// The data needed to initialize a 508/accessibility request
 type CreateAccessibilityRequestInput struct {
 	IntakeID uuid.UUID `json:"intakeID"`
 	Name     string    `json:"name"`
 }
 
+// The data used when adding a note to a 508/accessibiiity request
 type CreateAccessibilityRequestNoteInput struct {
 	RequestID       uuid.UUID `json:"requestID"`
 	Note            string    `json:"note"`
 	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
+// The payload for adding a note to a 508/accessibiiity request
 type CreateAccessibilityRequestNotePayload struct {
 	AccessibilityRequestNote *models.AccessibilityRequestNote `json:"accessibilityRequestNote"`
 	UserErrors               []*UserError                     `json:"userErrors"`
 }
 
+// The payload containing the data needed to initialize an AccessibilityRequest
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
+// TODO
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
 	ID             uuid.UUID  `json:"id"`
 	ExpirationDate *time.Time `json:"expirationDate"`
 }
 
+// TODO
 type CreateSystemIntakeActionExtendLifecycleIDPayload struct {
 	SystemIntake *models.SystemIntake `json:"systemIntake"`
 	UserErrors   []*UserError         `json:"userErrors"`
 }
 
+// TODO
 type CreateSystemIntakeInput struct {
 	RequestType models.SystemIntakeRequestType `json:"requestType"`
 	Requester   *SystemIntakeRequesterInput    `json:"requester"`
 }
 
+// TODO
 type CreateSystemIntakeNoteInput struct {
 	Content    string    `json:"content"`
 	AuthorName string    `json:"authorName"`
 	IntakeID   uuid.UUID `json:"intakeId"`
 }
 
+// The input required to add a test date/score to a 508/accessibility request
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
 	RequestID uuid.UUID               `json:"requestID"`
@@ -134,53 +155,65 @@ type CreateTestDateInput struct {
 	TestType  models.TestDateTestType `json:"testType"`
 }
 
+// The payload for the input required to add a test date/score to a
+// 508/accessibility request
 type CreateTestDatePayload struct {
 	TestDate   *models.TestDate `json:"testDate"`
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+// TODO
 type CurrentUser struct {
 	LaunchDarkly *LaunchDarklySettings `json:"launchDarkly"`
 }
 
+// The input used to delete a document from a 508/accessibility request
 type DeleteAccessibilityRequestDocumentInput struct {
 	ID uuid.UUID `json:"id"`
 }
 
+// The payload used to delete a document from a 508/accessibility request
 type DeleteAccessibilityRequestDocumentPayload struct {
 	ID *uuid.UUID `json:"id"`
 }
 
+// The input data needed to delete a 508/accessibility request
 type DeleteAccessibilityRequestInput struct {
 	ID     uuid.UUID                                 `json:"id"`
 	Reason models.AccessibilityRequestDeletionReason `json:"reason"`
 }
 
+// The payload data sent when deleting a 508/accessibility request
 type DeleteAccessibilityRequestPayload struct {
 	ID         *uuid.UUID   `json:"id"`
 	UserErrors []*UserError `json:"userErrors"`
 }
 
+// The input required to delete a test date/score
 type DeleteTestDateInput struct {
 	ID uuid.UUID `json:"id"`
 }
 
+// The payload for the input required to delete a test date/score
 type DeleteTestDatePayload struct {
 	TestDate   *models.TestDate `json:"testDate"`
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+// TODO
 type GeneratePresignedUploadURLInput struct {
 	FileName string `json:"fileName"`
 	MimeType string `json:"mimeType"`
 	Size     int    `json:"size"`
 }
 
+// TODO
 type GeneratePresignedUploadURLPayload struct {
 	URL        *string      `json:"url"`
 	UserErrors []*UserError `json:"userErrors"`
 }
 
+// TODO
 type IssueLifecycleIDInput struct {
 	ExpiresAt    time.Time `json:"expiresAt"`
 	Feedback     string    `json:"feedback"`
@@ -191,16 +224,19 @@ type IssueLifecycleIDInput struct {
 	CostBaseline *string   `json:"costBaseline"`
 }
 
+// TODO
 type LastAdminNote struct {
 	Content   *string    `json:"content"`
 	CreatedAt *time.Time `json:"createdAt"`
 }
 
+// TODO
 type LaunchDarklySettings struct {
 	UserKey    string `json:"userKey"`
 	SignedHash string `json:"signedHash"`
 }
 
+// TODO
 type RejectIntakeInput struct {
 	Feedback  string    `json:"feedback"`
 	IntakeID  uuid.UUID `json:"intakeId"`
@@ -208,6 +244,7 @@ type RejectIntakeInput struct {
 	Reason    string    `json:"reason"`
 }
 
+// Represents a request being made with the EASi system
 type Request struct {
 	ID              uuid.UUID   `json:"id"`
 	Name            *string     `json:"name"`
@@ -219,22 +256,27 @@ type Request struct {
 	NextMeetingDate *time.Time  `json:"nextMeetingDate"`
 }
 
+// TODO
 type RequestEdge struct {
 	Node *Request `json:"node"`
 }
 
+// TODO
 type RequestsConnection struct {
 	Edges []*RequestEdge `json:"edges"`
 }
 
+// TODO
 type SubmitIntakeInput struct {
 	ID uuid.UUID `json:"id"`
 }
 
+// TODO
 type SystemConnection struct {
 	Edges []*SystemEdge `json:"edges"`
 }
 
+// TODO
 type SystemEdge struct {
 	Node *models.System `json:"node"`
 }
@@ -250,21 +292,25 @@ type SystemIntakeAction struct {
 	CreatedAt            time.Time                         `json:"createdAt"`
 }
 
+// TODO
 type SystemIntakeActionActor struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
+// TODO
 type SystemIntakeBusinessOwner struct {
 	Component *string `json:"component"`
 	Name      *string `json:"name"`
 }
 
+// TODO
 type SystemIntakeBusinessOwnerInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
 }
 
+// TODO
 type SystemIntakeCollaborator struct {
 	Acronym      string `json:"acronym"`
 	Collaborator string `json:"collaborator"`
@@ -273,12 +319,14 @@ type SystemIntakeCollaborator struct {
 	Name         string `json:"name"`
 }
 
+// TODO
 type SystemIntakeCollaboratorInput struct {
 	Collaborator string `json:"collaborator"`
 	Name         string `json:"name"`
 	Key          string `json:"key"`
 }
 
+// TODO
 type SystemIntakeContract struct {
 	Contractor  *string       `json:"contractor"`
 	EndDate     *ContractDate `json:"endDate"`
@@ -287,6 +335,7 @@ type SystemIntakeContract struct {
 	Vehicle     *string       `json:"vehicle"`
 }
 
+// TODO
 type SystemIntakeContractInput struct {
 	Contractor  *string    `json:"contractor"`
 	EndDate     *time.Time `json:"endDate"`
@@ -295,53 +344,63 @@ type SystemIntakeContractInput struct {
 	Vehicle     *string    `json:"vehicle"`
 }
 
+// TODO
 type SystemIntakeCosts struct {
 	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
 	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
 }
 
+// TODO
 type SystemIntakeCostsInput struct {
 	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
 	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
 }
 
+// TODO
 type SystemIntakeFundingSource struct {
 	FundingNumber *string `json:"fundingNumber"`
 	IsFunded      *bool   `json:"isFunded"`
 	Source        *string `json:"source"`
 }
 
+// TODO
 type SystemIntakeFundingSourceInput struct {
 	FundingNumber *string `json:"fundingNumber"`
 	IsFunded      *bool   `json:"isFunded"`
 	Source        *string `json:"source"`
 }
 
+// TODO
 type SystemIntakeGovernanceTeam struct {
 	IsPresent *bool                       `json:"isPresent"`
 	Teams     []*SystemIntakeCollaborator `json:"teams"`
 }
 
+// TODO
 type SystemIntakeGovernanceTeamInput struct {
 	IsPresent *bool                            `json:"isPresent"`
 	Teams     []*SystemIntakeCollaboratorInput `json:"teams"`
 }
 
+// TODO
 type SystemIntakeIsso struct {
 	IsPresent *bool   `json:"isPresent"`
 	Name      *string `json:"name"`
 }
 
+// TODO
 type SystemIntakeISSOInput struct {
 	IsPresent *bool   `json:"isPresent"`
 	Name      *string `json:"name"`
 }
 
+// TODO
 type SystemIntakeLCIDExpirationChange struct {
 	PreviousDate time.Time `json:"previousDate"`
 	NewDate      time.Time `json:"newDate"`
 }
 
+// TODO
 type SystemIntakeNote struct {
 	Author    *SystemIntakeNoteAuthor `json:"author"`
 	Content   string                  `json:"content"`
@@ -349,31 +408,37 @@ type SystemIntakeNote struct {
 	ID        uuid.UUID               `json:"id"`
 }
 
+// TODO
 type SystemIntakeNoteAuthor struct {
 	Eua  string `json:"eua"`
 	Name string `json:"name"`
 }
 
+// TODO
 type SystemIntakeProductManager struct {
 	Component *string `json:"component"`
 	Name      *string `json:"name"`
 }
 
+// TODO
 type SystemIntakeProductManagerInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
 }
 
+// TODO
 type SystemIntakeRequester struct {
 	Component *string `json:"component"`
 	Email     *string `json:"email"`
 	Name      string  `json:"name"`
 }
 
+// TODO
 type SystemIntakeRequesterInput struct {
 	Name string `json:"name"`
 }
 
+// TODO
 type SystemIntakeRequesterWithComponentInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
@@ -385,7 +450,7 @@ type UpdateAccessibilityRequestStatus struct {
 	Status    models.AccessibilityRequestStatus `json:"status"`
 }
 
-// Result of updating an accessibiiity request's status
+// Result of updating a 508/accessibiiity request's status
 type UpdateAccessibilityRequestStatusPayload struct {
 	ID         uuid.UUID                         `json:"id"`
 	RequestID  uuid.UUID                         `json:"requestID"`
@@ -394,11 +459,13 @@ type UpdateAccessibilityRequestStatusPayload struct {
 	UserErrors []*UserError                      `json:"userErrors"`
 }
 
+// TODO
 type UpdateSystemIntakeAdminLeadInput struct {
 	AdminLead string    `json:"adminLead"`
 	ID        uuid.UUID `json:"id"`
 }
 
+// TODO
 type UpdateSystemIntakeContactDetailsInput struct {
 	ID              uuid.UUID                                `json:"id"`
 	Requester       *SystemIntakeRequesterWithComponentInput `json:"requester"`
@@ -408,6 +475,7 @@ type UpdateSystemIntakeContactDetailsInput struct {
 	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
 }
 
+// TODO
 type UpdateSystemIntakeContractDetailsInput struct {
 	ID            uuid.UUID                       `json:"id"`
 	CurrentStage  *string                         `json:"currentStage"`
@@ -416,11 +484,13 @@ type UpdateSystemIntakeContractDetailsInput struct {
 	Contract      *SystemIntakeContractInput      `json:"contract"`
 }
 
+// TODO
 type UpdateSystemIntakePayload struct {
 	SystemIntake *models.SystemIntake `json:"systemIntake"`
 	UserErrors   []*UserError         `json:"userErrors"`
 }
 
+// TODO
 type UpdateSystemIntakeRequestDetailsInput struct {
 	ID               uuid.UUID `json:"id"`
 	RequestName      *string   `json:"requestName"`
@@ -429,12 +499,14 @@ type UpdateSystemIntakeRequestDetailsInput struct {
 	NeedsEaSupport   *bool     `json:"needsEaSupport"`
 }
 
+// TODO
 type UpdateSystemIntakeReviewDatesInput struct {
 	GrbDate *time.Time `json:"grbDate"`
 	GrtDate *time.Time `json:"grtDate"`
 	ID      uuid.UUID  `json:"id"`
 }
 
+// The input required to update a test date/score
 type UpdateTestDateInput struct {
 	Date     time.Time               `json:"date"`
 	ID       uuid.UUID               `json:"id"`
@@ -442,6 +514,7 @@ type UpdateTestDateInput struct {
 	TestType models.TestDateTestType `json:"testType"`
 }
 
+// The payload for the input required to update a test date/score
 type UpdateTestDatePayload struct {
 	TestDate   *models.TestDate `json:"testDate"`
 	UserErrors []*UserError     `json:"userErrors"`
@@ -454,6 +527,7 @@ type UserError struct {
 	Path    []string `json:"path"`
 }
 
+// Indicates the type of a request being made with the EASi system
 type RequestType string
 
 const (
