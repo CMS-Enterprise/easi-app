@@ -51,7 +51,7 @@ func (a *Client) AuthorityToOperateFindList(params *AuthorityToOperateFindListPa
 		PathPattern:        "/authorityToOperate",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &AuthorityToOperateFindListReader{formats: a.formats},
 		AuthInfo:           authInfo,
