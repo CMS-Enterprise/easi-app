@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -111,6 +112,24 @@ func (s *Server) routes(
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		ldClient,
 	)
+
+	// Debugging Route. BC0V
+	s.router.HandleFunc("/api/v1/system-list-DEBUG", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		systemSummary, sserr := coreClient.GetSystemSummary(r.Context())
+		if sserr != nil {
+			s.logger.Error("Failed to get system summary", zap.Error(sserr))
+			_, werr := w.Write([]byte("ERROR"))
+			if werr != nil {
+				s.logger.Error("Failed to write response", zap.Error(werr))
+			}
+		} else {
+			summaryJSON, _ := json.Marshal(systemSummary)
+			_, werr := w.Write(summaryJSON)
+			if werr != nil {
+				s.logger.Error("Failed to write response", zap.Error(werr))
+			}
+		}
+	}))
 
 	// set up Email Client
 	sesConfig := s.NewSESConfig()
