@@ -41,7 +41,7 @@ const (
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
-var DefaultSchemes = []string{"https"}
+var DefaultSchemes = []string{"http"}
 
 // NewHTTPClient creates a new c e d a r core API HTTP client.
 func NewHTTPClient(formats strfmt.Registry) *CEDARCoreAPI {

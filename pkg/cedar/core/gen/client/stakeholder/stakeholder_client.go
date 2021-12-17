@@ -51,7 +51,7 @@ func (a *Client) StakeholderFindList(params *StakeholderFindListParams, authInfo
 		PathPattern:        "/stakeholder",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
+		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &StakeholderFindListReader{formats: a.formats},
 		AuthInfo:           authInfo,

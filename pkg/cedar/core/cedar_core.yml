@@ -44,7 +44,7 @@ tags:
   - name: user
     description: CEDAR system users
 schemes:
-  - "https"
+  - "http"
 security:
   - apiKey: []
 paths:
