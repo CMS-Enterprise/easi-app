@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -1209,6 +1210,7 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 func (r *queryResolver) CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error) {
 	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, id)
 	if err != nil {
+		appcontext.ZLogger(ctx).Error("Error fetching cedar system", zap.Error(err), zap.String("cedarSystemId", id))
 		return nil, err
 	}
 	return cedarSystem, nil
@@ -1217,6 +1219,7 @@ func (r *queryResolver) CedarSystem(ctx context.Context, id string) (*models.Ced
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	cedarSystems, err := r.cedarCoreClient.GetSystemSummary(ctx)
 	if err != nil {
+		appcontext.ZLogger(ctx).Error("Error fetching cedar systems", zap.Error(err))
 		return nil, err
 	}
 	return cedarSystems, nil
