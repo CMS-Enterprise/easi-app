@@ -125,7 +125,9 @@ func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem,
 	params.HTTPClient = c.hc
 
 	// Make the API call
+	appcontext.ZLogger(ctx).Info("Starting SystemSummaryFindByID API Call")
 	resp, err := c.sdk.System.SystemSummaryFindByID(params, c.auth)
+	appcontext.ZLogger(ctx).Info("Finished SystemSummaryFindByID API Call")
 	if err != nil {
 		return &models.CedarSystem{}, err
 	}
