@@ -130,6 +130,22 @@ func (s *Server) routes(
 			}
 		}
 	}))
+	s.router.HandleFunc("/api/v1/system-info-DEBUG", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		systemInfo, sserr := coreClient.GetSystem(r.Context(), "326-1415-0")
+		if sserr != nil {
+			s.logger.Error("Failed to get system info", zap.Error(sserr))
+			_, werr := w.Write([]byte("ERROR"))
+			if werr != nil {
+				s.logger.Error("Failed to write response", zap.Error(werr))
+			}
+		} else {
+			infoJSON, _ := json.Marshal(systemInfo)
+			_, werr := w.Write(infoJSON)
+			if werr != nil {
+				s.logger.Error("Failed to write response", zap.Error(werr))
+			}
+		}
+	}))
 
 	// set up Email Client
 	sesConfig := s.NewSESConfig()

@@ -21,7 +21,7 @@ import (
 
 const (
 	cedarCoreEnabledKey     = "cedarCoreEnabled"
-	cedarCoreEnabledDefault = false
+	cedarCoreEnabledDefault = true
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
@@ -82,7 +82,9 @@ func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, e
 	params.HTTPClient = c.hc
 
 	// Make the API call
+	appcontext.ZLogger(ctx).Info("Finished SystemSummaryFindList API Call")
 	resp, err := c.sdk.System.SystemSummaryFindList(params, c.auth)
+	appcontext.ZLogger(ctx).Info("Finished SystemSummaryFindList API Call")
 	if err != nil {
 		return []*models.CedarSystem{}, err
 	}
