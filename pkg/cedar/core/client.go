@@ -13,6 +13,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
 	"github.com/cmsgov/easi-app/pkg/flags"
@@ -135,6 +136,10 @@ func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem,
 	}
 
 	responseArray := resp.Payload.SystemSummary
+
+	if len(responseArray) == 0 {
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
+	}
 
 	// Convert the auto-generated struct to our own pkg/models struct
 	return &models.CedarSystem{
