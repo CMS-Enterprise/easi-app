@@ -8,6 +8,7 @@ import (
 
 	"github.com/facebookgo/clock"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -93,9 +94,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByID() {
 
 		_, err := s.store.FetchAccessibilityRequestByID(ctx, deletedAccessibilityRequest.ID)
 		s.Error(err)
-		s.Equal(
-			"Could not not find resource models.AccessibilityRequest with error: sql: no rows in result set",
-			err.Error())
+		s.Assertions.IsType(&apperrors.ResourceNotFoundError{}, err)
 	})
 }
 
