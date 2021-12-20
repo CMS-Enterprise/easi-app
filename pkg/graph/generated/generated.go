@@ -2866,11 +2866,17 @@ type UserError {
   path: [String!]!
 }
 
+"""
+Indicates the type of a request being made with the EASi system
+"""
 enum RequestType {
   ACCESSIBILITY_REQUEST
   GOVERNANCE_REQUEST
 }
 
+"""
+Represents a request being made with the EASi system
+"""
 type Request {
   id: UUID!
   name: String
@@ -2908,7 +2914,7 @@ type CedarSystem {
 
 """
 An accessibility request represents a system that needs to go through
-the 508 process.
+the 508 process
 """
 type AccessibilityRequest {
   documents: [AccessibilityRequestDocument!]!
@@ -2923,6 +2929,9 @@ type AccessibilityRequest {
   notes: [AccessibilityRequestNote!]! @hasRole(role: EASI_508_TESTER_OR_USER)
 }
 
+"""
+Indicates the status of a 508/accessibility request
+"""
 enum AccessibilityRequestStatus {
   OPEN
   IN_REMEDIATION
@@ -2950,7 +2959,7 @@ input UpdateAccessibilityRequestStatus {
 }
 
 """
-Result of updating an accessibiiity request's status
+Result of updating a 508/accessibility request's status
 """
 type UpdateAccessibilityRequestStatusPayload {
   id: UUID!
@@ -2960,12 +2969,18 @@ type UpdateAccessibilityRequestStatusPayload {
   userErrors: [UserError!]
 }
 
+"""
+The data used when adding a note to a 508/accessibility request
+"""
 input CreateAccessibilityRequestNoteInput {
   requestID: UUID!
   note: String!
   shouldSendEmail: Boolean!
 }
 
+"""
+Represents a note added to a 508/accessibility request by a user
+"""
 type AccessibilityRequestNote {
   id: UUID!
   requestID: UUID!
@@ -2974,6 +2989,9 @@ type AccessibilityRequestNote {
   authorName: String!
 }
 
+"""
+The payload for adding a note to a 508/accessibility request
+"""
 type CreateAccessibilityRequestNotePayload {
   accessibilityRequestNote: AccessibilityRequestNote!
   userErrors: [UserError!]
@@ -2988,7 +3006,8 @@ type BusinessOwner {
 }
 
 """
-A system is derived from a system intake and represents a computer system managed by CMS
+A System is derived from a system intake and represents a computer system
+managed by CMS
 """
 type System {
   businessOwner: BusinessOwner!
@@ -2997,12 +3016,20 @@ type System {
   name: String!
 }
 
+"""
+Indicates the status of a document that has been attached to 508/accessibility
+request, which will be scanned for viruses before it is made available
+"""
 enum AccessibilityRequestDocumentStatus {
   AVAILABLE
   PENDING
   UNAVAILABLE
 }
 
+"""
+Represents the common options for document type that is attached to a
+508/accessibility request
+"""
 enum AccessibilityRequestDocumentCommonType {
   AWARDED_VPAT
   OTHER
@@ -3012,11 +3039,18 @@ enum AccessibilityRequestDocumentCommonType {
   TEST_RESULTS
 }
 
+"""
+Denotes type of a document that is attached to a 508/accessibility request,
+which can be one of a number of common types, or another user-specified type
+"""
 type AccessibilityRequestDocumentType {
   commonType: AccessibilityRequestDocumentCommonType!
   otherTypeDescription: String
 }
 
+"""
+Represents a document attached to a 508/accessibility request
+"""
 type AccessibilityRequestDocument {
   documentType: AccessibilityRequestDocumentType!
   id: UUID!
@@ -3037,37 +3071,59 @@ type SystemEdge {
   node: System!
 }
 
+"""
+The data needed to initialize a 508/accessibility request
+"""
 input CreateAccessibilityRequestInput {
   intakeID: UUID!
   name: String!
 }
 
+"""
+The payload containing the data needed to initialize an AccessibilityRequest
+"""
 type CreateAccessibilityRequestPayload {
   accessibilityRequest: AccessibilityRequest
   userErrors: [UserError!]
 }
 
+"""
+Denotes the reason a 508/accessibility request was deleted
+"""
 enum AccessibilityRequestDeletionReason {
   INCORRECT_APPLICATION_AND_LIFECYCLE_ID
   NO_TESTING_NEEDED
   OTHER
 }
 
+"""
+The input data needed to delete a 508/accessibility request
+"""
 input DeleteAccessibilityRequestInput {
   id: UUID!
   reason: AccessibilityRequestDeletionReason!
 }
+
+"""
+The payload data sent when deleting a 508/accessibility request
+"""
 type DeleteAccessibilityRequestPayload {
   id: UUID
   userErrors: [UserError!]
 }
 
+"""
+Input associated with a document to be uploaded to a 508/accessibility request
+"""
 input GeneratePresignedUploadURLInput {
   fileName: String!
   mimeType: String!
   size: Int!
 }
 
+"""
+URL generated for a document to be uploaded to a 508/accessibility request
+"""
 type GeneratePresignedUploadURLPayload {
   url: String
   userErrors: [UserError!]
@@ -3091,11 +3147,17 @@ type TestDate {
   testType: TestDateTestType!
 }
 
+"""
+The type of test added to a 508/accessibility request
+"""
 enum TestDateTestType {
   INITIAL
   REMEDIATION
 }
 
+"""
+The input required to add a test date/score to a 508/accessibility request
+"""
 input CreateTestDateInput {
   date: Time!
   requestID: UUID!
@@ -3103,11 +3165,18 @@ input CreateTestDateInput {
   testType: TestDateTestType!
 }
 
+"""
+The payload for the input required to add a test date/score to a
+508/accessibility request
+"""
 type CreateTestDatePayload {
   testDate: TestDate
   userErrors: [UserError!]
 }
 
+"""
+The input required to update a test date/score
+"""
 input UpdateTestDateInput {
   date: Time!
   id: UUID!
@@ -3115,20 +3184,32 @@ input UpdateTestDateInput {
   testType: TestDateTestType!
 }
 
+"""
+The payload for the input required to update a test date/score
+"""
 type UpdateTestDatePayload {
   testDate: TestDate
   userErrors: [UserError!]
 }
 
+"""
+The input required to delete a test date/score
+"""
 input DeleteTestDateInput {
   id: UUID!
 }
 
+"""
+The payload for the input required to delete a test date/score
+"""
 type DeleteTestDatePayload {
   testDate: TestDate
   userErrors: [UserError!]
 }
 
+"""
+The input data used for adding a document to a 508/accessibility request
+"""
 input CreateAccessibilityRequestDocumentInput {
   commonDocumentType: AccessibilityRequestDocumentCommonType!
   mimeType: String!
@@ -3139,14 +3220,25 @@ input CreateAccessibilityRequestDocumentInput {
   url: String!
 }
 
+"""
+The payload containing the input data used for adding a document to a
+508/accessibility request
+"""
 type CreateAccessibilityRequestDocumentPayload {
   accessibilityRequestDocument: AccessibilityRequestDocument
   userErrors: [UserError!]
 }
 
+"""
+The input used to delete a document from a 508/accessibility request
+"""
 input DeleteAccessibilityRequestDocumentInput {
   id: UUID!
 }
+
+"""
+The payload used to delete a document from a 508/accessibility request
+"""
 type DeleteAccessibilityRequestDocumentPayload {
   id: UUID
 }
@@ -3169,6 +3261,10 @@ type BusinessCaseSolution {
   title: String
 }
 
+"""
+An IT governance requester's explanation of alternative solutions
+to their system, which involve leaving the system "as-is"
+"""
 type BusinessCaseAsIsSolution {
   cons: String
   costSavings: String
@@ -3177,12 +3273,18 @@ type BusinessCaseAsIsSolution {
   title: String
 }
 
+"""
+The cost phase of a 
+"""
 enum LifecycleCostPhase {
   DEVELOPMENT
   OPERATIONS_AND_MAINTENANCE
   OTHER
 }
 
+"""
+The type of a lifecycle cost solution, part of a business case
+"""
 enum LifecycleCostSolution {
   A
   AS_IS
@@ -3190,6 +3292,9 @@ enum LifecycleCostSolution {
   PREFERRED
 }
 
+"""
+Represents a lifecycle cost phase
+"""
 enum LifecycleCostYear {
   LIFECYCLE_COST_YEAR_1
   LIFECYCLE_COST_YEAR_2
@@ -3199,7 +3304,8 @@ enum LifecycleCostYear {
 }
 
 """
-An estimated Lifecycle cost row
+Information related to the estimated costs over one lifecycle phase for a
+system with a given solution
 """
 type EstimatedLifecycleCost {
   businessCaseId: UUID!
@@ -3210,11 +3316,18 @@ type EstimatedLifecycleCost {
   year: LifecycleCostYear
 }
 
+"""
+The status of a business case associated with an system IT governence request
+"""
 enum BusinessCaseStatus {
   CLOSED
   OPEN
 }
 
+"""
+A business case associated with an system IT governence request; contains 
+equester's justification for their system request
+"""
 type BusinessCase {
   alternativeASolution: BusinessCaseSolution
   alternativeBSolution: BusinessCaseSolution
@@ -3240,6 +3353,9 @@ type BusinessCase {
   updatedAt: Time!
 }
 
+"""
+The status of a system's IT governence request
+"""
 enum SystemIntakeStatus {
   BIZ_CASE_CHANGES_NEEDED
   BIZ_CASE_DRAFT
@@ -3278,6 +3394,9 @@ enum SystemIntakeStatus {
   WITHDRAWN
 }
 
+"""
+The type of an IT governance (system) request
+"""
 enum SystemIntakeRequestType {
   MAJOR_CHANGES
   NEW
@@ -3285,17 +3404,26 @@ enum SystemIntakeRequestType {
   SHUTDOWN
 }
 
+"""
+Represents the OIT business owner of a system
+"""
 type SystemIntakeBusinessOwner {
   component: String
   name: String
 }
 
+"""
+Represents a date used for start and end dates on a contract
+"""
 type ContractDate {
   day: String
   month: String
   year: String
 }
 
+"""
+Represents a contract for work on a system
+"""
 type SystemIntakeContract {
   contractor: String
   endDate: ContractDate!
@@ -3304,17 +3432,27 @@ type SystemIntakeContract {
   vehicle: String
 }
 
+"""
+Represents expectations about a system's additional costs
+"""
 type SystemIntakeCosts {
   expectedIncreaseAmount: String
   isExpectingIncrease: String
 }
 
+"""
+Represents the source of funding for a system
+"""
 type SystemIntakeFundingSource {
   fundingNumber: String
   isFunded: Boolean
   source: String
 }
 
+"""
+Represents a contact in OIT who is collaborating with the user
+creating a system IT governance request
+"""
 type SystemIntakeCollaborator {
   acronym: String!
   collaborator: String!
@@ -3323,21 +3461,34 @@ type SystemIntakeCollaborator {
   name: String!
 }
 
+"""
+Contains multiple system request collaborators, if any
+"""
 type SystemIntakeGovernanceTeam {
   isPresent: Boolean
   teams: [SystemIntakeCollaborator!]
 }
 
+"""
+The Information System Security Officer (ISSO) that is
+assicuated with a system request, if any
+"""
 type SystemIntakeISSO {
   isPresent: Boolean
   name: String
 }
 
+"""
+The author of a note added to a system request
+"""
 type SystemIntakeNoteAuthor {
   eua: String!
   name: String!
 }
 
+"""
+A note added to a system request
+"""
 type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
   content: String!
@@ -3345,17 +3496,26 @@ type SystemIntakeNote {
   id: UUID!
 }
 
+"""
+The product manager associated with a system
+"""
 type SystemIntakeProductManager {
   component: String
   name: String
 }
 
+"""
+The contact who made an IT governance request for a system
+"""
 type SystemIntakeRequester {
   component: String
   email: String
   name: String!
 }
 
+"""
+Represents an IT governance request for a system
+"""
 type SystemIntake {
   actions: [SystemIntakeAction!]!
   adminLead: String
@@ -3404,46 +3564,75 @@ type SystemIntake {
   lastAdminNote: LastAdminNote!
 }
 
+"""
+The input data used to set the requester of a system request
+"""
 input SystemIntakeRequesterInput {
   name: String!
 }
 
+"""
+The input data used to initialize an IT governance request for a system
+"""
 input CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequesterInput!
 }
 
+"""
+The input data used to set the requester for a system request along with the
+requester's business component
+"""
 input SystemIntakeRequesterWithComponentInput {
   name: String!
   component: String!
 }
 
+"""
+The input data used to set the CMS business owner of a system
+"""
 input SystemIntakeBusinessOwnerInput {
   name: String!
   component: String!
 }
 
+"""
+The input data used to set the CMS product manager/lead of a system
+"""
 input SystemIntakeProductManagerInput {
   name: String!
   component: String!
 }
 
+"""
+The input data used to set the ISSO associated with a system request, if any
+"""
 input SystemIntakeISSOInput {
   isPresent: Boolean
   name: String
 }
 
+"""
+The input data used to add an OIT collaborator for a system request
+"""
 input SystemIntakeCollaboratorInput {
   collaborator: String!
   name: String!
   key: String!
 }
 
+"""
+The input data used to set the list of OIT collaborators for a system request
+"""
 input SystemIntakeGovernanceTeamInput {
   isPresent: Boolean
   teams: [SystemIntakeCollaboratorInput]
 }
 
+"""
+The input data used to update the contact details of the people associated with
+a system request
+"""
 input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
   requester: SystemIntakeRequesterWithComponentInput!,
@@ -3453,6 +3642,9 @@ input UpdateSystemIntakeContactDetailsInput {
   governanceTeams: SystemIntakeGovernanceTeamInput!,
 }
 
+"""
+Input to update some fields on a system request
+"""
 input UpdateSystemIntakeRequestDetailsInput {
   id: UUID!
   requestName: String
@@ -3461,17 +3653,26 @@ input UpdateSystemIntakeRequestDetailsInput {
   needsEaSupport: Boolean
 }
 
+"""
+Input data detailing how a system is funded
+"""
 input SystemIntakeFundingSourceInput {
   fundingNumber: String
   isFunded: Boolean
   source: String
 }
 
+"""
+Input data for estimated system cost increases associated with a system request
+"""
 input SystemIntakeCostsInput {
   expectedIncreaseAmount: String
   isExpectingIncrease: String
 }
 
+"""
+Input data containing information about a contract related to a system request
+"""
 input SystemIntakeContractInput {
   contractor: String
   endDate: Time
@@ -3480,6 +3681,9 @@ input SystemIntakeContractInput {
   vehicle: String
 }
 
+"""
+Input data for updating contract details related to a system request
+"""
 input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
   currentStage: String
@@ -3488,16 +3692,25 @@ input UpdateSystemIntakeContractDetailsInput {
   contract: SystemIntakeContractInput
 }
 
+"""
+Input data for extending a system request's lifecycle ID
+"""
 input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
 }
 
+"""
+Payload data for extending a system request's lifecycle ID
+"""
 type CreateSystemIntakeActionExtendLifecycleIdPayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
 
+"""
+Represents the type of an action that is being done to a system request
+"""
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -3533,26 +3746,45 @@ type SystemIntakeAction {
   createdAt: Time!
 }
 
+"""
+Contains the data needed to change the expiration date of a system request's
+lifecycle ID
+"""
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
  }
 
+"""
+The contact who is associated with an action being done to a system request
+"""
 type SystemIntakeActionActor {
   name: String!
   email: String!
 }
 
+"""
+Feedback intended for a business owner before they proceed to writing a
+business case for a system request
+"""
 input AddGRTFeedbackInput {
   emailBody: String!
   feedback: String!
   intakeID: UUID!
 }
 
+"""
+Payload for adding GRT feedback to a system request (contains the system
+request ID)
+"""
 type AddGRTFeedbackPayload {
   id: UUID
 }
 
+"""
+The input data required to issue a lifecycle ID for a system's IT governance
+request
+"""
 input IssueLifecycleIdInput {
   expiresAt: Time!
   feedback: String!
@@ -3563,6 +3795,9 @@ input IssueLifecycleIdInput {
   costBaseline: String
 }
 
+"""
+Input data for rejection of a system's IT governance request
+"""
 input RejectIntakeInput {
   feedback: String!
   intakeId: UUID!
@@ -3570,16 +3805,26 @@ input RejectIntakeInput {
   reason: String!
 }
 
+"""
+Input data used to update the admin lead assigned to a system IT governance
+request
+"""
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
 }
 
+"""
+The most recent note added by an admin to a system request
+"""
 type LastAdminNote {
   content: String
   createdAt: Time
 }
 
+"""
+Indicates who the source is of feedback on a system request
+"""
 enum GRTFeedbackType {
   BUSINESS_OWNER
   GRB
@@ -3595,41 +3840,65 @@ type GRTFeedback {
   feedbackType: GRTFeedbackType
 }
 
+"""
+Input data used to update GRT and GRB dates for a system request
+"""
 input UpdateSystemIntakeReviewDatesInput {
   grbDate: Time
   grtDate: Time
   id: UUID!
 }
 
+"""
+Input data for adding a note to a system request
+"""
 input CreateSystemIntakeNoteInput {
   content: String!
   authorName: String!
   intakeId: UUID!
 }
 
+"""
+The payload for updating a system's IT governance request
+"""
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
 
+"""
+Input to add feedback to a system request
+"""
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
 }
 
+"""
+Input to submit an intake for review 
+"""
 input SubmitIntakeInput {
   id: UUID!
 }
 
+"""
+The current user's Launch Darkly key
+"""
 type LaunchDarklySettings {
   userKey: String!
   signedHash: String!
 }
 
+"""
+The current user of the application
+"""
 type CurrentUser {
   launchDarkly: LaunchDarklySettings!
 }
 
+"""
+Defines the mutations for the schema
+"""
 type Mutation {
   addGRTFeedbackAndKeepBusinessCaseInDraft(
     input: AddGRTFeedbackInput!
@@ -3719,6 +3988,9 @@ type Mutation {
   updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
 }
 
+"""
+Query definition for the schema
+"""
 type Query {
   accessibilityRequest(id: UUID!): AccessibilityRequest
   accessibilityRequests(
