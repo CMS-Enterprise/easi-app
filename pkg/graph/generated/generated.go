@@ -2959,7 +2959,7 @@ input UpdateAccessibilityRequestStatus {
 }
 
 """
-Result of updating a 508/accessibiiity request's status
+Result of updating a 508/accessibility request's status
 """
 type UpdateAccessibilityRequestStatusPayload {
   id: UUID!
@@ -2970,7 +2970,7 @@ type UpdateAccessibilityRequestStatusPayload {
 }
 
 """
-The data used when adding a note to a 508/accessibiiity request
+The data used when adding a note to a 508/accessibility request
 """
 input CreateAccessibilityRequestNoteInput {
   requestID: UUID!
@@ -2979,7 +2979,7 @@ input CreateAccessibilityRequestNoteInput {
 }
 
 """
-Represents a note added to a 508/accessibiiity request by a user
+Represents a note added to a 508/accessibility request by a user
 """
 type AccessibilityRequestNote {
   id: UUID!
@@ -2990,7 +2990,7 @@ type AccessibilityRequestNote {
 }
 
 """
-The payload for adding a note to a 508/accessibiiity request
+The payload for adding a note to a 508/accessibility request
 """
 type CreateAccessibilityRequestNotePayload {
   accessibilityRequestNote: AccessibilityRequestNote!

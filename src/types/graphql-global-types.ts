@@ -171,7 +171,7 @@ export interface CreateAccessibilityRequestInput {
 }
 
 /**
- * The data used when adding a note to a 508/accessibiiity request
+ * The data used when adding a note to a 508/accessibility request
  */
 export interface CreateAccessibilityRequestNoteInput {
   requestID: UUID;

@@ -104,14 +104,14 @@ type CreateAccessibilityRequestInput struct {
 	Name     string    `json:"name"`
 }
 
-// The data used when adding a note to a 508/accessibiiity request
+// The data used when adding a note to a 508/accessibility request
 type CreateAccessibilityRequestNoteInput struct {
 	RequestID       uuid.UUID `json:"requestID"`
 	Note            string    `json:"note"`
 	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
-// The payload for adding a note to a 508/accessibiiity request
+// The payload for adding a note to a 508/accessibility request
 type CreateAccessibilityRequestNotePayload struct {
 	AccessibilityRequestNote *models.AccessibilityRequestNote `json:"accessibilityRequestNote"`
 	UserErrors               []*UserError                     `json:"userErrors"`
@@ -452,7 +452,7 @@ type UpdateAccessibilityRequestStatus struct {
 	Status    models.AccessibilityRequestStatus `json:"status"`
 }
 
-// Result of updating a 508/accessibiiity request's status
+// Result of updating a 508/accessibility request's status
 type UpdateAccessibilityRequestStatusPayload struct {
 	ID         uuid.UUID                         `json:"id"`
 	RequestID  uuid.UUID                         `json:"requestID"`
