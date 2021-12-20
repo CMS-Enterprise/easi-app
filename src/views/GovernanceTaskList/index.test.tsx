@@ -1224,4 +1224,283 @@ describe('The Goveranance Task List', () => {
       ).toEqual('Completed');
     });
   });
+
+  describe('LCID Issued Behavior', () => {
+    const mockStore = configureMockStore();
+
+    it('renders LCID info alert when LCID is issued and status is OPEN', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {}
+        },
+        businessCase: { form: {} }
+      });
+
+      render(
+        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+          <MockedProvider
+            mocks={[
+              intakeQuery({
+                lcid: '123456',
+                status: 'READY_FOR_GRB'
+              }),
+              grtFeedback
+            ]}
+            addTypename={false}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <Route
+                  path="/governance-task-list/:systemId"
+                  component={GovernanceTaskList}
+                />
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      await waitForPageLoad();
+
+      expect(screen.getByTestId('lcid-issued-alert')).toBeInTheDocument();
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('prepare-for-grb-btn')).toBeInTheDocument();
+
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      const bizCase = screen.getByTestId('task-list-grb-meeting');
+      expect(
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render LCID info alert when LCID is not issued', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {}
+        },
+        businessCase: { form: {} }
+      });
+
+      render(
+        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+          <MockedProvider
+            mocks={[
+              intakeQuery({
+                status: 'READY_FOR_GRB'
+              }),
+              grtFeedback
+            ]}
+            addTypename={false}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <Route
+                  path="/governance-task-list/:systemId"
+                  component={GovernanceTaskList}
+                />
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      await waitForPageLoad();
+
+      expect(
+        within(screen.getByTestId('governance-task-list')).queryByTestId(
+          'lcid-issued-alert'
+        )
+      ).not.toBeInTheDocument();
+
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('prepare-for-grb-btn')).toBeInTheDocument();
+
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      const bizCase = screen.getByTestId('task-list-grb-meeting');
+      expect(
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render LCID info alert when LCID is issued and status is LCID_ISSUED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {}
+        },
+        businessCase: { form: {} }
+      });
+
+      render(
+        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+          <MockedProvider
+            mocks={[
+              intakeQuery({
+                lcid: '123456',
+                status: 'LCID_ISSUED'
+              }),
+              grtFeedback
+            ]}
+            addTypename={false}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <Route
+                  path="/governance-task-list/:systemId"
+                  component={GovernanceTaskList}
+                />
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      await waitForPageLoad();
+
+      expect(
+        within(screen.getByTestId('governance-task-list')).queryByTestId(
+          'lcid-issued-alert'
+        )
+      ).not.toBeInTheDocument();
+
+      expect(screen.getByTestId('task-list-closed-alert')).toBeInTheDocument();
+      expect(screen.getByTestId('decision-cta')).toBeInTheDocument();
+
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-intake-review')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-business-case-draft')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-business-case-final')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-grb-meeting')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      const bizCase = screen.getByTestId('task-list-decision');
+      expect(
+        within(bizCase).queryByTestId('task-list-task-tag')
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render LCID info alert when LCID is issued and status is NOT_APPROVED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {}
+        },
+        businessCase: { form: {} }
+      });
+
+      render(
+        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+          <MockedProvider
+            mocks={[
+              intakeQuery({
+                lcid: '123456',
+                status: 'NOT_APPROVED'
+              }),
+              grtFeedback
+            ]}
+            addTypename={false}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <Route
+                  path="/governance-task-list/:systemId"
+                  component={GovernanceTaskList}
+                />
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      await waitForPageLoad();
+
+      expect(
+        within(screen.getByTestId('governance-task-list')).queryByTestId(
+          'lcid-issued-alert'
+        )
+      ).not.toBeInTheDocument();
+      expect(screen.getByTestId('intake-view-link')).toBeInTheDocument();
+      expect(screen.getByTestId('task-list-closed-alert')).toBeInTheDocument();
+      expect(screen.getByTestId('decision-cta')).toBeInTheDocument();
+
+      expect(
+        within(screen.getByTestId('task-list-intake-form')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+
+      expect(
+        within(screen.getByTestId('task-list-grb-meeting')).getByTestId(
+          'task-list-task-tag'
+        ).textContent
+      ).toEqual('Completed');
+    });
+  });
 });
