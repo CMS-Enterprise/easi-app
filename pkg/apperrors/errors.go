@@ -242,7 +242,7 @@ type ResourceNotFoundError struct {
 // Error provides the error as a string
 func (e *ResourceNotFoundError) Error() string {
 	return fmt.Sprintf(
-		"Could not not find resource %T with error: %v",
+		"Could not find resource %T with error: %v",
 		e.Resource,
 		e.Err,
 	)
