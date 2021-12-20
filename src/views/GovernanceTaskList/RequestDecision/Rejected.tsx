@@ -26,6 +26,18 @@ const Rejected = ({ intake }: RejectedProps) => {
           <p className="text-pre-wrap">{decisionNextSteps}</p>
         </>
       )}
+
+      <div className="margin-top-4">
+        <UswdsLink
+          className="usa-button margin-bottom-2"
+          variant="unstyled"
+          asCustom={Link}
+          to={`/governance-task-list/${id}`}
+        >
+          {t('navigation.returnToTaskList')}
+        </UswdsLink>
+      </div>
+
       <h3>{t('general:feedback.improvement')}</h3>
       <UswdsLink
         href="https://www.surveymonkey.com/r/JNYSMZP"
@@ -35,12 +47,6 @@ const Rejected = ({ intake }: RejectedProps) => {
       >
         {t('general:feedback.whatYouThink')}
       </UswdsLink>
-
-      <div className="margin-top-4">
-        <UswdsLink asCustom={Link} to={`/governance-task-list/${id}`}>
-          {t('navigation.returnToTaskList')}
-        </UswdsLink>
-      </div>
     </>
   );
 };
