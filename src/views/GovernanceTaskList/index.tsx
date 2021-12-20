@@ -236,6 +236,7 @@ const GovernanceTaskList = () => {
                       direct you to go through the remaining steps.
                     </p>
                   </TaskListDescription>
+                  {/* Only display review Alert if intake is in initial stages (i.e. before review or request for business case) */}
                   {['INTAKE_DRAFT', 'INTAKE_SUBMITTED'].includes(
                     status || ''
                   ) && (
