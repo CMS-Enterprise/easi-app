@@ -2790,16 +2790,10 @@ type Request {
   nextMeetingDate: Time
 }
 
-"""
-TODO
-"""
 type RequestsConnection {
   edges: [RequestEdge!]!
 }
 
-"""
-TODO
-"""
 type RequestEdge {
   node: Request!
 }
@@ -2955,16 +2949,10 @@ type AccessibilityRequestDocument {
   url: String!
 }
 
-"""
-TODO
-"""
 type SystemConnection {
   edges: [SystemEdge!]!
 }
 
-"""
-TODO
-"""
 type SystemEdge {
   node: System!
 }
@@ -3011,7 +2999,7 @@ type DeleteAccessibilityRequestPayload {
 }
 
 """
-TODO
+Input associated with a document to be uploaded to a 508/accessibility request
 """
 input GeneratePresignedUploadURLInput {
   fileName: String!
@@ -3020,23 +3008,17 @@ input GeneratePresignedUploadURLInput {
 }
 
 """
-TODO
+URL generated for a document to be uploaded to a 508/accessibility request
 """
 type GeneratePresignedUploadURLPayload {
   url: String
   userErrors: [UserError!]
 }
 
-"""
-TODO
-"""
 type AccessibilityRequestsConnection {
   edges: [AccessibilityRequestEdge!]!
 }
 
-"""
-TODO
-"""
 type AccessibilityRequestEdge {
   node: AccessibilityRequest!
 }
@@ -3166,7 +3148,8 @@ type BusinessCaseSolution {
 }
 
 """
-TODO
+An IT governance requester's explanation of alternative solutions
+to their system, which involve leaving the system "as-is"
 """
 type BusinessCaseAsIsSolution {
   cons: String
@@ -3177,7 +3160,7 @@ type BusinessCaseAsIsSolution {
 }
 
 """
-TODO
+The cost phase of a 
 """
 enum LifecycleCostPhase {
   DEVELOPMENT
@@ -3186,7 +3169,7 @@ enum LifecycleCostPhase {
 }
 
 """
-TODO
+The type of a lifecycle cost solution, part of a business case
 """
 enum LifecycleCostSolution {
   A
@@ -3196,7 +3179,7 @@ enum LifecycleCostSolution {
 }
 
 """
-TODO
+Represents a lifecycle cost phase
 """
 enum LifecycleCostYear {
   LIFECYCLE_COST_YEAR_1
@@ -3207,7 +3190,8 @@ enum LifecycleCostYear {
 }
 
 """
-An estimated Lifecycle cost row
+Information related to the estimated costs over one lifecycle phase for a
+system with a given solution
 """
 type EstimatedLifecycleCost {
   businessCaseId: UUID!
@@ -3219,7 +3203,7 @@ type EstimatedLifecycleCost {
 }
 
 """
-TODO
+The status of a business case associated with an system IT governence request
 """
 enum BusinessCaseStatus {
   CLOSED
@@ -3227,7 +3211,8 @@ enum BusinessCaseStatus {
 }
 
 """
-TODO
+A business case associated with an system IT governence request; contains 
+equester's justification for their system request
 """
 type BusinessCase {
   alternativeASolution: BusinessCaseSolution
@@ -3255,7 +3240,7 @@ type BusinessCase {
 }
 
 """
-TODO
+The status of a system's IT governence request
 """
 enum SystemIntakeStatus {
   BIZ_CASE_CHANGES_NEEDED
@@ -3296,7 +3281,7 @@ enum SystemIntakeStatus {
 }
 
 """
-TODO
+The type of an IT governance (system) request
 """
 enum SystemIntakeRequestType {
   MAJOR_CHANGES
@@ -3306,7 +3291,7 @@ enum SystemIntakeRequestType {
 }
 
 """
-TODO
+Represents the OIT business owner of a system
 """
 type SystemIntakeBusinessOwner {
   component: String
@@ -3314,7 +3299,7 @@ type SystemIntakeBusinessOwner {
 }
 
 """
-TODO
+Represents a date used for start and end dates on a contract
 """
 type ContractDate {
   day: String
@@ -3323,7 +3308,7 @@ type ContractDate {
 }
 
 """
-TODO
+Represents a contract for work on a system
 """
 type SystemIntakeContract {
   contractor: String
@@ -3334,7 +3319,7 @@ type SystemIntakeContract {
 }
 
 """
-TODO
+Represents expectations about a system's additional costs
 """
 type SystemIntakeCosts {
   expectedIncreaseAmount: String
@@ -3342,7 +3327,7 @@ type SystemIntakeCosts {
 }
 
 """
-TODO
+Represents the source of funding for a system
 """
 type SystemIntakeFundingSource {
   fundingNumber: String
@@ -3351,7 +3336,8 @@ type SystemIntakeFundingSource {
 }
 
 """
-TODO
+Represents a contact in OIT who is collaborating with the user
+creating a system IT governance request
 """
 type SystemIntakeCollaborator {
   acronym: String!
@@ -3362,7 +3348,7 @@ type SystemIntakeCollaborator {
 }
 
 """
-TODO
+Contains multiple system request collaborators, if any
 """
 type SystemIntakeGovernanceTeam {
   isPresent: Boolean
@@ -3370,7 +3356,8 @@ type SystemIntakeGovernanceTeam {
 }
 
 """
-TODO
+The Information System Security Officer (ISSO) that is
+assicuated with a system request, if any
 """
 type SystemIntakeISSO {
   isPresent: Boolean
@@ -3378,7 +3365,7 @@ type SystemIntakeISSO {
 }
 
 """
-TODO
+The author of a note added to a system request
 """
 type SystemIntakeNoteAuthor {
   eua: String!
@@ -3386,7 +3373,7 @@ type SystemIntakeNoteAuthor {
 }
 
 """
-TODO
+A note added to a system request
 """
 type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
@@ -3396,7 +3383,7 @@ type SystemIntakeNote {
 }
 
 """
-TODO
+The product manager associated with a system
 """
 type SystemIntakeProductManager {
   component: String
@@ -3404,7 +3391,7 @@ type SystemIntakeProductManager {
 }
 
 """
-TODO
+The contact who made an IT governance request for a system
 """
 type SystemIntakeRequester {
   component: String
@@ -3413,7 +3400,7 @@ type SystemIntakeRequester {
 }
 
 """
-TODO
+Represents an IT governance request for a system
 """
 type SystemIntake {
   actions: [SystemIntakeAction!]!
@@ -3464,14 +3451,14 @@ type SystemIntake {
 }
 
 """
-TODO
+The input data used to set the requester of a system request
 """
 input SystemIntakeRequesterInput {
   name: String!
 }
 
 """
-TODO
+The input data used to initialize an IT governance request for a system
 """
 input CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType!
@@ -3479,7 +3466,8 @@ input CreateSystemIntakeInput {
 }
 
 """
-TODO
+The input data used to set the requester for a system request along with the
+requester's business component
 """
 input SystemIntakeRequesterWithComponentInput {
   name: String!
@@ -3487,7 +3475,7 @@ input SystemIntakeRequesterWithComponentInput {
 }
 
 """
-TODO
+The input data used to set the CMS business owner of a system
 """
 input SystemIntakeBusinessOwnerInput {
   name: String!
@@ -3495,7 +3483,7 @@ input SystemIntakeBusinessOwnerInput {
 }
 
 """
-TODO
+The input data used to set the CMS product manager/lead of a system
 """
 input SystemIntakeProductManagerInput {
   name: String!
@@ -3503,7 +3491,7 @@ input SystemIntakeProductManagerInput {
 }
 
 """
-TODO
+The input data used to set the ISSO associated with a system request, if any
 """
 input SystemIntakeISSOInput {
   isPresent: Boolean
@@ -3511,7 +3499,7 @@ input SystemIntakeISSOInput {
 }
 
 """
-TODO
+The input data used to add an OIT collaborator for a system request
 """
 input SystemIntakeCollaboratorInput {
   collaborator: String!
@@ -3520,7 +3508,7 @@ input SystemIntakeCollaboratorInput {
 }
 
 """
-TODO
+The input data used to set the list of OIT collaborators for a system request
 """
 input SystemIntakeGovernanceTeamInput {
   isPresent: Boolean
@@ -3528,7 +3516,8 @@ input SystemIntakeGovernanceTeamInput {
 }
 
 """
-TODO
+The input data used to update the contact details of the people associated with
+a system request
 """
 input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
@@ -3540,7 +3529,7 @@ input UpdateSystemIntakeContactDetailsInput {
 }
 
 """
-TODO
+Input to update some fields on a system request
 """
 input UpdateSystemIntakeRequestDetailsInput {
   id: UUID!
@@ -3551,7 +3540,7 @@ input UpdateSystemIntakeRequestDetailsInput {
 }
 
 """
-TODO
+Input data detailing how a system is funded
 """
 input SystemIntakeFundingSourceInput {
   fundingNumber: String
@@ -3560,7 +3549,7 @@ input SystemIntakeFundingSourceInput {
 }
 
 """
-TODO
+Input data for estimated system cost increases associated with a system request
 """
 input SystemIntakeCostsInput {
   expectedIncreaseAmount: String
@@ -3568,7 +3557,7 @@ input SystemIntakeCostsInput {
 }
 
 """
-TODO
+Input data containing information about a contract related to a system request
 """
 input SystemIntakeContractInput {
   contractor: String
@@ -3579,7 +3568,7 @@ input SystemIntakeContractInput {
 }
 
 """
-TODO
+Input data for updating contract details related to a system request
 """
 input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
@@ -3590,7 +3579,7 @@ input UpdateSystemIntakeContractDetailsInput {
 }
 
 """
-TODO
+Input data for extending a system request's lifecycle ID
 """
 input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
@@ -3598,13 +3587,16 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
 }
 
 """
-TODO
+Payload data for extending a system request's lifecycle ID
 """
 type CreateSystemIntakeActionExtendLifecycleIdPayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
 
+"""
+Represents the type of an action that is being done to a system request
+"""
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -3641,7 +3633,8 @@ type SystemIntakeAction {
 }
 
 """
-TODO
+Contains the data needed to change the expiration date of a system request's
+lifecycle ID
 """
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
@@ -3649,7 +3642,7 @@ type SystemIntakeLCIDExpirationChange {
  }
 
 """
-TODO
+The contact who is associated with an action being done to a system request
 """
 type SystemIntakeActionActor {
   name: String!
@@ -3657,7 +3650,8 @@ type SystemIntakeActionActor {
 }
 
 """
-TODO
+Feedback intended for a business owner before they proceed to writing a
+business case for a system request
 """
 input AddGRTFeedbackInput {
   emailBody: String!
@@ -3666,14 +3660,16 @@ input AddGRTFeedbackInput {
 }
 
 """
-TODO
+Payload for adding GRT feedback to a system request (contains the system
+request ID)
 """
 type AddGRTFeedbackPayload {
   id: UUID
 }
 
 """
-TODO
+The input data required to issue a lifecycle ID for a system's IT governance
+request
 """
 input IssueLifecycleIdInput {
   expiresAt: Time!
@@ -3686,7 +3682,7 @@ input IssueLifecycleIdInput {
 }
 
 """
-TODO
+Input data for rejection of a system's IT governance request
 """
 input RejectIntakeInput {
   feedback: String!
@@ -3696,7 +3692,8 @@ input RejectIntakeInput {
 }
 
 """
-TODO
+Input data used to update the admin lead assigned to a system IT governance
+request
 """
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
@@ -3704,7 +3701,7 @@ input UpdateSystemIntakeAdminLeadInput {
 }
 
 """
-TODO
+The most recent note added by an admin to a system request
 """
 type LastAdminNote {
   content: String
@@ -3712,7 +3709,7 @@ type LastAdminNote {
 }
 
 """
-TODO
+Indicates who the source is of feedback on a system request
 """
 enum GRTFeedbackType {
   BUSINESS_OWNER
@@ -3730,7 +3727,7 @@ type GRTFeedback {
 }
 
 """
-TODO
+Input data used to update GRT and GRB dates for a system request
 """
 input UpdateSystemIntakeReviewDatesInput {
   grbDate: Time
@@ -3739,7 +3736,7 @@ input UpdateSystemIntakeReviewDatesInput {
 }
 
 """
-TODO
+Input data for adding a note to a system request
 """
 input CreateSystemIntakeNoteInput {
   content: String!
@@ -3748,7 +3745,7 @@ input CreateSystemIntakeNoteInput {
 }
 
 """
-TODO
+The payload for updating a system's IT governance request
 """
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
@@ -3756,7 +3753,7 @@ type UpdateSystemIntakePayload {
 }
 
 """
-TODO
+Input to add feedback to a system request
 """
 input BasicActionInput {
   feedback: String!
@@ -3764,14 +3761,14 @@ input BasicActionInput {
 }
 
 """
-TODO
+Input to submit an intake for review 
 """
 input SubmitIntakeInput {
   id: UUID!
 }
 
 """
-TODO
+The current user's Launch Darkly key
 """
 type LaunchDarklySettings {
   userKey: String!
@@ -3779,14 +3776,14 @@ type LaunchDarklySettings {
 }
 
 """
-TODO
+The current user of the application
 """
 type CurrentUser {
   launchDarkly: LaunchDarklySettings!
 }
 
 """
-TODO
+Defines the mutations for the schema
 """
 type Mutation {
   addGRTFeedbackAndKeepBusinessCaseInDraft(
@@ -3878,7 +3875,7 @@ type Mutation {
 }
 
 """
-TODO
+Query definition for the schema
 """
 type Query {
   accessibilityRequest(id: UUID!): AccessibilityRequest

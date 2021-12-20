@@ -50,7 +50,7 @@ export enum AccessibilityRequestStatus {
 }
 
 /**
- * TODO
+ * Indicates who the source is of feedback on a system request
  */
 export enum GRTFeedbackType {
   BUSINESS_OWNER = "BUSINESS_OWNER",
@@ -65,6 +65,9 @@ export enum RequestType {
   GOVERNANCE_REQUEST = "GOVERNANCE_REQUEST",
 }
 
+/**
+ * Represents the type of an action that is being done to a system request
+ */
 export enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES = "BIZ_CASE_NEEDS_CHANGES",
   CREATE_BIZ_CASE = "CREATE_BIZ_CASE",
@@ -88,7 +91,7 @@ export enum SystemIntakeActionType {
 }
 
 /**
- * TODO
+ * The type of an IT governance (system) request
  */
 export enum SystemIntakeRequestType {
   MAJOR_CHANGES = "MAJOR_CHANGES",
@@ -98,7 +101,7 @@ export enum SystemIntakeRequestType {
 }
 
 /**
- * TODO
+ * The status of a system's IT governence request
  */
 export enum SystemIntakeStatus {
   BIZ_CASE_CHANGES_NEEDED = "BIZ_CASE_CHANGES_NEEDED",
@@ -129,7 +132,8 @@ export enum TestDateTestType {
 }
 
 /**
- * TODO
+ * Feedback intended for a business owner before they proceed to writing a
+ * business case for a system request
  */
 export interface AddGRTFeedbackInput {
   emailBody: string;
@@ -138,7 +142,7 @@ export interface AddGRTFeedbackInput {
 }
 
 /**
- * TODO
+ * Input to add feedback to a system request
  */
 export interface BasicActionInput {
   feedback: string;
@@ -176,7 +180,7 @@ export interface CreateAccessibilityRequestNoteInput {
 }
 
 /**
- * TODO
+ * Input data for extending a system request's lifecycle ID
  */
 export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID;
@@ -184,7 +188,7 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
 }
 
 /**
- * TODO
+ * The input data used to initialize an IT governance request for a system
  */
 export interface CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType;
@@ -192,7 +196,7 @@ export interface CreateSystemIntakeInput {
 }
 
 /**
- * TODO
+ * Input data for adding a note to a system request
  */
 export interface CreateSystemIntakeNoteInput {
   content: string;
@@ -233,7 +237,7 @@ export interface DeleteTestDateInput {
 }
 
 /**
- * TODO
+ * Input associated with a document to be uploaded to a 508/accessibility request
  */
 export interface GeneratePresignedUploadURLInput {
   fileName: string;
@@ -242,7 +246,8 @@ export interface GeneratePresignedUploadURLInput {
 }
 
 /**
- * TODO
+ * The input data required to issue a lifecycle ID for a system's IT governance
+ * request
  */
 export interface IssueLifecycleIdInput {
   expiresAt: Time;
@@ -255,7 +260,7 @@ export interface IssueLifecycleIdInput {
 }
 
 /**
- * TODO
+ * Input data for rejection of a system's IT governance request
  */
 export interface RejectIntakeInput {
   feedback: string;
@@ -265,14 +270,14 @@ export interface RejectIntakeInput {
 }
 
 /**
- * TODO
+ * Input to submit an intake for review 
  */
 export interface SubmitIntakeInput {
   id: UUID;
 }
 
 /**
- * TODO
+ * The input data used to set the CMS business owner of a system
  */
 export interface SystemIntakeBusinessOwnerInput {
   name: string;
@@ -280,7 +285,7 @@ export interface SystemIntakeBusinessOwnerInput {
 }
 
 /**
- * TODO
+ * The input data used to add an OIT collaborator for a system request
  */
 export interface SystemIntakeCollaboratorInput {
   collaborator: string;
@@ -289,7 +294,7 @@ export interface SystemIntakeCollaboratorInput {
 }
 
 /**
- * TODO
+ * Input data containing information about a contract related to a system request
  */
 export interface SystemIntakeContractInput {
   contractor?: string | null;
@@ -300,7 +305,7 @@ export interface SystemIntakeContractInput {
 }
 
 /**
- * TODO
+ * Input data for estimated system cost increases associated with a system request
  */
 export interface SystemIntakeCostsInput {
   expectedIncreaseAmount?: string | null;
@@ -308,7 +313,7 @@ export interface SystemIntakeCostsInput {
 }
 
 /**
- * TODO
+ * Input data detailing how a system is funded
  */
 export interface SystemIntakeFundingSourceInput {
   fundingNumber?: string | null;
@@ -317,7 +322,7 @@ export interface SystemIntakeFundingSourceInput {
 }
 
 /**
- * TODO
+ * The input data used to set the list of OIT collaborators for a system request
  */
 export interface SystemIntakeGovernanceTeamInput {
   isPresent?: boolean | null;
@@ -325,7 +330,7 @@ export interface SystemIntakeGovernanceTeamInput {
 }
 
 /**
- * TODO
+ * The input data used to set the ISSO associated with a system request, if any
  */
 export interface SystemIntakeISSOInput {
   isPresent?: boolean | null;
@@ -333,7 +338,7 @@ export interface SystemIntakeISSOInput {
 }
 
 /**
- * TODO
+ * The input data used to set the CMS product manager/lead of a system
  */
 export interface SystemIntakeProductManagerInput {
   name: string;
@@ -341,14 +346,15 @@ export interface SystemIntakeProductManagerInput {
 }
 
 /**
- * TODO
+ * The input data used to set the requester of a system request
  */
 export interface SystemIntakeRequesterInput {
   name: string;
 }
 
 /**
- * TODO
+ * The input data used to set the requester for a system request along with the
+ * requester's business component
  */
 export interface SystemIntakeRequesterWithComponentInput {
   name: string;
@@ -364,7 +370,8 @@ export interface UpdateAccessibilityRequestStatus {
 }
 
 /**
- * TODO
+ * Input data used to update the admin lead assigned to a system IT governance
+ * request
  */
 export interface UpdateSystemIntakeAdminLeadInput {
   adminLead: string;
@@ -372,7 +379,8 @@ export interface UpdateSystemIntakeAdminLeadInput {
 }
 
 /**
- * TODO
+ * The input data used to update the contact details of the people associated with
+ * a system request
  */
 export interface UpdateSystemIntakeContactDetailsInput {
   id: UUID;
@@ -384,7 +392,7 @@ export interface UpdateSystemIntakeContactDetailsInput {
 }
 
 /**
- * TODO
+ * Input data for updating contract details related to a system request
  */
 export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
@@ -395,7 +403,7 @@ export interface UpdateSystemIntakeContractDetailsInput {
 }
 
 /**
- * TODO
+ * Input to update some fields on a system request
  */
 export interface UpdateSystemIntakeRequestDetailsInput {
   id: UUID;
@@ -406,7 +414,7 @@ export interface UpdateSystemIntakeRequestDetailsInput {
 }
 
 /**
- * TODO
+ * Input data used to update GRT and GRB dates for a system request
  */
 export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
