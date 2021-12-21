@@ -370,8 +370,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       currently spending to meet your business need?
                     </legend>
                     <HelpText id="IntakeForm-IncreasedCostsHelp">
-                      This information helps the team decide on the right
-                      approval process for this request
+                      Compare the first year of new contract spending to current
+                      annual spending
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['costs.isExpectingIncrease']}
@@ -404,8 +404,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             increase?
                           </Label>
                           <HelpText id="IntakeForm-ExpectedIncreaseHelp">
-                            Compare the first year of new contract spending to
-                            current annual spending
+                            This information helps the team decide on the right
+                            approval process for this request
                           </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['costs.expectedIncreaseAmount']}
