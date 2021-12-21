@@ -17,27 +17,24 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
-import SystemHealthIcon from 'components/SystemHealthIcon';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import {
   GetCedarSystems,
   GetCedarSystems_cedarSystems as CedarSystem
 } from 'queries/types/GetCedarSystems';
-import { IconStatus, sortByStatus } from 'types/iconStatus';
-import { mockSystemInfo, SystemInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo with dynamic data fetched from backend
 
 // TODO - if we want to keep this text past the prototype state, it needs to use translation
-const mapStatusToDescription = (status: IconStatus): string => {
-  switch (status) {
-    case 'success':
-      return 'Fully operational';
-    case 'warning':
-      return 'Degraded functionality';
-    case 'fail':
-    default:
-      return 'Inoperative';
-  }
-};
+// const mapStatusToDescription = (status: IconStatus): string => {
+//   switch (status) {
+//     case 'success':
+//       return 'Fully operational';
+//     case 'warning':
+//       return 'Degraded functionality';
+//     case 'fail':
+//     default:
+//       return 'Inoperative';
+//   }
+// };
 
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
@@ -85,6 +82,14 @@ export const SystemRepositoryTable = () => {
     prepareRow
   } = useTable(
     {
+      sortTypes: {
+        alphanumeric: (rowOne, rowTwo, columnName) => {
+          const rowOneElem = rowOne.values[columnName];
+          const rowTwoElem = rowTwo.values[columnName];
+
+          return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
+        }
+      },
       columns,
       data: data?.cedarSystems as CedarSystem[],
       initialState: {
