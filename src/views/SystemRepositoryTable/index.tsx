@@ -8,6 +8,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Column, HeaderGroup, Row, useSortBy, useTable } from 'react-table';
+import { useQuery } from '@apollo/client';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
@@ -17,6 +18,11 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import SystemHealthIcon from 'components/SystemHealthIcon';
+import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
+import {
+  GetCedarSystems,
+  GetCedarSystems_cedarSystems as CedarSystem
+} from 'queries/types/GetCedarSystems';
 import { IconStatus, sortByStatus } from 'types/iconStatus';
 import { mockSystemInfo, SystemInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo with dynamic data fetched from backend
 
@@ -36,22 +42,28 @@ const mapStatusToDescription = (status: IconStatus): string => {
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
 
-  const sortRowsByStatus = useMemo(
-    () => (rowA: Row<SystemInfo>, rowB: Row<SystemInfo>) =>
-      sortByStatus(
-        rowA.original.productionStatus,
-        rowB.original.productionStatus
-      ),
-    []
-  );
+  const { data: result } = useQuery<GetCedarSystems>(GetCedarSystemsQuery);
 
-  const columns = useMemo<Column<SystemInfo>[]>(() => {
+  let data;
+  if (!result) {
+    data = {
+      cedarSystems: []
+    } as GetCedarSystems;
+  } else {
+    data = result;
+  }
+
+  const columns = useMemo<Column<CedarSystem>[]>(() => {
     return [
       {
+        Header: t<string>('systemTable.header.systemAcronym'),
+        accessor: 'acronym'
+      },
+      {
         Header: t<string>('systemTable.header.systemName'),
-        accessor: (systemInfo: SystemInfo) => `System ${systemInfo.name}`,
+        accessor: 'name',
         id: 'systemName',
-        Cell: ({ row }: { row: Row<SystemInfo> }) => (
+        Cell: ({ row }: { row: Row<CedarSystem> }) => (
           <UswdsLink asCustom={Link} to={`/sandbox/${row.original.id}`}>
             {row.original.name}
           </UswdsLink>
@@ -59,24 +71,11 @@ export const SystemRepositoryTable = () => {
       },
       {
         Header: t<string>('systemTable.header.systemOwner'),
-        accessor: (systemInfo: SystemInfo) =>
-          `${systemInfo.ownerName}, ${systemInfo.ownerOffice}`,
+        accessor: 'businessOwnerOrg',
         id: 'systemOwner'
-      },
-      {
-        Header: t<string>('systemTable.header.productionStatus'),
-        accessor: 'productionStatus',
-        Cell: ({ row }: { row: Row<SystemInfo> }) => (
-          <SystemHealthIcon
-            status={row.original.productionStatus}
-            size="medium"
-            label={mapStatusToDescription(row.original.productionStatus)}
-          />
-        ),
-        sortType: sortRowsByStatus
       }
     ];
-  }, [t, sortRowsByStatus]); // TODO when system data is dynamically fetched, this dependency list may need to be changed
+  }, [t]); // TODO when system data is dynamically fetched, this dependency list may need to be changed
 
   const {
     getTableProps,
@@ -87,7 +86,7 @@ export const SystemRepositoryTable = () => {
   } = useTable(
     {
       columns,
-      data: useMemo(() => mockSystemInfo, []),
+      data: data?.cedarSystems as CedarSystem[],
       initialState: {
         sortBy: useMemo(() => [{ id: 'systemName', desc: false }], [])
       }

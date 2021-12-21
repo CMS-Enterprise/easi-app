@@ -22,7 +22,7 @@ import (
 
 const (
 	cedarCoreEnabledKey     = "cedarCoreEnabled"
-	cedarCoreEnabledDefault = false
+	cedarCoreEnabledDefault = true
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
