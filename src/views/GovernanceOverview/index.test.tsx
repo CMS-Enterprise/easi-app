@@ -32,24 +32,26 @@ describe('The governance overview page', () => {
     );
   });
 
-  it('matches the snapshot (w/o id param)', () => {
-    const tree = renderer
-      .create(
+  it('matches the snapshot (w/o id param)', async () => {
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
         <MemoryRouter initialEntries={['/governance-overview']}>
           <Route
             path="/governance-overview/:systemId?"
             component={GovernanceOverview}
           />
         </MemoryRouter>
-      )
-      .toJSON();
+      );
+    });
 
-    expect(tree).toMatchSnapshot();
+    expect(tree.toJSON()).toMatchSnapshot();
   });
 
   it('matches the snapshot (w/ id param)', async () => {
-    const tree = renderer
-      .create(
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
         <MemoryRouter
           initialEntries={['/governance-overview/test-intake-guid']}
         >
@@ -58,10 +60,9 @@ describe('The governance overview page', () => {
             component={GovernanceOverview}
           />
         </MemoryRouter>
-      )
-      .toJSON();
+      );
+    });
 
-    await act(async () => {});
-    expect(tree).toMatchSnapshot();
+    expect(tree.toJSON()).toMatchSnapshot();
   });
 });

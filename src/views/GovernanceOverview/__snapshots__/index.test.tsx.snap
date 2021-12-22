@@ -198,7 +198,7 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
             onClick={[Function]}
             type="button"
           >
-            
+            John Doe
             <i
               className="fa fa-angle-down easi-header__caret"
             />
@@ -768,7 +768,7 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
             onClick={[Function]}
             type="button"
           >
-            
+            John Doe
             <i
               className="fa fa-angle-down easi-header__caret"
             />
