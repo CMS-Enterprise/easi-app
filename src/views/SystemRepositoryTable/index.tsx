@@ -7,7 +7,14 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Column, HeaderGroup, Row, useSortBy, useTable } from 'react-table';
+import {
+  Column,
+  HeaderGroup,
+  Row,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -79,7 +86,17 @@ export const SystemRepositoryTable = () => {
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize }
   } = useTable(
     {
       sortTypes: {
@@ -93,10 +110,12 @@ export const SystemRepositoryTable = () => {
       columns,
       data: data?.cedarSystems as CedarSystem[],
       initialState: {
-        sortBy: useMemo(() => [{ id: 'systemName', desc: false }], [])
+        sortBy: useMemo(() => [{ id: 'systemName', desc: false }], []),
+        pageIndex: 0
       }
     },
-    useSortBy
+    useSortBy,
+    usePagination
   );
 
   // TODO - copied from src/components/RequestRepository/index.tsx. is this something we should generalize & reuse?
@@ -167,7 +186,7 @@ export const SystemRepositoryTable = () => {
                 ))}
               </thead>
               <tbody {...getTableBodyProps()}>
-                {rows.map(row => {
+                {page.map(row => {
                   prepareRow(row);
                   return (
                     <tr {...row.getRowProps()}>
@@ -179,6 +198,60 @@ export const SystemRepositoryTable = () => {
                 })}
               </tbody>
             </Table>
+            {/* TEMPORARY PAGINATION START */}
+            <div className="pagination">
+              <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+                {'<<'}
+              </button>{' '}
+              <button
+                onClick={() => previousPage()}
+                disabled={!canPreviousPage}
+              >
+                {'<'}
+              </button>{' '}
+              <button onClick={() => nextPage()} disabled={!canNextPage}>
+                {'>'}
+              </button>{' '}
+              <button
+                onClick={() => gotoPage(pageCount - 1)}
+                disabled={!canNextPage}
+              >
+                {'>>'}
+              </button>{' '}
+              <span>
+                Page{' '}
+                <strong>
+                  {pageIndex + 1} of {pageOptions.length}
+                </strong>{' '}
+              </span>
+              <span>
+                | Go to page:{' '}
+                <input
+                  type="number"
+                  defaultValue={pageIndex + 1}
+                  onChange={e => {
+                    const page = e.target.value
+                      ? Number(e.target.value) - 1
+                      : 0;
+                    gotoPage(page);
+                  }}
+                  style={{ width: '100px' }}
+                />
+              </span>{' '}
+              <select
+                value={pageSize}
+                onChange={e => {
+                  setPageSize(Number(e.target.value));
+                }}
+              >
+                {[10, 20, 30, 40, 50].map(pageSize => (
+                  <option key={pageSize} value={pageSize}>
+                    Show {pageSize}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* TEMPORARY PAGINATION END */}
           </div>
         </>
       </MainContent>
