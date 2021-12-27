@@ -3,7 +3,6 @@ export type Flags = {
   downgradeGovTeam: boolean;
   downgrade508User: boolean;
   downgrade508Tester: boolean;
-  lcidExtension: boolean;
 };
 
 export type FlagsState = {
