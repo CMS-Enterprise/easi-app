@@ -10,11 +10,13 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
+	apideployments "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/deployment"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -153,4 +155,87 @@ func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem,
 		SystemMaintainerOrg:     responseArray[0].SystemMaintainerOrg,
 		SystemMaintainerOrgComp: responseArray[0].SystemMaintainerOrgComp,
 	}, nil
+}
+
+// GetDeploymentsOptionalParams represents the optional parameters that can be used to filter deployments
+// when searching through the CEDAR API
+// TODO - is this how we want to handle multiple optional parameters?
+type GetDeploymentsOptionalParams struct {
+	DeploymentType null.String
+	State          null.String
+	Status         null.String
+}
+
+// GetDeployments makes a GET call to the /deployment endpoint
+func (c *Client) GetDeployments(ctx context.Context, systemID string, optionalParams *GetDeploymentsOptionalParams) ([]*models.CedarDeployment, error) {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return []*models.CedarDeployment{}, nil
+	}
+
+	// Construct the parameters
+	params := apideployments.NewDeploymentFindListParams()
+	params.SetSystemID(systemID)
+	params.HTTPClient = c.hc
+
+	if optionalParams != nil {
+		if optionalParams.DeploymentType.Ptr() != nil {
+			params.SetDeploymentType(optionalParams.DeploymentType.Ptr())
+		}
+
+		if optionalParams.State.Ptr() != nil {
+			params.SetState(optionalParams.State.Ptr())
+		}
+
+		if optionalParams.Status.Ptr() != nil {
+			params.SetStatus(optionalParams.Status.Ptr())
+		}
+	}
+
+	// Make the API call
+	resp, err := c.sdk.Deployment.DeploymentFindList(params, c.auth)
+	if err != nil {
+		return []*models.CedarDeployment{}, err
+	}
+
+	if resp.Payload == nil {
+		return []*models.CedarDeployment{}, fmt.Errorf("no body received")
+	}
+
+	responseArray := resp.Payload.Deployments
+
+	if len(responseArray) == 0 {
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no deployments found"), Resource: []*models.CedarDeployment{}}
+	}
+
+	// Convert the auto-generated struct to our own pkg/models struct
+	retVal := []*models.CedarDeployment{}
+
+	// Populate the Deployment field by converting each item in resp.Payload.Depliyments
+	for _, deployment := range resp.Payload.Deployments {
+		retDeployment := &models.CedarDeployment{
+			ID:       *deployment.ID,
+			Name:     *deployment.Name,
+			SystemID: *deployment.SystemID,
+			// IsHotSite: deployment.IsHotSite,
+		}
+
+		// TODO - generated client translates JSON nulls into Golang empty values
+
+		if deployment.StartDate == (strfmt.Date{}) {
+			retDeployment.StartDate = nil
+		} else {
+			retDeployment.StartDate = &deployment.StartDate
+		}
+
+		if deployment.EndDate == (strfmt.Date{}) {
+			retDeployment.EndDate = nil
+		} else {
+			retDeployment.EndDate = &deployment.EndDate
+		}
+
+		retVal = append(retVal, retDeployment)
+	}
+
+	return retVal, nil
 }
