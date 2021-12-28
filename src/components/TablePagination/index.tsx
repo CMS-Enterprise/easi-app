@@ -24,7 +24,7 @@ const TablePagination = ({
 }: ReactTablePaginationProps) => {
   const classNames = classnames('pagination', className);
   return (
-    <div className={classNames}>
+    <div className={classNames} data-testid="table-pagination">
       <button
         type="button"
         className="usa-button"
