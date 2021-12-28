@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import NavigationBar, { navLinks } from './index';
 
@@ -13,6 +14,15 @@ jest.mock('react-i18next', () => ({
       i18n: {
         changeLanguage: () => new Promise(() => {})
       }
+    };
+  }
+}));
+
+jest.mock('launchdarkly-react-client-sdk', () => ({
+  // this mock makes sure any components using the translate hook can use it without a warning being shown
+  useFlags: () => {
+    return {
+      systemProfile: true
     };
   }
 }));
@@ -37,10 +47,15 @@ describe('The NavigationBar component', () => {
     );
 
     const { t } = useTranslation();
+    const flags = useFlags();
 
-    navLinks.map(link => {
-      const linkTitle = t(`header:${link.label}`);
-      return expect(getByText(linkTitle)).toBeInTheDocument();
+    navLinks.forEach(link => {
+      if (!flags.systemProfile && link.label === 'systems') {
+        // absence of flag has removed element from dom
+      } else {
+        const linkTitle = t(`header:${link.label}`);
+        expect(getByText(linkTitle)).toBeInTheDocument();
+      }
     });
     done();
   });
