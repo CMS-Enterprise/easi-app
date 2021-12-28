@@ -3,6 +3,7 @@ export type Flags = {
   downgradeGovTeam: boolean;
   downgrade508User: boolean;
   downgrade508Tester: boolean;
+  systemProfile: boolean;
 };
 
 export type FlagsState = {
