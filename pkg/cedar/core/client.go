@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
@@ -11,6 +12,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/guregu/null"
+	"github.com/guregu/null/zero"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -211,27 +213,64 @@ func (c *Client) GetDeployments(ctx context.Context, systemID string, optionalPa
 	// Convert the auto-generated struct to our own pkg/models struct
 	retVal := []*models.CedarDeployment{}
 
-	// Populate the Deployment field by converting each item in resp.Payload.Depliyments
+	// Populate the Deployment field by converting each item in resp.Payload.Deployments
+	// generated swagger client turns JSON nulls into Go zero values, so use null/zero package to convert them back to nullable values
 	for _, deployment := range resp.Payload.Deployments {
+		if deployment.ID == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment ID was null", zap.String("systemID", systemID))
+			continue
+		}
+
+		if deployment.Name == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment name was null", zap.String("systemID", systemID))
+			continue
+		}
+
+		if deployment.SystemID == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment system ID was null", zap.String("systemID", systemID))
+			continue
+		}
+
 		retDeployment := &models.CedarDeployment{
-			ID:       *deployment.ID,
-			Name:     *deployment.Name,
-			SystemID: *deployment.SystemID,
-			// IsHotSite: deployment.IsHotSite,
+			ID:                *deployment.ID,
+			Name:              *deployment.Name,
+			SystemID:          *deployment.SystemID,
+			StartDate:         zero.TimeFrom(time.Time(deployment.StartDate)),
+			EndDate:           zero.TimeFrom(time.Time(deployment.EndDate)),
+			IsHotSite:         zero.StringFrom(deployment.IsHotSite),
+			Description:       zero.StringFrom(deployment.Description),
+			ContractorName:    zero.StringFrom(deployment.ContractorName),
+			SystemVersion:     zero.StringFrom(deployment.ContractorName),
+			HasProductionData: zero.StringFrom(deployment.HasProductionData),
+
+			// TODO - assumes no nulls in array returned from query
+			ReplicatedSystemElements: deployment.ReplicatedSystemElements,
+
+			DeploymentType:      zero.StringFrom(deployment.DeploymentType),
+			SystemName:          zero.StringFrom(deployment.SystemName),
+			DeploymentElementID: zero.StringFrom(deployment.DeploymentElementID),
+			State:               zero.StringFrom(deployment.State),
+			Status:              zero.StringFrom(deployment.Status),
+			WanType:             zero.StringFrom(deployment.WanType),
 		}
 
-		// TODO - generated client translates JSON nulls into Golang empty values
-
-		if deployment.StartDate == (strfmt.Date{}) {
-			retDeployment.StartDate = nil
-		} else {
-			retDeployment.StartDate = &deployment.StartDate
-		}
-
-		if deployment.EndDate == (strfmt.Date{}) {
-			retDeployment.EndDate = nil
-		} else {
-			retDeployment.EndDate = &deployment.EndDate
+		if deployment.DataCenter != nil {
+			retDataCenter := &models.CedarDataCenter{
+				ID:           zero.StringFrom(deployment.DataCenter.ID),
+				Name:         zero.StringFrom(deployment.DataCenter.Name),
+				Version:      zero.StringFrom(deployment.DataCenter.Version),
+				Description:  zero.StringFrom(deployment.DataCenter.Description),
+				State:        zero.StringFrom(deployment.DataCenter.State),
+				Status:       zero.StringFrom(deployment.DataCenter.Status),
+				StartDate:    zero.TimeFrom(time.Time(deployment.DataCenter.StartDate)),
+				EndDate:      zero.TimeFrom(time.Time(deployment.DataCenter.EndDate)),
+				Address1:     zero.StringFrom(deployment.DataCenter.Address1),
+				Address2:     zero.StringFrom(deployment.DataCenter.Address2),
+				City:         zero.StringFrom(deployment.DataCenter.City),
+				AddressState: zero.StringFrom(deployment.DataCenter.AddressState),
+				Zip:          zero.StringFrom(deployment.DataCenter.Zip),
+			}
+			retDeployment.DataCenter = retDataCenter
 		}
 
 		retVal = append(retVal, retDeployment)
