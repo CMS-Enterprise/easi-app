@@ -99,17 +99,19 @@ export const Header = ({ children }: HeaderProps) => {
         </div>
         {authState?.isAuthenticated ? (
           <div>
-            {userName} |{' '}
-            <button
-              type="button"
-              className="usa-button usa-button--unstyled"
-              data-testid="signout-link"
-              aria-expanded="false"
-              aria-controls="sign-out"
-              onClick={signout}
-            >
-              {t('header:signOut')}
-            </button>
+            <div className="navbar--container">
+              {userName} &nbsp;| &nbsp;
+              <button
+                type="button"
+                className="usa-button usa-button--unstyled"
+                data-testid="signout-link"
+                aria-expanded="false"
+                aria-controls="sign-out"
+                onClick={signout}
+              >
+                {t('header:signOut')}
+              </button>
+            </div>
             <button
               type="button"
               className="usa-menu-btn"
@@ -146,16 +148,7 @@ export const Header = ({ children }: HeaderProps) => {
         <div className="usa-nav__inner">
           {children}
           {authState?.isAuthenticated ? (
-            <button
-              type="button"
-              className="easi-header__nav-link"
-              onClick={() => {
-                localStorage.removeItem(localAuthStorageKey);
-                oktaAuth.signOut();
-              }}
-            >
-              {t('header:signOut')}
-            </button>
+            <NavigationBar mobile signout={signout} />
           ) : (
             <a className="easi-header__nav-link" href="/signin">
               {t('header:signIn')}

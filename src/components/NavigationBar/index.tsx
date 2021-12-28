@@ -1,8 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
+import classnames from 'classnames';
 
 import './index.scss';
+
+type NavigationProps = {
+  mobile?: Boolean;
+  signout?: () => void;
+};
 
 export const navLinks = [
   {
@@ -27,16 +33,29 @@ export const navLinks = [
   }
 ];
 
-const NavigationBar = () => {
+const NavigationBar = ({ mobile, signout }: NavigationProps) => {
   const { t } = useTranslation();
   const location = useLocation();
+
+  const responsiveContainerClass = classnames('grid-container', {
+    'navbar--container': !mobile
+  });
+
+  const responsiveNavClass = classnames('easi-nav', {
+    'easi-nav__mobile': mobile
+  });
+
+  const responsiveNavItemClass = classnames('easi-nav__item', {
+    'easi-nav__item__mobile': mobile
+  });
+
   return (
     <nav aria-label={t('header:navigation')} data-testid="navigation-bar">
       <div className="navbar--divider" />
-      <ul className="navbar--container grid-container">
+      <ul className={responsiveContainerClass}>
         {navLinks.map(route => (
-          <li className="easi-nav" key={route.label}>
-            <div className="easi-nav__item">
+          <li className={responsiveNavClass} key={route.label}>
+            <div className={responsiveNavItemClass}>
               <Link to={route.link} className="navbar-link">
                 <em
                   className="usa-logo__text"
@@ -51,6 +70,24 @@ const NavigationBar = () => {
             </div>
           </li>
         ))}
+        {mobile && signout && (
+          <li className={responsiveNavClass} key="signout">
+            <div className={responsiveNavItemClass}>
+              <Link
+                to="/"
+                onClick={e => {
+                  e.preventDefault();
+                  signout();
+                }}
+                className="navbar-link"
+              >
+                <em className="usa-logo__text" aria-label={t('header:signOut')}>
+                  {t('header:signOut')}
+                </em>
+              </Link>
+            </div>
+          </li>
+        )}
       </ul>
     </nav>
   );
