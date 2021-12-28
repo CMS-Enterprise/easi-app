@@ -4,13 +4,13 @@ import { Link, useLocation } from 'react-router-dom';
 
 import './index.scss';
 
-const navLinks = [
+export const navLinks = [
   {
     link: '/',
     label: 'home'
   },
   {
-    link: '/system/systems-list',
+    link: '/system',
     label: 'systems'
   },
   {
@@ -27,11 +27,11 @@ const navLinks = [
   }
 ];
 
-const NavHeader = () => {
+const NavigationBar = () => {
   const { t } = useTranslation();
   const location = useLocation();
   return (
-    <nav aria-label={t('header:navigation')}>
+    <nav aria-label={t('header:navigation')} data-testid="navigation-bar">
       <div className="navbar--divider" />
       <ul className="navbar--container grid-container">
         {navLinks.map(route => (
@@ -39,7 +39,7 @@ const NavHeader = () => {
             <div className="easi-nav__item">
               <Link to={route.link} className="navbar-link">
                 <em
-                  className="usa-logo__text absolute"
+                  className="usa-logo__text"
                   aria-label={t(`header:${route.label}`)}
                 >
                   {t(`header:${route.label}`)}
@@ -56,4 +56,4 @@ const NavHeader = () => {
   );
 };
 
-export default NavHeader;
+export default NavigationBar;

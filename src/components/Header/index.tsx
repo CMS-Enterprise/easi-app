@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import classnames from 'classnames';
 
-import NavHeader from 'components/NavHeader';
+import NavigationBar from 'components/NavigationBar';
 import UsGovBanner from 'components/UsGovBanner';
 import { localAuthStorageKey } from 'constants/localAuth';
 
@@ -81,6 +81,11 @@ export const Header = ({ children }: HeaderProps) => {
     'is-visible': isMobileSideNavExpanded
   });
 
+  const signout = () => {
+    localStorage.removeItem(localAuthStorageKey);
+    oktaAuth.signOut();
+  };
+
   return (
     <header className="usa-header easi-header" role="banner">
       <UsGovBanner />
@@ -92,23 +97,35 @@ export const Header = ({ children }: HeaderProps) => {
             </em>
           </Link>
         </div>
-        {userName}
-        <button
-          type="button"
-          className="usa-menu-btn"
-          onClick={() => setIsMobileSideNavExpanded(true)}
-        >
-          <span className="fa fa-bars" />
-        </button>
+        {authState?.isAuthenticated ? (
+          <div>
+            {userName} |{' '}
+            <button
+              type="button"
+              className="usa-button usa-button--unstyled"
+              data-testid="signout-link"
+              aria-expanded="false"
+              aria-controls="sign-out"
+              onClick={signout}
+            >
+              {t('header:signOut')}
+            </button>
+            <button
+              type="button"
+              className="usa-menu-btn"
+              onClick={() => setIsMobileSideNavExpanded(true)}
+            >
+              <span className="fa fa-bars" />
+            </button>
+          </div>
+        ) : (
+          <Link className="easi-header__nav-link" to="/signin">
+            {t('header:signIn')}
+          </Link>
+        )}
       </div>
 
-      {authState?.isAuthenticated ? (
-        <NavHeader />
-      ) : (
-        <Link className="easi-header__nav-link" to="/signin">
-          {t('header:signIn')}
-        </Link>
-      )}
+      {authState?.isAuthenticated && <NavigationBar />}
 
       <div className="grid-container easi-header--desktop ">{children}</div>
       <div
