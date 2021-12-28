@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import classnames from 'classnames';
 
+import NavHeader from 'components/NavHeader';
 import UsGovBanner from 'components/UsGovBanner';
 import { localAuthStorageKey } from 'constants/localAuth';
-
-import { UserAction, UserActionList } from './UserActionList';
 
 import './index.scss';
 
@@ -19,7 +18,6 @@ export const Header = ({ children }: HeaderProps) => {
   const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
-  const [displayDropdown, setDisplayDropdown] = useState(false);
   const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
   const dropdownNode = useRef<any>();
   const mobileSideNav = useRef<any>();
@@ -56,7 +54,6 @@ export const Header = ({ children }: HeaderProps) => {
       return;
     }
 
-    setDisplayDropdown(false);
     setIsMobileSideNavExpanded(false);
   };
 
@@ -80,15 +77,6 @@ export const Header = ({ children }: HeaderProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const arrowClassname = classnames(
-    'fa',
-    'fa-angle-down',
-    'easi-header__caret',
-    {
-      'easi-header__caret--rotate': displayDropdown
-    }
-  );
-
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
     'is-visible': isMobileSideNavExpanded
   });
@@ -104,6 +92,7 @@ export const Header = ({ children }: HeaderProps) => {
             </em>
           </Link>
         </div>
+        {userName}
         <button
           type="button"
           className="usa-menu-btn"
@@ -111,52 +100,15 @@ export const Header = ({ children }: HeaderProps) => {
         >
           <span className="fa fa-bars" />
         </button>
-        <div className="navbar--container">
-          {authState?.isAuthenticated ? (
-            <div className="easi-header__dropdown-wrapper" ref={dropdownNode}>
-              <button
-                aria-label={
-                  displayDropdown ? 'Collapse User Menu' : 'Expand User Menu'
-                }
-                aria-expanded={displayDropdown}
-                aria-controls="Header-UserActionsList"
-                type="button"
-                className="easi-header__username"
-                data-testid="UserActions-Toggle"
-                onClick={() => {
-                  setDisplayDropdown(!displayDropdown);
-                }}
-              >
-                {userName}
-                <i className={arrowClassname} />
-              </button>
-              {displayDropdown && (
-                <UserActionList id="Header-UserActionsList">
-                  <UserAction link="/system/making-a-request">
-                    {t('header:addSystem')}
-                  </UserAction>
-                  <UserAction link="/508/making-a-request">
-                    {t('header:add508Request')}
-                  </UserAction>
-                  <UserAction
-                    testId="UserActions-Logout"
-                    onClick={() => {
-                      localStorage.removeItem(localAuthStorageKey);
-                      oktaAuth.signOut();
-                    }}
-                  >
-                    {t('header:signOut')}
-                  </UserAction>
-                </UserActionList>
-              )}
-            </div>
-          ) : (
-            <Link className="easi-header__nav-link" to="/signin">
-              {t('header:signIn')}
-            </Link>
-          )}
-        </div>
       </div>
+
+      {authState?.isAuthenticated ? (
+        <NavHeader />
+      ) : (
+        <Link className="easi-header__nav-link" to="/signin">
+          {t('header:signIn')}
+        </Link>
+      )}
 
       <div className="grid-container easi-header--desktop ">{children}</div>
       <div
