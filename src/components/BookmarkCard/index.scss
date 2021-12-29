@@ -5,35 +5,32 @@
 
     &__container {        
         padding: 24px;
-        width: 472px;
         height: 327px;
-        left: 121px;
-        top: 642px;
 
         /* component/card border */
         border: 2px solid #E6E6E6;
-        box-sizing: border-box;
         border-radius: 4px;
     }
 
     &__header {
-        position: static;
-        width: 424px;
-        height: 58px;
-        left: 24px;
-        top: 24px;
+        width: 100%;
+        align-items: normal;
+    }
 
-
-        /* Inside Auto Layout */
-
-        flex: none;
-        order: 0;
-        align-self: stretch;
-        flex-grow: 0;
-        margin: 0px 0px;
+    &__title {
+        overflow-wrap: break-word;
+        max-width: 90%;
     }
 
     &__icon {
         color: #005EA2;
+        display: flex;
+    }
+
+    &__body-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 }
