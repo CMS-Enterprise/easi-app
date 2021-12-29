@@ -18,14 +18,17 @@ export interface SystemInfo {
 export const mockSystemInfo: SystemInfo[] = [
   {
     id: '1',
-    name: 'ABC123',
+    name: 'Happiness Achievement Module',
     ownerName: 'Jane Doe',
     ownerOffice: 'CMMI',
     productionStatus: 'success',
     atoStatus: 'success',
     atoStatusText: 'Good to go!',
     section508Status: 'success',
-    section508StatusText: 'Good to go!',
+    section508StatusText: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
+    feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta.`,
     trbStatus: 'success',
     trbStatusText: 'Good to go!'
   },

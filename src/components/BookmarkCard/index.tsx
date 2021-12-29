@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import Divider from 'components/shared/Divider';
+
 import './index.scss';
 
 // TODO import CEDAR types once generated from gql
@@ -56,13 +58,23 @@ const BookmarkCard = ({
           </div>
           <p className="margin-0">{acronym}</p>
           <p className="bookmark__body-text line-height-body-4">
-            {' '}
-            {/* Todo: place CEDAR variable for body of card here */}
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
-            feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
-            Sollicitudin donec aliquam dui sed odio porta.
+            {section508StatusText}
           </p>
+          <p className="margin-bottom-0">Officer of Department</p>
+          <p className="text-bold margin-top-1">{ownerOffice}</p>
+          <Divider />
+          <div className="bookmark__header easi-header__basic">
+            <div>
+              <p className="margin-bottom-0">ATO Status</p>
+              <p className="text-bold margin-top-1 margin-bottom-0">
+                {atoStatusText}
+              </p>
+            </div>
+            <i
+              className="fa system-health-icon-success fa-check-circle fa-2x bookmark__icon margin-top-2"
+              aria-hidden="true"
+            />
+          </div>
         </div>
       </div>
     </div>
