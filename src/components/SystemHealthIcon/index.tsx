@@ -6,12 +6,18 @@ import { IconStatus } from 'types/iconStatus';
 import './index.scss';
 
 type SystemHealthIconProps = {
+  className?: string;
   status: IconStatus;
-  size: 'medium' | 'xl';
+  size: 'medium' | 'lg' | 'xl';
   label?: string;
 };
 
-const SystemHealthIcon = ({ status, size, label }: SystemHealthIconProps) => {
+const SystemHealthIcon = ({
+  status,
+  size,
+  label,
+  className
+}: SystemHealthIconProps) => {
   const classes = classnames(
     'fa',
     {
@@ -25,11 +31,15 @@ const SystemHealthIcon = ({ status, size, label }: SystemHealthIconProps) => {
       'fa-times-circle': status === 'fail'
     },
     {
+      'fa-2x': size === 'lg'
+    },
+    {
       'fa-5x': size === 'xl'
     },
     {
       'margin-right-05': label !== undefined && size === 'medium'
-    }
+    },
+    className
   );
 
   return (

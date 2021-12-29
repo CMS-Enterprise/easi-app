@@ -15,7 +15,9 @@
     }
 
     &__title {
-        overflow-wrap: break-word;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         max-width: 90%;
     }
 
@@ -29,5 +31,6 @@
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        min-height: 4.5em;
     }
 }

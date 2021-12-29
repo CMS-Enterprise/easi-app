@@ -4,6 +4,8 @@ import { Link as UswdsLink } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import Divider from 'components/shared/Divider';
+import SystemHealthIcon from 'components/SystemHealthIcon';
+import { IconStatus } from 'types/iconStatus';
 
 import './index.scss';
 
@@ -17,6 +19,7 @@ type BookmarkCardProps = {
   ownerOffice: string;
   atoStatusText: string;
   section508StatusText: string;
+  productionStatus: IconStatus;
 };
 
 const BookmarkCard = ({
@@ -26,6 +29,7 @@ const BookmarkCard = ({
   acronym,
   ownerOffice,
   atoStatusText,
+  productionStatus,
   section508StatusText
 }: BookmarkCardProps) => {
   return (
@@ -63,9 +67,10 @@ const BookmarkCard = ({
               {atoStatusText}
             </p>
           </div>
-          <i
-            className="fa system-health-icon-success fa-check-circle fa-2x bookmark__icon margin-top-2"
-            aria-hidden="true"
+          <SystemHealthIcon
+            status={productionStatus}
+            size="lg"
+            className="margin-top-2"
           />
         </div>
       </div>
