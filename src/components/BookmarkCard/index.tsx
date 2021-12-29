@@ -37,7 +37,7 @@ const BookmarkCard = ({
       className={classnames(
         'tablet:grid-col-6',
         'grid-col-12',
-        'margin-top-2',
+        'margin-top-3',
         className
       )}
     >
