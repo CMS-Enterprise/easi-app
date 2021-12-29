@@ -3,6 +3,7 @@ import { IconStatus } from 'types/iconStatus';
 
 export interface SystemInfo {
   id: string;
+  acronym: string;
   name: string;
   ownerName: string;
   ownerOffice: CMSOfficeAcronym;
@@ -18,6 +19,7 @@ export interface SystemInfo {
 export const mockSystemInfo: SystemInfo[] = [
   {
     id: '1',
+    acronym: 'HAM',
     name: 'Happiness Achievement Module',
     ownerName: 'Jane Doe',
     ownerOffice: 'CMMI',
@@ -34,6 +36,7 @@ export const mockSystemInfo: SystemInfo[] = [
   },
   {
     id: '2',
+    acronym: 'ZXC',
     name: 'XYZ789',
     ownerName: 'John Doe',
     ownerOffice: 'OIT',
@@ -47,6 +50,7 @@ export const mockSystemInfo: SystemInfo[] = [
   },
   {
     id: '3',
+    acronym: 'QWE',
     name: '8675309',
     ownerName: 'Jennifer Doe',
     ownerOffice: 'CCIIO',
