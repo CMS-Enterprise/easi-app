@@ -54,6 +54,49 @@ type CedarSystem {
 }
 
 """
+CedarDeployment represents a deployment of a system; this information is returned from the CEDAR Core API
+"""
+type CedarDeployment {
+  id: String!
+  name: String!
+  systemID: String!
+  startDate: Time
+  endDate: Time
+  isHotSite: String
+  description: String
+  contractorName: String
+  systemVersion: String
+  hasProductionData: String
+  replicatedSystemElements: [String!]!
+  deploymentType: String
+  systemName: String
+  deploymentElementID: String
+  state: String
+  status: String
+  wanType: String
+  dataCenter: CedarDataCenter
+}
+
+"""
+CedarDataCenter represents the data center used by a CedarDeployment
+"""
+type CedarDataCenter {
+  id: String
+  name: String
+  version: String
+  description: String
+  state: String
+  status: String
+  startDate: Time
+  endDate: Time
+  address1: String
+  address2: String
+  city: String
+  addressState: String
+  zip: String
+}
+
+"""
 An accessibility request represents a system that needs to go through
 the 508 process
 """
@@ -1144,6 +1187,7 @@ type Query {
   currentUser: CurrentUser
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
+  deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
 }
 
 """
