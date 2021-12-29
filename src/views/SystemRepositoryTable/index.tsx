@@ -136,11 +136,13 @@ export const SystemRepositoryTable = () => {
           <SecondaryNav>
             <NavLink to="/system-profile">{t('tabs.systemProfile')}</NavLink>
           </SecondaryNav>
+          {/* TEMPORARY */}
           <BookmarkCardWrapper>
-            <BookmarkCard {...mockSystemInfo[0]} />
-            <BookmarkCard {...mockSystemInfo[1]} />
-            <BookmarkCard {...mockSystemInfo[2]} />
+            {mockSystemInfo.map(mock => (
+              <BookmarkCard {...mock} />
+            ))}
           </BookmarkCardWrapper>
+          {/* TEMPORARY */}
           <div className="grid-container">
             <Table bordered={false} fullWidth {...getTableProps()}>
               <caption className="usa-sr-only">
