@@ -11,6 +11,7 @@ import { Column, HeaderGroup, Row, useSortBy, useTable } from 'react-table';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import BookmarkCard from 'components/BookmarkCard';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -134,6 +135,7 @@ export const SystemRepositoryTable = () => {
           <SecondaryNav>
             <NavLink to="/system-profile">{t('tabs.systemProfile')}</NavLink>
           </SecondaryNav>
+          <BookmarkCard acronym="HAM" {...mockSystemInfo[0]} />
           <div className="grid-container">
             <Table bordered={false} fullWidth {...getTableProps()}>
               <caption className="usa-sr-only">
