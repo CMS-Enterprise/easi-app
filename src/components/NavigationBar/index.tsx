@@ -56,7 +56,8 @@ const NavigationBar = ({ mobile, signout }: NavigationProps) => {
       <div className="navbar--divider" />
       <ul className={responsiveContainerClass}>
         {navLinks.map(route =>
-          !flags.systemProfile && route.label === 'systems' ? null : (
+          (!flags.systemProfile && route.label === 'systems') ||
+          (!flags.help && route.label === 'help') ? null : (
             <li className={responsiveNavClass} key={route.label}>
               <div className={responsiveNavItemClass}>
                 <Link to={route.link} className="navbar-link">

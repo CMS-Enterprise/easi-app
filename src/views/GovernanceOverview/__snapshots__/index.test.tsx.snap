@@ -180,7 +180,7 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
         >
           John Doe
           <div>
-             |  
+              |  
           </div>
           <button
             aria-controls="sign-out"
@@ -270,26 +270,6 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
                 className="usa-logo__text"
               >
                 Section 508
-              </em>
-            </a>
-          </div>
-        </li>
-        <li
-          className="easi-nav"
-        >
-          <div
-            className="easi-nav__item"
-          >
-            <a
-              className="navbar-link"
-              href="/help"
-              onClick={[Function]}
-            >
-              <em
-                aria-label="Help"
-                className="usa-logo__text"
-              >
-                Help
               </em>
             </a>
           </div>
@@ -384,26 +364,6 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
                     className="usa-logo__text"
                   >
                     Section 508
-                  </em>
-                </a>
-              </div>
-            </li>
-            <li
-              className="easi-nav easi-nav__mobile"
-            >
-              <div
-                className="easi-nav__item easi-nav__item__mobile"
-              >
-                <a
-                  className="navbar-link"
-                  href="/help"
-                  onClick={[Function]}
-                >
-                  <em
-                    aria-label="Help"
-                    className="usa-logo__text"
-                  >
-                    Help
                   </em>
                 </a>
               </div>
@@ -945,7 +905,7 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
         >
           John Doe
           <div>
-             |  
+              |  
           </div>
           <button
             aria-controls="sign-out"
@@ -1035,26 +995,6 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
                 className="usa-logo__text"
               >
                 Section 508
-              </em>
-            </a>
-          </div>
-        </li>
-        <li
-          className="easi-nav"
-        >
-          <div
-            className="easi-nav__item"
-          >
-            <a
-              className="navbar-link"
-              href="/help"
-              onClick={[Function]}
-            >
-              <em
-                aria-label="Help"
-                className="usa-logo__text"
-              >
-                Help
               </em>
             </a>
           </div>
@@ -1149,26 +1089,6 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
                     className="usa-logo__text"
                   >
                     Section 508
-                  </em>
-                </a>
-              </div>
-            </li>
-            <li
-              className="easi-nav easi-nav__mobile"
-            >
-              <div
-                className="easi-nav__item easi-nav__item__mobile"
-              >
-                <a
-                  className="navbar-link"
-                  href="/help"
-                  onClick={[Function]}
-                >
-                  <em
-                    aria-label="Help"
-                    className="usa-logo__text"
-                  >
-                    Help
                   </em>
                 </a>
               </div>
