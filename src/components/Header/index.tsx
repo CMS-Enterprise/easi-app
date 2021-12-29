@@ -101,7 +101,7 @@ export const Header = ({ children }: HeaderProps) => {
           <div>
             <div className="navbar--container">
               {userName}
-              <div>&nbsp;| &nbsp;</div>
+              <div>&nbsp; | &nbsp;</div>
               <button
                 type="button"
                 className="usa-button usa-button--unstyled"
