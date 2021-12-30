@@ -7,6 +7,8 @@ import Divider from 'components/shared/Divider';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import { IconStatus } from 'types/iconStatus';
 
+import BookmarkCardIcon from './BookmarkCardIcon';
+
 import './index.scss';
 
 // TODO import CEDAR types once generated from gql
@@ -34,7 +36,7 @@ const BookmarkCard = ({
   return (
     <div
       className={classnames(
-        'tablet:grid-col-6',
+        'desktop:grid-col-6',
         'grid-col-12',
         'margin-top-3',
         className
@@ -47,10 +49,7 @@ const BookmarkCard = ({
               {name}
             </UswdsLink>
           </h2>
-          <i
-            className="fa fa-bookmark fa-2x bookmark__icon"
-            aria-hidden="true"
-          />
+          <BookmarkCardIcon size="md" />
         </div>
         <p className="margin-0">{acronym}</p>
         <p className="bookmark__body-text line-height-body-4">
