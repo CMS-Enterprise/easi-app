@@ -44,7 +44,7 @@ const SystemHealthIcon = ({
 
   return (
     <>
-      <i className={classes} />
+      <i className={classes} data-testid="system-health-icon" />
       {label}
     </>
   );

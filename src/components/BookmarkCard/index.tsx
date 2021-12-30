@@ -10,7 +10,6 @@ import { IconStatus } from 'types/iconStatus';
 import './index.scss';
 
 // TODO import CEDAR types once generated from gql
-
 type BookmarkCardProps = {
   className?: string;
   id: string;

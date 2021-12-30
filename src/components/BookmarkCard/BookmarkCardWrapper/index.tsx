@@ -5,13 +5,17 @@ type BookmarkCardWrapperProps = {
   className?: string;
   children: React.ReactNode;
 };
+
 const BookmarkCardWrapper = ({
   className,
   children
 }: BookmarkCardWrapperProps) => {
-  const classNames = classnames('grid-container margin-top-1', className);
+  const classNames = classnames(
+    'grid-container margin-top-1 margin-bottom-1',
+    className
+  );
   return (
-    <div className={classNames}>
+    <div className={classNames} data-testid="bookmard-card-wrapper">
       <div className="grid-row grid-gap-lg">{children}</div>
     </div>
   );

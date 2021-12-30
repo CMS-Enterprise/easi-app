@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BookmarkCard matches the snapshot 1`] = `
+<div
+  className="tablet:grid-col-6 grid-col-12 margin-top-3"
+>
+  <div
+    className="grid-col-12 bookmark bookmark__container"
+  >
+    <div
+      className="bookmark__header easi-header__basic"
+    >
+      <h2
+        className="bookmark__title margin-top-0 margin-bottom-1"
+      >
+        <a
+          className="usa-link"
+          href="/systems/1"
+          onClick={[Function]}
+        >
+          Happiness Achievement Module
+        </a>
+      </h2>
+      <i
+        aria-hidden="true"
+        className="fa fa-bookmark fa-2x bookmark__icon"
+      />
+    </div>
+    <p
+      className="margin-0"
+    >
+      HAM
+    </p>
+    <p
+      className="bookmark__body-text line-height-body-4"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
+    feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta.
+    </p>
+    <p
+      className="margin-bottom-0"
+    >
+      Officer of Department
+    </p>
+    <p
+      className="text-bold margin-top-1"
+    >
+      CMMI
+    </p>
+    <div
+      className="easi-divider"
+    />
+    <div
+      className="bookmark__header easi-header__basic"
+    >
+      <div>
+        <p
+          className="margin-bottom-0"
+        >
+          ATO Status
+        </p>
+        <p
+          className="text-bold margin-top-1 margin-bottom-0"
+        >
+          Good to go!
+        </p>
+      </div>
+      <i
+        className="fa system-health-icon-success fa-check-circle fa-2x margin-top-2"
+        data-testid="system-health-icon"
+      />
+    </div>
+  </div>
+</div>
+`;
