@@ -176,7 +176,7 @@ exports[`The making a request page matches the snapshot 1`] = `
       </div>
       <div>
         <div
-          className="navbar--container"
+          className="navbar--container easi-nav__user"
         >
           
           <div>

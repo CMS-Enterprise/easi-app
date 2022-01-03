@@ -176,7 +176,7 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
       </div>
       <div>
         <div
-          className="navbar--container"
+          className="navbar--container easi-nav__user"
         >
           John Doe
           <div>
@@ -902,7 +902,7 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
       </div>
       <div>
         <div
-          className="navbar--container"
+          className="navbar--container easi-nav__user"
         >
           John Doe
           <div>
