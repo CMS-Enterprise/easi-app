@@ -1,51 +1,30 @@
 .easi-nav {
     display: flex;
 
-    &__mobile {
-        margin-bottom: 10px;
-        border-bottom: 1px solid grey;
-    }
-
     &__item {
         display: flex;
         height: 3.2em;
-
-        &__mobile {
-            padding: 1em;
-        }
     }
     
     &__label {
         order: 2
     }
 
-    &__current {
-        height: 4px;
-        background-color: #005EA2;
-        margin-top: 8px;
-        pointer-events: none;
-
-        &__mobile {
-            width: 4px;
-            height: 1.5em;
-            border-radius: 2px;
-            order: 1;
-            margin-top: 0;
-            margin-right: .5em;
-        }
+    &__user {
+        color: #71767A;
     }
+
+    &__current {
+        height: .25em;
+        background-color: #005EA2;
+        margin-top: .5em;
+        pointer-events: none;
+    }    
 
     &__link {
         padding: .8em;
         padding-left: 1em;
         padding-right: 1em;
-
-        &__mobile {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 0;
-        }
     
         &:link {
             text-decoration: none;
@@ -62,5 +41,43 @@
         &:active {
             text-decoration: underline;
         }        
+    }
+    
+    &__signout-container {
+        margin-top: 2em
+    };
+}
+
+@media (max-width: $desktop) {
+    .easi-nav {
+        margin-bottom: .5em;
+        border-bottom: 1px solid #DFE1E2;
+
+        &__item {
+            padding-top: 1em;
+            padding-right: 1em;
+            padding-bottom: 1em;
+            padding-left: 0;            
+        }
+
+        &__not-current {
+            padding-left: .75em;
+        }
+
+        &__current {        
+            width: .25em;
+            height: 1.5em;
+            border-radius: 2px;
+            order: 1;
+            margin-top: 0;
+            margin-right: .5em;
+        }
+
+        &__link {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0;       
+        }
     }
 }

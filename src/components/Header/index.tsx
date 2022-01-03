@@ -144,7 +144,7 @@ export const Header = ({ children }: HeaderProps) => {
           aria-label="Close"
           onClick={() => setIsMobileSideNavExpanded(false)}
         >
-          <span className="fa fa-close" />
+          <span className="fa fa-close fa-2x easi-header__close" />
         </button>
         <div className="usa-nav__inner">
           {children}

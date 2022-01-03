@@ -220,13 +220,13 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
             className="easi-nav__item"
           >
             <a
-              className="navbar-link"
+              className="easi-nav__link"
               href="/"
               onClick={[Function]}
             >
               <em
                 aria-label="Home"
-                className="usa-logo__text"
+                className="usa-logo__text easi-nav__label"
               >
                 Home
               </em>
@@ -240,16 +240,16 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
           className="easi-nav"
         >
           <div
-            className="easi-nav__item"
+            className="easi-nav__item easi-nav__not-current"
           >
             <a
-              className="navbar-link"
+              className="easi-nav__link"
               href="/system/making-a-request"
               onClick={[Function]}
             >
               <em
                 aria-label="IT Governance"
-                className="usa-logo__text"
+                className="usa-logo__text easi-nav__label"
               >
                 IT Governance
               </em>
@@ -260,16 +260,16 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
           className="easi-nav"
         >
           <div
-            className="easi-nav__item"
+            className="easi-nav__item easi-nav__not-current"
           >
             <a
-              className="navbar-link"
+              className="easi-nav__link"
               href="/508/making-a-request"
               onClick={[Function]}
             >
               <em
                 aria-label="Section 508"
-                className="usa-logo__text"
+                className="usa-logo__text easi-nav__label"
               >
                 Section 508
               </em>
@@ -294,7 +294,7 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
         type="button"
       >
         <span
-          className="fa fa-close"
+          className="fa fa-close fa-2x easi-header__close"
         />
       </button>
       <div
@@ -311,19 +311,19 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
             className="grid-container"
           >
             <li
-              className="easi-nav easi-nav__mobile"
+              className="easi-nav"
             >
               <div
-                className="easi-nav__item easi-nav__item__mobile"
+                className="easi-nav__item"
               >
                 <a
-                  className="navbar-link"
+                  className="easi-nav__link"
                   href="/"
                   onClick={[Function]}
                 >
                   <em
                     aria-label="Home"
-                    className="usa-logo__text"
+                    className="usa-logo__text easi-nav__label"
                   >
                     Home
                   </em>
@@ -334,19 +334,19 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
               </div>
             </li>
             <li
-              className="easi-nav easi-nav__mobile"
+              className="easi-nav"
             >
               <div
-                className="easi-nav__item easi-nav__item__mobile"
+                className="easi-nav__item easi-nav__not-current"
               >
                 <a
-                  className="navbar-link"
+                  className="easi-nav__link"
                   href="/system/making-a-request"
                   onClick={[Function]}
                 >
                   <em
                     aria-label="IT Governance"
-                    className="usa-logo__text"
+                    className="usa-logo__text easi-nav__label"
                   >
                     IT Governance
                   </em>
@@ -354,45 +354,26 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
               </div>
             </li>
             <li
-              className="easi-nav easi-nav__mobile"
+              className="easi-nav"
             >
               <div
-                className="easi-nav__item easi-nav__item__mobile"
+                className="easi-nav__item easi-nav__not-current"
               >
                 <a
-                  className="navbar-link"
+                  className="easi-nav__link"
                   href="/508/making-a-request"
                   onClick={[Function]}
                 >
                   <em
                     aria-label="Section 508"
-                    className="usa-logo__text"
+                    className="usa-logo__text easi-nav__label"
                   >
                     Section 508
                   </em>
                 </a>
               </div>
             </li>
-            <li
-              className="easi-nav easi-nav__mobile"
-            >
-              <div
-                className="easi-nav__item easi-nav__item__mobile"
-              >
-                <a
-                  className="navbar-link"
-                  href="/"
-                  onClick={[Function]}
-                >
-                  <em
-                    aria-label="Sign Out"
-                    className="usa-logo__text"
-                  >
-                    Sign Out
-                  </em>
-                </a>
-              </div>
-            </li>
+            
           </ul>
         </nav>
       </div>
