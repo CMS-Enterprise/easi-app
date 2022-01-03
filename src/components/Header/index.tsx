@@ -99,7 +99,7 @@ export const Header = ({ children }: HeaderProps) => {
         </div>
         {authState?.isAuthenticated ? (
           <div>
-            <div className="navbar--container">
+            <div className="navbar--container easi-nav__user">
               {userName}
               <div>&nbsp; | &nbsp;</div>
               <button
