@@ -34,11 +34,7 @@ const BookmarkCardIcon = ({
   );
 
   return (
-    <i
-      className={classes}
-      data-testid="system-health-icon"
-      aria-hidden="true"
-    />
+    <i className={classes} data-testid="bookmark-icon" aria-hidden="true" />
   );
 };
 

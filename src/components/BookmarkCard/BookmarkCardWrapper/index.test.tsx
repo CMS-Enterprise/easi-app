@@ -10,15 +10,15 @@ import BookmarkCardWrapper from './index';
 
 describe('BookmarkCardWrapper', () => {
   it('renders without errors', () => {
-    const { getByTestId, getByText } = render(
+    const { getByTestId } = render(
       <MemoryRouter>
         <BookmarkCardWrapper>
-          <BookmarkCard {...mockSystemInfo[0]} />
+          <BookmarkCard type="systemList" {...mockSystemInfo[0]} />
         </BookmarkCardWrapper>
       </MemoryRouter>
     );
 
-    expect(getByText('Happiness Achievement Module')).toBeInTheDocument();
+    expect(getByTestId('single-bookmark-card')).toBeInTheDocument();
     expect(getByTestId('bookmard-card-wrapper')).toBeInTheDocument();
   });
 });

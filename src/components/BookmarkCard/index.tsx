@@ -42,6 +42,7 @@ const BookmarkCard = ({
   const { t } = useTranslation();
   return (
     <div
+      data-testid="single-bookmark-card"
       className={classnames(
         'desktop:grid-col-6',
         'grid-col-12',
@@ -67,7 +68,7 @@ const BookmarkCard = ({
         <Divider />
         <div className="bookmark__header easi-header__basic">
           <div>
-            <p className="margin-bottom-0">{t(`${type}:subHeader1`)}</p>
+            <p className="margin-bottom-0">{t(`${type}:subHeader2`)}</p>
             <p className="text-bold margin-top-1 margin-bottom-0">
               {atoStatusText}
             </p>
