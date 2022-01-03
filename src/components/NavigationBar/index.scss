@@ -3,7 +3,7 @@
 
     &__mobile {
         margin-bottom: 10px;
-        background-color: #efefef;
+        border-bottom: 1px solid grey;
     }
 
     &__item {
@@ -14,12 +14,53 @@
             padding: 1em;
         }
     }
+    
+    &__label {
+        order: 2
+    }
 
     &__current {
         height: 4px;
         background-color: #005EA2;
         margin-top: 8px;
         pointer-events: none;
-    }    
 
+        &__mobile {
+            width: 4px;
+            height: 1.5em;
+            border-radius: 2px;
+            order: 1;
+            margin-top: 0;
+            margin-right: .5em;
+        }
+    }
+
+    &__link {
+        padding: .8em;
+        padding-left: 1em;
+        padding-right: 1em;
+
+        &__mobile {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0;
+        }
+    
+        &:link {
+            text-decoration: none;
+        }
+        
+        &:visited {
+            text-decoration: none;
+        }
+        
+        &:hover {
+            text-decoration: underline;
+        }
+        
+        &:active {
+            text-decoration: underline;
+        }        
+    }
 }

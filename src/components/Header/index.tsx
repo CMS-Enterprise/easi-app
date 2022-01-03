@@ -149,7 +149,7 @@ export const Header = ({ children }: HeaderProps) => {
         <div className="usa-nav__inner">
           {children}
           {authState?.isAuthenticated ? (
-            <NavigationBar mobile signout={signout} />
+            <NavigationBar mobile signout={signout} userName={userName} />
           ) : (
             <a className="easi-header__nav-link" href="/signin">
               {t('header:signIn')}

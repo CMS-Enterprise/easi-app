@@ -7,8 +7,9 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import './index.scss';
 
 type NavigationProps = {
-  mobile?: Boolean;
+  mobile?: boolean;
   signout?: () => void;
+  userName?: string;
 };
 
 export const navLinks = [
@@ -34,7 +35,7 @@ export const navLinks = [
   }
 ];
 
-const NavigationBar = ({ mobile, signout }: NavigationProps) => {
+const NavigationBar = ({ mobile, signout, userName }: NavigationProps) => {
   const { t } = useTranslation();
   const location = useLocation();
   const flags = useFlags();
@@ -51,6 +52,14 @@ const NavigationBar = ({ mobile, signout }: NavigationProps) => {
     'easi-nav__item__mobile': mobile
   });
 
+  const responsiveNavLinkClass = classnames('easi-nav__link', {
+    'easi-nav__link__mobile': mobile
+  });
+
+  const responsiveNavCurrentClass = classnames('easi-nav__current', {
+    'easi-nav__current__mobile': mobile
+  });
+
   return (
     <nav aria-label={t('header:navigation')} data-testid="navigation-bar">
       <div className="navbar--divider" />
@@ -60,20 +69,27 @@ const NavigationBar = ({ mobile, signout }: NavigationProps) => {
           (!flags.help && route.label === 'help') ? null : (
             <li className={responsiveNavClass} key={route.label}>
               <div className={responsiveNavItemClass}>
-                <Link to={route.link} className="navbar-link">
+                <Link to={route.link} className={responsiveNavLinkClass}>
                   <em
-                    className="usa-logo__text"
+                    className="usa-logo__text easi-nav__label"
                     aria-label={t(`header:${route.label}`)}
                   >
                     {t(`header:${route.label}`)}
                   </em>
                   {location.pathname === route.link && (
-                    <div className="easi-nav__current" />
+                    <div className={responsiveNavCurrentClass} />
                   )}
                 </Link>
               </div>
             </li>
           )
+        )}
+        {mobile && userName && (
+          <li className={responsiveNavClass} key="userName">
+            <div className={responsiveNavItemClass}>
+              <div className="logo__text nabar-link">{userName}</div>
+            </div>
+          </li>
         )}
         {mobile && signout && (
           <li className={responsiveNavClass} key="signout">
