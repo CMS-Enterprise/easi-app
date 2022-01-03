@@ -63,3 +63,5 @@ export const mockSystemInfo: SystemInfo[] = [
     trbStatusText: 'Hash and salt your passwords!'
   }
 ];
+
+export const mockBookmarkInfo: string[] = ['HAM', 'ZXC', 'QWE'];

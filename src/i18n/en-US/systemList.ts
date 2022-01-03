@@ -13,7 +13,9 @@ const systemList = {
     success: 'Fully operational',
     warning: 'Degraded functionality',
     fail: 'Inoperative'
-  }
+  },
+  subHeader1: 'Officer of Department',
+  subHeader2: 'ATO Status'
 };
 
 export default systemList;

@@ -23,7 +23,11 @@ import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import { sortByStatus } from 'types/iconStatus';
-import { mockSystemInfo, SystemInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo with dynamic data fetched from backend
+import {
+  mockBookmarkInfo,
+  mockSystemInfo,
+  SystemInfo
+} from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo with dynamic data fetched from backend
 
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
@@ -130,33 +134,39 @@ export const SystemRepositoryTable = () => {
           </PageHeading>
           <p className="margin-bottom-3">{t('systemList:bookmark.subtitle')}</p>
 
-          {!mockSystemInfo ||
-            (mockSystemInfo.length === 0 && (
-              <div className="tablet:grid-col-12">
-                <Alert type="info" className="padding-1">
-                  <h3 className="margin-0">
-                    {t('systemList:noBookmark.heading')}
-                  </h3>
-                  <div>
-                    <span className="margin-0">
-                      {t('systemList:noBookmark.text1')}
-                    </span>
-                    <BookmarkCardIcon size="sm" black />
-                    <span className="margin-0">
-                      {t('systemList:noBookmark.text2')}
-                    </span>
-                  </div>
-                </Alert>
-              </div>
-            ))}
+          {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
+          {!mockBookmarkInfo ||
+          mockBookmarkInfo.length === 0 ||
+          !mockSystemInfo ||
+          mockSystemInfo.length === 0 ? (
+            <div className="tablet:grid-col-12">
+              <Alert type="info" className="padding-1">
+                <h3 className="margin-0">
+                  {t('systemList:noBookmark.heading')}
+                </h3>
+                <div>
+                  <span className="margin-0">
+                    {t('systemList:noBookmark.text1')}
+                  </span>
+                  <BookmarkCardIcon size="sm" black />
+                  <span className="margin-0">
+                    {t('systemList:noBookmark.text2')}
+                  </span>
+                </div>
+              </Alert>
+            </div>
+          ) : (
+            <BookmarkCardWrapper>
+              {mockSystemInfo.map(
+                mock =>
+                  mockBookmarkInfo.includes(mock?.acronym) && (
+                    <BookmarkCard type="systemList" {...mock} />
+                  )
+              )}
+            </BookmarkCardWrapper>
+          )}
+          {/* TEMPORARY */}
 
-          {/* TEMPORARY */}
-          <BookmarkCardWrapper>
-            {mockSystemInfo.map(mock => (
-              <BookmarkCard {...mock} />
-            ))}
-          </BookmarkCardWrapper>
-          {/* TEMPORARY */}
           <Table bordered={false} fullWidth {...getTableProps()}>
             <caption className="usa-sr-only">
               {t('systemTable.caption')}

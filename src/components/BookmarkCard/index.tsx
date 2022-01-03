@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -11,9 +12,13 @@ import BookmarkCardIcon from './BookmarkCardIcon';
 
 import './index.scss';
 
-// TODO import CEDAR types once generated from gql
 type BookmarkCardProps = {
   className?: string;
+  type: string;
+};
+
+// TODO import CEDAR types once generated from gql
+type CedarSystemProps = {
   id: string;
   name: string;
   acronym: string;
@@ -25,6 +30,7 @@ type BookmarkCardProps = {
 
 const BookmarkCard = ({
   className,
+  type,
   id,
   name,
   acronym,
@@ -32,7 +38,8 @@ const BookmarkCard = ({
   atoStatusText,
   productionStatus,
   section508StatusText
-}: BookmarkCardProps) => {
+}: BookmarkCardProps & CedarSystemProps) => {
+  const { t } = useTranslation();
   return (
     <div
       className={classnames(
@@ -55,12 +62,12 @@ const BookmarkCard = ({
         <p className="bookmark__body-text line-height-body-4">
           {section508StatusText}
         </p>
-        <p className="margin-bottom-0">Officer of Department</p>
+        <p className="margin-bottom-0">{t(`${type}:subHeader1`)}</p>
         <p className="text-bold margin-top-1">{ownerOffice}</p>
         <Divider />
         <div className="bookmark__header easi-header__basic">
           <div>
-            <p className="margin-bottom-0">ATO Status</p>
+            <p className="margin-bottom-0">{t(`${type}:subHeader1`)}</p>
             <p className="text-bold margin-top-1 margin-bottom-0">
               {atoStatusText}
             </p>
