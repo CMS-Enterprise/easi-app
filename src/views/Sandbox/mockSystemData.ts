@@ -64,4 +64,22 @@ export const mockSystemInfo: SystemInfo[] = [
   }
 ];
 
-export const mockBookmarkInfo: string[] = ['HAM', 'ZXC', 'QWE'];
+export interface CedarSystemBookMark {
+  euaUserId: string;
+  cedarSystemId: string;
+}
+
+export const mockBookmarkInfo: CedarSystemBookMark[] = [
+  {
+    euaUserId: 'A',
+    cedarSystemId: '1'
+  },
+  {
+    euaUserId: 'A',
+    cedarSystemId: '2'
+  },
+  {
+    euaUserId: 'A',
+    cedarSystemId: '3'
+  }
+];

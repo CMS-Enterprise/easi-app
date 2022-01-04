@@ -27,7 +27,7 @@ import {
   mockBookmarkInfo,
   mockSystemInfo,
   SystemInfo
-} from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo with dynamic data fetched from backend
+} from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo/mockBookmarkInfo with dynamic data fetched from backend and CEDAR
 
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
@@ -159,9 +159,9 @@ export const SystemRepositoryTable = () => {
             <BookmarkCardWrapper>
               {mockSystemInfo.map(
                 mock =>
-                  mockBookmarkInfo.includes(mock?.acronym) && (
-                    <BookmarkCard type="systemList" {...mock} />
-                  )
+                  mockBookmarkInfo.some(
+                    bookmark => bookmark.cedarSystemId === mock.id
+                  ) && <BookmarkCard type="systemList" {...mock} />
               )}
             </BookmarkCardWrapper>
           )}
