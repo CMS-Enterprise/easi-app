@@ -50,14 +50,9 @@ describe('The NavigationBar component', () => {
     const { t } = useTranslation();
     const flags = useFlags();
 
-    navLinks.forEach(link => {
-      if (
-        (!flags.systemProfile && link.label === 'systems') ||
-        (!flags.help && link.label === 'help')
-      ) {
-        // absence of flag has removed element from dom
-      } else {
-        const linkTitle = t(`header:${link.label}`);
+    navLinks(flags).forEach(route => {
+      if (route.isEnabled) {
+        const linkTitle = t(`header:${route.label}`);
         expect(getByText(linkTitle)).toBeInTheDocument();
       }
     });

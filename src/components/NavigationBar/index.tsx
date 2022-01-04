@@ -4,6 +4,8 @@ import { Link, useLocation } from 'react-router-dom';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import { Flags } from 'types/flags';
+
 import './index.scss';
 
 type NavigationProps = {
@@ -12,26 +14,31 @@ type NavigationProps = {
   userName?: string;
 };
 
-export const navLinks = [
+export const navLinks = (flags: Flags) => [
   {
     link: '/',
-    label: 'home'
+    label: 'home',
+    isEnabled: true
   },
   {
     link: '/system',
-    label: 'systems'
+    label: 'systems',
+    isEnabled: flags.systemProfile
   },
   {
     link: '/system/making-a-request',
-    label: 'addSystem'
+    label: 'addSystem',
+    isEnabled: true
   },
   {
     link: '/508/making-a-request',
-    label: 'add508Request'
+    label: 'add508Request',
+    isEnabled: true
   },
   {
     link: '/help',
-    label: 'help'
+    label: 'help',
+    isEnabled: flags.help
   }
 ];
 
@@ -53,29 +60,29 @@ const NavigationBar = ({ mobile, signout, userName }: NavigationProps) => {
     <nav aria-label={t('header:navigation')} data-testid="navigation-bar">
       <div className="navbar--divider" />
       <ul className={responsiveContainerClass}>
-        {navLinks.map(route =>
-          (!flags.systemProfile && route.label === 'systems') ||
-          (!flags.help && route.label === 'help') ? null : (
-            <li className="easi-nav" key={route.label}>
-              <div
-                className={responsiveCurrentClass(
-                  location.pathname === route.link
-                )}
-              >
-                <Link to={route.link} className="easi-nav__link">
-                  <em
-                    className="usa-logo__text easi-nav__label"
-                    aria-label={t(`header:${route.label}`)}
-                  >
-                    {t(`header:${route.label}`)}
-                  </em>
-                  {location.pathname === route.link && (
-                    <div className="easi-nav__current" />
+        {navLinks(flags).map(
+          route =>
+            route.isEnabled && (
+              <li className="easi-nav" key={route.label}>
+                <div
+                  className={responsiveCurrentClass(
+                    location.pathname === route.link
                   )}
-                </Link>
-              </div>
-            </li>
-          )
+                >
+                  <Link to={route.link} className="easi-nav__link">
+                    <em
+                      className="usa-logo__text easi-nav__label"
+                      aria-label={t(`header:${route.label}`)}
+                    >
+                      {t(`header:${route.label}`)}
+                    </em>
+                    {location.pathname === route.link && (
+                      <div className="easi-nav__current" />
+                    )}
+                  </Link>
+                </div>
+              </li>
+            )
         )}
         {mobile && userName && signout && (
           <div className="easi-nav__signout-container">
