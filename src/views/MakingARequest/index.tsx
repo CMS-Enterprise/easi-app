@@ -1,12 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import {
-  Breadcrumb,
-  BreadcrumbBar,
-  BreadcrumbLink,
-  Link as UswdsLink
-} from '@trussworks/react-uswds';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -22,15 +17,6 @@ const MakingARequest = () => {
     <PageWrapper data-testid="making-a-system-request">
       <Header />
       <MainContent className="grid-container line-height-body-5 margin-bottom-5">
-        <BreadcrumbBar variant="wrap">
-          <Breadcrumb>
-            <BreadcrumbLink asCustom={Link} to="/">
-              <span>Home</span>
-            </BreadcrumbLink>
-          </Breadcrumb>
-          <Breadcrumb current>IT Governance</Breadcrumb>
-        </BreadcrumbBar>
-
         <PageHeading>{t('heading')}</PageHeading>
         <p>{t('reasonList.intro')}</p>
         <ul>

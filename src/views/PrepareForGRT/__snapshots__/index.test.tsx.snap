@@ -173,38 +173,136 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
           </em>
         </a>
       </div>
-      <button
-        className="usa-menu-btn"
-        onClick={[Function]}
-        type="button"
-      >
-        <span
-          className="fa fa-bars"
-        />
-      </button>
-      <div
-        className="navbar--container"
-      >
+      <div>
         <div
-          className="easi-header__dropdown-wrapper"
+          className="navbar--container easi-nav__user"
         >
+          
+          <div>
+              |  
+          </div>
           <button
-            aria-controls="Header-UserActionsList"
-            aria-expanded={false}
-            aria-label="Expand User Menu"
-            className="easi-header__username"
-            data-testid="UserActions-Toggle"
+            aria-controls="sign-out"
+            aria-expanded="false"
+            className="usa-button usa-button--unstyled"
+            data-testid="signout-link"
             onClick={[Function]}
             type="button"
           >
-            
-            <i
-              className="fa fa-angle-down easi-header__caret"
-            />
+            Sign Out
           </button>
         </div>
+        <button
+          className="usa-menu-btn"
+          onClick={[Function]}
+          type="button"
+        >
+          <span
+            className="fa fa-bars"
+          />
+        </button>
       </div>
     </div>
+    <nav
+      aria-label="Navigation Bar"
+      className="border-top-light"
+      data-testid="navigation-bar"
+    >
+      <div
+        className="grid-container"
+      >
+        <nav
+          aria-label="Primary navigation"
+          className="usa-nav"
+        >
+          <button
+            className="usa-nav__close"
+            data-testid="navCloseButton"
+            onClick={[Function]}
+            type="button"
+          >
+            <img
+              alt="close"
+              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
+            />
+          </button>
+          <ul
+            className="usa-nav__primary usa-accordion"
+          >
+            <li
+              className="usa-nav__primary-item"
+            >
+              <div
+                className="easi-nav"
+              >
+                <a
+                  aria-current="page"
+                  className="easi-nav__link usa-current"
+                  href="/"
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  <em
+                    aria-label="Home"
+                    className="usa-logo__text easi-nav__label"
+                  >
+                    Home
+                  </em>
+                </a>
+              </div>
+            </li>
+            <li
+              className="usa-nav__primary-item"
+            />
+            <li
+              className="usa-nav__primary-item"
+            >
+              <div
+                className="easi-nav"
+              >
+                <a
+                  aria-current={null}
+                  className="easi-nav__link"
+                  href="/system/making-a-request"
+                  onClick={[Function]}
+                >
+                  <em
+                    aria-label="IT Governance"
+                    className="usa-logo__text easi-nav__label"
+                  >
+                    IT Governance
+                  </em>
+                </a>
+              </div>
+            </li>
+            <li
+              className="usa-nav__primary-item"
+            >
+              <div
+                className="easi-nav"
+              >
+                <a
+                  aria-current={null}
+                  className="easi-nav__link"
+                  href="/508/making-a-request"
+                  onClick={[Function]}
+                >
+                  <em
+                    aria-label="Section 508"
+                    className="usa-logo__text easi-nav__label"
+                  >
+                    Section 508
+                  </em>
+                </a>
+              </div>
+            </li>
+            <li
+              className="usa-nav__primary-item"
+            />
+          </ul>
+        </nav>
+      </div>
+    </nav>
     <div
       className="grid-container easi-header--desktop "
     />
@@ -214,26 +312,136 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
     <div
       className="usa-nav sidenav-mobile"
     >
-      <button
-        aria-label="Close"
-        className="usa-nav__close"
-        onClick={[Function]}
-        type="button"
-      >
-        <span
-          className="fa fa-close"
-        />
-      </button>
       <div
         className="usa-nav__inner"
       >
-        <button
-          className="easi-header__nav-link"
-          onClick={[Function]}
-          type="button"
+        <nav
+          aria-label="Navigation Bar"
+          className="border-top-light"
+          data-testid="navigation-bar"
         >
-          Sign Out
-        </button>
+          <div
+            className="grid-container"
+          >
+            <nav
+              aria-label="Primary navigation"
+              className="usa-nav is-visible"
+            >
+              <button
+                className="usa-nav__close"
+                data-testid="navCloseButton"
+                onClick={[Function]}
+                type="button"
+              >
+                <img
+                  alt="close"
+                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
+                />
+              </button>
+              <ul
+                className="usa-nav__primary usa-accordion"
+              >
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav"
+                  >
+                    <a
+                      aria-current="page"
+                      className="easi-nav__link usa-current"
+                      href="/"
+                      onClick={[Function]}
+                      style={Object {}}
+                    >
+                      <em
+                        aria-label="Home"
+                        className="usa-logo__text easi-nav__label"
+                      >
+                        Home
+                      </em>
+                    </a>
+                  </div>
+                </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav"
+                  >
+                    <a
+                      aria-current={null}
+                      className="easi-nav__link"
+                      href="/system/making-a-request"
+                      onClick={[Function]}
+                    >
+                      <em
+                        aria-label="IT Governance"
+                        className="usa-logo__text easi-nav__label"
+                      >
+                        IT Governance
+                      </em>
+                    </a>
+                  </div>
+                </li>
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav"
+                  >
+                    <a
+                      aria-current={null}
+                      className="easi-nav__link"
+                      href="/508/making-a-request"
+                      onClick={[Function]}
+                    >
+                      <em
+                        aria-label="Section 508"
+                        className="usa-logo__text easi-nav__label"
+                      >
+                        Section 508
+                      </em>
+                    </a>
+                  </div>
+                </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav__signout-container"
+                  >
+                    <div
+                      className="easi-nav__user margin-bottom-1"
+                    >
+                      
+                    </div>
+                    <a
+                      aria-current="page"
+                      className="signout-link active"
+                      href="/"
+                      onClick={[Function]}
+                      style={Object {}}
+                    >
+                      <em
+                        aria-label="Sign Out"
+                        className="usa-logo__text text-underline"
+                      >
+                        Sign Out
+                      </em>
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </nav>
       </div>
     </div>
   </header>

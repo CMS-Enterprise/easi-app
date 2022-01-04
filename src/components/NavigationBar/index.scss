@@ -1,0 +1,38 @@
+.usa-nav__primary-item {    
+    .easi-nav {
+        display: flex;
+
+        &__item {
+            display: flex;
+        }
+
+        &__user {
+            color: #71767A;
+        }
+
+        &__link {
+            padding: 1em;
+        }
+
+        &__current {
+            height: .25em;
+            background-color: #005EA2;
+            margin-top: .5em;
+            pointer-events: none;
+        }
+
+        &__signout-container {
+            margin-top: 2em
+        };
+
+        a {   
+            &:visited {
+                color: #565C65
+            }             
+        }
+    }
+}
+
+.border-top-light {
+    border-top: 1px solid #DFE1E2;
+}

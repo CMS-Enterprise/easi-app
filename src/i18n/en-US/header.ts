@@ -1,9 +1,13 @@
 const header = {
+  addSystem: 'IT Governance',
+  add508Request: 'Section 508',
+  help: 'Help',
+  home: 'Home',
+  navigation: 'Navigation Bar',
   returnHome: 'EASi home',
-  addSystem: 'Make IT Governance request',
-  add508Request: 'Make 508 request',
   signIn: 'Sign In',
-  signOut: 'Sign Out'
+  signOut: 'Sign Out',
+  systems: 'Systems'
 };
 
 export default header;
