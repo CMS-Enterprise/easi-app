@@ -149,6 +149,9 @@ eua
 25
 uncomment
 cypress_ci.yml
+cypress_local.yml
+tailscale.yml
+ci_server_test.yml
 subfolder
 subfolders
 Unix-ish

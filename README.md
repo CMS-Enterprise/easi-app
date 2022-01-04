@@ -15,11 +15,13 @@ This application has the following main components:
 - [Frontend docs](./src/README.md)
 - [Backend docs](./pkg/README.md)
 - [Running development tasks with `scripts/dev`](./docs/dev_script_usage.md) - includes instructions on running the application locally
-- GraphQL development workflow
+- GraphQL development
+  - [Playground usage](./docs/graphql_playground.md)
   - [Schema modification and backend code]() <!-- Link to section added in https://github.com/CMSgov/easi-app/pull/1410 -->
   - [Frontend code]() <!-- Link to section added in https://github.com/CMSgov/easi-app/pull/1410 -->
 - [Working with the database](./docs/database.md) - includes instructions on modifying the database schema
 - [Testing locally](./docs/local_testing.md)
+- [Docker Compose files and usage](./docs/docker_compose.md)
 
 
 ## Repository Structure
@@ -112,18 +114,7 @@ export OKTA_TEST_SECRET=
 
 These values can be found in 1Password under "CMS IDM Test Account".
 
-### GraphQL Playground
 
-You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL playground while the Go backend is running. You will need to enter `/api/graph/query` as the query path in the UI for this to work. You'll also need to add the following to HTTP Headers (in the lower-left) to avoid auth errors:
-```
-{ "Authorization":"Local {\"favorLocalAuth\":true}"}
-```
-
-Additionally, you can define EUA job codes in the `Authorization` header that will be used when querying endpoints such as `systemIntake` that require them. The syntax is:
-```
-{ "Authorization":"Local {\"favorLocalAuth\":true, \"jobCodes\":[\"EASI_D_GOVTEAM\"]}"}
-```
-Additional job codes beyond/instead of `EASI_D_GOVTEAM` can be included in the `jobCodes` array, just make sure to escape the `"`'s around the job code names.
 
 ### Accessing the application over Tailscale
 
@@ -235,54 +226,3 @@ or
 Note: using `LICENSE_KEY_SSM_PATH` requires AWS credentials for the appropriate
 environment.
 
-## Docker Compose Files
-
-`scripts/dev` and parts of our CI tooling rely on docker-compose. Multiple
-docker-compose files exist to support different use cases and environments.
-
-| File                          | Description                                                                                                                       |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| docker-compose.yml            | Base configuration for `db`, `db_migrate`, `easi` and `easi_client` services                                                      |
-| docker-compose.override.yml   | Additional configuration for running the above services locally. Also adds configuration for `minio` and `prince` lambda services |
-| docker-compose.cypress_ci.yml | Additional configuration for running end-to-end Cypress tests in Github Actions                                                   |
-| docker-compose.local.yml      | Additional configuration for running end-to-end Cypress tests locally                                                             |
-
-### Use case: Run database and database migrations locally
-
-Use the following command if you only intend to run the database and database
-migration containers locally:
-
-```console
-$ docker-compose up --detach db db_migrate
-Creating easi-app_db_1 ... done
-Creating easi-app_db_migrate_1 ... done
-```
-
-By default, Docker Compose reads two files, a docker-compose.yml and an optional
-docker-compose.override.yml file. That's why, for the above command, you don't
-need to specify which compose files to use.
-
-Two options to take it down:
-
-```console
-docker-compose kill  # stops the running containers
-docker-compose down  # stops and also removes the containers
-```
-
-You can also force rebuilding the images (e.g. after using `kill`) with
-`docker-compose build`.
-
-### Use case: Run database, database migrations, backend, and frontend locally
-
-Use the following to run the database, database migrations, backend server, and
-frontend client locally in docker.
-
-```console
-COMPOSE_HTTP_TIMEOUT=120 docker-compose up --build
-```
-
-Run the following to shut it down:
-
-```console
-docker-compose down
-```
