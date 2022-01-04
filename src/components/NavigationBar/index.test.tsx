@@ -32,7 +32,12 @@ describe('The NavigationBar component', () => {
   it('renders without errors', done => {
     const { getByTestId } = render(
       <MemoryRouter initialEntries={['/']}>
-        <NavigationBar />
+        <NavigationBar
+          mobile
+          toggle={() => !null}
+          signout={() => null}
+          userName="A11Y"
+        />
       </MemoryRouter>
     );
 
@@ -43,7 +48,12 @@ describe('The NavigationBar component', () => {
   it('displays every navigation element', done => {
     const { getByText } = render(
       <MemoryRouter initialEntries={['/system/making-a-request']}>
-        <NavigationBar />
+        <NavigationBar
+          mobile
+          toggle={() => !null}
+          signout={() => null}
+          userName="A11Y"
+        />
       </MemoryRouter>
     );
 

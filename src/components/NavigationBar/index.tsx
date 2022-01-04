@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { PrimaryNav } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -8,9 +9,10 @@ import { Flags } from 'types/flags';
 
 import './index.scss';
 
-type NavigationProps = {
+export type NavigationProps = {
   mobile?: boolean;
-  signout?: () => void;
+  signout: () => void;
+  toggle: (active: boolean) => void;
   userName?: string;
 };
 
@@ -42,65 +44,73 @@ export const navLinks = (flags: Flags) => [
   }
 ];
 
-const NavigationBar = ({ mobile, signout, userName }: NavigationProps) => {
+const NavigationBar = ({
+  mobile,
+  signout,
+  toggle,
+  userName
+}: NavigationProps) => {
   const { t } = useTranslation();
-  const location = useLocation();
   const flags = useFlags();
 
   const responsiveContainerClass = classnames('grid-container', {
     'navbar--container': !mobile
   });
 
-  const responsiveCurrentClass = (current: boolean) =>
-    classnames('easi-nav__item', {
-      'easi-nav__not-current': !current
-    });
+  const primaryLinks = navLinks(flags).map(
+    route =>
+      route.isEnabled && (
+        <div className="easi-nav" key={route.label}>
+          <NavLink
+            to={route.link}
+            activeClassName="usa-current"
+            className="easi-nav__link"
+            exact
+          >
+            <em
+              className="usa-logo__text easi-nav__label"
+              aria-label={t(`header:${route.label}`)}
+            >
+              {t(`header:${route.label}`)}
+            </em>
+          </NavLink>
+        </div>
+      )
+  );
+
+  const userLinks = (
+    <div className="easi-nav__signout-container">
+      <div className="easi-nav__user margin-bottom-1">{userName}</div>
+      <NavLink
+        to="/"
+        onClick={e => {
+          e.preventDefault();
+          signout();
+        }}
+        className="signout-link"
+      >
+        <em
+          className="usa-logo__text text-underline"
+          aria-label={t('header:signOut')}
+        >
+          {t('header:signOut')}
+        </em>
+      </NavLink>
+    </div>
+  );
+
+  const navItems = mobile ? primaryLinks.concat(userLinks) : primaryLinks;
 
   return (
     <nav aria-label={t('header:navigation')} data-testid="navigation-bar">
       <div className="navbar--divider" />
       <ul className={responsiveContainerClass}>
-        {navLinks(flags).map(
-          route =>
-            route.isEnabled && (
-              <li className="easi-nav" key={route.label}>
-                <div
-                  className={responsiveCurrentClass(
-                    location.pathname === route.link
-                  )}
-                >
-                  <Link to={route.link} className="easi-nav__link">
-                    <em
-                      className="usa-logo__text easi-nav__label"
-                      aria-label={t(`header:${route.label}`)}
-                    >
-                      {t(`header:${route.label}`)}
-                    </em>
-                    {location.pathname === route.link && (
-                      <div className="easi-nav__current" />
-                    )}
-                  </Link>
-                </div>
-              </li>
-            )
-        )}
-        {mobile && userName && signout && (
-          <div className="easi-nav__signout-container">
-            <div className="easi-nav__user margin-bottom-1">{userName}</div>
-            <Link
-              to="/"
-              onClick={e => {
-                e.preventDefault();
-                signout();
-              }}
-              className="navbar-link"
-            >
-              <em className="usa-logo__text" aria-label={t('header:signOut')}>
-                {t('header:signOut')}
-              </em>
-            </Link>
-          </div>
-        )}
+        <PrimaryNav
+          onToggleMobileNav={() => toggle(false)}
+          mobileExpanded={mobile}
+          aria-label="Primary navigation"
+          items={navItems}
+        />
       </ul>
     </nav>
   );

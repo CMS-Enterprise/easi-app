@@ -128,7 +128,13 @@ export const Header = ({ children }: HeaderProps) => {
         )}
       </div>
 
-      {authState?.isAuthenticated && <NavigationBar />}
+      {authState?.isAuthenticated && (
+        <NavigationBar
+          toggle={setIsMobileSideNavExpanded}
+          signout={signout}
+          userName={userName}
+        />
+      )}
 
       <div className="grid-container easi-header--desktop ">{children}</div>
       <div
@@ -138,18 +144,15 @@ export const Header = ({ children }: HeaderProps) => {
       />
       {/* Mobile Display */}
       <div ref={mobileSideNav} className={mobileSideNavClasses}>
-        <button
-          type="button"
-          className="usa-nav__close"
-          aria-label="Close"
-          onClick={() => setIsMobileSideNavExpanded(false)}
-        >
-          <span className="fa fa-close fa-2x easi-header__close" />
-        </button>
         <div className="usa-nav__inner">
           {children}
           {authState?.isAuthenticated ? (
-            <NavigationBar mobile signout={signout} userName={userName} />
+            <NavigationBar
+              mobile
+              toggle={setIsMobileSideNavExpanded}
+              signout={signout}
+              userName={userName}
+            />
           ) : (
             <a className="easi-header__nav-link" href="/signin">
               {t('header:signIn')}

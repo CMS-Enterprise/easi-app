@@ -1,83 +1,34 @@
-.easi-nav {
-    display: flex;
-
-    &__item {
-        display: flex;
-        height: 3.2em;
-    }
-    
-    &__label {
-        order: 2
-    }
-
-    &__user {
-        color: #71767A;
-    }
-
-    &__current {
-        height: .25em;
-        background-color: #005EA2;
-        margin-top: .5em;
-        pointer-events: none;
-    }    
-
-    &__link {
-        padding: .8em;
-        padding-left: 1em;
-        padding-right: 1em;
-    
-        &:link {
-            text-decoration: none;
-        }
-        
-        &:visited {
-            text-decoration: none;
-        }
-        
-        &:hover {
-            text-decoration: underline;
-        }
-        
-        &:active {
-            text-decoration: underline;
-        }        
-    }
-    
-    &__signout-container {
-        margin-top: 2em
-    };
-}
-
-@media (max-width: $desktop) {
+.usa-nav__primary-item {    
     .easi-nav {
-        margin-bottom: .5em;
-        border-bottom: 1px solid #DFE1E2;
+        display: flex;
 
         &__item {
-            padding-top: 1em;
-            padding-right: 1em;
-            padding-bottom: 1em;
-            padding-left: 0;            
+            display: flex;
         }
 
-        &__not-current {
-            padding-left: .75em;
-        }
-
-        &__current {        
-            width: .25em;
-            height: 1.5em;
-            border-radius: 2px;
-            order: 1;
-            margin-top: 0;
-            margin-right: .5em;
+        &__user {
+            color: #71767A;
         }
 
         &__link {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 0;       
+            padding: 1em;
+        }
+
+        &__current {
+            height: .25em;
+            background-color: #005EA2;
+            margin-top: .5em;
+            pointer-events: none;
+        }
+
+        &__signout-container {
+            margin-top: 2em
+        };
+
+        a {   
+            &:visited {
+                color: #565C65
+            }             
         }
     }
 }

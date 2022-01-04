@@ -84,6 +84,29 @@
     padding-right: 0;
   }
 
+  @media (max-width: $desktop) {
+    .usa-nav__primary .usa-current {
+      &:after {
+        height: 1.5rem;
+        top: 0.8rem;
+      }
+    }
+
+    .usa-nav__primary a:not(.usa-button) {
+      padding: 1em;
+      padding-left: 1.25em;
+    }
+
+    .usa-nav__primary .signout-link {
+      padding: 0em !important;
+    }
+
+    // HACK: Remove mystery 1px space underneath the border
+    .usa-nav__primary > li {
+      margin-top: -1px;
+    }
+  }
+
   @media (min-width: $desktop) {
     .site-logo {
       margin-bottom: 2rem;

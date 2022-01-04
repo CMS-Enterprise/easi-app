@@ -214,107 +214,32 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
       <ul
         className="grid-container navbar--container"
       >
-        <li
-          className="easi-nav"
-        >
-          <div
-            className="easi-nav__item easi-nav__not-current"
-          >
-            <a
-              className="easi-nav__link"
-              href="/"
-              onClick={[Function]}
-            >
-              <em
-                aria-label="Home"
-                className="usa-logo__text easi-nav__label"
-              >
-                Home
-              </em>
-            </a>
-          </div>
-        </li>
-        <li
-          className="easi-nav"
-        >
-          <div
-            className="easi-nav__item easi-nav__not-current"
-          >
-            <a
-              className="easi-nav__link"
-              href="/system/making-a-request"
-              onClick={[Function]}
-            >
-              <em
-                aria-label="IT Governance"
-                className="usa-logo__text easi-nav__label"
-              >
-                IT Governance
-              </em>
-            </a>
-          </div>
-        </li>
-        <li
-          className="easi-nav"
-        >
-          <div
-            className="easi-nav__item easi-nav__not-current"
-          >
-            <a
-              className="easi-nav__link"
-              href="/508/making-a-request"
-              onClick={[Function]}
-            >
-              <em
-                aria-label="Section 508"
-                className="usa-logo__text easi-nav__label"
-              >
-                Section 508
-              </em>
-            </a>
-          </div>
-        </li>
-      </ul>
-    </nav>
-    <div
-      className="grid-container easi-header--desktop "
-    />
-    <div
-      className="usa-overlay"
-    />
-    <div
-      className="usa-nav sidenav-mobile"
-    >
-      <button
-        aria-label="Close"
-        className="usa-nav__close"
-        onClick={[Function]}
-        type="button"
-      >
-        <span
-          className="fa fa-close fa-2x easi-header__close"
-        />
-      </button>
-      <div
-        className="usa-nav__inner"
-      >
         <nav
-          aria-label="Navigation Bar"
-          data-testid="navigation-bar"
+          aria-label="Primary navigation"
+          className="usa-nav"
         >
-          <div
-            className="navbar--divider"
-          />
+          <button
+            className="usa-nav__close"
+            data-testid="navCloseButton"
+            onClick={[Function]}
+            type="button"
+          >
+            <img
+              alt="close"
+              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
+            />
+          </button>
           <ul
-            className="grid-container"
+            className="usa-nav__primary usa-accordion"
           >
             <li
-              className="easi-nav"
+              className="usa-nav__primary-item"
             >
               <div
-                className="easi-nav__item easi-nav__not-current"
+                className="easi-nav"
               >
                 <a
+                  aria-current={null}
                   className="easi-nav__link"
                   href="/"
                   onClick={[Function]}
@@ -329,12 +254,16 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
               </div>
             </li>
             <li
-              className="easi-nav"
+              className="usa-nav__primary-item"
+            />
+            <li
+              className="usa-nav__primary-item"
             >
               <div
-                className="easi-nav__item easi-nav__not-current"
+                className="easi-nav"
               >
                 <a
+                  aria-current={null}
                   className="easi-nav__link"
                   href="/system/making-a-request"
                   onClick={[Function]}
@@ -349,12 +278,13 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
               </div>
             </li>
             <li
-              className="easi-nav"
+              className="usa-nav__primary-item"
             >
               <div
-                className="easi-nav__item easi-nav__not-current"
+                className="easi-nav"
               >
                 <a
+                  aria-current={null}
                   className="easi-nav__link"
                   href="/508/making-a-request"
                   onClick={[Function]}
@@ -368,27 +298,151 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
                 </a>
               </div>
             </li>
-            <div
-              className="easi-nav__signout-container"
+            <li
+              className="usa-nav__primary-item"
+            />
+          </ul>
+        </nav>
+      </ul>
+    </nav>
+    <div
+      className="grid-container easi-header--desktop "
+    />
+    <div
+      className="usa-overlay"
+    />
+    <div
+      className="usa-nav sidenav-mobile"
+    >
+      <div
+        className="usa-nav__inner"
+      >
+        <nav
+          aria-label="Navigation Bar"
+          data-testid="navigation-bar"
+        >
+          <div
+            className="navbar--divider"
+          />
+          <ul
+            className="grid-container"
+          >
+            <nav
+              aria-label="Primary navigation"
+              className="usa-nav is-visible"
             >
-              <div
-                className="easi-nav__user margin-bottom-1"
-              >
-                John Doe
-              </div>
-              <a
-                className="navbar-link"
-                href="/"
+              <button
+                className="usa-nav__close"
+                data-testid="navCloseButton"
                 onClick={[Function]}
+                type="button"
               >
-                <em
-                  aria-label="Sign Out"
-                  className="usa-logo__text"
+                <img
+                  alt="close"
+                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
+                />
+              </button>
+              <ul
+                className="usa-nav__primary usa-accordion"
+              >
+                <li
+                  className="usa-nav__primary-item"
                 >
-                  Sign Out
-                </em>
-              </a>
-            </div>
+                  <div
+                    className="easi-nav"
+                  >
+                    <a
+                      aria-current={null}
+                      className="easi-nav__link"
+                      href="/"
+                      onClick={[Function]}
+                    >
+                      <em
+                        aria-label="Home"
+                        className="usa-logo__text easi-nav__label"
+                      >
+                        Home
+                      </em>
+                    </a>
+                  </div>
+                </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav"
+                  >
+                    <a
+                      aria-current={null}
+                      className="easi-nav__link"
+                      href="/system/making-a-request"
+                      onClick={[Function]}
+                    >
+                      <em
+                        aria-label="IT Governance"
+                        className="usa-logo__text easi-nav__label"
+                      >
+                        IT Governance
+                      </em>
+                    </a>
+                  </div>
+                </li>
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav"
+                  >
+                    <a
+                      aria-current={null}
+                      className="easi-nav__link"
+                      href="/508/making-a-request"
+                      onClick={[Function]}
+                    >
+                      <em
+                        aria-label="Section 508"
+                        className="usa-logo__text easi-nav__label"
+                      >
+                        Section 508
+                      </em>
+                    </a>
+                  </div>
+                </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav__signout-container"
+                  >
+                    <div
+                      className="easi-nav__user margin-bottom-1"
+                    >
+                      John Doe
+                    </div>
+                    <a
+                      aria-current="page"
+                      className="signout-link active"
+                      href="/"
+                      onClick={[Function]}
+                      style={Object {}}
+                    >
+                      <em
+                        aria-label="Sign Out"
+                        className="usa-logo__text text-underline"
+                      >
+                        Sign Out
+                      </em>
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </nav>
           </ul>
         </nav>
       </div>
@@ -940,107 +994,32 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
       <ul
         className="grid-container navbar--container"
       >
-        <li
-          className="easi-nav"
-        >
-          <div
-            className="easi-nav__item easi-nav__not-current"
-          >
-            <a
-              className="easi-nav__link"
-              href="/"
-              onClick={[Function]}
-            >
-              <em
-                aria-label="Home"
-                className="usa-logo__text easi-nav__label"
-              >
-                Home
-              </em>
-            </a>
-          </div>
-        </li>
-        <li
-          className="easi-nav"
-        >
-          <div
-            className="easi-nav__item easi-nav__not-current"
-          >
-            <a
-              className="easi-nav__link"
-              href="/system/making-a-request"
-              onClick={[Function]}
-            >
-              <em
-                aria-label="IT Governance"
-                className="usa-logo__text easi-nav__label"
-              >
-                IT Governance
-              </em>
-            </a>
-          </div>
-        </li>
-        <li
-          className="easi-nav"
-        >
-          <div
-            className="easi-nav__item easi-nav__not-current"
-          >
-            <a
-              className="easi-nav__link"
-              href="/508/making-a-request"
-              onClick={[Function]}
-            >
-              <em
-                aria-label="Section 508"
-                className="usa-logo__text easi-nav__label"
-              >
-                Section 508
-              </em>
-            </a>
-          </div>
-        </li>
-      </ul>
-    </nav>
-    <div
-      className="grid-container easi-header--desktop "
-    />
-    <div
-      className="usa-overlay"
-    />
-    <div
-      className="usa-nav sidenav-mobile"
-    >
-      <button
-        aria-label="Close"
-        className="usa-nav__close"
-        onClick={[Function]}
-        type="button"
-      >
-        <span
-          className="fa fa-close fa-2x easi-header__close"
-        />
-      </button>
-      <div
-        className="usa-nav__inner"
-      >
         <nav
-          aria-label="Navigation Bar"
-          data-testid="navigation-bar"
+          aria-label="Primary navigation"
+          className="usa-nav"
         >
-          <div
-            className="navbar--divider"
-          />
+          <button
+            className="usa-nav__close"
+            data-testid="navCloseButton"
+            onClick={[Function]}
+            type="button"
+          >
+            <img
+              alt="close"
+              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
+            />
+          </button>
           <ul
-            className="grid-container"
+            className="usa-nav__primary usa-accordion"
           >
             <li
-              className="easi-nav"
+              className="usa-nav__primary-item"
             >
               <div
-                className="easi-nav__item easi-nav__not-current"
+                className="easi-nav"
               >
                 <a
+                  aria-current={null}
                   className="easi-nav__link"
                   href="/"
                   onClick={[Function]}
@@ -1055,12 +1034,16 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
               </div>
             </li>
             <li
-              className="easi-nav"
+              className="usa-nav__primary-item"
+            />
+            <li
+              className="usa-nav__primary-item"
             >
               <div
-                className="easi-nav__item easi-nav__not-current"
+                className="easi-nav"
               >
                 <a
+                  aria-current={null}
                   className="easi-nav__link"
                   href="/system/making-a-request"
                   onClick={[Function]}
@@ -1075,12 +1058,13 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
               </div>
             </li>
             <li
-              className="easi-nav"
+              className="usa-nav__primary-item"
             >
               <div
-                className="easi-nav__item easi-nav__not-current"
+                className="easi-nav"
               >
                 <a
+                  aria-current={null}
                   className="easi-nav__link"
                   href="/508/making-a-request"
                   onClick={[Function]}
@@ -1094,27 +1078,151 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
                 </a>
               </div>
             </li>
-            <div
-              className="easi-nav__signout-container"
+            <li
+              className="usa-nav__primary-item"
+            />
+          </ul>
+        </nav>
+      </ul>
+    </nav>
+    <div
+      className="grid-container easi-header--desktop "
+    />
+    <div
+      className="usa-overlay"
+    />
+    <div
+      className="usa-nav sidenav-mobile"
+    >
+      <div
+        className="usa-nav__inner"
+      >
+        <nav
+          aria-label="Navigation Bar"
+          data-testid="navigation-bar"
+        >
+          <div
+            className="navbar--divider"
+          />
+          <ul
+            className="grid-container"
+          >
+            <nav
+              aria-label="Primary navigation"
+              className="usa-nav is-visible"
             >
-              <div
-                className="easi-nav__user margin-bottom-1"
-              >
-                John Doe
-              </div>
-              <a
-                className="navbar-link"
-                href="/"
+              <button
+                className="usa-nav__close"
+                data-testid="navCloseButton"
                 onClick={[Function]}
+                type="button"
               >
-                <em
-                  aria-label="Sign Out"
-                  className="usa-logo__text"
+                <img
+                  alt="close"
+                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
+                />
+              </button>
+              <ul
+                className="usa-nav__primary usa-accordion"
+              >
+                <li
+                  className="usa-nav__primary-item"
                 >
-                  Sign Out
-                </em>
-              </a>
-            </div>
+                  <div
+                    className="easi-nav"
+                  >
+                    <a
+                      aria-current={null}
+                      className="easi-nav__link"
+                      href="/"
+                      onClick={[Function]}
+                    >
+                      <em
+                        aria-label="Home"
+                        className="usa-logo__text easi-nav__label"
+                      >
+                        Home
+                      </em>
+                    </a>
+                  </div>
+                </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav"
+                  >
+                    <a
+                      aria-current={null}
+                      className="easi-nav__link"
+                      href="/system/making-a-request"
+                      onClick={[Function]}
+                    >
+                      <em
+                        aria-label="IT Governance"
+                        className="usa-logo__text easi-nav__label"
+                      >
+                        IT Governance
+                      </em>
+                    </a>
+                  </div>
+                </li>
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav"
+                  >
+                    <a
+                      aria-current={null}
+                      className="easi-nav__link"
+                      href="/508/making-a-request"
+                      onClick={[Function]}
+                    >
+                      <em
+                        aria-label="Section 508"
+                        className="usa-logo__text easi-nav__label"
+                      >
+                        Section 508
+                      </em>
+                    </a>
+                  </div>
+                </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
+                <li
+                  className="usa-nav__primary-item"
+                >
+                  <div
+                    className="easi-nav__signout-container"
+                  >
+                    <div
+                      className="easi-nav__user margin-bottom-1"
+                    >
+                      John Doe
+                    </div>
+                    <a
+                      aria-current="page"
+                      className="signout-link active"
+                      href="/"
+                      onClick={[Function]}
+                      style={Object {}}
+                    >
+                      <em
+                        aria-label="Sign Out"
+                        className="usa-logo__text text-underline"
+                      >
+                        Sign Out
+                      </em>
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </nav>
           </ul>
         </nav>
       </div>
