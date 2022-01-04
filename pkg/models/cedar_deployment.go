@@ -33,11 +33,11 @@ type CedarDeployment struct {
 	// possibly-null fields
 	StartDate                zero.Time
 	EndDate                  zero.Time
-	IsHotSite                zero.String // this could potentially be nullable Bool; sample values from CEDAR seem to be "Yes" or null
+	IsHotSite                zero.String // currently echoes CEDAR data exactly. in the future, this could potentially be nullable Bool; sample values from CEDAR seem to be "Yes" or null
 	Description              zero.String
 	ContractorName           zero.String
 	SystemVersion            zero.String
-	HasProductionData        zero.String // this could potentially be nullable Bool; sample values from CEDAR seem to be "Yes" or null
+	HasProductionData        zero.String // currently echoes CEDAR data exactly. in the future, this could potentially be nullable Bool; sample values from CEDAR seem to be "Yes" or null
 	ReplicatedSystemElements []string
 	DeploymentType           zero.String
 	SystemName               zero.String
