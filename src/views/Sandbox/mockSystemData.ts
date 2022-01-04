@@ -44,7 +44,8 @@ export const mockSystemInfo: SystemInfo[] = [
     atoStatus: 'warning',
     atoStatusText: 'Not yet compliant',
     section508Status: 'warning',
-    section508StatusText: 'Not yet compliant',
+    section508StatusText: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sollicitudin donec `,
     trbStatus: 'warning',
     trbStatusText: 'Needs more microservices'
   },
@@ -58,7 +59,9 @@ export const mockSystemInfo: SystemInfo[] = [
     atoStatus: 'fail',
     atoStatusText: 'Not yet authorized',
     section508Status: 'success',
-    section508StatusText: 'Good to go!',
+    section508StatusText: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
+    feugiat laoreet quis. `,
     trbStatus: 'fail',
     trbStatusText: 'Hash and salt your passwords!'
   }

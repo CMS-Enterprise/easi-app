@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { Card, Link as UswdsLink } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import Divider from 'components/shared/Divider';
@@ -41,16 +41,17 @@ const BookmarkCard = ({
 }: BookmarkCardProps & CedarSystemProps) => {
   const { t } = useTranslation();
   return (
-    <div
+    <Card
       data-testid="single-bookmark-card"
       className={classnames(
         'desktop:grid-col-6',
         'grid-col-12',
-        'margin-top-3',
+        'margin-top-2',
+        'margin-bottom-0',
         className
       )}
     >
-      <div className="grid-col-12 bookmark bookmark__container">
+      <div className="grid-col-12">
         <div className="bookmark__header easi-header__basic">
           <h2 className="bookmark__title margin-top-0 margin-bottom-1">
             <UswdsLink asCustom={Link} to={`/systems/${id}`}>
@@ -80,7 +81,7 @@ const BookmarkCard = ({
           />
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

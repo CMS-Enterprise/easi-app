@@ -8,12 +8,11 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Column, HeaderGroup, Row, useSortBy, useTable } from 'react-table';
-import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
+import { CardGroup, Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import BookmarkCard from 'components/BookmarkCard';
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
-import BookmarkCardWrapper from 'components/BookmarkCard/BookmarkCardWrapper';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -153,14 +152,14 @@ export const SystemRepositoryTable = () => {
               </Alert>
             </div>
           ) : (
-            <BookmarkCardWrapper>
+            <CardGroup>
               {mockSystemInfo.map(
                 mock =>
                   mockBookmarkInfo.some(
                     bookmark => bookmark.cedarSystemId === mock.id
                   ) && <BookmarkCard type="systemList" {...mock} />
               )}
-            </BookmarkCardWrapper>
+            </CardGroup>
           )}
           {/* TEMPORARY */}
 
