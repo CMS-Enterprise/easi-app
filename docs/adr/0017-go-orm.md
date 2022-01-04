@@ -1,4 +1,4 @@
-# *Use [sqlx](https://github.com/jmoiron/sqlx) for Go Database Access*
+# Use [sqlx](https://github.com/jmoiron/sqlx) for Go Database Access
 
 **User Story:** *[EASi 215](https://jiraent.cms.gov/browse/EASI-215)*
 
