@@ -54,6 +54,37 @@ type CedarSystem {
 }
 
 """
+Represents a cedar system that a user has bookmarked in the system repository
+"""
+type CedarSystemBookmark {
+  euaUserId: String!
+  cedarSystemId: UUID!
+}
+
+"""
+The data needed to bookmark a cedar system
+"""
+input CreateCedarSystemBookmarkInput {
+  euaUserId: String!
+  cedarSystemId: UUID!
+}
+
+"""
+The payload when bookmarking a cedar system
+"""
+type CreateCedarSystemBookmarkPayload {
+  cedarSystemBookmark: CedarSystemBookmark
+  userErrors: [UserError!]
+}
+
+"""
+The payload when deleting a bookmark for a cedar system
+"""
+type DeleteCedarSystemBookmarkPayload {
+  userErrors: [UserError!]
+}
+
+"""
 An accessibility request represents a system that needs to go through
 the 508 process
 """
@@ -1127,6 +1158,12 @@ type Mutation {
   updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
+  createCedarSystemBookmark(
+    input: CreateCedarSystemBookmarkInput!
+  ): CreateCedarSystemBookmarkPayload
+  deleteCedarSystemBookmark(
+    input: CreateCedarSystemBookmarkInput!
+  ): DeleteCedarSystemBookmarkPayload
 }
 
 """
@@ -1144,6 +1181,7 @@ type Query {
   currentUser: CurrentUser
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
+  cedarSystemBookmarks(id: String): [CedarSystemBookmark!]!
 }
 
 """

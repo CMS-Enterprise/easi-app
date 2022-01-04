@@ -176,6 +176,11 @@ type ComplexityRoot struct {
 		SystemMaintainerOrgComp func(childComplexity int) int
 	}
 
+	CedarSystemBookmark struct {
+		CedarSystemID func(childComplexity int) int
+		EUAUserID     func(childComplexity int) int
+	}
+
 	ContractDate struct {
 		Day   func(childComplexity int) int
 		Month func(childComplexity int) int
@@ -195,6 +200,11 @@ type ComplexityRoot struct {
 	CreateAccessibilityRequestPayload struct {
 		AccessibilityRequest func(childComplexity int) int
 		UserErrors           func(childComplexity int) int
+	}
+
+	CreateCedarSystemBookmarkPayload struct {
+		CedarSystemBookmark func(childComplexity int) int
+		UserErrors          func(childComplexity int) int
 	}
 
 	CreateSystemIntakeActionExtendLifecycleIDPayload struct {
@@ -217,6 +227,10 @@ type ComplexityRoot struct {
 
 	DeleteAccessibilityRequestPayload struct {
 		ID         func(childComplexity int) int
+		UserErrors func(childComplexity int) int
+	}
+
+	DeleteCedarSystemBookmarkPayload struct {
 		UserErrors func(childComplexity int) int
 	}
 
@@ -263,6 +277,7 @@ type ComplexityRoot struct {
 		CreateAccessibilityRequest                       func(childComplexity int, input model.CreateAccessibilityRequestInput) int
 		CreateAccessibilityRequestDocument               func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
 		CreateAccessibilityRequestNote                   func(childComplexity int, input model.CreateAccessibilityRequestNoteInput) int
+		CreateCedarSystemBookmark                        func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
 		CreateSystemIntake                               func(childComplexity int, input model.CreateSystemIntakeInput) int
 		CreateSystemIntakeActionBusinessCaseNeeded       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionBusinessCaseNeedsChanges func(childComplexity int, input model.BasicActionInput) int
@@ -277,6 +292,7 @@ type ComplexityRoot struct {
 		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
 		DeleteAccessibilityRequest                       func(childComplexity int, input model.DeleteAccessibilityRequestInput) int
 		DeleteAccessibilityRequestDocument               func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
+		DeleteCedarSystemBookmark                        func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
 		DeleteTestDate                                   func(childComplexity int, input model.DeleteTestDateInput) int
 		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
@@ -296,6 +312,7 @@ type ComplexityRoot struct {
 		AccessibilityRequest  func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests func(childComplexity int, after *string, first int) int
 		CedarSystem           func(childComplexity int, id string) int
+		CedarSystemBookmarks  func(childComplexity int, id *string) int
 		CedarSystems          func(childComplexity int) int
 		CurrentUser           func(childComplexity int) int
 		Requests              func(childComplexity int, after *string, first int) int
@@ -574,6 +591,8 @@ type MutationResolver interface {
 	UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystemIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeRequestDetails(ctx context.Context, input model.UpdateSystemIntakeRequestDetailsInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeContractDetails(ctx context.Context, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error)
+	CreateCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.CreateCedarSystemBookmarkPayload, error)
+	DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -584,6 +603,7 @@ type QueryResolver interface {
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
 	CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
+	CedarSystemBookmarks(ctx context.Context, id *string) ([]*models.CedarSystemBookmark, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error)
@@ -1233,6 +1253,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CedarSystem.SystemMaintainerOrgComp(childComplexity), true
 
+	case "CedarSystemBookmark.cedarSystemId":
+		if e.complexity.CedarSystemBookmark.CedarSystemID == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemBookmark.CedarSystemID(childComplexity), true
+
+	case "CedarSystemBookmark.euaUserId":
+		if e.complexity.CedarSystemBookmark.EUAUserID == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemBookmark.EUAUserID(childComplexity), true
+
 	case "ContractDate.day":
 		if e.complexity.ContractDate.Day == nil {
 			break
@@ -1296,6 +1330,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateAccessibilityRequestPayload.UserErrors(childComplexity), true
 
+	case "CreateCedarSystemBookmarkPayload.cedarSystemBookmark":
+		if e.complexity.CreateCedarSystemBookmarkPayload.CedarSystemBookmark == nil {
+			break
+		}
+
+		return e.complexity.CreateCedarSystemBookmarkPayload.CedarSystemBookmark(childComplexity), true
+
+	case "CreateCedarSystemBookmarkPayload.userErrors":
+		if e.complexity.CreateCedarSystemBookmarkPayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.CreateCedarSystemBookmarkPayload.UserErrors(childComplexity), true
+
 	case "CreateSystemIntakeActionExtendLifecycleIdPayload.systemIntake":
 		if e.complexity.CreateSystemIntakeActionExtendLifecycleIDPayload.SystemIntake == nil {
 			break
@@ -1351,6 +1399,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.DeleteAccessibilityRequestPayload.UserErrors(childComplexity), true
+
+	case "DeleteCedarSystemBookmarkPayload.userErrors":
+		if e.complexity.DeleteCedarSystemBookmarkPayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.DeleteCedarSystemBookmarkPayload.UserErrors(childComplexity), true
 
 	case "DeleteTestDatePayload.testDate":
 		if e.complexity.DeleteTestDatePayload.TestDate == nil {
@@ -1550,6 +1605,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateAccessibilityRequestNote(childComplexity, args["input"].(model.CreateAccessibilityRequestNoteInput)), true
 
+	case "Mutation.createCedarSystemBookmark":
+		if e.complexity.Mutation.CreateCedarSystemBookmark == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createCedarSystemBookmark_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateCedarSystemBookmark(childComplexity, args["input"].(model.CreateCedarSystemBookmarkInput)), true
+
 	case "Mutation.createSystemIntake":
 		if e.complexity.Mutation.CreateSystemIntake == nil {
 			break
@@ -1717,6 +1784,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteAccessibilityRequestDocument(childComplexity, args["input"].(model.DeleteAccessibilityRequestDocumentInput)), true
+
+	case "Mutation.deleteCedarSystemBookmark":
+		if e.complexity.Mutation.DeleteCedarSystemBookmark == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteCedarSystemBookmark_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteCedarSystemBookmark(childComplexity, args["input"].(model.CreateCedarSystemBookmarkInput)), true
 
 	case "Mutation.deleteTestDate":
 		if e.complexity.Mutation.DeleteTestDate == nil {
@@ -1909,6 +1988,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.CedarSystem(childComplexity, args["id"].(string)), true
+
+	case "Query.cedarSystemBookmarks":
+		if e.complexity.Query.CedarSystemBookmarks == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cedarSystemBookmarks_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarSystemBookmarks(childComplexity, args["id"].(*string)), true
 
 	case "Query.cedarSystems":
 		if e.complexity.Query.CedarSystems == nil {
@@ -2910,6 +3001,37 @@ type CedarSystem {
 	businessOwnerOrgComp: String
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
+}
+
+"""
+Represents a cedar system that a user has bookmarked in the system repository
+"""
+type CedarSystemBookmark {
+  euaUserId: String!
+  cedarSystemId: UUID!
+}
+
+"""
+The data needed to bookmark a cedar system
+"""
+input CreateCedarSystemBookmarkInput {
+  euaUserId: String!
+  cedarSystemId: UUID!
+}
+
+"""
+The payload when bookmarking a cedar system
+"""
+type CreateCedarSystemBookmarkPayload {
+  cedarSystemBookmark: CedarSystemBookmark
+  userErrors: [UserError!]
+}
+
+"""
+The payload when deleting a bookmark for a cedar system
+"""
+type DeleteCedarSystemBookmarkPayload {
+  userErrors: [UserError!]
 }
 
 """
@@ -3986,6 +4108,12 @@ type Mutation {
   updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
+  createCedarSystemBookmark(
+    input: CreateCedarSystemBookmarkInput!
+  ): CreateCedarSystemBookmarkPayload
+  deleteCedarSystemBookmark(
+    input: CreateCedarSystemBookmarkInput!
+  ): DeleteCedarSystemBookmarkPayload
 }
 
 """
@@ -4003,6 +4131,7 @@ type Query {
   currentUser: CurrentUser
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
+  cedarSystemBookmarks(id: String): [CedarSystemBookmark!]!
 }
 
 """
@@ -4151,6 +4280,21 @@ func (ec *executionContext) field_Mutation_createAccessibilityRequest_args(ctx c
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreateAccessibilityRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createCedarSystemBookmark_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CreateCedarSystemBookmarkInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateCedarSystemBookmarkInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateCedarSystemBookmarkInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4361,6 +4505,21 @@ func (ec *executionContext) field_Mutation_deleteAccessibilityRequest_args(ctx c
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNDeleteAccessibilityRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteCedarSystemBookmark_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CreateCedarSystemBookmarkInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateCedarSystemBookmarkInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateCedarSystemBookmarkInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4615,6 +4774,21 @@ func (ec *executionContext) field_Query_accessibilityRequests_args(ctx context.C
 		}
 	}
 	args["first"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarSystemBookmarks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -7569,6 +7743,76 @@ func (ec *executionContext) _CedarSystem_systemMaintainerOrgComp(ctx context.Con
 	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CedarSystemBookmark_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemBookmark) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarSystemBookmark",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EUAUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CedarSystemBookmark_cedarSystemId(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemBookmark) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarSystemBookmark",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CedarSystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ContractDate_day(ctx context.Context, field graphql.CollectedField, obj *model.ContractDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7860,6 +8104,70 @@ func (ec *executionContext) _CreateAccessibilityRequestPayload_userErrors(ctx co
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CreateCedarSystemBookmarkPayload_cedarSystemBookmark(ctx context.Context, field graphql.CollectedField, obj *model.CreateCedarSystemBookmarkPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateCedarSystemBookmarkPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CedarSystemBookmark, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.CedarSystemBookmark)
+	fc.Result = res
+	return ec.marshalOCedarSystemBookmark2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmark(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateCedarSystemBookmarkPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateCedarSystemBookmarkPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateCedarSystemBookmarkPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CreateSystemIntakeActionExtendLifecycleIdPayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.CreateSystemIntakeActionExtendLifecycleIDPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8096,6 +8404,38 @@ func (ec *executionContext) _DeleteAccessibilityRequestPayload_userErrors(ctx co
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "DeleteAccessibilityRequestPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DeleteCedarSystemBookmarkPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.DeleteCedarSystemBookmarkPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DeleteCedarSystemBookmarkPayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -10570,6 +10910,84 @@ func (ec *executionContext) _Mutation_updateSystemIntakeContractDetails(ctx cont
 	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_createCedarSystemBookmark(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createCedarSystemBookmark_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateCedarSystemBookmark(rctx, args["input"].(model.CreateCedarSystemBookmarkInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CreateCedarSystemBookmarkPayload)
+	fc.Result = res
+	return ec.marshalOCreateCedarSystemBookmarkPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateCedarSystemBookmarkPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteCedarSystemBookmark(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteCedarSystemBookmark_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteCedarSystemBookmark(rctx, args["input"].(model.CreateCedarSystemBookmarkInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DeleteCedarSystemBookmarkPayload)
+	fc.Result = res
+	return ec.marshalODeleteCedarSystemBookmarkPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteCedarSystemBookmarkPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10866,6 +11284,48 @@ func (ec *executionContext) _Query_cedarSystems(ctx context.Context, field graph
 	res := resTmp.([]*models.CedarSystem)
 	fc.Result = res
 	return ec.marshalOCedarSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_cedarSystemBookmarks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_cedarSystemBookmarks_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CedarSystemBookmarks(rctx, args["id"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarSystemBookmark)
+	fc.Result = res
+	return ec.marshalNCedarSystemBookmark2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmarkᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -16260,6 +16720,37 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestNoteInput(ct
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateCedarSystemBookmarkInput(ctx context.Context, obj interface{}) (model.CreateCedarSystemBookmarkInput, error) {
+	var it model.CreateCedarSystemBookmarkInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "euaUserId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
+			it.EuaUserID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "cedarSystemId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+			it.CedarSystemID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycleIdInput(ctx context.Context, obj interface{}) (model.CreateSystemIntakeActionExtendLifecycleIDInput, error) {
 	var it model.CreateSystemIntakeActionExtendLifecycleIDInput
 	asMap := map[string]interface{}{}
@@ -18129,6 +18620,38 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 	return out
 }
 
+var cedarSystemBookmarkImplementors = []string{"CedarSystemBookmark"}
+
+func (ec *executionContext) _CedarSystemBookmark(ctx context.Context, sel ast.SelectionSet, obj *models.CedarSystemBookmark) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarSystemBookmarkImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarSystemBookmark")
+		case "euaUserId":
+			out.Values[i] = ec._CedarSystemBookmark_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "cedarSystemId":
+			out.Values[i] = ec._CedarSystemBookmark_cedarSystemId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var contractDateImplementors = []string{"ContractDate"}
 
 func (ec *executionContext) _ContractDate(ctx context.Context, sel ast.SelectionSet, obj *model.ContractDate) graphql.Marshaler {
@@ -18227,6 +18750,32 @@ func (ec *executionContext) _CreateAccessibilityRequestPayload(ctx context.Conte
 			out.Values[i] = ec._CreateAccessibilityRequestPayload_accessibilityRequest(ctx, field, obj)
 		case "userErrors":
 			out.Values[i] = ec._CreateAccessibilityRequestPayload_userErrors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var createCedarSystemBookmarkPayloadImplementors = []string{"CreateCedarSystemBookmarkPayload"}
+
+func (ec *executionContext) _CreateCedarSystemBookmarkPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateCedarSystemBookmarkPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createCedarSystemBookmarkPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateCedarSystemBookmarkPayload")
+		case "cedarSystemBookmark":
+			out.Values[i] = ec._CreateCedarSystemBookmarkPayload_cedarSystemBookmark(ctx, field, obj)
+		case "userErrors":
+			out.Values[i] = ec._CreateCedarSystemBookmarkPayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -18356,6 +18905,30 @@ func (ec *executionContext) _DeleteAccessibilityRequestPayload(ctx context.Conte
 			out.Values[i] = ec._DeleteAccessibilityRequestPayload_id(ctx, field, obj)
 		case "userErrors":
 			out.Values[i] = ec._DeleteAccessibilityRequestPayload_userErrors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var deleteCedarSystemBookmarkPayloadImplementors = []string{"DeleteCedarSystemBookmarkPayload"}
+
+func (ec *executionContext) _DeleteCedarSystemBookmarkPayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteCedarSystemBookmarkPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deleteCedarSystemBookmarkPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeleteCedarSystemBookmarkPayload")
+		case "userErrors":
+			out.Values[i] = ec._DeleteCedarSystemBookmarkPayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -18628,6 +19201,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_updateSystemIntakeRequestDetails(ctx, field)
 		case "updateSystemIntakeContractDetails":
 			out.Values[i] = ec._Mutation_updateSystemIntakeContractDetails(ctx, field)
+		case "createCedarSystemBookmark":
+			out.Values[i] = ec._Mutation_createCedarSystemBookmark(ctx, field)
+		case "deleteCedarSystemBookmark":
+			out.Values[i] = ec._Mutation_deleteCedarSystemBookmark(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -18740,6 +19317,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cedarSystems(ctx, field)
+				return res
+			})
+		case "cedarSystemBookmarks":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cedarSystemBookmarks(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "__type":
@@ -20597,6 +21188,60 @@ func (ec *executionContext) marshalNBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeas
 	return ec._BusinessOwner(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCedarSystemBookmark2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmarkᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSystemBookmark) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarSystemBookmark2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmark(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCedarSystemBookmark2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmark(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystemBookmark) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._CedarSystemBookmark(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx context.Context, sel ast.SelectionSet, v *model.ContractDate) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -20619,6 +21264,11 @@ func (ec *executionContext) unmarshalNCreateAccessibilityRequestInput2githubᚗc
 
 func (ec *executionContext) unmarshalNCreateAccessibilityRequestNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestNoteInput(ctx context.Context, v interface{}) (model.CreateAccessibilityRequestNoteInput, error) {
 	res, err := ec.unmarshalInputCreateAccessibilityRequestNoteInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCreateCedarSystemBookmarkInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateCedarSystemBookmarkInput(ctx context.Context, v interface{}) (model.CreateCedarSystemBookmarkInput, error) {
+	res, err := ec.unmarshalInputCreateCedarSystemBookmarkInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -21858,6 +22508,13 @@ func (ec *executionContext) marshalOCedarSystem2ᚖgithubᚗcomᚋcmsgovᚋeasi�
 	return ec._CedarSystem(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCedarSystemBookmark2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmark(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystemBookmark) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CedarSystemBookmark(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -21877,6 +22534,13 @@ func (ec *executionContext) marshalOCreateAccessibilityRequestPayload2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._CreateAccessibilityRequestPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCreateCedarSystemBookmarkPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateCedarSystemBookmarkPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateCedarSystemBookmarkPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateCedarSystemBookmarkPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCreateSystemIntakeActionExtendLifecycleIdPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeActionExtendLifecycleIDPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateSystemIntakeActionExtendLifecycleIDPayload) graphql.Marshaler {
@@ -21912,6 +22576,13 @@ func (ec *executionContext) marshalODeleteAccessibilityRequestPayload2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._DeleteAccessibilityRequestPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODeleteCedarSystemBookmarkPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteCedarSystemBookmarkPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteCedarSystemBookmarkPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeleteCedarSystemBookmarkPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteTestDatePayload) graphql.Marshaler {

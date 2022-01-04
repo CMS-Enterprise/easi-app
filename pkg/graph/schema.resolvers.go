@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1095,6 +1096,14 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	}, err
 }
 
+func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.CreateCedarSystemBookmarkPayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
 	accessibilityRequest, err := r.store.FetchAccessibilityRequestByIDIncludingDeleted(ctx, id)
@@ -1220,6 +1229,14 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 		return nil, err
 	}
 	return cedarSystems, nil
+}
+
+func (r *queryResolver) CedarSystemBookmarks(ctx context.Context, id *string) ([]*models.CedarSystemBookmark, error) {
+	cedarSystemBookmarks, err := r.store.FetchCedarSystemBookmarks(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return cedarSystemBookmarks, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
