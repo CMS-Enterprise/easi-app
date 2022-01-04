@@ -2,10 +2,24 @@
 
 This repository contains the application code for CMS EASi (Easy Access to System Information).
 
+This application has the following main components:
+- A React frontend, using [Apollo](https://www.apollographql.com/docs/react/).
+- A Go backend that provides REST and GraphQL APIs.
+- A Postgres database.
+- A few lambda functions for PDF generation and file upload virus scanning.
+
 ## Documentation
 
-- [Development Environment Setup](./docs/dev_environment_setup.md)
+- [Development environment setup](./docs/dev_environment_setup.md)
 - [Architecture Decision Records (ADRs)](./docs/adr/index.md)
+- [Frontend docs](./src/README.md)
+- [Backend docs](./pkg/README.md)
+- [Running development tasks with `scripts/dev`](./docs/dev_script_usage.md) - includes instructions on running the application locally
+- GraphQL development workflow
+  - [Schema modification and backend code]() <!-- Link to section added in https://github.com/CMSgov/easi-app/pull/1410 -->
+  - [Frontend code]() <!-- Link to section added in https://github.com/CMSgov/easi-app/pull/1410 -->
+- [Working with the database](./docs/database.md) - includes instructions on modifying the database schema
+- [Testing locally](./docs/local_testing.md)
 
 
 ## Repository Structure
@@ -24,175 +38,6 @@ This repository has several major subfolders:
 - `public` contains static assets for the frontend.
 - `scripts` contains Bash and Ruby scripts used for various development and operational tasks.
 - `src` contains the TypeScript source code for the application's React frontend.
-
-## Overview
-
-This application is made up of the following main components:
-
-- A Go backend that provides REST and GraphQL APIs. More information on the packages within that program can be found in [`pkg/README.md`](./pkg/README.md).
-- A React frontend that uses [Apollo](https://www.apollographql.com/docs/react/). More information on the frontend structure can be found in [`src/README.md`](./src/README.md).
-- A few lambda functions for PDF generation and file upload virus scanning
-
-We generally use Docker Compose to orchestrate running these components during
-development, and developers usually interact with `scripts/dev` as a frontend to
-various development commands instead of invoking them directly. Here are the
-commands it currently supports:
-
-```console
-$ scripts/dev
-Please provide a task to run:
-
-scripts/dev build             # Build the Go application
-scripts/dev db:clean          # Deletes all rows from all tables
-scripts/dev db:migrate        # Runs database migrations and wait for them to complete
-scripts/dev db:recreate       # Destroys the database container and recreates it
-scripts/dev db:seed           # Load development dataset
-scripts/dev docker:sweep      # Delete all dangling volumes
-scripts/dev down              # Stops all services in the project
-scripts/dev gql               # Generate code from GraphQL schema
-scripts/dev hosts:check       # Verify that hosts for local development are configured
-scripts/dev lint              # Run all linters and checks managed by pre-commit
-scripts/dev list              # List available tasks
-scripts/dev minio:clean       # Mark all files in minio as clean (no viruses found)
-scripts/dev minio:infected    # Mark all files in minio as infected (virus found)
-scripts/dev minio:pending     # Mark all files in minio as pending (waiting for scan)
-scripts/dev prereqs           # Check to see if the app's prerequisites are installed
-scripts/dev reset             # Resets application to an empty state
-scripts/dev restart           # Restart the specified container
-scripts/dev tailscale         # Run app and expose to other machines over Tailscale
-scripts/dev test              # Run all tests in parallel
-scripts/dev test:go           # Runs Go tests
-scripts/dev test:go:long      # Runs Go tests, including long ones
-scripts/dev test:go:only      # Run targeted Go tests (pass path to package folder as additional options)
-scripts/dev test:js           # Run JS tests (pass path to scope to that location)
-scripts/dev test:js:named     # Run JS tests with a matching name (pass needle as additional option)
-scripts/dev up                # Starts all services in the project
-scripts/dev up:backend        # Starts all services except the frontend (runs more quickly, if frontend isn't needed)
-scripts/dev up:backend:watch  # Starts all services in the foreground except the frontend (runs more quickly, if frontend isn't needed)
-scripts/dev up:watch          # Starts all services in the project in the foreground
-```
-
-Some additional tools are required to work with the application source directly
-on the host machine. These operations can theoretically be done within Docker as
-well, but we haven't yet had the opportunity to migrate everything into it.
-
-_Note: The `scripts/dev` utility is written in Ruby. MacOS users will have Ruby installed by default; users of other operating systems may need to install it. See the "Dependencies" section below._
-
-
-
-## Starting the application
-
-From within the project directory, run `direnv allow` to load the default
-environment variables for the project. You will need to run this command again
-each time changes are made to `.envrc` or `.envrc.local`.
-
-- Run `scripts/dev prereqs` to check your machine for dependencies that need to
-  be installed. It will offer to install most of them for you.
-
-  - This script will also offer to configure your hosts file to resolve `minio`,
-    which is required to work with file uploads locally.
-
-- Start the application using `scripts/dev reset`. This will download and build
-  a bunch of Docker containers and then start the frontend, backend, and
-  database, as well as run scripts to migrate the database and seed data. You
-  can run this again later to restore the application to a known state during
-  development.
-
-- You should be able to visit the application by visiting
-  [http://localhost:3000](http://localhost:3000) in a browser.
-
-Run `scripts/dev` to see a list of other useful commands.
-
-## Build
-
-### GraphQL Generation
-
-```sh
-scripts/dev gql
-```
-
-This command will:
-
-- Regenerate the go types and resolver definitions
-- Regenerate the TypeScript types and validate `schema.graphql`
-
-### Golang cli app
-
-To build the cli application in your local filesystem:
-
-```sh
-scripts/dev build
-```
-
-You can then access the tool with the `easi` command.
-
-## Database
-
-### Migrating the Database
-
-To add a new migration, add a new file to the `migrations` directory following
-the standard `V__${last_migration_version + 1}_your_migration_name_here.sql`
-
-Then run `scripts/dev db:migrate`.
-
-### PostgreSQL CLI
-
-To inspect the database from your shell, `pgcli` is recommended:
-
-```sh
-brew install pgcli
-```
-
-Thanks to variables set in the `.envrc`, connecting is simple:
-
-```console
-$ pgcli
-Server: PostgreSQL 11.6 (Debian 11.6-1.pgdg90+1)
-Version: 2.2.0
-Chat: https://gitter.im/dbcli/pgcli
-Home: http://pgcli.com
-postgres@localhost:postgres> SHOW server_version;
-+-------------------------------+
-| server_version                |
-|-------------------------------|
-| 11.6 (Debian 11.6-1.pgdg90+1) |
-+-------------------------------+
-SHOW
-Time: 0.016s
-postgres@localhost:postgres>
-```
-
-## Testing
-
-Run all tests other than Cypress in the project using `scripts/dev test`.
-
-### Server tests
-
-- Run `scripts/dev test:go` to run all local-only server-side tests. This requires the database to be running first. Use `scripts/dev up:backend` to start it.
-- Run `scripts/dev test:go:only [path to package folder]` (e.g. `scripts/dev test:go:only "./pkg/cedar/intake`) to run server-side tests for a specific folder. Depending on the tests being run, this may require the database to be running, as above.
-- Run `scripts/dev test:go:long` to run all server-side tests, including ones that contact external services.
-
-### JS Tests
-
-Run `scripts/dev test:js`.
-
-### Cypress tests (End-to-end integration tests)
-
-There are multiple ways to run the Cypress tests:
-
-- Run `yarn cypress run` to run the tests in the CLI.
-- To have a more interactive experience, you can instead run `yarn cypress open`.
-  - Windows+WSL users will need some additional setup to run graphical applications from within WSL.
-    - Option 1: Use the preview features available in Windows Insiders build. See [Microsoft docs](https://docs.microsoft.com/en-us/windows/wsl/tutorials/gui-apps).
-    - Option 2: Set up an X server on Windows and configure WSL to use it. See [this article](https://wilcovanes.ch/articles/setting-up-the-cypress-gui-in-wsl2-ubuntu-for-windows-10/) for details.
-  - Note: the database, frontend, and backend must be running prior to starting the Cypress tests. Use `scripts/dev up` to start them.
-  - Before each testing run, run `scripts/dev db:clean && scripts/dev db:seed` to reset the database to a pre-seeded state.
-  - The `APP_ENV` environment variable should be set to `test` in `.envrc.local`. After creating `.envrc.local` if necessary and adding `APP_ENV=test` to it, run `direnv allow` to enable it. (See [instructions above](#direnv) on `direnv` usage)
-  - Running `login.spec.js` requires the environment variables `OKTA_TEST_USERNAME`, `OKTA_TEST_PASSWORD`, and `OKTA_TEST_SECRET` to be set in `.envrc.local`. The values can be found in 1Password, as mentioned in the [Authentication section](#authentication).
-- `APP_ENV=test ./scripts/run-cypress-test-docker` : Run the Cypress tests,
-  database, migrations, backend, and frontend locally in Docker, similar to how
-  they run in CI. Running the tests in this way takes time, but is useful
-  for troubleshooting integration test failures in CI.
 
 ## Optional Setup
 
