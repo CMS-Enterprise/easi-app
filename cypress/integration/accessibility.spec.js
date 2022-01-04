@@ -55,6 +55,7 @@ describe('Accessibility Requests', () => {
   it('has the correct page order when clicking through 508 team home page', () => {
     cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_USER' });
 
+    cy.contains('div', 'User A11Y');
     cy.contains('a', 'Section 508').click();
     cy.location().should(loc => {
       expect(loc.pathname).to.eq('/508/making-a-request');
