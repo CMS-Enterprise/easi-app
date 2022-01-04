@@ -205,13 +205,11 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
     </div>
     <nav
       aria-label="Navigation Bar"
+      className="border-top-light"
       data-testid="navigation-bar"
     >
       <div
-        className="navbar--divider"
-      />
-      <ul
-        className="grid-container navbar--container"
+        className="grid-container"
       >
         <nav
           aria-label="Primary navigation"
@@ -303,7 +301,7 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
             />
           </ul>
         </nav>
-      </ul>
+      </div>
     </nav>
     <div
       className="grid-container easi-header--desktop "
@@ -319,12 +317,10 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
       >
         <nav
           aria-label="Navigation Bar"
+          className="border-top-light"
           data-testid="navigation-bar"
         >
           <div
-            className="navbar--divider"
-          />
-          <ul
             className="grid-container"
           >
             <nav
@@ -444,7 +440,7 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
                 </li>
               </ul>
             </nav>
-          </ul>
+          </div>
         </nav>
       </div>
     </div>

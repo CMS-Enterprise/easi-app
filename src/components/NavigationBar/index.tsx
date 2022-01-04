@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import { PrimaryNav } from '@trussworks/react-uswds';
-import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { Flags } from 'types/flags';
@@ -53,10 +52,6 @@ const NavigationBar = ({
   const { t } = useTranslation();
   const flags = useFlags();
 
-  const responsiveContainerClass = classnames('grid-container', {
-    'navbar--container': !mobile
-  });
-
   const primaryLinks = navLinks(flags).map(
     route =>
       route.isEnabled && (
@@ -102,16 +97,19 @@ const NavigationBar = ({
   const navItems = mobile ? primaryLinks.concat(userLinks) : primaryLinks;
 
   return (
-    <nav aria-label={t('header:navigation')} data-testid="navigation-bar">
-      <div className="navbar--divider" />
-      <ul className={responsiveContainerClass}>
+    <nav
+      aria-label={t('header:navigation')}
+      data-testid="navigation-bar"
+      className="border-top-light"
+    >
+      <div className="grid-container">
         <PrimaryNav
           onToggleMobileNav={() => toggle(false)}
           mobileExpanded={mobile}
           aria-label="Primary navigation"
           items={navItems}
         />
-      </ul>
+      </div>
     </nav>
   );
 };

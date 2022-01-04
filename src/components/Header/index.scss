@@ -34,7 +34,7 @@
     display: none;
   }
 
-  .navbar--container, .navbar--divider {
+  .navbar--container {
     display: none;
   }
 
@@ -80,6 +80,7 @@
   }
 
   .grid-container {
+    display: flex;
     padding-left: 0;
     padding-right: 0;
   }
