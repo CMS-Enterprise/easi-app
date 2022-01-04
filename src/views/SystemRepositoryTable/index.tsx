@@ -135,10 +135,7 @@ export const SystemRepositoryTable = () => {
           <p className="margin-bottom-3">{t('systemList:bookmark.subtitle')}</p>
 
           {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
-          {!mockBookmarkInfo ||
-          mockBookmarkInfo.length === 0 ||
-          !mockSystemInfo ||
-          mockSystemInfo.length === 0 ? (
+          {mockBookmarkInfo.length === 0 || mockSystemInfo.length === 0 ? (
             <div className="tablet:grid-col-12">
               <Alert type="info" className="padding-1">
                 <h3 className="margin-0">
