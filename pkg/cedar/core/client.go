@@ -159,9 +159,7 @@ func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem,
 	}, nil
 }
 
-// GetDeploymentsOptionalParams represents the optional parameters that can be used to filter deployments
-// when searching through the CEDAR API
-// TODO - is this how we want to handle multiple optional parameters?
+// GetDeploymentsOptionalParams represents the optional parameters that can be used to filter deployments when searching through the CEDAR API
 type GetDeploymentsOptionalParams struct {
 	DeploymentType null.String
 	State          null.String
