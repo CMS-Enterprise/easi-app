@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1097,11 +1096,25 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 }
 
 func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.CreateCedarSystemBookmarkPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	bookmark := models.CedarSystemBookmark{
+		EUAUserID:     appcontext.Principal(ctx).ID(),
+		CedarSystemID: input.CedarSystemID,
+	}
+	createdBookmark, err := r.store.CreateCedarSystemBookmark(ctx, &bookmark)
+	return &model.CreateCedarSystemBookmarkPayload{
+		CedarSystemBookmark: createdBookmark,
+		UserErrors:          nil,
+	}, err
 }
 
 func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	_, err := r.store.DeleteCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
+		CedarSystemID: input.CedarSystemID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.DeleteCedarSystemBookmarkPayload{UserErrors: nil}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
