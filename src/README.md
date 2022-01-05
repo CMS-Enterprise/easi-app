@@ -23,3 +23,13 @@ The frontend code is organized into several major subfolders:
 - `utils` contains utility functions used repeatedly in the application.
 - `validations` contains [`Yup`](https://github.com/jquense/yup) validation functions, used by [`Formik`](https://formik.org/) forms throughout the application.
 - `views` contains the application's pages/screens.
+
+## GraphQL
+
+The source of truth for the GraphQL schema is `pkg/graph/schema.graphql`; Apollo Client is configured to reference this, and the Apollo Client VS Code plugin will enable autocomplete when writing queries/mutations for use in the frontend. Each query or mutation should be handwritten in the GraphQL query language in a file in the `src/queries` directory. Running `scripts/dev gql` (or `yarn generate`) will generate TypeScript types from these queries, placing the generated code in `src/queries/types`. The queries and types can then be used in component code by calling `useQuery()`/`useMutation()` from `@apollo/client`.
+
+For an example, consider the query used for fetching LaunchDarkly info for a currently logged-in user. The GraphQL query for fetching this data is defined in [`src/queries/GetCurrentUserQuery.ts`](`./queries/GetCurrentUserQuery.ts`); the generated types are found in [`src/queries/types/GetCurrentUser.ts`](`./queries/types/GetCurrentUser.ts`). These are then used in [`src/views/FlagsWrapper/index.tsx`](./views/FlagWrapper/index.tsx):
+```
+const { data } = useQuery<GetCurrentUser>(GetCurrentUserQuery);
+```
+which uses the Apollo Client library to fetch `data` from the backend using GraphQL.
