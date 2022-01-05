@@ -17,8 +17,8 @@ This application has the following main components:
 - [Running development tasks with `scripts/dev`](./docs/dev_script_usage.md) - includes instructions on running the application locally
 - GraphQL development
   - [Playground usage](./docs/graphql_playground.md)
-  - [Schema modification and backend code](./pkg/README.md#graphql)
-  - [Frontend code](./src/README/md#graphql)
+  - [Schema modification and backend code](./pkg/README.md#graphql-graph)
+  - [Frontend code](./src/README.md#graphql)
 - [Working with the database](./docs/database.md) - includes instructions on modifying the database schema
 - [Testing locally](./docs/local_testing.md)
 - [Docker Compose files and usage](./docs/docker_compose.md)
