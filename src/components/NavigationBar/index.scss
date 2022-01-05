@@ -11,12 +11,13 @@
         }
 
         &__link {
-            padding: 1em;
+            color: #565C65;
+            padding: 1em;            
         }
 
         &__current {
             height: .25em;
-            background-color: #005EA2;
+            background-color: $easi-blue;
             margin-top: .5em;
             pointer-events: none;
         }
@@ -30,6 +31,14 @@
                 color: #565C65
             }             
         }
+
+        .usa-current {
+            color: $easi-blue;
+            .usa-logo__text {
+                color: $easi-blue;
+            }
+        }
+
     }
 }
 
