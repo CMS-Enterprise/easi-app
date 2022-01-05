@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer, { act } from 'react-test-renderer';
+import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
 
 import TermsAndConditions from './index';
@@ -12,10 +12,7 @@ jest.mock('@okta/okta-react', () => ({
         isAuthenticated: true
       },
       oktaAuth: {
-        getUser: () =>
-          Promise.resolve({
-            name: 'John Doe'
-          }),
+        getUser: async () => {},
         logout: async () => {}
       }
     };
@@ -27,16 +24,14 @@ describe('The Terms & Conditions page', () => {
     shallow(<TermsAndConditions />);
   });
 
-  it('matches the snapshot', async () => {
-    let tree: any;
-    await act(async () => {
-      tree = renderer.create(
+  it('matches the snapshot', () => {
+    const tree = renderer
+      .create(
         <MemoryRouter>
           <TermsAndConditions />
         </MemoryRouter>
-      );
-    });
-
-    expect(tree.toJSON()).toMatchSnapshot();
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });
