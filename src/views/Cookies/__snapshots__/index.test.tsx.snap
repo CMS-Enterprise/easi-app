@@ -177,7 +177,7 @@ exports[`The Cookies static page matches the snapshot 1`] = `
         <div
           className="navbar--container easi-nav__user"
         >
-          
+          John Doe
           <div>
               |  
           </div>
@@ -420,7 +420,7 @@ exports[`The Cookies static page matches the snapshot 1`] = `
                     <div
                       className="easi-nav__user margin-bottom-1"
                     >
-                      
+                      John Doe
                     </div>
                     <a
                       aria-current="page"

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import renderer, { act } from 'react-test-renderer';
 import { shallow } from 'enzyme';
 
 import NotFound from './index';
@@ -12,28 +12,31 @@ jest.mock('@okta/okta-react', () => ({
         isAuthenticated: true
       },
       oktaAuth: {
-        getUser: async () => ({
-          name: 'John Doe'
-        }),
+        getUser: () =>
+          Promise.resolve({
+            name: 'John Doe'
+          }),
         logout: async () => {}
       }
     };
   }
 }));
-describe('The Not Found Page', () => {
+
+describe('The Terms & Conditions page', () => {
   it('renders without crashing', () => {
     shallow(<NotFound />);
   });
 
-  it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
+  it('matches the snapshot', async () => {
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
         <MemoryRouter>
           <NotFound />
         </MemoryRouter>
-      )
-      .toJSON();
+      );
+    });
 
-    expect(tree).toMatchSnapshot();
+    expect(tree.toJSON()).toMatchSnapshot();
   });
 });

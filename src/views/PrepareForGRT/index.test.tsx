@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import renderer, { act } from 'react-test-renderer';
 
 import PrepareForGRT from './index';
 
@@ -11,22 +11,27 @@ jest.mock('@okta/okta-react', () => ({
         isAuthenticated: true
       },
       oktaAuth: {
-        getUser: async () => {},
+        getUser: () =>
+          Promise.resolve({
+            name: 'John Doe'
+          }),
         logout: async () => {}
       }
     };
   }
 }));
 
-describe('The prepare for GRT info page', () => {
-  it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
+describe('The Cookies static page', () => {
+  it('matches the snapshot', async () => {
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
         <MemoryRouter>
           <PrepareForGRT />
         </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+      );
+    });
+
+    expect(tree.toJSON()).toMatchSnapshot();
   });
 });

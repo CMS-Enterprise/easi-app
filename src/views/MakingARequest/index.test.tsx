@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import renderer, { act } from 'react-test-renderer';
 import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
@@ -53,14 +53,16 @@ describe('The making a request page', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
+  it('matches the snapshot', async () => {
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
         <MemoryRouter>
           <MakingARequest />
         </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+      );
+    });
+
+    expect(tree.toJSON()).toMatchSnapshot();
   });
 });

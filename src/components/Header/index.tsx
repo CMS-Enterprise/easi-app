@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
@@ -22,7 +22,7 @@ export const Header = ({ children }: HeaderProps) => {
   const dropdownNode = useRef<any>();
   const mobileSideNav = useRef<any>();
 
-  useEffect(() => {
+  useMemo(() => {
     let isMounted = true;
     if (authState?.isAuthenticated) {
       oktaAuth.getUser().then((info: any) => {
