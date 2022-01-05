@@ -3015,7 +3015,6 @@ type CedarSystemBookmark {
 The data needed to bookmark a cedar system
 """
 input CreateCedarSystemBookmarkInput {
-  euaUserId: String!
   cedarSystemId: UUID!
 }
 
@@ -16729,14 +16728,6 @@ func (ec *executionContext) unmarshalInputCreateCedarSystemBookmarkInput(ctx con
 
 	for k, v := range asMap {
 		switch k {
-		case "euaUserId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
-			it.EuaUserID, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "cedarSystemId":
 			var err error
 

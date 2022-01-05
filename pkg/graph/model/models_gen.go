@@ -125,7 +125,6 @@ type CreateAccessibilityRequestPayload struct {
 
 // The data needed to bookmark a cedar system
 type CreateCedarSystemBookmarkInput struct {
-	EuaUserID     string    `json:"euaUserId"`
 	CedarSystemID uuid.UUID `json:"cedarSystemId"`
 }
 
