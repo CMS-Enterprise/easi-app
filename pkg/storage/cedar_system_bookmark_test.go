@@ -25,6 +25,6 @@ func (s StoreTestSuite) TestCreateCedarSystemBookmark() {
 		euaID := "ANON"
 		fetched, err := s.store.FetchCedarSystemBookmarks(ctx, &euaID)
 		s.NoError(err)
-		s.Len(fetched, 1)
+		s.True(len(fetched) > 0)
 	})
 }
