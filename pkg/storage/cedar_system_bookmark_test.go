@@ -14,7 +14,7 @@ func (s StoreTestSuite) TestCreateCedarSystemBookmark() {
 	s.Run("create a new cedar system bookmark", func() {
 		cedarSystemID, _ := uuid.NewRandom()
 		bookmark := models.CedarSystemBookmark{
-			EUAUserID:     "AAAA",
+			EUAUserID:     "ANON",
 			CedarSystemID: cedarSystemID,
 		}
 		_, err := s.store.CreateCedarSystemBookmark(ctx, &bookmark)
@@ -22,7 +22,7 @@ func (s StoreTestSuite) TestCreateCedarSystemBookmark() {
 	})
 
 	s.Run("fetches cedar system bookmarks", func() {
-		euaID := "AAAA"
+		euaID := "ANON"
 		fetched, err := s.store.FetchCedarSystemBookmarks(ctx, &euaID)
 		s.NoError(err)
 		s.Len(fetched, 1)
