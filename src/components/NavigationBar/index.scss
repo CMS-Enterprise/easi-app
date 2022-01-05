@@ -17,7 +17,7 @@
 
         &__current {
             height: .25em;
-            background-color: #005EA2;
+            background-color: $easi-blue;
             margin-top: .5em;
             pointer-events: none;
         }
@@ -33,9 +33,9 @@
         }
 
         .usa-current {
-            color: #005EA2;
+            color: $easi-blue;
             .usa-logo__text {
-                color: #005EA2;
+                color: $easi-blue;
             }
         }
 
