@@ -23,6 +23,7 @@ import Divider from 'components/shared/Divider';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import { sortByStatus } from 'types/iconStatus';
 import {
+  CedarSystemBookMark,
   mockBookmarkInfo,
   mockSystemInfo,
   SystemInfo
@@ -121,6 +122,18 @@ export const SystemRepositoryTable = () => {
     return classnames(marginClassName, 'fa fa-caret-up');
   };
 
+  const filterBookmarks = (
+    bookmarkData: SystemInfo[],
+    savedBookMarks: CedarSystemBookMark[],
+    bookmarkType: string
+  ) =>
+    bookmarkData.map(
+      mock =>
+        savedBookMarks.some(
+          bookmark => bookmark?.cedarSystemId === mock?.id
+        ) && <BookmarkCard type={bookmarkType} {...mock} />
+    );
+
   return (
     <PageWrapper>
       <Header />
@@ -153,12 +166,7 @@ export const SystemRepositoryTable = () => {
             </div>
           ) : (
             <CardGroup>
-              {mockSystemInfo.map(
-                mock =>
-                  mockBookmarkInfo.some(
-                    bookmark => bookmark.cedarSystemId === mock.id
-                  ) && <BookmarkCard type="systemList" {...mock} />
-              )}
+              {filterBookmarks(mockSystemInfo, mockBookmarkInfo, 'systemList')}
             </CardGroup>
           )}
           {/* TEMPORARY */}
