@@ -123,6 +123,16 @@ type CreateAccessibilityRequestPayload struct {
 	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
+// The data needed to bookmark a cedar system
+type CreateCedarSystemBookmarkInput struct {
+	CedarSystemID string `json:"cedarSystemId"`
+}
+
+// The payload when bookmarking a cedar system
+type CreateCedarSystemBookmarkPayload struct {
+	CedarSystemBookmark *models.CedarSystemBookmark `json:"cedarSystemBookmark"`
+}
+
 // Input data for extending a system request's lifecycle ID
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
 	ID             uuid.UUID  `json:"id"`
@@ -188,6 +198,11 @@ type DeleteAccessibilityRequestInput struct {
 type DeleteAccessibilityRequestPayload struct {
 	ID         *uuid.UUID   `json:"id"`
 	UserErrors []*UserError `json:"userErrors"`
+}
+
+// The payload when deleting a bookmark for a cedar system
+type DeleteCedarSystemBookmarkPayload struct {
+	CedarSystemID string `json:"cedarSystemId"`
 }
 
 // The input required to delete a test date/score

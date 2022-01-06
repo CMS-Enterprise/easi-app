@@ -1200,6 +1200,27 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	}, err
 }
 
+func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.CreateCedarSystemBookmarkPayload, error) {
+	bookmark := models.CedarSystemBookmark{
+		EUAUserID:     appcontext.Principal(ctx).ID(),
+		CedarSystemID: input.CedarSystemID,
+	}
+	createdBookmark, err := r.store.CreateCedarSystemBookmark(ctx, &bookmark)
+	return &model.CreateCedarSystemBookmarkPayload{
+		CedarSystemBookmark: createdBookmark,
+	}, err
+}
+
+func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error) {
+	_, err := r.store.DeleteCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
+		CedarSystemID: input.CedarSystemID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.DeleteCedarSystemBookmarkPayload{CedarSystemID: input.CedarSystemID}, nil
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
 	accessibilityRequest, err := r.store.FetchAccessibilityRequestByIDIncludingDeleted(ctx, id)
@@ -1325,6 +1346,14 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 		return nil, err
 	}
 	return cedarSystems, nil
+}
+
+func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error) {
+	cedarSystemBookmarks, err := r.store.FetchCedarSystemBookmarks(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return cedarSystemBookmarks, nil
 }
 
 func (r *queryResolver) Deployments(ctx context.Context, systemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error) {
