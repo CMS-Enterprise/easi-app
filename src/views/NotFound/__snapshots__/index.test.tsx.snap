@@ -299,6 +299,9 @@ exports[`The Not Found Page matches the snapshot 1`] = `
             <li
               className="usa-nav__primary-item"
             />
+            <li
+              className="usa-nav__primary-item"
+            />
           </ul>
         </nav>
       </div>
@@ -408,6 +411,9 @@ exports[`The Not Found Page matches the snapshot 1`] = `
                     </a>
                   </div>
                 </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
                 <li
                   className="usa-nav__primary-item"
                 />

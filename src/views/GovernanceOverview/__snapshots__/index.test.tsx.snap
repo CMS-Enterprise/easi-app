@@ -299,6 +299,9 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
             <li
               className="usa-nav__primary-item"
             />
+            <li
+              className="usa-nav__primary-item"
+            />
           </ul>
         </nav>
       </div>
@@ -407,6 +410,9 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
                     </a>
                   </div>
                 </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
                 <li
                   className="usa-nav__primary-item"
                 />
@@ -1075,6 +1081,9 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
             <li
               className="usa-nav__primary-item"
             />
+            <li
+              className="usa-nav__primary-item"
+            />
           </ul>
         </nav>
       </div>
@@ -1183,6 +1192,9 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
                     </a>
                   </div>
                 </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
                 <li
                   className="usa-nav__primary-item"
                 />

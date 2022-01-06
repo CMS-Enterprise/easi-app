@@ -300,6 +300,9 @@ exports[`The making a request page matches the snapshot 1`] = `
             <li
               className="usa-nav__primary-item"
             />
+            <li
+              className="usa-nav__primary-item"
+            />
           </ul>
         </nav>
       </div>
@@ -409,6 +412,9 @@ exports[`The making a request page matches the snapshot 1`] = `
                     </a>
                   </div>
                 </li>
+                <li
+                  className="usa-nav__primary-item"
+                />
                 <li
                   className="usa-nav__primary-item"
                 />
