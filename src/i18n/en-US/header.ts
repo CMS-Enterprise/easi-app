@@ -7,7 +7,8 @@ const header = {
   returnHome: 'EASi home',
   signIn: 'Sign In',
   signOut: 'Sign Out',
-  systems: 'Systems'
+  systems: 'Systems',
+  sandbox: 'Sandbox'
 };
 
 export default header;
