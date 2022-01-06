@@ -1222,7 +1222,7 @@ type Query {
   currentUser: CurrentUser
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
-  cedarSystemBookmarks(id: String): [CedarSystemBookmark!]!
+  cedarSystemBookmarks: [CedarSystemBookmark!]!
   deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
 }
 

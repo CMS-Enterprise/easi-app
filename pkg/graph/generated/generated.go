@@ -351,7 +351,7 @@ type ComplexityRoot struct {
 		AccessibilityRequest  func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests func(childComplexity int, after *string, first int) int
 		CedarSystem           func(childComplexity int, id string) int
-		CedarSystemBookmarks  func(childComplexity int, id *string) int
+		CedarSystemBookmarks  func(childComplexity int) int
 		CedarSystems          func(childComplexity int) int
 		CurrentUser           func(childComplexity int) int
 		Deployments           func(childComplexity int, systemID string, deploymentType *string, state *string, status *string) int
@@ -674,7 +674,7 @@ type QueryResolver interface {
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
 	CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
-	CedarSystemBookmarks(ctx context.Context, id *string) ([]*models.CedarSystemBookmark, error)
+	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
 	Deployments(ctx context.Context, systemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
 }
 type SystemIntakeResolver interface {
@@ -2283,12 +2283,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Query_cedarSystemBookmarks_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.CedarSystemBookmarks(childComplexity, args["id"].(*string)), true
+		return e.complexity.Query.CedarSystemBookmarks(childComplexity), true
 
 	case "Query.cedarSystems":
 		if e.complexity.Query.CedarSystems == nil {
@@ -4473,7 +4468,7 @@ type Query {
   currentUser: CurrentUser
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
-  cedarSystemBookmarks(id: String): [CedarSystemBookmark!]!
+  cedarSystemBookmarks: [CedarSystemBookmark!]!
   deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
 }
 
@@ -5117,21 +5112,6 @@ func (ec *executionContext) field_Query_accessibilityRequests_args(ctx context.C
 		}
 	}
 	args["first"] = arg1
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_cedarSystemBookmarks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
 	return args, nil
 }
 
@@ -12691,16 +12671,9 @@ func (ec *executionContext) _Query_cedarSystemBookmarks(ctx context.Context, fie
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_cedarSystemBookmarks_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CedarSystemBookmarks(rctx, args["id"].(*string))
+		return ec.resolvers.Query().CedarSystemBookmarks(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)

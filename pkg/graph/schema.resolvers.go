@@ -1349,8 +1349,8 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 	return cedarSystems, nil
 }
 
-func (r *queryResolver) CedarSystemBookmarks(ctx context.Context, id *string) ([]*models.CedarSystemBookmark, error) {
-	cedarSystemBookmarks, err := r.store.FetchCedarSystemBookmarks(ctx, id)
+func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error) {
+	cedarSystemBookmarks, err := r.store.FetchCedarSystemBookmarks(ctx)
 	if err != nil {
 		return nil, err
 	}

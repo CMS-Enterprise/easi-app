@@ -43,17 +43,14 @@ func (s *Store) CreateCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 }
 
 // FetchCedarSystemBookmarks queries the DB for all the cedar system bookmarks matching the given user's EUA ID
-func (s *Store) FetchCedarSystemBookmarks(ctx context.Context, id *string) ([]*models.CedarSystemBookmark, error) {
+func (s *Store) FetchCedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error) {
 	results := []*models.CedarSystemBookmark{}
 
-	if id == nil {
-		euaUserID := appcontext.Principal(ctx).ID()
-		id = &euaUserID
-	}
-	err := s.db.SelectContext(ctx, &results, `SELECT * FROM cedar_system_bookmarks WHERE eua_user_id=$1`, *id)
+	euaUserID := appcontext.Principal(ctx).ID()
+	err := s.db.SelectContext(ctx, &results, `SELECT * FROM cedar_system_bookmarks WHERE eua_user_id=$1`, euaUserID)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error("Failed to fetch cedar system bookmarks", zap.Error(err), zap.String("id", *id))
+		appcontext.ZLogger(ctx).Error("Failed to fetch cedar system bookmarks", zap.Error(err), zap.String("id", euaUserID))
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     models.CedarSystemBookmark{},

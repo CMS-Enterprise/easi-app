@@ -22,8 +22,7 @@ func (s StoreTestSuite) TestCreateCedarSystemBookmark() {
 	})
 
 	s.Run("fetches cedar system bookmarks", func() {
-		euaID := "ANON"
-		fetched, err := s.store.FetchCedarSystemBookmarks(ctx, &euaID)
+		fetched, err := s.store.FetchCedarSystemBookmarks(ctx)
 		s.NoError(err)
 		s.True(len(fetched) > 0)
 	})
