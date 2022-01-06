@@ -37,6 +37,11 @@ export const navLinks = (flags: Flags) => [
     isEnabled: true
   },
   {
+    link: '/sandbox',
+    label: 'sandbox',
+    isEnabled: flags.sandbox
+  },
+  {
     link: '/help',
     label: 'help',
     isEnabled: flags.help
