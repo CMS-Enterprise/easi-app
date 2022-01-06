@@ -122,16 +122,16 @@ export const SystemRepositoryTable = () => {
     return classnames(marginClassName, 'fa fa-caret-up');
   };
 
+  // As current CedarSystemBookMark type stands, db bookmarks need to be filted through existing CEDAR data get get the full bookmark.
   const filterBookmarks = (
     bookmarkData: SystemInfo[],
-    savedBookMarks: CedarSystemBookMark[],
-    bookmarkType: string
+    savedBookMarks: CedarSystemBookMark[]
   ) =>
     bookmarkData.map(
       mock =>
         savedBookMarks.some(
           bookmark => bookmark?.cedarSystemId === mock?.id
-        ) && <BookmarkCard type={bookmarkType} {...mock} />
+        ) && <BookmarkCard type="systemProfile" {...mock} />
     );
 
   return (
@@ -166,7 +166,7 @@ export const SystemRepositoryTable = () => {
             </div>
           ) : (
             <CardGroup>
-              {filterBookmarks(mockSystemInfo, mockBookmarkInfo, 'systemList')}
+              {filterBookmarks(mockSystemInfo, mockBookmarkInfo)}
             </CardGroup>
           )}
           {/* TEMPORARY */}

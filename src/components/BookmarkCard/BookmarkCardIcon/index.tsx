@@ -7,12 +7,14 @@ type BookmarkCardIconProps = {
   className?: string;
   black?: boolean;
   size: 'sm' | 'md' | 'lg';
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 const BookmarkCardIcon = ({
   size,
   black,
-  className
+  className,
+  onClick
 }: BookmarkCardIconProps) => {
   const classes = classnames(
     'fa',
@@ -34,7 +36,12 @@ const BookmarkCardIcon = ({
   );
 
   return (
-    <i className={classes} data-testid="bookmark-icon" aria-hidden="true" />
+    <i
+      className={classes}
+      onClick={onClick}
+      data-testid="bookmark-icon"
+      aria-hidden="true"
+    />
   );
 };
 

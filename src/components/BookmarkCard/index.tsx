@@ -14,7 +14,7 @@ import './index.scss';
 
 type BookmarkCardProps = {
   className?: string;
-  type: string;
+  type: 'systemProfile'; // Built in for future iterations/varations of bookmarked datasets that ingest i18n translations for headers.
 };
 
 // TODO import CEDAR types once generated from gql
