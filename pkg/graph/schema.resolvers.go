@@ -1208,7 +1208,6 @@ func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input 
 	createdBookmark, err := r.store.CreateCedarSystemBookmark(ctx, &bookmark)
 	return &model.CreateCedarSystemBookmarkPayload{
 		CedarSystemBookmark: createdBookmark,
-		UserErrors:          nil,
 	}, err
 }
 
@@ -1219,7 +1218,7 @@ func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input 
 	if err != nil {
 		return nil, err
 	}
-	return &model.DeleteCedarSystemBookmarkPayload{UserErrors: nil}, nil
+	return &model.DeleteCedarSystemBookmarkPayload{CedarSystemID: input.CedarSystemID}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {

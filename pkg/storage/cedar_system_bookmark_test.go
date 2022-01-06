@@ -3,8 +3,6 @@ package storage
 import (
 	"context"
 
-	"github.com/google/uuid"
-
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -12,7 +10,7 @@ func (s StoreTestSuite) TestCreateCedarSystemBookmark() {
 	ctx := context.Background()
 
 	s.Run("create a new cedar system bookmark", func() {
-		cedarSystemID, _ := uuid.NewRandom()
+		cedarSystemID := "326-1556-0"
 		bookmark := models.CedarSystemBookmark{
 			EUAUserID:     "ANON",
 			CedarSystemID: cedarSystemID,

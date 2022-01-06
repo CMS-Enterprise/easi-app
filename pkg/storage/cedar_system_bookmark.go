@@ -29,7 +29,7 @@ func (s *Store) CreateCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 			:eua_user_id,
 			:cedar_system_id,
 			:created_at
-		)`
+		) ON CONFLICT ON CONSTRAINT cedar_system_bookmarks_pkey DO UPDATE SET created_at = :created_at`
 	_, err := s.db.NamedExecContext(
 		ctx,
 		createCedarSystemBookmarkSQL,
@@ -60,7 +60,7 @@ func (s *Store) FetchCedarSystemBookmarks(ctx context.Context) ([]*models.CedarS
 	return results, nil
 }
 
-// DeleteCedarSystemBookmark deletes (soft delete - set deleted_at field) an existing cedar system bookmark object in the database
+// DeleteCedarSystemBookmark deletes an existing cedar system bookmark object in the database
 func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookmark *models.CedarSystemBookmark) (*models.CedarSystemBookmark, error) {
 	const deleteCedarSystemBookmarkSQL = `
 		DELETE FROM cedar_system_bookmarks

@@ -54,17 +54,18 @@ type CedarSystem {
 }
 
 """
+Represents a user's bookmark of a cedar system
 """
 type CedarSystemBookmark {
   euaUserId: String!
-  cedarSystemId: UUID!
+  cedarSystemId: String!
 }
 
 """
 The data needed to bookmark a cedar system
 """
 input CreateCedarSystemBookmarkInput {
-  cedarSystemId: UUID!
+  cedarSystemId: String!
 }
 
 """
@@ -72,14 +73,13 @@ The payload when bookmarking a cedar system
 """
 type CreateCedarSystemBookmarkPayload {
   cedarSystemBookmark: CedarSystemBookmark
-  userErrors: [UserError!]
 }
 
 """
 The payload when deleting a bookmark for a cedar system
 """
 type DeleteCedarSystemBookmarkPayload {
-  userErrors: [UserError!]
+  cedarSystemId: String!
 }
 
 """
