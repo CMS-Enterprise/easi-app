@@ -48,24 +48,6 @@ describe('The Header component', () => {
         done();
       });
     });
-
-    xit('displays dropdown when caret is clicked', async done => {
-      let component: any;
-      await act(async () => {
-        component = mount(
-          <MemoryRouter>
-            <Header />
-          </MemoryRouter>
-        );
-      });
-      setImmediate(() => {
-        component.update();
-        expect(component.find('.user-actions-dropdown').exists()).toBe(false);
-        component.find('.easi-header__caret').simulate('click');
-        expect(component.find('.user-actions-dropdown').exists()).toBe(true);
-        done();
-      });
-    });
   });
 
   xit('displays children', () => {
