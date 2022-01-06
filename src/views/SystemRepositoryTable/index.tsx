@@ -29,6 +29,18 @@ import {
   SystemInfo
 } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo/mockBookmarkInfo with dynamic data fetched from backend and CEDAR
 
+const filterBookmarks = (
+  systems: SystemInfo[],
+  savedBookMarks: CedarSystemBookMark[]
+) =>
+  systems
+    .filter(system =>
+      savedBookMarks.some(bookmark => bookmark.cedarSystemId === system.id)
+    )
+    .map(system => (
+      <BookmarkCard type="systemList" key={system.id} {...system} />
+    ));
+
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
 
@@ -121,18 +133,6 @@ export const SystemRepositoryTable = () => {
 
     return classnames(marginClassName, 'fa fa-caret-up');
   };
-
-  // As current CedarSystemBookMark type stands, db bookmarks need to be filted through existing CEDAR data get get the full bookmark.
-  const filterBookmarks = (
-    bookmarkData: SystemInfo[],
-    savedBookMarks: CedarSystemBookMark[]
-  ) =>
-    bookmarkData.map(
-      mock =>
-        savedBookMarks.some(
-          bookmark => bookmark?.cedarSystemId === mock?.id
-        ) && <BookmarkCard type="systemList" {...mock} />
-    );
 
   return (
     <PageWrapper>
