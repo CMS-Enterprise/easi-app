@@ -37,7 +37,7 @@ func (s StoreTestSuite) TestDuplicateCedarSystemBookmark() {
 	settableClock := testhelpers.SettableClock{Mock: mockClock}
 	s.store.clock = &settableClock
 
-	s.Run("create a new cedar system bookmark", func() {
+	s.Run("create a duplicate cedar system bookmark and verify created_at updates", func() {
 		cedarSystemID := "326-1556-2"
 		bookmark := models.CedarSystemBookmark{
 			EUAUserID:     "ANON",
