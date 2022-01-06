@@ -131,7 +131,7 @@ export const SystemRepositoryTable = () => {
       mock =>
         savedBookMarks.some(
           bookmark => bookmark?.cedarSystemId === mock?.id
-        ) && <BookmarkCard type="systemProfile" {...mock} />
+        ) && <BookmarkCard type="systemList" {...mock} />
     );
 
   return (
