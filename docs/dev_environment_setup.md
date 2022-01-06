@@ -196,3 +196,7 @@ To install the frontend's dependencies, run `yarn install --frozen-lockfile --ig
 **All developers:**
 - VS Code will recommend installing the extensions specified in [`.vscode/extensions.json`](./.vscode/extensions.json). Install all of them.
 - The Go extension should prompt you to install the analysis tools it uses. Install all of them. See [these instructions](https://github.com/golang/vscode-go/blob/master/README.md#tools) for more details.
+
+## Starting the application
+
+With all dependencies installed, you should be able to start the application. See [these instructions](./dev_script_usage.md#starting-the-application) on how to use the development script to run the application locally.
