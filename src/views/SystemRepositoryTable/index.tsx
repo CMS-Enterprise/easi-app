@@ -28,6 +28,8 @@ import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
+import Spinner from 'components/Spinner';
+import SystemHealthIcon from 'components/SystemHealthIcon';
 import TablePagination from 'components/TablePagination';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import {
@@ -60,16 +62,13 @@ const filterBookmarks = (
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
 
-  const { loading, data } = useQuery<GetCedarSystems>(GetCedarSystemsQuery);
+  const { loading, error, data } = useQuery<GetCedarSystems>(
+    GetCedarSystemsQuery
+  );
 
-  let systemsTableData;
-  if (!data) {
-    systemsTableData = {
-      cedarSystems: []
-    } as GetCedarSystems;
-  } else {
-    systemsTableData = data;
-  }
+  const systemsTableData = data?.cedarSystems
+    ? (data.cedarSystems as CedarSystem[])
+    : ([] as CedarSystem[]);
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
     return [
@@ -91,6 +90,21 @@ export const SystemRepositoryTable = () => {
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
         id: 'systemOwner'
+      },
+      {
+        Header: t<string>('systemTable.header.systemStatus'),
+        accessor: 'status',
+        id: 'systemStatus',
+        Cell: ({ row }: { row: Row<CedarSystem> }) => (
+          <div>
+            <SystemHealthIcon
+              status={mapCedarStatusToIcon(row.original.status)}
+              size="medium"
+              className="margin-right-1"
+            />
+            <span>{row.original.status}</span>
+          </div>
+        )
       }
     ];
   }, [t]); // TODO when system data is dynamically fetched, this dependency list may need to be changed
@@ -121,7 +135,7 @@ export const SystemRepositoryTable = () => {
         }
       },
       columns,
-      data: systemsTableData?.cedarSystems as CedarSystem[],
+      data: systemsTableData as CedarSystem[],
       initialState: {
         sortBy: useMemo(() => [{ id: 'systemName', desc: false }], []),
         pageIndex: 0
@@ -162,7 +176,21 @@ export const SystemRepositoryTable = () => {
     return classnames(marginClassName, 'fa fa-caret-up');
   };
 
-  if (loading) return 'loading';
+  if (loading) {
+    return (
+      <div className="text-center" data-testid="table-loading">
+        <Spinner size="xl" />;
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>{JSON.stringify(error)}</div>;
+  }
+
+  if (systemsTableData.length === 0) {
+    return <p>{t('requestsTable.empty')}</p>;
+  }
 
   return (
     <PageWrapper>
@@ -196,7 +224,7 @@ export const SystemRepositoryTable = () => {
             </div>
           ) : (
             <CardGroup>
-              {filterBookmarks(systemsTableData.cedarSystems, mockBookmarkInfo)}
+              {filterBookmarks(systemsTableData, mockBookmarkInfo)}
             </CardGroup>
           )}
           {/* TEMPORARY */}

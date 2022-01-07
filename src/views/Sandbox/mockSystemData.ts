@@ -18,7 +18,7 @@ export interface SystemInfo {
 
 export const mockSystemInfo: SystemInfo[] = [
   {
-    id: '326-7-0',
+    id: '1',
     acronym: 'HAM',
     name: 'Happiness Achievement Module',
     ownerName: 'Jane Doe',
@@ -75,14 +75,14 @@ export interface CedarSystemBookMark {
 export const mockBookmarkInfo: CedarSystemBookMark[] = [
   {
     euaUserId: 'A',
-    cedarSystemId: '1'
+    cedarSystemId: '326-7-0'
   },
   {
     euaUserId: 'A',
-    cedarSystemId: '2'
+    cedarSystemId: '326-74-0'
   },
   {
     euaUserId: 'A',
-    cedarSystemId: '3'
+    cedarSystemId: '326-99-0'
   }
 ];

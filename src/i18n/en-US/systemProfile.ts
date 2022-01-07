@@ -6,8 +6,9 @@ const systemProfile = {
     caption: 'List of Systems',
     header: {
       systemName: 'System Name',
-      systemOwner: 'System Owner',
-      systemAcronym: 'Acronym'
+      systemOwner: 'Office or Department',
+      systemAcronym: 'Acronym',
+      systemStatus: 'ATO Status'
     }
   }
 };
