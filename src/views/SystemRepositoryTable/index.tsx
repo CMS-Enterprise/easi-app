@@ -16,7 +16,13 @@ import {
   useTable
 } from 'react-table';
 import { useQuery } from '@apollo/client';
-import { CardGroup, Link as UswdsLink, Table } from '@trussworks/react-uswds';
+import {
+  Button,
+  CardGroup,
+  Link as UswdsLink,
+  SummaryBox,
+  Table
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import BookmarkCard from 'components/BookmarkCard';
@@ -226,27 +232,46 @@ export const SystemRepositoryTable = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
+        <PageHeading className="margin-bottom-1">
+          {t('systemProfile:header')}
+        </PageHeading>
+        <p>{t('systemProfile:subHeader')}</p>
+        <SummaryBox heading="" className="easi-request__container">
+          <p>{t('systemProfile:newRequest.info')}</p>
+          <Button
+            type="button"
+            outline
+            tabIndex={-1}
+            className="easi-request__button"
+          >
+            <UswdsLink
+              asCustom={Link}
+              to="/system/making-a-request"
+              className="easi-request__link"
+            >
+              {t('systemProfile:newRequest.button')}
+            </UswdsLink>
+          </Button>
+        </SummaryBox>
+        <Divider />
+        <PageHeading className="margin-bottom-0">
+          {t('systemProfile:bookmark.header')}
+        </PageHeading>
+        <p className="margin-bottom-3">
+          {t('systemProfile:bookmark.subtitle')}
+        </p>
         {loading ? (
           <div className="text-center" data-testid="table-loading">
             <Spinner size="xl" />;
           </div>
         ) : (
           <>
-            <PageHeading>{t('systemProfile:heading')}</PageHeading>
-            <Divider />
-            <PageHeading className="margin-bottom-0">
-              {t('systemProfile:bookmark.heading')}
-            </PageHeading>
-            <p className="margin-bottom-3">
-              {t('systemProfile:bookmark.subtitle')}
-            </p>
-
             {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
             {mockBookmarkInfo.length === 0 ? (
               <div className="tablet:grid-col-12">
                 <Alert type="info" className="padding-1">
                   <h3 className="margin-0">
-                    {t('systemProfile:noBookmark.heading')}
+                    {t('systemProfile:noBookmark.header')}
                   </h3>
                   <div>
                     <span className="margin-0">

@@ -1,4 +1,10 @@
 const systemProfile = {
+  header: 'CMS Systems and Applications',
+  subHeader: 'Find information about existing CMS systems and applications.',
+  newRequest: {
+    info: 'Have a new system or application?',
+    button: 'Start an intake request'
+  },
   tabs: {
     systemProfile: 'System Profile'
   },
@@ -11,15 +17,14 @@ const systemProfile = {
       systemStatus: 'ATO Status'
     }
   },
-  heading: 'CMS Systems and Applications',
   bookmark: {
-    heading: 'Bookmarked Systems',
+    header: 'Bookmarked Systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
     subHeader1: 'Officer or Department',
     subHeader2: 'ATO Status'
   },
   noBookmark: {
-    heading: 'You have not bookmarked any systems yet.',
+    header: 'You have not bookmarked any systems yet.',
     text1: 'Click the bookmark icon ( ',
     text2: ' ) for any system to add it to this section.'
   },
