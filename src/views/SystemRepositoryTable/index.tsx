@@ -37,6 +37,7 @@ import {
   GetCedarSystems_cedarSystems as CedarSystem
 } from 'queries/types/GetCedarSystems';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
+import extractAcronym from 'utils/extractAcronym';
 import {
   CedarSystemBookMark,
   mockBookmarkInfo
@@ -89,7 +90,13 @@ export const SystemRepositoryTable = () => {
       {
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
-        id: 'systemOwner'
+        id: 'systemOwner',
+        Cell: ({ row }: { row: Row<CedarSystem> }) => (
+          <p>
+            {row.original.businessOwnerOrg &&
+              extractAcronym(row.original.businessOwnerOrg)}
+          </p>
+        )
       },
       {
         Header: t<string>('systemTable.header.systemStatus'),
