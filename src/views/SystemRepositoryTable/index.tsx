@@ -43,6 +43,8 @@ import {
   mockBookmarkInfo
 } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo/mockBookmarkInfo with dynamic data fetched from backend and CEDAR
 
+import './index.scss';
+
 const filterBookmarks = (
   systems: CedarSystem[],
   savedBookMarks: CedarSystemBookMark[]
@@ -53,7 +55,7 @@ const filterBookmarks = (
     )
     .map(system => (
       <BookmarkCard
-        type="systemList"
+        type="systemProfile"
         key={system.id}
         statusIcon={mapCedarStatusToIcon(system.status)}
         {...system}
@@ -73,6 +75,25 @@ export const SystemRepositoryTable = () => {
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
     return [
+      {
+        Header: <BookmarkCardIcon size="sm" />,
+        accessor: 'id',
+        id: 'systemId',
+        sortType: (rowOne, rowTwo, columnName) => {
+          const rowOneElem = rowOne.values[columnName];
+          const rowTwoElem = rowTwo.values[columnName];
+
+          return rowOneElem > rowTwoElem ? 1 : -1;
+        },
+        Cell: ({ row }: { row: Row<CedarSystem> }) =>
+          mockBookmarkInfo.some(
+            bookmark => bookmark.cedarSystemId === row.original.id
+          ) ? (
+            <BookmarkCardIcon size="sm" />
+          ) : (
+            <BookmarkCardIcon lightgrey size="sm" />
+          )
+      },
       {
         Header: t<string>('systemTable.header.systemAcronym'),
         accessor: 'acronym'
@@ -183,112 +204,135 @@ export const SystemRepositoryTable = () => {
     return classnames(marginClassName, 'fa fa-caret-up');
   };
 
-  if (loading) {
-    return (
-      <div className="text-center" data-testid="table-loading">
-        <Spinner size="xl" />;
-      </div>
-    );
-  }
+  // TODO: Once <Header /> is moved outside of individual components, loading, errors, and no data need to be extracted from the main return
+  // if (loading) {
+  //   return (
+  //     <div className="text-center" data-testid="table-loading">
+  //       <Spinner size="xl" />;
+  //     </div>
+  //   );
+  // }
 
   if (error) {
-    return <div>{JSON.stringify(error)}</div>;
+    // TODO error handling
+    // return <div>{JSON.stringify(error)}</div>;
   }
 
-  if (systemsTableData.length === 0) {
-    return <p>{t('requestsTable.empty')}</p>;
-  }
+  // if (systemsTableData.length === 0) {
+  //   return <p>{t('requestsTable.empty')}</p>;
+  // }
 
   return (
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        <>
-          <PageHeading>{t('systemList:heading')}</PageHeading>
-          <Divider />
-          <PageHeading className="margin-bottom-0">
-            {t('systemList:bookmark.heading')}
-          </PageHeading>
-          <p className="margin-bottom-3">{t('systemList:bookmark.subtitle')}</p>
+        {loading ? (
+          <div className="text-center" data-testid="table-loading">
+            <Spinner size="xl" />;
+          </div>
+        ) : (
+          <>
+            <PageHeading>{t('systemProfile:heading')}</PageHeading>
+            <Divider />
+            <PageHeading className="margin-bottom-0">
+              {t('systemProfile:bookmark.heading')}
+            </PageHeading>
+            <p className="margin-bottom-3">
+              {t('systemProfile:bookmark.subtitle')}
+            </p>
 
-          {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
-          {mockBookmarkInfo.length === 0 ? (
-            <div className="tablet:grid-col-12">
-              <Alert type="info" className="padding-1">
-                <h3 className="margin-0">
-                  {t('systemList:noBookmark.heading')}
-                </h3>
-                <div>
-                  <span className="margin-0">
-                    {t('systemList:noBookmark.text1')}
-                  </span>
-                  <BookmarkCardIcon size="sm" black />
-                  <span className="margin-0">
-                    {t('systemList:noBookmark.text2')}
-                  </span>
-                </div>
-              </Alert>
-            </div>
-          ) : (
-            <CardGroup>
-              {filterBookmarks(systemsTableData, mockBookmarkInfo)}
-            </CardGroup>
-          )}
-          {/* TEMPORARY */}
-          <Table bordered={false} fullWidth {...getTableProps()}>
-            <caption className="usa-sr-only">
-              {t('systemTable.caption')}
-            </caption>
-            <thead>
-              {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
-                    <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      aria-sort={getColumnSortStatus(column)}
-                      scope="col"
-                    >
-                      {column.render('Header')}
-                      <span
-                        className={getHeaderSortIcon(
-                          column.isSorted,
-                          column.isSortedDesc
+            {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
+            {mockBookmarkInfo.length === 0 ? (
+              <div className="tablet:grid-col-12">
+                <Alert type="info" className="padding-1">
+                  <h3 className="margin-0">
+                    {t('systemProfile:noBookmark.heading')}
+                  </h3>
+                  <div>
+                    <span className="margin-0">
+                      {t('systemProfile:noBookmark.text1')}
+                    </span>
+                    <BookmarkCardIcon size="sm" black />
+                    <span className="margin-0">
+                      {t('systemProfile:noBookmark.text2')}
+                    </span>
+                  </div>
+                </Alert>
+              </div>
+            ) : (
+              <CardGroup>
+                {filterBookmarks(systemsTableData, mockBookmarkInfo)}
+              </CardGroup>
+            )}
+            {/* TEMPORARY */}
+            <Table bordered={false} fullWidth {...getTableProps()}>
+              <caption className="usa-sr-only">
+                {t('systemTable.caption')}
+              </caption>
+              <thead>
+                {headerGroups.map(headerGroup => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column, index) => (
+                      <th
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
                         )}
-                      />
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {page.map(row => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => (
-                      <th {...cell.getCellProps()}>{cell.render('Cell')}</th>
+                        aria-sort={getColumnSortStatus(column)}
+                        scope="col"
+                        style={{
+                          padding: index === 0 ? '0' : 'auto',
+                          paddingLeft: index === 0 ? '.25em' : 'auto'
+                        }}
+                      >
+                        {column.render('Header')}
+                        <span
+                          className={getHeaderSortIcon(
+                            column.isSorted,
+                            column.isSortedDesc
+                          )}
+                        />
+                      </th>
                     ))}
                   </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-          {/* TEMPORARY PAGINATION START */}
-          <TablePagination
-            gotoPage={gotoPage}
-            previousPage={previousPage}
-            nextPage={nextPage}
-            canNextPage={canNextPage}
-            pageIndex={pageIndex}
-            pageOptions={pageOptions}
-            canPreviousPage={canPreviousPage}
-            pageCount={pageCount}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            page={[]}
-          />
-          {/* TEMPORARY PAGINATION END */}
-        </>
+                ))}
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {page.map(row => {
+                  prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell, index) => (
+                        <th
+                          style={{
+                            paddingLeft: index === 0 ? '.25em' : 'auto'
+                          }}
+                          {...cell.getCellProps()}
+                        >
+                          {cell.render('Cell')}
+                        </th>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+            {/* TEMPORARY PAGINATION START */}
+            <TablePagination
+              gotoPage={gotoPage}
+              previousPage={previousPage}
+              nextPage={nextPage}
+              canNextPage={canNextPage}
+              pageIndex={pageIndex}
+              pageOptions={pageOptions}
+              canPreviousPage={canPreviousPage}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              page={[]}
+            />
+            {/* TEMPORARY PAGINATION END */}
+          </>
+        )}
       </MainContent>
       <Footer />
     </PageWrapper>

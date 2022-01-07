@@ -16,7 +16,7 @@ import './index.scss';
 type BookmarkCardProps = {
   className?: string;
   statusIcon: IconStatus;
-  type: 'systemList'; // Built in for future iterations/varations of bookmarked datasets that ingest i18n translations for headers.
+  type: 'systemProfile'; // Built in for future iterations/varations of bookmarked datasets that ingest i18n translations for headers.
 };
 
 const BookmarkCard = ({
@@ -53,12 +53,14 @@ const BookmarkCard = ({
         </div>
         <p className="margin-0">{acronym}</p>
         <p className="bookmark__body-text line-height-body-4">{description}</p>
-        <p className="margin-bottom-0">{t(`${type}:subHeader1`)}</p>
+        <p className="margin-bottom-0">{t(`${type}:bookmark.subHeader1`)}</p>
         <p className="text-bold margin-top-1">{businessOwnerOrg}</p>
         <Divider />
         <div className="bookmark__header easi-header__basic">
           <div>
-            <p className="margin-bottom-0">{t(`${type}:subHeader2`)}</p>
+            <p className="margin-bottom-0">
+              {t(`${type}:bookmark.subHeader2`)}
+            </p>
             <p className="text-bold margin-top-1 margin-bottom-0">{status}</p>
           </div>
           <SystemHealthIcon
