@@ -5,8 +5,13 @@ export default gql`
     cedarSystems {
       id
       name
+      description
       acronym
+      status
       businessOwnerOrg
+      businessOwnerOrgComp
+      systemMaintainerOrg
+      systemMaintainerOrgComp
     }
   }
 `;

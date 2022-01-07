@@ -1,12 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import {
-  Breadcrumb,
-  BreadcrumbBar,
-  BreadcrumbLink,
-  Link as UswdsLink
-} from '@trussworks/react-uswds';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
@@ -17,17 +12,9 @@ const MakingARequest = () => {
 
   return (
     <div
-      className="grid-container margin-bottom-2"
+      className="grid-container margin-bottom-2 margin-top-2"
       data-testid="making-a-508-request"
     >
-      <BreadcrumbBar variant="wrap">
-        <Breadcrumb>
-          <BreadcrumbLink asCustom={Link} to="/">
-            <span>Home</span>
-          </BreadcrumbLink>
-        </Breadcrumb>
-        <Breadcrumb current>{t('makingARequest.breadcrumb')}</Breadcrumb>
-      </BreadcrumbBar>
       <div className="tablet:grid-col-10">
         <Alert type="info">
           <Trans i18nKey="accessibility:makingARequest.info">

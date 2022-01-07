@@ -1,5 +1,19 @@
 export type IconStatus = 'success' | 'warning' | 'fail';
 
+export type CedarStatus = string | null; // Need to extract all possible returns for this field from CEDAR ex: Approved, Draft, etc.
+
+// TODO - if we want to keep this text past the prototype state, it needs to use translation
+export const mapCedarStatusToIcon = (status: CedarStatus): IconStatus => {
+  switch (status) {
+    case 'Approved':
+      return 'success';
+    case 'Draft':
+      return 'warning';
+    default:
+      return 'fail';
+  }
+};
+
 const mapStatusToRanking = (status: IconStatus): number => {
   switch (status) {
     case 'success':

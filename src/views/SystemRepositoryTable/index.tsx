@@ -16,46 +16,59 @@ import {
   useTable
 } from 'react-table';
 import { useQuery } from '@apollo/client';
-import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
+import { CardGroup, Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import BookmarkCard from 'components/BookmarkCard';
+import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
-import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import Alert from 'components/shared/Alert';
+import Divider from 'components/shared/Divider';
 import TablePagination from 'components/TablePagination';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import {
   GetCedarSystems,
   GetCedarSystems_cedarSystems as CedarSystem
 } from 'queries/types/GetCedarSystems';
+import { mapCedarStatusToIcon } from 'types/iconStatus';
+import {
+  CedarSystemBookMark,
+  mockBookmarkInfo
+} from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo/mockBookmarkInfo with dynamic data fetched from backend and CEDAR
 
-// TODO - if we want to keep this text past the prototype state, it needs to use translation
-// const mapStatusToDescription = (status: IconStatus): string => {
-//   switch (status) {
-//     case 'success':
-//       return 'Fully operational';
-//     case 'warning':
-//       return 'Degraded functionality';
-//     case 'fail':
-//     default:
-//       return 'Inoperative';
-//   }
-// };
+const filterBookmarks = (
+  systems: CedarSystem[],
+  savedBookMarks: CedarSystemBookMark[]
+) =>
+  systems
+    .filter(system =>
+      savedBookMarks.some(bookmark => bookmark.cedarSystemId === system.id)
+    )
+    .map(system => (
+      <BookmarkCard
+        type="systemList"
+        key={system.id}
+        statusIcon={mapCedarStatusToIcon(system.status)}
+        {...system}
+      />
+    ));
 
 export const SystemRepositoryTable = () => {
   const { t } = useTranslation('systemProfile');
 
-  const { data: result } = useQuery<GetCedarSystems>(GetCedarSystemsQuery);
+  const { loading, data } = useQuery<GetCedarSystems>(GetCedarSystemsQuery);
 
-  let data;
-  if (!result) {
-    data = {
+  let systemsTableData;
+  if (!data) {
+    systemsTableData = {
       cedarSystems: []
     } as GetCedarSystems;
   } else {
-    data = result;
+    systemsTableData = data;
   }
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
@@ -108,7 +121,7 @@ export const SystemRepositoryTable = () => {
         }
       },
       columns,
-      data: data?.cedarSystems as CedarSystem[],
+      data: systemsTableData?.cedarSystems as CedarSystem[],
       initialState: {
         sortBy: useMemo(() => [{ id: 'systemName', desc: false }], []),
         pageIndex: 0
@@ -149,71 +162,97 @@ export const SystemRepositoryTable = () => {
     return classnames(marginClassName, 'fa fa-caret-up');
   };
 
+  if (loading) return 'loading';
+
   return (
     <PageWrapper>
       <Header />
-      <MainContent>
+      <MainContent className="grid-container margin-bottom-5">
         <>
-          <SecondaryNav>
-            <NavLink to="/system-profile">{t('tabs.systemProfile')}</NavLink>
-          </SecondaryNav>
-          <div className="grid-container">
-            <Table bordered={false} fullWidth {...getTableProps()}>
-              <caption className="usa-sr-only">
-                {t('systemTable.caption')}
-              </caption>
-              <thead>
-                {headerGroups.map(headerGroup => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map(column => (
-                      <th
-                        {...column.getHeaderProps(
-                          column.getSortByToggleProps()
+          <PageHeading>{t('systemList:heading')}</PageHeading>
+          <Divider />
+          <PageHeading className="margin-bottom-0">
+            {t('systemList:bookmark.heading')}
+          </PageHeading>
+          <p className="margin-bottom-3">{t('systemList:bookmark.subtitle')}</p>
+
+          {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
+          {mockBookmarkInfo.length === 0 ? (
+            <div className="tablet:grid-col-12">
+              <Alert type="info" className="padding-1">
+                <h3 className="margin-0">
+                  {t('systemList:noBookmark.heading')}
+                </h3>
+                <div>
+                  <span className="margin-0">
+                    {t('systemList:noBookmark.text1')}
+                  </span>
+                  <BookmarkCardIcon size="sm" black />
+                  <span className="margin-0">
+                    {t('systemList:noBookmark.text2')}
+                  </span>
+                </div>
+              </Alert>
+            </div>
+          ) : (
+            <CardGroup>
+              {filterBookmarks(systemsTableData.cedarSystems, mockBookmarkInfo)}
+            </CardGroup>
+          )}
+          {/* TEMPORARY */}
+          <Table bordered={false} fullWidth {...getTableProps()}>
+            <caption className="usa-sr-only">
+              {t('systemTable.caption')}
+            </caption>
+            <thead>
+              {headerGroups.map(headerGroup => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map(column => (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      aria-sort={getColumnSortStatus(column)}
+                      scope="col"
+                    >
+                      {column.render('Header')}
+                      <span
+                        className={getHeaderSortIcon(
+                          column.isSorted,
+                          column.isSortedDesc
                         )}
-                        aria-sort={getColumnSortStatus(column)}
-                        scope="col"
-                      >
-                        {column.render('Header')}
-                        <span
-                          className={getHeaderSortIcon(
-                            column.isSorted,
-                            column.isSortedDesc
-                          )}
-                        />
-                      </th>
+                      />
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {page.map(row => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map(cell => (
+                      <th {...cell.getCellProps()}>{cell.render('Cell')}</th>
                     ))}
                   </tr>
-                ))}
-              </thead>
-              <tbody {...getTableBodyProps()}>
-                {page.map(row => {
-                  prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map(cell => (
-                        <th {...cell.getCellProps()}>{cell.render('Cell')}</th>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-            {/* TEMPORARY PAGINATION START */}
-            <TablePagination
-              gotoPage={gotoPage}
-              previousPage={previousPage}
-              nextPage={nextPage}
-              canNextPage={canNextPage}
-              pageIndex={pageIndex}
-              pageOptions={pageOptions}
-              canPreviousPage={canPreviousPage}
-              pageCount={pageCount}
-              pageSize={pageSize}
-              setPageSize={setPageSize}
-              page={[]}
-            />
-            {/* TEMPORARY PAGINATION END */}
-          </div>
+                );
+              })}
+            </tbody>
+          </Table>
+          {/* TEMPORARY PAGINATION START */}
+          <TablePagination
+            gotoPage={gotoPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            canNextPage={canNextPage}
+            pageIndex={pageIndex}
+            pageOptions={pageOptions}
+            canPreviousPage={canPreviousPage}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+            page={[]}
+          />
+          {/* TEMPORARY PAGINATION END */}
         </>
       </MainContent>
       <Footer />

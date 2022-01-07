@@ -11,8 +11,13 @@ export interface GetCedarSystems_cedarSystems {
   __typename: "CedarSystem";
   id: string;
   name: string;
+  description: string | null;
   acronym: string | null;
+  status: string | null;
   businessOwnerOrg: string | null;
+  businessOwnerOrgComp: string | null;
+  systemMaintainerOrg: string | null;
+  systemMaintainerOrgComp: string | null;
 }
 
 export interface GetCedarSystems {
