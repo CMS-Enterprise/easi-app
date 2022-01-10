@@ -34,6 +34,7 @@ import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import SystemProfileHealth from 'views/SystemProfileHealth';
+import SystemRepositoryTable from 'views/SystemRepositoryTable';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
@@ -109,6 +110,7 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/lcid-info"
         component={LcidInfo}
       />
+      <SecureRoute exact path="/system" component={SystemRepositoryTable} />
       <Redirect exact from="/system/new" to="/system/request-type" />
       <Redirect
         exact
