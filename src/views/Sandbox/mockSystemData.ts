@@ -1,69 +1,59 @@
-import { CMSOfficeAcronym } from 'constants/enums/cmsDivisionsAndOffices';
-import { IconStatus } from 'types/iconStatus';
+import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
-export interface SystemInfo {
-  id: string;
-  acronym: string;
-  name: string;
-  ownerName: string;
-  ownerOffice: CMSOfficeAcronym;
-  productionStatus: IconStatus; // TODO - this may not correspond to a field in CEDAR. maybe make it depend on ATO+508+TRB status?
-  atoStatus: IconStatus;
-  atoStatusText: string;
-  section508Status: IconStatus;
-  section508StatusText: string;
-  trbStatus: IconStatus;
-  trbStatusText: string;
-}
-
-export const mockSystemInfo: SystemInfo[] = [
+export const mockSystemInfo: CedarSystemProps[] = [
   {
+    __typename: 'CedarSystem',
     id: '1',
     acronym: 'HAM',
+    status: 'Approved',
     name: 'Happiness Achievement Module',
-    ownerName: 'Jane Doe',
-    ownerOffice: 'CMMI',
-    productionStatus: 'success',
-    atoStatus: 'success',
-    atoStatusText: 'Good to go!',
-    section508Status: 'success',
-    section508StatusText: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
-    trbStatus: 'success',
-    trbStatusText: 'Good to go!'
-  },
-  {
-    id: '2',
-    acronym: 'ZXC',
-    name: 'XYZ789',
-    ownerName: 'John Doe',
-    ownerOffice: 'OIT',
-    productionStatus: 'warning',
-    atoStatus: 'warning',
-    atoStatusText: 'Not yet compliant',
-    section508Status: 'warning',
-    section508StatusText: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    Sollicitudin donec `,
-    trbStatus: 'warning',
-    trbStatusText: 'Needs more microservices'
-  },
-  {
-    id: '3',
-    acronym: 'QWE',
-    name: '8675309',
-    ownerName: 'Jennifer Doe',
-    ownerOffice: 'CCIIO',
-    productionStatus: 'fail',
-    atoStatus: 'fail',
-    atoStatusText: 'Not yet authorized',
-    section508Status: 'success',
-    section508StatusText: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    businessOwnerOrg: 'CMMI',
+    businessOwnerOrgComp: 'Good to go!',
+    systemMaintainerOrg: 'success',
+    systemMaintainerOrgComp: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
-    feugiat laoreet quis. `,
-    trbStatus: 'fail',
-    trbStatusText: 'Hash and salt your passwords!'
+    feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta.`
+  },
+  {
+    __typename: 'CedarSystem',
+    id: '2',
+    acronym: 'ASD',
+    status: null,
+    name: 'Systems',
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
+    feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta.`,
+    businessOwnerOrg: 'CMMI',
+    businessOwnerOrgComp: 'Good to go!',
+    systemMaintainerOrg: 'success',
+    systemMaintainerOrgComp: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
+    feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta.`
+  },
+  {
+    __typename: 'CedarSystem',
+    id: '3',
+    acronym: 'ZXC',
+    status: 'Draft',
+    name: 'Government',
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
+    feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta.`,
+    businessOwnerOrg: 'CMMI',
+    businessOwnerOrgComp: 'Good to go!',
+    systemMaintainerOrg: 'success',
+    systemMaintainerOrgComp: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
+    feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta.`
   }
 ];
 

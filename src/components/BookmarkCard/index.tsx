@@ -65,8 +65,8 @@ const BookmarkCard = ({
           </div>
           <SystemHealthIcon
             status={statusIcon}
-            size="lg"
-            className="margin-top-2"
+            size="xl"
+            className="margin-top-3"
           />
         </div>
       </div>

@@ -4,15 +4,16 @@
             background-color: #F0F0F0;
             border: none;
             margin-bottom: 2.5rem;
-            padding: 1em;
-            padding-top: 0.25em;
+            padding: 1.5em;
+            padding-top: 0.1em;
         }
-        &__button {
-            outline-color: $easi-blue;
-        }
-        &__link {
+        &__button-link {
             text-decoration: none;
+            border: 2px solid $easi-blue;
+            border-radius: 0.25rem;
             color: $easi-blue;
+            padding: 0.5em;
+            font-weight: bold;
             &:visited {
                 color: $easi-blue;
             }             

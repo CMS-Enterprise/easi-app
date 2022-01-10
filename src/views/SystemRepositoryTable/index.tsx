@@ -17,7 +17,6 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import {
-  Button,
   CardGroup,
   Link as UswdsLink,
   SummaryBox,
@@ -33,7 +32,7 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import Alert from 'components/shared/Alert';
-import Divider from 'components/shared/Divider';
+import SectionWrapper from 'components/shared/SectionWrapper';
 import Spinner from 'components/Spinner';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import TablePagination from 'components/TablePagination';
@@ -232,28 +231,22 @@ export const SystemRepositoryTable = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        <PageHeading className="margin-bottom-1">
-          {t('systemProfile:header')}
-        </PageHeading>
-        <p>{t('systemProfile:subHeader')}</p>
-        <SummaryBox heading="" className="easi-request__container">
-          <p>{t('systemProfile:newRequest.info')}</p>
-          <Button
-            type="button"
-            outline
-            tabIndex={-1}
-            className="easi-request__button"
-          >
+        <SectionWrapper borderBottom>
+          <PageHeading className="margin-bottom-1">
+            {t('systemProfile:header')}
+          </PageHeading>
+          <p>{t('systemProfile:subHeader')}</p>
+          <SummaryBox heading="" className="easi-request__container">
+            <p>{t('systemProfile:newRequest.info')}</p>
             <UswdsLink
               asCustom={Link}
-              to="/system/making-a-request"
-              className="easi-request__link"
+              to="/system/request-type"
+              className="easi-request__button-link"
             >
               {t('systemProfile:newRequest.button')}
             </UswdsLink>
-          </Button>
-        </SummaryBox>
-        <Divider />
+          </SummaryBox>
+        </SectionWrapper>
         <PageHeading className="margin-bottom-0">
           {t('systemProfile:bookmark.header')}
         </PageHeading>
@@ -305,6 +298,7 @@ export const SystemRepositoryTable = () => {
                         aria-sort={getColumnSortStatus(column)}
                         scope="col"
                         style={{
+                          minWidth: '50px',
                           padding: index === 0 ? '0' : 'auto',
                           paddingLeft: index === 0 ? '.25em' : 'auto'
                         }}
