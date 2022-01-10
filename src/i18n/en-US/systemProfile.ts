@@ -32,6 +32,9 @@ const systemProfile = {
     success: 'Fully operational',
     warning: 'Degraded functionality',
     fail: 'Inoperative'
+  },
+  gql: {
+    fail: 'Failed to retrieve systems data'
   }
 };
 

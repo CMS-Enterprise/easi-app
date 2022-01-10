@@ -32,17 +32,18 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import Alert from 'components/shared/Alert';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Spinner from 'components/Spinner';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import TablePagination from 'components/TablePagination';
+import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import {
   GetCedarSystems,
   GetCedarSystems_cedarSystems as CedarSystem
 } from 'queries/types/GetCedarSystems';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
-import extractAcronym from 'utils/extractAcronym';
 import {
   CedarSystemBookMark,
   mockBookmarkInfo
@@ -50,14 +51,17 @@ import {
 
 import './index.scss';
 
+const findBookmark = (
+  systemId: string,
+  savedBookMarks: CedarSystemBookMark[]
+) => savedBookMarks.some(bookmark => bookmark.cedarSystemId === systemId);
+
 const filterBookmarks = (
   systems: CedarSystem[],
   savedBookMarks: CedarSystemBookMark[]
 ) =>
   systems
-    .filter(system =>
-      savedBookMarks.some(bookmark => bookmark.cedarSystemId === system.id)
-    )
+    .filter(system => findBookmark(system.id, savedBookMarks))
     .map(system => (
       <BookmarkCard
         type="systemProfile"
@@ -88,7 +92,10 @@ export const SystemRepositoryTable = () => {
           const rowOneElem = rowOne.values[columnName];
           const rowTwoElem = rowTwo.values[columnName];
 
-          return rowOneElem > rowTwoElem ? 1 : -1;
+          return findBookmark(rowOneElem, mockBookmarkInfo) >
+            findBookmark(rowTwoElem, mockBookmarkInfo)
+            ? 1
+            : -1;
         },
         Cell: ({ row }: { row: Row<CedarSystem> }) =>
           mockBookmarkInfo.some(
@@ -119,8 +126,9 @@ export const SystemRepositoryTable = () => {
         id: 'systemOwner',
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
           <p>
-            {row.original.businessOwnerOrg &&
-              extractAcronym(row.original.businessOwnerOrg)}
+            {cmsDivisionsAndOffices.find(
+              item => item.name === row.original.businessOwnerOrg
+            )?.acronym || row.original.businessOwnerOrg}
           </p>
         )
       },
@@ -169,6 +177,8 @@ export const SystemRepositoryTable = () => {
       },
       columns,
       data: systemsTableData as CedarSystem[],
+      autoResetSortBy: false,
+      autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => [{ id: 'systemName', desc: false }], []),
         pageIndex: 0
@@ -218,15 +228,6 @@ export const SystemRepositoryTable = () => {
   //   );
   // }
 
-  if (error) {
-    // TODO error handling
-    // return <div>{JSON.stringify(error)}</div>;
-  }
-
-  // if (systemsTableData.length === 0) {
-  //   return <p>{t('requestsTable.empty')}</p>;
-  // }
-
   return (
     <PageWrapper>
       <Header />
@@ -259,6 +260,14 @@ export const SystemRepositoryTable = () => {
           </div>
         ) : (
           <>
+            {error && (
+              <ErrorAlert heading="System error">
+                <ErrorAlertMessage
+                  message={t('systemProfile:gql.fail')}
+                  errorKey="system"
+                />
+              </ErrorAlert>
+            )}
             {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
             {mockBookmarkInfo.length === 0 ? (
               <div className="tablet:grid-col-12">
@@ -283,7 +292,7 @@ export const SystemRepositoryTable = () => {
               </CardGroup>
             )}
             {/* TEMPORARY */}
-            <Table bordered={false} fullWidth {...getTableProps()}>
+            <Table bordered={false} fullWidth scrollable {...getTableProps()}>
               <caption className="usa-sr-only">
                 {t('systemTable.caption')}
               </caption>
@@ -303,13 +312,24 @@ export const SystemRepositoryTable = () => {
                           paddingLeft: index === 0 ? '.25em' : 'auto'
                         }}
                       >
-                        {column.render('Header')}
-                        <span
-                          className={getHeaderSortIcon(
-                            column.isSorted,
-                            column.isSortedDesc
+                        <button
+                          className="usa-button usa-button--unstyled"
+                          type="button"
+                          {...column.getSortByToggleProps()}
+                        >
+                          {column.render('Header')}
+                          {column.isSorted && (
+                            <span
+                              className={getHeaderSortIcon(
+                                column.isSorted,
+                                column.isSortedDesc
+                              )}
+                            />
                           )}
-                        />
+                          {!column.isSorted && (
+                            <span className="margin-left-1 fa fa-sort caret" />
+                          )}
+                        </button>
                       </th>
                     ))}
                   </tr>
