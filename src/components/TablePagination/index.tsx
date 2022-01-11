@@ -16,15 +16,15 @@ const filterPages = (visiblePages: number[], totalPages: number) => {
 
 const getVisiblePages = (page: number, total: number) => {
   if (total < 7) {
-    return filterPages([1, 2, 3, 4, 5, 6], total);
+    return filterPages([1, 2, 3, 4, 5], total);
   }
   if (page % 5 >= 0 && page > 4 && page + 2 < total) {
-    return [1, page - 2, page - 1, page, page + 1, page + 2, total];
+    return [1, page - 1, page, page + 1, total];
   }
   if (page % 5 >= 0 && page > 4 && page + 2 >= total) {
     return [1, total - 3, total - 2, total - 1, total];
   }
-  return [1, 2, 3, 4, 5, total];
+  return [1, 2, 3, 4, total];
 };
 
 const TablePagination = ({
@@ -35,10 +35,7 @@ const TablePagination = ({
   canNextPage,
   pageIndex,
   pageOptions,
-  canPreviousPage,
-  pageCount,
-  pageSize,
-  setPageSize
+  canPreviousPage
 }: ReactTablePaginationProps) => {
   const { t } = useTranslation('systemProfile');
   const [visiblePages, setVisiblePages] = useState<number[]>([]);

@@ -18,6 +18,7 @@ import {
 import { useQuery } from '@apollo/client';
 import {
   CardGroup,
+  Grid,
   Link as UswdsLink,
   SummaryBox,
   Table
@@ -270,7 +271,7 @@ export const SystemRepositoryTable = () => {
             )}
             {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
             {mockBookmarkInfo.length === 0 ? (
-              <div className="tablet:grid-col-12">
+              <Grid tablet={{ col: 12 }}>
                 <Alert type="info" className="padding-1">
                   <h3 className="margin-0">
                     {t('systemProfile:noBookmark.header')}
@@ -285,13 +286,18 @@ export const SystemRepositoryTable = () => {
                     </span>
                   </div>
                 </Alert>
-              </div>
+              </Grid>
             ) : (
               <CardGroup>
                 {filterBookmarks(systemsTableData, mockBookmarkInfo)}
               </CardGroup>
             )}
-            {/* TEMPORARY */}
+
+            <span>
+              Showing {pageIndex * pageSize + 1}-{(pageIndex + 1) * pageSize} of{' '}
+              {systemsTableData.length} results
+            </span>
+
             <Table bordered={false} fullWidth scrollable {...getTableProps()}>
               <caption className="usa-sr-only">
                 {t('systemTable.caption')}
@@ -355,7 +361,6 @@ export const SystemRepositoryTable = () => {
                 })}
               </tbody>
             </Table>
-            {/* TEMPORARY PAGINATION START */}
             <TablePagination
               gotoPage={gotoPage}
               previousPage={previousPage}
@@ -369,7 +374,6 @@ export const SystemRepositoryTable = () => {
               setPageSize={setPageSize}
               page={[]}
             />
-            {/* TEMPORARY PAGINATION END */}
           </>
         )}
       </MainContent>
