@@ -39,7 +39,11 @@ const TablePagination = ({
 }: ReactTablePaginationProps) => {
   const { t } = useTranslation('systemProfile');
   const [visiblePages, setVisiblePages] = useState<number[]>([]);
-  const classNames = classnames('usa-pagination', className);
+  const classNames = classnames(
+    'usa-pagination',
+    'padding-bottom-1',
+    className
+  );
 
   useEffect(() => {
     setVisiblePages(getVisiblePages(pageIndex + 1, pageOptions.length));

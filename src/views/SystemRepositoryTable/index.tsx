@@ -288,7 +288,7 @@ export const SystemRepositoryTable = () => {
                 </Alert>
               </Grid>
             ) : (
-              <CardGroup>
+              <CardGroup className="margin-bottom-3">
                 {filterBookmarks(systemsTableData, mockBookmarkInfo)}
               </CardGroup>
             )}
@@ -313,7 +313,7 @@ export const SystemRepositoryTable = () => {
                         aria-sort={getColumnSortStatus(column)}
                         scope="col"
                         style={{
-                          minWidth: '50px',
+                          minWidth: index === 0 ? '50px' : '150px',
                           padding: index === 0 ? '0' : 'auto',
                           paddingLeft: index === 0 ? '.25em' : 'auto'
                         }}
