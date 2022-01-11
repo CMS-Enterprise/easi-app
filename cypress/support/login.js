@@ -11,11 +11,11 @@ Cypress.Commands.add('login', () => {
   cy.get('#okta-signin-submit').click();
 
   cy.get('.beacon-loading').should('not.exist');
-  cy.get('body').then(($body) => {
+  cy.get('body').then($body => {
     if ($body.find('input[name="answer"]').length) {
       cy.get('input[name="answer"]').then(() => {
         cy.task('generateOTP', Cypress.env('otpSecret'), { log: false }).then(
-          (token) => {
+          token => {
             cy.get('input[name="answer"]').type(token, { log: false });
             cy.get('input[name="rememberDevice"]').check({ force: true });
             cy.get('input[value="Verify"').click();
@@ -43,7 +43,6 @@ Cypress.Commands.add('localLogin', ({ name, role }) => {
 });
 
 Cypress.Commands.add('logout', () => {
-  cy.get('[data-testid="UserActions-Toggle"]').click();
-  cy.get('[data-testid="UserActions-Logout"]').click();
+  cy.get('[data-testid="signout-link"]').click();
   cy.url().should('eq', 'http://localhost:3000/');
 });

@@ -3,7 +3,7 @@
 import React, { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useSortBy, useTable } from 'react-table';
+import { HeaderGroup, useSortBy, useTable } from 'react-table';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
@@ -262,7 +262,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
   );
 };
 
-const currentTableSortDescription = headerGroup => {
+const currentTableSortDescription = <T extends {}>(
+  headerGroup: HeaderGroup<T>
+) => {
   const sortedHeader = headerGroup.headers.find(header => header.isSorted);
 
   if (sortedHeader) {

@@ -7,12 +7,19 @@
 // START Enums and Input Objects
 //==============================================================
 
+/**
+ * Denotes the reason a 508/accessibility request was deleted
+ */
 export enum AccessibilityRequestDeletionReason {
   INCORRECT_APPLICATION_AND_LIFECYCLE_ID = "INCORRECT_APPLICATION_AND_LIFECYCLE_ID",
   NO_TESTING_NEEDED = "NO_TESTING_NEEDED",
   OTHER = "OTHER",
 }
 
+/**
+ * Represents the common options for document type that is attached to a
+ * 508/accessibility request
+ */
 export enum AccessibilityRequestDocumentCommonType {
   AWARDED_VPAT = "AWARDED_VPAT",
   OTHER = "OTHER",
@@ -22,12 +29,19 @@ export enum AccessibilityRequestDocumentCommonType {
   TEST_RESULTS = "TEST_RESULTS",
 }
 
+/**
+ * Indicates the status of a document that has been attached to 508/accessibility
+ * request, which will be scanned for viruses before it is made available
+ */
 export enum AccessibilityRequestDocumentStatus {
   AVAILABLE = "AVAILABLE",
   PENDING = "PENDING",
   UNAVAILABLE = "UNAVAILABLE",
 }
 
+/**
+ * Indicates the status of a 508/accessibility request
+ */
 export enum AccessibilityRequestStatus {
   CLOSED = "CLOSED",
   DELETED = "DELETED",
@@ -35,16 +49,25 @@ export enum AccessibilityRequestStatus {
   OPEN = "OPEN",
 }
 
+/**
+ * Indicates who the source is of feedback on a system request
+ */
 export enum GRTFeedbackType {
   BUSINESS_OWNER = "BUSINESS_OWNER",
   GRB = "GRB",
 }
 
+/**
+ * Indicates the type of a request being made with the EASi system
+ */
 export enum RequestType {
   ACCESSIBILITY_REQUEST = "ACCESSIBILITY_REQUEST",
   GOVERNANCE_REQUEST = "GOVERNANCE_REQUEST",
 }
 
+/**
+ * Represents the type of an action that is being done to a system request
+ */
 export enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES = "BIZ_CASE_NEEDS_CHANGES",
   CREATE_BIZ_CASE = "CREATE_BIZ_CASE",
@@ -67,6 +90,9 @@ export enum SystemIntakeActionType {
   SUBMIT_INTAKE = "SUBMIT_INTAKE",
 }
 
+/**
+ * The type of an IT governance (system) request
+ */
 export enum SystemIntakeRequestType {
   MAJOR_CHANGES = "MAJOR_CHANGES",
   NEW = "NEW",
@@ -74,6 +100,9 @@ export enum SystemIntakeRequestType {
   SHUTDOWN = "SHUTDOWN",
 }
 
+/**
+ * The status of a system's IT governence request
+ */
 export enum SystemIntakeStatus {
   BIZ_CASE_CHANGES_NEEDED = "BIZ_CASE_CHANGES_NEEDED",
   BIZ_CASE_DRAFT = "BIZ_CASE_DRAFT",
@@ -94,22 +123,35 @@ export enum SystemIntakeStatus {
   WITHDRAWN = "WITHDRAWN",
 }
 
+/**
+ * The type of test added to a 508/accessibility request
+ */
 export enum TestDateTestType {
   INITIAL = "INITIAL",
   REMEDIATION = "REMEDIATION",
 }
 
+/**
+ * Feedback intended for a business owner before they proceed to writing a
+ * business case for a system request
+ */
 export interface AddGRTFeedbackInput {
   emailBody: string;
   feedback: string;
   intakeID: UUID;
 }
 
+/**
+ * Input to add feedback to a system request
+ */
 export interface BasicActionInput {
   feedback: string;
   intakeId: UUID;
 }
 
+/**
+ * The input data used for adding a document to a 508/accessibility request
+ */
 export interface CreateAccessibilityRequestDocumentInput {
   commonDocumentType: AccessibilityRequestDocumentCommonType;
   mimeType: string;
@@ -120,17 +162,26 @@ export interface CreateAccessibilityRequestDocumentInput {
   url: string;
 }
 
+/**
+ * The data needed to initialize a 508/accessibility request
+ */
 export interface CreateAccessibilityRequestInput {
   intakeID: UUID;
   name: string;
 }
 
+/**
+ * The data used when adding a note to a 508/accessibility request
+ */
 export interface CreateAccessibilityRequestNoteInput {
   requestID: UUID;
   note: string;
   shouldSendEmail: boolean;
 }
 
+/**
+ * Input data for extending a system request's lifecycle ID
+ */
 export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID;
   expirationDate?: Time | null;
@@ -139,17 +190,26 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   costBaseline?: string | null;
 }
 
+/**
+ * The input data used to initialize an IT governance request for a system
+ */
 export interface CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType;
   requester: SystemIntakeRequesterInput;
 }
 
+/**
+ * Input data for adding a note to a system request
+ */
 export interface CreateSystemIntakeNoteInput {
   content: string;
   authorName: string;
   intakeId: UUID;
 }
 
+/**
+ * The input required to add a test date/score to a 508/accessibility request
+ */
 export interface CreateTestDateInput {
   date: Time;
   requestID: UUID;
@@ -157,25 +217,41 @@ export interface CreateTestDateInput {
   testType: TestDateTestType;
 }
 
+/**
+ * The input used to delete a document from a 508/accessibility request
+ */
 export interface DeleteAccessibilityRequestDocumentInput {
   id: UUID;
 }
 
+/**
+ * The input data needed to delete a 508/accessibility request
+ */
 export interface DeleteAccessibilityRequestInput {
   id: UUID;
   reason: AccessibilityRequestDeletionReason;
 }
 
+/**
+ * The input required to delete a test date/score
+ */
 export interface DeleteTestDateInput {
   id: UUID;
 }
 
+/**
+ * Input associated with a document to be uploaded to a 508/accessibility request
+ */
 export interface GeneratePresignedUploadURLInput {
   fileName: string;
   mimeType: string;
   size: number;
 }
 
+/**
+ * The input data required to issue a lifecycle ID for a system's IT governance
+ * request
+ */
 export interface IssueLifecycleIdInput {
   expiresAt: Time;
   feedback: string;
@@ -186,6 +262,9 @@ export interface IssueLifecycleIdInput {
   costBaseline?: string | null;
 }
 
+/**
+ * Input data for rejection of a system's IT governance request
+ */
 export interface RejectIntakeInput {
   feedback: string;
   intakeId: UUID;
@@ -193,21 +272,33 @@ export interface RejectIntakeInput {
   reason: string;
 }
 
+/**
+ * Input to submit an intake for review 
+ */
 export interface SubmitIntakeInput {
   id: UUID;
 }
 
+/**
+ * The input data used to set the CMS business owner of a system
+ */
 export interface SystemIntakeBusinessOwnerInput {
   name: string;
   component: string;
 }
 
+/**
+ * The input data used to add an OIT collaborator for a system request
+ */
 export interface SystemIntakeCollaboratorInput {
   collaborator: string;
   name: string;
   key: string;
 }
 
+/**
+ * Input data containing information about a contract related to a system request
+ */
 export interface SystemIntakeContractInput {
   contractor?: string | null;
   endDate?: Time | null;
@@ -216,36 +307,58 @@ export interface SystemIntakeContractInput {
   vehicle?: string | null;
 }
 
+/**
+ * Input data for estimated system cost increases associated with a system request
+ */
 export interface SystemIntakeCostsInput {
   expectedIncreaseAmount?: string | null;
   isExpectingIncrease?: string | null;
 }
 
+/**
+ * Input data detailing how a system is funded
+ */
 export interface SystemIntakeFundingSourceInput {
   fundingNumber?: string | null;
   isFunded?: boolean | null;
   source?: string | null;
 }
 
+/**
+ * The input data used to set the list of OIT collaborators for a system request
+ */
 export interface SystemIntakeGovernanceTeamInput {
   isPresent?: boolean | null;
   teams?: (SystemIntakeCollaboratorInput | null)[] | null;
 }
 
+/**
+ * The input data used to set the ISSO associated with a system request, if any
+ */
 export interface SystemIntakeISSOInput {
   isPresent?: boolean | null;
   name?: string | null;
 }
 
+/**
+ * The input data used to set the CMS product manager/lead of a system
+ */
 export interface SystemIntakeProductManagerInput {
   name: string;
   component: string;
 }
 
+/**
+ * The input data used to set the requester of a system request
+ */
 export interface SystemIntakeRequesterInput {
   name: string;
 }
 
+/**
+ * The input data used to set the requester for a system request along with the
+ * requester's business component
+ */
 export interface SystemIntakeRequesterWithComponentInput {
   name: string;
   component: string;
@@ -259,11 +372,19 @@ export interface UpdateAccessibilityRequestStatus {
   status: AccessibilityRequestStatus;
 }
 
+/**
+ * Input data used to update the admin lead assigned to a system IT governance
+ * request
+ */
 export interface UpdateSystemIntakeAdminLeadInput {
   adminLead: string;
   id: UUID;
 }
 
+/**
+ * The input data used to update the contact details of the people associated with
+ * a system request
+ */
 export interface UpdateSystemIntakeContactDetailsInput {
   id: UUID;
   requester: SystemIntakeRequesterWithComponentInput;
@@ -273,6 +394,9 @@ export interface UpdateSystemIntakeContactDetailsInput {
   governanceTeams: SystemIntakeGovernanceTeamInput;
 }
 
+/**
+ * Input data for updating contract details related to a system request
+ */
 export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
   currentStage?: string | null;
@@ -281,6 +405,9 @@ export interface UpdateSystemIntakeContractDetailsInput {
   contract?: SystemIntakeContractInput | null;
 }
 
+/**
+ * Input to update some fields on a system request
+ */
 export interface UpdateSystemIntakeRequestDetailsInput {
   id: UUID;
   requestName?: string | null;
@@ -289,12 +416,18 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   needsEaSupport?: boolean | null;
 }
 
+/**
+ * Input data used to update GRT and GRB dates for a system request
+ */
 export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
   grtDate?: Time | null;
   id: UUID;
 }
 
+/**
+ * The input required to update a test date/score
+ */
 export interface UpdateTestDateInput {
   date: Time;
   id: UUID;

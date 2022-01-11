@@ -20,6 +20,7 @@ import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
+import LcidInfo from 'views/GovernanceTaskList/LcidInfo';
 import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -32,6 +33,7 @@ import PrivacyPolicy from 'views/PrivacyPolicy';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
+import SystemProfileHealth from 'views/SystemProfileHealth';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
@@ -102,6 +104,11 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/request-decision"
         component={RequestDecision}
       />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/lcid-info"
+        component={LcidInfo}
+      />
       <Redirect exact from="/system/new" to="/system/request-type" />
       <Redirect
         exact
@@ -138,6 +145,13 @@ const AppRoutes = () => {
 
       {/* Misc Routes */}
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+      {flags.sandbox && (
+        <Route
+          path="/sandbox/:systemId"
+          exact
+          component={SystemProfileHealth}
+        />
+      )}
 
       <Route path="/implicit/callback" component={LoginCallback} />
 

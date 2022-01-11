@@ -58,7 +58,7 @@ scripts/dev tailscale         # Run app and expose to other machines over Tailsc
 scripts/dev test              # Run all tests in parallel
 scripts/dev test:go           # Runs Go tests
 scripts/dev test:go:long      # Runs Go tests, including long ones
-scripts/dev test:go:only      # Run targeted Go tests (pass packages as additional options)
+scripts/dev test:go:only      # Run targeted Go tests (pass path to package folder as additional options)
 scripts/dev test:js           # Run JS tests (pass path to scope to that location)
 scripts/dev test:js:named     # Run JS tests with a matching name (pass needle as additional option)
 scripts/dev up                # Starts all services in the project
@@ -361,7 +361,9 @@ Run all tests other than Cypress in the project using `scripts/dev test`.
 
 ### Server tests
 
-Run `scripts/dev test:go`.
+- Run `scripts/dev test:go` to run all local-only server-side tests. This requires the database to be running first. Use `scripts/dev up:backend` to start it.
+- Run `scripts/dev test:go:only [path to package folder]` (e.g. `scripts/dev test:go:only "./pkg/cedar/intake`) to run server-side tests for a specific folder. Depending on the tests being run, this may require the database to be running, as above.
+- Run `scripts/dev test:go:long` to run all server-side tests, including ones that contact external services.
 
 ### JS Tests
 
@@ -464,6 +466,12 @@ You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL p
 ```
 { "Authorization":"Local {\"favorLocalAuth\":true}"}
 ```
+
+Additionally, you can define EUA job codes in the `Authorization` header that will be used when querying endpoints such as `systemIntake` that require them. The syntax is:
+```
+{ "Authorization":"Local {\"favorLocalAuth\":true, \"jobCodes\":[\"EASI_D_GOVTEAM\"]}"}
+```
+Additional job codes beyond/instead of `EASI_D_GOVTEAM` can be included in the `jobCodes` array, just make sure to escape the `"`'s around the job code names.
 
 ### Accessing the application over Tailscale
 

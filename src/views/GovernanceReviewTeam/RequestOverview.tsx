@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import classnames from 'classnames';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -52,7 +51,6 @@ const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
-  const flags = useFlags();
   const { systemId, activePage } = useParams<{
     systemId: string;
     activePage: string;
@@ -335,26 +333,23 @@ const RequestOverview = () => {
                 render={() => <IssueLifecycleId />}
               />
               {/* Only display extend LCID action if status is LCID_ISSUED or there has been an lcid issued in the past */}
-              {flags.lcidExtension &&
-                (data?.systemIntake?.status === 'LCID_ISSUED' ||
-                  data?.systemIntake?.lcid != null) && (
-                  <Route
-                    path="/governance-review-team/:systemId/actions/extend-lcid"
-                    render={() => (
-                      <ExtendLifecycleId
-                        lcid={data.systemIntake?.lcid || ''}
-                        lcidExpiresAt={data.systemIntake?.lcidExpiresAt}
-                        lcidScope={data.systemIntake?.lcidScope || ''}
-                        lcidNextSteps={
-                          data.systemIntake?.decisionNextSteps || ''
-                        }
-                        lcidCostBaseline={
-                          data.systemIntake?.lcidCostBaseline || ''
-                        }
-                      />
-                    )}
-                  />
-                )}
+              {(data?.systemIntake?.status === 'LCID_ISSUED' ||
+                data?.systemIntake?.lcid != null) && (
+                <Route
+                  path="/governance-review-team/:systemId/actions/extend-lcid"
+                  render={() => (
+                    <ExtendLifecycleId
+                      lcid={data.systemIntake?.lcid || ''}
+                      lcidExpiresAt={data.systemIntake?.lcidExpiresAt}
+                      lcidScope={data.systemIntake?.lcidScope || ''}
+                      lcidNextSteps={data.systemIntake?.decisionNextSteps || ''}
+                      lcidCostBaseline={
+                        data.systemIntake?.lcidCostBaseline || ''
+                      }
+                    />
+                  )}
+                />
+              )}
               <Route
                 path="/governance-review-team/:systemId/actions/not-approved"
                 render={() => <RejectIntake />}

@@ -1,20 +1,9 @@
 # EASI-000
 
-<!--
-    If applicable, insert the Jira story number in the markdown header above
-    The hyperlink will be filled in by GitHub autolinks:
-    https://github.com/CMSgov/easi-app/settings/key_links
---->
-
 ## Changes proposed in this pull request
 
 - Change 1
 - Change 2
-
-<!--
-    Please add/remove/edit any of the template below to fit the needs
-    of this specific PR
---->
 
 ## Reviewer Notes
 

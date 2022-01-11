@@ -28,7 +28,7 @@ jest.mock('@okta/okta-react', () => ({
 
 const waitForPageLoad = async () => {
   await waitFor(() => {
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
   });
 };
 
