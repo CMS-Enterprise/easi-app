@@ -110,7 +110,6 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/lcid-info"
         component={LcidInfo}
       />
-      <SecureRoute exact path="/system" component={SystemRepositoryTable} />
       <Redirect exact from="/system/new" to="/system/request-type" />
       <Redirect
         exact
@@ -121,6 +120,13 @@ const AppRoutes = () => {
         path="/system/:systemId/:formPage"
         component={SystemIntake}
       />
+      {flags.systemProfile && (
+        <SecureRoute
+          exact
+          path="/system-profile"
+          component={SystemRepositoryTable}
+        />
+      )}
       <Redirect
         exact
         from="/business/:businessCaseId"
