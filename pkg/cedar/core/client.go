@@ -13,6 +13,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
+	cache "github.com/patrickmn/go-cache"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -27,6 +28,7 @@ import (
 const (
 	cedarCoreEnabledKey     = "cedarCoreEnabled"
 	cedarCoreEnabledDefault = false
+	allSystemsCacheKey      = "allSystems"
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
@@ -46,6 +48,8 @@ func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Cli
 		return result
 	}
 
+	c := cache.New(5*time.Minute, 10*time.Minute)
+
 	hc := http.DefaultClient
 
 	return &Client{
@@ -63,7 +67,8 @@ func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Cli
 			),
 			strfmt.Default,
 		),
-		hc: hc,
+		hc:    hc,
+		cache: c,
 	}
 }
 
@@ -73,6 +78,7 @@ type Client struct {
 	auth             runtime.ClientAuthInfoWriter
 	sdk              *apiclient.CEDARCoreAPI
 	hc               *http.Client
+	cache            *cache.Cache
 }
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
@@ -80,6 +86,11 @@ func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, e
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarSystem{}, nil
+	}
+
+	allSystems, found := c.cache.Get(allSystemsCacheKey)
+	if found {
+		return allSystems.([]*models.CedarSystem), nil
 	}
 
 	// Construct the parameters
@@ -113,6 +124,8 @@ func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, e
 			SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
 		})
 	}
+
+	c.cache.Set(allSystemsCacheKey, retVal, cache.DefaultExpiration)
 
 	return retVal, nil
 }
