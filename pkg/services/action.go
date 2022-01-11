@@ -387,6 +387,15 @@ func NewCreateActionExtendLifecycleID(
 		action.LCIDExpirationChangeNewDate = expirationDate
 		action.LCIDExpirationChangePreviousDate = intake.LifecycleExpiresAt
 
+		action.LCIDExpirationChangeNewScope = scope
+		action.LCIDExpirationChangePreviousScope = intake.LifecycleScope.String
+
+		action.LCIDExpirationChangeNewNextSteps = *nextSteps
+		action.LCIDExpirationChangePreviousNextSteps = intake.DecisionNextSteps.String
+
+		action.LCIDExpirationChangeNewCostBaseline = *costBaseline
+		action.LCIDExpirationChangePreviousCostBaseline = intake.LifecycleCostBaseline.String
+
 		actionErr := saveAction(ctx, action)
 		if actionErr != nil {
 			return nil, actionErr

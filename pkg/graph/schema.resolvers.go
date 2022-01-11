@@ -760,6 +760,9 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		input.ID,
 		intake.ProjectName.String,
 		input.ExpirationDate,
+		input.Scope,
+		*input.NextSteps,
+		*input.CostBaseline,
 	)
 
 	if err != nil {
@@ -1224,10 +1227,17 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 			Feedback:  action.Feedback.Ptr(),
 			CreatedAt: *action.CreatedAt,
 		}
+
 		if action.LCIDExpirationChangeNewDate != nil && action.LCIDExpirationChangePreviousDate != nil {
 			graphAction.LcidExpirationChange = &model.SystemIntakeLCIDExpirationChange{
-				NewDate:      *action.LCIDExpirationChangeNewDate,
-				PreviousDate: *action.LCIDExpirationChangePreviousDate,
+				NewDate:              *action.LCIDExpirationChangeNewDate,
+				PreviousDate:         *action.LCIDExpirationChangePreviousDate,
+				NewScope:             action.LCIDExpirationChangeNewScope,
+				PreviousScope:        action.LCIDExpirationChangePreviousScope,
+				NewNextSteps:         action.LCIDExpirationChangeNewNextSteps,
+				PreviousNextSteps:    action.LCIDExpirationChangePreviousNextSteps,
+				NewCostBaseline:      action.LCIDExpirationChangeNewCostBaseline,
+				PreviousCostBaseline: action.LCIDExpirationChangePreviousCostBaseline,
 			}
 		}
 		results = append(results, &graphAction)

@@ -239,15 +239,15 @@ const ExtendLifecycleId = ({
                     </div>
                   </fieldset>
                 </FieldGroup>
-                <FieldGroup scrollElement="scope" error={!!flatErrors.scope}>
+                <FieldGroup scrollElement="scope" error={!!flatErrors.newScope}>
                   <Label htmlFor="IssueLifecycleIdForm-Scope">
                     {t('issueLCID.scopeLabel')}
                   </Label>
                   <HelpText>{t('issueLCID.scopeHelpText')}</HelpText>
-                  <FieldErrorMsg>{flatErrors.scope}</FieldErrorMsg>
+                  <FieldErrorMsg>{flatErrors.newScope}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    error={!!flatErrors.scope}
+                    error={!!flatErrors.newScope}
                     id="IssueLifecycleIdForm-Scope"
                     maxLength={3000}
                     name="newScope"
@@ -255,16 +255,16 @@ const ExtendLifecycleId = ({
                 </FieldGroup>
                 <FieldGroup
                   scrollElement="nextSteps"
-                  error={!!flatErrors.nextSteps}
+                  error={!!flatErrors.newNextSteps}
                 >
                   <Label htmlFor="IssueLifecycleIdForm-NextSteps">
                     {t('issueLCID.nextStepsLabel')}
                   </Label>
                   <HelpText>{t('issueLCID.nextStepsHelpText')}</HelpText>
-                  <FieldErrorMsg>{flatErrors.nextSteps}</FieldErrorMsg>
+                  <FieldErrorMsg>{flatErrors.newNextSteps}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    error={!!flatErrors.nextSteps}
+                    error={!!flatErrors.newNextSteps}
                     id="IssueLifecycleIdForm-NextSteps"
                     maxLength={3000}
                     name="newNextSteps"
