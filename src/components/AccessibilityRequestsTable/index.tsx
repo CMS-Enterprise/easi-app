@@ -2,12 +2,12 @@
 
 import React, { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { HeaderGroup, useSortBy, useTable } from 'react-table';
-import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
+import { Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
@@ -30,9 +30,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'requestName',
         Cell: ({ row, value }: any) => {
           return (
-            <UswdsLink asCustom={Link} to={`/508/requests/${row.original.id}`}>
-              {value}
-            </UswdsLink>
+            <UswdsReactLink
+              link={`/508/requests/${row.original.id}`}
+              heading={value}
+            />
           );
         },
         minWidth: 300,

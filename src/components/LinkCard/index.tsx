@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+
+import UswdsReactLink from 'components/LinkWrapper';
 
 type LinkCardProps = {
   children: React.ReactNode;
@@ -28,7 +29,7 @@ const LinkCard = ({
       {...props}
     >
       <h2 className="margin-top-0 margin-bottom-1">
-        <Link href={link}>{heading}</Link>
+        <UswdsReactLink link={link} heading={heading} />
       </h2>
       <div className="margin-top-1">{children}</div>
     </div>

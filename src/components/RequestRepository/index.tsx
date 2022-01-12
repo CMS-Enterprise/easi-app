@@ -8,12 +8,12 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Link as UswdsLink,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import TruncatedText from 'components/shared/TruncatedText';
 import { convertIntakeToCSV } from 'data/systemIntake';
@@ -105,13 +105,11 @@ const RequestRepository = () => {
 
       // If date is null, return button that takes user to page to add date
       return (
-        <UswdsLink
+        <UswdsReactLink
           data-testid="add-grt-date-cta"
-          asCustom={Link}
-          to={`/governance-review-team/${row.original.id}/dates`}
-        >
-          {t('requestRepository.table.addDate')}
-        </UswdsLink>
+          heading={t('requestRepository.table.addDate')}
+          link={`/governance-review-team/${row.original.id}/dates`}
+        />
       );
     }
   };
@@ -126,13 +124,11 @@ const RequestRepository = () => {
 
       // If date is null, return button that takes user to page to add date
       return (
-        <UswdsLink
+        <UswdsReactLink
           data-testid="add-grb-date-cta"
-          asCustom={Link}
-          to={`/governance-review-team/${row.original.id}/dates`}
-        >
-          {t('requestRepository.table.addDate')}
-        </UswdsLink>
+          heading={t('requestRepository.table.addDate')}
+          link={`/governance-review-team/${row.original.id}/dates`}
+        />
       );
     }
   };
