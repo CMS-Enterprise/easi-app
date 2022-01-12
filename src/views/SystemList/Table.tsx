@@ -50,9 +50,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
             : -1;
         },
         Cell: ({ row }: { row: Row<CedarSystem> }) =>
-          savedBookmarks.some(
-            bookmark => bookmark.cedarSystemId === row.original.id
-          ) ? (
+          findBookmark(row.original.id, savedBookmarks) ? (
             <BookmarkCardIcon size="sm" />
           ) : (
             <BookmarkCardIcon lightgrey size="sm" />
@@ -142,6 +140,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
 
   return (
     <>
+      {/* TODO:  Break out page info into own component */}
       <span>
         Showing {pageIndex * pageSize + 1}-{(pageIndex + 1) * pageSize} of{' '}
         {systems.length} results

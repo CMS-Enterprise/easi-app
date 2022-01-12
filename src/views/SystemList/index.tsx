@@ -40,6 +40,7 @@ import './index.scss';
 export const SystemList = () => {
   const { t } = useTranslation('systemProfile');
 
+  // TODO: query parameters and caching
   const { loading, error, data } = useQuery<GetCedarSystems>(
     GetCedarSystemsQuery
   );
@@ -81,6 +82,7 @@ export const SystemList = () => {
               {t('systemProfile:bookmark.subtitle')}
             </p>
 
+            {/* TODO: standardize/format error messages from CEDAR - either on FE or BE */}
             {error && (
               <ErrorAlert heading="System error">
                 <ErrorAlertMessage
