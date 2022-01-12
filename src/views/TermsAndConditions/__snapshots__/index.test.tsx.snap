@@ -177,7 +177,11 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
         <div
           className="navbar--container easi-nav__user"
         >
-          
+          <div
+            className="easi-header__user"
+          >
+            
+          </div>
           <div>
               |  
           </div>

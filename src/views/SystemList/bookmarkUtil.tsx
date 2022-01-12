@@ -8,12 +8,13 @@ import { CedarSystemBookMark } from 'views/Sandbox/mockSystemData';
 export const findBookmark = (
   systemId: string,
   savedBookMarks: CedarSystemBookMark[]
-) => savedBookMarks.some(bookmark => bookmark.cedarSystemId === systemId);
+): boolean =>
+  savedBookMarks.some(bookmark => bookmark.cedarSystemId === systemId);
 
 export const filterBookmarks = (
   systems: CedarSystem[],
   savedBookMarks: CedarSystemBookMark[]
-) =>
+): React.ReactNode =>
   systems
     .filter(system => findBookmark(system.id, savedBookMarks))
     .map(system => (

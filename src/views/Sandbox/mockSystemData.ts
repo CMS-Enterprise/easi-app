@@ -21,7 +21,7 @@ export const mockSystemInfo: CedarSystemProps[] = [
   },
   {
     __typename: 'CedarSystem',
-    id: '2',
+    id: '326-74-0',
     acronym: 'ASD',
     status: null,
     name: 'Systems',

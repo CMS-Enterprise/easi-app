@@ -20,11 +20,11 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
 import Alert from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import Spinner from 'components/Spinner';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import {
   GetCedarSystems,
@@ -48,15 +48,6 @@ export const SystemList = () => {
     ? (data.cedarSystems as CedarSystem[])
     : ([] as CedarSystem[]);
 
-  // TODO: Once <Header /> is moved outside of individual components, loading, errors, and no data need to be extracted from the main return
-  // if (loading) {
-  //   return (
-  //     <div className="text-center" data-testid="table-loading">
-  //       <Spinner size="xl" />;
-  //     </div>
-  //   );
-  // }
-
   return (
     <PageWrapper>
       <Header />
@@ -78,20 +69,18 @@ export const SystemList = () => {
           </SummaryBox>
         </SectionWrapper>
 
-        <PageHeading className="margin-bottom-0">
-          {t('systemProfile:bookmark.header')}
-        </PageHeading>
-
-        <p className="margin-bottom-3">
-          {t('systemProfile:bookmark.subtitle')}
-        </p>
-
         {loading ? (
-          <div className="text-center" data-testid="table-loading">
-            <Spinner size="xl" />;
-          </div>
+          <PageLoading />
         ) : (
           <>
+            <PageHeading className="margin-bottom-0">
+              {t('systemProfile:bookmark.header')}
+            </PageHeading>
+
+            <p className="margin-bottom-3">
+              {t('systemProfile:bookmark.subtitle')}
+            </p>
+
             {error && (
               <ErrorAlert heading="System error">
                 <ErrorAlertMessage

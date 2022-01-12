@@ -47,7 +47,7 @@ exports[`BookmarkCard matches the snapshot 1`] = `
         <p
           class="margin-bottom-0"
         >
-          Officer or Department
+          Office or Department
         </p>
         <p
           class="text-bold margin-top-1"

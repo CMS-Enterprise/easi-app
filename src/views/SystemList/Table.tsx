@@ -161,7 +161,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
                   style={{
                     minWidth: index === 0 ? '50px' : '150px',
                     padding: index === 0 ? '0' : 'auto',
-                    paddingLeft: index === 0 ? '.25em' : 'auto'
+                    paddingLeft: index === 0 ? '.5em' : 'auto'
                   }}
                 >
                   <button
@@ -196,7 +196,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
                 {row.cells.map((cell, index) => (
                   <th
                     style={{
-                      paddingLeft: index === 0 ? '.25em' : 'auto'
+                      paddingLeft: index === 0 ? '.5em' : 'auto'
                     }}
                     {...cell.getCellProps()}
                   >

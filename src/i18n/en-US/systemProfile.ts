@@ -20,7 +20,7 @@ const systemProfile = {
   bookmark: {
     header: 'Bookmarked Systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
-    subHeader1: 'Officer or Department',
+    subHeader1: 'Office or Department',
     subHeader2: 'ATO Status'
   },
   noBookmark: {

@@ -75,16 +75,16 @@ const TablePagination = ({
         <li className="usa-pagination__item usa-pagination__page-no">
           {visiblePages.map((page, index, array) => {
             return (
-              <>
+              <div key={page}>
                 {array[index - 1] + 2 < page ? (
-                  <>
-                    <li
+                  <div className="display-inline-flex">
+                    <div
                       className="usa-pagination__item usa-pagination__overflow"
                       role="presentation"
                     >
                       <span> … </span>
-                    </li>
-                    <li className="usa-pagination__item">
+                    </div>
+                    <div className="usa-pagination__item">
                       <button
                         type="button"
                         aria-label={`Page ${page}`}
@@ -98,10 +98,10 @@ const TablePagination = ({
                       >
                         {page}
                       </button>
-                    </li>
-                  </>
+                    </div>
+                  </div>
                 ) : (
-                  <li className="usa-pagination__item">
+                  <div className="usa-pagination__item">
                     <button
                       type="button"
                       aria-label={`Page ${page}`}
@@ -115,9 +115,9 @@ const TablePagination = ({
                     >
                       {page}
                     </button>
-                  </li>
+                  </div>
                 )}
-              </>
+              </div>
             );
           })}
         </li>
