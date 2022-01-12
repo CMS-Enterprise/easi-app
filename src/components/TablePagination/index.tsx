@@ -10,18 +10,14 @@ type ReactTablePaginationProps = {
 } & UsePaginationInstanceProps<{}> &
   UsePaginationState<{}>;
 
-const filterPages = (visiblePages: number[], totalPages: number) => {
-  return visiblePages.filter(page => page <= totalPages);
-};
-
 const getVisiblePages = (page: number, total: number) => {
   if (total < 7) {
-    return filterPages([1, 2, 3, 4, 5], total);
+    return [1, 2, 3, 4, 5].filter(singlePage => singlePage <= total);
   }
-  if (page % 5 >= 0 && page > 4 && page + 2 < total) {
+  if (page % 4 >= 0 && page > 3 && page + 2 < total) {
     return [1, page - 1, page, page + 1, total];
   }
-  if (page % 5 >= 0 && page > 4 && page + 2 >= total) {
+  if (page % 4 >= 0 && page > 3 && page + 2 >= total) {
     return [1, total - 3, total - 2, total - 1, total];
   }
   return [1, 2, 3, 4, total];
@@ -76,7 +72,7 @@ const TablePagination = ({
           {visiblePages.map((page, index, array) => {
             return (
               <div key={page}>
-                {array[index - 1] + 2 < page ? (
+                {array[index - 1] + 1 < page ? (
                   <div className="display-inline-flex">
                     <div
                       className="usa-pagination__item usa-pagination__overflow"
