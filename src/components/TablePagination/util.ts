@@ -13,11 +13,7 @@ const getVisiblePages = (currentPage: number, totalPages: number) => {
   }
   // If total is more than the minimum for elipsis (7) and IS adjacent to the end page within 4 pages
   // Returns an array with the start page, and the last four pages
-  if (
-    currentPage % 4 >= 0 &&
-    currentPage > 3 &&
-    currentPage + 3 >= totalPages
-  ) {
+  if (currentPage > 0 && currentPage > 3 && currentPage + 3 >= totalPages) {
     return [
       1,
       totalPages - 4,
@@ -29,7 +25,7 @@ const getVisiblePages = (currentPage: number, totalPages: number) => {
   }
   // If total is more than the minimum for elipsis (7) and IS NOT adjacent to the start or end of pages
   // Returns an array with the start page, current pages, two adjacent pages, and end page
-  if (currentPage % 4 >= 0 && currentPage > 4 && currentPage + 2 < totalPages) {
+  if (currentPage > 0 && currentPage > 4 && currentPage + 2 < totalPages) {
     return [1, currentPage - 1, currentPage, currentPage + 1, totalPages];
   }
   // If total is more than the minimum for elipsis (7) and IS adjacent to the start page within 4 pages
