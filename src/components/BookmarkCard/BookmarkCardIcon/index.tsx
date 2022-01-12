@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -36,12 +37,9 @@ const BookmarkCardIcon = ({
   );
 
   return (
-    <i
-      className={classes}
-      onClick={onClick}
-      data-testid="bookmark-icon"
-      aria-hidden="true"
-    />
+    <Button type="button" unstyled onClick={onClick}>
+      <i className={classes} data-testid="bookmark-icon" aria-hidden="true" />
+    </Button>
   );
 };
 
