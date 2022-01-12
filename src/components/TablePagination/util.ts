@@ -8,26 +8,33 @@ const fillMinPages = (totalPages: number) => {
 
 const getVisiblePages = (currentPage: number, totalPages: number) => {
   // If total pages are less than 6 (minimum for elipsis), create an array of available page based on total
-  if (totalPages < 6) {
+  if (totalPages < 7) {
     return fillMinPages(totalPages);
-  }
-  // If total is more than the minimum for elipsis (6) and IS NOT adjacent to the start or end of pages
-  // Returns an array with the start page, current pages, two adjacent pages, and end page
-  if (currentPage % 4 >= 0 && currentPage > 3 && currentPage + 2 < totalPages) {
-    return [1, currentPage - 1, currentPage, currentPage + 1, totalPages];
   }
   // If total is more than the minimum for elipsis (6) and IS adjacent to the end page within 3 pages
   // Returns an array with the start page, and the last four pages
   if (
     currentPage % 4 >= 0 &&
     currentPage > 3 &&
-    currentPage + 2 >= totalPages
+    currentPage + 3 >= totalPages
   ) {
-    return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    return [
+      1,
+      totalPages - 4,
+      totalPages - 3,
+      totalPages - 2,
+      totalPages - 1,
+      totalPages
+    ];
+  }
+  // If total is more than the minimum for elipsis (6) and IS NOT adjacent to the start or end of pages
+  // Returns an array with the start page, current pages, two adjacent pages, and end page
+  if (currentPage % 4 >= 0 && currentPage > 4 && currentPage + 2 < totalPages) {
+    return [1, currentPage - 1, currentPage, currentPage + 1, totalPages];
   }
   // If total is more than the minimum for elipsis (6) and IS adjacent to the start page within 3 pages
   // Returns an array with the first four pages and end page
-  return [1, 2, 3, 4, totalPages];
+  return [1, 2, 3, 4, 5, totalPages];
 };
 
 export default getVisiblePages;

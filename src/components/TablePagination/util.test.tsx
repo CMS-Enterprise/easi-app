@@ -15,10 +15,10 @@ describe('TablePagination Util', () => {
     expect(getVisiblePages(currentPage, totalPages)).toEqual(expectedPages);
   });
 
-  it('returns an array of only first 4 pages and max page', () => {
+  it('returns an array of only first 5 pages and max page', () => {
     const currentPage: number = 0;
     const totalPages: number = 60;
-    const expectedPages: number[] = [1, 2, 3, 4, 60];
+    const expectedPages: number[] = [1, 2, 3, 4, 5, 60];
     expect(getVisiblePages(currentPage, totalPages)).toEqual(expectedPages);
   });
 
@@ -29,17 +29,17 @@ describe('TablePagination Util', () => {
     expect(getVisiblePages(currentPage, totalPages)).toEqual(expectedPages);
   });
 
-  it('returns an array with starting page, current page-1, and current page through max page', () => {
+  it('returns an array with starting page, current page-2, and current page through max page', () => {
     const currentPage: number = 48;
     const totalPages: number = 50;
-    const expectedPages: number[] = [1, 47, 48, 49, 50];
+    const expectedPages: number[] = [1, 46, 47, 48, 49, 50];
     expect(getVisiblePages(currentPage, totalPages)).toEqual(expectedPages);
   });
 
-  it('returns an array with starting page and current page with 3 preceding pages', () => {
+  it('returns an array with starting page and current page with 4 preceding pages', () => {
     const currentPage: number = 50;
     const totalPages: number = 50;
-    const expectedPages: number[] = [1, 47, 48, 49, 50];
+    const expectedPages: number[] = [1, 46, 47, 48, 49, 50];
     expect(getVisiblePages(currentPage, totalPages)).toEqual(expectedPages);
   });
 });
