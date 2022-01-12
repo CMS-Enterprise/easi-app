@@ -5,16 +5,14 @@ import './index.scss';
 
 type BookmarkCardIconProps = {
   className?: string;
-  black?: boolean;
-  lightgrey?: boolean;
+  color?: 'black' | 'lightgrey';
   size: 'sm' | 'md' | 'lg';
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 const BookmarkCardIcon = ({
   size,
-  lightgrey,
-  black,
+  color,
   className,
   onClick
 }: BookmarkCardIconProps) => {
@@ -32,10 +30,10 @@ const BookmarkCardIcon = ({
       'fa-3x': size === 'lg'
     },
     {
-      lightgrey
+      lightgrey: color === 'lightgrey'
     },
     {
-      black
+      black: color === 'black'
     },
     className
   );

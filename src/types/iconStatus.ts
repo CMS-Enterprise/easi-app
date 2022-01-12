@@ -1,4 +1,4 @@
-export type IconStatus = 'success' | 'warning' | 'fail';
+export type IconStatus = 'success' | 'warning' | 'fail'; // TODO - Need more types for IconStatus in response to CEDAR SystemHealthIcon mappings.
 
 export type CedarStatus = string | null; // Need to extract all possible returns for this field from CEDAR ex: Approved, Draft, etc.
 

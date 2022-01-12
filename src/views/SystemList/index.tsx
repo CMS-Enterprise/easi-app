@@ -32,8 +32,8 @@ import {
 } from 'queries/types/GetCedarSystems';
 import { mockBookmarkInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo/mockBookmarkInfo with dynamic data fetched from backend and CEDAR
 
-import { filterBookmarks } from './bookmarkUtil';
 import Table from './Table';
+import { filterBookmarks } from './util';
 
 import './index.scss';
 
@@ -94,7 +94,7 @@ export const SystemList = () => {
 
             {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
             {mockBookmarkInfo.length === 0 ? (
-              <Grid tablet={{ col: 12 }}>
+              <Grid tablet={{ col: 12 }} className="margin-bottom-5">
                 <Alert type="info" className="padding-1">
                   <h3 className="margin-0">
                     {t('systemProfile:noBookmark.header')}
@@ -103,7 +103,7 @@ export const SystemList = () => {
                     <span className="margin-0">
                       {t('systemProfile:noBookmark.text1')}
                     </span>
-                    <BookmarkCardIcon size="sm" black />
+                    <BookmarkCardIcon size="sm" color="black" />
                     <span className="margin-0">
                       {t('systemProfile:noBookmark.text2')}
                     </span>

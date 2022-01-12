@@ -63,16 +63,16 @@ export interface CedarSystemBookMark {
 }
 
 export const mockBookmarkInfo: CedarSystemBookMark[] = [
-  {
-    euaUserId: 'A',
-    cedarSystemId: '326-7-0'
-  },
-  {
-    euaUserId: 'A',
-    cedarSystemId: '326-74-0'
-  },
-  {
-    euaUserId: 'A',
-    cedarSystemId: '326-99-0'
-  }
+  // {
+  //   euaUserId: 'A',
+  //   cedarSystemId: '326-7-0'
+  // },
+  // {
+  //   euaUserId: 'A',
+  //   cedarSystemId: '326-74-0'
+  // },
+  // {
+  //   euaUserId: 'A',
+  //   cedarSystemId: '326-99-0'
+  // }
 ];

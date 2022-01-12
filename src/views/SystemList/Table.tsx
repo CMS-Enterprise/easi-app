@@ -22,7 +22,7 @@ import { mapCedarStatusToIcon } from 'types/iconStatus';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import { CedarSystemBookMark } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo/mockBookmarkInfo with dynamic data fetched from backend and CEDAR
 
-import { findBookmark } from './bookmarkUtil';
+import { findBookmark } from './util';
 
 import './index.scss';
 
@@ -53,7 +53,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
           findBookmark(row.original.id, savedBookmarks) ? (
             <BookmarkCardIcon size="sm" />
           ) : (
-            <BookmarkCardIcon lightgrey size="sm" />
+            <BookmarkCardIcon color="lightgrey" size="sm" />
           )
       },
       {

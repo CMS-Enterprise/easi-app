@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UsePaginationInstanceProps, UsePaginationState } from 'react-table';
 import classnames from 'classnames';
+
+import getVisiblePages from './util';
 
 import './index.scss';
 
@@ -9,19 +11,6 @@ type ReactTablePaginationProps = {
   className?: string;
 } & UsePaginationInstanceProps<{}> &
   UsePaginationState<{}>;
-
-const getVisiblePages = (page: number, total: number) => {
-  if (total < 7) {
-    return [1, 2, 3, 4, 5].filter(singlePage => singlePage <= total);
-  }
-  if (page % 4 >= 0 && page > 3 && page + 2 < total) {
-    return [1, page - 1, page, page + 1, total];
-  }
-  if (page % 4 >= 0 && page > 3 && page + 2 >= total) {
-    return [1, total - 3, total - 2, total - 1, total];
-  }
-  return [1, 2, 3, 4, total];
-};
 
 const TablePagination = ({
   className,
@@ -34,16 +23,11 @@ const TablePagination = ({
   canPreviousPage
 }: ReactTablePaginationProps) => {
   const { t } = useTranslation('systemProfile');
-  const [visiblePages, setVisiblePages] = useState<number[]>([]);
   const classNames = classnames(
     'usa-pagination',
     'padding-bottom-1',
     className
   );
-
-  useEffect(() => {
-    setVisiblePages(getVisiblePages(pageIndex + 1, pageOptions.length));
-  }, [pageIndex, pageOptions.length]);
 
   return (
     <nav
@@ -69,17 +53,35 @@ const TablePagination = ({
           </li>
         )}
         <li className="usa-pagination__item usa-pagination__page-no">
-          {visiblePages.map((page, index, array) => {
-            return (
-              <div key={page}>
-                {array[index - 1] + 1 < page ? (
-                  <div className="display-inline-flex">
-                    <div
-                      className="usa-pagination__item usa-pagination__overflow"
-                      role="presentation"
-                    >
-                      <span> … </span>
+          {getVisiblePages(pageIndex + 1, pageOptions.length).map(
+            (page, index, array) => {
+              return (
+                <div key={page}>
+                  {array[index - 1] + 1 < page ? (
+                    <div className="display-inline-flex">
+                      <div
+                        className="usa-pagination__item usa-pagination__overflow"
+                        role="presentation"
+                      >
+                        <span> … </span>
+                      </div>
+                      <div className="usa-pagination__item">
+                        <button
+                          type="button"
+                          aria-label={`Page ${page}`}
+                          key={page}
+                          className={
+                            pageIndex + 1 === page
+                              ? 'usa-pagination__button usa-current'
+                              : 'usa-pagination__button'
+                          }
+                          onClick={() => gotoPage(page - 1)}
+                        >
+                          {page}
+                        </button>
+                      </div>
                     </div>
+                  ) : (
                     <div className="usa-pagination__item">
                       <button
                         type="button"
@@ -95,27 +97,11 @@ const TablePagination = ({
                         {page}
                       </button>
                     </div>
-                  </div>
-                ) : (
-                  <div className="usa-pagination__item">
-                    <button
-                      type="button"
-                      aria-label={`Page ${page}`}
-                      key={page}
-                      className={
-                        pageIndex + 1 === page
-                          ? 'usa-pagination__button usa-current'
-                          : 'usa-pagination__button'
-                      }
-                      onClick={() => gotoPage(page - 1)}
-                    >
-                      {page}
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                  )}
+                </div>
+              );
+            }
+          )}
         </li>
         {canNextPage && (
           <li className="usa-pagination__item usa-pagination__arrow">

@@ -7,7 +7,7 @@ import './index.scss';
 
 type SystemHealthIconProps = {
   className?: string;
-  status?: IconStatus;
+  status: IconStatus;
   size: 'medium' | 'lg' | 'xl';
   label?: string;
 };
