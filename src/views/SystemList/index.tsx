@@ -110,7 +110,7 @@ export const SystemList = () => {
                 </Grid>
               ) : (
                 <CardGroup className="margin-bottom-3">
-                  {filterBookmarks(systemsTableData, bookmarks)}
+                  {filterBookmarks(systemsTableData, bookmarks, refetch)}
                 </CardGroup>
               )}
             </SectionWrapper>
