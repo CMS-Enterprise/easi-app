@@ -82,44 +82,54 @@ export const SystemList = () => {
               {t('systemProfile:bookmark.subtitle')}
             </p>
 
+            {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
+            <SectionWrapper borderBottom className="margin-bottom-3">
+              {mockBookmarkInfo.length === 0 ? (
+                <Grid tablet={{ col: 12 }} className="margin-bottom-5">
+                  <Alert type="info" className="padding-1">
+                    <h3 className="margin-0">
+                      {t('systemProfile:noBookmark.header')}
+                    </h3>
+                    <div>
+                      <span className="margin-0">
+                        {t('systemProfile:noBookmark.text1')}
+                      </span>
+                      <BookmarkCardIcon size="sm" color="black" />
+                      <span className="margin-0">
+                        {t('systemProfile:noBookmark.text2')}
+                      </span>
+                    </div>
+                  </Alert>
+                </Grid>
+              ) : (
+                <CardGroup className="margin-bottom-3">
+                  {filterBookmarks(systemsTableData, mockBookmarkInfo)}
+                </CardGroup>
+              )}
+            </SectionWrapper>
+
+            <PageHeading className="margin-bottom-0">
+              {t('systemProfile:systemTable.title')}
+            </PageHeading>
+
+            <p className="margin-bottom-5">
+              {t('systemProfile:systemTable.subtitle')}
+            </p>
+
             {/* TODO: standardize/format error messages from CEDAR - either on FE or BE */}
-            {error && (
+            {error ? (
               <ErrorAlert heading="System error">
                 <ErrorAlertMessage
                   message={t('systemProfile:gql.fail')}
                   errorKey="system"
                 />
               </ErrorAlert>
-            )}
-
-            {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
-            {mockBookmarkInfo.length === 0 ? (
-              <Grid tablet={{ col: 12 }} className="margin-bottom-5">
-                <Alert type="info" className="padding-1">
-                  <h3 className="margin-0">
-                    {t('systemProfile:noBookmark.header')}
-                  </h3>
-                  <div>
-                    <span className="margin-0">
-                      {t('systemProfile:noBookmark.text1')}
-                    </span>
-                    <BookmarkCardIcon size="sm" color="black" />
-                    <span className="margin-0">
-                      {t('systemProfile:noBookmark.text2')}
-                    </span>
-                  </div>
-                </Alert>
-              </Grid>
             ) : (
-              <CardGroup className="margin-bottom-3">
-                {filterBookmarks(systemsTableData, mockBookmarkInfo)}
-              </CardGroup>
+              <Table
+                systems={systemsTableData}
+                savedBookmarks={mockBookmarkInfo}
+              />
             )}
-
-            <Table
-              systems={systemsTableData}
-              savedBookmarks={mockBookmarkInfo}
-            />
           </>
         )}
       </MainContent>
