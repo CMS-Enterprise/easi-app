@@ -11,6 +11,7 @@ import {
   ProcessListItem
 } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 
@@ -60,13 +61,13 @@ const AccessibilityTestingStepsOverview = () => {
               className="margin-0"
             >
               indexZero
-              <UswdsLink
-                href="/508/templates"
+              <UswdsReactLink
+                link="/508/templates"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 templatesLink
-              </UswdsLink>
+              </UswdsReactLink>
               indexTwo
             </Trans>
             <p className="margin-bottom-0">
@@ -133,15 +134,14 @@ const AccessibilityTestingStepsOverview = () => {
           </div>
         </CollapsableLink>
         {params.get('continue') === 'true' && (
-          <UswdsLink
-            asCustom={Link}
+          <UswdsReactLink
             className="usa-button margin-top-8"
             variant="unstyled"
-            to="/508/requests/new"
+            link="/508/requests/new"
             data-testid="continue-link"
           >
             {t('testingStepsOverview.start')}
-          </UswdsLink>
+          </UswdsReactLink>
         )}
       </div>
     </div>

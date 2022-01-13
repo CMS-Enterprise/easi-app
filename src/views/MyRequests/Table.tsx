@@ -1,15 +1,12 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
 import { useQuery } from '@apollo/client';
-import {
-  Link as UswdsLink,
-  Table as UswdsTable
-} from '@trussworks/react-uswds';
+import { Table as UswdsTable } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
@@ -47,9 +44,9 @@ const Table = () => {
               link = '/';
           }
           return (
-            <UswdsLink asCustom={Link} to={link}>
+            <UswdsReactLink link={link}>
               {value || t('requestsTable.defaultName')}
-            </UswdsLink>
+            </UswdsReactLink>
           );
         },
         maxWidth: 350

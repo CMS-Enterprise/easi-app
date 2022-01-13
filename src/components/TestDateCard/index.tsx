@@ -56,11 +56,12 @@ const TestDateCard = ({
       {isEditableDeletable && (
         <div>
           <UswdsReactLink
-            heading={t('general:edit')}
             link={`/508/requests/${requestId}/test-date/${id}`}
             aria-label={`Edit test ${testIndex} ${testType}`}
             data-testid="test-date-edit-link"
-          />
+          >
+            {t('general:edit')}
+          </UswdsReactLink>
           <Button
             className="margin-left-1"
             type="button"

@@ -12,6 +12,7 @@ import {
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -110,14 +111,13 @@ const LcidInfo = () => {
                 </p>
               )}
               <div className="margin-top-4">
-                <UswdsLink
+                <UswdsReactLink
                   className="usa-button margin-bottom-2"
                   variant="unstyled"
-                  asCustom={Link}
-                  to={`/governance-task-list/${systemIntake.id}`}
+                  link={`/governance-task-list/${systemIntake.id}`}
                 >
                   {t('navigation.returnToTaskList')}
-                </UswdsLink>
+                </UswdsReactLink>
               </div>
 
               <h2>{t('general:feedback.improvement')}</h2>

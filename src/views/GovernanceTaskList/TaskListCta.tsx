@@ -1,8 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
-import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import { useHistory } from 'react-router-dom';
+import { Button } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import { isIntakeStarted } from 'data/systemIntake';
 import { attendGrbMeetingTag } from 'data/taskList';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -13,47 +14,43 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
   switch (status) {
     case 'INTAKE_SUBMITTED':
       return (
-        <UswdsLink
+        <UswdsReactLink
           data-testid="intake-view-link"
-          asCustom={Link}
-          to={`/system/${id}/view`}
+          link={`/system/${id}/view`}
         >
           View Submitted Request Form
-        </UswdsLink>
+        </UswdsReactLink>
       );
     case 'INTAKE_DRAFT':
       if (isIntakeStarted(intake)) {
         return (
-          <UswdsLink
+          <UswdsReactLink
             className="usa-button"
             variant="unstyled"
-            asCustom={Link}
-            to={`/system/${id}/contact-details`}
+            link={`/system/${id}/contact-details`}
           >
             Continue
-          </UswdsLink>
+          </UswdsReactLink>
         );
       }
       return (
-        <UswdsLink
+        <UswdsReactLink
           data-testid="intake-start-btn"
           className="usa-button"
           variant="unstyled"
-          asCustom={Link}
-          to={`/system/${id || 'new'}/contact-details`}
+          link={`/system/${id || 'new'}/contact-details`}
         >
           Start
-        </UswdsLink>
+        </UswdsReactLink>
       );
     default:
       return (
-        <UswdsLink
+        <UswdsReactLink
           data-testid="intake-view-link"
-          asCustom={Link}
-          to={`/system/${id}/view`}
+          link={`/system/${id}/view`}
         >
           View Submitted Request Form
-        </UswdsLink>
+        </UswdsReactLink>
       );
   }
 };
@@ -87,15 +84,14 @@ export const BusinessCaseDraftCta = ({
       );
     case 'BIZ_CASE_DRAFT':
       return (
-        <UswdsLink
+        <UswdsReactLink
           data-testid="continue-biz-case-btn"
           className="usa-button"
           variant="unstyled"
-          asCustom={Link}
-          to={`/business/${businessCaseId}/general-request-info`}
+          link={`/business/${businessCaseId}/general-request-info`}
         >
           Continue
-        </UswdsLink>
+        </UswdsReactLink>
       );
     case 'BIZ_CASE_DRAFT_SUBMITTED':
     case 'BIZ_CASE_FINAL_NEEDED':
@@ -107,48 +103,44 @@ export const BusinessCaseDraftCta = ({
     case 'WITHDRAWN':
       if (businessCaseId) {
         return (
-          <UswdsLink
+          <UswdsReactLink
             data-testid="view-biz-case-link"
-            asCustom={Link}
-            to={`/business/${businessCaseId}/view`}
+            link={`/business/${businessCaseId}/view`}
           >
             View submitted business case
-          </UswdsLink>
+          </UswdsReactLink>
         );
       }
       return <></>;
     case 'BIZ_CASE_CHANGES_NEEDED':
       return (
-        <UswdsLink
+        <UswdsReactLink
           data-testid="update-biz-case-draft-btn"
           className="usa-button"
           variant="unstyled"
-          asCustom={Link}
-          to={`/business/${businessCaseId}/general-request-info`}
+          link={`/business/${businessCaseId}/general-request-info`}
         >
           Update draft business case
-        </UswdsLink>
+        </UswdsReactLink>
       );
     case 'READY_FOR_GRT':
       return (
         <>
-          <UswdsLink
+          <UswdsReactLink
             data-testid="prepare-for-grt-cta"
             className="display-table margin-bottom-3 usa-button"
             variant="unstyled"
-            asCustom={Link}
-            to={`/governance-task-list/${businessCaseId}/prepare-for-grt`}
+            link={`/governance-task-list/${businessCaseId}/prepare-for-grt`}
           >
             Prepare for review team meeting
-          </UswdsLink>
+          </UswdsReactLink>
 
-          <UswdsLink
+          <UswdsReactLink
             data-testid="view-biz-case-cta"
-            asCustom={Link}
-            to={`/business/${businessCaseId}/general-request-info`}
+            link={`/business/${businessCaseId}/general-request-info`}
           >
             Update submitted draft business case
-          </UswdsLink>
+          </UswdsReactLink>
         </>
       );
     default:
@@ -161,27 +153,25 @@ export const AttendGrbMeetingCta = ({ intake }: { intake: SystemIntake }) => {
   const { id, status } = intake || {};
   if (status === 'READY_FOR_GRB') {
     return (
-      <UswdsLink
+      <UswdsReactLink
         data-testid="prepare-for-grb-btn"
         className="usa-button"
         variant="unstyled"
-        asCustom={Link}
-        to={`/governance-task-list/${id}/prepare-for-grb`}
+        link={`/governance-task-list/${id}/prepare-for-grb`}
       >
         Prepare for the Review Board meeting
-      </UswdsLink>
+      </UswdsReactLink>
     );
   }
 
   if (attendGrbMeetingTag(intake) === 'COMPLETED') {
     return (
-      <UswdsLink
+      <UswdsReactLink
         data-testid="prepare-for-grb-link"
-        asCustom={Link}
-        to={`/governance-task-list/${id}/prepare-for-grb`}
+        link={`/governance-task-list/${id}/prepare-for-grb`}
       >
         Prepare for the Review Board meeting
-      </UswdsLink>
+      </UswdsReactLink>
     );
   }
 
@@ -193,15 +183,14 @@ export const DecisionCta = ({ id, status }: { id: string; status: string }) => {
   const { t } = useTranslation();
   if (['LCID_ISSUED', 'NOT_APPROVED'].includes(status)) {
     return (
-      <UswdsLink
+      <UswdsReactLink
         data-testid="decision-cta"
         className="usa-button"
         variant="unstyled"
-        asCustom={Link}
-        to={`/governance-task-list/${id}/request-decision`}
+        link={`/governance-task-list/${id}/request-decision`}
       >
         Read decision from board
-      </UswdsLink>
+      </UswdsReactLink>
     );
   }
 

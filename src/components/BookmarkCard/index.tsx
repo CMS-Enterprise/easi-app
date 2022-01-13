@@ -45,7 +45,7 @@ const BookmarkCard = ({
       <div className="grid-col-12">
         <div className="bookmark__header easi-header__basic">
           <h2 className="bookmark__title margin-top-0 margin-bottom-1">
-            <UswdsReactLink heading={name} link={`/systems/${id}`} />
+            <UswdsReactLink link={`/systems/${id}`}>{name}</UswdsReactLink>
           </h2>
           <BookmarkCardIcon size="md" />
         </div>

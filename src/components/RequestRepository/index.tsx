@@ -107,9 +107,10 @@ const RequestRepository = () => {
       return (
         <UswdsReactLink
           data-testid="add-grt-date-cta"
-          heading={t('requestRepository.table.addDate')}
           link={`/governance-review-team/${row.original.id}/dates`}
-        />
+        >
+          {t('requestRepository.table.addDate')}
+        </UswdsReactLink>
       );
     }
   };
@@ -126,9 +127,10 @@ const RequestRepository = () => {
       return (
         <UswdsReactLink
           data-testid="add-grb-date-cta"
-          heading={t('requestRepository.table.addDate')}
           link={`/governance-review-team/${row.original.id}/dates`}
-        />
+        >
+          {t('requestRepository.table.addDate')}
+        </UswdsReactLink>
       );
     }
   };

@@ -1,9 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 
 const WelcomeText = () => {
@@ -24,23 +23,21 @@ const WelcomeText = () => {
         ))}
       </ul>
       {authState?.isAuthenticated ? (
-        <UswdsLink
+        <UswdsReactLink
           className="usa-button"
-          asCustom={Link}
           variant="unstyled"
-          to="/system/request-type"
+          link="/system/request-type"
         >
           {t('startNow')}
-        </UswdsLink>
+        </UswdsReactLink>
       ) : (
-        <UswdsLink
+        <UswdsReactLink
           className="usa-button"
-          asCustom={Link}
           variant="unstyled"
-          to="/signin"
+          link="/signin"
         >
           {t('signIn')}
-        </UswdsLink>
+        </UswdsReactLink>
       )}
     </div>
   );

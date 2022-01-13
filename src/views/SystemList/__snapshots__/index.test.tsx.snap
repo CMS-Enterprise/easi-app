@@ -902,7 +902,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
                 >
                   <a
-                    class="usa-footer__primary-link"
+                    class="usa-link usa-footer__primary-link"
                     href="/privacy-policy"
                   >
                     Privacy Policy
@@ -912,7 +912,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
                 >
                   <a
-                    class="usa-footer__primary-link"
+                    class="usa-link usa-footer__primary-link"
                     href="/cookies"
                   >
                     Cookies
@@ -922,7 +922,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
                 >
                   <a
-                    class="usa-footer__primary-link"
+                    class="usa-link usa-footer__primary-link"
                     href="/terms-and-conditions"
                   >
                     Terms and Conditions
@@ -932,7 +932,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
                 >
                   <a
-                    class="usa-footer__primary-link"
+                    class="usa-link usa-footer__primary-link"
                     href="/accessibility-statement"
                   >
                     Accessibility Statement

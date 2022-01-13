@@ -30,10 +30,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'requestName',
         Cell: ({ row, value }: any) => {
           return (
-            <UswdsReactLink
-              link={`/508/requests/${row.original.id}`}
-              heading={value}
-            />
+            <UswdsReactLink link={`/508/requests/${row.original.id}`}>
+              {value}
+            </UswdsReactLink>
           );
         },
         minWidth: 300,

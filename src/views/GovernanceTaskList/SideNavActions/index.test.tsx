@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Link } from '@trussworks/react-uswds';
+import { Button } from '@trussworks/react-uswds';
 import { shallow } from 'enzyme';
 
 import Modal from 'components/Modal';
@@ -21,12 +21,14 @@ describe('The TaskListSideNavActions', () => {
   describe('save and exit', () => {
     it('displays text', () => {
       const component = renderComponent();
-      expect(component.find('Link').text()).toEqual('Save & Exit');
+      expect(
+        component.find('UswdsReactLink').at(0).dive().prop('children')
+      ).toEqual('Save & Exit');
     });
 
     it('goes to home', () => {
       const component = renderComponent();
-      expect(component.find('Link').prop('to')).toEqual('/');
+      expect(component.find('UswdsReactLink').at(0).prop('link')).toEqual('/');
     });
   });
 
@@ -62,21 +64,23 @@ describe('The TaskListSideNavActions', () => {
     describe('overview for adding a system', () => {
       it('displays text', () => {
         const component = renderComponent();
-        expect(component.find(Link).dive().text()).toEqual(
-          'Overview for adding a system\u00a0(opens in a new tab)'
-        );
+        expect(
+          component.find('UswdsReactLink').at(1).dive().props().children
+        ).toContain('Overview for adding a system');
       });
 
       it('goes to governence overview', () => {
         const component = renderComponent();
-        expect(component.find(Link).dive().prop('href')).toEqual(
+        expect(component.find('UswdsReactLink').at(1).prop('link')).toEqual(
           '/governance-overview'
         );
       });
 
       it('opens in a new tab', () => {
         const component = renderComponent();
-        expect(component.find(Link).dive().prop('target')).toEqual('_blank');
+        expect(component.find('UswdsReactLink').at(1).prop('target')).toEqual(
+          '_blank'
+        );
       });
     });
   });

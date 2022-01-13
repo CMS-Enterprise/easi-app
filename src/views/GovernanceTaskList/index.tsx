@@ -7,13 +7,13 @@ import {
   Alert,
   Breadcrumb,
   BreadcrumbBar,
-  BreadcrumbLink,
-  Link as UswdsLink
+  BreadcrumbLink
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -196,13 +196,12 @@ const GovernanceTaskList = () => {
                   <>
                     <span>LCID: {systemIntake.lcid}</span>
                     <br />
-                    <UswdsLink
+                    <UswdsReactLink
                       variant="unstyled"
-                      asCustom={Link}
-                      to={`/governance-task-list/${id}/lcid-info`}
+                      link={`/governance-task-list/${id}/lcid-info`}
                     >
                       Read about this LCID
-                    </UswdsLink>
+                    </UswdsReactLink>
                   </>
                 </Alert>
               )}
@@ -259,14 +258,13 @@ const GovernanceTaskList = () => {
                     ['NEED_BIZ_CASE', 'BIZ_CASE_DRAFT'].includes(
                       status || ''
                     ) && (
-                      <UswdsLink
+                      <UswdsReactLink
                         className="usa-button margin-top-2"
                         variant="unstyled"
-                        asCustom={Link}
-                        to={`/governance-task-list/${id}/feedback`}
+                        link={`/governance-task-list/${id}/feedback`}
                       >
                         Read feedback
-                      </UswdsLink>
+                      </UswdsReactLink>
                     )}
                 </TaskListItem>
                 <TaskListItem
@@ -303,14 +301,13 @@ const GovernanceTaskList = () => {
                       grtFeedback.length > 0 &&
                       status === 'BIZ_CASE_CHANGES_NEEDED' && (
                         <>
-                          <UswdsLink
+                          <UswdsReactLink
                             className="usa-button margin-bottom-2"
                             variant="unstyled"
-                            asCustom={Link}
-                            to={`/governance-task-list/${id}/feedback`}
+                            link={`/governance-task-list/${id}/feedback`}
                           >
                             Read feedback
-                          </UswdsLink>
+                          </UswdsReactLink>
                           <br />
                         </>
                       )}
@@ -332,26 +329,24 @@ const GovernanceTaskList = () => {
                     grtFeedback.length > 0 &&
                     status === 'BIZ_CASE_FINAL_NEEDED' && (
                       <>
-                        <UswdsLink
+                        <UswdsReactLink
                           className="usa-button margin-y-2"
                           variant="unstyled"
-                          asCustom={Link}
-                          to={`/governance-task-list/${id}/feedback`}
+                          link={`/governance-task-list/${id}/feedback`}
                         >
                           Read feedback
-                        </UswdsLink>
+                        </UswdsReactLink>
                         <br />
                       </>
                     )}
                   {status === 'BIZ_CASE_FINAL_NEEDED' && (
-                    <UswdsLink
+                    <UswdsReactLink
                       className="usa-button"
                       variant="unstyled"
-                      asCustom={Link}
-                      to={`/business/${businessCaseId}/general-request-info`}
+                      link={`/business/${businessCaseId}/general-request-info`}
                     >
                       Review and Submit
-                    </UswdsLink>
+                    </UswdsReactLink>
                   )}
                 </TaskListItem>
 

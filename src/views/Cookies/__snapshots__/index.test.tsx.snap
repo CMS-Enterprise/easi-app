@@ -606,8 +606,9 @@ exports[`The Cookies static page matches the snapshot 1`] = `
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/privacy-policy"
+                  onClick={[Function]}
                 >
                   Privacy Policy
                 </a>
@@ -616,8 +617,9 @@ exports[`The Cookies static page matches the snapshot 1`] = `
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/cookies"
+                  onClick={[Function]}
                 >
                   Cookies
                 </a>
@@ -626,8 +628,9 @@ exports[`The Cookies static page matches the snapshot 1`] = `
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/terms-and-conditions"
+                  onClick={[Function]}
                 >
                   Terms and Conditions
                 </a>
@@ -636,8 +639,9 @@ exports[`The Cookies static page matches the snapshot 1`] = `
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/accessibility-statement"
+                  onClick={[Function]}
                 >
                   Accessibility Statement
                 </a>

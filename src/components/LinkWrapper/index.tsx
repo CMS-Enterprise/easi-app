@@ -9,7 +9,8 @@ type UswdsReactLinkProps = {
   link: string;
   target?: '_blank';
   rel?: 'noopener noreferrer';
-  heading: React.ReactNode | string;
+  'data-testid'?: string;
+  children: React.ReactNode | string;
 };
 
 const UswdsReactLink = ({
@@ -18,18 +19,20 @@ const UswdsReactLink = ({
   link,
   target,
   rel,
-  heading
+  'data-testid': datatestid,
+  children
 }: UswdsReactLinkProps) => {
   return (
     <UswdsLink
       to={link}
+      data-testid={datatestid}
       target={target}
       rel={rel}
       variant={variant}
       asCustom={RouterLink}
       className={classnames(className)}
     >
-      {heading}
+      {children}
     </UswdsLink>
   );
 };

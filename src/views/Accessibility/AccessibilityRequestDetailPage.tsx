@@ -256,10 +256,11 @@ const AccessibilityRequestDetailPage = () => {
     <UswdsReactLink
       className="usa-button"
       variant="unstyled"
-      heading={t('requestDetails.documentUpload')}
       link={`/508/requests/${accessibilityRequestId}/documents/new`}
       data-testid="upload-new-document"
-    />
+    >
+      {t('requestDetails.documentUpload')}
+    </UswdsReactLink>
   );
 
   const bodyWithDocumentsTable = (
@@ -294,10 +295,9 @@ const AccessibilityRequestDetailPage = () => {
             link="/508/templates"
             target="_blank"
             rel="noopener noreferrer"
-            heading={t(
-              'accessibility:requestDetails.documents.noDocs.description'
-            )}
-          />
+          >
+            {t('accessibility:requestDetails.documents.noDocs.description')}
+          </UswdsReactLink>
         </p>
       </div>
       {uploadDocumentLink}
@@ -533,8 +533,9 @@ const AccessibilityRequestDetailPage = () => {
             <UswdsReactLink
               link={`/508/requests/${accessibilityRequestId}/change-status`}
               aria-label="Change status"
-              heading="Change"
-            />
+            >
+              Change
+            </UswdsReactLink>
           )}
         </div>
       </div>
@@ -612,18 +613,20 @@ const AccessibilityRequestDetailPage = () => {
               </div>
               <UswdsReactLink
                 className="display-inline-block margin-top-3"
-                heading={t('requestDetails.testingTemplates')}
                 target="_blank"
                 rel="noopener noreferrer"
                 link="/508/templates"
-              />
+              >
+                {t('requestDetails.testingTemplates')}
+              </UswdsReactLink>
               <UswdsReactLink
                 className="display-inline-block margin-top-3"
                 target="_blank"
                 rel="noopener noreferrer"
                 link="/508/testing-overview"
-                heading={t('requestDetails.testingSteps')}
-              />
+              >
+                {t('requestDetails.testingSteps')}
+              </UswdsReactLink>
               {userEuaId === requestOwnerEuaId && (
                 <button
                   type="button"

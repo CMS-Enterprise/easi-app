@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 
 import './index.scss';
@@ -21,9 +21,9 @@ const NotFoundPartial = () => {
         })}
       </ul>
       <p className="margin-bottom-5">{t('error:notFound.tryAgain')}</p>
-      <UswdsLink className="usa-button" variant="unstyled" href="/">
+      <UswdsReactLink className="usa-button" variant="unstyled" link="/">
         {t('error:notFound.goHome')}
-      </UswdsLink>
+      </UswdsReactLink>
     </div>
   );
 };
