@@ -1,0 +1,12 @@
+#main-content .usa-pagination {
+    justify-content: left;
+
+    &__page-no {
+      margin-left: -0.25em;
+    }
+
+    &__link {
+        border: none;
+        background-color: transparent;
+    }
+}

@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TablePagination render previous and next buttons 1`] = `
+<DocumentFragment>
+  <nav
+    aria-label="Pagination"
+    class="usa-pagination padding-bottom-1"
+    data-testid="table-pagination"
+  >
+    <ul
+      class="usa-pagination__list"
+    >
+      <li
+        class="usa-pagination__item usa-pagination__arrow"
+      >
+        <button
+          aria-label="Previous page"
+          class="usa-pagination__link usa-pagination__previous-page"
+          type="button"
+        >
+          <span
+            class="usa-pagination__link-text"
+          >
+            &lt; Previous 
+          </span>
+        </button>
+      </li>
+      <li
+        class="usa-pagination__item usa-pagination__page-no"
+      >
+        <div>
+          <div
+            class="usa-pagination__item"
+          >
+            <button
+              aria-label="Page 1"
+              class="usa-pagination__button"
+              type="button"
+            >
+              1
+            </button>
+          </div>
+        </div>
+        <div>
+          <div
+            class="display-inline-flex"
+          >
+            <div
+              class="usa-pagination__item usa-pagination__overflow"
+              role="presentation"
+            >
+              <span>
+                 … 
+              </span>
+            </div>
+            <div
+              class="usa-pagination__item"
+            >
+              <button
+                aria-label="Page 10"
+                class="usa-pagination__button"
+                type="button"
+              >
+                10
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            class="usa-pagination__item"
+          >
+            <button
+              aria-label="Page 11"
+              class="usa-pagination__button usa-current"
+              type="button"
+            >
+              11
+            </button>
+          </div>
+        </div>
+        <div>
+          <div
+            class="usa-pagination__item"
+          >
+            <button
+              aria-label="Page 12"
+              class="usa-pagination__button"
+              type="button"
+            >
+              12
+            </button>
+          </div>
+        </div>
+        <div>
+          <div
+            class="display-inline-flex"
+          >
+            <div
+              class="usa-pagination__item usa-pagination__overflow"
+              role="presentation"
+            >
+              <span>
+                 … 
+              </span>
+            </div>
+            <div
+              class="usa-pagination__item"
+            >
+              <button
+                aria-label="Page 1000"
+                class="usa-pagination__button"
+                type="button"
+              >
+                1000
+              </button>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-pagination__item usa-pagination__arrow"
+      >
+        <button
+          aria-label="Next page"
+          class="usa-pagination__link usa-pagination__previous-page"
+          type="button"
+        >
+          <span
+            class="usa-pagination__link-text"
+          >
+            Next &gt;
+          </span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</DocumentFragment>
+`;

@@ -219,7 +219,7 @@ const Table = () => {
 
   return (
     <div className="accessibility-requests-table">
-      <UswdsTable bordered={false} {...getTableProps()} fullWidth>
+      <UswdsTable bordered={false} {...getTableProps()} fullWidth scrollable>
         <caption className="usa-sr-only">{t('requestsTable.caption')}</caption>
         <thead>
           {headerGroups.map(headerGroup => (
