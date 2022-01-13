@@ -567,7 +567,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                       ATO Status
                     </p>
                     <p
-                      class="text-bold margin-top-1 margin-bottom-0"
+                      class="text-bold margin-top-0 margin-bottom-0"
                     />
                   </div>
                   <i
