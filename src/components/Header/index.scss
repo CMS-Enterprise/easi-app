@@ -9,6 +9,10 @@
     align-items: center;
   }
 
+  &__user {
+    color: #71767A;
+  }
+
   &__username {
     padding: 0;
     border: none;
@@ -129,20 +133,13 @@
       padding-right: 2rem;
     }
 
-    &__basic {
-      align-items: normal;
-    }
-
     .navbar--container {
       display: flex;
       align-items: center;
       margin-top: 0px;
       margin-bottom: 0px;
-      padding-left: 1rem;
-    }
-
-    .easi-nav__user {
-      padding-top: .5em;
+      margin-top: 2em;
+      margin-bottom: 2em;
     }
 
     .easi-header {

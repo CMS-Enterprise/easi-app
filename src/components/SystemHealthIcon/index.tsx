@@ -34,7 +34,7 @@ const SystemHealthIcon = ({
       'fa-2x': size === 'lg'
     },
     {
-      'fa-5x': size === 'xl'
+      'fa-3x': size === 'xl'
     },
     {
       'margin-right-05': label !== undefined && size === 'medium'
