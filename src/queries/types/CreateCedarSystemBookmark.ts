@@ -11,7 +11,6 @@ import { CreateCedarSystemBookmarkInput } from "./../../types/graphql-global-typ
 
 export interface CreateCedarSystemBookmark_createCedarSystemBookmark_cedarSystemBookmark {
   __typename: "CedarSystemBookmark";
-  euaUserId: string;
   cedarSystemId: string;
 }
 

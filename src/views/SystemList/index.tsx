@@ -25,15 +25,15 @@ import PageWrapper from 'components/PageWrapper';
 import Alert from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
+import GetCedarSystemsAndBookmarksQuery from 'queries/GetCedarSystemsAndBookmarksQuery';
 import {
-  GetCedarSystems,
-  GetCedarSystems_cedarSystems as CedarSystem
-} from 'queries/types/GetCedarSystems';
-import { mockBookmarkInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo/mockBookmarkInfo with dynamic data fetched from backend and CEDAR
+  GetCedarSystemsAndBookmarks,
+  GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark,
+  GetCedarSystemsAndBookmarks_cedarSystems as CedarSystem
+} from 'queries/types/GetCedarSystemsAndBookmarks';
 
 import Table from './Table';
-import { filterBookmarks } from './util';
+import filterBookmarks from './util';
 
 import './index.scss';
 
@@ -41,13 +41,20 @@ export const SystemList = () => {
   const { t } = useTranslation('systemProfile');
 
   // TODO: query parameters and caching
-  const { loading, error, data } = useQuery<GetCedarSystems>(
-    GetCedarSystemsQuery
-  );
+  const {
+    loading,
+    error,
+    data,
+    refetch
+  } = useQuery<GetCedarSystemsAndBookmarks>(GetCedarSystemsAndBookmarksQuery);
 
-  const systemsTableData = data?.cedarSystems
-    ? (data.cedarSystems as CedarSystem[])
-    : ([] as CedarSystem[]);
+  const systemsTableData = (data?.cedarSystems
+    ? data.cedarSystems
+    : []) as CedarSystem[];
+
+  const bookmarks = (data?.cedarSystemBookmarks
+    ? data.cedarSystemBookmarks
+    : []) as CedarSystemBookmark[];
 
   return (
     <PageWrapper>
@@ -92,8 +99,7 @@ export const SystemList = () => {
               </ErrorAlert>
             )}
 
-            {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
-            {mockBookmarkInfo.length === 0 ? (
+            {bookmarks.length === 0 ? (
               <Grid tablet={{ col: 12 }} className="margin-bottom-5">
                 <Alert type="info" className="padding-1">
                   <h3 className="margin-0">
@@ -112,13 +118,14 @@ export const SystemList = () => {
               </Grid>
             ) : (
               <CardGroup className="margin-bottom-3">
-                {filterBookmarks(systemsTableData, mockBookmarkInfo)}
+                {filterBookmarks(systemsTableData, bookmarks)}
               </CardGroup>
             )}
 
             <Table
               systems={systemsTableData}
-              savedBookmarks={mockBookmarkInfo}
+              savedBookmarks={bookmarks}
+              onRefetch={() => refetch}
             />
           </>
         )}
