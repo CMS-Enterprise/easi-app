@@ -33,8 +33,8 @@ import PrivacyPolicy from 'views/PrivacyPolicy';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
+import SystemList from 'views/SystemList';
 import SystemProfileHealth from 'views/SystemProfileHealth';
-import SystemRepositoryTable from 'views/SystemRepositoryTable';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
@@ -121,11 +121,7 @@ const AppRoutes = () => {
         component={SystemIntake}
       />
       {flags.systemProfile && (
-        <SecureRoute
-          exact
-          path="/system-profile"
-          component={SystemRepositoryTable}
-        />
+        <SecureRoute exact path="/system-profile" component={SystemList} />
       )}
       <Redirect
         exact
