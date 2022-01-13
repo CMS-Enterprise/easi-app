@@ -9,7 +9,8 @@ const systemProfile = {
     systemProfile: 'System Profile'
   },
   systemTable: {
-    caption: 'List of Systems',
+    title: 'All Systems',
+    subtitle: 'Bookmark systems that you want to access more quickly.',
     header: {
       systemName: 'System Name',
       systemOwner: 'Office or Department',
