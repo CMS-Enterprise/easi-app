@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 
-import SystemRepositoryTable from 'views/SystemRepositoryTable';
+import { SystemList } from 'views/SystemList';
 
 const Sandbox = () => {
   useEffect(() => {
     document.title = 'Sandbox';
   }, []);
 
-  return <SystemRepositoryTable />;
+  return <SystemList />;
 };
 
 export default Sandbox;

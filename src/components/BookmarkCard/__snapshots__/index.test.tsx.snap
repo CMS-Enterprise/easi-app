@@ -47,7 +47,7 @@ exports[`BookmarkCard matches the snapshot 1`] = `
         <p
           class="margin-bottom-0"
         >
-          Officer of Department
+          Office or Department
         </p>
         <p
           class="text-bold margin-top-1"
@@ -69,11 +69,11 @@ exports[`BookmarkCard matches the snapshot 1`] = `
             <p
               class="text-bold margin-top-1 margin-bottom-0"
             >
-              Good to go!
+              Approved
             </p>
           </div>
           <i
-            class="fa system-health-icon-success fa-check-circle fa-2x margin-top-2"
+            class="fa system-health-icon-success fa-check-circle fa-3x margin-top-3"
             data-testid="system-health-icon"
           />
         </div>
