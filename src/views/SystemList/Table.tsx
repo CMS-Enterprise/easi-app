@@ -47,34 +47,23 @@ export const Table = ({ systems, savedBookmarks, onRefetch }: TableProps) => {
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
     const handleCreateBookmark = (cedarSystemId: string) => {
-      // eslint-disable-next-line no-console
-      console.log(`trying to create a bookmark: ${cedarSystemId}`);
       createMutate({
         variables: {
           input: {
             cedarSystemId
           }
         }
-      }).then(response => {
-        // eslint-disable-next-line no-console
-        console.log(response);
-        onRefetch();
-      });
+      }).then(() => onRefetch());
     };
 
     const handleDeleteBookmark = (cedarSystemId: string) => {
-      // eslint-disable-next-line no-console
       deleteMutate({
         variables: {
           input: {
             cedarSystemId
           }
         }
-      }).then(response => {
-        // eslint-disable-next-line no-console
-        console.log(response);
-        onRefetch();
-      });
+      }).then(() => onRefetch());
     };
 
     const bookmarkIdSet: Set<string> = new Set(

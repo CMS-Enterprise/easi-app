@@ -34,7 +34,7 @@ describe('BookmarkCard', () => {
 
     // TODO Update expected text output when translations/headings of systemList get solidifed
     expect(getByText('Happiness Achievement Module')).toBeInTheDocument();
-    expect(getByText('Office or Department')).toBeInTheDocument();
+    expect(getByText('CMS Component')).toBeInTheDocument();
     expect(getByText('ATO Status')).toBeInTheDocument();
   });
 

@@ -85,9 +85,7 @@ describe('System List View', () => {
         await screen.findByText('Happiness Achievement Module')
       ).toBeInTheDocument();
       // Bookmark Text
-      expect(
-        await screen.getAllByText('Office or Department')[0]
-      ).toBeInTheDocument();
+      expect(await screen.getAllByText('CMS Component')[0]).toBeInTheDocument();
       expect(await screen.findByRole('table')).toBeInTheDocument();
     });
 

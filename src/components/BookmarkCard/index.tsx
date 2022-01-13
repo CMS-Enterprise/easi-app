@@ -44,7 +44,7 @@ const BookmarkCard = ({
     >
       <div className="grid-col-12">
         <div className="bookmark__header easi-header__basic">
-          <h2 className="bookmark__title margin-top-0 margin-bottom-1">
+          <h2 className="bookmark__title margin-top-0 margin-bottom-0">
             <UswdsLink asCustom={Link} to={`/systems/${id}`}>
               {name}
             </UswdsLink>
@@ -61,7 +61,7 @@ const BookmarkCard = ({
             <p className="margin-bottom-0">
               {t(`${type}:bookmark.subHeader2`)}
             </p>
-            <p className="text-bold margin-top-1 margin-bottom-0">{status}</p>
+            <p className="text-bold margin-top-0 margin-bottom-0">{status}</p>
           </div>
           <SystemHealthIcon
             status={statusIcon}
