@@ -13,7 +13,7 @@ const systemProfile = {
     subtitle: 'Bookmark systems that you want to access more quickly.',
     header: {
       systemName: 'System Name',
-      systemOwner: 'Office or Department',
+      systemOwner: 'CMS Component',
       systemAcronym: 'Acronym',
       systemStatus: 'ATO Status'
     }
@@ -21,7 +21,7 @@ const systemProfile = {
   bookmark: {
     header: 'Bookmarked Systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
-    subHeader1: 'Office or Department',
+    subHeader1: 'CMS Component',
     subHeader2: 'ATO Status'
   },
   noBookmark: {
