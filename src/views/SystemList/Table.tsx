@@ -6,14 +6,11 @@
 
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
-import {
-  Link as UswdsLink,
-  Table as UswdsTable
-} from '@trussworks/react-uswds';
+import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
+import UswdsReactLink from 'components/LinkWrapper';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
@@ -65,9 +62,9 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         accessor: 'name',
         id: 'systemName',
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <UswdsLink asCustom={Link} to={`/sandbox/${row.original.id}`}>
+          <UswdsReactLink to={`/sandbox/${row.original.id}`}>
             {row.original.name}
-          </UswdsLink>
+          </UswdsReactLink>
         )
       },
       {

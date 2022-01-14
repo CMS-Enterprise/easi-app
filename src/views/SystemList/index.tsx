@@ -6,18 +6,13 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import {
-  CardGroup,
-  Grid,
-  Link as UswdsLink,
-  SummaryBox
-} from '@trussworks/react-uswds';
+import { CardGroup, Grid, SummaryBox } from '@trussworks/react-uswds';
 
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -60,13 +55,12 @@ export const SystemList = () => {
           <p>{t('systemProfile:subHeader')}</p>
           <SummaryBox heading="" className="easi-request__container">
             <p>{t('systemProfile:newRequest.info')}</p>
-            <UswdsLink
-              asCustom={Link}
+            <UswdsReactLink
               to="/system/request-type"
               className="easi-request__button-link"
             >
               {t('systemProfile:newRequest.button')}
-            </UswdsLink>
+            </UswdsReactLink>
           </SummaryBox>
         </SectionWrapper>
 

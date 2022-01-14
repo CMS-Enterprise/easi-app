@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Button } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -25,7 +25,7 @@ const SideNavActions = ({ intake, archiveIntake }: SideNavActionsProps) => {
       data-testid="sidenav-actions"
     >
       <div className="grid-col margin-top-105">
-        <Link to="/">Save & Exit</Link>
+        <UswdsReactLink to="/">Save & Exit</UswdsReactLink>
       </div>
       {isIntakeOpen(intake.status) && (
         <div className="grid-col margin-top-2">
@@ -59,16 +59,16 @@ const SideNavActions = ({ intake, archiveIntake }: SideNavActionsProps) => {
       )}
       <div className="grid-col margin-top-5">
         <h4>Related Content</h4>
-        <UswdsLink
+        <UswdsReactLink
           aria-label="Open overview for adding a system in a new tab"
           className="line-height-body-5"
-          href="/governance-overview"
+          to="/governance-overview"
           variant="external"
           target="_blank"
         >
           Overview for adding a system
           <span aria-hidden>&nbsp;(opens in a new tab)</span>
-        </UswdsLink>
+        </UswdsReactLink>
       </div>
     </div>
   );

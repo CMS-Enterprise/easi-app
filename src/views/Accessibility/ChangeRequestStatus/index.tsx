@@ -1,15 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import {
-  Button,
-  Fieldset,
-  Link as UswdsLink,
-  Radio
-} from '@trussworks/react-uswds';
+import { Button, Fieldset, Radio } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PlainInfo from 'components/PlainInfo';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -149,13 +145,12 @@ const ChangeRequestStatus = () => {
                   <Button type="submit" className="margin-top-4">
                     {t('updateRequestStatus.submit')}
                   </Button>
-                  <UswdsLink
+                  <UswdsReactLink
                     className="display-block margin-top-3"
-                    asCustom={Link}
                     to={`/508/requests/${accessibilityRequestId}`}
                   >
                     {t('updateRequestStatus.cancel')}
-                  </UswdsLink>
+                  </UswdsReactLink>
                 </Form>
               </div>
             </>

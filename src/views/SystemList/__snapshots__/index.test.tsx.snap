@@ -516,7 +516,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="bookmark__header easi-header__basic"
                 >
                   <h2
-                    class="bookmark__title margin-top-0 margin-bottom-0"
+                    class="bookmark__title margin-top-0 margin-bottom-1"
                   >
                     <a
                       class="usa-link"
@@ -919,7 +919,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
                 >
                   <a
-                    class="usa-footer__primary-link"
+                    class="usa-link usa-footer__primary-link"
                     href="/privacy-policy"
                   >
                     Privacy Policy
@@ -929,7 +929,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
                 >
                   <a
-                    class="usa-footer__primary-link"
+                    class="usa-link usa-footer__primary-link"
                     href="/cookies"
                   >
                     Cookies
@@ -939,7 +939,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
                 >
                   <a
-                    class="usa-footer__primary-link"
+                    class="usa-link usa-footer__primary-link"
                     href="/terms-and-conditions"
                   >
                     Terms and Conditions
@@ -949,7 +949,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
                 >
                   <a
-                    class="usa-footer__primary-link"
+                    class="usa-link usa-footer__primary-link"
                     href="/accessibility-statement"
                   >
                     Accessibility Statement

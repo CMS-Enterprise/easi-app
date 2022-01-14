@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Footer as UswdsFooter, FooterNav } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import cmsGovLogo from 'images/cmsGovLogo.png';
 import hhsLogo from 'images/hhsLogo.png';
 
@@ -36,9 +37,13 @@ const Footer = () => {
             <FooterNav
               size="slim"
               links={footerNavLinks.map(item => (
-                <a className="usa-footer__primary-link" href={item.link}>
+                <UswdsReactLink
+                  className="usa-footer__primary-link"
+                  to={item.link}
+                  key={item.link}
+                >
                   {item.label}
-                </a>
+                </UswdsReactLink>
               ))}
             />
           </div>
