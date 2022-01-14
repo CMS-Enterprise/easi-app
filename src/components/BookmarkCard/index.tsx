@@ -59,7 +59,7 @@ const BookmarkCard = ({
             <p className="margin-bottom-0">
               {t(`${type}:bookmark.subHeader2`)}
             </p>
-            <p className="text-bold margin-top-1 margin-bottom-0">{status}</p>
+            <p className="text-bold margin-top-0 margin-bottom-0">{status}</p>
           </div>
           <SystemHealthIcon
             status={statusIcon}

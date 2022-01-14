@@ -494,87 +494,104 @@ exports[`System List View when there are requests matches snapshot 1`] = `
       >
         Bookmark systems that you want to access more quickly.
       </p>
-      <ul
-        class="usa-card-group margin-bottom-3"
-        data-testid="CardGroup"
+      <div
+        class="easi-section easi-section__border-bottom margin-bottom-3"
+        data-testid="section-wrapper"
       >
-        <li
-          class="usa-card desktop:grid-col-6 grid-col-12 margin-top-2 margin-bottom-0"
-          data-testid="single-bookmark-card"
+        <ul
+          class="usa-card-group margin-bottom-3"
+          data-testid="CardGroup"
         >
-          <div
-            class="usa-card__container"
+          <li
+            class="usa-card desktop:grid-col-6 grid-col-12 margin-top-2 margin-bottom-0"
+            data-testid="single-bookmark-card"
           >
             <div
-              class="grid-col-12"
+              class="usa-card__container"
             >
               <div
-                class="bookmark__header easi-header__basic"
+                class="grid-col-12"
               >
-                <h2
-                  class="bookmark__title margin-top-0 margin-bottom-1"
+                <div
+                  class="bookmark__header easi-header__basic"
                 >
-                  <a
-                    class="usa-link"
-                    href="/systems/326-74-0"
+                  <h2
+                    class="bookmark__title margin-top-0 margin-bottom-0"
                   >
-                    Systems
-                  </a>
-                </h2>
-                <i
-                  aria-hidden="true"
-                  class="fa fa-bookmark bookmark__icon fa-2x"
-                  data-testid="bookmark-icon"
-                />
-              </div>
-              <p
-                class="margin-0"
-              >
-                ASD
-              </p>
-              <p
-                class="bookmark__body-text line-height-body-4"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    <a
+                      class="usa-link"
+                      href="/systems/326-74-0"
+                    >
+                      Systems
+                    </a>
+                  </h2>
+                  <i
+                    aria-hidden="true"
+                    class="fa fa-bookmark bookmark__icon fa-2x"
+                    data-testid="bookmark-icon"
+                  />
+                </div>
+                <p
+                  class="margin-0"
+                >
+                  ASD
+                </p>
+                <p
+                  class="bookmark__body-text line-height-body-4"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.
-              </p>
-              <p
-                class="margin-bottom-0"
-              >
-                Office or Department
-              </p>
-              <p
-                class="text-bold margin-top-1"
-              >
-                CMMI
-              </p>
-              <div
-                class="easi-divider"
-              />
-              <div
-                class="bookmark__header easi-header__basic"
-              >
-                <div>
-                  <p
-                    class="margin-bottom-0"
-                  >
-                    ATO Status
-                  </p>
-                  <p
-                    class="text-bold margin-top-1 margin-bottom-0"
+                </p>
+                <p
+                  class="margin-bottom-0"
+                >
+                  CMS Component
+                </p>
+                <p
+                  class="text-bold margin-top-1"
+                >
+                  CMMI
+                </p>
+                <div
+                  class="easi-divider"
+                />
+                <div
+                  class="bookmark__header easi-header__basic"
+                >
+                  <div>
+                    <p
+                      class="margin-bottom-0"
+                    >
+                      ATO Status
+                    </p>
+                    <p
+                      class="text-bold margin-top-0 margin-bottom-0"
+                    />
+                  </div>
+                  <i
+                    class="fa system-health-icon-fail fa-times-circle fa-3x margin-top-3"
+                    data-testid="system-health-icon"
                   />
                 </div>
-                <i
-                  class="fa system-health-icon-fail fa-times-circle fa-3x margin-top-3"
-                  data-testid="system-health-icon"
-                />
               </div>
             </div>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
+      <h1
+        aria-live="polite"
+        class="easi-h1 margin-bottom-0"
+        tabindex="-1"
+      >
+        All Systems
+      </h1>
+      <p
+        class="margin-bottom-5"
+      >
+        Bookmark systems that you want to access more quickly.
+      </p>
       <span>
         Showing 1-10 of 3 results
       </span>
@@ -589,7 +606,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
           <caption
             class="usa-sr-only"
           >
-            List of Systems
+            systemTable.caption
           </caption>
           <thead>
             <tr
@@ -673,7 +690,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   title="Toggle SortBy"
                   type="button"
                 >
-                  Office or Department
+                  CMS Component
                   <span
                     class="margin-left-1 fa fa-sort caret"
                   />
