@@ -30,10 +30,10 @@ import './index.scss';
 type TableProps = {
   systems: CedarSystem[];
   savedBookmarks: CedarSystemBookmark[];
-  onRefetch: (variables?: any) => any;
+  refetch: (variables?: any) => any;
 };
 
-export const Table = ({ systems, savedBookmarks, onRefetch }: TableProps) => {
+export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
   const { t } = useTranslation('systemProfile');
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,7 +53,7 @@ export const Table = ({ systems, savedBookmarks, onRefetch }: TableProps) => {
             cedarSystemId
           }
         }
-      }).then(() => onRefetch());
+      }).then(() => refetch());
     };
 
     const handleDeleteBookmark = (cedarSystemId: string) => {
@@ -63,7 +63,7 @@ export const Table = ({ systems, savedBookmarks, onRefetch }: TableProps) => {
             cedarSystemId
           }
         }
-      }).then(() => onRefetch());
+      }).then(() => refetch());
     };
 
     const bookmarkIdSet: Set<string> = new Set(
@@ -139,7 +139,7 @@ export const Table = ({ systems, savedBookmarks, onRefetch }: TableProps) => {
         )
       }
     ];
-  }, [t, savedBookmarks, createMutate, deleteMutate, onRefetch]);
+  }, [t, savedBookmarks, createMutate, deleteMutate, refetch]);
 
   const {
     getTableProps,

@@ -3,8 +3,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 
-import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
-import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
+import GetCedarSystemsAndBookmarksQuery from 'queries/GetCedarSystemsAndBookmarksQuery';
+import { mockBookmarkInfo, mockSystemInfo } from 'views/Sandbox/mockSystemData';
 
 import SystemList from './index';
 
@@ -33,11 +33,12 @@ describe('System List View', () => {
       const mocks = [
         {
           request: {
-            query: GetCedarSystemsQuery
+            query: GetCedarSystemsAndBookmarksQuery
           },
           result: {
             data: {
-              cedarSystems: []
+              cedarSystems: [],
+              cedarSystemBookmarks: []
             }
           }
         }
@@ -61,11 +62,12 @@ describe('System List View', () => {
     const mocks = [
       {
         request: {
-          query: GetCedarSystemsQuery
+          query: GetCedarSystemsAndBookmarksQuery
         },
         result: {
           data: {
-            cedarSystems: mockSystemInfo
+            cedarSystems: mockSystemInfo,
+            cedarSystemBookmarks: mockBookmarkInfo
           }
         }
       }

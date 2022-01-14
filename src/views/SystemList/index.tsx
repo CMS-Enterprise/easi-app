@@ -135,7 +135,7 @@ export const SystemList = () => {
               <Table
                 systems={systemsTableData}
                 savedBookmarks={bookmarks}
-                onRefetch={() => refetch()}
+                refetch={() => refetch()}
               />
             )}
           </>
