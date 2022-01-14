@@ -39,7 +39,7 @@ const Footer = () => {
               links={footerNavLinks.map(item => (
                 <UswdsReactLink
                   className="usa-footer__primary-link"
-                  link={item.link}
+                  to={item.link}
                   key={item.link}
                 >
                   {item.label}

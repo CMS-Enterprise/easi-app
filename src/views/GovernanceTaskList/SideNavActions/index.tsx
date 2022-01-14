@@ -25,7 +25,7 @@ const SideNavActions = ({ intake, archiveIntake }: SideNavActionsProps) => {
       data-testid="sidenav-actions"
     >
       <div className="grid-col margin-top-105">
-        <UswdsReactLink link="/">Save & Exit</UswdsReactLink>
+        <UswdsReactLink to="/">Save & Exit</UswdsReactLink>
       </div>
       {isIntakeOpen(intake.status) && (
         <div className="grid-col margin-top-2">
@@ -62,7 +62,7 @@ const SideNavActions = ({ intake, archiveIntake }: SideNavActionsProps) => {
         <UswdsReactLink
           aria-label="Open overview for adding a system in a new tab"
           className="line-height-body-5"
-          link="/governance-overview"
+          to="/governance-overview"
           variant="external"
           target="_blank"
         >

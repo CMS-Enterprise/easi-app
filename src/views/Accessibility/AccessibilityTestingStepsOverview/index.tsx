@@ -62,7 +62,7 @@ const AccessibilityTestingStepsOverview = () => {
             >
               indexZero
               <UswdsReactLink
-                link="/508/templates"
+                to="/508/templates"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -137,7 +137,7 @@ const AccessibilityTestingStepsOverview = () => {
           <UswdsReactLink
             className="usa-button margin-top-8"
             variant="unstyled"
-            link="/508/requests/new"
+            to="/508/requests/new"
             data-testid="continue-link"
           >
             {t('testingStepsOverview.start')}

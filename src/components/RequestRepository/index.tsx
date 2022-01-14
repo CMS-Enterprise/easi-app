@@ -107,7 +107,7 @@ const RequestRepository = () => {
       return (
         <UswdsReactLink
           data-testid="add-grt-date-cta"
-          link={`/governance-review-team/${row.original.id}/dates`}
+          to={`/governance-review-team/${row.original.id}/dates`}
         >
           {t('requestRepository.table.addDate')}
         </UswdsReactLink>
@@ -127,7 +127,7 @@ const RequestRepository = () => {
       return (
         <UswdsReactLink
           data-testid="add-grb-date-cta"
-          link={`/governance-review-team/${row.original.id}/dates`}
+          to={`/governance-review-team/${row.original.id}/dates`}
         >
           {t('requestRepository.table.addDate')}
         </UswdsReactLink>

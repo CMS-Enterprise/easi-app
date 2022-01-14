@@ -170,7 +170,7 @@ const GovernanceOverview = () => {
           <UswdsReactLink
             className="usa-button"
             variant="unstyled"
-            link={`/governance-task-list/${systemId}`}
+            to={`/governance-task-list/${systemId}`}
           >
             Get started
           </UswdsReactLink>

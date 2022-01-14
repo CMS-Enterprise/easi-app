@@ -99,7 +99,7 @@ const GovernanceFeedback = () => {
               {feedbackforBusinessOwner.map(item => formatGRTFeedback(item))}
             </div>
           </div>
-          <UswdsReactLink link={`/governance-task-list/${systemId}`}>
+          <UswdsReactLink to={`/governance-task-list/${systemId}`}>
             {t('navigation.returnToTaskList')}
           </UswdsReactLink>
         </div>

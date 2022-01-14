@@ -256,7 +256,7 @@ const AccessibilityRequestDetailPage = () => {
     <UswdsReactLink
       className="usa-button"
       variant="unstyled"
-      link={`/508/requests/${accessibilityRequestId}/documents/new`}
+      to={`/508/requests/${accessibilityRequestId}/documents/new`}
       data-testid="upload-new-document"
     >
       {t('requestDetails.documentUpload')}
@@ -292,7 +292,7 @@ const AccessibilityRequestDetailPage = () => {
         <p className="line-height-body-4">
           <UswdsReactLink
             className="display-inline-block"
-            link="/508/templates"
+            to="/508/templates"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -531,7 +531,7 @@ const AccessibilityRequestDetailPage = () => {
           </dl>
           {isAccessibilityTeam && (
             <UswdsReactLink
-              link={`/508/requests/${accessibilityRequestId}/change-status`}
+              to={`/508/requests/${accessibilityRequestId}/change-status`}
               aria-label="Change status"
             >
               Change
@@ -615,7 +615,7 @@ const AccessibilityRequestDetailPage = () => {
                 className="display-inline-block margin-top-3"
                 target="_blank"
                 rel="noopener noreferrer"
-                link="/508/templates"
+                to="/508/templates"
               >
                 {t('requestDetails.testingTemplates')}
               </UswdsReactLink>
@@ -623,7 +623,7 @@ const AccessibilityRequestDetailPage = () => {
                 className="display-inline-block margin-top-3"
                 target="_blank"
                 rel="noopener noreferrer"
-                link="/508/testing-overview"
+                to="/508/testing-overview"
               >
                 {t('requestDetails.testingSteps')}
               </UswdsReactLink>

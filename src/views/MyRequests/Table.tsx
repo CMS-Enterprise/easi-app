@@ -44,7 +44,7 @@ const Table = () => {
               link = '/';
           }
           return (
-            <UswdsReactLink link={link}>
+            <UswdsReactLink to={link}>
               {value || t('requestsTable.defaultName')}
             </UswdsReactLink>
           );

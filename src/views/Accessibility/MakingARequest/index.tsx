@@ -49,7 +49,7 @@ const MakingARequest = () => {
         <p>{t('makingARequest.onceYouMakeRequest')}</p>
         <UswdsReactLink
           className="usa-button margin-bottom-3"
-          link="/508/testing-overview?continue=true"
+          to="/508/testing-overview?continue=true"
           variant="unstyled"
         >
           {t('makingARequest.continueButton')}

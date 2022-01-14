@@ -147,7 +147,7 @@ const ChangeRequestStatus = () => {
                   </Button>
                   <UswdsReactLink
                     className="display-block margin-top-3"
-                    link={`/508/requests/${accessibilityRequestId}`}
+                    to={`/508/requests/${accessibilityRequestId}`}
                   >
                     {t('updateRequestStatus.cancel')}
                   </UswdsReactLink>

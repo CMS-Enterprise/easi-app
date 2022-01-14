@@ -28,7 +28,7 @@ describe('The TaskListSideNavActions', () => {
 
     it('goes to home', () => {
       const component = renderComponent();
-      expect(component.find('UswdsReactLink').at(0).prop('link')).toEqual('/');
+      expect(component.find('UswdsReactLink').at(0).prop('to')).toEqual('/');
     });
   });
 
@@ -71,7 +71,7 @@ describe('The TaskListSideNavActions', () => {
 
       it('goes to governence overview', () => {
         const component = renderComponent();
-        expect(component.find('UswdsReactLink').at(1).prop('link')).toEqual(
+        expect(component.find('UswdsReactLink').at(1).prop('to')).toEqual(
           '/governance-overview'
         );
       });

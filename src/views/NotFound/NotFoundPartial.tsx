@@ -21,7 +21,7 @@ const NotFoundPartial = () => {
         })}
       </ul>
       <p className="margin-bottom-5">{t('error:notFound.tryAgain')}</p>
-      <UswdsReactLink className="usa-button" variant="unstyled" link="/">
+      <UswdsReactLink className="usa-button" variant="unstyled" to="/">
         {t('error:notFound.goHome')}
       </UswdsReactLink>
     </div>

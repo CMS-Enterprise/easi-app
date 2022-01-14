@@ -26,16 +26,12 @@ const WelcomeText = () => {
         <UswdsReactLink
           className="usa-button"
           variant="unstyled"
-          link="/system/request-type"
+          to="/system/request-type"
         >
           {t('startNow')}
         </UswdsReactLink>
       ) : (
-        <UswdsReactLink
-          className="usa-button"
-          variant="unstyled"
-          link="/signin"
-        >
+        <UswdsReactLink className="usa-button" variant="unstyled" to="/signin">
           {t('signIn')}
         </UswdsReactLink>
       )}

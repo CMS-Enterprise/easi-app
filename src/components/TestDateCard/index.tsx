@@ -56,7 +56,7 @@ const TestDateCard = ({
       {isEditableDeletable && (
         <div>
           <UswdsReactLink
-            link={`/508/requests/${requestId}/test-date/${id}`}
+            to={`/508/requests/${requestId}/test-date/${id}`}
             aria-label={`Edit test ${testIndex} ${testType}`}
             data-testid="test-date-edit-link"
           >

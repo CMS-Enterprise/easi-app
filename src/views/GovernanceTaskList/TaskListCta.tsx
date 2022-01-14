@@ -16,7 +16,7 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
       return (
         <UswdsReactLink
           data-testid="intake-view-link"
-          link={`/system/${id}/view`}
+          to={`/system/${id}/view`}
         >
           View Submitted Request Form
         </UswdsReactLink>
@@ -27,7 +27,7 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
           <UswdsReactLink
             className="usa-button"
             variant="unstyled"
-            link={`/system/${id}/contact-details`}
+            to={`/system/${id}/contact-details`}
           >
             Continue
           </UswdsReactLink>
@@ -38,7 +38,7 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
           data-testid="intake-start-btn"
           className="usa-button"
           variant="unstyled"
-          link={`/system/${id || 'new'}/contact-details`}
+          to={`/system/${id || 'new'}/contact-details`}
         >
           Start
         </UswdsReactLink>
@@ -47,7 +47,7 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
       return (
         <UswdsReactLink
           data-testid="intake-view-link"
-          link={`/system/${id}/view`}
+          to={`/system/${id}/view`}
         >
           View Submitted Request Form
         </UswdsReactLink>
@@ -88,7 +88,7 @@ export const BusinessCaseDraftCta = ({
           data-testid="continue-biz-case-btn"
           className="usa-button"
           variant="unstyled"
-          link={`/business/${businessCaseId}/general-request-info`}
+          to={`/business/${businessCaseId}/general-request-info`}
         >
           Continue
         </UswdsReactLink>
@@ -105,7 +105,7 @@ export const BusinessCaseDraftCta = ({
         return (
           <UswdsReactLink
             data-testid="view-biz-case-link"
-            link={`/business/${businessCaseId}/view`}
+            to={`/business/${businessCaseId}/view`}
           >
             View submitted business case
           </UswdsReactLink>
@@ -118,7 +118,7 @@ export const BusinessCaseDraftCta = ({
           data-testid="update-biz-case-draft-btn"
           className="usa-button"
           variant="unstyled"
-          link={`/business/${businessCaseId}/general-request-info`}
+          to={`/business/${businessCaseId}/general-request-info`}
         >
           Update draft business case
         </UswdsReactLink>
@@ -130,14 +130,14 @@ export const BusinessCaseDraftCta = ({
             data-testid="prepare-for-grt-cta"
             className="display-table margin-bottom-3 usa-button"
             variant="unstyled"
-            link={`/governance-task-list/${businessCaseId}/prepare-for-grt`}
+            to={`/governance-task-list/${businessCaseId}/prepare-for-grt`}
           >
             Prepare for review team meeting
           </UswdsReactLink>
 
           <UswdsReactLink
             data-testid="view-biz-case-cta"
-            link={`/business/${businessCaseId}/general-request-info`}
+            to={`/business/${businessCaseId}/general-request-info`}
           >
             Update submitted draft business case
           </UswdsReactLink>
@@ -157,7 +157,7 @@ export const AttendGrbMeetingCta = ({ intake }: { intake: SystemIntake }) => {
         data-testid="prepare-for-grb-btn"
         className="usa-button"
         variant="unstyled"
-        link={`/governance-task-list/${id}/prepare-for-grb`}
+        to={`/governance-task-list/${id}/prepare-for-grb`}
       >
         Prepare for the Review Board meeting
       </UswdsReactLink>
@@ -168,7 +168,7 @@ export const AttendGrbMeetingCta = ({ intake }: { intake: SystemIntake }) => {
     return (
       <UswdsReactLink
         data-testid="prepare-for-grb-link"
-        link={`/governance-task-list/${id}/prepare-for-grb`}
+        to={`/governance-task-list/${id}/prepare-for-grb`}
       >
         Prepare for the Review Board meeting
       </UswdsReactLink>
@@ -187,7 +187,7 @@ export const DecisionCta = ({ id, status }: { id: string; status: string }) => {
         data-testid="decision-cta"
         className="usa-button"
         variant="unstyled"
-        link={`/governance-task-list/${id}/request-decision`}
+        to={`/governance-task-list/${id}/request-decision`}
       >
         Read decision from board
       </UswdsReactLink>

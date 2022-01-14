@@ -6,7 +6,7 @@ import classnames from 'classnames';
 type UswdsReactLinkProps = {
   variant?: 'external' | 'unstyled' | 'nav';
   className?: string;
-  link: string;
+  to: string;
   target?: '_blank';
   rel?: 'noopener noreferrer';
   'data-testid'?: string;
@@ -16,7 +16,7 @@ type UswdsReactLinkProps = {
 const UswdsReactLink = ({
   variant,
   className,
-  link,
+  to,
   target,
   rel,
   'data-testid': datatestid,
@@ -24,7 +24,7 @@ const UswdsReactLink = ({
 }: UswdsReactLinkProps) => {
   return (
     <UswdsLink
-      to={link}
+      to={to}
       data-testid={datatestid}
       target={target}
       rel={rel}

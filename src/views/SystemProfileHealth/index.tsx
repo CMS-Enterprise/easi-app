@@ -42,7 +42,7 @@ const SystemProfileHealth = () => {
                     (ATO) for infrastructure systems and/or all application
                     systems developed, hosted and/or maintained on behalf of CMS
                   </p>
-                  <UswdsReactLink link="/sandbox">
+                  <UswdsReactLink to="/sandbox">
                     Learn more about ATO
                   </UswdsReactLink>
                 </>
@@ -61,7 +61,7 @@ const SystemProfileHealth = () => {
                     and communications technology (ICT) that is accessible to
                     people with disabilities.
                   </p>
-                  <UswdsReactLink link="/sandbox">
+                  <UswdsReactLink to="/sandbox">
                     Learn more about 508 Compliance
                   </UswdsReactLink>
                 </>
@@ -80,7 +80,7 @@ const SystemProfileHealth = () => {
                     The TRB provides oversight to ensure IT investments are
                     consistent with CMS’s IT strategy.
                   </p>
-                  <UswdsReactLink link="/sandbox">
+                  <UswdsReactLink to="/sandbox">
                     Learn more about the TRB
                   </UswdsReactLink>
                 </>

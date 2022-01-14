@@ -62,7 +62,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         accessor: 'name',
         id: 'systemName',
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <UswdsReactLink link={`/sandbox/${row.original.id}`}>
+          <UswdsReactLink to={`/sandbox/${row.original.id}`}>
             {row.original.name}
           </UswdsReactLink>
         )

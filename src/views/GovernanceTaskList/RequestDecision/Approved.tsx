@@ -54,7 +54,7 @@ const Approved = ({ intake }: ApprovedProps) => {
         <UswdsReactLink
           className="usa-button margin-bottom-2"
           variant="unstyled"
-          link={`/governance-task-list/${id}`}
+          to={`/governance-task-list/${id}`}
         >
           {t('navigation.returnToTaskList')}
         </UswdsReactLink>

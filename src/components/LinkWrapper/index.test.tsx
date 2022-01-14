@@ -8,7 +8,7 @@ describe('UswdsReactLink', () => {
   it('renders without errors', () => {
     const { getByTestId } = render(
       <MemoryRouter>
-        <UswdsReactLink data-testid="test-link" link="/">
+        <UswdsReactLink data-testid="test-link" to="/">
           Link
         </UswdsReactLink>
       </MemoryRouter>

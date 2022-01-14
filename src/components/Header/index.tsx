@@ -155,7 +155,7 @@ export const Header = ({ children }: HeaderProps) => {
               userName={userName}
             />
           ) : (
-            <UswdsReactLink className="easi-header__nav-link" link="/signin">
+            <UswdsReactLink className="easi-header__nav-link" to="/signin">
               {t('header:signIn')}
             </UswdsReactLink>
           )}

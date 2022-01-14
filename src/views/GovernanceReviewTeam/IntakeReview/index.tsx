@@ -29,7 +29,7 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
       <UswdsReactLink
         className="usa-button margin-top-5"
         variant="unstyled"
-        link={`/governance-review-team/${systemIntake.id}/actions`}
+        to={`/governance-review-team/${systemIntake.id}/actions`}
       >
         Take an action
       </UswdsReactLink>

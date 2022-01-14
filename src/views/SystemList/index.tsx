@@ -56,7 +56,7 @@ export const SystemList = () => {
           <SummaryBox heading="" className="easi-request__container">
             <p>{t('systemProfile:newRequest.info')}</p>
             <UswdsReactLink
-              link="/system/request-type"
+              to="/system/request-type"
               className="easi-request__button-link"
             >
               {t('systemProfile:newRequest.button')}

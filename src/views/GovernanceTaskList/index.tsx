@@ -198,7 +198,7 @@ const GovernanceTaskList = () => {
                     <br />
                     <UswdsReactLink
                       variant="unstyled"
-                      link={`/governance-task-list/${id}/lcid-info`}
+                      to={`/governance-task-list/${id}/lcid-info`}
                     >
                       Read about this LCID
                     </UswdsReactLink>
@@ -261,7 +261,7 @@ const GovernanceTaskList = () => {
                       <UswdsReactLink
                         className="usa-button margin-top-2"
                         variant="unstyled"
-                        link={`/governance-task-list/${id}/feedback`}
+                        to={`/governance-task-list/${id}/feedback`}
                       >
                         Read feedback
                       </UswdsReactLink>
@@ -304,7 +304,7 @@ const GovernanceTaskList = () => {
                           <UswdsReactLink
                             className="usa-button margin-bottom-2"
                             variant="unstyled"
-                            link={`/governance-task-list/${id}/feedback`}
+                            to={`/governance-task-list/${id}/feedback`}
                           >
                             Read feedback
                           </UswdsReactLink>
@@ -332,7 +332,7 @@ const GovernanceTaskList = () => {
                         <UswdsReactLink
                           className="usa-button margin-y-2"
                           variant="unstyled"
-                          link={`/governance-task-list/${id}/feedback`}
+                          to={`/governance-task-list/${id}/feedback`}
                         >
                           Read feedback
                         </UswdsReactLink>
@@ -343,7 +343,7 @@ const GovernanceTaskList = () => {
                     <UswdsReactLink
                       className="usa-button"
                       variant="unstyled"
-                      link={`/business/${businessCaseId}/general-request-info`}
+                      to={`/business/${businessCaseId}/general-request-info`}
                     >
                       Review and Submit
                     </UswdsReactLink>

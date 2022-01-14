@@ -114,7 +114,7 @@ const LcidInfo = () => {
                 <UswdsReactLink
                   className="usa-button margin-bottom-2"
                   variant="unstyled"
-                  link={`/governance-task-list/${systemIntake.id}`}
+                  to={`/governance-task-list/${systemIntake.id}`}
                 >
                   {t('navigation.returnToTaskList')}
                 </UswdsReactLink>

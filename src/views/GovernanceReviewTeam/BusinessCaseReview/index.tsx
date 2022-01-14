@@ -88,7 +88,7 @@ const BusinessCaseReview = ({
       <UswdsReactLink
         className="usa-button margin-top-5"
         variant="unstyled"
-        link={`/governance-review-team/${businessCase.systemIntakeId}/actions`}
+        to={`/governance-review-team/${businessCase.systemIntakeId}/actions`}
       >
         Take an action
       </UswdsReactLink>
