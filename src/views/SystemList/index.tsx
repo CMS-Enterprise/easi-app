@@ -56,6 +56,12 @@ export const SystemList = () => {
     ? data.cedarSystemBookmarks
     : []) as CedarSystemBookmark[];
 
+  //
+  const refetchBookmarks = () =>
+    refetch({
+      include: ['cedarSystemBookmarks']
+    });
+
   return (
     <PageWrapper>
       <Header />
@@ -110,7 +116,11 @@ export const SystemList = () => {
                 </Grid>
               ) : (
                 <CardGroup className="margin-bottom-3">
-                  {filterBookmarks(systemsTableData, bookmarks, refetch)}
+                  {filterBookmarks(
+                    systemsTableData,
+                    bookmarks,
+                    refetchBookmarks
+                  )}
                 </CardGroup>
               )}
             </SectionWrapper>
@@ -135,7 +145,7 @@ export const SystemList = () => {
               <Table
                 systems={systemsTableData}
                 savedBookmarks={bookmarks}
-                refetch={() => refetch()}
+                refetch={refetchBookmarks}
               />
             )}
           </>

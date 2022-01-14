@@ -19,7 +19,7 @@ type BookmarkCardProps = {
   className?: string;
   statusIcon: IconStatus;
   type: 'systemProfile'; // Built in for future iterations/varations of bookmarked datasets that ingest i18n translations for headers.
-  refetch: (variables?: any) => any;
+  refetch: () => any | undefined;
 };
 
 const BookmarkCard = ({
@@ -48,7 +48,7 @@ const BookmarkCard = ({
           cedarSystemId
         }
       }
-    }).then(() => refetch());
+    }).then(refetch);
   };
 
   return (

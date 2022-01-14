@@ -30,7 +30,7 @@ import './index.scss';
 type TableProps = {
   systems: CedarSystem[];
   savedBookmarks: CedarSystemBookmark[];
-  refetch: (variables?: any) => any;
+  refetch: () => any;
 };
 
 export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
@@ -53,7 +53,7 @@ export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
             cedarSystemId
           }
         }
-      }).then(() => refetch());
+      }).then(refetch);
     };
 
     const handleDeleteBookmark = (cedarSystemId: string) => {
@@ -63,7 +63,7 @@ export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
             cedarSystemId
           }
         }
-      }).then(() => refetch());
+      }).then(refetch);
     };
 
     const bookmarkIdSet: Set<string> = new Set(
