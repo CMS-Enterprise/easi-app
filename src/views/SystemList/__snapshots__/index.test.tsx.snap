@@ -516,7 +516,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="bookmark__header easi-header__basic"
                 >
                   <h2
-                    class="bookmark__title margin-top-0 margin-bottom-0"
+                    class="bookmark__title margin-top-0 margin-bottom-1"
                   >
                     <a
                       class="usa-link"
