@@ -5,13 +5,13 @@ import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
-  BreadcrumbLink,
-  Link as USWDSLink
+  BreadcrumbLink
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
@@ -99,9 +99,9 @@ const GovernanceFeedback = () => {
               {feedbackforBusinessOwner.map(item => formatGRTFeedback(item))}
             </div>
           </div>
-          <USWDSLink asCustom={Link} to={`/governance-task-list/${systemId}`}>
+          <UswdsReactLink to={`/governance-task-list/${systemId}`}>
             {t('navigation.returnToTaskList')}
-          </USWDSLink>
+          </UswdsReactLink>
         </div>
       </MainContent>
       <Footer />

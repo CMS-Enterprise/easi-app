@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 type RejectedProps = {
@@ -28,14 +28,13 @@ const Rejected = ({ intake }: RejectedProps) => {
       )}
 
       <div className="margin-top-4">
-        <UswdsLink
+        <UswdsReactLink
           className="usa-button margin-bottom-2"
           variant="unstyled"
-          asCustom={Link}
           to={`/governance-task-list/${id}`}
         >
           {t('navigation.returnToTaskList')}
-        </UswdsLink>
+        </UswdsReactLink>
       </div>
 
       <h3>{t('general:feedback.improvement')}</h3>

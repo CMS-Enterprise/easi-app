@@ -715,8 +715,9 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/privacy-policy"
+                  onClick={[Function]}
                 >
                   Privacy Policy
                 </a>
@@ -725,8 +726,9 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/cookies"
+                  onClick={[Function]}
                 >
                   Cookies
                 </a>
@@ -735,8 +737,9 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/terms-and-conditions"
+                  onClick={[Function]}
                 >
                   Terms and Conditions
                 </a>
@@ -745,8 +748,9 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/accessibility-statement"
+                  onClick={[Function]}
                 >
                   Accessibility Statement
                 </a>
@@ -1494,8 +1498,9 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/privacy-policy"
+                  onClick={[Function]}
                 >
                   Privacy Policy
                 </a>
@@ -1504,8 +1509,9 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/cookies"
+                  onClick={[Function]}
                 >
                   Cookies
                 </a>
@@ -1514,8 +1520,9 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/terms-and-conditions"
+                  onClick={[Function]}
                 >
                   Terms and Conditions
                 </a>
@@ -1524,8 +1531,9 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
                 className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
               >
                 <a
-                  className="usa-footer__primary-link"
+                  className="usa-link usa-footer__primary-link"
                   href="/accessibility-statement"
+                  onClick={[Function]}
                 >
                   Accessibility Statement
                 </a>

@@ -4,6 +4,7 @@ import { Button } from '@trussworks/react-uswds';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import SystemProfileHealthCard from 'components/SystemProfileHealthCard';
@@ -41,7 +42,9 @@ const SystemProfileHealth = () => {
                     (ATO) for infrastructure systems and/or all application
                     systems developed, hosted and/or maintained on behalf of CMS
                   </p>
-                  <a href="/sandbox">Learn more about ATO</a>
+                  <UswdsReactLink to="/sandbox">
+                    Learn more about ATO
+                  </UswdsReactLink>
                 </>
               }
               footer={<Button type="button">View ATO Information</Button>}
@@ -58,7 +61,9 @@ const SystemProfileHealth = () => {
                     and communications technology (ICT) that is accessible to
                     people with disabilities.
                   </p>
-                  <a href="/sandbox">Learn more about 508 Compliance</a>
+                  <UswdsReactLink to="/sandbox">
+                    Learn more about 508 Compliance
+                  </UswdsReactLink>
                 </>
               }
               footer={
@@ -75,7 +80,9 @@ const SystemProfileHealth = () => {
                     The TRB provides oversight to ensure IT investments are
                     consistent with CMS’s IT strategy.
                   </p>
-                  <a href="/sandbox">Learn more about the TRB</a>
+                  <UswdsReactLink to="/sandbox">
+                    Learn more about the TRB
+                  </UswdsReactLink>
                 </>
               }
               footer={<Button type="button">View TRB Information</Button>}

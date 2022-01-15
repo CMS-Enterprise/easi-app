@@ -6,18 +6,13 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import {
-  CardGroup,
-  Grid,
-  Link as UswdsLink,
-  SummaryBox
-} from '@trussworks/react-uswds';
+import { CardGroup, Grid, SummaryBox } from '@trussworks/react-uswds';
 
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -25,12 +20,16 @@ import PageWrapper from 'components/PageWrapper';
 import Alert from 'components/shared/Alert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import GetCedarSystemsAndBookmarksQuery from 'queries/GetCedarSystemsAndBookmarksQuery';
+import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
+import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import {
-  GetCedarSystemsAndBookmarks,
-  GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark,
-  GetCedarSystemsAndBookmarks_cedarSystems as CedarSystem
-} from 'queries/types/GetCedarSystemsAndBookmarks';
+  GetCedarSystemBookmarks,
+  GetCedarSystemBookmarks_cedarSystemBookmarks as CedarSystemBookmark
+} from 'queries/types/GetCedarSystemBookmarks';
+import {
+  GetCedarSystems,
+  GetCedarSystems_cedarSystems as CedarSystem
+} from 'queries/types/GetCedarSystems';
 
 import Table from './Table';
 import filterBookmarks from './util';
@@ -42,25 +41,20 @@ export const SystemList = () => {
 
   // TODO: query parameters and caching
   const {
-    loading,
-    error,
-    data,
-    refetch
-  } = useQuery<GetCedarSystemsAndBookmarks>(GetCedarSystemsAndBookmarksQuery);
+    loading: loadingSystems,
+    error: error1,
+    data: data1
+  } = useQuery<GetCedarSystems>(GetCedarSystemsQuery);
 
-  const systemsTableData = (data?.cedarSystems
-    ? data.cedarSystems
-    : []) as CedarSystem[];
+  const {
+    loading: loadingBookmarks,
+    error: error2,
+    data: data2,
+    refetch: refetchBookmarks
+  } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
 
-  const bookmarks = (data?.cedarSystemBookmarks
-    ? data.cedarSystemBookmarks
-    : []) as CedarSystemBookmark[];
-
-  //
-  const refetchBookmarks = () =>
-    refetch({
-      include: ['cedarSystemBookmarks']
-    });
+  const systemsTableData = (data1?.cedarSystems ?? []) as CedarSystem[];
+  const bookmarks: CedarSystemBookmark[] = data2?.cedarSystemBookmarks ?? [];
 
   return (
     <PageWrapper>
@@ -73,17 +67,16 @@ export const SystemList = () => {
           <p>{t('systemProfile:subHeader')}</p>
           <SummaryBox heading="" className="easi-request__container">
             <p>{t('systemProfile:newRequest.info')}</p>
-            <UswdsLink
-              asCustom={Link}
+            <UswdsReactLink
               to="/system/request-type"
               className="easi-request__button-link"
             >
               {t('systemProfile:newRequest.button')}
-            </UswdsLink>
+            </UswdsReactLink>
           </SummaryBox>
         </SectionWrapper>
 
-        {loading ? (
+        {loadingSystems || loadingBookmarks ? (
           <PageLoading />
         ) : (
           <>
@@ -134,7 +127,7 @@ export const SystemList = () => {
             </p>
 
             {/* TODO: standardize/format error messages from CEDAR - either on FE or BE */}
-            {error ? (
+            {error1 || error2 ? (
               <ErrorAlert heading="System error">
                 <ErrorAlertMessage
                   message={t('systemProfile:gql.fail')}
@@ -145,7 +138,7 @@ export const SystemList = () => {
               <Table
                 systems={systemsTableData}
                 savedBookmarks={bookmarks}
-                refetch={refetchBookmarks}
+                refetchBookmarks={refetchBookmarks}
               />
             )}
           </>

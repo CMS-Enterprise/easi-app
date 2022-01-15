@@ -4,7 +4,6 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Link as UswdsLink,
   ProcessList,
   ProcessListHeading,
   ProcessListItem
@@ -12,6 +11,7 @@ import {
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
@@ -167,14 +167,13 @@ const GovernanceOverview = () => {
         </div>
 
         {systemId && (
-          <UswdsLink
+          <UswdsReactLink
             className="usa-button"
-            asCustom={Link}
             variant="unstyled"
             to={`/governance-task-list/${systemId}`}
           >
             Get started
-          </UswdsLink>
+          </UswdsReactLink>
         )}
       </MainContent>
       <Footer />

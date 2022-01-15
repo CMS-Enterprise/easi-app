@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Card, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Card } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
@@ -64,10 +64,8 @@ const BookmarkCard = ({
     >
       <div className="grid-col-12">
         <div className="bookmark__header easi-header__basic">
-          <h2 className="bookmark__title margin-top-0 margin-bottom-0">
-            <UswdsLink asCustom={Link} to={`/systems/${id}`}>
-              {name}
-            </UswdsLink>
+          <h2 className="bookmark__title margin-top-0 margin-bottom-1">
+            <UswdsReactLink to={`/systems/${id}`}>{name}</UswdsReactLink>
           </h2>
           <BookmarkCardIcon
             size="md"

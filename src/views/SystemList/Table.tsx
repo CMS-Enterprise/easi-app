@@ -6,15 +6,12 @@
 
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
 import { useMutation } from '@apollo/client';
-import {
-  Link as UswdsLink,
-  Table as UswdsTable
-} from '@trussworks/react-uswds';
+import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
+import UswdsReactLink from 'components/LinkWrapper';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
@@ -30,20 +27,18 @@ import './index.scss';
 type TableProps = {
   systems: CedarSystem[];
   savedBookmarks: CedarSystemBookmark[];
-  refetch: () => any;
+  refetchBookmarks: () => any;
 };
 
-export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
+export const Table = ({
+  systems,
+  savedBookmarks,
+  refetchBookmarks
+}: TableProps) => {
   const { t } = useTranslation('systemProfile');
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [createMutate, mutationResult] = useMutation(
-    CreateCedarSystemBookmarkQuery
-  );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [deleteMutate, mutationResult2] = useMutation(
-    DeleteCedarSystemBookmarkQuery
-  );
+  const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery);
+  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
     const handleCreateBookmark = (cedarSystemId: string) => {
@@ -53,7 +48,7 @@ export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
             cedarSystemId
           }
         }
-      }).then(refetch);
+      }).then(refetchBookmarks);
     };
 
     const handleDeleteBookmark = (cedarSystemId: string) => {
@@ -63,7 +58,7 @@ export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
             cedarSystemId
           }
         }
-      }).then(refetch);
+      }).then(refetchBookmarks);
     };
 
     const bookmarkIdSet: Set<string> = new Set(
@@ -77,11 +72,9 @@ export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
         id: 'systemId',
         sortType: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
-          const rowTwoElem = rowTwo.values[columnName];
+          // const rowTwoElem = rowTwo.values[columnName];
 
-          return bookmarkIdSet.has(rowOneElem) > bookmarkIdSet.has(rowTwoElem)
-            ? 1
-            : -1;
+          return bookmarkIdSet.has(rowOneElem) ? 1 : -1;
         },
         Cell: ({ row }: { row: Row<CedarSystem> }) =>
           bookmarkIdSet.has(row.original.id) ? (
@@ -106,9 +99,9 @@ export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
         accessor: 'name',
         id: 'systemName',
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <UswdsLink asCustom={Link} to={`/sandbox/${row.original.id}`}>
+          <UswdsReactLink to={`/sandbox/${row.original.id}`}>
             {row.original.name}
-          </UswdsLink>
+          </UswdsReactLink>
         )
       },
       {
@@ -139,7 +132,7 @@ export const Table = ({ systems, savedBookmarks, refetch }: TableProps) => {
         )
       }
     ];
-  }, [t, savedBookmarks, createMutate, deleteMutate, refetch]);
+  }, [t, savedBookmarks, createMutate, deleteMutate, refetchBookmarks]);
 
   const {
     getTableProps,
