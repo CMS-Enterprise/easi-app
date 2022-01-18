@@ -11,7 +11,6 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
-import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
 import Accessibility from 'views/Accessibility';
@@ -191,9 +190,7 @@ const App = () => {
                 <TimeOutWrapper>
                   <PageWrapper>
                     <Header />
-                    <MainContent>
-                      <AppRoutes />
-                    </MainContent>
+                    <AppRoutes />
                     <Footer />
                   </PageWrapper>
                 </TimeOutWrapper>

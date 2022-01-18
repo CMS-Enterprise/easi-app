@@ -7,11 +7,8 @@ import {
   BreadcrumbLink
 } from '@trussworks/react-uswds';
 
-import Footer from 'components/Footer';
-import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
-import PageWrapper from 'components/PageWrapper';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
   GetSystemIntake,
@@ -51,58 +48,57 @@ export const SystemIntake = () => {
   }
 
   return (
-    <PageWrapper className="system-intake" data-testid="system-intake">
-      <Header />
-      <MainContent className="grid-container margin-bottom-5">
-        <BreadcrumbBar variant="wrap">
-          <Breadcrumb>
-            <BreadcrumbLink asCustom={Link} to="/">
-              <span>Home</span>
-            </BreadcrumbLink>
-          </Breadcrumb>
-          <Breadcrumb>
-            <BreadcrumbLink
-              asCustom={Link}
-              to={`/governance-task-list/${systemId}`}
-            >
-              <span>Get governance approval</span>
-            </BreadcrumbLink>
-          </Breadcrumb>
-          <Breadcrumb current>Intake Request</Breadcrumb>
-        </BreadcrumbBar>
-        {loading && <PageLoading />}
-        {!loading && !!systemIntake && (
-          <Switch>
-            <Route
-              path="/system/:systemId/contact-details"
-              render={() => <ContactDetails systemIntake={systemIntake} />}
-            />
-            <Route
-              path="/system/:systemId/request-details"
-              render={() => <RequestDetails systemIntake={systemIntake} />}
-            />
-            <Route
-              path="/system/:systemId/contract-details"
-              render={() => <ContractDetails systemIntake={systemIntake} />}
-            />
-            <Route
-              path="/system/:systemId/review"
-              render={() => <Review systemIntake={systemIntake} />}
-            />
-            <Route
-              path="/system/:systemId/confirmation"
-              render={() => <Confirmation />}
-            />
-            <Route
-              path="/system/:systemId/view"
-              render={() => <SystemIntakeView systemIntake={systemIntake} />}
-            />
-            <Route path="*" render={() => <NotFoundPartial />} />
-          </Switch>
-        )}
-      </MainContent>
-      <Footer />
-    </PageWrapper>
+    <MainContent
+      className="system-intake grid-container margin-bottom-5"
+      data-testid="system-intake"
+    >
+      <BreadcrumbBar variant="wrap">
+        <Breadcrumb>
+          <BreadcrumbLink asCustom={Link} to="/">
+            <span>Home</span>
+          </BreadcrumbLink>
+        </Breadcrumb>
+        <Breadcrumb>
+          <BreadcrumbLink
+            asCustom={Link}
+            to={`/governance-task-list/${systemId}`}
+          >
+            <span>Get governance approval</span>
+          </BreadcrumbLink>
+        </Breadcrumb>
+        <Breadcrumb current>Intake Request</Breadcrumb>
+      </BreadcrumbBar>
+      {loading && <PageLoading />}
+      {!loading && !!systemIntake && (
+        <Switch>
+          <Route
+            path="/system/:systemId/contact-details"
+            render={() => <ContactDetails systemIntake={systemIntake} />}
+          />
+          <Route
+            path="/system/:systemId/request-details"
+            render={() => <RequestDetails systemIntake={systemIntake} />}
+          />
+          <Route
+            path="/system/:systemId/contract-details"
+            render={() => <ContractDetails systemIntake={systemIntake} />}
+          />
+          <Route
+            path="/system/:systemId/review"
+            render={() => <Review systemIntake={systemIntake} />}
+          />
+          <Route
+            path="/system/:systemId/confirmation"
+            render={() => <Confirmation />}
+          />
+          <Route
+            path="/system/:systemId/view"
+            render={() => <SystemIntakeView systemIntake={systemIntake} />}
+          />
+          <Route path="*" render={() => <NotFoundPartial />} />
+        </Switch>
+      )}
+    </MainContent>
   );
 };
 
