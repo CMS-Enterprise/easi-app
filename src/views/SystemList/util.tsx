@@ -14,9 +14,7 @@ const filterBookmarks = (
     savedBookmarks.map(sys => sys.cedarSystemId)
   );
 
-  const bookmarkedSystems = systems.filter(sys =>
-    bookmarkIdSet.has(sys.id)
-  ) as CedarSystem[];
+  const bookmarkedSystems = systems.filter(sys => bookmarkIdSet.has(sys.id));
 
   return bookmarkedSystems.map(system => (
     <BookmarkCard
