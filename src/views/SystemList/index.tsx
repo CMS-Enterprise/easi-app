@@ -76,7 +76,7 @@ export const SystemList = () => {
           </SummaryBox>
         </SectionWrapper>
 
-        {loadingSystems || loadingBookmarks ? (
+        {loadingSystems ? (
           <PageLoading />
         ) : (
           <>
@@ -88,35 +88,38 @@ export const SystemList = () => {
               {t('systemProfile:bookmark.subtitle')}
             </p>
 
-            {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
-            <SectionWrapper borderBottom className="margin-bottom-3">
-              {bookmarks.length === 0 ? (
-                <Grid tablet={{ col: 12 }} className="margin-bottom-5">
-                  <Alert type="info" className="padding-1">
-                    <h3 className="margin-0">
-                      {t('systemProfile:noBookmark.header')}
-                    </h3>
-                    <div>
-                      <span className="margin-0">
-                        {t('systemProfile:noBookmark.text1')}
-                      </span>
-                      <BookmarkCardIcon size="sm" color="black" />
-                      <span className="margin-0">
-                        {t('systemProfile:noBookmark.text2')}
-                      </span>
-                    </div>
-                  </Alert>
-                </Grid>
-              ) : (
-                <CardGroup className="margin-bottom-3">
-                  {filterBookmarks(
-                    systemsTableData,
-                    bookmarks,
-                    refetchBookmarks
-                  )}
-                </CardGroup>
-              )}
-            </SectionWrapper>
+            {loadingBookmarks ? (
+              <PageLoading />
+            ) : (
+              <SectionWrapper borderBottom className="margin-bottom-3">
+                {bookmarks.length === 0 ? (
+                  <Grid tablet={{ col: 12 }} className="margin-bottom-5">
+                    <Alert type="info" className="padding-1">
+                      <h3 className="margin-0">
+                        {t('systemProfile:noBookmark.header')}
+                      </h3>
+                      <div>
+                        <span className="margin-0">
+                          {t('systemProfile:noBookmark.text1')}
+                        </span>
+                        <BookmarkCardIcon size="sm" color="black" />
+                        <span className="margin-0">
+                          {t('systemProfile:noBookmark.text2')}
+                        </span>
+                      </div>
+                    </Alert>
+                  </Grid>
+                ) : (
+                  <CardGroup className="margin-bottom-3">
+                    {filterBookmarks(
+                      systemsTableData,
+                      bookmarks,
+                      refetchBookmarks
+                    )}
+                  </CardGroup>
+                )}
+              </SectionWrapper>
+            )}
 
             <PageHeading className="margin-bottom-0">
               {t('systemProfile:systemTable.title')}
@@ -127,6 +130,7 @@ export const SystemList = () => {
             </p>
 
             {/* TODO: standardize/format error messages from CEDAR - either on FE or BE */}
+
             {error1 || error2 ? (
               <ErrorAlert heading="System error">
                 <ErrorAlertMessage
