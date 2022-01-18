@@ -9,6 +9,10 @@ import {
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import Footer from 'components/Footer';
+import Header from 'components/Header';
+import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
 import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
@@ -185,7 +189,13 @@ const App = () => {
             <FlagsWrapper>
               <UserInfoWrapper>
                 <TimeOutWrapper>
-                  <AppRoutes />
+                  <PageWrapper>
+                    <Header />
+                    <MainContent>
+                      <AppRoutes />
+                    </MainContent>
+                    <Footer />
+                  </PageWrapper>
                 </TimeOutWrapper>
               </UserInfoWrapper>
             </FlagsWrapper>
