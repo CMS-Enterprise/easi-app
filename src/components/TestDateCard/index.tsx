@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Button } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
@@ -55,14 +55,13 @@ const TestDateCard = ({
 
       {isEditableDeletable && (
         <div>
-          <UswdsLink
-            asCustom={Link}
+          <UswdsReactLink
             to={`/508/requests/${requestId}/test-date/${id}`}
             aria-label={`Edit test ${testIndex} ${testType}`}
             data-testid="test-date-edit-link"
           >
             {t('general:edit')}
-          </UswdsLink>
+          </UswdsReactLink>
           <Button
             className="margin-left-1"
             type="button"

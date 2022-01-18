@@ -80,6 +80,7 @@ exports[`The accessibility testing overview matches the snapshot 1`] = `
         <a
           className="usa-link"
           href="/508/templates"
+          onClick={[Function]}
           rel="noopener noreferrer"
           target="_blank"
         >

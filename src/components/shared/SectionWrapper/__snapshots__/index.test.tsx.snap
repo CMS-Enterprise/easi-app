@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SectionWrapper matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="easi-section"
+    data-testid="section-wrapper"
+  />
+</DocumentFragment>
+`;

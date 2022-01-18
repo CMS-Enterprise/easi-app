@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import classnames from 'classnames';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import NavigationBar from 'components/NavigationBar';
 import UsGovBanner from 'components/UsGovBanner';
 import { localAuthStorageKey } from 'constants/localAuth';
@@ -100,7 +101,7 @@ export const Header = ({ children }: HeaderProps) => {
         {authState?.isAuthenticated ? (
           <div>
             <div className="navbar--container easi-nav__user">
-              {userName}
+              <div className="easi-header__user">{userName}</div>
               <div>&nbsp; | &nbsp;</div>
               <button
                 type="button"
@@ -154,9 +155,9 @@ export const Header = ({ children }: HeaderProps) => {
               userName={userName}
             />
           ) : (
-            <a className="easi-header__nav-link" href="/signin">
+            <UswdsReactLink className="easi-header__nav-link" to="/signin">
               {t('header:signIn')}
-            </a>
+            </UswdsReactLink>
           )}
         </div>
       </div>

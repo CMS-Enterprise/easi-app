@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
@@ -7,8 +7,7 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Button,
-  Link as UswdsLink
+  Button
 } from '@trussworks/react-uswds';
 import {
   Field,
@@ -22,6 +21,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
+import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import {
   NoteByline,
@@ -253,15 +253,14 @@ const AccessibilityRequestDetailPage = () => {
   const requestStatus = accessibilityRequestStatusMap[`${statusEnum}`];
 
   const uploadDocumentLink = (
-    <UswdsLink
+    <UswdsReactLink
       className="usa-button"
       variant="unstyled"
-      asCustom={Link}
       to={`/508/requests/${accessibilityRequestId}/documents/new`}
       data-testid="upload-new-document"
     >
       {t('requestDetails.documentUpload')}
-    </UswdsLink>
+    </UswdsReactLink>
   );
 
   const bodyWithDocumentsTable = (
@@ -291,18 +290,14 @@ const AccessibilityRequestDetailPage = () => {
           {t('requestDetails.documents.noDocs.heading')}
         </h2>
         <p className="line-height-body-4">
-          <Trans i18nKey="accessibility:requestDetails.documents.noDocs.description">
-            indexZero
-            <UswdsLink
-              className="display-inline-block"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="/508/templates"
-            >
-              linkText
-            </UswdsLink>
-            indexOne
-          </Trans>
+          <UswdsReactLink
+            className="display-inline-block"
+            to="/508/templates"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('accessibility:requestDetails.documents.noDocs.description')}
+          </UswdsReactLink>
         </p>
       </div>
       {uploadDocumentLink}
@@ -535,13 +530,12 @@ const AccessibilityRequestDetailPage = () => {
             </dd>
           </dl>
           {isAccessibilityTeam && (
-            <UswdsLink
-              asCustom={Link}
+            <UswdsReactLink
               to={`/508/requests/${accessibilityRequestId}/change-status`}
               aria-label="Change status"
             >
               Change
-            </UswdsLink>
+            </UswdsReactLink>
           )}
         </div>
       </div>
@@ -617,22 +611,22 @@ const AccessibilityRequestDetailPage = () => {
                   <dd className="margin-0 margin-bottom-3">{lcid}</dd>
                 </dl>
               </div>
-              <UswdsLink
+              <UswdsReactLink
                 className="display-inline-block margin-top-3"
                 target="_blank"
                 rel="noopener noreferrer"
-                href="/508/templates"
+                to="/508/templates"
               >
                 {t('requestDetails.testingTemplates')}
-              </UswdsLink>
-              <UswdsLink
+              </UswdsReactLink>
+              <UswdsReactLink
                 className="display-inline-block margin-top-3"
                 target="_blank"
                 rel="noopener noreferrer"
-                href="/508/testing-overview"
+                to="/508/testing-overview"
               >
                 {t('requestDetails.testingSteps')}
-              </UswdsLink>
+              </UswdsReactLink>
               {userEuaId === requestOwnerEuaId && (
                 <button
                   type="button"

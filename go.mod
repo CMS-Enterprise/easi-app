@@ -22,7 +22,7 @@ require (
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/pquerna/otp v1.3.0
-	github.com/spf13/cobra v1.2.1
+	github.com/spf13/cobra v1.3.0
 	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.7.0
 	github.com/vektah/gqlparser/v2 v2.2.0

@@ -1,8 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import { AnythingWrongSurvey } from 'components/Survey';
@@ -27,14 +26,13 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
       >
         <SystemIntakeReview systemIntake={systemIntake} />
       </PDFExport>
-      <UswdsLink
+      <UswdsReactLink
         className="usa-button margin-top-5"
         variant="unstyled"
         to={`/governance-review-team/${systemIntake.id}/actions`}
-        asCustom={Link}
       >
         Take an action
-      </UswdsLink>
+      </UswdsReactLink>
       <AnythingWrongSurvey />
     </div>
   );
