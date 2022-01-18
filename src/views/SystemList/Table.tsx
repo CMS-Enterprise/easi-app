@@ -6,12 +6,20 @@
 
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
+import {
+  Column,
+  Row,
+  useFilters,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import UswdsReactLink from 'components/LinkWrapper';
 import SystemHealthIcon from 'components/SystemHealthIcon';
+// import { GlobalFilter } from 'components/TableFilter';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
@@ -108,6 +116,9 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
     pageOptions,
     pageCount,
     gotoPage,
+    // state,
+    // preGlobalFilteredRows,
+    // setGlobalFilter,
     nextPage,
     previousPage,
     setPageSize,
@@ -132,6 +143,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
       }
     },
     useSortBy,
+    useFilters,
     usePagination
   );
 
@@ -142,6 +154,12 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         Showing {pageIndex * pageSize + 1}-{(pageIndex + 1) * pageSize} of{' '}
         {systems.length} results
       </span>
+
+      {/* <GlobalFilter
+        preGlobalFilteredRows={preGlobalFilteredRows}
+        globalFilter={state.globalFilter}
+        setGlobalFilter={setGlobalFilter}
+      /> */}
 
       <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
         <caption className="usa-sr-only">{t('systemTable.caption')}</caption>
