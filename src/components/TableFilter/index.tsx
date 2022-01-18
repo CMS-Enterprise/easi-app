@@ -1,10 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FilterValue, useAsyncDebounce } from 'react-table';
 import { Button, Form, Label, TextInput } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import './index.scss';
+
 // Truss has a SearchBar component, but it only takes onSubmit - meant for server side filtering.
-// This is component is meant for client side filtering using onChange
+// Currently this component is meant for client side filtering using onChange
 
 type GlobalClientFilterProps = {
   setGlobalFilter: (filterValue: FilterValue) => void;
@@ -20,6 +23,7 @@ const GlobalClientFilter = ({
   tableName,
   className
 }: GlobalClientFilterProps) => {
+  const { t } = useTranslation('systemProfile');
   // Set a debounce to capture set input before re-rendering on each character
   const onChange = useAsyncDebounce(value => {
     setGlobalFilter(value || undefined);
@@ -34,8 +38,8 @@ const GlobalClientFilter = ({
         // TODO: CEDAR API filtering may go here if implemented
       }}
     >
-      <Label srOnly hidden htmlFor={`${tableID}-search`}>
-        Table Search
+      <Label srOnly htmlFor={`${tableID}-search`}>
+        {t('systemTable.search')}
       </Label>
       <TextInput
         id={`${tableID}-search`}
@@ -46,9 +50,10 @@ const GlobalClientFilter = ({
         }}
         name={`${tableName} Search`}
       />
-      <Button type="submit" style={{ pointerEvents: 'none' }}>
+      {/* Right not search button doesn't need to do anything, it searches onChange - 
+        purely from wireframe.  Will change in future with CEDAR API filtering */}
+      <Button type="submit" className="no-pointer">
         {' '}
-        {/* Right not search button doesn't need to do anything, it searches onChange */}
         <span className="usa-search__submit-text fa fa-search" />
       </Button>
     </Form>

@@ -12,6 +12,7 @@ const systemProfile = {
     title: 'All Systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
     id: 'system-list',
+    search: 'Search Table',
     header: {
       systemName: 'System Name',
       systemOwner: 'CMS Component',
