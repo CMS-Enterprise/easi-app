@@ -132,8 +132,8 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
     {
       sortTypes: {
         alphanumeric: (rowOne, rowTwo, columnName) => {
-          const rowOneElem = rowOne.values[columnName];
-          const rowTwoElem = rowTwo.values[columnName];
+          const rowOneElem = rowOne.values[columnName] || '';
+          const rowTwoElem = rowTwo.values[columnName] || '';
 
           return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
         }
@@ -155,19 +155,33 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
 
   return (
     <>
-      {/* TODO:  Break out page info into own component */}
-      <span>
-        Showing {pageIndex * pageSize + 1}-{(pageIndex + 1) * pageSize} of{' '}
-        {systems.length} results
-      </span>
-
       <GlobalClientFilter
-        rows={rows}
-        state={state}
         setGlobalFilter={setGlobalFilter}
         tableID={t('systemTable.id')}
         tableName={t('systemTable.title')}
+        className="margin-bottom-5"
       />
+
+      {/* TODO:  Break out page info into own component */}
+      {state.globalFilter ? (
+        <span>
+          {rows.length === 0
+            ? 'No results found.'
+            : `Showing ${pageIndex * pageSize + 1}-${
+                (pageIndex + 1) * pageSize
+              } of
+              ${rows.length} results`}
+        </span>
+      ) : (
+        <span>
+          {systems.length === 0
+            ? 'No results found.'
+            : `Showing ${pageIndex * pageSize + 1}-${
+                (pageIndex + 1) * pageSize
+              } of
+              ${systems.length} results`}
+        </span>
+      )}
 
       <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
         <caption className="usa-sr-only">{t('systemTable.caption')}</caption>
