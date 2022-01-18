@@ -1,66 +1,66 @@
-// import React, { useState } from 'react';
-// import { useAsyncDebounce } from 'react-table';
-// import { Search, TextInput } from '@trussworks/react-uswds';
-// import { Field } from 'formik';
+import React from 'react';
+import { FilterValue, Row, useAsyncDebounce } from 'react-table';
+import { Button, Form, Label, TextInput } from '@trussworks/react-uswds';
 
-// interface filterGlobalProps {
-//   preGlobalFilteredRows: any;
-//   globalFilter: () => void;
-//   setGlobalFilter: (columnId: string, filterValue: any) => void;
-// }
+import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 
-// interface filterColumnsProps {
-//   filterValue: any;
-//   preFilteredRows: { length: number };
-//   setFilter: (columnId: string, filterValue: any) => void;
-// }
+// Truss has a SearchBar component, but it only takes onSubmit - meant for server side filtering.
+// This is component is meant for client side filtering using onChange
 
-// // Component for Global Filter
-// export const GlobalFilter = ({
-//   preGlobalFilteredRows,
-//   globalFilter,
-//   setGlobalFilter
-// }: filterGlobalProps) => {
-//   const [value, setValue] = useState(globalFilter);
+type GlobalClientFilterProps = {
+  setGlobalFilter: (filterValue: FilterValue) => void;
+  rows: Row<CedarSystem>[];
+  state: FilterValue;
+  tableID: string;
+  tableName: string;
+};
 
-//   const onChange = useAsyncDebounce(inputValue => {
-//     setGlobalFilter(inputValue || undefined, '');
-//   }, 200);
+// Component for Global Filter for Client Side filtering
+const GlobalClientFilter = ({
+  setGlobalFilter,
+  rows,
+  state,
+  tableID,
+  tableName
+}: GlobalClientFilterProps) => {
+  // Set a debounce to capture set input before re-rendering on each character
+  const onChange = useAsyncDebounce(value => {
+    setGlobalFilter(value || undefined);
+  }, 200);
 
-//   return (
-//     <div>
-//       <Field
-//         as={TextInput}
-//         id="table"
-//         name="value"
-//         label="Development"
-//         maxLength={10}
-//         match={/^[0-9\b]+$/}
-//         aria-describedby="DevelopmentCostsDefinition"
-//         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-//           setValue(e.target.value);
-//           onChange(e.target.value);
-//         }}
-//       />
-//     </div>
-//   );
-// };
+  return (
+    <Form
+      role="search"
+      className="usa-search"
+      onSubmit={e => {
+        e.preventDefault();
+        // TODO: CEDAR API filtering may go here if implemented
+      }}
+    >
+      <Label srOnly hidden htmlFor={`${tableID}-search`}>
+        Table Search
+      </Label>
+      <TextInput
+        id={`${tableID}-search`}
+        type="search"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          // Currently only client-side filtering - updates search filter onChange
+          onChange(e.target.value);
+        }}
+        name={`${tableName} Search`}
+      />
+      <Button type="submit">
+        <span className="usa-search__submit-text">Search</span>
+      </Button>
+      {state.globalFilter && (
+        <p>
+          {rows.length === 0
+            ? 'No results found.'
+            : `Showing ${rows.length} results`}
+        </p>
+      )}
+    </Form>
+  );
+};
 
-// // Component for Default Column Filter
-// export const DefaultFilterForColumn = ({
-//   filterValue,
-//   preFilteredRows: { length },
-//   setFilter
-// }): filterColumnsProps => {
-//   return (
-//     <Search
-//       value={filterValue || ''}
-//       onChange={e => {
-//         // Set undefined to remove the filter entirely
-//         setFilter(e.target.value || undefined);
-//       }}
-//       placeholder={`Search ${length} records..`}
-//       style={{ marginTop: '10px' }}
-//     />
-//   );
-// };
+export default GlobalClientFilter;

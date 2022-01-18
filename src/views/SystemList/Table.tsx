@@ -10,6 +10,7 @@ import {
   Column,
   Row,
   useFilters,
+  useGlobalFilter,
   usePagination,
   useSortBy,
   useTable
@@ -19,7 +20,7 @@ import { Table as UswdsTable } from '@trussworks/react-uswds';
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import UswdsReactLink from 'components/LinkWrapper';
 import SystemHealthIcon from 'components/SystemHealthIcon';
-// import { GlobalFilter } from 'components/TableFilter';
+import GlobalClientFilter from 'components/TableFilter';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
@@ -45,6 +46,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         Header: <BookmarkCardIcon size="sm" />,
         accessor: 'id',
         id: 'systemId',
+        disableGlobalFilter: true,
         sortType: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
           const rowTwoElem = rowTwo.values[columnName];
@@ -63,7 +65,8 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
       },
       {
         Header: t<string>('systemTable.header.systemAcronym'),
-        accessor: 'acronym'
+        accessor: 'acronym',
+        disableGlobalFilter: true
       },
       {
         Header: t<string>('systemTable.header.systemName'),
@@ -79,6 +82,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
         id: 'systemOwner',
+        disableGlobalFilter: true,
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
           <p>
             {cmsDivisionsAndOffices.find(
@@ -91,6 +95,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         Header: t<string>('systemTable.header.systemStatus'),
         accessor: 'status',
         id: 'systemStatus',
+        disableGlobalFilter: true,
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
           <div>
             <SystemHealthIcon
@@ -116,9 +121,9 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
     pageOptions,
     pageCount,
     gotoPage,
-    // state,
-    // preGlobalFilteredRows,
-    // setGlobalFilter,
+    setGlobalFilter,
+    state,
+    rows,
     nextPage,
     previousPage,
     setPageSize,
@@ -142,8 +147,9 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         pageIndex: 0
       }
     },
-    useSortBy,
     useFilters,
+    useGlobalFilter,
+    useSortBy,
     usePagination
   );
 
@@ -155,11 +161,13 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         {systems.length} results
       </span>
 
-      {/* <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        globalFilter={state.globalFilter}
+      <GlobalClientFilter
+        rows={rows}
+        state={state}
         setGlobalFilter={setGlobalFilter}
-      /> */}
+        tableID={t('systemTable.id')}
+        tableName={t('systemTable.title')}
+      />
 
       <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
         <caption className="usa-sr-only">{t('systemTable.caption')}</caption>
