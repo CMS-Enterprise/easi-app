@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2016
 
 original_schema_file="pkg/cedar/intake/cedar_intake.yml"
 output_schema_file="pkg/cedar/intake/system_intake_schema.json"
@@ -16,15 +17,19 @@ then
     exit 2
 fi
 
-yq_expr=$(cat <<-END
-    with_entries(select(.key | test("definitions"))) 
-  | .definitions
-  | with_entries(select(.key | test("EASIIntake")))
-  | {"definitions": .}
-  | .\$schema = "http://json-schema.org/draft-04/schema#"
-  | .\$ref = "#/definitions/EASIIntake"
-  | sort_keys(..)
-END
+yq_commands=(
+    'with_entries(select(.key | test("definitions")))' # use only the "definitions" entry
+  '| .definitions' # pull out values under "definitions"
+  '| with_entries(select(.key | test("EASIIntake")))' # use only the definitions.EASIIntake entry
+  '| {"definitions": .}' # put the EASIIntake value back under the key "definitions"
+  '| .$schema = "http://json-schema.org/draft-04/schema#"' # add the "$schema" entry
+  '| .$ref = "#/definitions/EASIIntake"' # add the "$ref" entry
+  '| sort_keys(..)' # sort entries by key names, alphabetically
 )
+
+yq_expr=""
+for yq_command in "${yq_commands[@]}"; do
+  yq_expr+=" $yq_command"
+done
 
 yq eval "$yq_expr" --output-format=json "$original_schema_file" > "$output_schema_file"
