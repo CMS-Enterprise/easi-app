@@ -16,6 +16,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -258,6 +259,110 @@ func (r *businessCaseResolver) SuccessIndicators(ctx context.Context, obj *model
 
 func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error) {
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
+}
+
+func (r *cedarDataCenterResolver) ID(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.ID.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) Name(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.Name.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) Version(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.Version.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) Description(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.Description.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) State(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.State.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) Status(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.Status.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) StartDate(ctx context.Context, obj *models.CedarDataCenter) (*time.Time, error) {
+	return obj.StartDate.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) EndDate(ctx context.Context, obj *models.CedarDataCenter) (*time.Time, error) {
+	return obj.EndDate.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) Address1(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.Address1.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) Address2(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.Address2.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) City(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.City.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) AddressState(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.AddressState.Ptr(), nil
+}
+
+func (r *cedarDataCenterResolver) Zip(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
+	return obj.Zip.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) StartDate(ctx context.Context, obj *models.CedarDeployment) (*time.Time, error) {
+	return obj.StartDate.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) EndDate(ctx context.Context, obj *models.CedarDeployment) (*time.Time, error) {
+	return obj.EndDate.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) IsHotSite(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.IsHotSite.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) Description(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.Description.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) ContractorName(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.ContractorName.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) SystemVersion(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.SystemVersion.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) HasProductionData(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.HasProductionData.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) DeploymentType(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.DeploymentType.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) SystemName(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.SystemName.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) DeploymentElementID(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.DeploymentElementID.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) State(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.State.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) Status(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.Status.Ptr(), nil
+}
+
+func (r *cedarDeploymentResolver) WanType(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
+	return obj.WanType.Ptr(), nil
 }
 
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
@@ -1095,6 +1200,27 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	}, err
 }
 
+func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.CreateCedarSystemBookmarkPayload, error) {
+	bookmark := models.CedarSystemBookmark{
+		EUAUserID:     appcontext.Principal(ctx).ID(),
+		CedarSystemID: input.CedarSystemID,
+	}
+	createdBookmark, err := r.store.CreateCedarSystemBookmark(ctx, &bookmark)
+	return &model.CreateCedarSystemBookmarkPayload{
+		CedarSystemBookmark: createdBookmark,
+	}, err
+}
+
+func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error) {
+	_, err := r.store.DeleteCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
+		CedarSystemID: input.CedarSystemID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.DeleteCedarSystemBookmarkPayload{CedarSystemID: input.CedarSystemID}, nil
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
 	accessibilityRequest, err := r.store.FetchAccessibilityRequestByIDIncludingDeleted(ctx, id)
@@ -1220,6 +1346,39 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 		return nil, err
 	}
 	return cedarSystems, nil
+}
+
+func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error) {
+	cedarSystemBookmarks, err := r.store.FetchCedarSystemBookmarks(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return cedarSystemBookmarks, nil
+}
+
+func (r *queryResolver) Deployments(ctx context.Context, systemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error) {
+	var optionalParams *cedarcore.GetDeploymentsOptionalParams
+	if deploymentType != nil || state != nil || status != nil {
+		optionalParams = &cedarcore.GetDeploymentsOptionalParams{}
+
+		if deploymentType != nil {
+			optionalParams.DeploymentType = null.StringFromPtr(deploymentType)
+		}
+
+		if state != nil {
+			optionalParams.State = null.StringFromPtr(state)
+		}
+
+		if status != nil {
+			optionalParams.Status = null.StringFromPtr(status)
+		}
+	}
+
+	cedarDeployments, err := r.cedarCoreClient.GetDeployments(ctx, systemID, optionalParams)
+	if err != nil {
+		return nil, err
+	}
+	return cedarDeployments, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
@@ -1543,6 +1702,16 @@ func (r *Resolver) AccessibilityRequestNote() generated.AccessibilityRequestNote
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
+// CedarDataCenter returns generated.CedarDataCenterResolver implementation.
+func (r *Resolver) CedarDataCenter() generated.CedarDataCenterResolver {
+	return &cedarDataCenterResolver{r}
+}
+
+// CedarDeployment returns generated.CedarDeploymentResolver implementation.
+func (r *Resolver) CedarDeployment() generated.CedarDeploymentResolver {
+	return &cedarDeploymentResolver{r}
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -1556,6 +1725,8 @@ type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type accessibilityRequestNoteResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
+type cedarDataCenterResolver struct{ *Resolver }
+type cedarDeploymentResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }

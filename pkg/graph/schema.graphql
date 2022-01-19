@@ -54,6 +54,78 @@ type CedarSystem {
 }
 
 """
+Represents a user's bookmark of a cedar system
+"""
+type CedarSystemBookmark {
+  euaUserId: String!
+  cedarSystemId: String!
+}
+
+"""
+The data needed to bookmark a cedar system
+"""
+input CreateCedarSystemBookmarkInput {
+  cedarSystemId: String!
+}
+
+"""
+The payload when bookmarking a cedar system
+"""
+type CreateCedarSystemBookmarkPayload {
+  cedarSystemBookmark: CedarSystemBookmark
+}
+
+"""
+The payload when deleting a bookmark for a cedar system
+"""
+type DeleteCedarSystemBookmarkPayload {
+  cedarSystemId: String!
+}
+
+"""
+CedarDeployment represents a deployment of a system; this information is returned from the CEDAR Core API
+"""
+type CedarDeployment {
+  id: String!
+  name: String!
+  systemID: String!
+  startDate: Time
+  endDate: Time
+  isHotSite: String
+  description: String
+  contractorName: String
+  systemVersion: String
+  hasProductionData: String
+  replicatedSystemElements: [String!]!
+  deploymentType: String
+  systemName: String
+  deploymentElementID: String
+  state: String
+  status: String
+  wanType: String
+  dataCenter: CedarDataCenter
+}
+
+"""
+CedarDataCenter represents the data center used by a CedarDeployment
+"""
+type CedarDataCenter {
+  id: String
+  name: String
+  version: String
+  description: String
+  state: String
+  status: String
+  startDate: Time
+  endDate: Time
+  address1: String
+  address2: String
+  city: String
+  addressState: String
+  zip: String
+}
+
+"""
 An accessibility request represents a system that needs to go through
 the 508 process
 """
@@ -1127,6 +1199,12 @@ type Mutation {
   updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
+  createCedarSystemBookmark(
+    input: CreateCedarSystemBookmarkInput!
+  ): CreateCedarSystemBookmarkPayload
+  deleteCedarSystemBookmark(
+    input: CreateCedarSystemBookmarkInput!
+  ): DeleteCedarSystemBookmarkPayload
 }
 
 """
@@ -1144,6 +1222,8 @@ type Query {
   currentUser: CurrentUser
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
+  cedarSystemBookmarks: [CedarSystemBookmark!]!
+  deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
 }
 
 """

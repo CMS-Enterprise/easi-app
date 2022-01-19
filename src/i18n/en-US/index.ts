@@ -17,6 +17,7 @@ import intake from './intake';
 import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
 import systemProfile from './systemProfile';
+import tableAndPagination from './tableAndPagination';
 import termsAndConditions from './termsAndConditions';
 
 const enUS = {
@@ -37,6 +38,7 @@ const enUS = {
   makingARequest,
   privacyPolicy,
   systemProfile,
+  tableAndPagination,
   taskList,
   termsAndConditions
 };

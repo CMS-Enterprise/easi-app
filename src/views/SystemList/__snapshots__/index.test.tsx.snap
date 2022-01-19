@@ -1,0 +1,926 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`System List View when there are requests matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="easi-page-wrapper"
+  >
+    <header
+      class="usa-header easi-header"
+      role="banner"
+    >
+      <section
+        aria-label="Official government website"
+        class="usa-banner"
+      >
+        <div
+          class="usa-accordion"
+        >
+          <header
+            class="usa-banner__header"
+          >
+            <div
+              class="usa-banner__inner"
+            >
+              <div
+                class="grid-col-auto"
+              >
+                <img
+                  alt="U.S. flag"
+                  class="usa-banner__header-flag"
+                  src="us_flag_small.png"
+                />
+              </div>
+              <div
+                class="grid-col-fill tablet:grid-col-auto"
+              >
+                <p
+                  class="usa-banner__header-text"
+                >
+                  An official website of the United States government
+                </p>
+                <p
+                  aria-hidden="true"
+                  class="usa-banner__header-action"
+                >
+                  Here’s how you know
+                </p>
+              </div>
+              <button
+                aria-controls="gov-banner"
+                aria-expanded="false"
+                class="usa-accordion__button usa-banner__button"
+                type="button"
+              >
+                <span
+                  class="usa-banner__button-text"
+                >
+                  Here’s how you know
+                </span>
+              </button>
+            </div>
+          </header>
+          <div
+            class="usa-banner__content usa-accordion__content"
+            hidden=""
+            id="gov-banner"
+          >
+            <div
+              class="grid-row grid-gap-lg"
+            >
+              <div
+                class="usa-banner__guidance tablet:grid-col-6"
+              >
+                <img
+                  alt="Dot gov"
+                  class="usa-banner__icon usa-media-block__img"
+                  src="icon-dot-gov.svg"
+                />
+                <div
+                  class="usa-media-block__body"
+                >
+                  <p>
+                    <strong>
+                      Official websites use .gov
+                    </strong>
+                    <br />
+                    A 
+                    <strong>
+                      .gov
+                    </strong>
+                     website belongs to an official government organization in the United States.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="usa-banner__guidance tablet:grid-col-6"
+              >
+                <img
+                  alt="Https"
+                  class="usa-banner__icon usa-media-block__img"
+                  src="icon-https.svg"
+                />
+                <div
+                  class="usa-media-block__body"
+                >
+                  <p>
+                    <strong>
+                      Secure .gov websites use HTTPS
+                    </strong>
+                    <br />
+                    A 
+                    <strong>
+                      lock
+                    </strong>
+                     (
+                    <span
+                      class="icon-lock"
+                    >
+                      <svg
+                        aria-labelledby="banner-lock-title banner-lock-description"
+                        class="usa-banner__lock-image"
+                        height="64"
+                        role="img"
+                        viewBox="0 0 52 64"
+                        width="52"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <title
+                          id="banner-lock-title"
+                        >
+                          Lock
+                        </title>
+                        <desc
+                          id="banner-lock-description"
+                        >
+                          A locked padlock
+                        </desc>
+                        <path
+                          d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"
+                          fill="#000000"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                    ) or 
+                    <strong>
+                      https://
+                    </strong>
+                     means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div
+        class="grid-container easi-header__basic"
+      >
+        <div
+          class="usa-logo site-logo"
+          id="logo"
+        >
+          <a
+            href="/"
+          >
+            <em
+              aria-label="EASi home"
+              class="usa-logo__text"
+            >
+              EASi
+            </em>
+          </a>
+        </div>
+        <div>
+          <div
+            class="navbar--container easi-nav__user"
+          >
+            <div
+              class="easi-header__user"
+            >
+              John Doe
+            </div>
+            <div>
+                |  
+            </div>
+            <button
+              aria-controls="sign-out"
+              aria-expanded="false"
+              class="usa-button usa-button--unstyled"
+              data-testid="signout-link"
+              type="button"
+            >
+              Sign Out
+            </button>
+          </div>
+          <button
+            class="usa-menu-btn"
+            type="button"
+          >
+            <span
+              class="fa fa-bars"
+            />
+          </button>
+        </div>
+      </div>
+      <nav
+        aria-label="Navigation Bar"
+        class="border-top-light"
+        data-testid="navigation-bar"
+      >
+        <div
+          class="grid-container"
+        >
+          <nav
+            aria-label="Primary navigation"
+            class="usa-nav"
+          >
+            <button
+              class="usa-nav__close"
+              data-testid="navCloseButton"
+              type="button"
+            >
+              <img
+                alt="close"
+                src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
+              />
+            </button>
+            <ul
+              class="usa-nav__primary usa-accordion"
+            >
+              <li
+                class="usa-nav__primary-item"
+              >
+                <div
+                  class="easi-nav"
+                >
+                  <a
+                    aria-current="page"
+                    class="easi-nav__link usa-current"
+                    href="/"
+                  >
+                    <em
+                      aria-label="Home"
+                      class="usa-logo__text easi-nav__label"
+                    >
+                      Home
+                    </em>
+                  </a>
+                </div>
+              </li>
+              <li
+                class="usa-nav__primary-item"
+              />
+              <li
+                class="usa-nav__primary-item"
+              >
+                <div
+                  class="easi-nav"
+                >
+                  <a
+                    class="easi-nav__link"
+                    href="/system/making-a-request"
+                  >
+                    <em
+                      aria-label="IT Governance"
+                      class="usa-logo__text easi-nav__label"
+                    >
+                      IT Governance
+                    </em>
+                  </a>
+                </div>
+              </li>
+              <li
+                class="usa-nav__primary-item"
+              >
+                <div
+                  class="easi-nav"
+                >
+                  <a
+                    class="easi-nav__link"
+                    href="/508/making-a-request"
+                  >
+                    <em
+                      aria-label="Section 508"
+                      class="usa-logo__text easi-nav__label"
+                    >
+                      Section 508
+                    </em>
+                  </a>
+                </div>
+              </li>
+              <li
+                class="usa-nav__primary-item"
+              />
+              <li
+                class="usa-nav__primary-item"
+              />
+            </ul>
+          </nav>
+        </div>
+      </nav>
+      <div
+        class="grid-container easi-header--desktop "
+      />
+      <div
+        class="usa-overlay"
+      />
+      <div
+        class="usa-nav sidenav-mobile"
+      >
+        <div
+          class="usa-nav__inner"
+        >
+          <nav
+            aria-label="Navigation Bar"
+            class="border-top-light"
+            data-testid="navigation-bar"
+          >
+            <div
+              class="grid-container"
+            >
+              <nav
+                aria-label="Primary navigation"
+                class="usa-nav is-visible"
+              >
+                <button
+                  class="usa-nav__close"
+                  data-testid="navCloseButton"
+                  type="button"
+                >
+                  <img
+                    alt="close"
+                    src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
+                  />
+                </button>
+                <ul
+                  class="usa-nav__primary usa-accordion"
+                >
+                  <li
+                    class="usa-nav__primary-item"
+                  >
+                    <div
+                      class="easi-nav"
+                    >
+                      <a
+                        aria-current="page"
+                        class="easi-nav__link usa-current"
+                        href="/"
+                      >
+                        <em
+                          aria-label="Home"
+                          class="usa-logo__text easi-nav__label"
+                        >
+                          Home
+                        </em>
+                      </a>
+                    </div>
+                  </li>
+                  <li
+                    class="usa-nav__primary-item"
+                  />
+                  <li
+                    class="usa-nav__primary-item"
+                  >
+                    <div
+                      class="easi-nav"
+                    >
+                      <a
+                        class="easi-nav__link"
+                        href="/system/making-a-request"
+                      >
+                        <em
+                          aria-label="IT Governance"
+                          class="usa-logo__text easi-nav__label"
+                        >
+                          IT Governance
+                        </em>
+                      </a>
+                    </div>
+                  </li>
+                  <li
+                    class="usa-nav__primary-item"
+                  >
+                    <div
+                      class="easi-nav"
+                    >
+                      <a
+                        class="easi-nav__link"
+                        href="/508/making-a-request"
+                      >
+                        <em
+                          aria-label="Section 508"
+                          class="usa-logo__text easi-nav__label"
+                        >
+                          Section 508
+                        </em>
+                      </a>
+                    </div>
+                  </li>
+                  <li
+                    class="usa-nav__primary-item"
+                  />
+                  <li
+                    class="usa-nav__primary-item"
+                  />
+                  <li
+                    class="usa-nav__primary-item"
+                  >
+                    <div
+                      class="easi-nav__signout-container"
+                    >
+                      <div
+                        class="easi-nav__user margin-bottom-1"
+                      >
+                        John Doe
+                      </div>
+                      <a
+                        aria-current="page"
+                        class="signout-link active"
+                        href="/"
+                      >
+                        <em
+                          aria-label="Sign Out"
+                          class="usa-logo__text text-underline"
+                        >
+                          Sign Out
+                        </em>
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </header>
+    <main
+      class="easi-main-content grid-container margin-bottom-5"
+      id="main-content"
+      role="main"
+      tabindex="-1"
+    >
+      <div
+        class="easi-section easi-section__border-bottom"
+        data-testid="section-wrapper"
+      >
+        <h1
+          aria-live="polite"
+          class="easi-h1 margin-bottom-1"
+          tabindex="-1"
+        >
+          CMS Systems and Applications
+        </h1>
+        <p>
+          Find information about existing CMS systems and applications.
+        </p>
+        <div
+          class="usa-summary-box easi-request__container"
+          data-testid="summary-box"
+        >
+          <div
+            class="usa-summary-box__body"
+          >
+            <h3
+              class="usa-summary-box__heading"
+            />
+            <div
+              class="usa-summary-box__text"
+            >
+              <p>
+                Have a new system or application?
+              </p>
+              <a
+                class="usa-link easi-request__button-link"
+                href="/system/request-type"
+              >
+                Start an intake request
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h1
+        aria-live="polite"
+        class="easi-h1 margin-bottom-0"
+        tabindex="-1"
+      >
+        Bookmarked Systems
+      </h1>
+      <p
+        class="margin-bottom-3"
+      >
+        Bookmark systems that you want to access more quickly.
+      </p>
+      <div
+        class="margin-y-10"
+        data-testid="page-loading"
+      >
+        <div
+          class="text-center"
+        >
+          <span
+            aria-busy="true"
+            aria-valuetext="Loading the page"
+            class="easi-spinner easi-spinner--xl"
+            role="progressbar"
+          />
+        </div>
+        <h1
+          class="margin-top-6 text-center"
+        >
+          Loading the page
+        </h1>
+      </div>
+      <h1
+        aria-live="polite"
+        class="easi-h1 margin-bottom-0"
+        tabindex="-1"
+      >
+        All Systems
+      </h1>
+      <p
+        class="margin-bottom-5"
+      >
+        Bookmark systems that you want to access more quickly.
+      </p>
+      <span>
+        Showing 1-10 of 3 results
+      </span>
+      <div
+        class="usa-table-container--scrollable"
+        data-testid="scrollable-table-container"
+      >
+        <table
+          class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--3-K3t"
+          data-testid="table"
+        >
+          <caption
+            class="usa-sr-only"
+          >
+            systemTable.caption
+          </caption>
+          <thead>
+            <tr
+              role="row"
+            >
+              <th
+                aria-sort="none"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="min-width: 50px; padding: 0px 0px 0px .5em;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="fa fa-bookmark bookmark__icon fa-1x"
+                    data-testid="bookmark-icon"
+                  />
+                  <span
+                    class="margin-left-1 fa fa-sort caret"
+                  />
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="min-width: 150px;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  Acronym
+                  <span
+                    class="margin-left-1 fa fa-sort caret"
+                  />
+                </button>
+              </th>
+              <th
+                aria-sort="ascending"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="min-width: 150px;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  System Name
+                  <span
+                    class="margin-left-1 fa fa-caret-up"
+                  />
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="min-width: 150px;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  CMS Component
+                  <span
+                    class="margin-left-1 fa fa-sort caret"
+                  />
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="min-width: 150px;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  ATO Status
+                  <span
+                    class="margin-left-1 fa fa-sort caret"
+                  />
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            role="rowgroup"
+          >
+            <tr
+              role="row"
+            >
+              <th
+                role="cell"
+                style="padding-left: .5em;"
+              >
+                <i
+                  aria-hidden="true"
+                  class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
+                  data-testid="bookmark-icon"
+                />
+              </th>
+              <th
+                role="cell"
+              >
+                ZXC
+              </th>
+              <th
+                role="cell"
+              >
+                <a
+                  class="usa-link"
+                  href="/sandbox/3"
+                >
+                  Government
+                </a>
+              </th>
+              <th
+                role="cell"
+              >
+                <p>
+                  CMMI
+                </p>
+              </th>
+              <th
+                role="cell"
+              >
+                <div>
+                  <i
+                    class="fa system-health-icon-warning fa-exclamation-circle margin-right-1"
+                    data-testid="system-health-icon"
+                  />
+                  <span>
+                    Draft
+                  </span>
+                </div>
+              </th>
+            </tr>
+            <tr
+              role="row"
+            >
+              <th
+                role="cell"
+                style="padding-left: .5em;"
+              >
+                <i
+                  aria-hidden="true"
+                  class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
+                  data-testid="bookmark-icon"
+                />
+              </th>
+              <th
+                role="cell"
+              >
+                HAM
+              </th>
+              <th
+                role="cell"
+              >
+                <a
+                  class="usa-link"
+                  href="/sandbox/1"
+                >
+                  Happiness Achievement Module
+                </a>
+              </th>
+              <th
+                role="cell"
+              >
+                <p>
+                  CMMI
+                </p>
+              </th>
+              <th
+                role="cell"
+              >
+                <div>
+                  <i
+                    class="fa system-health-icon-success fa-check-circle margin-right-1"
+                    data-testid="system-health-icon"
+                  />
+                  <span>
+                    Approved
+                  </span>
+                </div>
+              </th>
+            </tr>
+            <tr
+              role="row"
+            >
+              <th
+                role="cell"
+                style="padding-left: .5em;"
+              >
+                <i
+                  aria-hidden="true"
+                  class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
+                  data-testid="bookmark-icon"
+                />
+              </th>
+              <th
+                role="cell"
+              >
+                ASD
+              </th>
+              <th
+                role="cell"
+              >
+                <a
+                  class="usa-link"
+                  href="/sandbox/326-74-0"
+                >
+                  Systems
+                </a>
+              </th>
+              <th
+                role="cell"
+              >
+                <p>
+                  CMMI
+                </p>
+              </th>
+              <th
+                role="cell"
+              >
+                <div>
+                  <i
+                    class="fa system-health-icon-fail fa-times-circle margin-right-1"
+                    data-testid="system-health-icon"
+                  />
+                  <span />
+                </div>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <nav
+        aria-label="Pagination"
+        class="usa-pagination padding-bottom-1"
+        data-testid="table-pagination"
+      >
+        <ul
+          class="usa-pagination__list"
+        >
+          <li
+            class="usa-pagination__item usa-pagination__page-no"
+          >
+            <div>
+              <div
+                class="usa-pagination__item"
+              >
+                <button
+                  aria-label="Page 1"
+                  class="usa-pagination__button usa-current"
+                  type="button"
+                >
+                  1
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </main>
+    <footer
+      class="usa-footer usa-footer--slim"
+    >
+      <div
+        class="usa-footer__primary-section"
+      >
+        <div
+          class="usa-footer__primary-container grid-row"
+        >
+          <div
+            class="mobile-lg:grid-col-8"
+          >
+            <nav
+              class="usa-footer__nav"
+            >
+              <ul
+                class="grid-row grid-gap"
+              >
+                <li
+                  class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+                >
+                  <a
+                    class="usa-link usa-footer__primary-link"
+                    href="/privacy-policy"
+                  >
+                    Privacy Policy
+                  </a>
+                </li>
+                <li
+                  class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+                >
+                  <a
+                    class="usa-link usa-footer__primary-link"
+                    href="/cookies"
+                  >
+                    Cookies
+                  </a>
+                </li>
+                <li
+                  class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+                >
+                  <a
+                    class="usa-link usa-footer__primary-link"
+                    href="/terms-and-conditions"
+                  >
+                    Terms and Conditions
+                  </a>
+                </li>
+                <li
+                  class="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+                >
+                  <a
+                    class="usa-link usa-footer__primary-link"
+                    href="/accessibility-statement"
+                  >
+                    Accessibility Statement
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div
+        class="usa-footer__secondary-section"
+      >
+        <div
+          class="grid-container"
+        >
+          <div>
+            <div
+              class="easi-footer__secondary-logo-wrap"
+            >
+              <img
+                alt="CMS.gov Logo"
+                src="cmsGovLogo.png"
+              />
+              <img
+                alt="Department of Health and Human Services USA"
+                class="margin-left-1"
+                src="hhsLogo.png"
+              />
+            </div>
+            <span>
+              A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 21244
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</DocumentFragment>
+`;

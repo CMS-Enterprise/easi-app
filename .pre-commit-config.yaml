@@ -25,6 +25,11 @@ repos:
             docs/adr/index.md
           )$
 
+  - repo: git://github.com/Bahjat/pre-commit-golang
+    rev: c3086eea8af86847dbdff2e46b85a5fe3c9d9656
+    hooks:
+      - id: go-fmt-import
+
   - repo: git://github.com/golangci/golangci-lint
     rev: v1.41.1
     hooks:

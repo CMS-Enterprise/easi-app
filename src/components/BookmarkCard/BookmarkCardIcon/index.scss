@@ -1,0 +1,15 @@
+.bookmark {
+    &__icon {
+        color: #005EA2;
+        display: inline-block;
+        cursor: pointer;
+    }
+}
+
+.black {
+    color: black;
+}
+
+.lightgrey {
+    color: $medium-gray
+}

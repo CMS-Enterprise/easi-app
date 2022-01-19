@@ -11,3 +11,11 @@
     margin-bottom: 1em;
   }
 }
+
+body .usa-footer {
+  &__primary-link {
+      &:visited {
+        color: $black;
+      }
+    }
+}

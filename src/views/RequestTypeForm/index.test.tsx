@@ -163,7 +163,7 @@ describe('The request type form page', () => {
   it('renders without crashing', async () => {
     renderPage([]);
     await waitFor(() => {
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
     });
 
     expect(screen.getByTestId('request-type-form')).toBeInTheDocument();
@@ -199,7 +199,7 @@ describe('The request type form page', () => {
     renderPage([intakeMutation]);
 
     await waitFor(() => {
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
     });
 
     screen.getByRole('radio', { name: /new system/i }).click();
@@ -240,7 +240,7 @@ describe('The request type form page', () => {
     renderPage([intakeMutation, intakeQuery({ requestType: 'MAJOR_CHANGES' })]);
 
     await waitFor(() => {
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
     });
 
     screen.getByRole('radio', { name: /major changes/i }).click();
@@ -281,7 +281,7 @@ describe('The request type form page', () => {
     renderPage([intakeMutation, intakeQuery({ requestType: 'RECOMPETE' })]);
 
     await waitFor(() => {
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
     });
 
     screen.getByRole('radio', { name: /re-compete/i }).click();
@@ -322,7 +322,7 @@ describe('The request type form page', () => {
     renderPage([intakeMutation, intakeQuery({})]);
 
     await waitFor(() => {
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
     });
 
     screen.getByRole('radio', { name: /decommission/i }).click();
@@ -335,7 +335,7 @@ describe('The request type form page', () => {
     renderPage([]);
 
     await waitFor(() => {
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
     });
 
     screen.getByRole('button', { name: /continue/i }).click();

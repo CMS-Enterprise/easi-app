@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BookmarkCard matches the snapshot 1`] = `
+<DocumentFragment>
+  <li
+    class="usa-card desktop:grid-col-6 grid-col-12 margin-top-2 margin-bottom-0"
+    data-testid="single-bookmark-card"
+  >
+    <div
+      class="usa-card__container"
+    >
+      <div
+        class="grid-col-12"
+      >
+        <div
+          class="bookmark__header easi-header__basic"
+        >
+          <h2
+            class="bookmark__title margin-top-0 margin-bottom-1"
+          >
+            <a
+              class="usa-link"
+              href="/systems/1"
+            >
+              Happiness Achievement Module
+            </a>
+          </h2>
+          <i
+            aria-hidden="true"
+            class="fa fa-bookmark bookmark__icon fa-2x"
+            data-testid="bookmark-icon"
+          />
+        </div>
+        <p
+          class="margin-0"
+        >
+          HAM
+        </p>
+        <p
+          class="bookmark__body-text line-height-body-4"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
+    feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
+    Sollicitudin donec aliquam dui sed odio porta.
+        </p>
+        <p
+          class="margin-bottom-0"
+        >
+          CMS Component
+        </p>
+        <p
+          class="text-bold margin-top-1"
+        >
+          CMMI
+        </p>
+        <div
+          class="easi-divider"
+        />
+        <div
+          class="bookmark__header easi-header__basic"
+        >
+          <div>
+            <p
+              class="margin-bottom-0"
+            >
+              ATO Status
+            </p>
+            <p
+              class="text-bold margin-top-0 margin-bottom-0"
+            >
+              Approved
+            </p>
+          </div>
+          <i
+            class="fa system-health-icon-success fa-check-circle fa-3x margin-top-3"
+            data-testid="system-health-icon"
+          />
+        </div>
+      </div>
+    </div>
+  </li>
+</DocumentFragment>
+`;

@@ -33,6 +33,7 @@ import PrivacyPolicy from 'views/PrivacyPolicy';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
+import SystemList from 'views/SystemList';
 import SystemProfileHealth from 'views/SystemProfileHealth';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
@@ -119,6 +120,9 @@ const AppRoutes = () => {
         path="/system/:systemId/:formPage"
         component={SystemIntake}
       />
+      {flags.systemProfile && (
+        <SecureRoute exact path="/system-profile" component={SystemList} />
+      )}
       <Redirect
         exact
         from="/business/:businessCaseId"
