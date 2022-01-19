@@ -1,7 +1,8 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
@@ -51,9 +52,7 @@ describe('System List View', () => {
         </MemoryRouter>
       );
 
-      expect(
-        await screen.findByText('Showing 1-10 of 0 results')
-      ).toBeInTheDocument();
+      expect(await screen.findByText('No results found.')).toBeInTheDocument();
     });
   });
 
@@ -87,6 +86,30 @@ describe('System List View', () => {
       // Bookmark Text
       expect(await screen.getAllByText('CMS Component')[0]).toBeInTheDocument();
       expect(await screen.findByRole('table')).toBeInTheDocument();
+    });
+
+    it('displays relevant results from filter', async () => {
+      render(
+        <MemoryRouter>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <SystemList />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      // User event to typing in query with debounce
+      await waitFor(() => {
+        userEvent.type(
+          screen.getByRole('searchbox'),
+          'Happiness Achievement Module'
+        );
+      });
+
+      // Mocked time for debounce of input
+      await waitFor(() => new Promise(res => setTimeout(res, 200)));
+
+      // ZXC is a mocked table row text item that should not be included in filtered results
+      expect(screen.queryByText('ZXC')).toBeNull();
     });
 
     it('matches snapshot', async () => {

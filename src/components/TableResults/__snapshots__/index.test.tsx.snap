@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Table Results Componenet matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class=""
+    data-testid="page-results"
+  >
+    <span>
+      <span>
+        Showing 1-10 of 100 results
+      </span>
+    </span>
+  </div>
+</DocumentFragment>
+`;

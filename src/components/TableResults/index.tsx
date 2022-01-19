@@ -1,11 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { UseGlobalFiltersState } from 'react-table';
 import classnames from 'classnames';
 
 type TableResultsProps = {
   className?: string;
-  globalFilter: UseGlobalFiltersState<{}>;
+  globalFilter: boolean;
   pageIndex: number;
   pageSize: number;
   filteredRowLength: number;
@@ -29,7 +28,7 @@ const TableResults = ({
   const pageLength: number = rows < 10 ? rows : (pageIndex + 1) * pageSize;
 
   return (
-    <div className={classnames(className)}>
+    <div className={classnames(className)} data-testid="page-results">
       <span>
         {rows === 0 ? (
           t('tableAndPagination:results.noResults')

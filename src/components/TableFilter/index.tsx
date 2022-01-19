@@ -24,13 +24,14 @@ const GlobalClientFilter = ({
   className
 }: GlobalClientFilterProps) => {
   const { t } = useTranslation('systemProfile');
-  // Set a debounce to capture set input before re-rendering on each character
+  // Set a debounce to capture set input before re-rendering on each character.
   const onChange = useAsyncDebounce(value => {
     setGlobalFilter(value || undefined);
   }, 200);
 
   return (
     <Form
+      data-testid="table-client-filter"
       role="search"
       className={classnames('usa-search', className)}
       onSubmit={e => {
@@ -43,6 +44,7 @@ const GlobalClientFilter = ({
       </Label>
       <TextInput
         id={`${tableID}-search`}
+        role="searchbox"
         type="search"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           // Currently only client-side filtering - updates search filter onChange
