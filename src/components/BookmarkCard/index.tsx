@@ -36,10 +36,7 @@ const BookmarkCard = ({
 }: BookmarkCardProps & CedarSystemProps) => {
   const { t } = useTranslation();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [deleteMutate, mutationResult2] = useMutation(
-    DeleteCedarSystemBookmarkQuery
-  );
+  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
 
   const handleDeleteBookmark = (cedarSystemId: string) => {
     deleteMutate({

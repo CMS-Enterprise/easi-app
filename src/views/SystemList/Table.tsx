@@ -72,8 +72,6 @@ export const Table = ({
         id: 'systemId',
         sortType: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
-          // const rowTwoElem = rowTwo.values[columnName];
-
           return bookmarkIdSet.has(rowOneElem) ? 1 : -1;
         },
         Cell: ({ row }: { row: Row<CedarSystem> }) =>
