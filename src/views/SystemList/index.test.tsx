@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
@@ -101,13 +101,19 @@ describe('System List View', () => {
         </MemoryRouter>
       );
 
-      // Table line item text
-      expect(
-        await screen.findByText('Happiness Achievement Module')
-      ).toBeInTheDocument();
-      // Bookmark Text
-      expect(await screen.getAllByText('CMS Component')[0]).toBeInTheDocument();
-      expect(await screen.findByRole('table')).toBeInTheDocument();
+      waitFor(() => {
+        expect(
+          screen.getByText('Happiness Achievement Module')
+        ).toBeInTheDocument();
+      });
+
+      waitFor(() => {
+        expect(screen.getAllByText('CMS Component')[0]).toBeInTheDocument();
+      });
+
+      waitFor(() => {
+        expect(screen.findByRole('table')).toBeInTheDocument();
+      });
     });
 
     it('matches snapshot', async () => {
