@@ -63,7 +63,7 @@ repos:
         name: check-code-generation
         entry: scripts/pre-commit-check-code-generation
         language: script
-        files: (pkg/graph/schema.graphql|pkg/graph/schema.resolvers.go|src/queries/*.ts)
+        files: (pkg/graph/schema.graphql|pkg/graph/schema.resolvers.go|src/queries/*.ts|pkg/cedar/intake/system_intake_schema.json)
 
   - repo: git://github.com/awslabs/git-secrets
     rev: 80230afa8c8bdeac766a0fece36f95ffaa0be778
