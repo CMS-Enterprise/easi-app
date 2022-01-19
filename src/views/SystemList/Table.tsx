@@ -22,6 +22,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePagination from 'components/TablePagination';
+import TableResults from 'components/TableResults';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
@@ -162,26 +163,13 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         className="margin-bottom-5"
       />
 
-      {/* TODO:  Break out page info into own component */}
-      {state.globalFilter ? (
-        <span>
-          {rows.length === 0
-            ? 'No results found.'
-            : `Showing ${pageIndex * pageSize + 1}-${
-                (pageIndex + 1) * pageSize
-              } of
-              ${rows.length} results`}
-        </span>
-      ) : (
-        <span>
-          {systems.length === 0
-            ? 'No results found.'
-            : `Showing ${pageIndex * pageSize + 1}-${
-                (pageIndex + 1) * pageSize
-              } of
-              ${systems.length} results`}
-        </span>
-      )}
+      <TableResults
+        globalFilter={state.globalFilter}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        filteredRowLength={rows.length}
+        rowLength={systems.length}
+      />
 
       <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
         <caption className="usa-sr-only">{t('systemTable.caption')}</caption>
