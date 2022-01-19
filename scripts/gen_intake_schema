@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+original_schema_file="pkg/cedar/intake/cedar_intake.yml"
+output_schema_file="pkg/cedar/intake/system_intake_schema.json"
+
+if [ ! -f "$original_schema_file" ]
+then
+  echo "Schema file not found" 1>&2
+  exit 1
+fi
+
+if ! command -v yq &> /dev/null
+then
+    echo "yq could not be found."
+    echo "Install yq from https://github.com/mikefarah/yq/#install"
+    exit 2
+fi
+
+yq_expr=$(cat <<-END
+    with_entries(select(.key | test("definitions"))) 
+  | .definitions
+  | with_entries(select(.key | test("EASIIntake")))
+  | {"definitions": .}
+  | .\$schema = "http://json-schema.org/draft-04/schema#"
+  | .\$ref = "#/definitions/EASIIntake"
+  | sort_keys(..)
+END
+)
+
+yq eval "$yq_expr" --output-format=json "$original_schema_file" > "$output_schema_file"
