@@ -35,7 +35,7 @@ const TableResults = ({
   // Sets the max results to either the filtered dataset or default (depending on if filtering)
   const rows: number = globalFilter ? filteredRowLength : rowLength;
 
-  const currentPage = pageIndex * pageSize + 1;
+  const currentPage: number = pageIndex * pageSize + 1;
 
   // If data or filter results are less than 10 (page size) - then default to the number of returned rows
   const pageRange: number = rows < 10 ? rows : (pageIndex + 1) * pageSize;
