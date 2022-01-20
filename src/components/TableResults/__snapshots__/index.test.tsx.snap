@@ -8,8 +8,7 @@ exports[`Table Results Componenet matches snapshot 1`] = `
   >
     <span>
       <div>
-        Showing 1-10 of 100 results  
-        <strong />
+        Showing 1-10 of 100 results 
       </div>
     </span>
   </div>

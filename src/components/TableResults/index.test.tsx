@@ -48,7 +48,7 @@ describe('Table Results Componenet', () => {
     expect(
       await screen.getByText(/Showing 1-10 of 42 results/)
     ).toBeInTheDocument();
-    expect(await screen.findByText('Happiness')).toBeInTheDocument();
+    expect(await screen.findByText('"Happiness"')).toBeInTheDocument();
   });
 
   it('matches snapshot', async () => {

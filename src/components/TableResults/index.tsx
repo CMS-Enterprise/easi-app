@@ -12,6 +12,16 @@ type TableResultsProps = {
   rowLength: number;
 };
 
+const displayResult = (searchTerm: FilterValue) =>
+  searchTerm ? (
+    <span>
+      <Trans i18nKey="tableAndPagination:results.searchInput" />{' '}
+      <strong>&quot;{searchTerm}&quot;</strong>{' '}
+    </span>
+  ) : (
+    ''
+  );
+
 const TableResults = ({
   className,
   globalFilter,
@@ -36,8 +46,8 @@ const TableResults = ({
         {rows === 0 ? (
           <div>
             {t('tableAndPagination:results.noResults')}{' '}
-            {globalFilter && t('tableAndPagination:results.searchInput')}{' '}
-            <strong>{globalFilter}</strong>
+            {/* Displays the search input even if there are no results */}
+            {displayResult(globalFilter)}
           </div>
         ) : (
           <div>
@@ -45,8 +55,7 @@ const TableResults = ({
               indexZero {{ currentPage }} indexOne {{ pageRange }} indexTwo{' '}
               {{ rows }}
             </Trans>
-            {globalFilter && t('tableAndPagination:results.searchInput')}{' '}
-            <strong>{globalFilter}</strong>
+            {displayResult(globalFilter)}
           </div>
         )}
       </span>

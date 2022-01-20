@@ -160,7 +160,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         setGlobalFilter={setGlobalFilter}
         tableID={t('systemTable.id')}
         tableName={t('systemTable.title')}
-        className="margin-bottom-5"
+        className="margin-bottom-4"
       />
 
       <TableResults
@@ -169,6 +169,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         pageSize={pageSize}
         filteredRowLength={rows.length}
         rowLength={systems.length}
+        className="margin-bottom-4"
       />
 
       <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
