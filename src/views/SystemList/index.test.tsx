@@ -52,7 +52,9 @@ describe('System List View', () => {
         </MemoryRouter>
       );
 
-      expect(await screen.findByText('No results found.')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryAllByRole('cell')).toEqual([]);
+      });
     });
   });
 
@@ -109,7 +111,7 @@ describe('System List View', () => {
       await waitFor(() => new Promise(res => setTimeout(res, 200)));
 
       // ZXC is a mocked table row text item that should not be included in filtered results
-      expect(screen.queryByText('ZXC')).toBeNull();
+      expect(await screen.queryByText('ZXC')).toBeNull();
     });
 
     it('matches snapshot', async () => {
