@@ -1,8 +1,8 @@
-# TODO (title depends on what solution we use)
+# Do not use Dataloader for dealing with n+1 query issues with GraphQL Resolvers
 
 **User Story:** *(none)*
 
-here's a potential problem with how our GraphQL resolvers are written that could impact scalability as our database gets larger and as we fetch more data and more complex structures from CEDAR. With some nested objects, our GraphQL resolvers can make n+1 queries to the database (or other underlying data source, i.e. CEDAR) to respond to a request. As an example, this GraphQL query:
+There's a potential problem with how our GraphQL resolvers are written that could impact scalability as our database gets larger and as we fetch more data and more complex structures from CEDAR. With some nested objects, our GraphQL resolvers can make n+1 queries to the database (or other underlying data source, i.e. CEDAR) to respond to a request. As an example, this GraphQL query:
 
 ```graphQL
 query {
@@ -45,26 +45,14 @@ This could cause some scalability issues as the number of records in our databas
   * Implement this with the [`dataloaden`](https://github.com/vektah/dataloaden) library. The [`dataloaden-proof-of-concept` branch](https://github.com/CMSgov/easi-app/tree/dataloaden-proof-of-concept) has a proof of concept for using this, which batches the SQL queries.
   * Implement this with the [`graph-gophers/dataloader`](https://github.com/graph-gophers/dataloader) library.
 
-**TODO**: Anything else we can think of?
-
 
 ## Decision Outcome
 
-**TODO**
+* Chosen Alternative: Do nothing for now (though keep an eye on the issue going forward)
+  * This isn't currently causing us problems. If it starts to impact us in the future, we'll revisit this.
 
-* Chosen Alternative: *[alternative 1]*
-* *[justification.
-  e.g., only alternative,
-  which meets KO criterion decision driver
-  | which resolves force force
-  | ...
-  | comes out best (see below)]*
-* *[consequences. e.g.,
-  negative impact on quality attribute,
-  follow-up decisions required,
-  ...]* <!-- optional -->
 
-## Pros and Cons of the Alternatives <!-- optional -->
+## Pros and Cons of the Alternatives
 
 ### Batch queries (general approach)
 
