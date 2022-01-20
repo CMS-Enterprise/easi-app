@@ -2,26 +2,29 @@ import React from 'react';
 
 import BookmarkCard from 'components/BookmarkCard';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
+import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
-import { CedarSystemBookMark } from 'views/Sandbox/mockSystemData';
 
-export const findBookmark = (
-  systemId: string,
-  savedBookMarks: CedarSystemBookMark[]
-): boolean =>
-  savedBookMarks.some(bookmark => bookmark.cedarSystemId === systemId);
-
-export const filterBookmarks = (
+const filterBookmarks = (
   systems: CedarSystem[],
-  savedBookMarks: CedarSystemBookMark[]
-): React.ReactNode =>
-  systems
-    .filter(system => findBookmark(system.id, savedBookMarks))
-    .map(system => (
-      <BookmarkCard
-        type="systemProfile"
-        key={system.id}
-        statusIcon={mapCedarStatusToIcon(system.status)}
-        {...system}
-      />
-    ));
+  savedBookmarks: CedarSystemBookmark[],
+  refetch: () => any | undefined
+): React.ReactNode => {
+  const bookmarkIdSet: Set<string> = new Set(
+    savedBookmarks.map(sys => sys.cedarSystemId)
+  );
+
+  const bookmarkedSystems = systems.filter(sys => bookmarkIdSet.has(sys.id));
+
+  return bookmarkedSystems.map(system => (
+    <BookmarkCard
+      type="systemProfile"
+      key={system.id}
+      statusIcon={mapCedarStatusToIcon(system.status)}
+      {...system}
+      refetch={refetch}
+    />
+  ));
+};
+
+export default filterBookmarks;

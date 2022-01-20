@@ -62,17 +62,14 @@ func (s *Store) FetchCedarSystemBookmarks(ctx context.Context) ([]*models.CedarS
 
 // DeleteCedarSystemBookmark deletes an existing cedar system bookmark object in the database
 func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookmark *models.CedarSystemBookmark) (*models.CedarSystemBookmark, error) {
+	euaUserID := appcontext.Principal(ctx).ID()
+
 	const deleteCedarSystemBookmarkSQL = `
 		DELETE FROM cedar_system_bookmarks
-		WHERE eua_user_id.id = :id
-		AND cedar_system_id = :
-		RETURNING *`
+		WHERE eua_user_id = $1
+		AND cedar_system_id = $2;`
 
-	_, err := s.db.NamedExecContext(
-		ctx,
-		deleteCedarSystemBookmarkSQL,
-		cedarSystemBookmark,
-	)
+	_, err := s.db.Exec(deleteCedarSystemBookmarkSQL, euaUserID, cedarSystemBookmark.CedarSystemID)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete cedar system bookmark with error %s", zap.Error(err))
