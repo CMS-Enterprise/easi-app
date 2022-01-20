@@ -102,18 +102,14 @@ describe('System List View', () => {
         </MemoryRouter>
       );
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(
           screen.getByText('Happiness Achievement Module')
         ).toBeInTheDocument();
       });
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getAllByText('CMS Component')[0]).toBeInTheDocument();
-      });
-
-      waitFor(() => {
-        expect(screen.findByRole('table')).toBeInTheDocument();
       });
     });
 
