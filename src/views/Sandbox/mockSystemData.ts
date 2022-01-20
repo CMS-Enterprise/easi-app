@@ -57,12 +57,12 @@ export const mockSystemInfo: CedarSystemProps[] = [
   }
 ];
 
-export interface CedarSystemBookMark {
+export interface CedarSystemBookmark {
   euaUserId: string;
   cedarSystemId: string;
 }
 
-export const mockBookmarkInfo: CedarSystemBookMark[] = [
+export const mockBookmarkInfo: CedarSystemBookmark[] = [
   {
     euaUserId: 'A',
     cedarSystemId: '326-7-0'

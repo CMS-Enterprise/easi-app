@@ -180,6 +180,13 @@ export interface CreateAccessibilityRequestNoteInput {
 }
 
 /**
+ * The data needed to bookmark a cedar system
+ */
+export interface CreateCedarSystemBookmarkInput {
+  cedarSystemId: string;
+}
+
+/**
  * Input data for extending a system request's lifecycle ID
  */
 export interface CreateSystemIntakeActionExtendLifecycleIdInput {

@@ -7,6 +7,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
+import { useMutation } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
@@ -14,24 +15,56 @@ import UswdsReactLink from 'components/LinkWrapper';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
+import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
+import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
+import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
-import { CedarSystemBookMark } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo/mockBookmarkInfo with dynamic data fetched from backend and CEDAR
-
-import { findBookmark } from './util';
 
 import './index.scss';
 
 type TableProps = {
   systems: CedarSystem[];
-  savedBookmarks: CedarSystemBookMark[];
+  savedBookmarks: CedarSystemBookmark[];
+  refetchBookmarks: () => any;
 };
 
-export const Table = ({ systems, savedBookmarks }: TableProps) => {
+export const Table = ({
+  systems,
+  savedBookmarks,
+  refetchBookmarks
+}: TableProps) => {
   const { t } = useTranslation('systemProfile');
 
+  const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery);
+  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
+
   const columns = useMemo<Column<CedarSystem>[]>(() => {
+    const handleCreateBookmark = (cedarSystemId: string) => {
+      createMutate({
+        variables: {
+          input: {
+            cedarSystemId
+          }
+        }
+      }).then(refetchBookmarks);
+    };
+
+    const handleDeleteBookmark = (cedarSystemId: string) => {
+      deleteMutate({
+        variables: {
+          input: {
+            cedarSystemId
+          }
+        }
+      }).then(refetchBookmarks);
+    };
+
+    const bookmarkIdSet: Set<string> = new Set(
+      savedBookmarks.map(bm => bm.cedarSystemId)
+    );
+
     return [
       {
         Header: <BookmarkCardIcon size="sm" />,
@@ -39,18 +72,20 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         id: 'systemId',
         sortType: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
-          const rowTwoElem = rowTwo.values[columnName];
-
-          return findBookmark(rowOneElem, savedBookmarks) >
-            findBookmark(rowTwoElem, savedBookmarks)
-            ? 1
-            : -1;
+          return bookmarkIdSet.has(rowOneElem) ? 1 : -1;
         },
         Cell: ({ row }: { row: Row<CedarSystem> }) =>
-          findBookmark(row.original.id, savedBookmarks) ? (
-            <BookmarkCardIcon size="sm" />
+          bookmarkIdSet.has(row.original.id) ? (
+            <BookmarkCardIcon
+              size="sm"
+              onClick={() => handleDeleteBookmark(row.original.id)}
+            />
           ) : (
-            <BookmarkCardIcon color="lightgrey" size="sm" />
+            <BookmarkCardIcon
+              color="lightgrey"
+              size="sm"
+              onClick={() => handleCreateBookmark(row.original.id)}
+            />
           )
       },
       {
@@ -95,7 +130,7 @@ export const Table = ({ systems, savedBookmarks }: TableProps) => {
         )
       }
     ];
-  }, [t, savedBookmarks]);
+  }, [t, savedBookmarks, createMutate, deleteMutate, refetchBookmarks]);
 
   const {
     getTableProps,
