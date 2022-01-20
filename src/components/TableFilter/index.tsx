@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import './index.scss';
 
 // Truss has a SearchBar component, but it only takes onSubmit - meant for server side filtering.
-// Currently this component is meant for client side filtering using onChange
+// Currently this component is used for client side filtering using onChange
 
 type GlobalClientFilterProps = {
   setGlobalFilter: (filterValue: FilterValue) => void;
@@ -24,9 +24,10 @@ const GlobalClientFilter = ({
   className
 }: GlobalClientFilterProps) => {
   const { t } = useTranslation('systemProfile');
-  // Set a debounce to capture set input before re-rendering on each character.
+  // Set a debounce to capture set input before re-rendering on each character.  Preparation for BE fetching/filtering.
+  // May not be necessary until then
   const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined);
+    setGlobalFilter(value);
   }, 200);
 
   return (
