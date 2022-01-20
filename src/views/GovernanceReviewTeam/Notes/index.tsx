@@ -156,7 +156,6 @@ const Notes = () => {
                     closeLabel="more"
                     text={lcidExpirationChange.newScope}
                     charLimit={freeFormTextCharLimit}
-                    className="margin-top-2"
                   />
                 </dd>
                 <dt>{t('notes.extendLcid.oldScope')}</dt>
@@ -167,7 +166,6 @@ const Notes = () => {
                     closeLabel="more"
                     text={lcidExpirationChange.previousScope}
                     charLimit={freeFormTextCharLimit}
-                    className="margin-top-2"
                   />
                 </dd>
                 <dt>{t('notes.extendLcid.newNextSteps')}</dt>
@@ -178,7 +176,6 @@ const Notes = () => {
                     closeLabel="more"
                     text={lcidExpirationChange.newNextSteps}
                     charLimit={freeFormTextCharLimit}
-                    className="margin-top-2"
                   />
                 </dd>
                 <dt>{t('notes.extendLcid.oldNextSteps')}</dt>
@@ -189,7 +186,6 @@ const Notes = () => {
                     closeLabel="more"
                     text={lcidExpirationChange.previousNextSteps}
                     charLimit={freeFormTextCharLimit}
-                    className="margin-top-2"
                   />
                 </dd>
                 <dt>{t('notes.extendLcid.newCostBaseline')}</dt>
@@ -201,7 +197,6 @@ const Notes = () => {
                       closeLabel="more"
                       text={lcidExpirationChange.newCostBaseline}
                       charLimit={freeFormTextCharLimit}
-                      className="margin-top-2"
                     />
                   </dd>
                 ) : (
@@ -216,7 +211,6 @@ const Notes = () => {
                       closeLabel="more"
                       text={lcidExpirationChange.previousCostBaseline}
                       charLimit={freeFormTextCharLimit}
-                      className="margin-top-2"
                     />
                   </dd>
                 ) : (
