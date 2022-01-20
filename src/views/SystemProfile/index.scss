@@ -1,0 +1,19 @@
+#main-content {
+    .system-profile {
+        &__summary-box {
+            border-top: 0;
+            background-color: color($theme-color-primary-lighter);
+            padding-left: 0;
+        }
+
+        &__acronym {
+            font-size: 1em;
+            font-weight: normal;
+        }
+    }    
+
+    .usa-breadcrumb {
+        background-color: transparent;
+        padding: 0;
+    }   
+}

@@ -34,7 +34,7 @@ import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import SystemList from 'views/SystemList';
-import SystemProfileHealth from 'views/SystemProfileHealth';
+import SystemProfile from 'views/SystemProfile';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
@@ -121,7 +121,14 @@ const AppRoutes = () => {
         component={SystemIntake}
       />
       {flags.systemProfile && (
-        <SecureRoute exact path="/system-profile" component={SystemList} />
+        <>
+          <SecureRoute exact path="/system-profile" component={SystemList} />
+          <SecureRoute
+            path="/system-profile/:systemId"
+            exact
+            component={SystemProfile}
+          />
+        </>
       )}
       <Redirect
         exact
@@ -150,11 +157,7 @@ const AppRoutes = () => {
       {/* Misc Routes */}
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
       {flags.sandbox && (
-        <Route
-          path="/sandbox/:systemId"
-          exact
-          component={SystemProfileHealth}
-        />
+        <Route path="/sandbox/:systemId" exact component={SystemProfile} />
       )}
 
       <Route path="/implicit/callback" component={LoginCallback} />
