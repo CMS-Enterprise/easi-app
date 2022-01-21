@@ -848,6 +848,12 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		}, nil
 	}
 
+	if input.Scope == "" {
+		return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
+			UserErrors: []*model.UserError{{Message: "Must provide a non-empty scope", Path: []string{"scope"}}},
+		}, nil
+	}
+
 	intake, err := r.service.CreateActionExtendLifecycleID(
 		ctx, &models.Action{
 			IntakeID:   &input.ID,
