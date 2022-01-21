@@ -8,6 +8,19 @@ const systemProfile = {
   tabs: {
     systemProfile: 'System Profile'
   },
+  singleSystem: {
+    id: 'single-system-profile',
+    summary: {
+      expand: 'Expand system summary',
+      hide: 'Hide system summary',
+      label: 'Open system external link',
+      view: 'View',
+      subheader1: 'CMS Component',
+      subheader2: 'Business Owner',
+      subheader3: 'Go Live Date',
+      subheader4: 'Most recent major change release'
+    }
+  },
   systemTable: {
     title: 'All Systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',

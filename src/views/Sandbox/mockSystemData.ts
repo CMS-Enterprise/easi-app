@@ -60,15 +60,15 @@ export const mockSystemInfo: CedarSystemProps[] = [
     id: '326-9-0',
     acronym: 'BBC',
     status: 'Approved',
-    name: '1-800-Medicare Beneficiary Contact Center Operations Contractor',
+    name: 'Medicare Beneficiary Contact Center',
     description: `The Beneficiary Contact Center (BCC) provides an unbiased 
     central point of contact for Medicare Beneficiaries and their caregivers with 
     scripted responses on coverage information, health care choices, claims, and 
     preventive services.The Balanced Budget Act of 1997 mandated a toll free 
     line for beneficiaries. CMS created a 1-800-Medicare`,
     businessOwnerOrg: 'Division of Call Center Systems',
-    businessOwnerOrgComp: 'Good to go!',
-    systemMaintainerOrg: 'success',
+    businessOwnerOrgComp: 'Geraldine Hobbs',
+    systemMaintainerOrg: 'Jan 6 2022',
     systemMaintainerOrgComp: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.

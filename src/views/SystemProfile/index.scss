@@ -7,8 +7,17 @@
         }
 
         &__acronym {
-            font-size: 1em;
+            font-size: 1rem;
             font-weight: normal;
+        }
+
+        &__summary-body {
+            font-weight: normal;
+            font-size: 1rem;
+        }
+
+        &__subheader {
+            font-size: 1.5rem;
         }
     }    
 

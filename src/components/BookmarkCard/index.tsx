@@ -51,13 +51,7 @@ const BookmarkCard = ({
   return (
     <Card
       data-testid="single-bookmark-card"
-      className={classnames(
-        'desktop:grid-col-6',
-        'grid-col-12',
-        'margin-top-2',
-        'margin-bottom-0',
-        className
-      )}
+      className={classnames('desktop:grid-col-6', 'grid-col-12', className)}
     >
       <div className="grid-col-12">
         <div className="bookmark__header easi-header__basic">
