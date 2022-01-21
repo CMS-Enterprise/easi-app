@@ -20,6 +20,15 @@ Right now we likely don't have the engineering staff to implement all the infras
 
 Additionally, the main con of in-application memory caching (that it's not shared across multiple tasks) is not a huge deal at this time, since we typically are only running 1 task at a time due to our workload being relatively low.
 
+## Open Questions
+
+- Is there a way to avoid (or minimize) the amount of times that a user "feels" the load time of an expensive call?
+  - A few potential options:
+    - Periodically "seed" the cache, rather than populating it when a request is made for the data
+      - This has the upside of always having users hit the cache directly, but the downside is that we'd have to write some scheduled code to periodically seed the cache (Lambda?)
+    - Have the cache never expire, and always return data from the cache, but instead of refreshing the cache _before_ returning data to the front-end, refresh the cache _after_ we return data
+      - This has the upside of also always returning from cache (fast!), but the (major) downside of potentially having data from the cache be _very_ old.
+
 ## Pros and Cons of the Alternatives
 
 ### In application memory caching
