@@ -1,11 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
   Grid,
+  SideNav,
   SummaryBox
 } from '@trussworks/react-uswds';
 
@@ -21,15 +22,50 @@ import {
   DescriptionDefinition,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import SectionWrapper from 'components/shared/SectionWrapper';
 // import SystemProfileHealthCard from 'components/SystemProfileHealthCard';
 import NotFound from 'views/NotFound';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
 
+import SystemHome from './components/systemHome';
+
 import './index.scss';
+
+type componentProps = {
+  label: string;
+  component: React.ReactNode;
+  route: string;
+};
+
+const sideNavItems = (id: string) => [
+  {
+    label: 'home',
+    component: <SystemHome />,
+    route: `/system-profile/${id}`
+  },
+  {
+    label: 'details',
+    component: <SystemHome />,
+    route: `/system-profile/${id}/details`
+  },
+  {
+    label: 'team-and-contract',
+    component: <SystemHome />,
+    route: `/system-profile/${id}/team-and-contract`
+  }
+];
+
+// Locates the correct component to display in sub-navigation based on url id and parameter
+const displaySystemComponent = (label: string, id: string) =>
+  sideNavItems(id).find((item: componentProps) => item.label === label)
+    ?.component || 'Not Found'; // TODO: Create a not found component that doesnt render entire app like <NotFound />
 
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemId, subinfo } = useParams<{
+    systemId: string;
+    subinfo: string;
+  }>();
 
   // TODO: Use GQL query for single system of CEDAR data
   const systemInfo = mockSystemInfo.find(
@@ -85,8 +121,7 @@ const SystemProfile = () => {
                     variant="external"
                     target="_blank"
                   >
-                    {t('singleSystem.summary.view')}
-                    {systemInfo.name}
+                    {t('singleSystem.summary.view')} {systemInfo.name}
                     <span aria-hidden>&nbsp;</span>
                   </UswdsReactLink>
 
@@ -134,6 +169,32 @@ const SystemProfile = () => {
             </PageHeading>
           </Grid>
         </SummaryBox>
+        <SectionWrapper className="margin-top-5 margin-bottom-5">
+          <Grid className="grid-container">
+            <Grid row>
+              <Grid desktop={{ col: 3 }}>
+                <SideNav
+                  items={sideNavItems(systemInfo.id).map(item => (
+                    <NavLink
+                      to={item.route}
+                      activeClassName="usa-current"
+                      exact
+                    >
+                      {t(`navigation.${item.label}`)}
+                    </NavLink>
+                  ))}
+                />
+              </Grid>
+              <Grid
+                desktop={{ col: 6 }}
+                className="padding-left-5 padding-right-5"
+              >
+                {displaySystemComponent(subinfo || 'home', systemInfo.id)}
+              </Grid>
+              <Grid desktop={{ col: 3 }} />
+            </Grid>
+          </Grid>
+        </SectionWrapper>
       </MainContent>
       <Footer />
     </PageWrapper>

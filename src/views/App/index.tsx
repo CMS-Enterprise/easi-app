@@ -128,6 +128,11 @@ const AppRoutes = () => {
             exact
             component={SystemProfile}
           />
+          <SecureRoute
+            path="/system-profile/:systemId/:subinfo"
+            exact
+            component={SystemProfile}
+          />
         </>
       )}
       <Redirect

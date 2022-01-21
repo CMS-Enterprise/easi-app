@@ -5,6 +5,11 @@ const systemProfile = {
     info: 'Have a new system or application?',
     button: 'Start an intake request'
   },
+  navigation: {
+    home: 'System Home',
+    details: 'System Details',
+    'team-and-contract': 'Team and Contract'
+  },
   tabs: {
     systemProfile: 'System Profile'
   },

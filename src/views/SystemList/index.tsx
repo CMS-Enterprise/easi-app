@@ -121,9 +121,9 @@ export const SystemList = () => {
               </SectionWrapper>
             )}
 
-            <PageHeading className="margin-bottom-0">
+            <h1 className="margin-bottom-0 margin-top-5">
               {t('systemProfile:systemTable.title')}
-            </PageHeading>
+            </h1>
 
             <p className="margin-bottom-5">
               {t('systemProfile:systemTable.subtitle')}
