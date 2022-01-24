@@ -5,8 +5,9 @@ import SystemHome from './systemHome';
 const sideNavItems = (id: string) => [
   {
     label: 'home',
+    groupEnd: true,
     component: <SystemHome />,
-    route: `/system-profile/${id}`
+    route: `/system-profile/${id}/home`
   },
   {
     label: 'details',
@@ -25,6 +26,7 @@ const sideNavItems = (id: string) => [
   },
   {
     label: 'tools-and-software',
+    groupEnd: true,
     component: <SystemHome />,
     route: `/system-profile/${id}/tools-and-software`
   },
@@ -40,6 +42,7 @@ const sideNavItems = (id: string) => [
   },
   {
     label: 'section-508',
+    groupEnd: true,
     component: <SystemHome />,
     route: `/system-profile/${id}/section-508`
   },

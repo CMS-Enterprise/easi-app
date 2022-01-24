@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import {
@@ -9,6 +9,7 @@ import {
   SideNav,
   SummaryBox
 } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import Footer from 'components/Footer';
@@ -23,7 +24,6 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
-// import SystemProfileHealthCard from 'components/SystemProfileHealthCard';
 import NotFound from 'views/NotFound';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
 
@@ -43,7 +43,6 @@ const displaySystemComponent = (label: string, id: string) =>
     ?.component || 'Not Found'; // TODO: Create a not found component that doesnt render entire app like <NotFound />
 
 const SystemProfile = () => {
-  const scrollRef = useRef<null | HTMLDivElement>(null);
   const { t } = useTranslation('systemProfile');
   const { systemId, subinfo } = useParams<{
     systemId: string;
@@ -55,12 +54,14 @@ const SystemProfile = () => {
     mockSystem => mockSystem.id === systemId
   );
 
-  useEffect(() => {
-    if (subinfo && scrollRef?.current) {
-      // Scroll to element with should be in view after rendering
-      scrollRef.current.scrollIntoView();
-    }
-  }, [subinfo]);
+  // // TODO: implement cleaner way for sub-route components to keep scroll position
+  // const scrollRef = useRef<null | HTMLDivElement>(null);
+  // useEffect(() => {
+  //   if (subinfo && scrollRef?.current) {
+  //     // Scroll to element with should be in view after rendering
+  //     scrollRef.current.scrollIntoView();
+  //   }
+  // }, [subinfo]);
 
   if (systemInfo === undefined) {
     return <NotFound />;
@@ -160,7 +161,7 @@ const SystemProfile = () => {
           </Grid>
         </SummaryBox>
         <SectionWrapper className="margin-top-5 margin-bottom-5">
-          <div ref={scrollRef} />
+          {/* <div ref={scrollRef} /> */}
           <Grid className="grid-container">
             <Grid row>
               <Grid desktop={{ col: 3 }}>
@@ -168,7 +169,11 @@ const SystemProfile = () => {
                   items={sideNavItems(systemInfo.id).map(item => (
                     <NavLink
                       to={item.route}
+                      key={item.label}
                       activeClassName="usa-current"
+                      className={classnames({
+                        'nav-group-border': item.groupEnd
+                      })}
                       exact
                     >
                       {t(`navigation.${item.label}`)}
