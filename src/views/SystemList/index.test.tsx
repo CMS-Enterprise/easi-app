@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
@@ -62,9 +63,9 @@ describe('System List View', () => {
         </MemoryRouter>
       );
 
-      expect(
-        await screen.findByText('Showing 1-10 of 0 results')
-      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryAllByRole('cell')).toEqual([]);
+      });
     });
   });
 
@@ -101,19 +102,39 @@ describe('System List View', () => {
         </MemoryRouter>
       );
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(
           screen.getByText('Happiness Achievement Module')
         ).toBeInTheDocument();
       });
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getAllByText('CMS Component')[0]).toBeInTheDocument();
       });
+    });
 
-      waitFor(() => {
-        expect(screen.findByRole('table')).toBeInTheDocument();
+    it('displays relevant results from filter', async () => {
+      render(
+        <MemoryRouter>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <SystemList />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      // User event to typing in query with debounce
+      await waitFor(() => {
+        userEvent.type(
+          screen.getByRole('searchbox'),
+          'Happiness Achievement Module'
+        );
       });
+
+      // Mocked time for debounce of input
+      await waitFor(() => new Promise(res => setTimeout(res, 200)));
+
+      // ZXC is a mocked table row text item that should not be included in filtered results
+      expect(await screen.queryByText('ZXC')).toBeNull();
     });
 
     it('matches snapshot', async () => {
