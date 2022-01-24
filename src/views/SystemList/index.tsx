@@ -17,18 +17,22 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
-import Alert from 'components/shared/Alert';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import Alert, { AlertText } from 'components/shared/Alert';
+import { ErrorAlert } from 'components/shared/ErrorAlert';
 import SectionWrapper from 'components/shared/SectionWrapper';
+import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
+import {
+  GetCedarSystemBookmarks,
+  GetCedarSystemBookmarks_cedarSystemBookmarks as CedarSystemBookmark
+} from 'queries/types/GetCedarSystemBookmarks';
 import {
   GetCedarSystems,
   GetCedarSystems_cedarSystems as CedarSystem
 } from 'queries/types/GetCedarSystems';
-import { mockBookmarkInfo } from 'views/Sandbox/mockSystemData'; // TODO - replace mockSystemInfo/mockBookmarkInfo with dynamic data fetched from backend and CEDAR
 
 import Table from './Table';
-import { filterBookmarks } from './util';
+import filterBookmarks from './util';
 
 import './index.scss';
 
@@ -36,13 +40,21 @@ export const SystemList = () => {
   const { t } = useTranslation('systemProfile');
 
   // TODO: query parameters and caching
-  const { loading, error, data } = useQuery<GetCedarSystems>(
-    GetCedarSystemsQuery
-  );
+  const {
+    loading: loadingSystems,
+    error: error1,
+    data: data1
+  } = useQuery<GetCedarSystems>(GetCedarSystemsQuery);
 
-  const systemsTableData = data?.cedarSystems
-    ? (data.cedarSystems as CedarSystem[])
-    : ([] as CedarSystem[]);
+  const {
+    loading: loadingBookmarks,
+    error: error2,
+    data: data2,
+    refetch: refetchBookmarks
+  } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
+
+  const systemsTableData = (data1?.cedarSystems ?? []) as CedarSystem[];
+  const bookmarks: CedarSystemBookmark[] = data2?.cedarSystemBookmarks ?? [];
 
   return (
     <PageWrapper>
@@ -64,7 +76,7 @@ export const SystemList = () => {
           </SummaryBox>
         </SectionWrapper>
 
-        {loading ? (
+        {loadingSystems ? (
           <PageLoading />
         ) : (
           <>
@@ -76,31 +88,38 @@ export const SystemList = () => {
               {t('systemProfile:bookmark.subtitle')}
             </p>
 
-            {/* TEMPORARY mockSystemInfo/mockBookmarkInfo data until we get live data from CEDAR as well as backend storage per EASi-1470 */}
-            <SectionWrapper borderBottom className="margin-bottom-3">
-              {mockBookmarkInfo.length === 0 ? (
-                <Grid tablet={{ col: 12 }} className="margin-bottom-5">
-                  <Alert type="info" className="padding-1">
-                    <h3 className="margin-0">
-                      {t('systemProfile:noBookmark.header')}
-                    </h3>
-                    <div>
-                      <span className="margin-0">
-                        {t('systemProfile:noBookmark.text1')}
-                      </span>
-                      <BookmarkCardIcon size="sm" color="black" />
-                      <span className="margin-0">
-                        {t('systemProfile:noBookmark.text2')}
-                      </span>
-                    </div>
-                  </Alert>
-                </Grid>
-              ) : (
-                <CardGroup className="margin-bottom-3">
-                  {filterBookmarks(systemsTableData, mockBookmarkInfo)}
-                </CardGroup>
-              )}
-            </SectionWrapper>
+            {loadingBookmarks ? (
+              <PageLoading />
+            ) : (
+              <SectionWrapper borderBottom className="margin-bottom-3">
+                {bookmarks.length === 0 ? (
+                  <Grid tablet={{ col: 12 }} className="margin-bottom-5">
+                    <Alert type="info" className="padding-1">
+                      <h3 className="margin-0">
+                        {t('systemProfile:noBookmark.header')}
+                      </h3>
+                      <div>
+                        <span className="margin-0">
+                          {t('systemProfile:noBookmark.text1')}
+                        </span>
+                        <BookmarkCardIcon size="sm" color="black" />
+                        <span className="margin-0">
+                          {t('systemProfile:noBookmark.text2')}
+                        </span>
+                      </div>
+                    </Alert>
+                  </Grid>
+                ) : (
+                  <CardGroup className="margin-bottom-3">
+                    {filterBookmarks(
+                      systemsTableData,
+                      bookmarks,
+                      refetchBookmarks
+                    )}
+                  </CardGroup>
+                )}
+              </SectionWrapper>
+            )}
 
             <PageHeading className="margin-bottom-0">
               {t('systemProfile:systemTable.title')}
@@ -111,17 +130,18 @@ export const SystemList = () => {
             </p>
 
             {/* TODO: standardize/format error messages from CEDAR - either on FE or BE */}
-            {error ? (
+
+            {error1 || error2 ? (
               <ErrorAlert heading="System error">
-                <ErrorAlertMessage
-                  message={t('systemProfile:gql.fail')}
-                  errorKey="system"
-                />
+                <AlertText>
+                  <span>{t('systemProfile:gql.fail')}</span>
+                </AlertText>
               </ErrorAlert>
             ) : (
               <Table
                 systems={systemsTableData}
-                savedBookmarks={mockBookmarkInfo}
+                savedBookmarks={bookmarks}
+                refetchBookmarks={refetchBookmarks}
               />
             )}
           </>

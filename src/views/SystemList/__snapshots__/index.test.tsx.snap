@@ -592,9 +592,47 @@ exports[`System List View when there are requests matches snapshot 1`] = `
       >
         Bookmark systems that you want to access more quickly.
       </p>
-      <span>
-        Showing 1-10 of 3 results
-      </span>
+      <form
+        class="usa-form usa-search margin-bottom-4"
+        data-testid="table-client-filter"
+        role="search"
+      >
+        <label
+          class="usa-sr-only"
+          data-testid="label"
+          for="system-list-search"
+        >
+          Search Table
+        </label>
+        <input
+          class="usa-input"
+          data-testid="textInput"
+          id="system-list-search"
+          name="All Systems Search"
+          role="searchbox"
+          type="search"
+        />
+        <button
+          class="usa-button no-pointer"
+          data-testid="button"
+          type="submit"
+        >
+           
+          <span
+            class="usa-search__submit-text fa fa-search"
+          />
+        </button>
+      </form>
+      <div
+        class="margin-bottom-4"
+        data-testid="page-results"
+      >
+        <span>
+          <div>
+            Showing 1-3 of 3 results 
+          </div>
+        </span>
+      </div>
       <div
         class="usa-table-container--scrollable"
         data-testid="scrollable-table-container"
