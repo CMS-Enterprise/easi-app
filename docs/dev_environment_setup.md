@@ -18,6 +18,7 @@ In general, the necessary tools are:
 - [`direnv`](https://direnv.net/)
 - [`pre-commit`](https://pre-commit.com/) (Installation requires Python)
 - `psql` (Postgres command-line client)
+- `yq` (Used for manipulating YAML to generate a JSON Schema file)
 
 ## Basic Prerequisites
 
@@ -188,6 +189,14 @@ The Postgres command-line client is needed for running database-related scriptin
 ## Installing frontend dependencies
 
 To install the frontend's dependencies, run `yarn install --frozen-lockfile --ignore-engines`. The `--frozen-lockfile` flag will install the exact versions of all dependencies that are specified in `yarn.lock`; the `--ignore-engines` flag is necessary with Node 16 due to [this `react-uswds` issue](https://github.com/trussworks/react-uswds/issues/1582).
+
+## yq
+
+[`yq`](https://github.com/mikefarah/yq) is used for generating a JSON schema file for the System Intake data we push over to CEDAR.
+
+**MacOS:** Install with `brew install yq`.
+
+**Windows+WSL:**: Download and install with `wget https://github.com/mikefarah/yq/releases/download/v4.16.2/yq_linux_amd64 -O yq && sudo mv yq /usr/bin/yq && chmod +x /usr/bin/yq`.
 
 ## VSCode-specific tools
 
