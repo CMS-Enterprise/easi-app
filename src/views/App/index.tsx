@@ -125,19 +125,21 @@ const AppRoutes = () => {
         component={SystemIntake}
       />
       {flags.systemProfile && (
-        <>
-          <SecureRoute exact path="/system-profile" component={SystemList} />
-          <SecureRoute
-            path="/system-profile/:systemId"
-            exact
-            component={SystemProfile}
-          />
-          <SecureRoute
-            path="/system-profile/:systemId/:subinfo"
-            exact
-            component={SystemProfile}
-          />
-        </>
+        <SecureRoute exact path="/system-profile" component={SystemList} />
+      )}
+      {flags.systemProfile && (
+        <SecureRoute
+          path="/system-profile/:systemId"
+          exact
+          component={SystemProfile}
+        />
+      )}
+      {flags.systemProfile && (
+        <SecureRoute
+          path="/system-profile/:systemId/:subinfo"
+          exact
+          component={SystemProfile}
+        />
       )}
       <Redirect
         exact
