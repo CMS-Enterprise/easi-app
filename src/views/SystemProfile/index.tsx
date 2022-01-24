@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import {
@@ -27,7 +27,7 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import NotFound from 'views/NotFound';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
 
-import SystemHome from './components/systemHome';
+import sideNavItems from './components/index';
 
 import './index.scss';
 
@@ -37,30 +37,13 @@ type componentProps = {
   route: string;
 };
 
-const sideNavItems = (id: string) => [
-  {
-    label: 'home',
-    component: <SystemHome />,
-    route: `/system-profile/${id}`
-  },
-  {
-    label: 'details',
-    component: <SystemHome />,
-    route: `/system-profile/${id}/details`
-  },
-  {
-    label: 'team-and-contract',
-    component: <SystemHome />,
-    route: `/system-profile/${id}/team-and-contract`
-  }
-];
-
 // Locates the correct component to display in sub-navigation based on url id and parameter
 const displaySystemComponent = (label: string, id: string) =>
   sideNavItems(id).find((item: componentProps) => item.label === label)
     ?.component || 'Not Found'; // TODO: Create a not found component that doesnt render entire app like <NotFound />
 
 const SystemProfile = () => {
+  const scrollRef = useRef<null | HTMLDivElement>(null);
   const { t } = useTranslation('systemProfile');
   const { systemId, subinfo } = useParams<{
     systemId: string;
@@ -71,6 +54,13 @@ const SystemProfile = () => {
   const systemInfo = mockSystemInfo.find(
     mockSystem => mockSystem.id === systemId
   );
+
+  useEffect(() => {
+    if (subinfo && scrollRef?.current) {
+      // Scroll to element with should be in view after rendering
+      scrollRef.current.scrollIntoView();
+    }
+  }, [subinfo]);
 
   if (systemInfo === undefined) {
     return <NotFound />;
@@ -170,6 +160,7 @@ const SystemProfile = () => {
           </Grid>
         </SummaryBox>
         <SectionWrapper className="margin-top-5 margin-bottom-5">
+          <div ref={scrollRef} />
           <Grid className="grid-container">
             <Grid row>
               <Grid desktop={{ col: 3 }}>
