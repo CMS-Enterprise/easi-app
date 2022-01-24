@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Table Filter Componenet matches snapshot 1`] = `
+<DocumentFragment>
+  <form
+    class="usa-form usa-search margin-bottom-5"
+    data-testid="table-client-filter"
+    role="search"
+  >
+    <label
+      class="usa-sr-only"
+      data-testid="label"
+      for="table-id-search"
+    >
+      Search Table
+    </label>
+    <input
+      class="usa-input"
+      data-testid="textInput"
+      id="table-id-search"
+      name="table-name Search"
+      role="searchbox"
+      type="search"
+    />
+    <button
+      class="usa-button no-pointer"
+      data-testid="button"
+      type="submit"
+    >
+       
+      <span
+        class="usa-search__submit-text fa fa-search"
+      />
+    </button>
+  </form>
+</DocumentFragment>
+`;
