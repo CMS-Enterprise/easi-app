@@ -63,7 +63,15 @@ repos:
         name: check-code-generation
         entry: scripts/pre-commit-check-code-generation
         language: script
-        files: (pkg/graph/schema.graphql|pkg/graph/schema.resolvers.go|src/queries/*.ts|pkg/cedar/intake/system_intake_schema.json)
+        files: (pkg/graph/schema.graphql|pkg/graph/schema.resolvers.go|src/queries/*.ts)
+
+  - repo: local
+    hooks:
+      - id: check-cedar-schema-generation
+        name: check-cedar-schema-generation
+        entry: scripts/gen_intake_schema
+        language: script
+        files: (pkg/cedar/intake/system_intake_schema.json|pkg/cedar/intake/cedar_intake.yml)
 
   - repo: git://github.com/awslabs/git-secrets
     rev: 80230afa8c8bdeac766a0fece36f95ffaa0be778

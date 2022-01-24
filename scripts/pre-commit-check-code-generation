@@ -13,6 +13,3 @@ fi
 
 # Run GraphQL generation for Typescript files
 yarn generate
-
-# Generate JSON Schema for CEDAR System Intake
-scripts/gen_intake_schema
