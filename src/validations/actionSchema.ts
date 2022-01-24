@@ -75,7 +75,9 @@ export const extendLifecycleIdSchema = Yup.object().shape({
         () => false
       )
     }
-  )
+  ),
+  newScope: Yup.string().trim().required('Please include a scope'),
+  newNextSteps: Yup.string().trim().required('Please fill out next steps')
 });
 
 export const rejectIntakeSchema = Yup.object().shape({
