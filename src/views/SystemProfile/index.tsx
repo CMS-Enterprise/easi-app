@@ -187,7 +187,41 @@ const SystemProfile = () => {
               >
                 {displaySystemComponent(subinfo || 'home', systemInfo.id)}
               </Grid>
-              <Grid desktop={{ col: 3 }} />
+              <Grid desktop={{ col: 3 }}>
+                <div className="top-divider" />
+                <p>{t('singleSystem.pointOfContact')}</p>
+                <DescriptionTerm
+                  className="system-profile__subheader"
+                  term={systemInfo.businessOwnerOrgComp || ''}
+                />
+                <DescriptionDefinition
+                  definition={t('singleSystem.summary.subheader2')}
+                />
+                <p>
+                  <UswdsReactLink
+                    aria-label={t('singleSystem.sendEmail')}
+                    className="line-height-body-5"
+                    to="/" // TODO: Get link from CEDAR?
+                    variant="external"
+                    target="_blank"
+                  >
+                    {t('singleSystem.sendEmail')}
+                    <span aria-hidden>&nbsp;</span>
+                  </UswdsReactLink>
+                </p>
+                <p>
+                  <UswdsReactLink
+                    aria-label={t('singleSystem.moreContact')}
+                    className="line-height-body-5"
+                    to="/" // TODO: Get link from CEDAR?
+                    variant="external"
+                    target="_blank"
+                  >
+                    {t('singleSystem.moreContact')}
+                    <span aria-hidden>&nbsp;</span>
+                  </UswdsReactLink>
+                </p>
+              </Grid>
             </Grid>
           </Grid>
         </SectionWrapper>

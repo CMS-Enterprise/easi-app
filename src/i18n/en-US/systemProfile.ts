@@ -23,6 +23,9 @@ const systemProfile = {
   },
   singleSystem: {
     id: 'single-system-profile',
+    pointOfContact: 'Point of Contact',
+    sendEmail: 'Send and email',
+    moreContact: 'More points of contact',
     summary: {
       expand: 'Expand system summary',
       hide: 'Hide system summary',
