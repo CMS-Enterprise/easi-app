@@ -239,7 +239,6 @@ describe('Governance Review Team', () => {
     cy.get('#ExtendLifecycleId-NewExpirationYear')
       .type('2028')
       .should('have.value', '2028');
-    cy.get('button[type="submit"]').click();
 
     cy.get('#ExtendLifecycleIdForm-Scope')
       .type('Scope')
@@ -287,9 +286,8 @@ describe('Governance Review Team', () => {
       .type('31')
       .should('have.value', '31');
     cy.get('#ExtendLifecycleId-NewExpirationYear')
-      .type('2028')
-      .should('have.value', '2028');
-    cy.get('button[type="submit"]').click();
+      .type('2029')
+      .should('have.value', '2029');
 
     cy.get('#ExtendLifecycleIdForm-Scope')
       .type('Scope')
