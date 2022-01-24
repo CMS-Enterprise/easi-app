@@ -240,7 +240,7 @@ const ExtendLifecycleId = ({
                   </fieldset>
                 </FieldGroup>
                 <FieldGroup scrollElement="scope" error={!!flatErrors.newScope}>
-                  <Label htmlFor="IssueLifecycleIdForm-Scope">
+                  <Label htmlFor="ExtendLifecycleIdForm-Scope">
                     {t('issueLCID.scopeLabel')}
                   </Label>
                   <HelpText>{t('issueLCID.scopeHelpText')}</HelpText>
@@ -248,7 +248,7 @@ const ExtendLifecycleId = ({
                   <Field
                     as={TextAreaField}
                     error={!!flatErrors.newScope}
-                    id="IssueLifecycleIdForm-Scope"
+                    id="ExtendLifecycleIdForm-Scope"
                     maxLength={3000}
                     name="newScope"
                   />
@@ -257,7 +257,7 @@ const ExtendLifecycleId = ({
                   scrollElement="nextSteps"
                   error={!!flatErrors.newNextSteps}
                 >
-                  <Label htmlFor="IssueLifecycleIdForm-NextSteps">
+                  <Label htmlFor="ExtendLifecycleIdForm-NextSteps">
                     {t('issueLCID.nextStepsLabel')}
                   </Label>
                   <HelpText>{t('issueLCID.nextStepsHelpText')}</HelpText>
@@ -265,19 +265,19 @@ const ExtendLifecycleId = ({
                   <Field
                     as={TextAreaField}
                     error={!!flatErrors.newNextSteps}
-                    id="IssueLifecycleIdForm-NextSteps"
+                    id="ExtendLifecycleIdForm-NextSteps"
                     maxLength={3000}
                     name="newNextSteps"
                   />
                 </FieldGroup>
                 <FieldGroup>
-                  <Label htmlFor="IssueLifecycleIdForm-CostBaseline">
+                  <Label htmlFor="ExtendLifecycleIdForm-CostBaseline">
                     {t('issueLCID.costBaselineLabel')}
                   </Label>
                   <HelpText>{t('issueLCID.costBaselineHelpText')}</HelpText>
                   <Field
                     as={TextAreaField}
-                    id="IssueLifecycleIdForm-CostBaseline"
+                    id="ExtendLifecycleIdForm-CostBaseline"
                     maxLength={3000}
                     name="newCostBaseline"
                   />
