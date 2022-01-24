@@ -40,7 +40,7 @@ import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
 
-import scrollBlackList from './scrollConfig';
+import shouldScroll from './scrollConfig';
 
 import './index.scss';
 
@@ -50,8 +50,7 @@ const AppRoutes = () => {
 
   // Scroll to top
   useLayoutEffect(() => {
-    // Checking for only first path as possible blacklist, as subsequent paths contain variable ids
-    if (!scrollBlackList.includes(location.pathname?.split('/')[1])) {
+    if (shouldScroll(location.pathname)) {
       window.scrollTo(0, 0);
     }
   }, [location.pathname]);
