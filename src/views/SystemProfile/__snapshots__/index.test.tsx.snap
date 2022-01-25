@@ -617,6 +617,26 @@ exports[`The making a request page matches snapshot 1`] = `
         </div>
       </div>
       <div
+        class="grid-container system-profile__nav"
+      >
+        <div
+          class="usa-overlay"
+        />
+        <button
+          class="usa-menu-btn easi-header__basic  system-profile__nav-button"
+          type="button"
+        >
+          <h3
+            class="padding-left-1"
+          >
+            Tools and Software
+          </h3>
+          <span
+            class="fa fa-bars"
+          />
+        </button>
+      </div>
+      <div
         class="easi-section margin-top-5 margin-bottom-5"
         data-testid="section-wrapper"
       >
@@ -632,122 +652,140 @@ exports[`The making a request page matches snapshot 1`] = `
               class="desktop:grid-col-3"
               data-testid="grid"
             >
-              <ul
-                class="usa-sidenav"
-                data-testid="sidenav"
+              <div
+                class="usa-nav sidenav-mobile"
               >
-                <li
-                  class="usa-sidenav__item"
+                <nav
+                  aria-label="Side navigation"
+                  class="usa-nav"
                 >
-                  <a
-                    class="nav-group-border"
-                    href="/system-profile/326-9-0/home"
+                  <button
+                    class="usa-nav__close"
+                    data-testid="navCloseButton"
+                    type="button"
                   >
-                    System Home
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/system-profile/326-9-0/details"
+                    <img
+                      alt="close"
+                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
+                    />
+                  </button>
+                  <ul
+                    class="usa-nav__primary usa-accordion"
                   >
-                    System Details
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/system-profile/326-9-0/team-and-contract"
-                  >
-                    Team and Contract
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/system-profile/326-9-0/funding-and-budget"
-                  >
-                    Funding and Budget
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    aria-current="page"
-                    class="nav-group-border usa-current"
-                    href="/system-profile/326-9-0/tools-and-software"
-                  >
-                    Tools and Software
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/system-profile/326-9-0/ato"
-                  >
-                    ATO
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/system-profile/326-9-0/lifecycle-id"
-                  >
-                    Lifecyle ID
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class="nav-group-border"
-                    href="/system-profile/326-9-0/section-508"
-                  >
-                    Section 508
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/system-profile/326-9-0/sub-systems"
-                  >
-                    Sub-systems
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/system-profile/326-9-0/system-data"
-                  >
-                    System Data
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/system-profile/326-9-0/documents"
-                  >
-                    Documents
-                  </a>
-                </li>
-              </ul>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class="nav-group-border"
+                        href="/system-profile/326-9-0/home"
+                      >
+                        System Home
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class=""
+                        href="/system-profile/326-9-0/details"
+                      >
+                        System Details
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class=""
+                        href="/system-profile/326-9-0/team-and-contract"
+                      >
+                        Team and Contract
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class=""
+                        href="/system-profile/326-9-0/funding-and-budget"
+                      >
+                        Funding and Budget
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        aria-current="page"
+                        class="nav-group-border usa-current"
+                        href="/system-profile/326-9-0/tools-and-software"
+                      >
+                        Tools and Software
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class=""
+                        href="/system-profile/326-9-0/ato"
+                      >
+                        ATO
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class=""
+                        href="/system-profile/326-9-0/lifecycle-id"
+                      >
+                        Lifecyle ID
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class="nav-group-border"
+                        href="/system-profile/326-9-0/section-508"
+                      >
+                        Section 508
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class=""
+                        href="/system-profile/326-9-0/sub-systems"
+                      >
+                        Sub-systems
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class=""
+                        href="/system-profile/326-9-0/system-data"
+                      >
+                        System Data
+                      </a>
+                    </li>
+                    <li
+                      class="usa-nav__primary-item"
+                    >
+                      <a
+                        class=""
+                        href="/system-profile/326-9-0/documents"
+                      >
+                        Documents
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
             <div
               class="desktop:grid-col-6 padding-left-5 padding-right-5"

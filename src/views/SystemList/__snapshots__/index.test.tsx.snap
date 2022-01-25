@@ -515,9 +515,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
         </h1>
       </div>
       <h1
-        aria-live="polite"
-        class="easi-h1 margin-bottom-0"
-        tabindex="-1"
+        class="margin-bottom-0 margin-top-5"
       >
         All Systems
       </h1>
@@ -527,7 +525,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
         Bookmark systems that you want to access more quickly.
       </p>
       <span>
-        Showing 1-10 of 3 results
+        Showing 1-10 of 4 results
       </span>
       <div
         class="usa-table-container--scrollable"
@@ -678,7 +676,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 <a
                   class="usa-link"
-                  href="/sandbox/3"
+                  href="/system-profile/3/home/top"
                 >
                   Government
                 </a>
@@ -727,7 +725,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 <a
                   class="usa-link"
-                  href="/sandbox/1"
+                  href="/system-profile/1/home/top"
                 >
                   Happiness Achievement Module
                 </a>
@@ -769,6 +767,55 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               <th
                 role="cell"
               >
+                BBC
+              </th>
+              <th
+                role="cell"
+              >
+                <a
+                  class="usa-link"
+                  href="/system-profile/326-9-0/home/top"
+                >
+                  Medicare Beneficiary Contact Center
+                </a>
+              </th>
+              <th
+                role="cell"
+              >
+                <p>
+                  Division of Call Center Systems
+                </p>
+              </th>
+              <th
+                role="cell"
+              >
+                <div>
+                  <i
+                    class="fa system-health-icon-success fa-check-circle margin-right-1"
+                    data-testid="system-health-icon"
+                  />
+                  <span>
+                    Approved
+                  </span>
+                </div>
+              </th>
+            </tr>
+            <tr
+              role="row"
+            >
+              <th
+                role="cell"
+                style="padding-left: .5em;"
+              >
+                <i
+                  aria-hidden="true"
+                  class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
+                  data-testid="bookmark-icon"
+                />
+              </th>
+              <th
+                role="cell"
+              >
                 ASD
               </th>
               <th
@@ -776,7 +823,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 <a
                   class="usa-link"
-                  href="/sandbox/326-74-0"
+                  href="/system-profile/326-1-0/home/top"
                 >
                   Systems
                 </a>
