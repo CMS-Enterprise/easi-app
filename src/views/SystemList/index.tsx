@@ -17,8 +17,8 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import PageWrapper from 'components/PageWrapper';
-import Alert from 'components/shared/Alert';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import Alert, { AlertText } from 'components/shared/Alert';
+import { ErrorAlert } from 'components/shared/ErrorAlert';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
@@ -133,10 +133,9 @@ export const SystemList = () => {
 
             {error1 || error2 ? (
               <ErrorAlert heading="System error">
-                <ErrorAlertMessage
-                  message={t('systemProfile:gql.fail')}
-                  errorKey="system"
-                />
+                <AlertText>
+                  <span>{t('systemProfile:gql.fail')}</span>
+                </AlertText>
               </ErrorAlert>
             ) : (
               <Table

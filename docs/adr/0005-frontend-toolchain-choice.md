@@ -1,4 +1,4 @@
-# *Use Create React App for frontend bootstrapping*
+# Use Create React App for frontend bootstrapping
 
 * Status: Proposed [Proposed, Accepted, Rejected, Deprecated, Superseded, etc.]
 * Deciders: Mikena, Eady, Chris

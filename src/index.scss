@@ -75,4 +75,18 @@ code {
 #main-content {
   outline: none;
   border-top: 0;
+
+  table {
+    tr {
+      p {
+          margin: 0;
+      }
+
+      th {
+        border-bottom: 0.5px solid black;
+        border-top: 0.5px solid black;
+      }
+    }
+  }
 }
+

@@ -136,8 +136,17 @@ const governanceReviewTeam = {
     },
     showEmail: 'Show Email',
     hideEmail: 'Hide Email',
-    newExpirationDate: 'New expiration date',
-    oldExpirationDate: 'Old expiration date'
+    extendLcid: {
+      newExpirationDate: 'New expiration date',
+      oldExpirationDate: 'Old expiration date',
+      newScope: 'New Scope',
+      oldScope: 'Old Scope',
+      newNextSteps: 'New Next Steps',
+      oldNextSteps: 'Old Next Steps',
+      newCostBaseline: 'New Cost Baseline',
+      oldCostBaseline: 'Old Cost Baseline',
+      noCostBaseline: 'No Cost Baseline Specified'
+    }
   },
   dates: {
     heading: 'Dates',

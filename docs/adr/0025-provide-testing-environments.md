@@ -1,4 +1,4 @@
-# *Provide a Testing Environment for Non-Engineers*
+# Provide a Testing Environment for Non-Engineers
 
 **User Story:** *317* <!-- optional -->
 

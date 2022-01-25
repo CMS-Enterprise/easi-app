@@ -1,0 +1,13 @@
+input[type="search"]::-webkit-search-cancel-button:hover { 
+    cursor:pointer; 
+}
+
+#main-content .usa-search {
+    &__submit-text {
+        display: inherit;
+    }
+}
+
+.no-pointer {
+    pointer-events: none;
+}

@@ -12,7 +12,10 @@ import { CreateSystemIntakeActionExtendLifecycleIdInput } from "./../../types/gr
 export interface CreateSystemIntakeActionExtendLifecycleId_createSystemIntakeActionExtendLifecycleId_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
+  lcidScope: string | null;
+  decisionNextSteps: string | null;
   lcidExpiresAt: Time | null;
+  lcidCostBaseline: string | null;
 }
 
 export interface CreateSystemIntakeActionExtendLifecycleId_createSystemIntakeActionExtendLifecycleId {

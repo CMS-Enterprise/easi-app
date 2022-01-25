@@ -911,6 +911,9 @@ Input data for extending a system request's lifecycle ID
 input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
+  nextSteps: String
+  scope: String!
+  costBaseline: String
 }
 
 """
@@ -966,6 +969,12 @@ lifecycle ID
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
+  previousScope: String!
+  newScope: String!
+  previousNextSteps: String!
+  newNextSteps: String!
+  previousCostBaseline: String!
+  newCostBaseline: String!
  }
 
 """
