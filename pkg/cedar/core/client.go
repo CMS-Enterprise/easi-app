@@ -312,25 +312,56 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct
-	return convertWireRolesToModel(ctx, systemID, resp.Payload.Roles), nil
+	return convertWireRolesToModel(ctx, resp.Payload.Roles), nil
 }
 
-func convertWireRolesToModel(ctx context.Context, systemID string, wireRoles []*wiremodels.Role) []*models.CedarRole {
+// GetRolesByRoleID makes a GET call to the /role endpoint using a role ID
+func (c *Client) GetRolesByRoleID(ctx context.Context, roleID string) ([]*models.CedarRole, error) {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return []*models.CedarRole{}, nil
+	}
+
+	// Construct the parameters
+	params := apiroles.NewRoleFindByIDParams()
+	params.SetApplication(cedarRoleApplication)
+	params.SetRoleID(&roleID)
+	params.HTTPClient = c.hc
+
+	// Make the API call
+	resp, err := c.sdk.Role.RoleFindByID(params, c.auth)
+	if err != nil {
+		return []*models.CedarRole{}, err
+	}
+
+	if resp.Payload == nil {
+		return []*models.CedarRole{}, fmt.Errorf("no body received")
+	}
+
+	if len(resp.Payload.Roles) == 0 {
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no deployments found"), Resource: []*models.CedarRole{}}
+	}
+
+	// Convert the auto-generated struct to our own pkg/models struct
+	return convertWireRolesToModel(ctx, resp.Payload.Roles), nil
+}
+
+func convertWireRolesToModel(ctx context.Context, wireRoles []*wiremodels.Role) []*models.CedarRole {
 	roles := []*models.CedarRole{}
 
 	for _, wireRole := range wireRoles {
 		if wireRole.Application == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role Application was null", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role Application was null")
 			continue
 		}
 
 		if wireRole.ObjectID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role ObjectID was null", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role ObjectID was null")
 			continue
 		}
 
 		if wireRole.RoleTypeID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role type ID was null", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role type ID was null")
 			continue
 		}
 
