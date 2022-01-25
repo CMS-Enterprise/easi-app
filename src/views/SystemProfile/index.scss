@@ -1,4 +1,4 @@
-#main-content {
+#system-profile {
     .system-profile {
         &__summary-box {
             border-top: 0;
@@ -41,6 +41,10 @@
         &__item {
             border: none;
         }
+    }
+
+    .usa-sidenav__item a:not(.usa-current) {
+        padding-left: 0;        
     }
 
     .nav-group-border {

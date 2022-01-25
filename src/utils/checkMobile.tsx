@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 
 type deviceProps = 'mobile' | 'tablet' | 'desktop';
 
+export const mobile: number = 640;
+export const tablet: number = 1024;
+
 const useCheckResponsiveScreen = (device: deviceProps) => {
   const [width, setWidth] = useState(window.innerWidth);
   const handleWindowSizeChange = () => {
@@ -17,9 +20,9 @@ const useCheckResponsiveScreen = (device: deviceProps) => {
 
   switch (device) {
     case 'mobile':
-      return width <= 640;
+      return width <= mobile;
     case 'tablet':
-      return width <= 1024;
+      return width <= tablet;
     case 'desktop':
       return true;
     default:
