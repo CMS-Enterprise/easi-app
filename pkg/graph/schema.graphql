@@ -969,12 +969,12 @@ lifecycle ID
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
-  previousScope: String!
-  newScope: String!
-  previousNextSteps: String!
-  newNextSteps: String!
-  previousCostBaseline: String!
-  newCostBaseline: String!
+  previousScope: String
+  newScope: String
+  previousNextSteps: String
+  newNextSteps: String
+  previousCostBaseline: String
+  newCostBaseline: String
  }
 
 """
