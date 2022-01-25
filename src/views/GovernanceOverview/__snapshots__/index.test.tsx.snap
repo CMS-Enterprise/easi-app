@@ -3,6 +3,7 @@
 exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
 <main
   className="easi-main-content easi-governance-overview grid-container margin-bottom-5"
+  data-testid="governance-overview"
   id="main-content"
   role="main"
   tabIndex={-1}
@@ -245,6 +246,7 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
 exports[`The governance overview page matches the snapshot (w/o id param) 1`] = `
 <main
   className="easi-main-content easi-governance-overview grid-container margin-bottom-5"
+  data-testid="governance-overview"
   id="main-content"
   role="main"
   tabIndex={-1}

@@ -3,6 +3,7 @@
 exports[`The making a request page matches the snapshot 1`] = `
 <main
   className="easi-main-content grid-container line-height-body-5 margin-bottom-5"
+  data-testid="making-a-system-request"
   id="main-content"
   role="main"
   tabIndex={-1}
