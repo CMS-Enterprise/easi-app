@@ -1,11 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
 import { Card } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import SystemHealthIcon from 'components/SystemHealthIcon';
+import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import { IconStatus } from 'types/iconStatus';
 
@@ -17,6 +19,7 @@ type BookmarkCardProps = {
   className?: string;
   statusIcon: IconStatus;
   type: 'systemProfile'; // Built in for future iterations/varations of bookmarked datasets that ingest i18n translations for headers.
+  refetch: () => any | undefined;
 };
 
 const BookmarkCard = ({
@@ -28,9 +31,23 @@ const BookmarkCard = ({
   acronym,
   status,
   statusIcon,
-  businessOwnerOrg
+  businessOwnerOrg,
+  refetch
 }: BookmarkCardProps & CedarSystemProps) => {
   const { t } = useTranslation();
+
+  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
+
+  const handleDeleteBookmark = (cedarSystemId: string) => {
+    deleteMutate({
+      variables: {
+        input: {
+          cedarSystemId
+        }
+      }
+    }).then(refetch);
+  };
+
   return (
     <Card
       data-testid="single-bookmark-card"
@@ -47,7 +64,10 @@ const BookmarkCard = ({
           <h2 className="bookmark__title margin-top-0 margin-bottom-1">
             <UswdsReactLink to={`/systems/${id}`}>{name}</UswdsReactLink>
           </h2>
-          <BookmarkCardIcon size="md" />
+          <BookmarkCardIcon
+            size="md"
+            onClick={() => handleDeleteBookmark(id)}
+          />
         </div>
         <p className="margin-0">{acronym}</p>
         <p className="bookmark__body-text line-height-body-4">{description}</p>

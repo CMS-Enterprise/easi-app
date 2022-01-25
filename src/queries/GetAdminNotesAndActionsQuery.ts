@@ -21,6 +21,12 @@ export default gql`
         lcidExpirationChange {
           previousDate
           newDate
+          previousScope
+          newScope
+          previousNextSteps
+          newNextSteps
+          previousCostBaseline
+          newCostBaseline
         }
         actor {
           name

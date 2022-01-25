@@ -53,15 +53,21 @@ const (
 
 // Action is the model for an action on a system intake
 type Action struct {
-	ID                               uuid.UUID    `json:"id"`
-	IntakeID                         *uuid.UUID   `db:"intake_id"`
-	BusinessCaseID                   *uuid.UUID   `db:"business_case_id"`
-	ActionType                       ActionType   `json:"actionType" db:"action_type"`
-	ActorName                        string       `json:"actorName" db:"actor_name"`
-	ActorEmail                       EmailAddress `json:"actorEmail" db:"actor_email"`
-	ActorEUAUserID                   string       `json:"actorEuaUserId" db:"actor_eua_user_id"`
-	Feedback                         null.String  `json:"feedback"`
-	CreatedAt                        *time.Time   `json:"createdAt" db:"created_at"`
-	LCIDExpirationChangeNewDate      *time.Time   `db:"lcid_expiration_change_new_date"`
-	LCIDExpirationChangePreviousDate *time.Time   `db:"lcid_expiration_change_previous_date"`
+	ID                                       uuid.UUID    `json:"id"`
+	IntakeID                                 *uuid.UUID   `db:"intake_id"`
+	BusinessCaseID                           *uuid.UUID   `db:"business_case_id"`
+	ActionType                               ActionType   `json:"actionType" db:"action_type"`
+	ActorName                                string       `json:"actorName" db:"actor_name"`
+	ActorEmail                               EmailAddress `json:"actorEmail" db:"actor_email"`
+	ActorEUAUserID                           string       `json:"actorEuaUserId" db:"actor_eua_user_id"`
+	Feedback                                 null.String  `json:"feedback"`
+	CreatedAt                                *time.Time   `json:"createdAt" db:"created_at"`
+	LCIDExpirationChangeNewDate              *time.Time   `db:"lcid_expiration_change_new_date"`
+	LCIDExpirationChangePreviousDate         *time.Time   `db:"lcid_expiration_change_previous_date"`
+	LCIDExpirationChangeNewScope             string       `db:"lcid_expiration_change_new_scope"`
+	LCIDExpirationChangePreviousScope        string       `db:"lcid_expiration_change_previous_scope"`
+	LCIDExpirationChangeNewNextSteps         string       `db:"lcid_expiration_change_new_next_steps"`
+	LCIDExpirationChangePreviousNextSteps    string       `db:"lcid_expiration_change_previous_next_steps"`
+	LCIDExpirationChangeNewCostBaseline      string       `db:"lcid_expiration_change_new_cost_baseline"`
+	LCIDExpirationChangePreviousCostBaseline string       `db:"lcid_expiration_change_previous_cost_baseline"`
 }

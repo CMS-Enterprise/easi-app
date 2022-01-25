@@ -327,6 +327,7 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/actions/issue-lcid"
               render={() => <IssueLifecycleId />}
             />
+
             {/* Only display extend LCID action if status is LCID_ISSUED or there has been an lcid issued in the past */}
             {(data?.systemIntake?.status === 'LCID_ISSUED' ||
               data?.systemIntake?.lcid != null) && (
@@ -336,6 +337,9 @@ const RequestOverview = () => {
                   <ExtendLifecycleId
                     lcid={data.systemIntake?.lcid || ''}
                     lcidExpiresAt={data.systemIntake?.lcidExpiresAt}
+                    lcidScope={data.systemIntake?.lcidScope || ''}
+                    lcidNextSteps={data.systemIntake?.decisionNextSteps || ''}
+                    lcidCostBaseline={data.systemIntake?.lcidCostBaseline || ''}
                   />
                 )}
               />

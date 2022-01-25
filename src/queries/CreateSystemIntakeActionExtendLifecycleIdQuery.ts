@@ -7,7 +7,10 @@ export default gql`
     createSystemIntakeActionExtendLifecycleId(input: $input) {
       systemIntake {
         id
+        lcidScope
+        decisionNextSteps
         lcidExpiresAt
+        lcidCostBaseline
       }
     }
   }

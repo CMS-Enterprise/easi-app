@@ -14,17 +14,23 @@ import (
 )
 
 type extendLCID struct {
-	RequestName  string
-	NewExpiresAt string
-	DecisionLink string
+	RequestName     string
+	NewExpiresAt    string
+	NewScope        string
+	NewNextSteps    string
+	NewCostBaseline string
+	DecisionLink    string
 }
 
-func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time) (string, error) {
+func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) (string, error) {
 	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := extendLCID{
-		RequestName:  requestName,
-		NewExpiresAt: newExpiresAt.Format("January 2, 2006"),
-		DecisionLink: c.urlFromPath(decisionPath),
+		RequestName:     requestName,
+		NewExpiresAt:    newExpiresAt.Format("January 2, 2006"),
+		NewScope:        newScope,
+		NewNextSteps:    newNextSteps,
+		NewCostBaseline: newCostBaseline,
+		DecisionLink:    c.urlFromPath(decisionPath),
 	}
 
 	var b bytes.Buffer
@@ -39,9 +45,18 @@ func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requestName string, new
 }
 
 // SendExtendLCIDEmail sends an email for extending an LCID
-func (c Client) SendExtendLCIDEmail(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time) error {
-	subject := "Lifecycle ID expiration date extended"
-	body, err := c.extendLCIDBody(systemIntakeID, requestName, newExpiresAt)
+func (c Client) SendExtendLCIDEmail(
+	ctx context.Context,
+	recipient models.EmailAddress,
+	systemIntakeID uuid.UUID,
+	requestName string,
+	newExpiresAt *time.Time,
+	newScope string,
+	newNextSteps string,
+	newCostBaseline string,
+) error {
+	subject := "Lifecycle ID Extended"
+	body, err := c.extendLCIDBody(systemIntakeID, requestName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
