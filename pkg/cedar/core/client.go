@@ -345,6 +345,7 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 			AssigneePhone:     zero.StringFrom(role.AssigneePhone),
 			AssigneeDesc:      zero.StringFrom(role.AssigneeDesc),
 
+			RoleTypeName: zero.StringFrom(role.RoleTypeName),
 			RoleTypeDesc: zero.StringFrom(role.RoleTypeDesc),
 			RoleID:       zero.StringFrom(role.RoleID),
 			ObjectType:   zero.StringFrom(role.ObjectType),

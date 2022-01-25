@@ -33,6 +33,7 @@ type CedarRole struct {
 	AssigneePhone     zero.String
 	AssigneeDesc      zero.String
 
+	RoleTypeName zero.String
 	RoleTypeDesc zero.String
 	RoleID       zero.String
 	ObjectType   zero.String
