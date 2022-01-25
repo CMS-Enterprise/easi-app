@@ -4,15 +4,16 @@ import { useSortBy, useTable } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
-import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
+import { sortColumnValues } from 'utils/tableSort';
+
+import tableUtil from './tableUtil';
 
 import './index.scss';
 
@@ -43,37 +44,22 @@ const Table = () => {
             default:
               link = '/';
           }
-          return (
-            <UswdsReactLink to={link}>
-              {value || t('requestsTable.defaultName')}
-            </UswdsReactLink>
-          );
+          return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
         },
         maxWidth: 350
       },
       {
         Header: t('requestsTable.headers.type'),
-        accessor: 'type',
-        Cell: ({ value }: any) => {
-          return t(`requestsTable.types.${value}`);
-        }
+        accessor: 'type'
       },
       {
         Header: t('requestsTable.headers.submittedAt'),
-        accessor: 'submittedAt',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
-          }
-          return t('requestsTable.defaultSubmittedAt');
-        }
+        accessor: 'submittedAt'
       },
       {
         Header: t('requestsTable.headers.status'),
         accessor: 'status',
-        width: '200px',
         Cell: ({ row, value }: any) => {
-          let statusString;
           switch (row.original.type) {
             case RequestType.ACCESSIBILITY_REQUEST:
               // Status hasn't changed if the status record created at is the same
@@ -82,65 +68,40 @@ const Table = () => {
                 row.original.submittedAt.toISO() ===
                 row.original.statusCreatedAt.toISO()
               ) {
-                return <span>{accessibilityRequestStatusMap[value]}</span>;
+                return <span>{value}</span>;
               }
-
               return (
                 <span>
-                  {accessibilityRequestStatusMap[value]}{' '}
+                  {value}
                   <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
                     row.original.statusCreatedAt
                   )}`}</span>
                 </span>
               );
             case RequestType.GOVERNANCE_REQUEST:
-              statusString = t(`intake:statusMap.${value}`);
-              if (row.original.lcid) {
-                return `${statusString}: ${row.original.lcid}`;
-              }
-              return statusString;
+              return value;
             default:
               return '';
           }
-        }
+        },
+        width: '200px'
       },
       {
         Header: t('requestsTable.headers.nextMeetingDate'),
         accessor: 'nextMeetingDate',
         className: 'next-meeting-date',
-        width: '180px',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
-          }
-          return 'None';
-        }
+        width: '180px'
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const data = useMemo(() => {
-    const requests =
-      tableData &&
-      tableData.requests &&
-      tableData.requests.edges.map(edge => {
-        return edge.node;
-      });
-
-    const mappedData = requests?.map(request => {
-      const submittedAt = request.submittedAt
-        ? DateTime.fromISO(request.submittedAt)
-        : null;
-
-      const statusCreatedAt = request.statusCreatedAt
-        ? DateTime.fromISO(request.statusCreatedAt)
-        : null;
-      return { ...request, submittedAt, statusCreatedAt };
-    });
-
-    return mappedData || [];
-  }, [tableData]);
+    if (tableData) {
+      return tableUtil(tableData, t);
+    }
+    return [];
+  }, [tableData, t]);
 
   const {
     getTableProps,
@@ -156,23 +117,12 @@ const Table = () => {
         alphanumeric: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
           const rowTwoElem = rowTwo.values[columnName];
-
-          // If item is a string, enforce capitalization (temporarily) and then compare
-          if (typeof rowOneElem === 'string') {
-            return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
-          }
-
-          // If item is a DateTime, convert to Number and compare
-          if (rowOneElem instanceof DateTime) {
-            return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
-          }
-
-          // If neither string nor DateTime, return bare comparison
-          return rowOneElem > rowTwoElem ? 1 : -1;
+          return sortColumnValues(rowOneElem, rowTwoElem);
         }
       },
       initialState: {
-        sortBy: [{ id: 'submittedAt', desc: true }]
+        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
+        pageIndex: 0
       }
     },
     useSortBy

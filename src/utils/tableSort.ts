@@ -1,5 +1,6 @@
 import { HeaderGroup } from 'react-table';
 import classnames from 'classnames';
+import { DateTime } from 'luxon';
 
 export const getColumnSortStatus = <T extends {}>(
   column: HeaderGroup<T>
@@ -28,4 +29,31 @@ export const getHeaderSortIcon = (
   }
 
   return classnames(marginClassName, 'fa fa-caret-up');
+};
+
+export const sortColumnValues = (
+  rowOneElem: null | string | number | Date,
+  rowTwoElem: null | string | number | Date
+) => {
+  // Null checks for columns with data potentially empty (LCID Expiration, Admin Notes, etc.)
+  if (rowOneElem === null) {
+    return 1;
+  }
+
+  if (rowTwoElem === null) {
+    return -1;
+  }
+
+  // If both items are strings, enforce capitalization (temporarily) and then compare
+  if (typeof rowOneElem === 'string' && typeof rowTwoElem === 'string') {
+    return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
+  }
+
+  // If both items are DateTimes, convert to Number and compare
+  if (rowOneElem instanceof DateTime && rowTwoElem instanceof DateTime) {
+    return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
+  }
+
+  // If items are different types and/or neither string nor DateTime, return bare comparison
+  return rowOneElem > rowTwoElem ? 1 : -1;
 };
