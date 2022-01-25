@@ -21,7 +21,6 @@ import (
 	apideployments "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/deployment"
 	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
-	wiremodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -281,6 +280,7 @@ func (c *Client) GetDeployments(ctx context.Context, systemID string, optionalPa
 }
 
 // GetRolesBySystem makes a GET call to the /role endpoint using a system ID and an optional role type ID
+// we don't currently have a use case for querying /role by role ID, so that's not implemented
 func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleTypeID null.String) ([]*models.CedarRole, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
@@ -312,93 +312,58 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct
-	return convertWireRolesToModel(ctx, resp.Payload.Roles), nil
-}
+	retVal := []*models.CedarRole{}
 
-// GetRolesByRoleID makes a GET call to the /role endpoint using a role ID
-func (c *Client) GetRolesByRoleID(ctx context.Context, roleID string) ([]*models.CedarRole, error) {
-	if !c.cedarCoreEnabled(ctx) {
-		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarRole{}, nil
-	}
-
-	// Construct the parameters
-	params := apiroles.NewRoleFindByIDParams()
-	params.SetApplication(cedarRoleApplication)
-	params.SetRoleID(&roleID)
-	params.HTTPClient = c.hc
-
-	// Make the API call
-	resp, err := c.sdk.Role.RoleFindByID(params, c.auth)
-	if err != nil {
-		return []*models.CedarRole{}, err
-	}
-
-	if resp.Payload == nil {
-		return []*models.CedarRole{}, fmt.Errorf("no body received")
-	}
-
-	if len(resp.Payload.Roles) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no deployments found"), Resource: []*models.CedarRole{}}
-	}
-
-	// Convert the auto-generated struct to our own pkg/models struct
-	return convertWireRolesToModel(ctx, resp.Payload.Roles), nil
-}
-
-func convertWireRolesToModel(ctx context.Context, wireRoles []*wiremodels.Role) []*models.CedarRole {
-	roles := []*models.CedarRole{}
-
-	for _, wireRole := range wireRoles {
-		if wireRole.Application == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role Application was null")
+	for _, role := range resp.Payload.Roles {
+		if role.Application == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding role; role Application was null", zap.String("systemID", systemID))
 			continue
 		}
 
-		if wireRole.ObjectID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role ObjectID was null")
+		if role.ObjectID == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding role; role ObjectID was null", zap.String("systemID", systemID))
 			continue
 		}
 
-		if wireRole.RoleTypeID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role type ID was null")
+		if role.RoleTypeID == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding role; role type ID was null", zap.String("systemID", systemID))
 			continue
 		}
 
 		// generated swagger client turns JSON nulls into Go zero values, so use null/zero package to convert them back to nullable values
-		role := &models.CedarRole{
-			Application: *wireRole.Application,
-			ObjectID:    *wireRole.ObjectID,
-			RoleTypeID:  *wireRole.RoleTypeID,
+		retRole := &models.CedarRole{
+			Application: *role.Application,
+			ObjectID:    *role.ObjectID,
+			RoleTypeID:  *role.RoleTypeID,
 
-			AssigneeUsername:  zero.StringFrom(wireRole.AssigneeUserName),
-			AssigneeEmail:     zero.StringFrom(wireRole.AssigneeEmail),
-			AssigneeOrgID:     zero.StringFrom(wireRole.AssigneeOrgID),
-			AssigneeOrgName:   zero.StringFrom(wireRole.AssigneeOrgName),
-			AssigneeFirstName: zero.StringFrom(wireRole.AssigneeFirstName),
-			AssigneeLastName:  zero.StringFrom(wireRole.AssigneeLastName),
-			AssigneePhone:     zero.StringFrom(wireRole.AssigneePhone),
-			AssigneeDesc:      zero.StringFrom(wireRole.AssigneeDesc),
+			AssigneeUsername:  zero.StringFrom(role.AssigneeUserName),
+			AssigneeEmail:     zero.StringFrom(role.AssigneeEmail),
+			AssigneeOrgID:     zero.StringFrom(role.AssigneeOrgID),
+			AssigneeOrgName:   zero.StringFrom(role.AssigneeOrgName),
+			AssigneeFirstName: zero.StringFrom(role.AssigneeFirstName),
+			AssigneeLastName:  zero.StringFrom(role.AssigneeLastName),
+			AssigneePhone:     zero.StringFrom(role.AssigneePhone),
+			AssigneeDesc:      zero.StringFrom(role.AssigneeDesc),
 
-			RoleTypeDesc: zero.StringFrom(wireRole.RoleTypeDesc),
-			RoleID:       zero.StringFrom(wireRole.RoleID),
-			ObjectType:   zero.StringFrom(wireRole.ObjectType),
+			RoleTypeDesc: zero.StringFrom(role.RoleTypeDesc),
+			RoleID:       zero.StringFrom(role.RoleID),
+			ObjectType:   zero.StringFrom(role.ObjectType),
 		}
 
 		var retAssigneeType models.CedarAssigneeType
 
-		if wireRole.AssigneeType == string(models.PersonAssignee) {
+		if role.AssigneeType == string(models.PersonAssignee) {
 			retAssigneeType = models.PersonAssignee
-		} else if wireRole.AssigneeType == string(models.OrganizationAssignee) {
+		} else if role.AssigneeType == string(models.OrganizationAssignee) {
 			retAssigneeType = models.OrganizationAssignee
 		} else {
 			retAssigneeType = models.UndefinedAssignee
 		}
 
-		role.AssigneeType = retAssigneeType
+		retRole.AssigneeType = retAssigneeType
 
-		roles = append(roles, role)
+		retVal = append(retVal, retRole)
 	}
 
-	return roles
+	return retVal, nil
 }
