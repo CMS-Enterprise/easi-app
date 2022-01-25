@@ -20,6 +20,14 @@
         &__subheader {
             font-size: 1.5rem;
         }
+
+        &__nav {
+            padding: 0;
+        }
+
+        &__nav-button {
+            width: 100%
+        }
     }    
 
     .usa-breadcrumb {
@@ -27,7 +35,7 @@
         padding: 0;
     }
 
-    .usa-sidenav {
+    .usa-sidenav, .usa-nav__primary-item {
         border: none;
 
         &__item {

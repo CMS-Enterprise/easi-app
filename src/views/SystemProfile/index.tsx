@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import {
@@ -6,6 +6,7 @@ import {
   BreadcrumbBar,
   BreadcrumbLink,
   Grid,
+  PrimaryNav,
   SideNav,
   SummaryBox
 } from '@trussworks/react-uswds';
@@ -24,6 +25,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
+import useCheckResponsiveScreen from 'utils/checkMobile';
 import NotFound from 'views/NotFound';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
 
@@ -33,6 +35,9 @@ import './index.scss';
 
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
+  const isMobile = useCheckResponsiveScreen('tablet');
+  const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
+  const mobileSideNav = useRef<any>();
   const { systemId, subinfo, top } = useParams<{
     systemId: string;
     subinfo: string;
@@ -50,6 +55,30 @@ const SystemProfile = () => {
   const systemInfo = mockSystemInfo.find(
     mockSystem => mockSystem.id === systemId
   );
+
+  const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
+    'is-visible': isMobileSideNavExpanded
+  });
+
+  const handleClick = (e: Event) => {
+    if (
+      mobileSideNav &&
+      mobileSideNav.current &&
+      mobileSideNav.current.contains(e.target)
+    ) {
+      return;
+    }
+
+    setIsMobileSideNavExpanded(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mouseup', handleClick);
+
+    return () => {
+      document.removeEventListener('mouseup', handleClick);
+    };
+  }, []);
 
   // TODO: Handle errors and loading
   if (!systemInfo) {
@@ -149,30 +178,80 @@ const SystemProfile = () => {
             </PageHeading>
           </Grid>
         </SummaryBox>
+
+        {/* Button/Header to display when mobile/tablet */}
+        <div className="grid-container system-profile__nav">
+          <div
+            className={classnames('usa-overlay', {
+              'is-visible': isMobileSideNavExpanded
+            })}
+          />
+          <button
+            type="button"
+            className="usa-menu-btn easi-header__basic  system-profile__nav-button"
+            onClick={() => setIsMobileSideNavExpanded(true)}
+          >
+            <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>
+            <span className="fa fa-bars" />
+          </button>
+        </div>
+
         <SectionWrapper className="margin-top-5 margin-bottom-5">
           <Grid className="grid-container">
             <Grid row>
               <Grid desktop={{ col: 3 }}>
                 {/* Side navigation for single system */}
-                <SideNav
-                  items={Object.keys(sideNavItems(systemInfo.id)).map(
-                    (key: string) => (
-                      <NavLink
-                        to={sideNavItems(systemInfo.id)[key].route}
-                        key={key}
-                        activeClassName="usa-current"
-                        className={classnames({
-                          'nav-group-border': sideNavItems(systemInfo.id)[key]
-                            .groupEnd
-                        })}
-                        exact
-                      >
-                        {t(`navigation.${key}`)}
-                      </NavLink>
-                    )
-                  )}
-                />
+                {!isMobile ? (
+                  <SideNav
+                    items={Object.keys(sideNavItems(systemInfo.id)).map(
+                      (key: string) => (
+                        <NavLink
+                          to={sideNavItems(systemInfo.id)[key].route}
+                          key={key}
+                          activeClassName="usa-current"
+                          className={classnames({
+                            'nav-group-border': sideNavItems(systemInfo.id)[key]
+                              .groupEnd
+                          })}
+                          exact
+                        >
+                          {t(`navigation.${key}`)}
+                        </NavLink>
+                      )
+                    )}
+                  />
+                ) : (
+                  <div ref={mobileSideNav} className={mobileSideNavClasses}>
+                    {/* Mobile Display */}
+                    <PrimaryNav
+                      onToggleMobileNav={() =>
+                        setIsMobileSideNavExpanded(false)
+                      }
+                      mobileExpanded={isMobileSideNavExpanded}
+                      aria-label="Side navigation"
+                      items={Object.keys(sideNavItems(systemInfo.id)).map(
+                        (key: string) => (
+                          <NavLink
+                            to={sideNavItems(systemInfo.id)[key].route}
+                            key={key}
+                            onClick={() => setIsMobileSideNavExpanded(false)}
+                            activeClassName="usa-current"
+                            className={classnames({
+                              'nav-group-border': sideNavItems(systemInfo.id)[
+                                key
+                              ].groupEnd
+                            })}
+                            exact
+                          >
+                            {t(`navigation.${key}`)}
+                          </NavLink>
+                        )
+                      )}
+                    />
+                  </div>
+                )}
               </Grid>
+
               <Grid
                 desktop={{ col: 6 }}
                 className="padding-left-5 padding-right-5"
