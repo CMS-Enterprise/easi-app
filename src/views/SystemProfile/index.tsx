@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import {
@@ -33,10 +33,18 @@ import './index.scss';
 
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
-  const { systemId, subinfo } = useParams<{
+  const { systemId, subinfo, top } = useParams<{
     systemId: string;
     subinfo: string;
+    top: string;
   }>();
+
+  // Scroll to top if redirect
+  useLayoutEffect(() => {
+    if (top) {
+      window.scrollTo(0, 0);
+    }
+  }, [top]);
 
   // TODO: Use GQL query for single system of CEDAR data
   const systemInfo = mockSystemInfo.find(

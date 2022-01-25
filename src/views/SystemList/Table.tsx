@@ -97,7 +97,7 @@ export const Table = ({
         accessor: 'name',
         id: 'systemName',
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <UswdsReactLink to={`/system-profile/${row.original.id}/home`}>
+          <UswdsReactLink to={`/system-profile/${row.original.id}/home/top`}>
             {row.original.name}
           </UswdsReactLink>
         )
