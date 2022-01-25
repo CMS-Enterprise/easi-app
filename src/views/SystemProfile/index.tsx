@@ -31,17 +31,6 @@ import sideNavItems from './components/index';
 
 import './index.scss';
 
-type componentProps = {
-  label: string;
-  component: React.ReactNode;
-  route: string;
-};
-
-// Locates the correct component to display in sub-navigation based on url id and parameter
-const displaySystemComponent = (label: string, id: string) =>
-  sideNavItems(id).find((item: componentProps) => item.label === label)
-    ?.component || 'Not Found'; // TODO: Create a not found component that doesnt render entire app like <NotFound />
-
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
   const { systemId, subinfo } = useParams<{
@@ -54,16 +43,8 @@ const SystemProfile = () => {
     mockSystem => mockSystem.id === systemId
   );
 
-  // // TODO: implement cleaner way for sub-route components to keep scroll position
-  // const scrollRef = useRef<null | HTMLDivElement>(null);
-  // useEffect(() => {
-  //   if (subinfo && scrollRef?.current) {
-  //     // Scroll to element with should be in view after rendering
-  //     scrollRef.current.scrollIntoView();
-  //   }
-  // }, [subinfo]);
-
-  if (systemInfo === undefined) {
+  // TODO: Handle errors and loading
+  if (!systemInfo) {
     return <NotFound />;
   }
 
@@ -77,7 +58,7 @@ const SystemProfile = () => {
               <Breadcrumb>
                 <span>&larr; </span>
                 <BreadcrumbLink asCustom={Link} to="/system-profile">
-                  <span>Back to All Systems</span>
+                  <span>{t('singleSystem.summary.back')}</span>
                 </BreadcrumbLink>
               </Breadcrumb>
             </BreadcrumbBar>
@@ -161,32 +142,37 @@ const SystemProfile = () => {
           </Grid>
         </SummaryBox>
         <SectionWrapper className="margin-top-5 margin-bottom-5">
-          {/* <div ref={scrollRef} /> */}
           <Grid className="grid-container">
             <Grid row>
               <Grid desktop={{ col: 3 }}>
+                {/* Side navigation for single system */}
                 <SideNav
-                  items={sideNavItems(systemInfo.id).map(item => (
-                    <NavLink
-                      to={item.route}
-                      key={item.label}
-                      activeClassName="usa-current"
-                      className={classnames({
-                        'nav-group-border': item.groupEnd
-                      })}
-                      exact
-                    >
-                      {t(`navigation.${item.label}`)}
-                    </NavLink>
-                  ))}
+                  items={Object.keys(sideNavItems(systemInfo.id)).map(
+                    (key: string) => (
+                      <NavLink
+                        to={sideNavItems(systemInfo.id)[key].route}
+                        key={key}
+                        activeClassName="usa-current"
+                        className={classnames({
+                          'nav-group-border': sideNavItems(systemInfo.id)[key]
+                            .groupEnd
+                        })}
+                        exact
+                      >
+                        {t(`navigation.${key}`)}
+                      </NavLink>
+                    )
+                  )}
                 />
               </Grid>
               <Grid
                 desktop={{ col: 6 }}
                 className="padding-left-5 padding-right-5"
               >
-                {displaySystemComponent(subinfo || 'home', systemInfo.id)}
+                {/* This renders the selected sidenav central component */}
+                {sideNavItems(systemInfo.id)[subinfo || 'home'].component}
               </Grid>
+              {/* Point of contact/ miscellaneous info */}
               <Grid desktop={{ col: 3 }}>
                 <div className="top-divider" />
                 <p>{t('singleSystem.pointOfContact')}</p>

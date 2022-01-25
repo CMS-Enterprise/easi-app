@@ -2,65 +2,64 @@ import React from 'react';
 
 import SystemHome from './systemHome';
 
-const sideNavItems = (id: string) => [
-  {
-    label: 'home',
+type sideNavItemProps = {
+  groupEnd?: boolean; // Value used to designate end of sidenav subgrouping / border-bottom
+  component: React.ReactNode;
+  route: string;
+};
+
+interface sideNavProps {
+  [key: string]: sideNavItemProps;
+}
+
+const sideNavItems = (id: string): sideNavProps => ({
+  home: {
     groupEnd: true,
     component: <SystemHome />,
     route: `/system-profile/${id}/home`
   },
-  {
-    label: 'details',
+  details: {
     component: <SystemHome />,
     route: `/system-profile/${id}/details`
   },
-  {
-    label: 'team-and-contract',
+  'team-and-contract': {
     component: <SystemHome />,
     route: `/system-profile/${id}/team-and-contract`
   },
-  {
-    label: 'funding-and-budget',
+  'funding-and-budget': {
     component: <SystemHome />,
     route: `/system-profile/${id}/funding-and-budget`
   },
-  {
-    label: 'tools-and-software',
+  'tools-and-software': {
     groupEnd: true,
     component: <SystemHome />,
     route: `/system-profile/${id}/tools-and-software`
   },
-  {
-    label: 'ato',
+  ato: {
     component: <SystemHome />,
     route: `/system-profile/${id}/ato`
   },
-  {
-    label: 'lifecycle-id',
+  'lifecycle-id': {
     component: <SystemHome />,
     route: `/system-profile/${id}/lifecycle-id`
   },
-  {
-    label: 'section-508',
+  'section-508': {
     groupEnd: true,
     component: <SystemHome />,
     route: `/system-profile/${id}/section-508`
   },
-  {
-    label: 'sub-systems',
+  'sub-systems': {
     component: <SystemHome />,
     route: `/system-profile/${id}/sub-systems`
   },
-  {
-    label: 'system-data',
+  'system-data': {
     component: <SystemHome />,
     route: `/system-profile/${id}/system-data`
   },
-  {
-    label: 'documents',
+  documents: {
     component: <SystemHome />,
     route: `/system-profile/${id}/documents`
   }
-];
+});
 
 export default sideNavItems;

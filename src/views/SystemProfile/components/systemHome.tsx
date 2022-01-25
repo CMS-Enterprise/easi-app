@@ -14,12 +14,7 @@ const SystemHome = ({ className, children }: SystemHomeProps) => {
         data-testid="system-card"
         className={classnames('grid-col-12', className)}
       >
-        <div className="grid-col-12">
-          <p className="bookmark__title margin-top-0 margin-bottom-1">
-            Production Environment
-          </p>
-          {children}
-        </div>
+        <div className="grid-col-12">{children}</div>
       </Card>
     </CardGroup>
   );

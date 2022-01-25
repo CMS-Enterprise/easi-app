@@ -27,6 +27,7 @@ const systemProfile = {
     sendEmail: 'Send and email',
     moreContact: 'More points of contact',
     summary: {
+      back: 'Back to All Systems',
       expand: 'Expand system summary',
       hide: 'Hide system summary',
       label: 'Open system external link',
