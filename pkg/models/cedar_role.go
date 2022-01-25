@@ -24,7 +24,7 @@ type CedarRole struct {
 
 	// possibly-null fields
 	AssigneeType      CedarAssigneeType
-	AssigneeUserName  zero.String
+	AssigneeUsername  zero.String
 	AssigneeEmail     zero.String
 	AssigneeOrgID     zero.String
 	AssigneeOrgName   zero.String

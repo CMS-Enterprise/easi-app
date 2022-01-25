@@ -371,7 +371,7 @@ func convertWireRolesToModel(ctx context.Context, wireRoles []*wiremodels.Role) 
 			ObjectID:    *wireRole.ObjectID,
 			RoleTypeID:  *wireRole.RoleTypeID,
 
-			AssigneeUserName:  zero.StringFrom(wireRole.AssigneeUserName),
+			AssigneeUsername:  zero.StringFrom(wireRole.AssigneeUserName),
 			AssigneeEmail:     zero.StringFrom(wireRole.AssigneeEmail),
 			AssigneeOrgID:     zero.StringFrom(wireRole.AssigneeOrgID),
 			AssigneeOrgName:   zero.StringFrom(wireRole.AssigneeOrgName),
