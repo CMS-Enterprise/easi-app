@@ -3,7 +3,7 @@
 exports[`BookmarkCard matches the snapshot 1`] = `
 <DocumentFragment>
   <li
-    class="usa-card desktop:grid-col-6 grid-col-12 margin-top-2 margin-bottom-0"
+    class="usa-card desktop:grid-col-6 grid-col-12"
     data-testid="single-bookmark-card"
   >
     <div
@@ -20,7 +20,7 @@ exports[`BookmarkCard matches the snapshot 1`] = `
           >
             <a
               class="usa-link"
-              href="/systems/1"
+              href="/system-profile/1/home/top"
             >
               Happiness Achievement Module
             </a>

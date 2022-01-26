@@ -64,10 +64,10 @@ type Action struct {
 	CreatedAt                                *time.Time   `json:"createdAt" db:"created_at"`
 	LCIDExpirationChangeNewDate              *time.Time   `db:"lcid_expiration_change_new_date"`
 	LCIDExpirationChangePreviousDate         *time.Time   `db:"lcid_expiration_change_previous_date"`
-	LCIDExpirationChangeNewScope             string       `db:"lcid_expiration_change_new_scope"`
-	LCIDExpirationChangePreviousScope        string       `db:"lcid_expiration_change_previous_scope"`
-	LCIDExpirationChangeNewNextSteps         string       `db:"lcid_expiration_change_new_next_steps"`
-	LCIDExpirationChangePreviousNextSteps    string       `db:"lcid_expiration_change_previous_next_steps"`
-	LCIDExpirationChangeNewCostBaseline      string       `db:"lcid_expiration_change_new_cost_baseline"`
-	LCIDExpirationChangePreviousCostBaseline string       `db:"lcid_expiration_change_previous_cost_baseline"`
+	LCIDExpirationChangeNewScope             null.String  `db:"lcid_expiration_change_new_scope"`
+	LCIDExpirationChangePreviousScope        null.String  `db:"lcid_expiration_change_previous_scope"`
+	LCIDExpirationChangeNewNextSteps         null.String  `db:"lcid_expiration_change_new_next_steps"`
+	LCIDExpirationChangePreviousNextSteps    null.String  `db:"lcid_expiration_change_previous_next_steps"`
+	LCIDExpirationChangeNewCostBaseline      null.String  `db:"lcid_expiration_change_new_cost_baseline"`
+	LCIDExpirationChangePreviousCostBaseline null.String  `db:"lcid_expiration_change_previous_cost_baseline"`
 }

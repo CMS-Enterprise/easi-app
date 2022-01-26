@@ -5,8 +5,38 @@ const systemProfile = {
     info: 'Have a new system or application?',
     button: 'Start an intake request'
   },
+  navigation: {
+    home: 'System Home',
+    details: 'System Details',
+    'team-and-contract': 'Team and Contract',
+    'funding-and-budget': 'Funding and Budget',
+    'tools-and-software': 'Tools and Software',
+    ato: 'ATO',
+    'lifecycle-id': 'Lifecyle ID',
+    'section-508': 'Section 508',
+    'sub-systems': 'Sub-systems',
+    'system-data': 'System Data',
+    documents: 'Documents'
+  },
   tabs: {
     systemProfile: 'System Profile'
+  },
+  singleSystem: {
+    id: 'single-system-profile',
+    pointOfContact: 'Point of Contact',
+    sendEmail: 'Send and email',
+    moreContact: 'More points of contact',
+    summary: {
+      back: 'Back to All Systems',
+      expand: 'Expand system summary',
+      hide: 'Hide system summary',
+      label: 'Open system external link',
+      view: 'View',
+      subheader1: 'CMS Component',
+      subheader2: 'Business Owner',
+      subheader3: 'Go Live Date',
+      subheader4: 'Most recent major change release'
+    }
   },
   systemTable: {
     title: 'All Systems',

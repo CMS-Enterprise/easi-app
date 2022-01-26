@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
@@ -162,9 +162,6 @@ describe('The request type form page', () => {
 
   it('renders without crashing', async () => {
     renderPage([]);
-    await waitFor(() => {
-      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
-    });
 
     expect(screen.getByTestId('request-type-form')).toBeInTheDocument();
   });
@@ -197,10 +194,6 @@ describe('The request type form page', () => {
     };
 
     renderPage([intakeMutation]);
-
-    await waitFor(() => {
-      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
-    });
 
     screen.getByRole('radio', { name: /new system/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
@@ -239,10 +232,6 @@ describe('The request type form page', () => {
 
     renderPage([intakeMutation, intakeQuery({ requestType: 'MAJOR_CHANGES' })]);
 
-    await waitFor(() => {
-      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
-    });
-
     screen.getByRole('radio', { name: /major changes/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
 
@@ -279,10 +268,6 @@ describe('The request type form page', () => {
     };
 
     renderPage([intakeMutation, intakeQuery({ requestType: 'RECOMPETE' })]);
-
-    await waitFor(() => {
-      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
-    });
 
     screen.getByRole('radio', { name: /re-compete/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
@@ -321,10 +306,6 @@ describe('The request type form page', () => {
 
     renderPage([intakeMutation, intakeQuery({})]);
 
-    await waitFor(() => {
-      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
-    });
-
     screen.getByRole('radio', { name: /decommission/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
 
@@ -333,10 +314,6 @@ describe('The request type form page', () => {
 
   it('executes request type validations', async () => {
     renderPage([]);
-
-    await waitFor(() => {
-      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
-    });
 
     screen.getByRole('button', { name: /continue/i }).click();
 
