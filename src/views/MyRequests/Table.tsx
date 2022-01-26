@@ -39,10 +39,10 @@ const Table = () => {
         Cell: ({ row, value }: any) => {
           let link: string;
           switch (row.original.type) {
-            case RequestType.ACCESSIBILITY_REQUEST:
+            case t('requestsTable.types.ACCESSIBILITY_REQUEST'):
               link = `/508/requests/${row.original.id}`;
               break;
-            case RequestType.GOVERNANCE_REQUEST:
+            case t('requestsTable.types.GOVERNANCE_REQUEST'):
               link = `/governance-task-list/${row.original.id}`;
               break;
             default:
