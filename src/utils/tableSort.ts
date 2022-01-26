@@ -31,6 +31,18 @@ export const getHeaderSortIcon = (
   return classnames(marginClassName, 'fa fa-caret-up');
 };
 
+export const currentTableSortDescription = (headerGroup: any) => {
+  const sortedHeader = headerGroup.headers.find(
+    (header: HeaderGroup) => header.isSorted
+  );
+
+  if (sortedHeader) {
+    const direction = sortedHeader.isSortedDesc ? 'descending' : 'ascending';
+    return `Requests table sorted by ${sortedHeader.Header} ${direction}`;
+  }
+  return 'Requests table reset to default sort order';
+};
+
 export const sortColumnValues = (
   rowOneElem: null | string | number | Date,
   rowTwoElem: null | string | number | Date

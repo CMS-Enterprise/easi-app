@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useSortBy, useTable } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
-import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
@@ -11,9 +10,14 @@ import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
-import { sortColumnValues } from 'utils/tableSort';
+import {
+  currentTableSortDescription,
+  getColumnSortStatus,
+  getHeaderSortIcon,
+  sortColumnValues
+} from 'utils/tableSort';
 
-import tableUtil from './tableUtil';
+import mapRequestData from './tableUtil';
 
 import './index.scss';
 
@@ -98,7 +102,7 @@ const Table = () => {
 
   const data = useMemo(() => {
     if (tableData) {
-      return tableUtil(tableData, t);
+      return mapRequestData(tableData, t);
     }
     return [];
   }, [tableData, t]);
@@ -127,26 +131,6 @@ const Table = () => {
     },
     useSortBy
   );
-
-  const getHeaderSortIcon = (isDesc: boolean | undefined) => {
-    return classnames('margin-left-1', {
-      'fa fa-caret-down fa-lg caret': isDesc,
-      'fa fa-caret-up fa-lg caret': !isDesc
-    });
-  };
-
-  const getColumnSortStatus = (
-    column: any
-  ): 'descending' | 'ascending' | 'none' => {
-    if (column.isSorted) {
-      if (column.isSortedDesc) {
-        return 'descending';
-      }
-      return 'ascending';
-    }
-
-    return 'none';
-  };
 
   if (loading) {
     return (
@@ -186,7 +170,10 @@ const Table = () => {
                     {column.render('Header')}
                     {column.isSorted && (
                       <span
-                        className={getHeaderSortIcon(column.isSortedDesc)}
+                        className={getHeaderSortIcon(
+                          column.isSorted,
+                          column.isSortedDesc
+                        )}
                       />
                     )}
                     {!column.isSorted && (
@@ -233,16 +220,6 @@ const Table = () => {
       </div>
     </div>
   );
-};
-
-const currentTableSortDescription = headerGroup => {
-  const sortedHeader = headerGroup.headers.find(header => header.isSorted);
-
-  if (sortedHeader) {
-    const direction = sortedHeader.isSortedDesc ? 'descending' : 'ascending';
-    return `Requests table sorted by ${sortedHeader.Header} ${direction}`;
-  }
-  return 'Requests table reset to default sort order';
 };
 
 export default Table;

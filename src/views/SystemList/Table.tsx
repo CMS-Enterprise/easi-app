@@ -30,7 +30,11 @@ import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQue
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
-import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
+import {
+  getColumnSortStatus,
+  getHeaderSortIcon,
+  sortColumnValues
+} from 'utils/tableSort';
 
 import './index.scss';
 
@@ -170,8 +174,7 @@ export const Table = ({
         alphanumeric: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName] || '';
           const rowTwoElem = rowTwo.values[columnName] || '';
-
-          return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
+          return sortColumnValues(rowOneElem, rowTwoElem);
         }
       },
       columns,

@@ -126,7 +126,7 @@ const AccessibilityDocumentsList = ({
   }
   return (
     <div data-testid="accessibility-documents-list">
-      <Table bordered={false} {...getTableProps()} fullWidth>
+      <Table bordered={false} {...getTableProps()} fullWidth scrollable>
         <caption className="usa-sr-only">
           {`${t('documentTable.caption')} ${requestName}`}
         </caption>
