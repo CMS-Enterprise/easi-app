@@ -2,6 +2,8 @@ import { HeaderGroup } from 'react-table';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
+type sortColumnProps = null | string | number | Date;
+
 export const getColumnSortStatus = <T extends {}>(
   column: HeaderGroup<T>
 ): 'descending' | 'ascending' | 'none' => {
@@ -44,8 +46,8 @@ export const currentTableSortDescription = (headerGroup: any) => {
 };
 
 export const sortColumnValues = (
-  rowOneElem: null | string | number | Date,
-  rowTwoElem: null | string | number | Date
+  rowOneElem: sortColumnProps,
+  rowTwoElem: sortColumnProps
 ) => {
   // Null checks for columns with data potentially empty (LCID Expiration, Admin Notes, etc.)
   if (rowOneElem === null) {
@@ -59,6 +61,11 @@ export const sortColumnValues = (
   // If both items are strings, enforce capitalization (temporarily) and then compare
   if (typeof rowOneElem === 'string' && typeof rowTwoElem === 'string') {
     return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
+  }
+
+  // If string and datetime, sort datetimes together
+  if (rowOneElem instanceof DateTime && typeof rowTwoElem === 'string') {
+    return 1;
   }
 
   // If both items are DateTimes, convert to Number and compare

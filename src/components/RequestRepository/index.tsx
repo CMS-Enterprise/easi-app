@@ -14,6 +14,7 @@ import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import TruncatedText from 'components/shared/TruncatedText';
 import { convertIntakeToCSV } from 'data/systemIntake';
@@ -24,6 +25,11 @@ import {
   getAcronymForComponent,
   translateRequestType
 } from 'utils/systemIntake';
+import {
+  getColumnSortStatus,
+  getHeaderSortIcon,
+  sortColumnValues
+} from 'utils/tableSort';
 
 import csvHeaderMap from './csvHeaderMap';
 
@@ -70,9 +76,7 @@ const RequestRepository = () => {
     Header: t('intake:contactDetails.requester'),
     accessor: 'requester',
     Cell: ({ value }: any) => {
-      // Display both the requester name and the acronym of their component
-      // TODO: might be better to just save the component's acronym in the intake?
-      return `${value.name}, ${getAcronymForComponent(value.component)}`;
+      return value;
     }
   };
 
@@ -80,18 +84,17 @@ const RequestRepository = () => {
     Header: t('intake:fields.adminLead'),
     accessor: 'adminLead',
     Cell: ({ value }: any) => {
-      if (value) {
-        return value;
+      if (value === t('governanceReviewTeam:adminLeads.notAssigned')) {
+        return (
+          <>
+            {/* TODO: should probably make this a button that opens up the assign admin
+                  lead automatically. Similar to the Dates functionality */}
+            <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
+            {t('governanceReviewTeam:adminLeads.notAssigned')}
+          </>
+        );
       }
-
-      return (
-        <>
-          {/* TODO: should probably make this a button that opens up the assign admin
-                    lead automatically. Similar to the Dates functionality */}
-          <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
-          {t('governanceReviewTeam:adminLeads.notAssigned')}
-        </>
-      );
+      return value;
     }
   };
 
@@ -99,19 +102,18 @@ const RequestRepository = () => {
     Header: t('intake:fields.grtDate'),
     accessor: 'grtDate',
     Cell: ({ row, value }: any) => {
-      if (value) {
-        return formatDateAndIgnoreTimezone(value);
+      if (value === t('requestRepository.table.addDate')) {
+        // If date is null, return button that takes user to page to add date
+        return (
+          <UswdsReactLink
+            data-testid="add-grt-date-cta"
+            to={`/governance-review-team/${row.original.id}/dates`}
+          >
+            {t('requestRepository.table.addDate')}
+          </UswdsReactLink>
+        );
       }
-
-      // If date is null, return button that takes user to page to add date
-      return (
-        <UswdsReactLink
-          data-testid="add-grt-date-cta"
-          to={`/governance-review-team/${row.original.id}/dates`}
-        >
-          {t('requestRepository.table.addDate')}
-        </UswdsReactLink>
-      );
+      return formatDateAndIgnoreTimezone(value);
     }
   };
 
@@ -119,19 +121,18 @@ const RequestRepository = () => {
     Header: t('intake:fields.grbDate'),
     accessor: 'grbDate',
     Cell: ({ row, value }: any) => {
-      if (value) {
-        return formatDateAndIgnoreTimezone(value);
+      if (value === t('requestRepository.table.addDate')) {
+        // If date is null, return button that takes user to page to add date
+        return (
+          <UswdsReactLink
+            data-testid="add-grb-date-cta"
+            to={`/governance-review-team/${row.original.id}/dates`}
+          >
+            {t('requestRepository.table.addDate')}
+          </UswdsReactLink>
+        );
       }
-
-      // If date is null, return button that takes user to page to add date
-      return (
-        <UswdsReactLink
-          data-testid="add-grb-date-cta"
-          to={`/governance-review-team/${row.original.id}/dates`}
-        >
-          {t('requestRepository.table.addDate')}
-        </UswdsReactLink>
-      );
+      return formatDateAndIgnoreTimezone(value);
     }
   };
 
@@ -242,9 +243,31 @@ const RequestRepository = () => {
         statusTranslation = t(`intake:statusMap.${statusEnum}`);
       }
 
+      // Display both the requester name and the acronym of their component
+      // TODO: might be better to just save the component's acronym in the intake?
+      const requester = `${intake.requester.name}, ${getAcronymForComponent(
+        intake.requester.component
+      )}`;
+
+      const adminLead = intake.adminLead
+        ? intake.adminLead
+        : t('governanceReviewTeam:adminLeads.notAssigned');
+
+      const grtDate = intake.grtDate
+        ? intake.grtDate
+        : t('requestRepository.table.addDate');
+
+      const grbDate = intake.grbDate
+        ? intake.grbDate
+        : t('requestRepository.table.addDate');
+
       // Override all applicable fields in intake to use i18n translations
       return {
         ...intake,
+        requester,
+        adminLead,
+        grtDate,
+        grbDate,
         status: statusTranslation,
         requestType: translateRequestType(intake.requestType)
       };
@@ -270,63 +293,16 @@ const RequestRepository = () => {
         alphanumeric: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
           const rowTwoElem = rowTwo.values[columnName];
-
-          // Null checks for columns with data potentially empty (LCID Expiration, Admin Notes, etc.)
-          if (rowOneElem === null) {
-            return 1;
-          }
-
-          if (rowTwoElem === null) {
-            return -1;
-          }
-
-          // If both items are strings, enforce capitalization (temporarily) and then compare
-          if (
-            typeof rowOneElem === 'string' &&
-            typeof rowTwoElem === 'string'
-          ) {
-            return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
-          }
-
-          // If both items are DateTimes, convert to Number and compare
-          if (
-            rowOneElem instanceof DateTime &&
-            rowTwoElem instanceof DateTime
-          ) {
-            return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
-          }
-
-          // If items are different types and/or neither string nor DateTime, return bare comparison
-          return rowOneElem > rowTwoElem ? 1 : -1;
+          return sortColumnValues(rowOneElem, rowTwoElem);
         }
       },
       data,
       initialState: {
-        sortBy: [{ id: 'submittedAt', desc: true }]
+        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], [])
       }
     },
     useSortBy
   );
-
-  const getHeaderSortIcon = (isDesc: boolean | undefined) => {
-    return classnames('margin-left-1', {
-      'fa fa-caret-down': isDesc,
-      'fa fa-caret-up': !isDesc
-    });
-  };
-
-  const getColumnSortStatus = (
-    column: any
-  ): 'descending' | 'ascending' | 'none' => {
-    if (column.isSorted) {
-      if (column.isSortedDesc) {
-        return 'descending';
-      }
-      return 'ascending';
-    }
-
-    return 'none';
-  };
 
   const csvHeaders = csvHeaderMap(t);
 
@@ -335,7 +311,7 @@ const RequestRepository = () => {
   };
 
   return (
-    <>
+    <MainContent className="grid-container margin-bottom-5">
       <div className="display-flex flex-justify flex-wrap margin-bottom-2">
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
@@ -423,12 +399,31 @@ const RequestRepository = () => {
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
-                  style={{ whiteSpace: 'nowrap' }}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    borderTop: 0
+                  }}
                 >
-                  {column.render('Header')}
-                  {column.isSorted && (
-                    <span className={getHeaderSortIcon(column.isSortedDesc)} />
-                  )}
+                  <button
+                    className="usa-button usa-button--unstyled"
+                    type="button"
+                    {...column.getSortByToggleProps()}
+                  >
+                    {column.render('Header')}
+                    {column.isSorted && (
+                      <span
+                        className={getHeaderSortIcon(
+                          column.isSorted,
+                          column.isSortedDesc
+                        )}
+                      />
+                    )}
+                    {!column.isSorted && (
+                      <span className="margin-left-1 fa fa-sort caret" />
+                    )}
+                  </button>
                 </th>
               ))}
             </tr>
@@ -465,7 +460,7 @@ const RequestRepository = () => {
           })}
         </tbody>
       </Table>
-    </>
+    </MainContent>
   );
 };
 

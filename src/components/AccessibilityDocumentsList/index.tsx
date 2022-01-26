@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Cell, Column, useTable } from 'react-table';
+import { Cell, Column, useSortBy, useTable } from 'react-table';
 import { Button, Link, Table } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
@@ -11,6 +11,7 @@ import {
 } from 'types/graphql-global-types';
 import { translateDocumentType } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
+import { getHeaderSortIcon } from 'utils/tableSort';
 
 type Document = {
   id: string;
@@ -112,14 +113,17 @@ const AccessibilityDocumentsList = ({
     headerGroups,
     rows,
     prepareRow
-  } = useTable({
-    columns,
-    data: documents,
-    documents,
-    initialState: {
-      sortBy: [{ id: 'uploadedAt', desc: true }]
-    }
-  });
+  } = useTable(
+    {
+      columns,
+      data: documents,
+      documents,
+      initialState: {
+        sortBy: [{ id: 'uploadedAt', desc: true }]
+      }
+    },
+    useSortBy
+  );
 
   if (documents.length === 0) {
     return <div>{t('documentTable.noDocuments')}</div>;
@@ -136,10 +140,33 @@ const AccessibilityDocumentsList = ({
               {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps()}
-                  style={{ whiteSpace: 'nowrap', width: column.width }}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    width: column.width,
+                    borderTop: 0
+                  }}
                   scope="col"
                 >
-                  {column.render('Header')}
+                  <button
+                    className="usa-button usa-button--unstyled"
+                    type="button"
+                    {...column.getSortByToggleProps()}
+                  >
+                    {column.render('Header')}
+                    {column.isSorted && (
+                      <span
+                        className={getHeaderSortIcon(
+                          column.isSorted,
+                          column.isSortedDesc
+                        )}
+                      />
+                    )}
+                    {!column.isSorted && (
+                      <span className="margin-left-1 fa fa-sort caret" />
+                    )}
+                  </button>
                 </th>
               ))}
             </tr>
