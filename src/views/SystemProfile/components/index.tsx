@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SystemHome from './systemHome';
+import SystemHome from './SystemHome';
 
 type sideNavItemProps = {
   groupEnd?: boolean; // Value used to designate end of sidenav subgrouping / border-bottom
@@ -11,6 +11,8 @@ type sideNavItemProps = {
 interface sideNavProps {
   [key: string]: sideNavItemProps;
 }
+
+// groupEnd value is used to designate the end of navigation related grouping
 
 const sideNavItems = (id: string): sideNavProps => ({
   home: {

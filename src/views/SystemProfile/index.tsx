@@ -26,6 +26,8 @@ import useCheckResponsiveScreen from 'utils/checkMobile';
 import NotFound from 'views/NotFound';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
 
+// components/index contains all the sideNavItems components, routes, labels and translations
+// The sideNavItems object keys are mapped to the url param - 'subinfo'
 import sideNavItems from './components/index';
 
 import './index.scss';
