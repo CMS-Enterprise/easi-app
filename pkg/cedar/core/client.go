@@ -330,6 +330,19 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 			continue
 		}
 
+		var retAssigneeType models.CedarAssigneeType
+
+		if role.AssigneeType == string(models.PersonAssignee) {
+			retAssigneeType = models.PersonAssignee
+		} else if role.AssigneeType == string(models.OrganizationAssignee) {
+			retAssigneeType = models.OrganizationAssignee
+		} else if role.AssigneeType == "" {
+			retAssigneeType = ""
+		} else {
+			appcontext.ZLogger(ctx).Error("Error decoding role; role assignee type didn't match possible values from Swagger", zap.String("systemID", systemID))
+			continue
+		}
+
 		// generated swagger client turns JSON nulls into Go zero values, so use null/zero package to convert them back to nullable values
 		retRole := &models.CedarRole{
 			Application: *role.Application,
@@ -351,17 +364,9 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 			ObjectType:   zero.StringFrom(role.ObjectType),
 		}
 
-		var retAssigneeType models.CedarAssigneeType
-
-		if role.AssigneeType == string(models.PersonAssignee) {
-			retAssigneeType = models.PersonAssignee
-		} else if role.AssigneeType == string(models.OrganizationAssignee) {
-			retAssigneeType = models.OrganizationAssignee
-		} else {
-			retAssigneeType = models.UndefinedAssignee
+		if retAssigneeType != "" {
+			retRole.AssigneeType = &retAssigneeType
 		}
-
-		retRole.AssigneeType = retAssigneeType
 
 		retVal = append(retVal, retRole)
 	}

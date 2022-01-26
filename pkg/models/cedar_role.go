@@ -6,9 +6,6 @@ import "github.com/guregu/null/zero"
 type CedarAssigneeType string
 
 const (
-	// UndefinedAssignee represents an assignee type that's not listed as an option in the CEDAR swagger
-	UndefinedAssignee CedarAssigneeType = "undefined"
-
 	// PersonAssignee represents a person that's been assigned a role
 	PersonAssignee CedarAssigneeType = "person"
 	// OrganizationAssignee represents an organization that's been assigned a role
@@ -23,7 +20,7 @@ type CedarRole struct {
 	RoleTypeID  string
 
 	// possibly-null fields
-	AssigneeType      CedarAssigneeType
+	AssigneeType      *CedarAssigneeType
 	AssigneeUsername  zero.String
 	AssigneeEmail     zero.String
 	AssigneeOrgID     zero.String
