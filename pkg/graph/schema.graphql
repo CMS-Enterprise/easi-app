@@ -140,6 +140,7 @@ type AccessibilityRequest {
   euaUserId: String!
   statusRecord: AccessibilityRequestStatusRecord!
   notes: [AccessibilityRequestNote!]! @hasRole(role: EASI_508_TESTER_OR_USER)
+  cedarSystemId: String
 }
 
 """
@@ -290,6 +291,7 @@ The data needed to initialize a 508/accessibility request
 input CreateAccessibilityRequestInput {
   intakeID: UUID!
   name: String!
+  cedarSystemId: String
 }
 
 """
