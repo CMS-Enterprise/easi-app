@@ -9214,9 +9214,9 @@ func (ec *executionContext) _CedarRole_assigneeType(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(models.CedarAssigneeType)
+	res := resTmp.(*models.CedarAssigneeType)
 	fc.Result = res
-	return ec.marshalOCedarAssigneeType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAssigneeType(ctx, field.Selections, res)
+	return ec.marshalOCedarAssigneeType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAssigneeType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarRole_assigneeUsername(ctx context.Context, field graphql.CollectedField, obj *models.CedarRole) (ret graphql.Marshaler) {
@@ -25578,14 +25578,20 @@ func (ec *executionContext) marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgo
 	return ec._BusinessCaseSolution(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOCedarAssigneeType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAssigneeType(ctx context.Context, v interface{}) (models.CedarAssigneeType, error) {
+func (ec *executionContext) unmarshalOCedarAssigneeType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAssigneeType(ctx context.Context, v interface{}) (*models.CedarAssigneeType, error) {
+	if v == nil {
+		return nil, nil
+	}
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.CedarAssigneeType(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOCedarAssigneeType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAssigneeType(ctx context.Context, sel ast.SelectionSet, v models.CedarAssigneeType) graphql.Marshaler {
-	return graphql.MarshalString(string(v))
+func (ec *executionContext) marshalOCedarAssigneeType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAssigneeType(ctx context.Context, sel ast.SelectionSet, v *models.CedarAssigneeType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalString(string(*v))
 }
 
 func (ec *executionContext) marshalOCedarDataCenter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDataCenter(ctx context.Context, sel ast.SelectionSet, v *models.CedarDataCenter) graphql.Marshaler {

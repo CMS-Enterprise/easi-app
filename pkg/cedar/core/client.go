@@ -308,7 +308,7 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 	}
 
 	if len(resp.Payload.Roles) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no deployments found"), Resource: []*models.CedarRole{}}
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no roles found"), Resource: []*models.CedarRole{}}
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct
