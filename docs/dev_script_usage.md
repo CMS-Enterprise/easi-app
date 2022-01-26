@@ -30,7 +30,7 @@ scripts/dev tailscale         # Run app and expose to other machines over Tailsc
 scripts/dev test              # Run all tests in parallel
 scripts/dev test:go           # Runs Go tests
 scripts/dev test:go:long      # Runs Go tests, including long ones
-scripts/dev test:go:only      # Run targeted Go tests (pass path to package folder as additional options)
+scripts/dev test:go:only      # Run targeted Go tests (pass full package name as additional options)
 scripts/dev test:js           # Run JS tests (pass path to scope to that location)
 scripts/dev test:js:named     # Run JS tests with a matching name (pass needle as additional option)
 scripts/dev up                # Starts all services in the project
