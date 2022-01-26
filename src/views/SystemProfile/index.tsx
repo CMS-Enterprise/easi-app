@@ -37,7 +37,7 @@ const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
-  const mobileSideNav = useRef<any>();
+  const mobileSideNav = useRef<HTMLDivElement | null>(null);
   const { systemId, subinfo, top } = useParams<{
     systemId: string;
     subinfo: string;
