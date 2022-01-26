@@ -37,11 +37,13 @@ import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import SystemList from 'views/SystemList';
-import SystemProfileHealth from 'views/SystemProfileHealth';
+import SystemProfile from 'views/SystemProfile';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
+
+import shouldScroll from './scrollConfig';
 
 import './index.scss';
 
@@ -51,7 +53,9 @@ const AppRoutes = () => {
 
   // Scroll to top
   useLayoutEffect(() => {
-    window.scrollTo(0, 0);
+    if (shouldScroll(location.pathname)) {
+      window.scrollTo(0, 0);
+    }
   }, [location.pathname]);
 
   return (
@@ -126,6 +130,20 @@ const AppRoutes = () => {
       {flags.systemProfile && (
         <SecureRoute exact path="/system-profile" component={SystemList} />
       )}
+      {flags.systemProfile && (
+        <SecureRoute
+          path="/system-profile/:systemId"
+          exact
+          component={SystemProfile}
+        />
+      )}
+      {flags.systemProfile && (
+        <SecureRoute
+          path="/system-profile/:systemId/:subinfo/:top?"
+          exact
+          component={SystemProfile}
+        />
+      )}
       <Redirect
         exact
         from="/business/:businessCaseId"
@@ -153,11 +171,7 @@ const AppRoutes = () => {
       {/* Misc Routes */}
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
       {flags.sandbox && (
-        <Route
-          path="/sandbox/:systemId"
-          exact
-          component={SystemProfileHealth}
-        />
+        <Route path="/sandbox/:systemId" exact component={SystemProfile} />
       )}
 
       <Route path="/implicit/callback" component={LoginCallback} />

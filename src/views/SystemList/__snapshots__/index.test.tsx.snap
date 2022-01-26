@@ -67,84 +67,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
       <ul
         class="usa-card-group margin-bottom-3"
         data-testid="CardGroup"
-      >
-        <li
-          class="usa-card desktop:grid-col-6 grid-col-12 margin-top-2 margin-bottom-0"
-          data-testid="single-bookmark-card"
-        >
-          <div
-            class="usa-card__container"
-          >
-            <div
-              class="grid-col-12"
-            >
-              <div
-                class="bookmark__header easi-header__basic"
-              >
-                <h2
-                  class="bookmark__title margin-top-0 margin-bottom-1"
-                >
-                  <a
-                    class="usa-link"
-                    href="/systems/326-74-0"
-                  >
-                    Systems
-                  </a>
-                </h2>
-                <i
-                  aria-hidden="true"
-                  class="fa fa-bookmark bookmark__icon fa-2x"
-                  data-testid="bookmark-icon"
-                />
-              </div>
-              <p
-                class="margin-0"
-              >
-                ASD
-              </p>
-              <p
-                class="bookmark__body-text line-height-body-4"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
-    feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
-    Sollicitudin donec aliquam dui sed odio porta.
-              </p>
-              <p
-                class="margin-bottom-0"
-              >
-                CMS Component
-              </p>
-              <p
-                class="text-bold margin-top-1"
-              >
-                CMMI
-              </p>
-              <div
-                class="easi-divider"
-              />
-              <div
-                class="bookmark__header easi-header__basic"
-              >
-                <div>
-                  <p
-                    class="margin-bottom-0"
-                  >
-                    ATO Status
-                  </p>
-                  <p
-                    class="text-bold margin-top-0 margin-bottom-0"
-                  />
-                </div>
-                <i
-                  class="fa system-health-icon-fail fa-times-circle fa-3x margin-top-3"
-                  data-testid="system-health-icon"
-                />
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
+      />
     </div>
     <h1
       aria-live="polite"
@@ -195,7 +118,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
     >
       <span>
         <div>
-          Showing 1-3 of 3 results 
+          Showing 1-4 of 4 results 
         </div>
       </span>
     </div>
@@ -348,7 +271,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
             >
               <a
                 class="usa-link"
-                href="/sandbox/3"
+                href="/system-profile/3/home/top"
               >
                 Government
               </a>
@@ -397,7 +320,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
             >
               <a
                 class="usa-link"
-                href="/sandbox/1"
+                href="/system-profile/1/home/top"
               >
                 Happiness Achievement Module
               </a>
@@ -432,7 +355,56 @@ exports[`System List View when there are requests matches snapshot 1`] = `
             >
               <i
                 aria-hidden="true"
-                class="fa fa-bookmark bookmark__icon fa-1x"
+                class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
+                data-testid="bookmark-icon"
+              />
+            </th>
+            <th
+              role="cell"
+            >
+              BBC
+            </th>
+            <th
+              role="cell"
+            >
+              <a
+                class="usa-link"
+                href="/system-profile/326-9-0/home/top"
+              >
+                Medicare Beneficiary Contact Center
+              </a>
+            </th>
+            <th
+              role="cell"
+            >
+              <p>
+                Division of Call Center Systems
+              </p>
+            </th>
+            <th
+              role="cell"
+            >
+              <div>
+                <i
+                  class="fa system-health-icon-success fa-check-circle margin-right-1"
+                  data-testid="system-health-icon"
+                />
+                <span>
+                  Approved
+                </span>
+              </div>
+            </th>
+          </tr>
+          <tr
+            role="row"
+          >
+            <th
+              role="cell"
+              style="padding-left: .5em;"
+            >
+              <i
+                aria-hidden="true"
+                class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
                 data-testid="bookmark-icon"
               />
             </th>
@@ -446,7 +418,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
             >
               <a
                 class="usa-link"
-                href="/sandbox/326-74-0"
+                href="/system-profile/326-1-0/home/top"
               >
                 Systems
               </a>
