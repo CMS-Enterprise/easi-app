@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -120,7 +119,7 @@ func (r *accessibilityRequestResolver) Notes(ctx context.Context, obj *models.Ac
 }
 
 func (r *accessibilityRequestResolver) CedarSystemID(ctx context.Context, obj *models.AccessibilityRequest) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.CedarSystemID.Ptr(), nil
 }
 
 func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
