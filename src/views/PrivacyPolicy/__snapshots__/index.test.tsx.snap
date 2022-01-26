@@ -1,1242 +1,693 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The Privacy Policy static page matches the snapshot 1`] = `
-<div
-  className="easi-page-wrapper"
+<main
+  className="easi-main-content grid-container line-height-body-5 margin-bottom-5"
+  id="main-content"
+  role="main"
+  tabIndex={-1}
 >
-  <header
-    className="usa-header easi-header"
-    role="banner"
-  >
-    <section
-      aria-label="Official government website"
-      className="usa-banner"
-    >
-      <div
-        className="usa-accordion"
-      >
-        <header
-          className="usa-banner__header"
-        >
-          <div
-            className="usa-banner__inner"
-          >
-            <div
-              className="grid-col-auto"
-            >
-              <img
-                alt="U.S. flag"
-                className="usa-banner__header-flag"
-                src="us_flag_small.png"
-              />
-            </div>
-            <div
-              className="grid-col-fill tablet:grid-col-auto"
-            >
-              <p
-                className="usa-banner__header-text"
-              >
-                An official website of the United States government
-              </p>
-              <p
-                aria-hidden="true"
-                className="usa-banner__header-action"
-              >
-                Here’s how you know
-              </p>
-            </div>
-            <button
-              aria-controls="gov-banner"
-              aria-expanded={false}
-              className="usa-accordion__button usa-banner__button"
-              onClick={[Function]}
-              type="button"
-            >
-              <span
-                className="usa-banner__button-text"
-              >
-                Here’s how you know
-              </span>
-            </button>
-          </div>
-        </header>
-        <div
-          className="usa-banner__content usa-accordion__content"
-          hidden={true}
-          id="gov-banner"
-        >
-          <div
-            className="grid-row grid-gap-lg"
-          >
-            <div
-              className="usa-banner__guidance tablet:grid-col-6"
-            >
-              <img
-                alt="Dot gov"
-                className="usa-banner__icon usa-media-block__img"
-                src="icon-dot-gov.svg"
-              />
-              <div
-                className="usa-media-block__body"
-              >
-                <p>
-                  <strong>
-                    Official websites use .gov
-                  </strong>
-                  <br />
-                  A 
-                  <strong>
-                    .gov
-                  </strong>
-                   website belongs to an official government organization in the United States.
-                </p>
-              </div>
-            </div>
-            <div
-              className="usa-banner__guidance tablet:grid-col-6"
-            >
-              <img
-                alt="Https"
-                className="usa-banner__icon usa-media-block__img"
-                src="icon-https.svg"
-              />
-              <div
-                className="usa-media-block__body"
-              >
-                <p>
-                  <strong>
-                    Secure .gov websites use HTTPS
-                  </strong>
-                  <br />
-                  A 
-                  <strong>
-                    lock
-                  </strong>
-                   (
-                  <span
-                    className="icon-lock"
-                  >
-                    <svg
-                      aria-labelledby="banner-lock-title banner-lock-description"
-                      className="usa-banner__lock-image"
-                      height="64"
-                      role="img"
-                      viewBox="0 0 52 64"
-                      width="52"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <title
-                        id="banner-lock-title"
-                      >
-                        Lock
-                      </title>
-                      <desc
-                        id="banner-lock-description"
-                      >
-                        A locked padlock
-                      </desc>
-                      <path
-                        d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"
-                        fill="#000000"
-                        fillRule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  ) or 
-                  <strong>
-                    https://
-                  </strong>
-                   means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <div
-      className="grid-container easi-header__basic"
-    >
-      <div
-        className="usa-logo site-logo"
-        id="logo"
-      >
-        <a
-          href="/"
-          onClick={[Function]}
-        >
-          <em
-            aria-label="EASi home"
-            className="usa-logo__text"
-          >
-            EASi
-          </em>
-        </a>
-      </div>
-      <div>
-        <div
-          className="navbar--container easi-nav__user"
-        >
-          <div
-            className="easi-header__user"
-          >
-            
-          </div>
-          <div>
-              |  
-          </div>
-          <button
-            aria-controls="sign-out"
-            aria-expanded="false"
-            className="usa-button usa-button--unstyled"
-            data-testid="signout-link"
-            onClick={[Function]}
-            type="button"
-          >
-            Sign Out
-          </button>
-        </div>
-        <button
-          className="usa-menu-btn"
-          onClick={[Function]}
-          type="button"
-        >
-          <span
-            className="fa fa-bars"
-          />
-        </button>
-      </div>
-    </div>
-    <nav
-      aria-label="Navigation Bar"
-      className="border-top-light"
-      data-testid="navigation-bar"
-    >
-      <div
-        className="grid-container"
-      >
-        <nav
-          aria-label="Primary navigation"
-          className="usa-nav"
-        >
-          <button
-            className="usa-nav__close"
-            data-testid="navCloseButton"
-            onClick={[Function]}
-            type="button"
-          >
-            <img
-              alt="close"
-              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
-            />
-          </button>
-          <ul
-            className="usa-nav__primary usa-accordion"
-          >
-            <li
-              className="usa-nav__primary-item"
-            >
-              <div
-                className="easi-nav"
-              >
-                <a
-                  aria-current="page"
-                  className="easi-nav__link usa-current"
-                  href="/"
-                  onClick={[Function]}
-                  style={Object {}}
-                >
-                  <em
-                    aria-label="Home"
-                    className="usa-logo__text easi-nav__label"
-                  >
-                    Home
-                  </em>
-                </a>
-              </div>
-            </li>
-            <li
-              className="usa-nav__primary-item"
-            />
-            <li
-              className="usa-nav__primary-item"
-            >
-              <div
-                className="easi-nav"
-              >
-                <a
-                  aria-current={null}
-                  className="easi-nav__link"
-                  href="/system/making-a-request"
-                  onClick={[Function]}
-                >
-                  <em
-                    aria-label="IT Governance"
-                    className="usa-logo__text easi-nav__label"
-                  >
-                    IT Governance
-                  </em>
-                </a>
-              </div>
-            </li>
-            <li
-              className="usa-nav__primary-item"
-            >
-              <div
-                className="easi-nav"
-              >
-                <a
-                  aria-current={null}
-                  className="easi-nav__link"
-                  href="/508/making-a-request"
-                  onClick={[Function]}
-                >
-                  <em
-                    aria-label="Section 508"
-                    className="usa-logo__text easi-nav__label"
-                  >
-                    Section 508
-                  </em>
-                </a>
-              </div>
-            </li>
-            <li
-              className="usa-nav__primary-item"
-            />
-            <li
-              className="usa-nav__primary-item"
-            />
-          </ul>
-        </nav>
-      </div>
-    </nav>
-    <div
-      className="grid-container easi-header--desktop "
-    />
-    <div
-      className="usa-overlay"
-    />
-    <div
-      className="usa-nav sidenav-mobile"
-    >
-      <div
-        className="usa-nav__inner"
-      >
-        <nav
-          aria-label="Navigation Bar"
-          className="border-top-light"
-          data-testid="navigation-bar"
-        >
-          <div
-            className="grid-container"
-          >
-            <nav
-              aria-label="Primary navigation"
-              className="usa-nav is-visible"
-            >
-              <button
-                className="usa-nav__close"
-                data-testid="navCloseButton"
-                onClick={[Function]}
-                type="button"
-              >
-                <img
-                  alt="close"
-                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPjx0aXRsZT5jbG9zZTwvdGl0bGU+PHBhdGggZmlsbD0iIzU2NUM2NSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNTcuMDQyIDEuMTVsNS44MDkgNS44MDhhNCA0IDAgMCAxIDAgNS42NTdMNDMuNDY1IDMybDE5LjM4NiAxOS4zODVhNCA0IDAgMCAxIDAgNS42NTdsLTUuODA5IDUuODA5YTQgNCAwIDAgMS01LjY1NyAwTDMyIDQzLjQ2NSAxMi42MTUgNjIuODUxYTQgNCAwIDAgMS01LjY1NyAwbC01LjgwOS01LjgwOWE0IDQgMCAwIDEgMC01LjY1N0wyMC41MzUgMzIgMS4xNDkgMTIuNjE1YTQgNCAwIDAgMSAwLTUuNjU3bDUuODA5LTUuODA5YTQgNCAwIDAgMSA1LjY1NyAwTDMyIDIwLjUzNSA1MS4zODUgMS4xNDlhNCA0IDAgMCAxIDUuNjU3IDB6Ii8+PC9zdmc+"
-                />
-              </button>
-              <ul
-                className="usa-nav__primary usa-accordion"
-              >
-                <li
-                  className="usa-nav__primary-item"
-                >
-                  <div
-                    className="easi-nav"
-                  >
-                    <a
-                      aria-current="page"
-                      className="easi-nav__link usa-current"
-                      href="/"
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      <em
-                        aria-label="Home"
-                        className="usa-logo__text easi-nav__label"
-                      >
-                        Home
-                      </em>
-                    </a>
-                  </div>
-                </li>
-                <li
-                  className="usa-nav__primary-item"
-                />
-                <li
-                  className="usa-nav__primary-item"
-                >
-                  <div
-                    className="easi-nav"
-                  >
-                    <a
-                      aria-current={null}
-                      className="easi-nav__link"
-                      href="/system/making-a-request"
-                      onClick={[Function]}
-                    >
-                      <em
-                        aria-label="IT Governance"
-                        className="usa-logo__text easi-nav__label"
-                      >
-                        IT Governance
-                      </em>
-                    </a>
-                  </div>
-                </li>
-                <li
-                  className="usa-nav__primary-item"
-                >
-                  <div
-                    className="easi-nav"
-                  >
-                    <a
-                      aria-current={null}
-                      className="easi-nav__link"
-                      href="/508/making-a-request"
-                      onClick={[Function]}
-                    >
-                      <em
-                        aria-label="Section 508"
-                        className="usa-logo__text easi-nav__label"
-                      >
-                        Section 508
-                      </em>
-                    </a>
-                  </div>
-                </li>
-                <li
-                  className="usa-nav__primary-item"
-                />
-                <li
-                  className="usa-nav__primary-item"
-                />
-                <li
-                  className="usa-nav__primary-item"
-                >
-                  <div
-                    className="easi-nav__signout-container"
-                  >
-                    <div
-                      className="easi-nav__user margin-bottom-1"
-                    >
-                      
-                    </div>
-                    <a
-                      aria-current="page"
-                      className="signout-link active"
-                      href="/"
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      <em
-                        aria-label="Sign Out"
-                        className="usa-logo__text text-underline"
-                      >
-                        Sign Out
-                      </em>
-                    </a>
-                  </div>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </nav>
-      </div>
-    </div>
-  </header>
-  <main
-    className="easi-main-content grid-container line-height-body-5 margin-bottom-5"
-    id="main-content"
-    role="main"
+  <h1
+    aria-live="polite"
+    className="easi-h1"
     tabIndex={-1}
   >
-    <h1
-      aria-live="polite"
-      className="easi-h1"
-      tabIndex={-1}
-    >
-      Privacy
-    </h1>
-    <div>
-      <h2>
-        CMS.gov Privacy Policy
-      </h2>
-      <p>
-        Protecting your privacy is very important to us. This privacy policy describes what information we collect, why we collect it, and what we do with it.  This privacy notice covers CMS.gov, marketplace.cms.gov, innovation.cms.gov, partnershipforpatients.cms.gov, and hfpp.cms.gov.  These websites are referred to as “CMS.gov” throughout the rest of this notice and are maintained and operated by the Centers for Medicare & Medicaid Services (CMS).  The privacy notice for other CMS websites not listed above is available at 
-        <a
-          aria-label="Open 'CMS Privacy Policy' in a new tab"
-          className="usa-link usa-link--external"
-          href="https://www.cms.gov/About-CMS/Agency-Information/Aboutwebsite/Privacy-Policy"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          https://www.cms.gov/About-CMS/Agency-Information/Aboutwebsite/Privacy-Policy
-        </a>
-      </p>
-      <p>
-        CMS.gov doesn’t collect name, contact information, or other similar information through these websites unless you choose to provide it. We do collect other, limited, non-personally identifiable information automatically from visitors who read, browse, and/or download information from our website. We do this so we can understand how the website is being used and how we can make it more helpful. For more information, see 
-        <a
-          className="usa-link"
-          href="#info-we-collect"
-        >
-          Types of information we collect
-        </a>
-      </p>
-      <p>
-        Personally identifiable information (PII), defined by the Office of Management and Budget (OMB), refers to information that can be used to distinguish or trace an individual's identity, like their name, Medicare Number, biometric records, etc. alone, or when combined with other personal or identifying information which is linked or linkable to a specific individual, like date and place of birth, mother’s maiden name, etc. Medicare Fee-for-Service eligibility and enrollment information and claims data are considered protected health information (PHI) under the Health Insurance Portability and Accountability Act (1996) (HIPAA) regulations.
-      </p>
-      <p>
-        We don’t sell any information you provide when you visit CMS.gov. For information on how we share information, see 
-        <a
-          className="usa-link"
-          href="#info-usage"
-        >
-          How CMS uses information collected on CMS.gov
-        </a>
-      </p>
-    </div>
-    <div>
-      <h2
-        id="info-we-collect"
-      >
-        Types of information we collect
-      </h2>
-      <h3>
-        Information which is automatically collected:
-      </h3>
-      <h4>
-        When you browse:
-      </h4>
-      <p>
-        Certain information about your visit can be collected when you browse websites. When you browse CMS.gov, we, and in some cases, our third-party service providers, can collect the following types of information about your visit, including:
-      </p>
-      <ul>
-        <li>
-          Domain from which you accessed the internet (like Verizon.com if you’re using a Verizon account).
-        </li>
-        <li>
-          IP address (an IP or internet protocol address is a number that’s automatically assigned to a device connected to the internet).
-        </li>
-        <li>
-          Approximate geographic location based on the IP address of the user’s local system.
-        </li>
-        <li>
-          Operating system for the device that you’re using and information about the browser you used when visiting the site. The operating system is software that directs a computer’s basic functions, like executing programs and managing storage.
-        </li>
-        <li>
-          Date and time of your visit.
-        </li>
-        <li>
-          Pages you visited.
-        </li>
-        <li>
-          Address of the website that connected you to CMS.gov (like Google.com or Bing.com).
-        </li>
-        <li>
-          Device type (like desktop computer, tablet, or type of mobile device).
-        </li>
-        <li>
-          Screen resolution.
-        </li>
-        <li>
-          Browser language.
-        </li>
-        <li>
-          Geographic location.
-        </li>
-        <li>
-          Time spent on page.
-        </li>
-        <li>
-          Scroll depth (measures how much of a web page was viewed).
-        </li>
-        <li>
-          Your actions on CMS.gov (like clicking a button).
-        </li>
-      </ul>
-      <p>
-        For more information, see 
-        <a
-          className="usa-link"
-          href="#third-party-sites-usage"
-        >
-          How CMS uses third-party websites & applications with CMS.gov
-        </a>
-      </p>
-      <p>
-        We use this information to:
-      </p>
-      <ul>
-        <li>
-          Measure the number of visitors to CMS.gov.
-        </li>
-        <li>
-          Help make our website more useful for visitors.
-        </li>
-        <li>
-          Improve our public education and outreach through digital advertising.
-        </li>
-      </ul>
-      <p>
-        Also, this information is sometimes used to personalize the content we show you on third-party sites. For more information on our practices, see 
-        <a
-          className="usa-link"
-          href="#third-party-sites-usage"
-        >
-          How CMS uses third-party websites & applications with CMS.gov
-        </a>
-      </p>
-      <h3>
-        Information you may provide:
-      </h3>
-      <h4>
-        When you request information:
-      </h4>
-      <p>
-        We collect information, including your email address, to deliver alerts or eNewsletters. We use this information to complete the subscription process and provide you with information. You can opt out of these communications at any time by editing your 
-        <a
-          aria-label="Open 'Subscriber Preferences' in a new tab"
-          className="usa-link usa-link--external"
-          href="https://public.govdelivery.com/accounts/USCMS/subscriber/new?preferences=true"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          subscription preferences.
-        </a>
-      </p>
-    </div>
-    <div>
-      <h2
-        id="info-usage"
-      >
-        How CMS uses information collected on CMS.gov
-      </h2>
-      <h3>
-        Sending you CMS messages:
-      </h3>
-      <p>
-        We use the email address you provide us to send emails related to CMS.
-      </p>
-      <h3>
-        Conducting surveys to improve services:
-      </h3>
-      <p>
-        We use online surveys to collect opinions and feedback. You don’t have to answer these questions. If you do answer these questions, don’t include any PII/PHI in your answers. We analyze and use the information from these surveys to improve the CMS.gov website. The information is available only to CMS managers, members of the CMS communications and web teams, and other designated federal staff and contractors who require this information to perform their duties.
-      </p>
-      <h3>
-        Using third-party tools for website analytics
-      </h3>
-      <p>
-        We use a variety of third-party web tools for web analytics. We don’t collect any PII/PHI with these tools.  We use these tools to collect basic information about visits to CMS.gov. This information is then used to maintain the website, including:
-      </p>
-      <ul>
-        <li>
-          Monitoring website stability
-        </li>
-        <li>
-          Measuring website traffic
-        </li>
-        <li>
-          Optimizing website content
-        </li>
-        <li>
-          Helping make the website more useful to visitors
-        </li>
-      </ul>
-      <p>
-        CMS staff analyzes the data collected from these tools. Reports are available only to CMS managers, teams who implement programs represented on CMS.gov, members of the CMS communications and web teams, and other designated federal staff and contractors who need this information to perform their jobs.
-      </p>
-      <h3>
-        Using third-party tools for outreach and education through digital advertising:
-      </h3>
-      <p>
-        We use third-party web services to conduct outreach and education through the use of digital advertising for CMS.gov. These third-party services may collect information through the use of web beacons (also called pixels) that are located on our pages. A web beacon is a see-through graphic image (usually 1 pixel x 1 pixel) that's placed on a web page and, in combination with a cookie, allows us to collect information regarding the use of the web page that contains the web beacon.
-      </p>
-      <p>
-        We use web beacons to tell when a user is redirected to CMS.gov by clicking or otherwise interacting with a CMS advertisement that we ran on another website. This is known as “click tracking” or “conversion tracking,” and we use it to better target CMS advertisements (known as “retargeting”) to inform consumers about the services available through CMS.gov. For more information on how these tools work, see 
-        <a
-          className="usa-link"
-          href="#third-party-sites-usage"
-        >
-          How CMS uses third-party websites & applications with CMS.gov
-        </a>
-      </p>
-      <p>
-        We also use third-party tools to help deliver advertising. Vendors that operate the third-party tools may also gather information about your visits to third-party sites outside of CMS.gov. While we don't track your internet activity outside of CMS.gov, our vendors may use information collected automatically by visiting CMS.gov, and combine it with data they collect elsewhere for targeted advertising purposes. You can opt out of this type of data collection via Privacy Manager, Ad Choices, and Do Not Track. For methods to opt out of this type of collection, see 
-        <a
-          className="usa-link"
-          href="#tracking-and-data-collection"
-        >
-          Your choices about tracking & data collection on CMS.gov
-        </a>
-      </p>
-      <p>
-        The outreach and education analytics tools provide reports which aggregate data like the number of clicks on advertisements. The reports are available only to CMS managers, teams who implement programs represented on CMS.gov, members of the CMS.gov communications and web teams, and other designated federal staff and contractors who need this information to perform their duties.
-      </p>
-    </div>
-    <div>
-      <h2>
-        How CMS uses cookies & other technologies on CMS.gov
-      </h2>
-      <p>
-        The Office of Management and Budget Memo 
-        <a
-          aria-label="Open 'M-10-22 Memo' in a new tab"
-          className="usa-link usa-link--external"
-          href="https://www.whitehouse.gov/sites/whitehouse.gov/files/omb/memoranda/2010/m10-22.pdf"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          M-10-22
-        </a>
-        , Guidance for Online Use of Web Measurement and Customization Technologies, allows federal agencies to use session and persistent cookies to improve the delivery of services.
-      </p>
-      <p>
-        When you visit a website, its server may generate a piece of text known as a “cookie” to place on your device. The cookie, which is unique to your browser, allows the server to "remember" specific information about your visit while you’re connected. The cookie makes it easier for you to use the dynamic features of web pages. Information that you enter into CMS.gov isn’t associated with cookies on CMS.gov. Depending on the third-party tool’s business practices, privacy policies, terms of service, and/or the privacy settings you selected, information you’ve provided to third parties could be used to identify you when you visit CMS.gov. These third parties don’t/won’t share your identity with CMS or the Department of Health and Human Services (HHS).
-      </p>
-      <p>
-        There are 2 types of cookies - single session (temporary) and multi-session (persistent). Single session cookies last only as long as your internet browser is open. Once you close your browser, the session cookie disappears. Persistent cookies are stored on your device for longer periods. Both types of cookies create an ID that’s unique to your device.
-      </p>
-      <ul>
-        <li>
-          <strong>
-            Session cookies:
-          </strong>
-           We use session cookies for technical purposes, like to allow better navigation through our website. These cookies let our server know that you’re continuing a visit to our website. The OMB Memo M-10-22 Guidance defines our use of session cookies as "Usage Tier 1—Single Session.” The policy says, "This tier encompasses any use of single session web measurement and customization technologies."
-        </li>
-        <li>
-          <strong>
-            Persistent cookies:
-          </strong>
-           We use persistent cookies to understand the differences between new and returning visitors to CMS.gov. Persistent cookies remain on your device between visits to our website until they expire or are removed by the user. The OMB Memorandum M-10-22 Guidance defines our use of persistent cookies as "Usage Tier 2—Multi-session without personally identifiable information.” The policy says, "This tier encompasses any use of multi-session web measurement and customization technologies when no PII is collected." We don’t use persistent cookies to collect PII. We don’t identify a user by using cookies.
-        </li>
-      </ul>
-      <p>
-        CMS also uses these technologies on CMS.gov:
-      </p>
-      <ul>
-        <li>
-          <strong>
-            Persistent cookies for digital advertising:
-          </strong>
-           Similar to persistent cookies identified above, CMS uses persistent cookies for outreach through digital advertising. These cookies can also be created on third-party websites and remain on your device between visits to our website until they expire or you remove them. Consistent with OMB guidance for “Usage Tier 2”, we don’t use persistent cookies for outreach to collect PII. CMS doesn’t identify a user by using such technologies.
-        </li>
-        <li>
-          <strong>
-            Web beacons for digital advertising (also called pixels and/or tracking tags):
-          </strong>
-           See-through images placed on certain pages of CMS.gov are typically used in conjunction with cookies and aren’t stored on your device. When you access these pages, web beacons generate a notice of your visit. For information on how we use web beacons, see
-           
-          <a
-            className="usa-link"
-            href="#third-party-sites-usage"
-          >
-            How CMS uses third-party websites & applications with CMS.gov
-          </a>
-        </li>
-        <li>
-          <strong>
-            Website log files:
-          </strong>
-           These are used as an analysis tool and to tell how visitors use CMS.gov, how often they return, and how they navigate through the website.
-        </li>
-        <li>
-          <strong>
-            Flash:
-          </strong>
-           Flash is used to assess the performance of the site and as a player for selected videos depending on the browser a device is using.
-        </li>
-        <li>
-          <strong>
-            Local Storage Objects:
-          </strong>
-           We use Flash Local Storage Objects (“LSOs”) to store your preferences and to personalize your visit.
-        </li>
-      </ul>
-    </div>
-    <div>
-      <h2
-        id="tracking-and-data-collection"
-      >
-        Your choices about tracking & data collection on CMS.gov
-      </h2>
-      <p>
-        CMS.gov offers a Privacy Manager which gives you control over what tracking and data collection takes place during your visit. Third-party tools are enabled by default to provide a quality consumer experience.
-      </p>
-      <p>
-        The Privacy Manager provides you with the choice to opt in or to opt out of the different categories of third-party tools used by CMS.gov: Advertising, Analytics, or Social Media. The Privacy Manager prevents cookies, web beacons, and Local Storage Objects from being placed on your device. The Privacy Manager also prevents third-party tools from loading regardless of your cookie settings, which provides you with an additional layer of privacy that prevents the tool from loading at all. Because the Privacy Manager creates a cookie in your browser, the opt in and opt out choices you make through the Privacy Manager will only be effective on the device and browser you used to make your choices, and your choices will expire when the cookie expires. Once the cookie is created, the Privacy Manager will retain your settings for 3 years from the date of your most recent visit. You may revisit the Privacy Manager to change or renew your choices at any time.
-      </p>
-      <p>
-        If you disable cookies in your browser, our Privacy Manager won’t be able to store your preferences and won’t function properly. If you don’t wish to use our Privacy Manager to opt out of the tools used by CMS.gov, you can opt out of tools individually, or via the Digital Advertising Alliance (“DAA”) AdChoices icon, discussed in the next subsection.
-      </p>
-      <p>
-        If you opt out of the tools used by CMS.gov via the Privacy Manager or by opting out of the tools directly, you’ll still have access to information and resources at CMS.gov.
-      </p>
-      <p>
-        <strong>
-          AdChoices:
-        </strong>
-         We include the AdChoices icon on all digital advertising that uses “conversion tracking” or “retargeting.” To learn about conversion tracking, targeted advertising, and retargeting, see 
-        <a
-          className="usa-link"
-          href="#third-party-sites-usage"
-        >
-          How CMS uses third-party websites & applications with CMS.gov
-        </a>
-        . The AdChoices icon is usually at or near the corner of digital ads. When you click on the AdChoices icon, it will provide information on what company served the ad and information on how to opt out. Learn more about AdChoices.
-      </p>
-      <p>
-        <strong>
-          Do Not Track:
-        </strong>
-         We automatically observe the “Do Not Track” browser setting for digital advertising that uses “conversion tracking” or “retargeting.” If “Do Not Track” is set before a device visits CMS.gov, third-party conversion tracking and retargeting tools won’t load on the website. To learn more about conversion tracking and retargeting, see 
-        <a
-          className="usa-link"
-          href="#third-party-sites-usage"
-        >
-          How CMS uses third-party websites & applications with CMS.gov
-        </a>
-         
-        <a
-          aria-label="Open 'Do Not Track' in a new tab"
-          className="usa-link usa-link--external"
-          href="https://www.eff.org/issues/do-not-track"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Learn more about Do Not Track and how to set the Do Not Track setting in your browser.
-        </a>
-      </p>
-    </div>
-    <div>
-      <h2
-        id="third-party-sites-usage"
-      >
-        How CMS uses third-party websites & applications with CMS.gov
-      </h2>
-      <p>
-        CMS.gov uses a variety of technologies and social media services to communicate and interact with the public. These third-party websites and applications include popular social networking and media websites, open source software communities, and more.
-      </p>
-      <h3>
-        Third-party websites:
-      </h3>
-      <p>
-        Your activity on the third-party websites that CMS.gov links to (like Facebook or Twitter) is governed by the security and privacy policies of those websites. You should review the privacy policies of all websites before using them so you understand how your information may be used.
-      </p>
-      <h3>
-        Website analytics tools:
-      </h3>
-      <p>
-        These tools collect basic site usage information, like:
-      </p>
-      <ul>
-        <li>
-          How many visits CMS.gov gets
-        </li>
-        <li>
-          The pages visited
-        </li>
-        <li>
-          Time spent on CMS.gov
-        </li>
-        <li>
-          The number of return visits to CMS.gov
-        </li>
-        <li>
-          The approximate geographic location of the device used to access CMS.gov
-        </li>
-        <li>
-          Types of devices used
-        </li>
-      </ul>
-      <p>
-        This information is used to maintain the website, including:
-      </p>
-      <ul>
-        <li>
-          Monitoring website stability
-        </li>
-        <li>
-          Measuring website traffic
-        </li>
-        <li>
-          Optimizing website content
-        </li>
-        <li>
-          Improving your experience
-        </li>
-      </ul>
-      <p>
-        Use the CMS.gov Privacy Manager to opt out of website analytics tools.
-      </p>
-      <h3>
-        Digital advertising tools for outreach & education:
-      </h3>
-      <p>
-        We use third-party tools to support our digital advertising outreach and education efforts. These tools enable us to reach new people and provide information to previous visitors. To use these tools, we use these technologies on CMS.gov:
-      </p>
-      <p>
-        <strong>
-          Click tracking:
-        </strong>
-         We use click tracking to identify the ads that are most helpful to consumers and efficient for outreach. This enables us to improve the performance of ads that consumers click on. When users click on links from ads, data about what ad was viewed is collected. Reports are generated about ad performance – including the total number of views and clicks an ad received.
-      </p>
-      <p>
-        <strong>
-          Conversion tracking:
-        </strong>
-         We use conversion tracking to identify ads that are helpful to consumers and efficient for outreach. It enables us to improve the performance of ads viewed by consumers. When a CMS.gov ad is viewed on a third-party site (like a banner ad), a cookie is placed in the browser of the device the ad was viewed on. If this device later visits CMS.gov, the visit is linked to the ad viewed on the same device. Use the CMS.gov Privacy Manager to opt out of advertising tools. Users can click on the “AdChoices” icon in the corner of our ads to opt out of this Ad Targeting. Users who have set their browser to “Do Not Track” will automatically be opted out of conversion tracking. For more information about AdChoices and Do Not Track, see 
-        <a
-          className="usa-link"
-          href="#tracking-and-data-collection"
-        >
-          Your choices about tracking & data collection on CMS.gov
-        </a>
-      </p>
-      <p>
-        <strong>
-          Retargeting:
-        </strong>
-         We use retargeting to provide information to consumers who have previously visited CMS.gov, like reminders about upcoming enrollment deadlines. Retargeting enables us to improve the performance of ads by delivering them to relevant audiences, like recent visitors to CMS.gov. During a visit to CMS.gov, a cookie is placed in the browser of the devices used to view the website. When that same device is used to visit third-party websites that are displaying CMS.gov ads, ads for CMS.gov may be shown to that device because it had previously visited CMS.gov. Using these cookies, we don't collect information about the third-party websites visited by a device. Reports are generated about ad performance – including the total number of views and clicks an ad received. Use the CMS.gov Privacy Manager to opt out of advertising tools. Users can click on the “AdChoices” icon in the corner of our ads to opt out of this Ad Targeting. Users who have set their browser to “Do Not Track” will automatically be opted out of conversion tracking. For more information about AdChoices and Do Not Track, see 
-        <a
-          className="usa-link"
-          href="#tracking-and-data-collection"
-        >
-          Your choices about tracking & data collection on CMS.gov
-        </a>
-      </p>
-      <p>
-        <strong>
-          Targeted advertising:
-        </strong>
-         We use third-party vendors to engage in targeted advertising (also called online behavioral or interest-based advertising) to provide information to consumers across their online activities. Targeted advertising involves the collection of data from a particular computer or device. Data regarding web viewing behaviors or application use is gathered to predict user preferences or interests. We can have ads delivered to computers or devices based on the preferences or interests inferred from the web-viewing behaviors or application use.
-      </p>
-      <p>
-        Third-party vendors engaged by us may also target advertising based on information automatically collected (not information you provide) when you browse our websites or other websites on the internet. You can opt out of this type of data collection via our Privacy Manager, Ad Choices, and Do Not Track. For methods to opt out of this type of collection, see 
-        <a
-          className="usa-link"
-          href="#tracking-and-data-collection"
-        >
-          Your choices about tracking & data collection on CMS.gov
-        </a>
-      </p>
-      <p>
-        We may consider new third-party tools or the use of new third-party websites, but we'll first assess the tool or website before it’s used in connection with CMS.gov. We'll provide notice to the public before adding any new tool to CMS.gov. These assessments include a description about how information will be collected, accessed, secured, and stored. 
-        <a
-          aria-label="Open 'CMS Third Party Privacy Policies' in a new tab"
-          className="usa-link usa-link--external"
-          href="https://www.cms.gov/privacy/third-party-privacy-policies"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          See a list of the third-party tools currently being used on CMS.gov.
-        </a>
-         
-        <a
-          aria-label="Open 'Risk Assessment of Third Party Tools' in a new tab"
-          className="usa-link usa-link--external"
-          href="https://www.hhs.gov/pia/index/index.html"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          See risk assessments for third-party websites and applications.
-        </a>
-      </p>
-    </div>
-    <div>
-      <h2>
-        How CMS protects your personal information
-      </h2>
-      <p>
-        You don’t have to give us personal information when you visit CMS.gov, but if you want to get alerts or e-newsletters, you’ll need to give us your email address to subscribe.
-      </p>
-      <p>
-        If you choose to give us PII in an email, request for information, paper or electronic form, questionnaire, survey, etc., we’ll the information you give us only long enough to respond to your question or to fulfill the stated purpose of the communication.
-      </p>
-      <p>
-        If we need to contact you, we’ll save your personal information in a record system designed to retrieve information about you by personal identifier (name, personal email address, home mailing address, personal or mobile phone number, etc.) and keep the information you give us safe according to the 
-        <a
-          aria-label="Open 'Privacy Act of 1974' in a new tab"
-          className="usa-link usa-link--external"
-          href="https://www.govinfo.gov/content/pkg/USCODE-2012-title5/pdf/USCODE-2012-title5-partI-chap5-subchapII-sec552a.pdf"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Privacy Act of 1974
-        </a>
-        , as amended 
-        <a
-          aria-label="Open '5 U.S.C. Section 552a' in a new tab"
-          className="usa-link usa-link--external"
-          href="https://www.govinfo.gov/app/details/USCODE-2010-title5/USCODE-2010-title5-partI-chap5-subchapII-sec552a"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          (5 U.S.C. Section 552a).
-        </a>
-      </p>
-      <p>
-        If we have a record system to retrieve information about you so we can carry out our mission, a Privacy Act Notification Statement should be prominently displayed out in the open on the public-facing website or form asking you for PII. The statement has to address these 5 criteria:
-      </p>
-      <ol>
-        <li>
-          The legal authorization we have to collect information about you
-        </li>
-        <li>
-          Why we’re collecting information
-        </li>
-        <li>
-          Routine ways we disclose information outside of our websites
-        </li>
-        <li>
-          Whether or not you legally have to give us the information we’re asking for
-        </li>
-        <li>
-          What happens if you choose to not us the information we’re asking for
-        </li>
-      </ol>
-      <p>
-        For more information about CMS.gov’s privacy policy, email 
-        <a
-          className="usa-link"
-          href="mailto:Privacy@cms.hhs.gov"
-        >
-          Privacy@cms.hhs.gov
-        </a>
-      </p>
-      <p>
-        Third-party services are web-based technologies that aren’t exclusively operated or controlled by a government entity, or that involve significant participation of a nongovernment entity. These services may be separate websites or may be applications embedded within our websites. The list of third-party services includes links to relevant third-party privacy policies.
-      </p>
-    </div>
-    <div>
-      <h2>
-        How long CMS keeps data & how it’s accessed
-      </h2>
-      <p>
-        We'll keep data collected long enough to achieve the specified objective for which they were collected. Once the specified objective is achieved, the data will be retired or destroyed in accordance with published draft records schedules of CMS as approved by the National Archives and Records Administration.
-      </p>
-      <p>
-        We don't store information from cookies on our systems. The persistent cookies used with third-party tools on CMS.gov can be stored on a user’s local system and are set to expire at varying time periods depending upon the cookie. We assess whether the expiration date of a cookie exceeds one year and 
-        <a
-          aria-label="Open 'Privacy Impact Assessments' in a new tab"
-          className="usa-link usa-link--external"
-          href="https://www.hhs.gov/pia/index.html"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          provides an explanation
-        </a>
-         as to why cookies with a longer life are used on the site in the associated Third-Party Website or Application Privacy Impact Assessment.
-      </p>
-    </div>
-    <div>
-      <h2>
-        Children & privacy on CMS.gov
-      </h2>
-      <p>
-        We believe it’s important to protect the privacy of children online. The Children’s Online Privacy Protection Act (COPPA) governs information gathered online from or about children under the age of 13. CMS.gov isn’t intended to solicit information of any kind from children under age 13.
-      </p>
-    </div>
-    <div>
-      <h2>
-        Links to other sites
-      </h2>
-      <p>
-        CMS.gov may link to other HHS websites, other government websites, and/or private organizations (like health care providers). We link to other websites solely for your convenience and education. When you follow a link to an external site, you’re leaving CMS.gov and the external site’s privacy and security policies will apply. Non-federal websites don’t necessarily operate under the same laws, regulations, and policies as federal websites. Other than third-party websites highlighted in this privacy notice, we aren’t responsible for the contents of external web pages and a link to a page doesn’t constitute an endorsement.
-      </p>
-      <h3>
-        Social media & other sites that require registration
-      </h3>
-      <p>
-        We use social media websites (listed below) to:
-      </p>
-      <ul>
-        <li>
-          Increase government transparency
-        </li>
-        <li>
-          Improve information sharing
-        </li>
-        <li>
-          Promote public participation
-        </li>
-        <li>
-          Encourage partnership with CMS
-        </li>
-      </ul>
-      <strong>
-        Social media websites aren’t government websites or applications. They’re controlled or operated by the social media website.
-      </strong>
-       We don’t own, manage, or control social media websites. In addition, we don’t collect, maintain, or disseminate information posted by visitors to those social media websites. If you choose to provide information to a social media website through registration or other interaction with the website, the use of any information you provide is controlled by your relationship with the social media website. For example, any information that you provide to register on Facebook is voluntarily contributed and isn’t maintained by us. This information may be available to our social media page administrators in whole or part, based on a user's privacy settings on the social media website. However, we won’t use PII, if provided by you to a social media website or other website that requires registration, for targeted advertising or retargeting. Although you may voluntarily contribute to a social media website with the intent to share the information with others on a CMS social media page, to protect your privacy, don’t disclose PII about yourself or others.
-      <p>
-        We don’t keep separate records or accounting of any social media website users or their interaction with the CMS.gov pages on social media websites. We don’t store or share this information. User information is retained by social media websites in accordance with the website’s policies. See each social media website’s privacy policy to see how long user information is retained after an account has been deleted. To learn more about how each social media website uses and maintains information visit their privacy policy, as follows:
-      </p>
-      <ul>
-        <li>
-          <a
-            aria-label="Open 'Facebook Privacy Policy' in a new tab"
-            className="usa-link usa-link--external"
-            href="https://www.facebook.com/policies"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Facebook
-          </a>
-        </li>
-        <li>
-          <a
-            aria-label="Open 'Twitter Privacy Policy' in a new tab"
-            className="usa-link usa-link--external"
-            href="https://twitter.com/en/privacy"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Twitter
-          </a>
-        </li>
-        <li>
-          <a
-            aria-label="Open 'YouTube Privacy Policy' in a new tab"
-            className="usa-link usa-link--external"
-            href="https://support.google.com/youtube/answer/7671399?p=privacy_guidelines&hl=en&visit_id=637341420338082975-3155661882&rd=1"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            YouTube
-          </a>
-        </li>
-        <li>
-          <a
-            aria-label="Open 'LinkedIn Privacy Policy' in a new tab"
-            className="usa-link usa-link--external"
-            href="https://www.linkedin.com/legal/privacy-policy"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            LinkedIn
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div>
-      <h2>
-        Additional privacy information
-      </h2>
+    Privacy
+  </h1>
+  <div>
+    <h2>
+      CMS.gov Privacy Policy
+    </h2>
+    <p>
+      Protecting your privacy is very important to us. This privacy policy describes what information we collect, why we collect it, and what we do with it.  This privacy notice covers CMS.gov, marketplace.cms.gov, innovation.cms.gov, partnershipforpatients.cms.gov, and hfpp.cms.gov.  These websites are referred to as “CMS.gov” throughout the rest of this notice and are maintained and operated by the Centers for Medicare & Medicaid Services (CMS).  The privacy notice for other CMS websites not listed above is available at 
       <a
-        aria-label="Open 'Privacy Statistics' in a new tab"
+        aria-label="Open 'CMS Privacy Policy' in a new tab"
         className="usa-link usa-link--external"
-        href="https://www.cms.gov/Research-Statistics-Data-and-Systems/Computer-Data-and-Systems/Privacy"
+        href="https://www.cms.gov/About-CMS/Agency-Information/Aboutwebsite/Privacy-Policy"
         rel="noopener noreferrer"
         target="_blank"
       >
-        Get more information about CMS privacy policies.
+        https://www.cms.gov/About-CMS/Agency-Information/Aboutwebsite/Privacy-Policy
       </a>
-    </div>
-  </main>
-  <footer
-    className="usa-footer usa-footer--slim"
-  >
-    <div
-      className="usa-footer__primary-section"
-    >
-      <div
-        className="usa-footer__primary-container grid-row"
+    </p>
+    <p>
+      CMS.gov doesn’t collect name, contact information, or other similar information through these websites unless you choose to provide it. We do collect other, limited, non-personally identifiable information automatically from visitors who read, browse, and/or download information from our website. We do this so we can understand how the website is being used and how we can make it more helpful. For more information, see 
+      <a
+        className="usa-link"
+        href="#info-we-collect"
       >
-        <div
-          className="mobile-lg:grid-col-8"
+        Types of information we collect
+      </a>
+    </p>
+    <p>
+      Personally identifiable information (PII), defined by the Office of Management and Budget (OMB), refers to information that can be used to distinguish or trace an individual's identity, like their name, Medicare Number, biometric records, etc. alone, or when combined with other personal or identifying information which is linked or linkable to a specific individual, like date and place of birth, mother’s maiden name, etc. Medicare Fee-for-Service eligibility and enrollment information and claims data are considered protected health information (PHI) under the Health Insurance Portability and Accountability Act (1996) (HIPAA) regulations.
+    </p>
+    <p>
+      We don’t sell any information you provide when you visit CMS.gov. For information on how we share information, see 
+      <a
+        className="usa-link"
+        href="#info-usage"
+      >
+        How CMS uses information collected on CMS.gov
+      </a>
+    </p>
+  </div>
+  <div>
+    <h2
+      id="info-we-collect"
+    >
+      Types of information we collect
+    </h2>
+    <h3>
+      Information which is automatically collected:
+    </h3>
+    <h4>
+      When you browse:
+    </h4>
+    <p>
+      Certain information about your visit can be collected when you browse websites. When you browse CMS.gov, we, and in some cases, our third-party service providers, can collect the following types of information about your visit, including:
+    </p>
+    <ul>
+      <li>
+        Domain from which you accessed the internet (like Verizon.com if you’re using a Verizon account).
+      </li>
+      <li>
+        IP address (an IP or internet protocol address is a number that’s automatically assigned to a device connected to the internet).
+      </li>
+      <li>
+        Approximate geographic location based on the IP address of the user’s local system.
+      </li>
+      <li>
+        Operating system for the device that you’re using and information about the browser you used when visiting the site. The operating system is software that directs a computer’s basic functions, like executing programs and managing storage.
+      </li>
+      <li>
+        Date and time of your visit.
+      </li>
+      <li>
+        Pages you visited.
+      </li>
+      <li>
+        Address of the website that connected you to CMS.gov (like Google.com or Bing.com).
+      </li>
+      <li>
+        Device type (like desktop computer, tablet, or type of mobile device).
+      </li>
+      <li>
+        Screen resolution.
+      </li>
+      <li>
+        Browser language.
+      </li>
+      <li>
+        Geographic location.
+      </li>
+      <li>
+        Time spent on page.
+      </li>
+      <li>
+        Scroll depth (measures how much of a web page was viewed).
+      </li>
+      <li>
+        Your actions on CMS.gov (like clicking a button).
+      </li>
+    </ul>
+    <p>
+      For more information, see 
+      <a
+        className="usa-link"
+        href="#third-party-sites-usage"
+      >
+        How CMS uses third-party websites & applications with CMS.gov
+      </a>
+    </p>
+    <p>
+      We use this information to:
+    </p>
+    <ul>
+      <li>
+        Measure the number of visitors to CMS.gov.
+      </li>
+      <li>
+        Help make our website more useful for visitors.
+      </li>
+      <li>
+        Improve our public education and outreach through digital advertising.
+      </li>
+    </ul>
+    <p>
+      Also, this information is sometimes used to personalize the content we show you on third-party sites. For more information on our practices, see 
+      <a
+        className="usa-link"
+        href="#third-party-sites-usage"
+      >
+        How CMS uses third-party websites & applications with CMS.gov
+      </a>
+    </p>
+    <h3>
+      Information you may provide:
+    </h3>
+    <h4>
+      When you request information:
+    </h4>
+    <p>
+      We collect information, including your email address, to deliver alerts or eNewsletters. We use this information to complete the subscription process and provide you with information. You can opt out of these communications at any time by editing your 
+      <a
+        aria-label="Open 'Subscriber Preferences' in a new tab"
+        className="usa-link usa-link--external"
+        href="https://public.govdelivery.com/accounts/USCMS/subscriber/new?preferences=true"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        subscription preferences.
+      </a>
+    </p>
+  </div>
+  <div>
+    <h2
+      id="info-usage"
+    >
+      How CMS uses information collected on CMS.gov
+    </h2>
+    <h3>
+      Sending you CMS messages:
+    </h3>
+    <p>
+      We use the email address you provide us to send emails related to CMS.
+    </p>
+    <h3>
+      Conducting surveys to improve services:
+    </h3>
+    <p>
+      We use online surveys to collect opinions and feedback. You don’t have to answer these questions. If you do answer these questions, don’t include any PII/PHI in your answers. We analyze and use the information from these surveys to improve the CMS.gov website. The information is available only to CMS managers, members of the CMS communications and web teams, and other designated federal staff and contractors who require this information to perform their duties.
+    </p>
+    <h3>
+      Using third-party tools for website analytics
+    </h3>
+    <p>
+      We use a variety of third-party web tools for web analytics. We don’t collect any PII/PHI with these tools.  We use these tools to collect basic information about visits to CMS.gov. This information is then used to maintain the website, including:
+    </p>
+    <ul>
+      <li>
+        Monitoring website stability
+      </li>
+      <li>
+        Measuring website traffic
+      </li>
+      <li>
+        Optimizing website content
+      </li>
+      <li>
+        Helping make the website more useful to visitors
+      </li>
+    </ul>
+    <p>
+      CMS staff analyzes the data collected from these tools. Reports are available only to CMS managers, teams who implement programs represented on CMS.gov, members of the CMS communications and web teams, and other designated federal staff and contractors who need this information to perform their jobs.
+    </p>
+    <h3>
+      Using third-party tools for outreach and education through digital advertising:
+    </h3>
+    <p>
+      We use third-party web services to conduct outreach and education through the use of digital advertising for CMS.gov. These third-party services may collect information through the use of web beacons (also called pixels) that are located on our pages. A web beacon is a see-through graphic image (usually 1 pixel x 1 pixel) that's placed on a web page and, in combination with a cookie, allows us to collect information regarding the use of the web page that contains the web beacon.
+    </p>
+    <p>
+      We use web beacons to tell when a user is redirected to CMS.gov by clicking or otherwise interacting with a CMS advertisement that we ran on another website. This is known as “click tracking” or “conversion tracking,” and we use it to better target CMS advertisements (known as “retargeting”) to inform consumers about the services available through CMS.gov. For more information on how these tools work, see 
+      <a
+        className="usa-link"
+        href="#third-party-sites-usage"
+      >
+        How CMS uses third-party websites & applications with CMS.gov
+      </a>
+    </p>
+    <p>
+      We also use third-party tools to help deliver advertising. Vendors that operate the third-party tools may also gather information about your visits to third-party sites outside of CMS.gov. While we don't track your internet activity outside of CMS.gov, our vendors may use information collected automatically by visiting CMS.gov, and combine it with data they collect elsewhere for targeted advertising purposes. You can opt out of this type of data collection via Privacy Manager, Ad Choices, and Do Not Track. For methods to opt out of this type of collection, see 
+      <a
+        className="usa-link"
+        href="#tracking-and-data-collection"
+      >
+        Your choices about tracking & data collection on CMS.gov
+      </a>
+    </p>
+    <p>
+      The outreach and education analytics tools provide reports which aggregate data like the number of clicks on advertisements. The reports are available only to CMS managers, teams who implement programs represented on CMS.gov, members of the CMS.gov communications and web teams, and other designated federal staff and contractors who need this information to perform their duties.
+    </p>
+  </div>
+  <div>
+    <h2>
+      How CMS uses cookies & other technologies on CMS.gov
+    </h2>
+    <p>
+      The Office of Management and Budget Memo 
+      <a
+        aria-label="Open 'M-10-22 Memo' in a new tab"
+        className="usa-link usa-link--external"
+        href="https://www.whitehouse.gov/sites/whitehouse.gov/files/omb/memoranda/2010/m10-22.pdf"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        M-10-22
+      </a>
+      , Guidance for Online Use of Web Measurement and Customization Technologies, allows federal agencies to use session and persistent cookies to improve the delivery of services.
+    </p>
+    <p>
+      When you visit a website, its server may generate a piece of text known as a “cookie” to place on your device. The cookie, which is unique to your browser, allows the server to "remember" specific information about your visit while you’re connected. The cookie makes it easier for you to use the dynamic features of web pages. Information that you enter into CMS.gov isn’t associated with cookies on CMS.gov. Depending on the third-party tool’s business practices, privacy policies, terms of service, and/or the privacy settings you selected, information you’ve provided to third parties could be used to identify you when you visit CMS.gov. These third parties don’t/won’t share your identity with CMS or the Department of Health and Human Services (HHS).
+    </p>
+    <p>
+      There are 2 types of cookies - single session (temporary) and multi-session (persistent). Single session cookies last only as long as your internet browser is open. Once you close your browser, the session cookie disappears. Persistent cookies are stored on your device for longer periods. Both types of cookies create an ID that’s unique to your device.
+    </p>
+    <ul>
+      <li>
+        <strong>
+          Session cookies:
+        </strong>
+         We use session cookies for technical purposes, like to allow better navigation through our website. These cookies let our server know that you’re continuing a visit to our website. The OMB Memo M-10-22 Guidance defines our use of session cookies as "Usage Tier 1—Single Session.” The policy says, "This tier encompasses any use of single session web measurement and customization technologies."
+      </li>
+      <li>
+        <strong>
+          Persistent cookies:
+        </strong>
+         We use persistent cookies to understand the differences between new and returning visitors to CMS.gov. Persistent cookies remain on your device between visits to our website until they expire or are removed by the user. The OMB Memorandum M-10-22 Guidance defines our use of persistent cookies as "Usage Tier 2—Multi-session without personally identifiable information.” The policy says, "This tier encompasses any use of multi-session web measurement and customization technologies when no PII is collected." We don’t use persistent cookies to collect PII. We don’t identify a user by using cookies.
+      </li>
+    </ul>
+    <p>
+      CMS also uses these technologies on CMS.gov:
+    </p>
+    <ul>
+      <li>
+        <strong>
+          Persistent cookies for digital advertising:
+        </strong>
+         Similar to persistent cookies identified above, CMS uses persistent cookies for outreach through digital advertising. These cookies can also be created on third-party websites and remain on your device between visits to our website until they expire or you remove them. Consistent with OMB guidance for “Usage Tier 2”, we don’t use persistent cookies for outreach to collect PII. CMS doesn’t identify a user by using such technologies.
+      </li>
+      <li>
+        <strong>
+          Web beacons for digital advertising (also called pixels and/or tracking tags):
+        </strong>
+         See-through images placed on certain pages of CMS.gov are typically used in conjunction with cookies and aren’t stored on your device. When you access these pages, web beacons generate a notice of your visit. For information on how we use web beacons, see
+         
+        <a
+          className="usa-link"
+          href="#third-party-sites-usage"
         >
-          <nav
-            className="usa-footer__nav"
-          >
-            <ul
-              className="grid-row grid-gap"
-            >
-              <li
-                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
-              >
-                <a
-                  className="usa-link usa-footer__primary-link"
-                  href="/privacy-policy"
-                  onClick={[Function]}
-                >
-                  Privacy Policy
-                </a>
-              </li>
-              <li
-                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
-              >
-                <a
-                  className="usa-link usa-footer__primary-link"
-                  href="/cookies"
-                  onClick={[Function]}
-                >
-                  Cookies
-                </a>
-              </li>
-              <li
-                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
-              >
-                <a
-                  className="usa-link usa-footer__primary-link"
-                  href="/terms-and-conditions"
-                  onClick={[Function]}
-                >
-                  Terms and Conditions
-                </a>
-              </li>
-              <li
-                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
-              >
-                <a
-                  className="usa-link usa-footer__primary-link"
-                  href="/accessibility-statement"
-                  onClick={[Function]}
-                >
-                  Accessibility Statement
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </div>
-    <div
-      className="usa-footer__secondary-section"
+          How CMS uses third-party websites & applications with CMS.gov
+        </a>
+      </li>
+      <li>
+        <strong>
+          Website log files:
+        </strong>
+         These are used as an analysis tool and to tell how visitors use CMS.gov, how often they return, and how they navigate through the website.
+      </li>
+      <li>
+        <strong>
+          Flash:
+        </strong>
+         Flash is used to assess the performance of the site and as a player for selected videos depending on the browser a device is using.
+      </li>
+      <li>
+        <strong>
+          Local Storage Objects:
+        </strong>
+         We use Flash Local Storage Objects (“LSOs”) to store your preferences and to personalize your visit.
+      </li>
+    </ul>
+  </div>
+  <div>
+    <h2
+      id="tracking-and-data-collection"
     >
-      <div
-        className="grid-container"
+      Your choices about tracking & data collection on CMS.gov
+    </h2>
+    <p>
+      CMS.gov offers a Privacy Manager which gives you control over what tracking and data collection takes place during your visit. Third-party tools are enabled by default to provide a quality consumer experience.
+    </p>
+    <p>
+      The Privacy Manager provides you with the choice to opt in or to opt out of the different categories of third-party tools used by CMS.gov: Advertising, Analytics, or Social Media. The Privacy Manager prevents cookies, web beacons, and Local Storage Objects from being placed on your device. The Privacy Manager also prevents third-party tools from loading regardless of your cookie settings, which provides you with an additional layer of privacy that prevents the tool from loading at all. Because the Privacy Manager creates a cookie in your browser, the opt in and opt out choices you make through the Privacy Manager will only be effective on the device and browser you used to make your choices, and your choices will expire when the cookie expires. Once the cookie is created, the Privacy Manager will retain your settings for 3 years from the date of your most recent visit. You may revisit the Privacy Manager to change or renew your choices at any time.
+    </p>
+    <p>
+      If you disable cookies in your browser, our Privacy Manager won’t be able to store your preferences and won’t function properly. If you don’t wish to use our Privacy Manager to opt out of the tools used by CMS.gov, you can opt out of tools individually, or via the Digital Advertising Alliance (“DAA”) AdChoices icon, discussed in the next subsection.
+    </p>
+    <p>
+      If you opt out of the tools used by CMS.gov via the Privacy Manager or by opting out of the tools directly, you’ll still have access to information and resources at CMS.gov.
+    </p>
+    <p>
+      <strong>
+        AdChoices:
+      </strong>
+       We include the AdChoices icon on all digital advertising that uses “conversion tracking” or “retargeting.” To learn about conversion tracking, targeted advertising, and retargeting, see 
+      <a
+        className="usa-link"
+        href="#third-party-sites-usage"
       >
-        <div>
-          <div
-            className="easi-footer__secondary-logo-wrap"
-          >
-            <img
-              alt="CMS.gov Logo"
-              src="cmsGovLogo.png"
-            />
-            <img
-              alt="Department of Health and Human Services USA"
-              className="margin-left-1"
-              src="hhsLogo.png"
-            />
-          </div>
-          <span>
-            A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 21244
-          </span>
-        </div>
-      </div>
-    </div>
-  </footer>
-</div>
+        How CMS uses third-party websites & applications with CMS.gov
+      </a>
+      . The AdChoices icon is usually at or near the corner of digital ads. When you click on the AdChoices icon, it will provide information on what company served the ad and information on how to opt out. Learn more about AdChoices.
+    </p>
+    <p>
+      <strong>
+        Do Not Track:
+      </strong>
+       We automatically observe the “Do Not Track” browser setting for digital advertising that uses “conversion tracking” or “retargeting.” If “Do Not Track” is set before a device visits CMS.gov, third-party conversion tracking and retargeting tools won’t load on the website. To learn more about conversion tracking and retargeting, see 
+      <a
+        className="usa-link"
+        href="#third-party-sites-usage"
+      >
+        How CMS uses third-party websites & applications with CMS.gov
+      </a>
+       
+      <a
+        aria-label="Open 'Do Not Track' in a new tab"
+        className="usa-link usa-link--external"
+        href="https://www.eff.org/issues/do-not-track"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Learn more about Do Not Track and how to set the Do Not Track setting in your browser.
+      </a>
+    </p>
+  </div>
+  <div>
+    <h2
+      id="third-party-sites-usage"
+    >
+      How CMS uses third-party websites & applications with CMS.gov
+    </h2>
+    <p>
+      CMS.gov uses a variety of technologies and social media services to communicate and interact with the public. These third-party websites and applications include popular social networking and media websites, open source software communities, and more.
+    </p>
+    <h3>
+      Third-party websites:
+    </h3>
+    <p>
+      Your activity on the third-party websites that CMS.gov links to (like Facebook or Twitter) is governed by the security and privacy policies of those websites. You should review the privacy policies of all websites before using them so you understand how your information may be used.
+    </p>
+    <h3>
+      Website analytics tools:
+    </h3>
+    <p>
+      These tools collect basic site usage information, like:
+    </p>
+    <ul>
+      <li>
+        How many visits CMS.gov gets
+      </li>
+      <li>
+        The pages visited
+      </li>
+      <li>
+        Time spent on CMS.gov
+      </li>
+      <li>
+        The number of return visits to CMS.gov
+      </li>
+      <li>
+        The approximate geographic location of the device used to access CMS.gov
+      </li>
+      <li>
+        Types of devices used
+      </li>
+    </ul>
+    <p>
+      This information is used to maintain the website, including:
+    </p>
+    <ul>
+      <li>
+        Monitoring website stability
+      </li>
+      <li>
+        Measuring website traffic
+      </li>
+      <li>
+        Optimizing website content
+      </li>
+      <li>
+        Improving your experience
+      </li>
+    </ul>
+    <p>
+      Use the CMS.gov Privacy Manager to opt out of website analytics tools.
+    </p>
+    <h3>
+      Digital advertising tools for outreach & education:
+    </h3>
+    <p>
+      We use third-party tools to support our digital advertising outreach and education efforts. These tools enable us to reach new people and provide information to previous visitors. To use these tools, we use these technologies on CMS.gov:
+    </p>
+    <p>
+      <strong>
+        Click tracking:
+      </strong>
+       We use click tracking to identify the ads that are most helpful to consumers and efficient for outreach. This enables us to improve the performance of ads that consumers click on. When users click on links from ads, data about what ad was viewed is collected. Reports are generated about ad performance – including the total number of views and clicks an ad received.
+    </p>
+    <p>
+      <strong>
+        Conversion tracking:
+      </strong>
+       We use conversion tracking to identify ads that are helpful to consumers and efficient for outreach. It enables us to improve the performance of ads viewed by consumers. When a CMS.gov ad is viewed on a third-party site (like a banner ad), a cookie is placed in the browser of the device the ad was viewed on. If this device later visits CMS.gov, the visit is linked to the ad viewed on the same device. Use the CMS.gov Privacy Manager to opt out of advertising tools. Users can click on the “AdChoices” icon in the corner of our ads to opt out of this Ad Targeting. Users who have set their browser to “Do Not Track” will automatically be opted out of conversion tracking. For more information about AdChoices and Do Not Track, see 
+      <a
+        className="usa-link"
+        href="#tracking-and-data-collection"
+      >
+        Your choices about tracking & data collection on CMS.gov
+      </a>
+    </p>
+    <p>
+      <strong>
+        Retargeting:
+      </strong>
+       We use retargeting to provide information to consumers who have previously visited CMS.gov, like reminders about upcoming enrollment deadlines. Retargeting enables us to improve the performance of ads by delivering them to relevant audiences, like recent visitors to CMS.gov. During a visit to CMS.gov, a cookie is placed in the browser of the devices used to view the website. When that same device is used to visit third-party websites that are displaying CMS.gov ads, ads for CMS.gov may be shown to that device because it had previously visited CMS.gov. Using these cookies, we don't collect information about the third-party websites visited by a device. Reports are generated about ad performance – including the total number of views and clicks an ad received. Use the CMS.gov Privacy Manager to opt out of advertising tools. Users can click on the “AdChoices” icon in the corner of our ads to opt out of this Ad Targeting. Users who have set their browser to “Do Not Track” will automatically be opted out of conversion tracking. For more information about AdChoices and Do Not Track, see 
+      <a
+        className="usa-link"
+        href="#tracking-and-data-collection"
+      >
+        Your choices about tracking & data collection on CMS.gov
+      </a>
+    </p>
+    <p>
+      <strong>
+        Targeted advertising:
+      </strong>
+       We use third-party vendors to engage in targeted advertising (also called online behavioral or interest-based advertising) to provide information to consumers across their online activities. Targeted advertising involves the collection of data from a particular computer or device. Data regarding web viewing behaviors or application use is gathered to predict user preferences or interests. We can have ads delivered to computers or devices based on the preferences or interests inferred from the web-viewing behaviors or application use.
+    </p>
+    <p>
+      Third-party vendors engaged by us may also target advertising based on information automatically collected (not information you provide) when you browse our websites or other websites on the internet. You can opt out of this type of data collection via our Privacy Manager, Ad Choices, and Do Not Track. For methods to opt out of this type of collection, see 
+      <a
+        className="usa-link"
+        href="#tracking-and-data-collection"
+      >
+        Your choices about tracking & data collection on CMS.gov
+      </a>
+    </p>
+    <p>
+      We may consider new third-party tools or the use of new third-party websites, but we'll first assess the tool or website before it’s used in connection with CMS.gov. We'll provide notice to the public before adding any new tool to CMS.gov. These assessments include a description about how information will be collected, accessed, secured, and stored. 
+      <a
+        aria-label="Open 'CMS Third Party Privacy Policies' in a new tab"
+        className="usa-link usa-link--external"
+        href="https://www.cms.gov/privacy/third-party-privacy-policies"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        See a list of the third-party tools currently being used on CMS.gov.
+      </a>
+       
+      <a
+        aria-label="Open 'Risk Assessment of Third Party Tools' in a new tab"
+        className="usa-link usa-link--external"
+        href="https://www.hhs.gov/pia/index/index.html"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        See risk assessments for third-party websites and applications.
+      </a>
+    </p>
+  </div>
+  <div>
+    <h2>
+      How CMS protects your personal information
+    </h2>
+    <p>
+      You don’t have to give us personal information when you visit CMS.gov, but if you want to get alerts or e-newsletters, you’ll need to give us your email address to subscribe.
+    </p>
+    <p>
+      If you choose to give us PII in an email, request for information, paper or electronic form, questionnaire, survey, etc., we’ll the information you give us only long enough to respond to your question or to fulfill the stated purpose of the communication.
+    </p>
+    <p>
+      If we need to contact you, we’ll save your personal information in a record system designed to retrieve information about you by personal identifier (name, personal email address, home mailing address, personal or mobile phone number, etc.) and keep the information you give us safe according to the 
+      <a
+        aria-label="Open 'Privacy Act of 1974' in a new tab"
+        className="usa-link usa-link--external"
+        href="https://www.govinfo.gov/content/pkg/USCODE-2012-title5/pdf/USCODE-2012-title5-partI-chap5-subchapII-sec552a.pdf"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Privacy Act of 1974
+      </a>
+      , as amended 
+      <a
+        aria-label="Open '5 U.S.C. Section 552a' in a new tab"
+        className="usa-link usa-link--external"
+        href="https://www.govinfo.gov/app/details/USCODE-2010-title5/USCODE-2010-title5-partI-chap5-subchapII-sec552a"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        (5 U.S.C. Section 552a).
+      </a>
+    </p>
+    <p>
+      If we have a record system to retrieve information about you so we can carry out our mission, a Privacy Act Notification Statement should be prominently displayed out in the open on the public-facing website or form asking you for PII. The statement has to address these 5 criteria:
+    </p>
+    <ol>
+      <li>
+        The legal authorization we have to collect information about you
+      </li>
+      <li>
+        Why we’re collecting information
+      </li>
+      <li>
+        Routine ways we disclose information outside of our websites
+      </li>
+      <li>
+        Whether or not you legally have to give us the information we’re asking for
+      </li>
+      <li>
+        What happens if you choose to not us the information we’re asking for
+      </li>
+    </ol>
+    <p>
+      For more information about CMS.gov’s privacy policy, email 
+      <a
+        className="usa-link"
+        href="mailto:Privacy@cms.hhs.gov"
+      >
+        Privacy@cms.hhs.gov
+      </a>
+    </p>
+    <p>
+      Third-party services are web-based technologies that aren’t exclusively operated or controlled by a government entity, or that involve significant participation of a nongovernment entity. These services may be separate websites or may be applications embedded within our websites. The list of third-party services includes links to relevant third-party privacy policies.
+    </p>
+  </div>
+  <div>
+    <h2>
+      How long CMS keeps data & how it’s accessed
+    </h2>
+    <p>
+      We'll keep data collected long enough to achieve the specified objective for which they were collected. Once the specified objective is achieved, the data will be retired or destroyed in accordance with published draft records schedules of CMS as approved by the National Archives and Records Administration.
+    </p>
+    <p>
+      We don't store information from cookies on our systems. The persistent cookies used with third-party tools on CMS.gov can be stored on a user’s local system and are set to expire at varying time periods depending upon the cookie. We assess whether the expiration date of a cookie exceeds one year and 
+      <a
+        aria-label="Open 'Privacy Impact Assessments' in a new tab"
+        className="usa-link usa-link--external"
+        href="https://www.hhs.gov/pia/index.html"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        provides an explanation
+      </a>
+       as to why cookies with a longer life are used on the site in the associated Third-Party Website or Application Privacy Impact Assessment.
+    </p>
+  </div>
+  <div>
+    <h2>
+      Children & privacy on CMS.gov
+    </h2>
+    <p>
+      We believe it’s important to protect the privacy of children online. The Children’s Online Privacy Protection Act (COPPA) governs information gathered online from or about children under the age of 13. CMS.gov isn’t intended to solicit information of any kind from children under age 13.
+    </p>
+  </div>
+  <div>
+    <h2>
+      Links to other sites
+    </h2>
+    <p>
+      CMS.gov may link to other HHS websites, other government websites, and/or private organizations (like health care providers). We link to other websites solely for your convenience and education. When you follow a link to an external site, you’re leaving CMS.gov and the external site’s privacy and security policies will apply. Non-federal websites don’t necessarily operate under the same laws, regulations, and policies as federal websites. Other than third-party websites highlighted in this privacy notice, we aren’t responsible for the contents of external web pages and a link to a page doesn’t constitute an endorsement.
+    </p>
+    <h3>
+      Social media & other sites that require registration
+    </h3>
+    <p>
+      We use social media websites (listed below) to:
+    </p>
+    <ul>
+      <li>
+        Increase government transparency
+      </li>
+      <li>
+        Improve information sharing
+      </li>
+      <li>
+        Promote public participation
+      </li>
+      <li>
+        Encourage partnership with CMS
+      </li>
+    </ul>
+    <strong>
+      Social media websites aren’t government websites or applications. They’re controlled or operated by the social media website.
+    </strong>
+     We don’t own, manage, or control social media websites. In addition, we don’t collect, maintain, or disseminate information posted by visitors to those social media websites. If you choose to provide information to a social media website through registration or other interaction with the website, the use of any information you provide is controlled by your relationship with the social media website. For example, any information that you provide to register on Facebook is voluntarily contributed and isn’t maintained by us. This information may be available to our social media page administrators in whole or part, based on a user's privacy settings on the social media website. However, we won’t use PII, if provided by you to a social media website or other website that requires registration, for targeted advertising or retargeting. Although you may voluntarily contribute to a social media website with the intent to share the information with others on a CMS social media page, to protect your privacy, don’t disclose PII about yourself or others.
+    <p>
+      We don’t keep separate records or accounting of any social media website users or their interaction with the CMS.gov pages on social media websites. We don’t store or share this information. User information is retained by social media websites in accordance with the website’s policies. See each social media website’s privacy policy to see how long user information is retained after an account has been deleted. To learn more about how each social media website uses and maintains information visit their privacy policy, as follows:
+    </p>
+    <ul>
+      <li>
+        <a
+          aria-label="Open 'Facebook Privacy Policy' in a new tab"
+          className="usa-link usa-link--external"
+          href="https://www.facebook.com/policies"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Facebook
+        </a>
+      </li>
+      <li>
+        <a
+          aria-label="Open 'Twitter Privacy Policy' in a new tab"
+          className="usa-link usa-link--external"
+          href="https://twitter.com/en/privacy"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Twitter
+        </a>
+      </li>
+      <li>
+        <a
+          aria-label="Open 'YouTube Privacy Policy' in a new tab"
+          className="usa-link usa-link--external"
+          href="https://support.google.com/youtube/answer/7671399?p=privacy_guidelines&hl=en&visit_id=637341420338082975-3155661882&rd=1"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          YouTube
+        </a>
+      </li>
+      <li>
+        <a
+          aria-label="Open 'LinkedIn Privacy Policy' in a new tab"
+          className="usa-link usa-link--external"
+          href="https://www.linkedin.com/legal/privacy-policy"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          LinkedIn
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <h2>
+      Additional privacy information
+    </h2>
+    <a
+      aria-label="Open 'Privacy Statistics' in a new tab"
+      className="usa-link usa-link--external"
+      href="https://www.cms.gov/Research-Statistics-Data-and-Systems/Computer-Data-and-Systems/Privacy"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Get more information about CMS privacy policies.
+    </a>
+  </div>
+</main>
 `;
