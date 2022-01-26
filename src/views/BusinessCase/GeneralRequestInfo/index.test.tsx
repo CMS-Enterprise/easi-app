@@ -9,29 +9,6 @@ import configureMockStore from 'redux-mock-store';
 import { businessCaseInitialData } from 'data/businessCase';
 import BusinessCase from 'views/BusinessCase';
 
-jest.mock('@okta/okta-react', () => ({
-  useOktaAuth: () => {
-    return {
-      authState: {
-        isAuthenticated: true
-      },
-      oktaAuth: {
-        getAccessToken: () => Promise.resolve('test-access-token'),
-        getUser: () =>
-          Promise.resolve({
-            name: 'John Doe'
-          })
-      }
-    };
-  }
-}));
-
-const waitForPageLoad = async () => {
-  await waitFor(() => {
-    expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
-  });
-};
-
 const renderPage = (store: any) =>
   render(
     <MemoryRouter
@@ -74,14 +51,12 @@ describe('Business case general request info form', () => {
 
   it('renders without errors', async () => {
     renderPage(defaultStore);
-    await waitForPageLoad();
 
     expect(screen.getByTestId('general-request-info')).toBeInTheDocument();
   });
 
   it('fills all fields', async () => {
     renderPage(defaultStore);
-    await waitForPageLoad();
 
     const projectNameField = screen.getByRole('textbox', {
       name: /Project Name/i
@@ -110,24 +85,24 @@ describe('Business case general request info form', () => {
 
   it('does not run validations', async () => {
     renderPage(defaultStore);
-    await waitForPageLoad();
 
     screen.getByRole('button', { name: /Next/i }).click();
 
-    expect(
-      screen.queryByTestId('formik-validation-errors')
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId('formik-validation-errors')
+      ).not.toBeInTheDocument();
+    });
 
-    await waitForPageLoad();
-
-    expect(
-      screen.getByRole('heading', { name: /Request description/i })
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /Request description/i })
+      ).toBeInTheDocument();
+    });
   });
 
   it('does not render mandatory fields message', async () => {
     renderPage(defaultStore);
-    await waitForPageLoad();
 
     expect(
       screen.queryByTestId('mandatory-fields-alert')
@@ -136,13 +111,12 @@ describe('Business case general request info form', () => {
 
   it('navigates to next page', async () => {
     renderPage(defaultStore);
-    await waitForPageLoad();
 
     screen.getByRole('button', { name: /next/i }).click();
 
-    await waitForPageLoad();
-
-    expect(screen.getByTestId('request-description')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('request-description')).toBeInTheDocument();
+    });
   });
 
   describe('BIZ_CASE_FINAL_NEEDED', () => {
@@ -169,7 +143,6 @@ describe('Business case general request info form', () => {
 
     it('renders mandatory fields message', async () => {
       renderPage(storeWithFinalBizCase);
-      await waitForPageLoad();
 
       expect(screen.getByTestId('mandatory-fields-alert')).toBeInTheDocument();
     });
@@ -178,15 +151,14 @@ describe('Business case general request info form', () => {
       window.scrollTo = jest.fn();
 
       renderPage(storeWithFinalBizCase);
-      await waitForPageLoad();
 
       screen.getByRole('button', { name: /Next/i }).click();
 
-      await waitForPageLoad();
-
-      expect(
-        screen.getByTestId('formik-validation-errors')
-      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.getByTestId('formik-validation-errors')
+        ).toBeInTheDocument();
+      });
     });
   });
 });
