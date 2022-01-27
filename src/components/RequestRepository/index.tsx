@@ -20,6 +20,7 @@ import TruncatedText from 'components/shared/TruncatedText';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
+import useCheckResponsiveScreen from 'utils/checkMobile';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
 import {
   getAcronymForComponent,
@@ -37,6 +38,7 @@ import './index.scss';
 
 const RequestRepository = () => {
   type TableTypes = 'open' | 'closed';
+  const isMobile = useCheckResponsiveScreen('tablet');
   const [activeTable, setActiveTable] = useState<TableTypes>('open');
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
@@ -385,7 +387,8 @@ const RequestRepository = () => {
           count: data.length
         })}
       </h1>
-      <Table fixed bordered={false} {...getTableProps()} fullWidth>
+      {/* This is the only table that expands past the USWDS desktop dimensions.  Only convert to scrollable when in tablet/mobile */}
+      <Table scrollable={isMobile} bordered={false} {...getTableProps()}>
         <caption className="usa-sr-only">
           {activeTable === 'open' &&
             t('requestRepository.aria.openTableCaption')}
@@ -399,12 +402,6 @@ const RequestRepository = () => {
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
-                  style={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    borderTop: 0
-                  }}
                 >
                   <button
                     className="usa-button usa-button--unstyled"

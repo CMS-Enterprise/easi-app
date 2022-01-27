@@ -159,7 +159,7 @@ const Table = () => {
                 <th
                   {...column.getHeaderProps()}
                   aria-sort={getColumnSortStatus(column)}
-                  style={{}}
+                  className="table-header"
                   scope="col"
                 >
                   <button

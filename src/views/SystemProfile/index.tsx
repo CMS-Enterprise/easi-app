@@ -206,7 +206,6 @@ const SystemProfile = () => {
                             'nav-group-border': sideNavItems(systemInfo.id)[key]
                               .groupEnd
                           })}
-                          exact
                         >
                           {t(`navigation.${key}`)}
                         </NavLink>

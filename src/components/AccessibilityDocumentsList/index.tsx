@@ -119,7 +119,7 @@ const AccessibilityDocumentsList = ({
       data: documents,
       documents,
       initialState: {
-        sortBy: [{ id: 'uploadedAt', desc: true }]
+        sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], [])
       }
     },
     useSortBy
@@ -141,11 +141,7 @@ const AccessibilityDocumentsList = ({
                 <th
                   {...column.getHeaderProps()}
                   style={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    width: column.width,
-                    borderTop: 0
+                    width: column.width
                   }}
                   scope="col"
                 >

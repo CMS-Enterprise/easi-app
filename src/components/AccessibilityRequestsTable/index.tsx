@@ -142,7 +142,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       requests,
       initialState: {
-        sortBy: [{ id: 'submittedAt', desc: true }]
+        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], [])
       }
     },
     useSortBy
@@ -161,11 +161,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                     style: {
                       width: column.width,
                       minWidth: column.minWidth,
-                      maxWidth: column.maxWidth,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      borderTop: 0
+                      maxWidth: column.maxWidth
                     }
                   })}
                   aria-sort={getColumnSortStatus(column)}

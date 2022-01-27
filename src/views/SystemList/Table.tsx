@@ -224,8 +224,7 @@ export const Table = ({
                   style={{
                     minWidth: index === 0 ? '50px' : '150px',
                     padding: index === 0 ? '0' : 'auto',
-                    paddingLeft: index === 0 ? '.5em' : 'auto',
-                    borderTop: 0
+                    paddingLeft: index === 0 ? '.5em' : 'auto'
                   }}
                 >
                   <button

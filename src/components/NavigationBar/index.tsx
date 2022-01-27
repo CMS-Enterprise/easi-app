@@ -65,6 +65,7 @@ const NavigationBar = ({
             to={route.link}
             activeClassName="usa-current"
             className="easi-nav__link"
+            onClick={() => toggle(false)}
             exact
           >
             <em
