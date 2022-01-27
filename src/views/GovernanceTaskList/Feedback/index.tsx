@@ -9,12 +9,9 @@ import {
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
-import Footer from 'components/Footer';
-import Header from 'components/Header';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import PageWrapper from 'components/PageWrapper';
 import HelpText from 'components/shared/HelpText';
 import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import {
@@ -61,51 +58,47 @@ const GovernanceFeedback = () => {
   };
 
   return (
-    <PageWrapper>
-      <Header />
-      <MainContent>
-        <div className="grid-container">
-          <BreadcrumbBar variant="wrap">
-            <Breadcrumb>
-              <BreadcrumbLink asCustom={Link} to="/">
-                <span>{t('navigation.home')}</span>
-              </BreadcrumbLink>
-            </Breadcrumb>
-            <Breadcrumb>
-              <BreadcrumbLink
-                asCustom={Link}
-                to={`/governance-task-list/${systemId}`}
-              >
-                <span>{t('navigation.governanceApproval')}</span>
-              </BreadcrumbLink>
-            </Breadcrumb>
-            <Breadcrumb current>{t('navigation.feedback')}</Breadcrumb>
-          </BreadcrumbBar>
-          <div className="grid-col-10">
-            <PageHeading>{t('feedback.heading')}</PageHeading>
-            {feedbackforGRB.length > 0 && (
-              <>
-                <h2>{t('feedback.grb.heading')}</h2>
-                <HelpText>{t('feedback.grb.help')}</HelpText>
-                <div className="margin-top-3">
-                  {feedbackforGRB.map(item => formatGRTFeedback(item))}
-                </div>
-              </>
-            )}
+    <MainContent>
+      <div className="grid-container">
+        <BreadcrumbBar variant="wrap">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>{t('navigation.home')}</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb>
+            <BreadcrumbLink
+              asCustom={Link}
+              to={`/governance-task-list/${systemId}`}
+            >
+              <span>{t('navigation.governanceApproval')}</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>{t('navigation.feedback')}</Breadcrumb>
+        </BreadcrumbBar>
+        <div className="grid-col-10">
+          <PageHeading>{t('feedback.heading')}</PageHeading>
+          {feedbackforGRB.length > 0 && (
+            <>
+              <h2>{t('feedback.grb.heading')}</h2>
+              <HelpText>{t('feedback.grb.help')}</HelpText>
+              <div className="margin-top-3">
+                {feedbackforGRB.map(item => formatGRTFeedback(item))}
+              </div>
+            </>
+          )}
 
-            <h2>{t('feedback.businessOwner.heading')}</h2>
-            <HelpText>{t('feedback.businessOwner.help')}</HelpText>
-            <div className="margin-top-3">
-              {feedbackforBusinessOwner.map(item => formatGRTFeedback(item))}
-            </div>
+          <h2>{t('feedback.businessOwner.heading')}</h2>
+          <HelpText>{t('feedback.businessOwner.help')}</HelpText>
+          <div className="margin-top-3">
+            {feedbackforBusinessOwner.map(item => formatGRTFeedback(item))}
           </div>
-          <UswdsReactLink to={`/governance-task-list/${systemId}`}>
-            {t('navigation.returnToTaskList')}
-          </UswdsReactLink>
         </div>
-      </MainContent>
-      <Footer />
-    </PageWrapper>
+        <UswdsReactLink to={`/governance-task-list/${systemId}`}>
+          {t('navigation.returnToTaskList')}
+        </UswdsReactLink>
+      </div>
+    </MainContent>
   );
 };
 

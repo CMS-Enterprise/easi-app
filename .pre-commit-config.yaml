@@ -79,3 +79,9 @@ repos:
       - id: git-secrets
         entry: git-secrets --pre_commit_hook
 
+  - repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: end-of-file-fixer
+        name: Add newlines to end of files
+        files: \.(sql|scss|md|js|ts|tsx|go)$

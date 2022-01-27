@@ -1,0 +1,59 @@
+#system-profile {
+    .system-profile {
+        &__summary-box {
+            border-top: 0;
+            background-color: color($theme-color-primary-lighter);
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        &__acronym {
+            font-size: 1rem;
+            font-weight: normal;
+        }
+
+        &__summary-body {
+            font-weight: normal;
+            font-size: 1rem;
+        }
+
+        &__subheader {
+            font-size: 1.5rem;
+        }
+
+        &__nav {
+            padding: 0;
+        }
+
+        &__nav-button {
+            width: 100%
+        }
+    }    
+
+    .usa-breadcrumb {
+        background-color: transparent;
+        padding: 0;
+    }
+
+    .usa-sidenav, .usa-nav__primary-item {
+        border: none;
+
+        &__item {
+            border: none;
+        }
+    }
+
+    .usa-sidenav__item a:not(.usa-current) {
+        padding-left: 0;        
+    }
+
+    .nav-group-border {
+        border-bottom: .5px solid color($theme-color-disabled-light);
+    }
+}
+
+.top-divider {
+    height: .25rem;
+    width: 100%;
+    background-color: color($theme-color-primary-lighter);
+}

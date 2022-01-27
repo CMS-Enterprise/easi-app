@@ -4445,12 +4445,12 @@ lifecycle ID
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
-  previousScope: String!
-  newScope: String!
-  previousNextSteps: String!
-  newNextSteps: String!
-  previousCostBaseline: String!
-  newCostBaseline: String!
+  previousScope: String
+  newScope: String
+  previousNextSteps: String
+  newNextSteps: String
+  previousCostBaseline: String
+  newCostBaseline: String
  }
 
 """
@@ -16734,14 +16734,11 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousScope(ctx 
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newScope(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeLCIDExpirationChange) (ret graphql.Marshaler) {
@@ -16769,14 +16766,11 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newScope(ctx conte
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousNextSteps(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeLCIDExpirationChange) (ret graphql.Marshaler) {
@@ -16804,14 +16798,11 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousNextSteps(
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newNextSteps(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeLCIDExpirationChange) (ret graphql.Marshaler) {
@@ -16839,14 +16830,11 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newNextSteps(ctx c
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousCostBaseline(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeLCIDExpirationChange) (ret graphql.Marshaler) {
@@ -16874,14 +16862,11 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousCostBaseli
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newCostBaseline(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeLCIDExpirationChange) (ret graphql.Marshaler) {
@@ -16909,14 +16894,11 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newCostBaseline(ct
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeNote_author(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNote) (ret graphql.Marshaler) {
@@ -23308,34 +23290,16 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange(ctx context.Contex
 			}
 		case "previousScope":
 			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_previousScope(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "newScope":
 			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_newScope(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "previousNextSteps":
 			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_previousNextSteps(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "newNextSteps":
 			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_newNextSteps(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "previousCostBaseline":
 			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_previousCostBaseline(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "newCostBaseline":
 			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_newCostBaseline(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
