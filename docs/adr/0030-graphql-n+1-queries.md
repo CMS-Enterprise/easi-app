@@ -75,4 +75,3 @@ This could cause some scalability issues as the number of records in our databas
 * `+` Minimum effort required.
 * `+` The problem doesn't appear severe right now, especially when EASi's database is the data source, due to the small amount of data we're dealing with.
 * `-` Doesn't address the problem; with a larger data set in our database, or with more data being requested from CEDAR, we could run into issues with our backend taking a long time to resolve a GraphQL query.
-
