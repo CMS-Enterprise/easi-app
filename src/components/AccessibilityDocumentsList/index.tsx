@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Cell, Column, useSortBy, useTable } from 'react-table';
 import { Button, Link, Table } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -16,6 +17,7 @@ import { getHeaderSortIcon } from 'utils/tableSort';
 type Document = {
   id: string;
   status: AccessibilityRequestDocumentStatus;
+  translatedStatus: string;
   url: string;
   uploadedAt: string;
   documentType: {
@@ -52,22 +54,15 @@ const AccessibilityDocumentsList = ({
       {
         Header: t<string>('documentTable.header.uploadedAt'),
         accessor: 'uploadedAt',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
-          }
-          return '';
-        },
         width: '25%'
       },
       {
         Header: t<string>('documentTable.header.actions'),
-        Cell: ({ row }: Cell<Document>) => (
+        accessor: 'translatedStatus',
+        Cell: ({ row, value }: Cell<Document>) => (
           <>
-            {row.original.status === 'PENDING' && (
-              <em>Virus scan in progress...</em>
-            )}
-            {row.original.status === 'AVAILABLE' && (
+            {value === t('documentTable.status.pending') && <em>{value}</em>}
+            {value === t('documentTable.view') && (
               <>
                 <Link
                   className="margin-right-3"
@@ -79,7 +74,7 @@ const AccessibilityDocumentsList = ({
                     row.original.documentType
                   )} in a new tab or window`}
                 >
-                  {t('documentTable.view')}
+                  {value}
                 </Link>
                 <Button
                   aria-label={`Remove ${translateDocumentType(
@@ -94,10 +89,10 @@ const AccessibilityDocumentsList = ({
                 </Button>
               </>
             )}
-            {row.original.status === 'UNAVAILABLE' && (
+            {value === t('documentTable.status.unavailable') && (
               <>
                 <i className="fa fa-exclamation-circle text-secondary" />{' '}
-                Document failed virus scan
+                {value}
               </>
             )}
           </>
@@ -106,6 +101,38 @@ const AccessibilityDocumentsList = ({
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const data = useMemo(() => {
+    const tableData = documents.map((singleDoc: Document) => {
+      const uploadedAt = singleDoc.uploadedAt
+        ? formatDate(DateTime.fromISO(singleDoc.uploadedAt))
+        : '';
+
+      let translatedStatus;
+      switch (singleDoc.status) {
+        case 'PENDING':
+          translatedStatus = t('documentTable.status.pending');
+          break;
+        case 'AVAILABLE':
+          translatedStatus = t('documentTable.view');
+          break;
+        case 'UNAVAILABLE':
+          translatedStatus = t('documentTable.status.unavailable');
+          break;
+        default:
+          translatedStatus = '';
+          break;
+      }
+
+      return {
+        ...singleDoc,
+        translatedStatus,
+        uploadedAt
+      };
+    });
+
+    return tableData;
+  }, [documents, t]);
 
   const {
     getTableProps,
@@ -116,7 +143,7 @@ const AccessibilityDocumentsList = ({
   } = useTable(
     {
       columns,
-      data: documents,
+      data,
       documents,
       initialState: {
         sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], [])

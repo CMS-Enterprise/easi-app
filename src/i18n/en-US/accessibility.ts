@@ -23,7 +23,11 @@ const accessibility = {
       proceedButton: 'Remove document',
       declineButton: 'Keep document'
     },
-    noDocuments: 'No documents added to request yet.'
+    noDocuments: 'No documents added to request yet.',
+    status: {
+      pending: 'Virus scan in progress...',
+      unavailable: 'Document failed virus scan'
+    }
   },
   uploadDocument: {
     presignedUrlErrorHeader: 'There is a problem',

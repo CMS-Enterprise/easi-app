@@ -3,10 +3,12 @@ import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
 type sortColumnProps = null | string | number | Date;
+type columnStatusProps = 'descending' | 'ascending' | 'none';
 
+// Populates 'aria-sort' on table elements based on sort status
 export const getColumnSortStatus = <T extends {}>(
   column: HeaderGroup<T>
-): 'descending' | 'ascending' | 'none' => {
+): columnStatusProps => {
   if (column.isSorted) {
     if (column.isSortedDesc) {
       return 'descending';
@@ -17,6 +19,8 @@ export const getColumnSortStatus = <T extends {}>(
   return 'none';
 };
 
+// Returns header sort icon class based on sort status
+// TODO: convert to Material Icon
 export const getHeaderSortIcon = (
   isSorted: boolean,
   isSortedDesc: boolean | undefined
@@ -33,6 +37,7 @@ export const getHeaderSortIcon = (
   return classnames(marginClassName, 'fa fa-caret-up');
 };
 
+// Description beneath tables for sorting status
 export const currentTableSortDescription = (headerGroup: any) => {
   const sortedHeader = headerGroup.headers.find(
     (header: HeaderGroup) => header.isSorted
@@ -58,14 +63,17 @@ export const sortColumnValues = (
     return -1;
   }
 
+  // If string/number and datetime, sort out datetimes
+  if (
+    rowOneElem instanceof DateTime &&
+    (typeof rowTwoElem === 'string' || typeof rowTwoElem === 'number')
+  ) {
+    return 1;
+  }
+
   // If both items are strings, enforce capitalization (temporarily) and then compare
   if (typeof rowOneElem === 'string' && typeof rowTwoElem === 'string') {
     return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
-  }
-
-  // If string and datetime, sort datetimes together
-  if (rowOneElem instanceof DateTime && typeof rowTwoElem === 'string') {
-    return 1;
   }
 
   // If both items are DateTimes, convert to Number and compare
@@ -73,6 +81,6 @@ export const sortColumnValues = (
     return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
   }
 
-  // If items are different types and/or neither string nor DateTime, return bare comparison
+  // If items are different types and/or not DateTime, return bare comparison
   return rowOneElem > rowTwoElem ? 1 : -1;
 };

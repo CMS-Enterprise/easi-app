@@ -6,7 +6,12 @@ import { RequestType } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 
-const mapRequestData = (tableData: GetRequests, t: TFunction) => {
+// React table sorts on the data passed table.  The column configuration uses the accessor to access the field of the original dataset.
+// Column cell configuration is meant to wrap data in JSX components, not modify data for sorting
+// Here is where the data can be modified and used appropriately for sorting.
+// Modifed data can then be configured with JSX components in column cell configuration
+
+const tableMap = (tableData: GetRequests, t: TFunction) => {
   const requests = tableData?.requests?.edges.map(edge => {
     return edge.node;
   });
@@ -26,16 +31,15 @@ const mapRequestData = (tableData: GetRequests, t: TFunction) => {
       ? formatDate(request.submittedAt)
       : 'None';
 
-    const statusCreatedAt = request.statusCreatedAt
-      ? DateTime.fromISO(request.statusCreatedAt)
-      : null;
-
     let status;
-    switch (request.status) {
+    switch (request.type) {
       case RequestType.ACCESSIBILITY_REQUEST:
         // Status hasn't changed if the status record created at is the same
         // as the 508 request's submitted at
-        if (request.submittedAt.toISO() === request.statusCreatedAt.toISO()) {
+        if (
+          new Date(request.submittedAt).toISOString() ===
+          new Date(request.statusCreatedAt).toISOString()
+        ) {
           status = accessibilityRequestStatusMap[request.status];
         }
         status = accessibilityRequestStatusMap[request.status];
@@ -54,7 +58,6 @@ const mapRequestData = (tableData: GetRequests, t: TFunction) => {
     return {
       ...request,
       submittedAt,
-      statusCreatedAt,
       nextMeetingDate,
       name,
       type,
@@ -65,4 +68,4 @@ const mapRequestData = (tableData: GetRequests, t: TFunction) => {
   return mappedData || [];
 };
 
-export default mapRequestData;
+export default tableMap;

@@ -8,7 +8,6 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
-import { RequestType } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
 import {
   currentTableSortDescription,
@@ -17,9 +16,9 @@ import {
   sortColumnValues
 } from 'utils/tableSort';
 
-import mapRequestData from './tableUtil';
+import tableMap from './tableMap';
 
-import './index.scss';
+import '../index.scss';
 
 const Table = () => {
   const { t } = useTranslation(['home', 'intake', 'accessibility']);
@@ -65,24 +64,24 @@ const Table = () => {
         accessor: 'status',
         Cell: ({ row, value }: any) => {
           switch (row.original.type) {
-            case RequestType.ACCESSIBILITY_REQUEST:
+            case t(`requestsTable.types.ACCESSIBILITY_REQUEST`):
               // Status hasn't changed if the status record created at is the same
               // as the 508 request's submitted at
-              if (
-                row.original.submittedAt.toISO() ===
-                row.original.statusCreatedAt.toISO()
-              ) {
+              if (row.original.submittedAt === row.original.createdAt) {
                 return <span>{value}</span>;
               }
               return (
                 <span>
                   {value}
-                  <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
+                  <span className="text-base-dark font-body-3xs">{` - Changed on ${formatDate(
                     row.original.statusCreatedAt
                   )}`}</span>
                 </span>
               );
-            case RequestType.GOVERNANCE_REQUEST:
+            case t(`requestsTable.types.GOVERNANCE_REQUEST`):
+              if (row.original.lcid) {
+                return `${value}: ${row.original.lcid}`;
+              }
               return value;
             default:
               return '';
@@ -100,9 +99,10 @@ const Table = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Modifying data for table sorting and prepping for Cell configuration
   const data = useMemo(() => {
     if (tableData) {
-      return mapRequestData(tableData, t);
+      return tableMap(tableData, t);
     }
     return [];
   }, [tableData, t]);

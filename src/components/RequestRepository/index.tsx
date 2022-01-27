@@ -23,16 +23,13 @@ import { fetchSystemIntakes } from 'types/routines';
 import useCheckResponsiveScreen from 'utils/checkMobile';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
 import {
-  getAcronymForComponent,
-  translateRequestType
-} from 'utils/systemIntake';
-import {
   getColumnSortStatus,
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
 
 import csvHeaderMap from './csvHeaderMap';
+import tableMap from './tableMap';
 
 import './index.scss';
 
@@ -229,51 +226,12 @@ const RequestRepository = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTable, t]);
 
+  // Modifying data for table sorting and prepping for Cell configuration
   const data = useMemo(() => {
-    return systemIntakes.map(intake => {
-      const statusEnum = intake.status;
-      let statusTranslation = '';
-
-      // Translating status
-      if (statusEnum === 'LCID_ISSUED') {
-        // if status is LCID_ISSUED, translate from enum to i18n and append LCID
-        statusTranslation = `${t(`intake:statusMap.${statusEnum}`)}: ${
-          intake.lcid
-        }`;
-      } else {
-        // if not just translate from enum to i18n
-        statusTranslation = t(`intake:statusMap.${statusEnum}`);
-      }
-
-      // Display both the requester name and the acronym of their component
-      // TODO: might be better to just save the component's acronym in the intake?
-      const requester = `${intake.requester.name}, ${getAcronymForComponent(
-        intake.requester.component
-      )}`;
-
-      const adminLead = intake.adminLead
-        ? intake.adminLead
-        : t('governanceReviewTeam:adminLeads.notAssigned');
-
-      const grtDate = intake.grtDate
-        ? intake.grtDate
-        : t('requestRepository.table.addDate');
-
-      const grbDate = intake.grbDate
-        ? intake.grbDate
-        : t('requestRepository.table.addDate');
-
-      // Override all applicable fields in intake to use i18n translations
-      return {
-        ...intake,
-        requester,
-        adminLead,
-        grtDate,
-        grbDate,
-        status: statusTranslation,
-        requestType: translateRequestType(intake.requestType)
-      };
-    });
+    if (systemIntakes) {
+      return tableMap(systemIntakes, t);
+    }
+    return [];
   }, [systemIntakes, t]);
 
   useEffect(() => {
