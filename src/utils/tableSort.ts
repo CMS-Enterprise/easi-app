@@ -38,7 +38,9 @@ export const getHeaderSortIcon = (
 };
 
 // Description beneath tables for sorting status
-export const currentTableSortDescription = (headerGroup: any) => {
+export const currentTableSortDescription = (headerGroup: {
+  headers: HeaderGroup[];
+}) => {
   const sortedHeader = headerGroup.headers.find(
     (header: HeaderGroup) => header.isSorted
   );
