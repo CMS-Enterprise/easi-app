@@ -1413,12 +1413,12 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 			graphAction.LcidExpirationChange = &model.SystemIntakeLCIDExpirationChange{
 				NewDate:              *action.LCIDExpirationChangeNewDate,
 				PreviousDate:         *action.LCIDExpirationChangePreviousDate,
-				NewScope:             action.LCIDExpirationChangeNewScope,
-				PreviousScope:        action.LCIDExpirationChangePreviousScope,
-				NewNextSteps:         action.LCIDExpirationChangeNewNextSteps,
-				PreviousNextSteps:    action.LCIDExpirationChangePreviousNextSteps,
-				NewCostBaseline:      action.LCIDExpirationChangeNewCostBaseline,
-				PreviousCostBaseline: action.LCIDExpirationChangePreviousCostBaseline,
+				NewScope:             action.LCIDExpirationChangeNewScope.Ptr(),
+				PreviousScope:        action.LCIDExpirationChangePreviousScope.Ptr(),
+				NewNextSteps:         action.LCIDExpirationChangeNewNextSteps.Ptr(),
+				PreviousNextSteps:    action.LCIDExpirationChangePreviousNextSteps.Ptr(),
+				NewCostBaseline:      action.LCIDExpirationChangeNewCostBaseline.Ptr(),
+				PreviousCostBaseline: action.LCIDExpirationChangePreviousCostBaseline.Ptr(),
 			}
 		}
 		results = append(results, &graphAction)

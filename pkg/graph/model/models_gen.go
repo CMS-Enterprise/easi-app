@@ -417,12 +417,12 @@ type SystemIntakeISSOInput struct {
 type SystemIntakeLCIDExpirationChange struct {
 	PreviousDate         time.Time `json:"previousDate"`
 	NewDate              time.Time `json:"newDate"`
-	PreviousScope        string    `json:"previousScope"`
-	NewScope             string    `json:"newScope"`
-	PreviousNextSteps    string    `json:"previousNextSteps"`
-	NewNextSteps         string    `json:"newNextSteps"`
-	PreviousCostBaseline string    `json:"previousCostBaseline"`
-	NewCostBaseline      string    `json:"newCostBaseline"`
+	PreviousScope        *string   `json:"previousScope"`
+	NewScope             *string   `json:"newScope"`
+	PreviousNextSteps    *string   `json:"previousNextSteps"`
+	NewNextSteps         *string   `json:"newNextSteps"`
+	PreviousCostBaseline *string   `json:"previousCostBaseline"`
+	NewCostBaseline      *string   `json:"newCostBaseline"`
 }
 
 // A note added to a system request

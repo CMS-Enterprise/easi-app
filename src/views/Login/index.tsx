@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 
-import Footer from 'components/Footer';
-import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import PageWrapper from 'components/PageWrapper';
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
 import { localAuthStorageKey } from 'constants/localAuth';
 import { isLocalAuthEnabled } from 'utils/auth';
@@ -44,34 +41,28 @@ const Login = () => {
 
   if (isLocalAuthEnabled() && isLocalAuth) {
     return (
-      <PageWrapper>
-        <MainContent className="grid-container margin-top-4">
-          <DevLogin />
-        </MainContent>
-      </PageWrapper>
+      <MainContent className="grid-container margin-top-4">
+        <DevLogin />
+      </MainContent>
     );
   }
 
   return (
-    <PageWrapper>
-      <Header />
-      <MainContent className="grid-container">
-        {isLocalAuthEnabled() && (
-          <div>
-            <button
-              type="button"
-              onClick={handleUseLocalAuth}
-              data-testid="LocalAuth-Visit"
-            >
-              Use Local Auth
-            </button>
-          </div>
-        )}
-        <PageHeading>Sign in using EUA</PageHeading>
-        <OktaSignInWidget onSuccess={onSuccess} onError={() => {}} />
-      </MainContent>
-      <Footer />
-    </PageWrapper>
+    <MainContent className="grid-container">
+      {isLocalAuthEnabled() && (
+        <div>
+          <button
+            type="button"
+            onClick={handleUseLocalAuth}
+            data-testid="LocalAuth-Visit"
+          >
+            Use Local Auth
+          </button>
+        </div>
+      )}
+      <PageHeading>Sign in using EUA</PageHeading>
+      <OktaSignInWidget onSuccess={onSuccess} onError={() => {}} />
+    </MainContent>
   );
 };
 

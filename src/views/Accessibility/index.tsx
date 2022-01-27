@@ -5,10 +5,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { Link } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import Footer from 'components/Footer';
-import Header from 'components/Header';
 import MainContent from 'components/MainContent';
-import PageWrapper from 'components/PageWrapper';
 import {
   REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY,
   REPORT_PROBLEM_BASIC_USER_SURVEY
@@ -150,14 +147,12 @@ const PageTemplate = ({
   surveyUrl: string;
 }) => {
   return (
-    <PageWrapper>
-      <Header />
+    <>
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
       <ReportProblemLinkArea url={surveyUrl} />
-      <Footer />
-    </PageWrapper>
+    </>
   );
 };
 

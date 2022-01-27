@@ -154,68 +154,83 @@ const Notes = () => {
                     id="new-lcid-scope"
                     label="less"
                     closeLabel="more"
-                    text={lcidExpirationChange.newScope}
+                    text={
+                      lcidExpirationChange.newScope ||
+                      t('notes.extendLcid.noScope')
+                    }
                     charLimit={freeFormTextCharLimit}
                   />
                 </dd>
+
                 <dt>{t('notes.extendLcid.oldScope')}</dt>
                 <dd>
                   <TruncatedText
                     id="previous-lcid-scope"
                     label="less"
                     closeLabel="more"
-                    text={lcidExpirationChange.previousScope}
+                    text={
+                      lcidExpirationChange.previousScope ||
+                      t('notes.extendLcid.noScope')
+                    }
                     charLimit={freeFormTextCharLimit}
                   />
                 </dd>
+
                 <dt>{t('notes.extendLcid.newNextSteps')}</dt>
                 <dd>
                   <TruncatedText
                     id="new-lcid-next-steps"
                     label="less"
                     closeLabel="more"
-                    text={lcidExpirationChange.newNextSteps}
+                    text={
+                      lcidExpirationChange.newNextSteps ||
+                      t('notes.extendLcid.noNextSteps')
+                    }
                     charLimit={freeFormTextCharLimit}
                   />
                 </dd>
+
                 <dt>{t('notes.extendLcid.oldNextSteps')}</dt>
                 <dd>
                   <TruncatedText
                     id="previous-lcid-next-steps"
                     label="less"
                     closeLabel="more"
-                    text={lcidExpirationChange.previousNextSteps}
+                    text={
+                      lcidExpirationChange.previousNextSteps ||
+                      t('notes.extendLcid.noNextSteps')
+                    }
                     charLimit={freeFormTextCharLimit}
                   />
                 </dd>
+
                 <dt>{t('notes.extendLcid.newCostBaseline')}</dt>
-                {lcidExpirationChange.newCostBaseline ? (
-                  <dd>
-                    <TruncatedText
-                      id="new-lcid-cost-baseline"
-                      label="less"
-                      closeLabel="more"
-                      text={lcidExpirationChange.newCostBaseline}
-                      charLimit={freeFormTextCharLimit}
-                    />
-                  </dd>
-                ) : (
-                  <dd>{t('notes.extendLcid.noCostBaseline')}</dd>
-                )}
+                <dd>
+                  <TruncatedText
+                    id="new-lcid-cost-baseline"
+                    label="less"
+                    closeLabel="more"
+                    text={
+                      lcidExpirationChange.newCostBaseline ||
+                      t('notes.extendLcid.noCostBaseline')
+                    }
+                    charLimit={freeFormTextCharLimit}
+                  />
+                </dd>
+
                 <dt>{t('notes.extendLcid.oldCostBaseline')}</dt>
-                {lcidExpirationChange.previousCostBaseline ? (
-                  <dd>
-                    <TruncatedText
-                      id="previous-lcid-cost-baseline"
-                      label="less"
-                      closeLabel="more"
-                      text={lcidExpirationChange.previousCostBaseline}
-                      charLimit={freeFormTextCharLimit}
-                    />
-                  </dd>
-                ) : (
-                  <dd>{t('notes.extendLcid.noCostBaseline')}</dd>
-                )}
+                <dd>
+                  <TruncatedText
+                    id="previous-lcid-cost-baseline"
+                    label="less"
+                    closeLabel="more"
+                    text={
+                      lcidExpirationChange.previousCostBaseline ||
+                      t('notes.extendLcid.noCostBaseline')
+                    }
+                    charLimit={freeFormTextCharLimit}
+                  />
+                </dd>
               </dl>
             )}
             {feedback && (

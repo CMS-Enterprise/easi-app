@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
@@ -12,35 +12,12 @@ import {
 } from 'data/businessCase';
 import BusinessCase from 'views/BusinessCase';
 
-jest.mock('@okta/okta-react', () => ({
-  useOktaAuth: () => {
-    return {
-      authState: {
-        isAuthenticated: true
-      },
-      oktaAuth: {
-        getAccessToken: () => Promise.resolve('test-access-token'),
-        getUser: () =>
-          Promise.resolve({
-            name: 'John Doe'
-          })
-      }
-    };
-  }
-}));
-
 window.matchMedia = (): any => ({
   addListener: () => {},
   removeListener: () => {}
 });
 
 window.scrollTo = jest.fn();
-
-const waitForPageLoad = async () => {
-  await waitFor(() => {
-    expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
-  });
-};
 
 const renderPage = (store: any) =>
   render(
@@ -84,14 +61,12 @@ describe('Business case alternative a solution', () => {
 
   it('renders without errors', async () => {
     renderPage(defaultStore);
-    await waitForPageLoad();
 
     expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
   });
 
   it('navigates back a page', async () => {
     renderPage(defaultStore);
-    await waitForPageLoad();
 
     screen.getByRole('button', { name: /back/i }).click();
 
@@ -100,7 +75,6 @@ describe('Business case alternative a solution', () => {
 
   it('adds alternative b and navigates to it', async () => {
     renderPage(defaultStore);
-    await waitForPageLoad();
 
     screen.getByRole('button', { name: /alternative b/i }).click();
 
@@ -109,7 +83,6 @@ describe('Business case alternative a solution', () => {
 
   it('navigates forward to review', async () => {
     renderPage(defaultStore);
-    await waitForPageLoad();
 
     screen.getByRole('button', { name: /next/i }).click();
 
@@ -143,7 +116,6 @@ describe('Business case alternative a solution', () => {
 
     it('hides adding alternative b when it exists already', async () => {
       renderPage(withAlternativeBStore);
-      await waitForPageLoad();
 
       expect(
         screen.queryByRole('button', { name: /alternative b/i })
@@ -152,7 +124,6 @@ describe('Business case alternative a solution', () => {
 
     it('navigates forward to alternative b', async () => {
       renderPage(withAlternativeBStore);
-      await waitForPageLoad();
 
       screen.getByRole('button', { name: /next/i }).click();
 
@@ -184,7 +155,6 @@ describe('Business case alternative a solution', () => {
 
     it('renders validation errors', async () => {
       renderPage(bizCaseFinalStore);
-      await waitForPageLoad();
 
       // Fill one field so we can trigger validation errors
       const titleField = screen.getByRole('textbox', {

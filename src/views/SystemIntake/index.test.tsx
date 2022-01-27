@@ -13,23 +13,6 @@ import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
 import { SystemIntake } from './index';
 
-jest.mock('@okta/okta-react', () => ({
-  useOktaAuth: () => {
-    return {
-      authState: {
-        isAuthenticated: true
-      },
-      oktaAuth: {
-        getAccessToken: () => Promise.resolve('test-access-token'),
-        getUser: () =>
-          Promise.resolve({
-            name: 'John Doe'
-          })
-      }
-    };
-  }
-}));
-
 describe('The System Intake page', () => {
   const INTAKE_ID = 'ccdfdcf5-5085-4521-9f77-fa1ea324502b';
   const intakeQuery = {

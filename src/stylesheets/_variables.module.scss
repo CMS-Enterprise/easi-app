@@ -1,0 +1,10 @@
+$mobile: 480px;
+$tablet: 640px;
+$desktop: 1024px;
+
+// division by 1px removes the unit
+:export {
+    mobile: $mobile / 1px;
+    tablet: $tablet / 1px;
+    desktop: $desktop / 1px;
+}
