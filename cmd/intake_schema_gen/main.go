@@ -75,5 +75,10 @@ func main() {
 		addDefinitionsToRootSchema(rootSchema, jsonschema.Reflect(object), reflect.TypeOf(object).Name())
 	}
 
+	// clear out unnecessary fields on EASIObject definition
+	rootSchema.Definitions["EASIObject"].Properties = nil
+	rootSchema.Definitions["EASIObject"].AdditionalProperties = nil
+	rootSchema.Definitions["EASIObject"].Type = ""
+
 	writeSchemaToFile(rootSchema)
 }
