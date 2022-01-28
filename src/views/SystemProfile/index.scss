@@ -28,6 +28,16 @@
         &__nav-button {
             width: 100%
         }
+
+        &__tag {
+            padding: 5px 10px;
+            display: inline-block;
+            text-transform: inherit;
+            border-radius: 0;
+            font-weight: bold;
+            color: color($theme-color-base-darker);
+            background-color: color($theme-color-base-lighter);
+        }
     }    
 
     .usa-breadcrumb {

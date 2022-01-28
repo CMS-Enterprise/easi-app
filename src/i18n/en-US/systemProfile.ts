@@ -36,6 +36,17 @@ const systemProfile = {
       subheader2: 'Business Owner',
       subheader3: 'Go Live Date',
       subheader4: 'Most recent major change release'
+    },
+    systemDetails: {
+      header: 'System Details',
+      ownership: 'System ownership',
+      usersPerMonth: 'Users per month',
+      access: 'Internal or public access',
+      fismaID: 'FISMA Sytem ID',
+      tagHeader1: 'CMS Programs and Mission Essential Functions',
+      tagHeader2: 'CMS Innovation Center (CMMI) Models',
+      urlsAndLocations: 'URLs and Locations',
+      migrationDate: 'Cloud migration date'
     }
   },
   systemTable: {
