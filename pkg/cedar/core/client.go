@@ -96,8 +96,8 @@ func (c *Client) StartCacheRefresh(ctx context.Context, cacheRefreshTime time.Du
 	ticker := time.NewTicker(cacheRefreshTime)
 	go func() {
 		for {
+			// Wait for the ticker. This will block the current goroutine until the ticker sends a message over the channel
 			<-ticker.C
-			fmt.Println("LETS GET THAT CACHE", time.Now())
 			err := c.populateSystemSummaryCache(ctx)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Failed to refresh CEDAR Core cache", zap.Error(err))
