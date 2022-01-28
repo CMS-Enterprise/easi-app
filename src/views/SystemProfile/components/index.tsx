@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
+
 import SystemHome from './SystemHome';
 
 type sideNavItemProps = {
@@ -14,53 +16,53 @@ interface sideNavProps {
 
 // groupEnd value is used to designate the end of navigation related grouping
 
-const sideNavItems = (id: string): sideNavProps => ({
+const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
   home: {
     groupEnd: true,
-    component: <SystemHome />,
-    route: `/system-profile/${id}/home`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/home`
   },
   details: {
-    component: <SystemHome />,
-    route: `/system-profile/${id}/details`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/details`
   },
   'team-and-contract': {
-    component: <SystemHome />,
-    route: `/system-profile/${id}/team-and-contract`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/team-and-contract`
   },
   'funding-and-budget': {
-    component: <SystemHome />,
-    route: `/system-profile/${id}/funding-and-budget`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/funding-and-budget`
   },
   'tools-and-software': {
     groupEnd: true,
-    component: <SystemHome />,
-    route: `/system-profile/${id}/tools-and-software`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/tools-and-software`
   },
   ato: {
-    component: <SystemHome />,
-    route: `/system-profile/${id}/ato`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/ato`
   },
   'lifecycle-id': {
-    component: <SystemHome />,
-    route: `/system-profile/${id}/lifecycle-id`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/lifecycle-id`
   },
   'section-508': {
     groupEnd: true,
-    component: <SystemHome />,
-    route: `/system-profile/${id}/section-508`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/section-508`
   },
   'sub-systems': {
-    component: <SystemHome />,
-    route: `/system-profile/${id}/sub-systems`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/sub-systems`
   },
   'system-data': {
-    component: <SystemHome />,
-    route: `/system-profile/${id}/system-data`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/system-data`
   },
   documents: {
-    component: <SystemHome />,
-    route: `/system-profile/${id}/documents`
+    component: <SystemHome system={system} />,
+    route: `/system-profile/${system.id}/documents`
   }
 });
 

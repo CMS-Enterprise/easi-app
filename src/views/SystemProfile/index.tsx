@@ -196,17 +196,16 @@ const SystemProfile = () => {
                 {/* Side navigation for single system */}
                 {!isMobile ? (
                   <SideNav
-                    items={Object.keys(sideNavItems(systemInfo.id)).map(
+                    items={Object.keys(sideNavItems(systemInfo)).map(
                       (key: string) => (
                         <NavLink
-                          to={sideNavItems(systemInfo.id)[key].route}
+                          to={sideNavItems(systemInfo)[key].route}
                           key={key}
                           activeClassName="usa-current"
                           className={classnames({
-                            'nav-group-border': sideNavItems(systemInfo.id)[key]
+                            'nav-group-border': sideNavItems(systemInfo)[key]
                               .groupEnd
                           })}
-                          exact
                         >
                           {t(`navigation.${key}`)}
                         </NavLink>
@@ -222,19 +221,17 @@ const SystemProfile = () => {
                       }
                       mobileExpanded={isMobileSideNavExpanded}
                       aria-label="Side navigation"
-                      items={Object.keys(sideNavItems(systemInfo.id)).map(
+                      items={Object.keys(sideNavItems(systemInfo)).map(
                         (key: string) => (
                           <NavLink
-                            to={sideNavItems(systemInfo.id)[key].route}
+                            to={sideNavItems(systemInfo)[key].route}
                             key={key}
                             onClick={() => setIsMobileSideNavExpanded(false)}
                             activeClassName="usa-current"
                             className={classnames({
-                              'nav-group-border': sideNavItems(systemInfo.id)[
-                                key
-                              ].groupEnd
+                              'nav-group-border': sideNavItems(systemInfo)[key]
+                                .groupEnd
                             })}
-                            exact
                           >
                             {t(`navigation.${key}`)}
                           </NavLink>
@@ -245,48 +242,9 @@ const SystemProfile = () => {
                 )}
               </Grid>
 
-              <Grid
-                desktop={{ col: 6 }}
-                className="padding-left-5 padding-right-5"
-              >
+              <Grid desktop={{ col: 9 }}>
                 {/* This renders the selected sidenav central component */}
-                {sideNavItems(systemInfo.id)[subinfo || 'home'].component}
-              </Grid>
-              {/* Point of contact/ miscellaneous info */}
-              <Grid desktop={{ col: 3 }}>
-                <div className="top-divider" />
-                <p>{t('singleSystem.pointOfContact')}</p>
-                <DescriptionTerm
-                  className="system-profile__subheader"
-                  term={systemInfo.businessOwnerOrgComp || ''}
-                />
-                <DescriptionDefinition
-                  definition={t('singleSystem.summary.subheader2')}
-                />
-                <p>
-                  <UswdsReactLink
-                    aria-label={t('singleSystem.sendEmail')}
-                    className="line-height-body-5"
-                    to="/" // TODO: Get link from CEDAR?
-                    variant="external"
-                    target="_blank"
-                  >
-                    {t('singleSystem.sendEmail')}
-                    <span aria-hidden>&nbsp;</span>
-                  </UswdsReactLink>
-                </p>
-                <p>
-                  <UswdsReactLink
-                    aria-label={t('singleSystem.moreContact')}
-                    className="line-height-body-5"
-                    to="/" // TODO: Get link from CEDAR?
-                    variant="external"
-                    target="_blank"
-                  >
-                    {t('singleSystem.moreContact')}
-                    <span aria-hidden>&nbsp;</span>
-                  </UswdsReactLink>
-                </p>
+                {sideNavItems(systemInfo)[subinfo || 'home'].component}
               </Grid>
             </Grid>
           </Grid>

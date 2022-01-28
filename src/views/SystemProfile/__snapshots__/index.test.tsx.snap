@@ -345,75 +345,90 @@ exports[`The making a request page matches snapshot 1`] = `
               </ul>
             </div>
             <div
-              class="desktop:grid-col-6 padding-left-5 padding-right-5"
-              data-testid="grid"
-            >
-              <ul
-                class="usa-card-group"
-                data-testid="CardGroup"
-              >
-                <li
-                  class="usa-card grid-col-12"
-                  data-testid="system-card"
-                >
-                  <div
-                    class="usa-card__container"
-                  >
-                    <div
-                      class="grid-col-12"
-                    />
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div
-              class="desktop:grid-col-3"
+              class="desktop:grid-col-9"
               data-testid="grid"
             >
               <div
-                class="top-divider"
-              />
-              <p>
-                Point of Contact
-              </p>
-              <dt
-                class="text-bold margin-bottom-05 system-profile__subheader"
+                class="grid-container"
+                data-testid="grid"
               >
-                Geraldine Hobbs
-              </dt>
-              <dd
-                class="description-definition margin-0"
-              >
-                Business Owner
-              </dd>
-              <p>
-                <a
-                  class="usa-link usa-link--external line-height-body-5"
-                  href="/"
-                  target="_blank"
+                <div
+                  class="grid-row"
+                  data-testid="grid"
                 >
-                  Send and email
-                  <span
-                    aria-hidden="true"
+                  <div
+                    class="desktop:grid-col-9"
+                    data-testid="grid"
                   >
-                     
-                  </span>
-                </a>
-              </p>
-              <p>
-                <a
-                  class="usa-link usa-link--external line-height-body-5"
-                  href="/"
-                  target="_blank"
-                >
-                  More points of contact
-                  <span
-                    aria-hidden="true"
+                    <ul
+                      class="usa-card-group"
+                      data-testid="CardGroup"
+                    >
+                      <li
+                        class="usa-card grid-col-12"
+                        data-testid="system-card"
+                      >
+                        <div
+                          class="usa-card__container"
+                        >
+                          <div
+                            class="grid-col-12"
+                          />
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div
+                    class="desktop:grid-col-3"
+                    data-testid="grid"
                   >
-                     
-                  </span>
-                </a>
-              </p>
+                    <div
+                      class="top-divider"
+                    />
+                    <p>
+                      Point of Contact
+                    </p>
+                    <dt
+                      class="text-bold margin-bottom-05 system-profile__subheader"
+                    >
+                      Geraldine Hobbs
+                    </dt>
+                    <dd
+                      class="description-definition margin-0"
+                    >
+                      Business Owner
+                    </dd>
+                    <p>
+                      <a
+                        class="usa-link usa-link--external line-height-body-5"
+                        href="/"
+                        target="_blank"
+                      >
+                        Send and email
+                        <span
+                          aria-hidden="true"
+                        >
+                           
+                        </span>
+                      </a>
+                    </p>
+                    <p>
+                      <a
+                        class="usa-link usa-link--external line-height-body-5"
+                        href="/"
+                        target="_blank"
+                      >
+                        More points of contact
+                        <span
+                          aria-hidden="true"
+                        >
+                           
+                        </span>
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
