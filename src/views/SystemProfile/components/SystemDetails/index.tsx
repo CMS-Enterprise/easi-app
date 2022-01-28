@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardGroup, Grid, Tag } from '@trussworks/react-uswds';
-import classnames from 'classnames';
+import { Card, Grid, Tag } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -9,21 +8,20 @@ import {
   DescriptionDefinition,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
-import '../../index.scss';
+import './index.scss';
 
 type SystemDetailsProps = {
-  className?: string;
-  children?: React.ReactNode;
   system: CedarSystemProps;
 };
 
-const SystemDetails = ({ className, children, system }: SystemDetailsProps) => {
+const SystemDetails = ({ system }: SystemDetailsProps) => {
   const { t } = useTranslation('systemProfile');
   return (
-    <Grid className="grid-container">
+    <Grid className="grid-container padding-left-0 padding-right-0">
       <Grid row>
         <Grid desktop={{ col: 9 }} className="padding-right-3">
           <SectionWrapper borderBottom className="padding-bottom-5">
@@ -100,14 +98,57 @@ const SystemDetails = ({ className, children, system }: SystemDetailsProps) => {
               definition={system.businessOwnerOrg || ''}
             />
 
-            <CardGroup className="margin-top-5">
-              <Card
-                data-testid="system-card"
-                className={classnames('grid-col-12', className)}
+            {/* <CardGroup className="margin-top-5"> */}
+            <Card
+              data-testid="system-card"
+              className="grid-col-12 margin-top-5"
+            >
+              <Grid desktop={{ col: 12 }} className="easi-header__basic">
+                <dt>{t('singleSystem.systemDetails.prodEnv')}</dt>
+                <div>
+                  <dd>{t('singleSystem.systemDetails.wedAppFirewall')}</dd>
+                </div>
+              </Grid>
+
+              <Grid
+                desktop={{ col: 12 }}
+                className="padding-left-2 padding-right-2"
               >
-                <div className="grid-col-12">{children}</div>
-              </Card>
-            </CardGroup>
+                <h2 className="link-header margin-top-0 margin-bottom-2">
+                  <UswdsReactLink
+                    className="system-profile__card-link"
+                    to={system.id}
+                  >
+                    ham.cms.gov
+                  </UswdsReactLink>
+                </h2>
+                <Tag className="system-profile__tag margin-bottom-2">
+                  API Endpoint
+                </Tag>
+                <Divider />
+              </Grid>
+              <Grid row>
+                <Grid desktop={{ col: 6 }} className="padding-2">
+                  <DescriptionTerm
+                    term={t('singleSystem.systemDetails.location')}
+                  />
+                  <DescriptionDefinition
+                    className="font-body-md"
+                    definition={system.businessOwnerOrgComp || ''}
+                  />
+                </Grid>
+                <Grid desktop={{ col: 6 }} className="padding-2">
+                  <DescriptionTerm
+                    term={t('singleSystem.systemDetails.cloudProvider')}
+                  />
+                  <DescriptionDefinition
+                    className="font-body-md"
+                    definition={system.businessOwnerOrgComp || ''}
+                  />
+                </Grid>
+              </Grid>
+            </Card>
+            {/* </CardGroup> */}
           </SectionWrapper>
         </Grid>
         {/* Point of contact/ miscellaneous info */}

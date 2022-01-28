@@ -192,7 +192,7 @@ const SystemProfile = () => {
         <SectionWrapper className="margin-top-5 margin-bottom-5">
           <Grid className="grid-container">
             <Grid row>
-              <Grid desktop={{ col: 3 }}>
+              <Grid desktop={{ col: 3 }} className="padding-right-3">
                 {/* Side navigation for single system */}
                 {!isMobile ? (
                   <SideNav

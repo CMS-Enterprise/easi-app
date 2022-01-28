@@ -38,7 +38,16 @@
             color: color($theme-color-base-darker);
             background-color: color($theme-color-base-lighter);
         }
-    }    
+    }
+
+    .link-header {
+        text-underline-offset: 0.25rem;
+    }
+
+    .easi-header__basic {
+        padding: 1rem;
+        padding-bottom: 0
+    }
 
     .usa-breadcrumb {
         background-color: transparent;
@@ -51,6 +60,11 @@
         &__item {
             border: none;
         }
+    }
+
+    .usa-card__container {
+        border-radius: .25rem;
+        margin: 0;
     }
 
     .usa-sidenav__item a:not(.usa-current) {
