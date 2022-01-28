@@ -107,16 +107,19 @@ func (c *Client) StartCacheRefresh(ctx context.Context, cacheRefreshTime time.Du
 }
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
-func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, error) {
+// If tryCache is true, it will try and retrieve the data from the cache first and make an API call if the cache is empty
+func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarSystem{}, nil
 	}
 
 	// Check and use cache before making API call
-	cachedSystems, found := c.cache.Get(allSystemsCacheKey)
-	if found {
-		return cachedSystems.([]*models.CedarSystem), nil
+	if tryCache {
+		cachedSystems, found := c.cache.Get(allSystemsCacheKey)
+		if found {
+			return cachedSystems.([]*models.CedarSystem), nil
+		}
 	}
 
 	// No item in the cache - make the API call as usual
@@ -167,8 +170,8 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 		return nil
 	}
 
-	// Fallback to main API
-	systemSummary, err := c.GetSystemSummary(ctx)
+	// Get data from API - don't use cache to populate cache!
+	systemSummary, err := c.GetSystemSummary(ctx, false)
 	if err != nil {
 		return err
 	}
