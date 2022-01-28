@@ -102,6 +102,8 @@ const AccessibilityDocumentsList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Here is where the data can be modified and used appropriately for sorting.
+  // Modifed data can then be configured with JSX components in column cell configuration
   const data = useMemo(() => {
     const tableData = documents.map((singleDoc: Document) => {
       const uploadedAt = singleDoc.uploadedAt
