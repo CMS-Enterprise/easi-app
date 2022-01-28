@@ -83,17 +83,17 @@ const RequestRepository = () => {
     Header: t('intake:fields.adminLead'),
     accessor: 'adminLead',
     Cell: ({ value }: any) => {
-      if (value === t('governanceReviewTeam:adminLeads.notAssigned')) {
-        return (
-          <>
-            {/* TODO: should probably make this a button that opens up the assign admin
-                  lead automatically. Similar to the Dates functionality */}
-            <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
-            {t('governanceReviewTeam:adminLeads.notAssigned')}
-          </>
-        );
+      if (value) {
+        return value;
       }
-      return value;
+      return (
+        <>
+          {/* TODO: should probably make this a button that opens up the assign admin
+                lead automatically. Similar to the Dates functionality */}
+          <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
+          {t('governanceReviewTeam:adminLeads.notAssigned')}
+        </>
+      );
     }
   };
 
@@ -355,10 +355,13 @@ const RequestRepository = () => {
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
+                  style={{
+                    minWidth: index === 0 ? '175px' : '150px'
+                  }}
                 >
                   <button
                     className="usa-button usa-button--unstyled"
@@ -366,12 +369,7 @@ const RequestRepository = () => {
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    {column.isSorted && (
-                      <span className={getHeaderSortIcon(column)} />
-                    )}
-                    {!column.isSorted && (
-                      <span className="margin-left-1 fa fa-sort caret" />
-                    )}
+                    <span className={getHeaderSortIcon(column)} />
                   </button>
                 </th>
               ))}

@@ -31,10 +31,6 @@ const tableMap = (tableData: SystemIntakeForm[], t: TFunction) => {
       intake.requester.component
     )}`;
 
-    const adminLead = intake.adminLead
-      ? intake.adminLead
-      : t('governanceReviewTeam:adminLeads.notAssigned');
-
     const grtDate = intake.grtDate
       ? intake.grtDate
       : t('requestRepository.table.addDate');
@@ -47,7 +43,6 @@ const tableMap = (tableData: SystemIntakeForm[], t: TFunction) => {
     return {
       ...intake,
       requester,
-      adminLead,
       grtDate,
       grbDate,
       status: statusTranslation,

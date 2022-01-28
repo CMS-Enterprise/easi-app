@@ -188,12 +188,7 @@ const AccessibilityDocumentsList = ({
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    {column.isSorted && (
-                      <span className={getHeaderSortIcon(column)} />
-                    )}
-                    {!column.isSorted && (
-                      <span className="margin-left-1 fa fa-sort caret" />
-                    )}
+                    <span className={getHeaderSortIcon(column)} />
                   </button>
                 </th>
               ))}

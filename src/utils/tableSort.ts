@@ -24,14 +24,14 @@ export const getColumnSortStatus = <T extends {}>(
 export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
   const marginClassName = 'margin-left-1';
   if (!column.isSorted) {
-    return classnames(marginClassName, 'fa fa-sort caret');
+    return classnames(marginClassName, 'fa fa-sort caret position-absolute');
   }
 
   if (column.isSortedDesc) {
-    return classnames(marginClassName, 'fa fa-caret-down');
+    return classnames(marginClassName, 'fa fa-caret-down position-absolute');
   }
 
-  return classnames(marginClassName, 'fa fa-caret-up');
+  return classnames(marginClassName, 'fa fa-caret-up position-absolute');
 };
 
 // Description beneath tables for sorting status

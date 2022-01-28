@@ -49,6 +49,7 @@ const Table = () => {
           }
           return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
         },
+        width: '220px',
         maxWidth: 350
       },
       {
@@ -93,7 +94,7 @@ const Table = () => {
         Header: t('requestsTable.headers.nextMeetingDate'),
         accessor: 'nextMeetingDate',
         className: 'next-meeting-date',
-        width: '180px'
+        width: '220px'
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -156,12 +157,15 @@ const Table = () => {
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps()}
                   aria-sort={getColumnSortStatus(column)}
                   className="table-header"
                   scope="col"
+                  style={{
+                    minWidth: index === 4 ? '250px' : '140px'
+                  }}
                 >
                   <button
                     className="usa-button usa-button--unstyled"
@@ -169,12 +173,7 @@ const Table = () => {
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    {column.isSorted && (
-                      <span className={getHeaderSortIcon(column)} />
-                    )}
-                    {!column.isSorted && (
-                      <span className="margin-left-1 fa fa-sort caret" />
-                    )}
+                    <span className={getHeaderSortIcon(column)} />
                   </button>
                 </th>
               ))}
