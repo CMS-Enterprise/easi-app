@@ -96,11 +96,6 @@ export const sortColumnValues = (
     return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
   }
 
-  // If both items are DateTimes, convert to Number and compare
-  if (rowOneElem instanceof DateTime && rowTwoElem instanceof DateTime) {
-    return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
-  }
-
-  // Default case
+  // Default case if both are number/datetime
   return rowOneElem > rowTwoElem ? 1 : -1;
 };
