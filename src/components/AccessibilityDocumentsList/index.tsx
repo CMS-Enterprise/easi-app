@@ -112,13 +112,13 @@ const AccessibilityDocumentsList = ({
 
       let translatedStatus;
       switch (singleDoc.status) {
-        case 'PENDING':
+        case AccessibilityRequestDocumentStatus.PENDING:
           translatedStatus = t('documentTable.status.pending');
           break;
-        case 'AVAILABLE':
+        case AccessibilityRequestDocumentStatus.AVAILABLE:
           translatedStatus = t('documentTable.view');
           break;
-        case 'UNAVAILABLE':
+        case AccessibilityRequestDocumentStatus.UNAVAILABLE:
           translatedStatus = t('documentTable.status.unavailable');
           break;
         default:
