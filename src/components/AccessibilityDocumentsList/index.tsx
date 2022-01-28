@@ -12,7 +12,7 @@ import {
 } from 'types/graphql-global-types';
 import { translateDocumentType } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
-import { getHeaderSortIcon } from 'utils/tableSort';
+import { getHeaderSortIcon, sortColumnValues } from 'utils/tableSort';
 
 type Document = {
   id: string;
@@ -143,6 +143,14 @@ const AccessibilityDocumentsList = ({
   } = useTable(
     {
       columns,
+      sortTypes: {
+        alphanumeric: (rowOne, rowTwo, columnName) => {
+          return sortColumnValues(
+            rowOne.values[columnName],
+            rowTwo.values[columnName]
+          );
+        }
+      },
       data,
       documents,
       initialState: {

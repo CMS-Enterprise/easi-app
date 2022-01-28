@@ -135,9 +135,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       data,
       sortTypes: {
         alphanumeric: (rowOne, rowTwo, columnName) => {
-          const rowOneElem = rowOne.values[columnName];
-          const rowTwoElem = rowTwo.values[columnName];
-          return sortColumnValues(rowOneElem, rowTwoElem);
+          return sortColumnValues(
+            rowOne.values[columnName],
+            rowTwo.values[columnName]
+          );
         }
       },
       requests,

@@ -248,12 +248,11 @@ const RequestRepository = () => {
     {
       columns,
       sortTypes: {
-        // TODO: This may not work if another column is added that is not a string or date.
-        // Sort method changes depending on if item is a string or object
         alphanumeric: (rowOne, rowTwo, columnName) => {
-          const rowOneElem = rowOne.values[columnName];
-          const rowTwoElem = rowTwo.values[columnName];
-          return sortColumnValues(rowOneElem, rowTwoElem);
+          return sortColumnValues(
+            rowOne.values[columnName],
+            rowTwo.values[columnName]
+          );
         }
       },
       data,

@@ -2,8 +2,8 @@ import { HeaderGroup } from 'react-table';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
-type sortColumnProps = null | string | number | Date;
-type columnStatusProps = 'descending' | 'ascending' | 'none';
+export type sortColumnProps = null | string | number | DateTime;
+export type columnStatusProps = 'descending' | 'ascending' | 'none';
 
 // Populates 'aria-sort' on table elements based on sort status
 export const getColumnSortStatus = <T extends {}>(
@@ -65,12 +65,30 @@ export const sortColumnValues = (
     return -1;
   }
 
+  // If string and number, sort out number first
+  if (typeof rowOneElem === 'number' && typeof rowTwoElem === 'string') {
+    return 1;
+  }
+
+  // If string and number, sort out number first
+  if (typeof rowOneElem === 'string' && typeof rowTwoElem === 'number') {
+    return -1;
+  }
+
   // If string/number and datetime, sort out datetimes
   if (
     rowOneElem instanceof DateTime &&
     (typeof rowTwoElem === 'string' || typeof rowTwoElem === 'number')
   ) {
     return 1;
+  }
+
+  // If string/number and datetime, sort out datetimes
+  if (
+    rowTwoElem instanceof DateTime &&
+    (typeof rowOneElem === 'string' || typeof rowOneElem === 'number')
+  ) {
+    return -1;
   }
 
   // If both items are strings, enforce capitalization (temporarily) and then compare
@@ -83,6 +101,6 @@ export const sortColumnValues = (
     return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
   }
 
-  // If items are different types and/or not DateTime, return bare comparison
+  // Default case
   return rowOneElem > rowTwoElem ? 1 : -1;
 };
