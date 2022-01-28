@@ -43,7 +43,7 @@ describe('tableSortUtil', () => {
         isSortedDesc: false
       } as HeaderGroup;
       expect(getHeaderSortIcon(column)).toEqual(
-        'margin-left-1 fa fa-sort caret'
+        'margin-left-1 fa fa-sort caret position-absolute'
       );
     });
 
@@ -53,7 +53,7 @@ describe('tableSortUtil', () => {
         isSortedDesc: true
       } as HeaderGroup;
       expect(getHeaderSortIcon(column)).toEqual(
-        'margin-left-1 fa fa-caret-down'
+        'margin-left-1 fa fa-caret-down position-absolute'
       );
     });
 
@@ -62,7 +62,9 @@ describe('tableSortUtil', () => {
         isSorted: true,
         isSortedDesc: false
       } as HeaderGroup;
-      expect(getHeaderSortIcon(column)).toEqual('margin-left-1 fa fa-caret-up');
+      expect(getHeaderSortIcon(column)).toEqual(
+        'margin-left-1 fa fa-caret-up position-absolute'
+      );
     });
   });
 

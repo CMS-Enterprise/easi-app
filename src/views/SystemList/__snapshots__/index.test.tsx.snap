@@ -159,7 +159,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   data-testid="bookmark-icon"
                 />
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
@@ -179,7 +179,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 Acronym
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
@@ -199,7 +199,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 System Name
                 <span
-                  class="margin-left-1 fa fa-caret-up"
+                  class="margin-left-1 fa fa-caret-up position-absolute"
                 />
               </button>
             </th>
@@ -219,7 +219,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 CMS Component
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
@@ -239,7 +239,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 ATO Status
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
