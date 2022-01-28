@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/99designs/gqlgen v0.14.0
+	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
 	github.com/aws/aws-sdk-go v1.42.35
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.20.1
