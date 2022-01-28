@@ -170,12 +170,7 @@ const Table = () => {
                   >
                     {column.render('Header')}
                     {column.isSorted && (
-                      <span
-                        className={getHeaderSortIcon(
-                          column.isSorted,
-                          column.isSortedDesc
-                        )}
-                      />
+                      <span className={getHeaderSortIcon(column)} />
                     )}
                     {!column.isSorted && (
                       <span className="margin-left-1 fa fa-sort caret" />

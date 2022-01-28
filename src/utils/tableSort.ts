@@ -21,16 +21,13 @@ export const getColumnSortStatus = <T extends {}>(
 
 // Returns header sort icon class based on sort status
 // TODO: convert to Material Icon
-export const getHeaderSortIcon = (
-  isSorted: boolean,
-  isSortedDesc: boolean | undefined
-) => {
+export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
   const marginClassName = 'margin-left-1';
-  if (!isSorted) {
+  if (!column.isSorted) {
     return classnames(marginClassName, 'fa fa-sort caret');
   }
 
-  if (isSortedDesc) {
+  if (column.isSortedDesc) {
     return classnames(marginClassName, 'fa fa-caret-down');
   }
 
