@@ -27,6 +27,12 @@ export interface GetAdminNotesAndActions_systemIntake_actions_lcidExpirationChan
   __typename: "SystemIntakeLCIDExpirationChange";
   previousDate: Time;
   newDate: Time;
+  previousScope: string | null;
+  newScope: string | null;
+  previousNextSteps: string | null;
+  newNextSteps: string | null;
+  previousCostBaseline: string | null;
+  newCostBaseline: string | null;
 }
 
 export interface GetAdminNotesAndActions_systemIntake_actions_actor {

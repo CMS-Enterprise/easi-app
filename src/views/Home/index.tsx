@@ -5,12 +5,9 @@ import { withRouter } from 'react-router-dom';
 import { Alert } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import Footer from 'components/Footer';
-import Header from 'components/Header';
 import LinkCard from 'components/LinkCard';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
@@ -100,13 +97,7 @@ const Home = () => {
     );
   };
 
-  return (
-    <PageWrapper>
-      <Header />
-      <MainContent className="margin-bottom-5">{renderView()}</MainContent>
-      <Footer />
-    </PageWrapper>
-  );
+  return <MainContent className="margin-bottom-5">{renderView()}</MainContent>;
 };
 
 export default withRouter(Home);

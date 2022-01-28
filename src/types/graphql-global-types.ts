@@ -192,6 +192,9 @@ export interface CreateCedarSystemBookmarkInput {
 export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID;
   expirationDate?: Time | null;
+  nextSteps?: string | null;
+  scope: string;
+  costBaseline?: string | null;
 }
 
 /**

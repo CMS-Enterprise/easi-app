@@ -17,9 +17,8 @@ require (
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jmoiron/sqlx v1.2.0
-	github.com/lestrrat-go/jwx v1.0.2 // indirect
 	github.com/lib/pq v1.10.3
-	github.com/okta/okta-jwt-verifier-golang v0.1.0
+	github.com/okta/okta-jwt-verifier-golang v1.1.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/pquerna/otp v1.3.0
 	github.com/spf13/cobra v1.3.0

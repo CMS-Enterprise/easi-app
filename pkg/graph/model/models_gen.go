@@ -137,6 +137,9 @@ type CreateCedarSystemBookmarkPayload struct {
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
 	ID             uuid.UUID  `json:"id"`
 	ExpirationDate *time.Time `json:"expirationDate"`
+	NextSteps      *string    `json:"nextSteps"`
+	Scope          string     `json:"scope"`
+	CostBaseline   *string    `json:"costBaseline"`
 }
 
 // Payload data for extending a system request's lifecycle ID
@@ -412,8 +415,14 @@ type SystemIntakeISSOInput struct {
 // Contains the data needed to change the expiration date of a system request's
 // lifecycle ID
 type SystemIntakeLCIDExpirationChange struct {
-	PreviousDate time.Time `json:"previousDate"`
-	NewDate      time.Time `json:"newDate"`
+	PreviousDate         time.Time `json:"previousDate"`
+	NewDate              time.Time `json:"newDate"`
+	PreviousScope        *string   `json:"previousScope"`
+	NewScope             *string   `json:"newScope"`
+	PreviousNextSteps    *string   `json:"previousNextSteps"`
+	NewNextSteps         *string   `json:"newNextSteps"`
+	PreviousCostBaseline *string   `json:"previousCostBaseline"`
+	NewCostBaseline      *string   `json:"newCostBaseline"`
 }
 
 // A note added to a system request

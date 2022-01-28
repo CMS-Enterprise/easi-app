@@ -126,6 +126,36 @@ type CedarDataCenter {
 }
 
 """
+The possible types of assignees for CedarRoles
+"""
+enum CedarAssigneeType {
+  PERSON
+  ORGANIZATION
+}
+
+"""
+CedarRole represents a role assigned to a person or organization for a system; this information is returned from the CEDAR Core API
+"""
+type CedarRole {
+  application: String!
+  objectID: String!
+  roleTypeID: String!
+  assigneeType: CedarAssigneeType
+  assigneeUsername: String
+  assigneeEmail: String
+  assigneeOrgID: String
+  assigneeOrgName: String
+  assigneeFirstName: String
+  assigneeLastName: String
+  assigneePhone: String
+  assigneeDesc: String
+  roleTypeName: String
+  roleTypeDesc: String
+  roleID: String
+  objectType: String
+}
+
+"""
 An accessibility request represents a system that needs to go through
 the 508 process
 """
@@ -911,6 +941,9 @@ Input data for extending a system request's lifecycle ID
 input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
+  nextSteps: String
+  scope: String!
+  costBaseline: String
 }
 
 """
@@ -966,6 +999,12 @@ lifecycle ID
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
+  previousScope: String
+  newScope: String
+  previousNextSteps: String
+  newNextSteps: String
+  previousCostBaseline: String
+  newCostBaseline: String
  }
 
 """
@@ -1224,6 +1263,7 @@ type Query {
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
+  roles(systemId: String!, roleTypeID: String): [CedarRole!]!
 }
 
 """

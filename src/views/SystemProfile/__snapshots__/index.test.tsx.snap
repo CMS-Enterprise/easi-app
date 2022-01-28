@@ -1,0 +1,439 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The making a request page matches snapshot 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <div
+      id="system-profile"
+    >
+      <div
+        class="usa-summary-box system-profile__summary-box"
+        data-testid="summary-box"
+      >
+        <div
+          class="usa-summary-box__body"
+        >
+          <h3
+            class="usa-summary-box__heading"
+          />
+          <div
+            class="usa-summary-box__text"
+          >
+            <div
+              class="grid-container"
+              data-testid="grid"
+            >
+              <nav
+                aria-label="Breadcrumbs"
+                class="usa-breadcrumb usa-breadcrumb--wrap"
+              >
+                <ol
+                  class="usa-breadcrumb__list"
+                >
+                  <li
+                    class="usa-breadcrumb__list-item"
+                  >
+                    <span>
+                      ← 
+                    </span>
+                    <a
+                      class="usa-breadcrumb__link"
+                      href="/system-profile"
+                    >
+                      <span>
+                        Back to All Systems
+                      </span>
+                    </a>
+                  </li>
+                </ol>
+              </nav>
+              <h1
+                aria-live="polite"
+                class="easi-h1 margin-top-2"
+                tabindex="-1"
+              >
+                <div
+                  class="bookmark__title"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="fa fa-bookmark bookmark__icon fa-1x margin-right-1"
+                    data-testid="bookmark-icon"
+                  />
+                   
+                  <span>
+                    Medicare Beneficiary Contact Center 
+                  </span>
+                  <span
+                    class="system-profile__acronym"
+                  >
+                    (BBC)
+                  </span>
+                </div>
+                <div
+                  class="system-profile__summary-body"
+                >
+                  <div
+                    class="easi-collapsable-link"
+                  >
+                    <div
+                      class="easi-collapsable-link__content-no-bar"
+                      id="single-system-profile"
+                    >
+                      <dd
+                        class="description-definition margin-0 margin-bottom-2"
+                      >
+                        The Beneficiary Contact Center (BCC) provides an unbiased 
+    central point of contact for Medicare Beneficiaries and their caregivers with 
+    scripted responses on coverage information, health care choices, claims, and 
+    preventive services.The Balanced Budget Act of 1997 mandated a toll free 
+    line for beneficiaries. CMS created a 1-800-Medicare
+                      </dd>
+                      <a
+                        class="usa-link usa-link--external line-height-body-5"
+                        href="/"
+                        target="_blank"
+                      >
+                        View Medicare Beneficiary Contact Center
+                        <span
+                          aria-hidden="true"
+                        >
+                           
+                        </span>
+                      </a>
+                      <div
+                        class="grid-row margin-top-3"
+                        data-testid="grid"
+                      >
+                        <div
+                          class="desktop:grid-col-6 margin-bottom-2"
+                          data-testid="grid"
+                        >
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            CMS Component
+                          </dd>
+                          <dt
+                            class="text-bold margin-bottom-05 system-profile__subheader"
+                          >
+                            Division of Call Center Systems
+                          </dt>
+                        </div>
+                        <div
+                          class="desktop:grid-col-6 margin-bottom-2"
+                          data-testid="grid"
+                        >
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            Business Owner
+                          </dd>
+                          <dt
+                            class="text-bold margin-bottom-05 system-profile__subheader"
+                          >
+                            Geraldine Hobbs
+                          </dt>
+                        </div>
+                        <div
+                          class="desktop:grid-col-6 margin-bottom-2"
+                          data-testid="grid"
+                        >
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            Go Live Date
+                          </dd>
+                          <dt
+                            class="text-bold margin-bottom-05 system-profile__subheader"
+                          >
+                            Jan 6 2022
+                          </dt>
+                        </div>
+                        <div
+                          class="desktop:grid-col-6 margin-bottom-2"
+                          data-testid="grid"
+                        >
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            Most recent major change release
+                          </dd>
+                          <dt
+                            class="text-bold margin-bottom-05 system-profile__subheader"
+                          >
+                            326-9-0
+                          </dt>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      aria-controls="single-system-profile"
+                      aria-expanded="true"
+                      class="usa-button usa-button--unstyled text-bold margin-top-3"
+                      data-testid="collapsable-link"
+                      type="button"
+                    >
+                      <span
+                        class="fa easi-collapsable-link__square easi-collapsable-link__eye-icon fa-eye-slash"
+                      />
+                      Hide system summary
+                    </button>
+                  </div>
+                </div>
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid-container system-profile__nav"
+      >
+        <div
+          class="usa-overlay"
+        />
+        <button
+          class="usa-menu-btn easi-header__basic  system-profile__nav-button"
+          type="button"
+        >
+          <h3
+            class="padding-left-1"
+          >
+            Tools and Software
+          </h3>
+          <span
+            class="fa fa-bars"
+          />
+        </button>
+      </div>
+      <div
+        class="easi-section margin-top-5 margin-bottom-5"
+        data-testid="section-wrapper"
+      >
+        <div
+          class="grid-container"
+          data-testid="grid"
+        >
+          <div
+            class="grid-row"
+            data-testid="grid"
+          >
+            <div
+              class="desktop:grid-col-3"
+              data-testid="grid"
+            >
+              <ul
+                class="usa-sidenav"
+                data-testid="sidenav"
+              >
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class="nav-group-border"
+                    href="/system-profile/326-9-0/home"
+                  >
+                    System Home
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/system-profile/326-9-0/details"
+                  >
+                    System Details
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/system-profile/326-9-0/team-and-contract"
+                  >
+                    Team and Contract
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/system-profile/326-9-0/funding-and-budget"
+                  >
+                    Funding and Budget
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    aria-current="page"
+                    class="nav-group-border usa-current"
+                    href="/system-profile/326-9-0/tools-and-software"
+                  >
+                    Tools and Software
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/system-profile/326-9-0/ato"
+                  >
+                    ATO
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/system-profile/326-9-0/lifecycle-id"
+                  >
+                    Lifecyle ID
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class="nav-group-border"
+                    href="/system-profile/326-9-0/section-508"
+                  >
+                    Section 508
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/system-profile/326-9-0/sub-systems"
+                  >
+                    Sub-systems
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/system-profile/326-9-0/system-data"
+                  >
+                    System Data
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/system-profile/326-9-0/documents"
+                  >
+                    Documents
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="desktop:grid-col-9"
+              data-testid="grid"
+            >
+              <div
+                class="grid-container"
+                data-testid="grid"
+              >
+                <div
+                  class="grid-row"
+                  data-testid="grid"
+                >
+                  <div
+                    class="desktop:grid-col-9"
+                    data-testid="grid"
+                  >
+                    <ul
+                      class="usa-card-group"
+                      data-testid="CardGroup"
+                    >
+                      <li
+                        class="usa-card grid-col-12"
+                        data-testid="system-card"
+                      >
+                        <div
+                          class="usa-card__container"
+                        >
+                          <div
+                            class="grid-col-12"
+                          />
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div
+                    class="desktop:grid-col-3"
+                    data-testid="grid"
+                  >
+                    <div
+                      class="top-divider"
+                    />
+                    <p>
+                      Point of Contact
+                    </p>
+                    <dt
+                      class="text-bold margin-bottom-05 system-profile__subheader"
+                    >
+                      Geraldine Hobbs
+                    </dt>
+                    <dd
+                      class="description-definition margin-0"
+                    >
+                      Business Owner
+                    </dd>
+                    <p>
+                      <a
+                        class="usa-link usa-link--external line-height-body-5"
+                        href="/"
+                        target="_blank"
+                      >
+                        Send and email
+                        <span
+                          aria-hidden="true"
+                        >
+                           
+                        </span>
+                      </a>
+                    </p>
+                    <p>
+                      <a
+                        class="usa-link usa-link--external line-height-body-5"
+                        href="/"
+                        target="_blank"
+                      >
+                        More points of contact
+                        <span
+                          aria-hidden="true"
+                        >
+                           
+                        </span>
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;

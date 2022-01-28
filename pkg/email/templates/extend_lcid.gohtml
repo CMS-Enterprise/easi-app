@@ -1,2 +1,9 @@
-<p>The expiration date of the Lifecycle ID for {{.RequestName}} is extended to {{.NewExpiresAt}}</p>
+<p>The Lifecycle ID for {{.RequestName}} has been extended</p>
+<p>Expiration Date: {{.NewExpiresAt}}</p>
+<p>Scope: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.NewScope}}</pre></p>
+{{if .NewNextSteps}}<p>Next Steps: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.NewNextSteps}}</pre></p>
+{{end}}
+{{if .NewCostBaseline}}<p>Cost Baseline: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.NewCostBaseline}}</pre></p>
+{{end}}
+
 <a href="{{.DecisionLink}}">View details in EASi</a>

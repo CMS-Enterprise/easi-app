@@ -17,7 +17,7 @@ const action = {
     sendEmail: 'Send email',
     guideReceivedClose: 'Decomission guide received. Close the request',
     notRespondingClose: 'Project team not responding. Close the request',
-    extendLifecycleID: 'Extend Lifecycle ID expiration date'
+    extendLifecycleID: 'Extend Lifecycle ID'
   },
   issueLCID: {
     backLink: 'Change',
@@ -55,7 +55,7 @@ const action = {
     back: 'Change',
     heading: 'Actions on request',
     subheading: 'How to proceed?',
-    action: 'Extend Lifecycle ID expiration date',
+    action: 'Extend Lifecycle ID',
     currentLcid: 'Lifecycle ID',
     currentLcidExpiration: 'Current expiration date',
     expirationDate: {
@@ -65,9 +65,13 @@ const action = {
       day: 'Day',
       year: 'Year'
     },
+    currentScope: 'Current Scope',
+    currentNextSteps: 'Current Next Steps',
+    currentCostBaseline: 'Current Project Cost Baseline (Optional)',
+    noCostBaseline: 'There is no Cost Baseline associated with this LCID',
     submissionInfo:
       'An email will automatically be sent to the Business Owner letting them know of the new expiration date.',
-    submit: 'Extend Lifecycle ID expiration date'
+    submit: 'Extend Lifecycle ID'
   },
   rejectIntake: {
     backLink: 'Change',

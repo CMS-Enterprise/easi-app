@@ -239,6 +239,64 @@ describe('Governance Review Team', () => {
     cy.get('#ExtendLifecycleId-NewExpirationYear')
       .type('2028')
       .should('have.value', '2028');
+
+    cy.get('#ExtendLifecycleIdForm-Scope')
+      .type('Scope')
+      .should('have.value', 'Scope');
+
+    cy.get('#ExtendLifecycleIdForm-NextSteps')
+      .type('Next Steps')
+      .should('have.value', 'Next Steps');
+
+    cy.get('#ExtendLifecycleIdForm-CostBaseline')
+      .type('Cost Baseline')
+      .should('have.value', 'Cost Baseline');
+
+    cy.get('button[type="submit"]').click();
+
+    cy.wait('@getAdminNotesAndActions');
+    cy.get('h1').contains('Admin team notes');
+  });
+
+  it('can extend a Lifecycle ID with no Cost Baseline', () => {
+    cy.intercept('GET', '/api/v1/system_intakes?status=closed').as(
+      'getClosedRequests'
+    );
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetAdminNotesAndActions') {
+        req.alias = 'getAdminNotesAndActions';
+      }
+    });
+
+    cy.get('button').contains('Closed Requests').click();
+
+    cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
+    cy.contains('a', 'With LCID Issued').should('be.visible').click();
+
+    cy.contains('a', 'Actions').should('be.visible').click();
+
+    cy.get('#extend-lcid').check({ force: true }).should('be.checked');
+    cy.get('button[type="submit"]').click();
+
+    cy.get('#ExtendLifecycleId-NewExpirationMonth')
+      .type('08')
+      .should('have.value', '08');
+    cy.get('#ExtendLifecycleId-NewExpirationDay')
+      .type('31')
+      .should('have.value', '31');
+    cy.get('#ExtendLifecycleId-NewExpirationYear')
+      .type('2029')
+      .should('have.value', '2029');
+
+    cy.get('#ExtendLifecycleIdForm-Scope')
+      .type('Scope')
+      .should('have.value', 'Scope');
+
+    cy.get('#ExtendLifecycleIdForm-NextSteps')
+      .type('Next Steps')
+      .should('have.value', 'Next Steps');
+
     cy.get('button[type="submit"]').click();
 
     cy.wait('@getAdminNotesAndActions');
