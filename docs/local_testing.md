@@ -5,7 +5,7 @@ Run all tests other than Cypress in the project using `scripts/dev test`.
 ## Server tests
 
 - Run `scripts/dev test:go` to run all local-only server-side tests. This requires the database to be running first. Use `scripts/dev up:backend` to start it.
-- Run `scripts/dev test:go:only [path to package folder]` (e.g. `scripts/dev test:go:only "./pkg/cedar/intake`) to run server-side tests for a specific folder. Depending on the tests being run, this may require the database to be running, as above.
+- Run `scripts/dev test:go:only [full package name]` (e.g. `scripts/dev test:go:only "github.com/cmsgov/easi-app/pkg/cedar/core"`) to run server-side tests for a specific folder. Depending on the tests being run, this may require the database to be running, as above.
 - Run `scripts/dev test:go:long` to run all server-side tests, including ones that contact external services.
 
 ## JS Tests

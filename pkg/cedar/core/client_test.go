@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/guregu/null"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
@@ -52,4 +53,50 @@ func (s ClientTestSuite) TestClient() {
 		blankSummary := models.CedarSystem{}
 		s.Equal(*resp, blankSummary)
 	})
+	s.Run("\"person\" decodes to correct role assignee type", func() {
+		enabledLdClient, err := enabledLdClient()
+		s.NoError(err)
+		c := NewClient("fake", "fake", enabledLdClient)
+
+		c.sdk = newMockSdkForRoleQueries("person")
+
+		roles, err := c.GetRolesBySystem(ctx, "fakeSystemID", null.StringFromPtr(nil))
+		s.NoError(err)
+		s.Equal(models.PersonAssignee, *roles[0].AssigneeType)
+	})
+	s.Run("\"organization\" decodes to correct role assignee type", func() {
+		enabledLdClient, err := enabledLdClient()
+		s.NoError(err)
+		c := NewClient("fake", "fake", enabledLdClient)
+
+		c.sdk = newMockSdkForRoleQueries("organization")
+
+		roles, err := c.GetRolesBySystem(ctx, "fakeSystemID", null.StringFromPtr(nil))
+		s.NoError(err)
+		s.Equal(models.OrganizationAssignee, *roles[0].AssigneeType)
+	})
+	s.Run("Empty assignee type decodes to null assignee type", func() {
+		enabledLdClient, err := enabledLdClient()
+		s.NoError(err)
+		c := NewClient("fake", "fake", enabledLdClient)
+
+		c.sdk = newMockSdkForRoleQueries("")
+
+		roles, err := c.GetRolesBySystem(ctx, "fakeSystemID", null.StringFromPtr(nil))
+		s.NoError(err)
+		s.Nil(roles[0].AssigneeType)
+	})
+	s.Run("Invalid value for assignee type causes role to be skipped when decoding", func() {
+		enabledLdClient, err := enabledLdClient()
+		s.NoError(err)
+		c := NewClient("fake", "fake", enabledLdClient)
+
+		c.sdk = newMockSdkForRoleQueries("INVALID VALUE")
+
+		roles, err := c.GetRolesBySystem(ctx, "fakeSystemID", null.StringFromPtr(nil))
+		s.NoError(err)
+		blankRoles := []*models.CedarRole{}
+		s.Equal(blankRoles, roles)
+	})
+
 }

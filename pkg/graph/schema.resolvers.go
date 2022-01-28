@@ -365,6 +365,54 @@ func (r *cedarDeploymentResolver) WanType(ctx context.Context, obj *models.Cedar
 	return obj.WanType.Ptr(), nil
 }
 
+func (r *cedarRoleResolver) AssigneeUsername(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.AssigneeUsername.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) AssigneeEmail(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.AssigneeEmail.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) AssigneeOrgID(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.AssigneeOrgID.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) AssigneeOrgName(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.AssigneeOrgName.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) AssigneeFirstName(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.AssigneeFirstName.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) AssigneeLastName(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.AssigneeLastName.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) AssigneePhone(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.AssigneePhone.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) AssigneeDesc(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.AssigneeDesc.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) RoleTypeName(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.RoleTypeName.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) RoleTypeDesc(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.RoleTypeDesc.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) RoleID(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.RoleID.Ptr(), nil
+}
+
+func (r *cedarRoleResolver) ObjectType(ctx context.Context, obj *models.CedarRole) (*string, error) {
+	return obj.ObjectType.Ptr(), nil
+}
+
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
@@ -1390,6 +1438,14 @@ func (r *queryResolver) Deployments(ctx context.Context, systemID string, deploy
 	return cedarDeployments, nil
 }
 
+func (r *queryResolver) Roles(ctx context.Context, systemID string, roleTypeID *string) ([]*models.CedarRole, error) {
+	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, systemID, null.StringFromPtr(roleTypeID))
+	if err != nil {
+		return nil, err
+	}
+	return cedarRoles, nil
+}
+
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
 	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
 	if actionsErr != nil {
@@ -1728,6 +1784,9 @@ func (r *Resolver) CedarDeployment() generated.CedarDeploymentResolver {
 	return &cedarDeploymentResolver{r}
 }
 
+// CedarRole returns generated.CedarRoleResolver implementation.
+func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleResolver{r} }
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -1743,6 +1802,7 @@ type accessibilityRequestNoteResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
 type cedarDataCenterResolver struct{ *Resolver }
 type cedarDeploymentResolver struct{ *Resolver }
+type cedarRoleResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
