@@ -50,7 +50,7 @@ func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Cli
 		return result
 	}
 
-	c := cache.New(5*time.Minute, 10*time.Minute)
+	c := cache.New(-1, -1) // -1, -1 means no expiration, no cleanup. This is all handled by the Ticker.
 
 	hc := http.DefaultClient
 
@@ -83,6 +83,29 @@ type Client struct {
 	cache            *cache.Cache
 }
 
+// StartCacheRefresh does the following two things
+// 1. Immediately attempts to populate the cache with current System Summary response data
+// 2. Starts a goroutine that will periodically refresh the cache with new data, based on cacheRefreshTime
+//
+// This function returns no errors, and only logs when something goes wrong
+func (c *Client) StartCacheRefresh(ctx context.Context, cacheRefreshTime time.Duration) {
+	initialErr := c.populateSystemSummaryCache(ctx)
+	if initialErr != nil {
+		appcontext.ZLogger(ctx).Error("Failed to refresh CEDAR Core cache", zap.Error(initialErr))
+	}
+	ticker := time.NewTicker(cacheRefreshTime)
+	go func() {
+		for {
+			<-ticker.C
+			fmt.Println("LETS GET THAT CACHE", time.Now())
+			err := c.populateSystemSummaryCache(ctx)
+			if err != nil {
+				appcontext.ZLogger(ctx).Error("Failed to refresh CEDAR Core cache", zap.Error(err))
+			}
+		}
+	}()
+}
+
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
@@ -90,10 +113,13 @@ func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, e
 		return []*models.CedarSystem{}, nil
 	}
 
-	allSystems, found := c.cache.Get(allSystemsCacheKey)
+	// Check and use cache before making API call
+	cachedSystems, found := c.cache.Get(allSystemsCacheKey)
 	if found {
-		return allSystems.([]*models.CedarSystem), nil
+		return cachedSystems.([]*models.CedarSystem), nil
 	}
+
+	// No item in the cache - make the API call as usual
 
 	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindListParams()
@@ -127,9 +153,30 @@ func (c *Client) GetSystemSummary(ctx context.Context) ([]*models.CedarSystem, e
 		})
 	}
 
-	c.cache.Set(allSystemsCacheKey, retVal, cache.DefaultExpiration)
-
 	return retVal, nil
+}
+
+// populateSystemSummaryCache is a method used internally by the CEDAR Core client
+// to populate the in-memory cache with the results of a call to the /system/summary endpoint
+//
+// It does not return anything from the cache, nor does it return anything at all (unless an error occurs)
+func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
+	appcontext.ZLogger(ctx).Info("Refreshing CEDAR Core cache")
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return nil
+	}
+
+	// Fallback to main API
+	systemSummary, err := c.GetSystemSummary(ctx)
+	if err != nil {
+		return err
+	}
+
+	// Set in cache
+	c.cache.Set(allSystemsCacheKey, systemSummary, cache.DefaultExpiration)
+
+	return nil
 }
 
 // GetSystem makes a GET call to the /system/summary/{id} endpoint

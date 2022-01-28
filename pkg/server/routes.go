@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -21,6 +22,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
@@ -111,6 +113,9 @@ func (s *Server) routes(
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		ldClient,
 	)
+
+	// Start refreshing all System Information on a timer
+	go coreClient.StartCacheRefresh(appcontext.WithLogger(context.Background(), s.logger), time.Minute*5)
 
 	// set up Email Client
 	sesConfig := s.NewSESConfig()
