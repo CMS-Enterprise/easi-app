@@ -457,7 +457,6 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		if err != nil {
 			return nil, err
 		}
-	} else {
 		newRequest.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
 	}
 
