@@ -37,7 +37,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
       id="system-detail"
     >
       <Grid row>
-        <Grid desktop={{ col: 9 }} className="padding-right-3">
+        <Grid desktop={{ col: 9 }}>
           <SectionWrapper borderBottom className="padding-bottom-5">
             <PageHeading headingLevel="h2" className="margin-top-0">
               {t('singleSystem.systemDetails.header')}

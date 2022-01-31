@@ -45,7 +45,7 @@ export const locationsInfo: tempLocationProp[] = [
   }
 ];
 
-export const mockSystemInfo: tempCedarSystemProps[] = [
+export const mockSystemInfo: CedarSystemProps[] = [
   {
     __typename: 'CedarSystem',
     id: '1',
