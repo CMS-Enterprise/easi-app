@@ -42,9 +42,7 @@ describe('tableSortUtil', () => {
         isSorted: false,
         isSortedDesc: false
       } as HeaderGroup;
-      expect(getHeaderSortIcon(column)).toEqual(
-        'margin-left-1 fa fa-sort caret position-absolute'
-      );
+      expect(getHeaderSortIcon(column)).toContain('fa-sort caret');
     });
 
     it('return down caret class', () => {
@@ -52,9 +50,7 @@ describe('tableSortUtil', () => {
         isSorted: true,
         isSortedDesc: true
       } as HeaderGroup;
-      expect(getHeaderSortIcon(column)).toEqual(
-        'margin-left-1 fa fa-caret-down position-absolute'
-      );
+      expect(getHeaderSortIcon(column)).toContain('fa-caret-down');
     });
 
     it('return up caret class', () => {
@@ -62,9 +58,7 @@ describe('tableSortUtil', () => {
         isSorted: true,
         isSortedDesc: false
       } as HeaderGroup;
-      expect(getHeaderSortIcon(column)).toEqual(
-        'margin-left-1 fa fa-caret-up position-absolute'
-      );
+      expect(getHeaderSortIcon(column)).toContain('fa-caret-up');
     });
   });
 
