@@ -35,11 +35,11 @@ export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
 };
 
 // Description beneath tables for sorting status
-export const currentTableSortDescription = (headerGroup: {
-  headers: HeaderGroup[];
+export const currentTableSortDescription = <T extends {}>(headerGroup: {
+  headers: HeaderGroup<T>[];
 }) => {
   const sortedHeader = headerGroup.headers.find(
-    (header: HeaderGroup) => header.isSorted
+    (header: HeaderGroup<T>) => header.isSorted
   );
 
   if (sortedHeader) {

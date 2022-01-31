@@ -18,9 +18,9 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import TruncatedText from 'components/shared/TruncatedText';
 import { convertIntakeToCSV } from 'data/systemIntake';
+import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
-import useCheckResponsiveScreen from 'utils/checkMobile';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
 import {
   getColumnSortStatus,
