@@ -1,6 +1,51 @@
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
-export const mockSystemInfo: CedarSystemProps[] = [
+// Temporary extension of CEDAR types under BE integration complete
+export type tempLocationProp = {
+  environment:
+    | 'Production environment'
+    | 'Development environment'
+    | 'Code Repository';
+  url: string;
+  tags: string[];
+  location: string;
+  cloudProvider: string;
+  firewall: boolean;
+};
+
+// Temporary extension of CEDAR types under BE integration complete
+export interface tempCedarSystemProps extends CedarSystemProps {
+  locations?: tempLocationProp[];
+}
+
+export const locationsInfo: tempLocationProp[] = [
+  {
+    environment: 'Production environment',
+    url: 'ham.cms.gov',
+    tags: ['API endpoint', 'URL endpoint'],
+    location: 'AWS East',
+    cloudProvider: 'Amazon Web Services',
+    firewall: true
+  },
+  {
+    environment: 'Development environment',
+    url: 'dev.ham.cms.gov',
+    tags: [],
+    location: 'AWS East',
+    cloudProvider: 'Amazon Web Services',
+    firewall: true
+  },
+  {
+    environment: 'Code Repository',
+    url: 'github.com/ham',
+    tags: ['Versioned code repository'],
+    location: 'AWS East',
+    cloudProvider: 'Amazon Web Services',
+    firewall: true
+  }
+];
+
+export const mockSystemInfo: tempCedarSystemProps[] = [
   {
     __typename: 'CedarSystem',
     id: '1',

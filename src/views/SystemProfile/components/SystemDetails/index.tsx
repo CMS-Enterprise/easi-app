@@ -1,6 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardBody, CardHeader, Grid, Tag } from '@trussworks/react-uswds';
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Grid,
+  Tag
+} from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -10,18 +17,25 @@ import {
 } from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
+// import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
+import {
+  tempCedarSystemProps,
+  tempLocationProp
+} from 'views/Sandbox/mockSystemData';
 
 import './index.scss';
 
 type SystemDetailsProps = {
-  system: CedarSystemProps;
+  system: tempCedarSystemProps; // TODO: Once additional CEDAR data is define, change to GQL generated type
 };
 
 const SystemDetails = ({ system }: SystemDetailsProps) => {
   const { t } = useTranslation('systemProfile');
   return (
-    <Grid className="grid-container padding-left-0 padding-right-0">
+    <Grid
+      className="grid-container padding-left-0 padding-right-0"
+      id="system-detail"
+    >
       <Grid row>
         <Grid desktop={{ col: 9 }} className="padding-right-3">
           <SectionWrapper borderBottom className="padding-bottom-5">
@@ -94,76 +108,67 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
               term={t('singleSystem.systemDetails.migrationDate')}
             />
             <DescriptionDefinition
-              className="font-body-md"
+              className="font-body-md margin-bottom-5"
               definition={system.businessOwnerOrg || ''}
             />
 
-            {/* <CardGroup className="margin-top-5"> */}
-            <Card
-              data-testid="system-card"
-              className="grid-col-12 margin-top-5"
-            >
-              <CardHeader className="easi-header__basic">
-                <dt>{t('singleSystem.systemDetails.prodEnv')}</dt>
-                <div>
-                  <dd>{t('singleSystem.systemDetails.wedAppFirewall')}</dd>
-                </div>
-              </CardHeader>
+            {system?.locations?.map(
+              (location: tempLocationProp): React.ReactNode => (
+                <Card data-testid="system-card" className="grid-col-12">
+                  <CardHeader className="easi-header__basic">
+                    <dt>{location.environment || ''}</dt>
+                    <div>
+                      <dd>
+                        {location.firewall && 'Web Application Firewall'}
+                        {/* TODO: Map defined CEDAR variable once availabe */}
+                      </dd>
+                    </div>
+                  </CardHeader>
 
-              <CardBody>
-                <h2 className="link-header margin-top-0 margin-bottom-2">
-                  <UswdsReactLink
-                    className="system-profile__card-link"
-                    to={system.id}
-                  >
-                    ham.cms.gov
-                  </UswdsReactLink>
-                </h2>
-                <Tag className="system-profile__tag margin-bottom-2">
-                  API Endpoint
-                </Tag>
-                <Divider />
-              </CardBody>
+                  <CardBody className="padding-left-2 padding-right-2 padding-bottom-0">
+                    <h2 className="link-header margin-top-0 margin-bottom-2">
+                      <UswdsReactLink
+                        className="system-profile__card-link"
+                        to={location.url}
+                      >
+                        {location.url || ''}{' '}
+                        {/* TODO: Map defined CEDAR variable once availabe */}
+                      </UswdsReactLink>
+                    </h2>
+                    {location?.tags?.map((tag: string) => (
+                      <Tag className="system-profile__tag margin-bottom-2">
+                        {tag || ''}{' '}
+                        {/* TODO: Map defined CEDAR variable once availabe */}
+                      </Tag>
+                    ))}
 
-              {/* <Grid
-                desktop={{ col: 12 }}
-                className="padding-left-2 padding-right-2"
-              >
-                <h2 className="link-header margin-top-0 margin-bottom-2">
-                  <UswdsReactLink
-                    className="system-profile__card-link"
-                    to={system.id}
-                  >
-                    ham.cms.gov
-                  </UswdsReactLink>
-                </h2>
-                <Tag className="system-profile__tag margin-bottom-2">
-                  API Endpoint
-                </Tag>
-                <Divider />
-              </Grid> */}
-              <Grid row>
-                <Grid desktop={{ col: 6 }} className="padding-2">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.location')}
-                  />
-                  <DescriptionDefinition
-                    className="font-body-md"
-                    definition={system.businessOwnerOrgComp || ''}
-                  />
-                </Grid>
-                <Grid desktop={{ col: 6 }} className="padding-2">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.cloudProvider')}
-                  />
-                  <DescriptionDefinition
-                    className="font-body-md"
-                    definition={system.businessOwnerOrgComp || ''}
-                  />
-                </Grid>
-              </Grid>
-            </Card>
-            {/* </CardGroup> */}
+                    <Divider />
+                  </CardBody>
+                  <CardFooter className="padding-0">
+                    <Grid row>
+                      <Grid desktop={{ col: 6 }} className="padding-2">
+                        <DescriptionTerm
+                          term={t('singleSystem.systemDetails.location')}
+                        />
+                        <DescriptionDefinition
+                          className="font-body-md"
+                          definition={location.location || ''}
+                        />
+                      </Grid>
+                      <Grid desktop={{ col: 6 }} className="padding-2">
+                        <DescriptionTerm
+                          term={t('singleSystem.systemDetails.cloudProvider')}
+                        />
+                        <DescriptionDefinition
+                          className="font-body-md"
+                          definition={location.cloudProvider || ''}
+                        />
+                      </Grid>
+                    </Grid>
+                  </CardFooter>
+                </Card>
+              )
+            )}
           </SectionWrapper>
         </Grid>
         {/* Point of contact/ miscellaneous info */}

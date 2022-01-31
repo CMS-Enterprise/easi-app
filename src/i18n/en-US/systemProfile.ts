@@ -47,8 +47,6 @@ const systemProfile = {
       tagHeader2: 'CMS Innovation Center (CMMI) Models',
       urlsAndLocations: 'URLs and Locations',
       migrationDate: 'Cloud migration date',
-      prodEnv: 'Production environment',
-      wedAppFirewall: 'Web Application Firewall',
       location: 'Location',
       cloudProvider: 'Cloud Service Provider'
     }

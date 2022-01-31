@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -16,15 +17,24 @@ import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import {
   DescriptionDefinition,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
+import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
+import {
+  GetCedarSystem
+  // GetCedarSystem_cedarSystem as CedarSystem
+} from 'queries/types/GetCedarSystem';
 import useCheckResponsiveScreen from 'utils/checkMobile';
 import NotFound from 'views/NotFound';
-import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
+import {
+  locationsInfo,
+  tempCedarSystemProps
+} from 'views/Sandbox/mockSystemData';
 
 // components/index contains all the sideNavItems components, routes, labels and translations
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
@@ -50,10 +60,19 @@ const SystemProfile = () => {
     }
   }, [top]);
 
-  // TODO: Use GQL query for single system of CEDAR data
-  const systemInfo = mockSystemInfo.find(
-    mockSystem => mockSystem.id === systemId
+  const { loading, error, data } = useQuery<GetCedarSystem>(
+    GetCedarSystemQuery,
+    {
+      variables: {
+        id: systemId
+      }
+    }
   );
+
+  const cedarData = (data?.cedarSystem ?? null) as tempCedarSystemProps; // Temp props for locations
+
+  // Mocking additional location info on payload until CEDAR location type is defined
+  const systemInfo = { ...cedarData, locations: locationsInfo };
 
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
     'is-visible': isMobileSideNavExpanded
@@ -74,8 +93,12 @@ const SystemProfile = () => {
     };
   }, []);
 
+  if (loading) {
+    return <PageLoading />;
+  }
+
   // TODO: Handle errors and loading
-  if (!systemInfo) {
+  if (error || !systemInfo) {
     return <NotFound />;
   }
 
