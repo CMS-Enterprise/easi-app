@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, Grid, Tag } from '@trussworks/react-uswds';
+import { Card, CardBody, CardHeader, Grid, Tag } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -103,14 +103,29 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
               data-testid="system-card"
               className="grid-col-12 margin-top-5"
             >
-              <Grid desktop={{ col: 12 }} className="easi-header__basic">
+              <CardHeader className="easi-header__basic">
                 <dt>{t('singleSystem.systemDetails.prodEnv')}</dt>
                 <div>
                   <dd>{t('singleSystem.systemDetails.wedAppFirewall')}</dd>
                 </div>
-              </Grid>
+              </CardHeader>
 
-              <Grid
+              <CardBody>
+                <h2 className="link-header margin-top-0 margin-bottom-2">
+                  <UswdsReactLink
+                    className="system-profile__card-link"
+                    to={system.id}
+                  >
+                    ham.cms.gov
+                  </UswdsReactLink>
+                </h2>
+                <Tag className="system-profile__tag margin-bottom-2">
+                  API Endpoint
+                </Tag>
+                <Divider />
+              </CardBody>
+
+              {/* <Grid
                 desktop={{ col: 12 }}
                 className="padding-left-2 padding-right-2"
               >
@@ -126,7 +141,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                   API Endpoint
                 </Tag>
                 <Divider />
-              </Grid>
+              </Grid> */}
               <Grid row>
                 <Grid desktop={{ col: 6 }} className="padding-2">
                   <DescriptionTerm
