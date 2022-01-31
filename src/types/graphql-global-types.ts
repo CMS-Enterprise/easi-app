@@ -168,6 +168,7 @@ export interface CreateAccessibilityRequestDocumentInput {
 export interface CreateAccessibilityRequestInput {
   intakeID: UUID;
   name: string;
+  cedarSystemId?: string | null;
 }
 
 /**

@@ -33,7 +33,8 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *models.
 			intake_id,
 			created_at,
 			updated_at,
-			eua_user_id
+			eua_user_id,
+			cedar_system_id
 		)
 		VALUES (
 			:id,
@@ -41,7 +42,8 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *models.
 			:intake_id,
 		    :created_at,
 			:updated_at,
-			:eua_user_id
+			:eua_user_id,
+			:cedar_system_id
 		)`
 	_, err := s.db.NamedExec(
 		createRequestSQL,

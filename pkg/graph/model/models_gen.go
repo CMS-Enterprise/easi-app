@@ -100,8 +100,9 @@ type CreateAccessibilityRequestDocumentPayload struct {
 
 // The data needed to initialize a 508/accessibility request
 type CreateAccessibilityRequestInput struct {
-	IntakeID uuid.UUID `json:"intakeID"`
-	Name     string    `json:"name"`
+	IntakeID      uuid.UUID `json:"intakeID"`
+	Name          string    `json:"name"`
+	CedarSystemID *string   `json:"cedarSystemId"`
 }
 
 // The data used when adding a note to a 508/accessibility request
