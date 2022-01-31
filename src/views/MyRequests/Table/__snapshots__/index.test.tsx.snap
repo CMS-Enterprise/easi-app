@@ -28,7 +28,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 140px;"
+              style="min-width: 140px; width: 140px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -48,7 +48,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 140px;"
+              style="min-width: 140px; width: 140px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -68,7 +68,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 140px;"
+              style="min-width: 140px; width: 220px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -88,7 +88,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 140px;"
+              style="min-width: 140px; width: 140px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -108,7 +108,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 250px;"
+              style="min-width: 220px; width: 140px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"

@@ -144,7 +144,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 50px; padding: 0px 0px 0px .5em;"
+              style="min-width: 50px; padding: 0px 0px 0px .5em; position: relative;"
               title="Toggle SortBy"
             >
               <button
@@ -168,7 +168,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 150px;"
+              style="min-width: 150px; position: relative;"
               title="Toggle SortBy"
             >
               <button
@@ -188,7 +188,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 150px;"
+              style="min-width: 150px; position: relative;"
               title="Toggle SortBy"
             >
               <button
@@ -208,7 +208,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 150px;"
+              style="min-width: 150px; position: relative;"
               title="Toggle SortBy"
             >
               <button
@@ -228,7 +228,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 150px;"
+              style="min-width: 150px; position: relative;"
               title="Toggle SortBy"
             >
               <button
