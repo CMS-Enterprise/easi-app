@@ -33,12 +33,12 @@ func (s ClientTestSuite) TestClient() {
 	s.NoError(err)
 
 	s.Run("Instantiation successful", func() {
-		c := NewClient("fake", "fake", ldClient)
+		c := NewClient(ctx, "fake", "fake", ldClient)
 		s.NotNil(c)
 	})
 
 	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
-		c := NewClient("fake", "fake", ldClient)
+		c := NewClient(ctx, "fake", "fake", ldClient)
 		resp, err := c.GetSystemSummary(ctx, false)
 		s.NoError(err)
 
@@ -46,7 +46,7 @@ func (s ClientTestSuite) TestClient() {
 		s.Equal(resp, blankSummary)
 	})
 	s.Run("LD defaults protects invocation of GetSystem", func() {
-		c := NewClient("fake", "fake", ldClient)
+		c := NewClient(ctx, "fake", "fake", ldClient)
 		resp, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
 
@@ -56,7 +56,7 @@ func (s ClientTestSuite) TestClient() {
 	s.Run("\"person\" decodes to correct role assignee type", func() {
 		enabledLdClient, err := enabledLdClient()
 		s.NoError(err)
-		c := NewClient("fake", "fake", enabledLdClient)
+		c := NewClient(ctx, "fake", "fake", enabledLdClient)
 
 		c.sdk = newMockSdkForRoleQueries("person")
 
@@ -67,7 +67,7 @@ func (s ClientTestSuite) TestClient() {
 	s.Run("\"organization\" decodes to correct role assignee type", func() {
 		enabledLdClient, err := enabledLdClient()
 		s.NoError(err)
-		c := NewClient("fake", "fake", enabledLdClient)
+		c := NewClient(ctx, "fake", "fake", enabledLdClient)
 
 		c.sdk = newMockSdkForRoleQueries("organization")
 
@@ -78,7 +78,7 @@ func (s ClientTestSuite) TestClient() {
 	s.Run("Empty assignee type decodes to null assignee type", func() {
 		enabledLdClient, err := enabledLdClient()
 		s.NoError(err)
-		c := NewClient("fake", "fake", enabledLdClient)
+		c := NewClient(ctx, "fake", "fake", enabledLdClient)
 
 		c.sdk = newMockSdkForRoleQueries("")
 
@@ -89,7 +89,7 @@ func (s ClientTestSuite) TestClient() {
 	s.Run("Invalid value for assignee type causes role to be skipped when decoding", func() {
 		enabledLdClient, err := enabledLdClient()
 		s.NoError(err)
-		c := NewClient("fake", "fake", enabledLdClient)
+		c := NewClient(ctx, "fake", "fake", enabledLdClient)
 
 		c.sdk = newMockSdkForRoleQueries("INVALID VALUE")
 

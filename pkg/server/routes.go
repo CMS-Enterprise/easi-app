@@ -8,7 +8,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -109,13 +108,11 @@ func (s *Server) routes(
 
 	// set up CEDAR core API client
 	coreClient := cedarcore.NewClient(
+		appcontext.WithLogger(context.Background(), s.logger),
 		s.Config.GetString(appconfig.CEDARAPIURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		ldClient,
 	)
-
-	// Start refreshing all System Information on a timer
-	go coreClient.StartCacheRefresh(appcontext.WithLogger(context.Background(), s.logger), time.Minute*5)
 
 	// set up Email Client
 	sesConfig := s.NewSESConfig()

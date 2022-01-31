@@ -34,7 +34,7 @@ const (
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
-func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Client {
+func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Client {
 	fnEmit := func(ctx context.Context) bool {
 		lduser := flags.Principal(ctx)
 		result, err := ldClient.BoolVariation(cedarCoreEnabledKey, lduser, cedarCoreEnabledDefault)
@@ -50,11 +50,11 @@ func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Cli
 		return result
 	}
 
-	c := cache.New(-1, -1) // -1, -1 means no expiration, no cleanup. This is all handled by the Ticker.
+	c := cache.New(cache.NoExpiration, cache.NoExpiration) // Don't expire data _or_ clean it up
 
 	hc := http.DefaultClient
 
-	return &Client{
+	client := &Client{
 		cedarCoreEnabled: fnEmit,
 		auth: httptransport.APIKeyAuth(
 			"x-Gateway-APIKey",
@@ -72,6 +72,11 @@ func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Cli
 		hc:    hc,
 		cache: c,
 	}
+
+	// Start cache refresh
+	client.startCacheRefresh(ctx, time.Minute*5)
+
+	return client
 }
 
 // Client represents a connection to the CEDAR Core API
@@ -83,27 +88,20 @@ type Client struct {
 	cache            *cache.Cache
 }
 
-// StartCacheRefresh does the following two things
-// 1. Immediately attempts to populate the cache with current System Summary response data
-// 2. Starts a goroutine that will periodically refresh the cache with new data, based on cacheRefreshTime
-//
+// startCacheRefresh starts a goroutine that will periodically refresh the cache with new data, based on cacheRefreshTime
 // This function returns no errors, and only logs when something goes wrong
-func (c *Client) StartCacheRefresh(ctx context.Context, cacheRefreshTime time.Duration) {
-	initialErr := c.populateSystemSummaryCache(ctx)
-	if initialErr != nil {
-		appcontext.ZLogger(ctx).Error("Failed to refresh CEDAR Core cache", zap.Error(initialErr))
-	}
+func (c *Client) startCacheRefresh(ctx context.Context, cacheRefreshTime time.Duration) {
 	ticker := time.NewTicker(cacheRefreshTime)
-	go func() {
+	go func(ctx context.Context) {
 		for {
-			// Wait for the ticker. This will block the current goroutine until the ticker sends a message over the channel
-			<-ticker.C
 			err := c.populateSystemSummaryCache(ctx)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Failed to refresh CEDAR Core cache", zap.Error(err))
 			}
+			// Wait for the ticker. This will block the current goroutine until the ticker sends a message over the channel
+			<-ticker.C
 		}
-	}()
+	}(ctx)
 }
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
@@ -164,11 +162,12 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 //
 // It does not return anything from the cache, nor does it return anything at all (unless an error occurs)
 func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
-	appcontext.ZLogger(ctx).Info("Refreshing CEDAR Core cache")
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return nil
 	}
+
+	appcontext.ZLogger(ctx).Info("Refreshing CEDAR Core cache")
 
 	// Get data from API - don't use cache to populate cache!
 	systemSummary, err := c.GetSystemSummary(ctx, false)
@@ -176,8 +175,10 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 		return err
 	}
 
+	appcontext.ZLogger(ctx).Info("Refresed CEDAR Core cache")
+
 	// Set in cache
-	c.cache.Set(allSystemsCacheKey, systemSummary, cache.DefaultExpiration)
+	c.cache.SetDefault(allSystemsCacheKey, systemSummary)
 
 	return nil
 }
