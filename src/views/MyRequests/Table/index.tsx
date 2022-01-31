@@ -164,7 +164,9 @@ const Table = () => {
                   className="table-header"
                   scope="col"
                   style={{
-                    minWidth: index === 4 ? '250px' : '140px'
+                    minWidth: index === 4 ? '220px' : '140px',
+                    width: index === 2 ? '220px' : '140px',
+                    position: 'relative'
                   }}
                 >
                   <button

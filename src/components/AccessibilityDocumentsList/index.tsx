@@ -178,7 +178,8 @@ const AccessibilityDocumentsList = ({
                 <th
                   {...column.getHeaderProps()}
                   style={{
-                    width: column.width
+                    width: column.width,
+                    position: 'relative'
                   }}
                   scope="col"
                 >

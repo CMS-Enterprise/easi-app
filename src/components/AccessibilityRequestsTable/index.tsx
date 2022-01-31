@@ -153,7 +153,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
 
   return (
     <div className="accessibility-requests-table">
-      <Table bordered={false} {...getTableProps()} fullWidth>
+      <Table bordered={false} scrollable {...getTableProps()} fullWidth>
         <caption className="usa-sr-only">{t('requestTable.caption')}</caption>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -164,7 +164,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                     style: {
                       width: column.width,
                       minWidth: column.minWidth,
-                      maxWidth: column.maxWidth
+                      maxWidth: column.maxWidth,
+                      position: 'relative'
                     }
                   })}
                   aria-sort={getColumnSortStatus(column)}

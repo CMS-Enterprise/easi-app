@@ -345,7 +345,12 @@ const RequestRepository = () => {
         })}
       </h1>
       {/* This is the only table that expands past the USWDS desktop dimensions.  Only convert to scrollable when in tablet/mobile */}
-      <Table scrollable={isMobile} bordered={false} {...getTableProps()}>
+      <Table
+        scrollable={isMobile}
+        fullWidth
+        bordered={false}
+        {...getTableProps()}
+      >
         <caption className="usa-sr-only">
           {activeTable === 'open' &&
             t('requestRepository.aria.openTableCaption')}
@@ -360,7 +365,8 @@ const RequestRepository = () => {
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
                   style={{
-                    minWidth: index === 0 ? '175px' : '150px'
+                    minWidth: index === 0 ? '175px' : '150px',
+                    position: 'relative'
                   }}
                 >
                   <button
