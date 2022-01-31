@@ -57,7 +57,7 @@ describe('tableSortUtil', () => {
       );
     });
 
-    it('return down caret class', () => {
+    it('return up caret class', () => {
       const column = {
         isSorted: true,
         isSortedDesc: false
