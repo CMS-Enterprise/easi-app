@@ -2,58 +2,20 @@ package models
 
 // EASIBusinessSolution represents a business solution submitted through EASi
 type EASIBusinessSolution struct {
+	AcquisitionApproach     string `json:"acquisitionApproach"`
+	Cons                    string `json:"cons"`
+	CostSavings             string `json:"costSavings"`
+	HasUI                   string `json:"hasUI"`
+	HostingCloudServiceType string `json:"hostingCloudServiceType"`
+	HostingLocation         string `json:"hostingLocation"`
+	HostingType             string `json:"hostingType"`
+	Pros                    string `json:"pros"`
 
-	// acquisition approach
-	// Required: true
-	AcquisitionApproach *string `json:"acquisitionApproach"`
+	// TODO - nullable boolean
+	SecurityIsApproved string `json:"securityIsApproved" jsonschema:"enum=,enum=false,enum=true"`
 
-	// cons
-	// Required: true
-	Cons *string `json:"cons"`
-
-	// cost savings
-	// Required: true
-	CostSavings *string `json:"costSavings"`
-
-	// has UI
-	// Required: true
-	HasUI *string `json:"hasUI"`
-
-	// hosting cloud service type
-	// Required: true
-	HostingCloudServiceType *string `json:"hostingCloudServiceType"`
-
-	// hosting location
-	// Required: true
-	HostingLocation *string `json:"hostingLocation"`
-
-	// hosting type
-	// Required: true
-	HostingType *string `json:"hostingType"`
-
-	// pros
-	// Required: true
-	Pros *string `json:"pros"`
-
-	// security is approved
-	// Required: true
-	// Enum: [ false true]
-	SecurityIsApproved *string `json:"securityIsApproved" jsonschema:"enum=,enum=false,enum=true"`
-
-	// security is being reviewed
-	// Required: true
-	SecurityIsBeingReviewed *string `json:"securityIsBeingReviewed"`
-
-	// solution type
-	// Required: true
-	// Enum: [preferred alternativeA alternativeB]
-	SolutionType *string `json:"solutionType" jsonschema:"enum=preferred,enum=alternativeA,enum=alternativeB"`
-
-	// summary
-	// Required: true
-	Summary *string `json:"summary"`
-
-	// title
-	// Required: true
-	Title *string `json:"title"`
+	SecurityIsBeingReviewed string `json:"securityIsBeingReviewed"`
+	SolutionType            string `json:"solutionType" jsonschema:"enum=preferred,enum=alternativeA,enum=alternativeB"`
+	Summary                 string `json:"summary"`
+	Title                   string `json:"title"`
 }
