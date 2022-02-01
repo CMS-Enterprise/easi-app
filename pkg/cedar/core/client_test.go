@@ -9,7 +9,6 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type ClientTestSuite struct {
@@ -34,22 +33,5 @@ func (s ClientTestSuite) TestClient() {
 	s.Run("Instantiation successful", func() {
 		c := NewClient(ctx, "fake", "fake", ldClient)
 		s.NotNil(c)
-	})
-
-	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
-		c := NewClient(ctx, "fake", "fake", ldClient)
-		resp, err := c.GetSystemSummary(ctx, false)
-		s.NoError(err)
-
-		blankSummary := []*models.CedarSystem{}
-		s.Equal(resp, blankSummary)
-	})
-	s.Run("LD defaults protects invocation of GetSystem", func() {
-		c := NewClient(ctx, "fake", "fake", ldClient)
-		resp, err := c.GetSystem(ctx, "fake")
-		s.NoError(err)
-
-		blankSummary := models.CedarSystem{}
-		s.Equal(*resp, blankSummary)
 	})
 }
