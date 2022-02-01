@@ -149,7 +149,11 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
 
             {system?.locations?.map(
               (location: tempLocationProp): React.ReactNode => (
-                <Card data-testid="system-card" className="grid-col-12">
+                <Card
+                  key={location.id}
+                  data-testid="system-card"
+                  className="grid-col-12"
+                >
                   <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
                     <dt>{location.environment}</dt>
                     <div>
@@ -178,7 +182,10 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                       )}
                     </h2>
                     {location?.tags?.map((tag: string) => (
-                      <Tag className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter">
+                      <Tag
+                        key={tag}
+                        className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
+                      >
                         {tag}{' '}
                         {/* TODO: Map defined CEDAR variable once availabe */}
                       </Tag>
@@ -226,7 +233,10 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
             </PageHeading>
 
             {system.developmentTags?.map((tag: string) => (
-              <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
+              <Tag
+                key={tag}
+                className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
+              >
                 <i className="fa fa-check-circle text-primary-dark margin-right-1" />
                 {tag} {/* TODO: Map defined CEDAR variable once availabe */}
               </Tag>
@@ -312,12 +322,11 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
               {t('singleSystem.systemDetails.ipInfo')}
             </PageHeading>
 
-            {system.developmentTags?.map((tag: string) => (
-              <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
-                <i className="fa fa-check-circle text-primary-dark margin-right-1" />
-                {tag} {/* TODO: Map defined CEDAR variable once availabe */}
-              </Tag>
-            ))}
+            {/* TODO: Map defined CEDAR variable once availabe */}
+            <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
+              <i className="fa fa-check-circle text-primary-dark margin-right-1" />
+              E-CAP Initiative
+            </Tag>
 
             {/* TODO: Map and populate tags with CEDAR */}
             <Grid row className="margin-top-2">

@@ -1,0 +1,433 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The making a request page matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="grid-container padding-left-0 padding-right-0"
+    data-testid="grid"
+    id="system-detail"
+  >
+    <div
+      class="grid-row"
+      data-testid="grid"
+    >
+      <div
+        class="desktop:grid-col-9"
+        data-testid="grid"
+      >
+        <div
+          class="easi-section easi-section__border-bottom padding-bottom-4"
+          data-testid="section-wrapper"
+        >
+          <h2
+            aria-live="polite"
+            class="easi-h1 margin-top-0"
+            tabindex="-1"
+          >
+            System Details
+          </h2>
+          <div
+            class="grid-row margin-top-3"
+            data-testid="grid"
+          >
+            <div
+              class="desktop:grid-col-6 margin-bottom-5"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                System ownership
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3"
+              >
+                CMS owned
+              </dd>
+            </div>
+            <div
+              class="desktop:grid-col-6 margin-bottom-5"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Users per month
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3"
+              >
+                2,345
+              </dd>
+            </div>
+            <div
+              class="desktop:grid-col-6 margin-bottom-5"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Internal or public access
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3"
+              >
+                Both public and internal access
+              </dd>
+            </div>
+            <div
+              class="desktop:grid-col-6 margin-bottom-5"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                FISMA Sytem ID
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3"
+              >
+                123-456-789-0
+              </dd>
+            </div>
+          </div>
+          <h3
+            aria-live="polite"
+            class="easi-h1 margin-top-0 margin-bottom-1"
+            tabindex="-1"
+          >
+            CMS Programs and Mission Essential Functions
+          </h3>
+          <span
+            class="usa-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+            data-testid="tag"
+          >
+            Fee for Service (FFS)
+          </span>
+          <span
+            class="usa-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+            data-testid="tag"
+          >
+            Million Hearts
+          </span>
+          <h3
+            aria-live="polite"
+            class="easi-h1 margin-top-3 margin-bottom-1"
+            tabindex="-1"
+          >
+            CMS Innovation Center (CMMI) Models
+          </h3>
+          <span
+            class="usa-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+            data-testid="tag"
+          >
+            Next Generation ACO Model
+          </span>
+          <span
+            class="usa-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+            data-testid="tag"
+          >
+            Comprehensive Primary Care Plus
+          </span>
+          <span
+            class="usa-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+            data-testid="tag"
+          >
+            Independence at Home Demonstration
+          </span>
+        </div>
+        <div
+          class="easi-section easi-section__border-bottom padding-bottom-3 margin-bottom-3"
+          data-testid="section-wrapper"
+        >
+          <h2
+            aria-live="polite"
+            class="easi-h1 margin-top-3"
+            tabindex="-1"
+          >
+            URLs and Locations
+          </h2>
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Cloud migration date
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            December 12, 2017
+          </dd>
+        </div>
+        <div
+          class="easi-section easi-section__border-bottom padding-bottom-5 margin-bottom-4"
+          data-testid="section-wrapper"
+        >
+          <h2
+            aria-live="polite"
+            class="easi-h1 margin-top-4 margin-bottom-1"
+            tabindex="-1"
+          >
+            Development
+          </h2>
+          <div
+            class="grid-row margin-top-3"
+            data-testid="grid"
+          >
+            <div
+              class="desktop:grid-col-6"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Custom Development
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                85%
+              </dd>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Development work completed
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                Every two weeks
+              </dd>
+            </div>
+            <div
+              class="desktop:grid-col-6"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Planned release frequency
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                92%
+              </dd>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Planned retirement
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                No planned retirement or replacement
+              </dd>
+            </div>
+            <div
+              class="desktop:grid-col-12"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Description of development work to be completed
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat elementum nibh feugiat donec. Ultricies at libero nullam egestas ipsum, sed.
+              </dd>
+            </div>
+            <div
+              class="desktop:grid-col-12"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                AI technology status
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                Approved
+              </dd>
+            </div>
+            <div
+              class="desktop:grid-col-12"
+              data-testid="grid"
+            >
+              <h3
+                aria-live="polite"
+                class="easi-h1 margin-top-0 margin-bottom-1"
+                tabindex="-1"
+              >
+                AI Technology types
+              </h3>
+              <span
+                class="usa-tag system-profile__tag text-base-darker bg-base-lighter"
+                data-testid="tag"
+              >
+                Natural Language Processing
+              </span>
+              <span
+                class="usa-tag system-profile__tag text-base-darker bg-base-lighter"
+                data-testid="tag"
+              >
+                Chat Bots
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="easi-section margin-bottom-5"
+          data-testid="section-wrapper"
+        >
+          <h2
+            aria-live="polite"
+            class="easi-h1 margin-top-3 margin-bottom-1"
+            tabindex="-1"
+          >
+            IP Information
+          </h2>
+          <span
+            class="usa-tag system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
+            data-testid="tag"
+          >
+            <i
+              class="fa fa-check-circle text-primary-dark margin-right-1"
+            />
+            E-CAP Initiative
+          </span>
+          <div
+            class="grid-row margin-top-2"
+            data-testid="grid"
+          >
+            <div
+              class="desktop:grid-col-6 padding-right-2"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Current IP access
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                IPv4 only
+              </dd>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Number of IP-enabled assets
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                This system will be transitioned to IPv6
+              </dd>
+            </div>
+            <div
+              class="desktop:grid-col-6 padding-right-2"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                IPv6 transition
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                21
+              </dd>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Percent transitioned to IPv6
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                25%
+              </dd>
+            </div>
+            <div
+              class="desktop:grid-col-6 padding-right-2"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Hard-coded IP addresses
+              </dt>
+              <dd
+                class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+              >
+                This system has hard-coded IP addresses
+              </dd>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="desktop:grid-col-3 side-divider"
+        data-testid="grid"
+      >
+        <div
+          class="top-divider"
+        />
+        <p
+          class="font-body-xs margin-top-1 margin-bottom-3"
+        >
+          Point of Contact
+        </p>
+        <dt
+          class="text-bold margin-bottom-05 system-profile__subheader margin-bottom-1"
+        >
+          Geraldine Hobbs
+        </dt>
+        <dd
+          class="description-definition margin-0"
+        >
+          Business Owner
+        </dd>
+        <p>
+          <a
+            class="usa-link usa-link--external line-height-body-5"
+            href="/"
+            target="_blank"
+          >
+            Send and email
+            <span
+              aria-hidden="true"
+            >
+               
+            </span>
+          </a>
+        </p>
+        <p>
+          <a
+            class="usa-link line-height-body-5"
+            href="/"
+            target="_blank"
+          >
+            More points of contact
+            <span
+              aria-hidden="true"
+            >
+               
+            </span>
+            <span
+              aria-hidden="true"
+            >
+              → 
+            </span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -2,6 +2,7 @@ import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/
 
 // Temporary extension of CEDAR types under BE integration complete
 export type tempLocationProp = {
+  id: string;
   environment:
     | 'Production environment'
     | 'Development environment'
@@ -26,6 +27,7 @@ export const developmentTags: string[] = [
 
 export const locationsInfo: tempLocationProp[] = [
   {
+    id: '1',
     environment: 'Production environment',
     url: 'ham.cms.gov',
     tags: ['API endpoint', 'URL endpoint'],
@@ -34,6 +36,7 @@ export const locationsInfo: tempLocationProp[] = [
     firewall: true
   },
   {
+    id: '2',
     environment: 'Development environment',
     url: 'dev.ham.cms.gov',
     tags: [],
@@ -42,6 +45,7 @@ export const locationsInfo: tempLocationProp[] = [
     firewall: true
   },
   {
+    id: '3',
     environment: 'Code Repository',
     url: 'github.com/ham',
     tags: ['Versioned code repository'],
