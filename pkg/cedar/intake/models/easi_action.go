@@ -4,6 +4,6 @@ package models
 type EASIAction struct {
 	ActionType string `json:"actionType"`
 	ActorEUA   string `json:"actorEUA"`
-	Feedback   string `json:"feedback"`
+	Feedback   string `json:"feedback"` // Feedback sent to requestor via email
 	IntakeID   string `json:"intakeId"`
 }
