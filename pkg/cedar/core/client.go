@@ -73,8 +73,8 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, ldClie
 		cache: c,
 	}
 
-	// Start cache refresh
-	client.startCacheRefresh(ctx, time.Minute*5)
+	// Start cache refresh for all types we want to cache
+	client.startCacheRefresh(ctx, time.Minute*5, client.populateSystemSummaryCache)
 
 	return client
 }
@@ -90,11 +90,11 @@ type Client struct {
 
 // startCacheRefresh starts a goroutine that will periodically refresh the cache with new data, based on cacheRefreshTime
 // This function returns no errors, and only logs when something goes wrong
-func (c *Client) startCacheRefresh(ctx context.Context, cacheRefreshTime time.Duration) {
+func (c *Client) startCacheRefresh(ctx context.Context, cacheRefreshTime time.Duration, populateCache func(context.Context) error) {
 	ticker := time.NewTicker(cacheRefreshTime)
 	go func(ctx context.Context) {
 		for {
-			err := c.populateSystemSummaryCache(ctx)
+			err := populateCache(ctx)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Failed to refresh CEDAR Core cache", zap.Error(err))
 			}
