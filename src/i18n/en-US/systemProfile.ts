@@ -47,8 +47,19 @@ const systemProfile = {
       tagHeader2: 'CMS Innovation Center (CMMI) Models',
       urlsAndLocations: 'URLs and Locations',
       migrationDate: 'Cloud migration date',
+      noMigrationDate: 'No clould migration planned yet',
       location: 'Location',
-      cloudProvider: 'Cloud Service Provider'
+      cloudProvider: 'Cloud Service Provider',
+      development: 'Development',
+      customDevelopment: 'Custom Development',
+      workCompleted: 'Development work completed',
+      releaseFrequency: 'Planned release frequency',
+      retirement: 'Planned retirement',
+      developmentDescription: 'Description of development work to be completed',
+      aiTechStatus: 'AI technology status',
+      technologyTypes: 'AI Technology types',
+      noURL: 'This system does not have URLS',
+      noEnvironmentURL: 'This environment does not have a url'
     }
   },
   systemTable: {

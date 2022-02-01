@@ -32,6 +32,7 @@ import {
 import useCheckResponsiveScreen from 'utils/checkMobile';
 import NotFound from 'views/NotFound';
 import {
+  developmentTags,
   locationsInfo,
   tempCedarSystemProps
 } from 'views/Sandbox/mockSystemData';
@@ -72,7 +73,11 @@ const SystemProfile = () => {
   const cedarData = (data?.cedarSystem ?? null) as tempCedarSystemProps; // Temp props for locations
 
   // Mocking additional location info on payload until CEDAR location type is defined
-  const systemInfo = { ...cedarData, locations: locationsInfo };
+  const systemInfo = {
+    ...cedarData,
+    locations: locationsInfo,
+    developmentTags
+  };
 
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
     'is-visible': isMobileSideNavExpanded

@@ -6,7 +6,7 @@ export type tempLocationProp = {
     | 'Production environment'
     | 'Development environment'
     | 'Code Repository';
-  url: string;
+  url?: string;
   tags: string[];
   location: string;
   cloudProvider: string;
@@ -16,7 +16,13 @@ export type tempLocationProp = {
 // Temporary extension of CEDAR types under BE integration complete
 export interface tempCedarSystemProps extends CedarSystemProps {
   locations?: tempLocationProp[];
+  developmentTags?: string[];
 }
+
+export const developmentTags: string[] = [
+  'Agile Methodology',
+  'AI Technologies'
+];
 
 export const locationsInfo: tempLocationProp[] = [
   {
