@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardGroup, Grid } from '@trussworks/react-uswds';
+import { Card, Grid } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -19,17 +19,15 @@ type SystemHomeProps = {
 const SystemHome = ({ className, children, system }: SystemHomeProps) => {
   const { t } = useTranslation('systemProfile');
   return (
-    <Grid className="grid-container">
+    <Grid className="grid-container padding-left-0">
       <Grid row>
-        <Grid desktop={{ col: 9 }}>
-          <CardGroup>
-            <Card
-              data-testid="system-card"
-              className={classnames('grid-col-12', className)}
-            >
-              <div className="grid-col-12">{children}</div>
-            </Card>
-          </CardGroup>
+        <Grid desktop={{ col: 9 }} className="padding-right-2">
+          <Card
+            data-testid="system-card"
+            className={classnames('grid-col-12', className)}
+          >
+            <div className="grid-col-12">{children}</div>
+          </Card>
         </Grid>
         {/* Point of contact/ miscellaneous info */}
         <Grid desktop={{ col: 3 }}>

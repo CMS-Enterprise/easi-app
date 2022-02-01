@@ -155,7 +155,7 @@ const SystemProfile = () => {
                     <span aria-hidden>&nbsp;</span>
                   </UswdsReactLink>
 
-                  {/* TODO: Map fields to CEDAR data */}
+                  {/* TODO: Map <DescriptionTerm /> to CEDAR data */}
                   <Grid row className="margin-top-3">
                     <Grid desktop={{ col: 6 }} className="margin-bottom-2">
                       <DescriptionDefinition
@@ -172,7 +172,7 @@ const SystemProfile = () => {
                       />
                       <DescriptionTerm
                         className="system-profile__subheader"
-                        term={systemInfo.businessOwnerOrgComp || ''}
+                        term="Geraldine Hobbs"
                       />
                     </Grid>
                     <Grid desktop={{ col: 6 }} className="margin-bottom-2">
@@ -181,7 +181,7 @@ const SystemProfile = () => {
                       />
                       <DescriptionTerm
                         className="system-profile__subheader"
-                        term={systemInfo.systemMaintainerOrg || ''}
+                        term="July 27, 2015"
                       />
                     </Grid>
                     <Grid desktop={{ col: 6 }} className="margin-bottom-2">
@@ -190,7 +190,7 @@ const SystemProfile = () => {
                       />
                       <DescriptionTerm
                         className="system-profile__subheader"
-                        term={systemInfo.id || ''}
+                        term="December 4, 2021"
                       />
                     </Grid>
                   </Grid>
@@ -209,7 +209,7 @@ const SystemProfile = () => {
           />
           <button
             type="button"
-            className="usa-menu-btn easi-header__basic  system-profile__nav-button"
+            className="usa-menu-btn easi-header__basic system-profile__nav-button"
             onClick={() => setIsMobileSideNavExpanded(true)}
           >
             <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>

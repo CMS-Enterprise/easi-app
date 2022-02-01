@@ -59,7 +59,13 @@ const systemProfile = {
       aiTechStatus: 'AI technology status',
       technologyTypes: 'AI Technology types',
       noURL: 'This system does not have URLS',
-      noEnvironmentURL: 'This environment does not have a url'
+      noEnvironmentURL: 'This environment does not have a url',
+      ipInfo: 'IP Information',
+      currentIP: 'Current IP access',
+      ipAssets: 'Number of IP-enabled assets',
+      ipv6Transition: 'IPv6 transition',
+      percentTransitioned: 'Percent transitioned to IPv6',
+      hardCodedIP: 'Hard-coded IP addresses'
     }
   },
   systemTable: {

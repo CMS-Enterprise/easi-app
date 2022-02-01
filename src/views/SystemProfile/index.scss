@@ -1,7 +1,7 @@
 #system-profile {
     .system-profile {
         &__summary-box {
-            border-top: 0;
+            border: 0;
             background-color: color($theme-color-primary-lighter);
             padding-left: 0;
             padding-right: 0;
@@ -26,7 +26,8 @@
         }
 
         &__nav-button {
-            width: 100%
+            width: 100%;
+            align-items: center;
         }
 
         &__tag {
@@ -40,10 +41,6 @@
 
     .link-header {
         text-underline-offset: 0.25rem;
-    }
-
-    .easi-header__basic {
-        padding-bottom: 0
     }
 
     .usa-breadcrumb {
@@ -64,6 +61,10 @@
         margin: 0;
     }
 
+    .usa-card__header {
+        align-items: inherit;
+    }
+
     .usa-sidenav__item a:not(.usa-current) {
         padding-left: 0;        
     }
@@ -74,7 +75,16 @@
 }
 
 .top-divider {
-    height: .25rem;
-    width: 100%;
-    background-color: color($theme-color-primary-lighter);
+    @media screen and (min-width: $desktop) {
+        height: .25rem;
+        width: 100%;
+        background-color: color($theme-color-primary-lighter);
+    }
+}
+
+.side-divider {
+    @media screen and (max-width: $desktop) {
+        border-left: .25rem solid color($theme-color-primary-lighter);
+        padding-left: 1rem;
+    }    
 }
