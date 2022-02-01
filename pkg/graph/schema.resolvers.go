@@ -1414,7 +1414,7 @@ func (r *queryResolver) CedarSystem(ctx context.Context, id string) (*models.Ced
 }
 
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	cedarSystems, err := r.cedarCoreClient.GetSystemSummary(ctx)
+	cedarSystems, err := r.cedarCoreClient.GetSystemSummary(ctx, true)
 	if err != nil {
 		return nil, err
 	}
