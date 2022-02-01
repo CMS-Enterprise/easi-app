@@ -61,6 +61,10 @@ func addDefinitionsToRootSchema(rootSchema *jsonschema.Schema, objectSchema *jso
 func main() {
 	rootSchema := jsonschema.Reflect(&EASIObject{})
 
+	// Include one of each struct defined in pkg/cedar/intake/models
+
+	// Note for future devs: the go/types package could be used to extract static type information on each file in that directory,
+	// but there's no way to convert a types.Type to the reflect.Type that the jsonschema package could use.
 	objects := []interface{}{
 		models.EASIAction{},
 		models.EASIBizCase{},
