@@ -3,22 +3,18 @@ package intake
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func translateAction(_ context.Context, action *models.Action) (*wire.IntakeInput, error) {
-	if action == nil {
-		return nil, fmt.Errorf("nil action received")
-	}
-
-	obj := wire.EASIAction{
-		IntakeID:   pStr(action.IntakeID.String()),
-		ActionType: pStr(string(action.ActionType)),
-		ActorEUA:   pStr(action.ActorEUAUserID),
-		Feedback:   pStr(action.Feedback.ValueOrZero()),
+func translateAction(_ context.Context, action models.Action) (*wire.IntakeInput, error) {
+	obj := intakemodels.EASIAction{
+		IntakeID:   action.IntakeID.String(),
+		ActionType: string(action.ActionType),
+		ActorEUA:   action.ActorEUAUserID,
+		Feedback:   action.Feedback.ValueOrZero(),
 	}
 
 	blob, err := json.Marshal(&obj)

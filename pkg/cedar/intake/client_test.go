@@ -4,13 +4,13 @@ import (
 	"context"
 	"testing"
 
-	"github.com/google/uuid"
+	// "github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	// wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -69,6 +69,7 @@ func (s ClientTestSuite) TestClient() {
 	// })
 }
 
+/*
 func (s ClientTestSuite) TestTranslation() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
@@ -168,3 +169,4 @@ func (s ClientTestSuite) TestTranslation() {
 	})
 
 }
+*/

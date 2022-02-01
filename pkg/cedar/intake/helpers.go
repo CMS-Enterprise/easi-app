@@ -1,36 +1,52 @@
 package intake
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
+	// "context"
+	// "encoding/json"
+	// "fmt"
 	"strconv"
-	"strings"
+	// "strings"
 	"time"
 
 	"github.com/go-openapi/strfmt"
 	"github.com/guregu/null"
-	"github.com/hashicorp/go-multierror"
-
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	// "github.com/hashicorp/go-multierror"
+	// wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 )
+
+func strDate(t *time.Time) string {
+	str := ""
+	if t != nil {
+		str = strfmt.Date(*t).String()
+	}
+	return str
+}
+
+// strDateTime turns a nil Time pointer into an empty string,
+// or a non-nil pointer into a ISO8601-format string, e.g. "2006-01-02T15:04:05Z"
+func strDateTime(t *time.Time) string {
+	str := ""
+	if t != nil {
+		str = t.UTC().Format(time.RFC3339)
+	}
+	return str
+}
+
+// pBool turns a nullable boolean into a string, using the empty
+// string to represent the un-set case, or "true" or "false" otherwise
+func strNullableBool(b null.Bool) string {
+	str := ""
+	if b.Ptr() != nil {
+		str = strconv.FormatBool(b.Bool)
+	}
+	return str
+}
 
 // pStr is a quick helper for turning a string into a string-pointer
 // inline, without having to clutter your mainline code with the
 // indirection, e.g. when building a type and assigning properties
 func pStr(s string) *string {
 	return &s
-}
-
-// pDate turns a Time pointer into either an empty string in the
-// negative case, or to a whole day string in CEDAR's preferred
-// ISO8601 format, e.g. "2006-01-02"
-func pDate(t *time.Time) *string {
-	val := ""
-	if t != nil {
-		val = strfmt.Date(*t).String()
-	}
-	return pStr(val)
 }
 
 // pDate turns a Time pointer into either an empty string in the
@@ -45,17 +61,7 @@ func pDateTime(t *time.Time) *string {
 	return pStr(val)
 }
 
-// pBool turns a nullable boolean into a string, using the empty
-// string to represent the un-set case, or "true" or "false"
-// otherwise
-func pBool(b null.Bool) *string {
-	val := ""
-	if b.Ptr() != nil {
-		val = strconv.FormatBool(b.Bool)
-	}
-	return pStr(val)
-}
-
+/*
 type validater interface {
 	Validate(strfmt.Registry) error
 }
@@ -121,3 +127,4 @@ func validateInput(_ context.Context, ii *wire.IntakeInput) error {
 
 	return nil
 }
+*/

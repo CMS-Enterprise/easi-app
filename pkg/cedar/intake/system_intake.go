@@ -3,65 +3,61 @@ package intake
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func translateSystemIntake(_ context.Context, si *models.SystemIntake) (*wire.IntakeInput, error) {
-	if si == nil {
-		return nil, fmt.Errorf("nil system intake received")
-	}
+func translateSystemIntake(_ context.Context, si models.SystemIntake) (*wire.IntakeInput, error) {
+	obj := &intakemodels.EASIIntake{
+		UserEUA:                     si.EUAUserID.ValueOrZero(),
+		Status:                      string(si.Status),
+		RequestType:                 string(si.RequestType),
+		Requester:                   si.Requester,
+		Component:                   si.Component.ValueOrZero(),
+		BusinessOwner:               si.BusinessOwner.ValueOrZero(),
+		BusinessOwnerComponent:      si.BusinessOwnerComponent.ValueOrZero(),
+		ProductManager:              si.ProductManager.ValueOrZero(),
+		ProductManagerComponent:     si.ProductManagerComponent.ValueOrZero(),
+		Isso:                        si.ISSO.ValueOrZero(),
+		IssoName:                    si.ISSOName.ValueOrZero(),
+		TrbCollaborator:             si.TRBCollaborator.ValueOrZero(),
+		TrbCollaboratorName:         si.TRBCollaboratorName.ValueOrZero(),
+		OitSecurityCollaborator:     si.OITSecurityCollaborator.ValueOrZero(),
+		OitSecurityCollaboratorName: si.OITSecurityCollaboratorName.ValueOrZero(),
+		EaCollaborator:              si.EACollaborator.ValueOrZero(),
+		EaCollaboratorName:          si.EACollaboratorName.ValueOrZero(),
+		ProjectName:                 si.ProjectName.ValueOrZero(),
+		ProjectAcronym:              si.ProjectAcronym.ValueOrZero(),
+		FundingSource:               si.FundingSource.ValueOrZero(),
+		FundingNumber:               si.FundingNumber.ValueOrZero(),
+		BusinessNeed:                si.BusinessNeed.ValueOrZero(),
+		Solution:                    si.Solution.ValueOrZero(),
+		ProcessStatus:               si.ProcessStatus.ValueOrZero(),
+		ExistingContract:            si.ExistingContract.ValueOrZero(),
+		CostIncrease:                si.CostIncrease.ValueOrZero(),
+		CostIncreaseAmount:          si.CostIncreaseAmount.ValueOrZero(),
+		Contractor:                  si.Contractor.ValueOrZero(),
+		ContractVehicle:             si.ContractVehicle.ValueOrZero(),
+		GrtReviewEmailBody:          si.GrtReviewEmailBody.ValueOrZero(),
+		RequesterEmailAddress:       si.RequesterEmailAddress.ValueOrZero(),
+		LifecycleID:                 si.LifecycleID.ValueOrZero(),
+		LifecycleScope:              si.LifecycleScope.ValueOrZero(),
+		DecisionNextSteps:           si.DecisionNextSteps.ValueOrZero(),
+		RejectionReason:             si.RejectionReason.ValueOrZero(),
+		AdminLead:                   si.AdminLead.ValueOrZero(),
 
-	obj := &wire.EASIIntake{
-		UserEUA:                     pStr(si.EUAUserID.ValueOrZero()),
-		Status:                      pStr(string(si.Status)),
-		RequestType:                 pStr(string(si.RequestType)),
-		Requester:                   pStr(si.Requester),
-		Component:                   pStr(si.Component.ValueOrZero()),
-		BusinessOwner:               pStr(si.BusinessOwner.ValueOrZero()),
-		BusinessOwnerComponent:      pStr(si.BusinessOwnerComponent.ValueOrZero()),
-		ProductManager:              pStr(si.ProductManager.ValueOrZero()),
-		ProductManagerComponent:     pStr(si.ProductManagerComponent.ValueOrZero()),
-		Isso:                        pStr(si.ISSO.ValueOrZero()),
-		IssoName:                    pStr(si.ISSOName.ValueOrZero()),
-		TrbCollaborator:             pStr(si.TRBCollaborator.ValueOrZero()),
-		TrbCollaboratorName:         pStr(si.TRBCollaboratorName.ValueOrZero()),
-		OitSecurityCollaborator:     pStr(si.OITSecurityCollaborator.ValueOrZero()),
-		OitSecurityCollaboratorName: pStr(si.OITSecurityCollaboratorName.ValueOrZero()),
-		EaCollaborator:              pStr(si.EACollaborator.ValueOrZero()),
-		EaCollaboratorName:          pStr(si.EACollaboratorName.ValueOrZero()),
-		ProjectName:                 pStr(si.ProjectName.ValueOrZero()),
-		ProjectAcronym:              pStr(si.ProjectAcronym.ValueOrZero()),
-		FundingSource:               pStr(si.FundingSource.ValueOrZero()),
-		FundingNumber:               pStr(si.FundingNumber.ValueOrZero()),
-		BusinessNeed:                pStr(si.BusinessNeed.ValueOrZero()),
-		Solution:                    pStr(si.Solution.ValueOrZero()),
-		ProcessStatus:               pStr(si.ProcessStatus.ValueOrZero()),
-		ExistingContract:            pStr(si.ExistingContract.ValueOrZero()),
-		CostIncrease:                pStr(si.CostIncrease.ValueOrZero()),
-		CostIncreaseAmount:          pStr(si.CostIncreaseAmount.ValueOrZero()),
-		Contractor:                  pStr(si.Contractor.ValueOrZero()),
-		ContractVehicle:             pStr(si.ContractVehicle.ValueOrZero()),
-		GrtReviewEmailBody:          pStr(si.GrtReviewEmailBody.ValueOrZero()),
-		RequesterEmailAddress:       pStr(si.RequesterEmailAddress.ValueOrZero()),
-		LifecycleID:                 pStr(si.LifecycleID.ValueOrZero()),
-		LifecycleScope:              pStr(si.LifecycleScope.ValueOrZero()),
-		DecisionNextSteps:           pStr(si.DecisionNextSteps.ValueOrZero()),
-		RejectionReason:             pStr(si.RejectionReason.ValueOrZero()),
-		AdminLead:                   pStr(si.AdminLead.ValueOrZero()),
-
-		ExistingFunding:    pBool(si.ExistingFunding),
-		EaSupportRequest:   pBool(si.EASupportRequest),
-		ContractStartDate:  pDate(si.ContractStartDate),
-		ContractEndDate:    pDate(si.ContractEndDate),
-		SubmittedAt:        pDateTime(si.SubmittedAt),
-		DecidedAt:          pDateTime(si.DecidedAt),
-		ArchivedAt:         pDateTime(si.ArchivedAt),
-		GrbDate:            pDate(si.GRBDate),
-		GrtDate:            pDate(si.GRTDate),
-		LifecycleExpiresAt: pDate(si.LifecycleExpiresAt),
+		ExistingFunding:    strNullableBool(si.ExistingFunding),
+		EaSupportRequest:   strNullableBool(si.EASupportRequest),
+		ContractStartDate:  strDate(si.ContractStartDate),
+		ContractEndDate:    strDate(si.ContractEndDate),
+		SubmittedAt:        strDateTime(si.SubmittedAt),
+		DecidedAt:          strDateTime(si.DecidedAt),
+		ArchivedAt:         strDateTime(si.ArchivedAt),
+		GrbDate:            strDate(si.GRBDate),
+		GrtDate:            strDate(si.GRTDate),
+		LifecycleExpiresAt: strDate(si.LifecycleExpiresAt),
 	}
 
 	blob, err := json.Marshal(&obj)

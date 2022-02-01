@@ -3,21 +3,17 @@ package intake
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func translateNote(_ context.Context, note *models.Note) (*wire.IntakeInput, error) {
-	if note == nil {
-		return nil, fmt.Errorf("nil note received")
-	}
-
-	obj := wire.EASINote{
-		IntakeID:  pStr(note.SystemIntakeID.String()),
-		AuthorEUA: pStr(note.AuthorEUAID),
-		Content:   pStr(note.Content.ValueOrZero()),
+func translateNote(_ context.Context, note models.Note) (*wire.IntakeInput, error) {
+	obj := intakemodels.EASINote{
+		IntakeID:  note.SystemIntakeID.String(),
+		AuthorEUA: note.AuthorEUAID,
+		Content:   note.Content.ValueOrZero(),
 	}
 
 	blob, err := json.Marshal(&obj)
