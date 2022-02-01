@@ -343,6 +343,18 @@ func (c *Client) GetDeployments(ctx context.Context, systemID string, optionalPa
 	return retVal, nil
 }
 
+func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool) {
+	if rawAssigneeType == string(models.PersonAssignee) {
+		return models.PersonAssignee, true
+	} else if rawAssigneeType == string(models.OrganizationAssignee) {
+		return models.OrganizationAssignee, true
+	} else if rawAssigneeType == "" {
+		return "", true
+	} else {
+		return "", false
+	}
+}
+
 // GetRolesBySystem makes a GET call to the /role endpoint using a system ID and an optional role type ID
 // we don't currently have a use case for querying /role by role ID, so that's not implemented
 func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleTypeID null.String) ([]*models.CedarRole, error) {
@@ -394,18 +406,13 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 			continue
 		}
 
-		var retAssigneeType models.CedarAssigneeType
-
-		if role.AssigneeType == string(models.PersonAssignee) {
-			retAssigneeType = models.PersonAssignee
-		} else if role.AssigneeType == string(models.OrganizationAssignee) {
-			retAssigneeType = models.OrganizationAssignee
-		} else if role.AssigneeType == "" {
-			retAssigneeType = ""
-		} else {
+		assigneeType, validAssigneeType := decodeAssigneeType(role.AssigneeType)
+		if !validAssigneeType {
 			appcontext.ZLogger(ctx).Error("Error decoding role; role assignee type didn't match possible values from Swagger", zap.String("systemID", systemID))
 			continue
 		}
+
+		appcontext.ZLogger(ctx).Error("Error decoding role; role assignee type didn't match possible values from Swagger", zap.String("systemID", systemID))
 
 		// generated swagger client turns JSON nulls into Go zero values, so use null/zero package to convert them back to nullable values
 		retRole := &models.CedarRole{
@@ -428,8 +435,8 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 			ObjectType:   zero.StringFrom(role.ObjectType),
 		}
 
-		if retAssigneeType != "" {
-			retRole.AssigneeType = &retAssigneeType
+		if assigneeType != models.CedarAssigneeType("") {
+			retRole.AssigneeType = &assigneeType
 		}
 
 		retVal = append(retVal, retRole)
