@@ -175,7 +175,7 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 		return err
 	}
 
-	appcontext.ZLogger(ctx).Info("Refresed CEDAR Core cache")
+	appcontext.ZLogger(ctx).Info("Refreshed CEDAR Core cache")
 
 	// Set in cache
 	c.cache.SetDefault(allSystemsCacheKey, systemSummary)
@@ -411,8 +411,6 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 			appcontext.ZLogger(ctx).Error("Error decoding role; role assignee type didn't match possible values from Swagger", zap.String("systemID", systemID))
 			continue
 		}
-
-		appcontext.ZLogger(ctx).Error("Error decoding role; role assignee type didn't match possible values from Swagger", zap.String("systemID", systemID))
 
 		// generated swagger client turns JSON nulls into Go zero values, so use null/zero package to convert them back to nullable values
 		retRole := &models.CedarRole{
