@@ -33,7 +33,7 @@ const Home = () => {
         return (
           // Changed GRT table from grid-container to just slight margins. This is take up
           // entire screen to better fit the more expansive data in the table.
-          <div className="padding-x-4">
+          <div>
             {message && (
               <div className="grid-container margin-top-6">
                 <Alert type="success" slim role="alert">

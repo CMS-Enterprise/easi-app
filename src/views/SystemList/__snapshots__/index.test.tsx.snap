@@ -144,7 +144,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 50px; padding: 0px 0px 0px .5em;"
+              style="min-width: 50px; padding: 0px 0px 0px .5em; position: relative;"
               title="Toggle SortBy"
             >
               <button
@@ -159,7 +159,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   data-testid="bookmark-icon"
                 />
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
@@ -168,7 +168,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 150px;"
+              style="min-width: 150px; position: relative;"
               title="Toggle SortBy"
             >
               <button
@@ -179,7 +179,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 Acronym
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
@@ -188,7 +188,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 150px;"
+              style="min-width: 150px; position: relative;"
               title="Toggle SortBy"
             >
               <button
@@ -199,7 +199,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 System Name
                 <span
-                  class="margin-left-1 fa fa-caret-up"
+                  class="margin-left-1 fa fa-caret-up position-absolute"
                 />
               </button>
             </th>
@@ -208,7 +208,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 150px;"
+              style="min-width: 150px; position: relative;"
               title="Toggle SortBy"
             >
               <button
@@ -219,7 +219,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 CMS Component
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
@@ -228,7 +228,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 150px;"
+              style="min-width: 150px; position: relative;"
               title="Toggle SortBy"
             >
               <button
@@ -239,7 +239,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               >
                 ATO Status
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>

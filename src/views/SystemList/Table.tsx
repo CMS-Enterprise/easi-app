@@ -30,7 +30,11 @@ import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQue
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
-import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
+import {
+  getColumnSortStatus,
+  getHeaderSortIcon,
+  sortColumnValues
+} from 'utils/tableSort';
 
 import './index.scss';
 
@@ -168,10 +172,10 @@ export const Table = ({
     {
       sortTypes: {
         alphanumeric: (rowOne, rowTwo, columnName) => {
-          const rowOneElem = rowOne.values[columnName] || '';
-          const rowTwoElem = rowTwo.values[columnName] || '';
-
-          return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
+          return sortColumnValues(
+            rowOne.values[columnName],
+            rowTwo.values[columnName]
+          );
         }
       },
       columns,
@@ -221,7 +225,8 @@ export const Table = ({
                   style={{
                     minWidth: index === 0 ? '50px' : '150px',
                     padding: index === 0 ? '0' : 'auto',
-                    paddingLeft: index === 0 ? '.5em' : 'auto'
+                    paddingLeft: index === 0 ? '.5em' : 'auto',
+                    position: 'relative'
                   }}
                 >
                   <button
@@ -230,17 +235,7 @@ export const Table = ({
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    {column.isSorted && (
-                      <span
-                        className={getHeaderSortIcon(
-                          column.isSorted,
-                          column.isSortedDesc
-                        )}
-                      />
-                    )}
-                    {!column.isSorted && (
-                      <span className="margin-left-1 fa fa-sort caret" />
-                    )}
+                    <span className={getHeaderSortIcon(column)} />
                   </button>
                 </th>
               ))}
