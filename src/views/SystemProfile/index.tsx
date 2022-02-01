@@ -121,14 +121,15 @@ const SystemProfile = () => {
               </Breadcrumb>
             </BreadcrumbBar>
 
-            <PageHeading className="margin-top-2">
-              <div className="bookmark__title">
-                <BookmarkCardIcon size="sm" className="margin-right-1" />{' '}
-                <span>{systemInfo.name} </span>
-                <span className="system-profile__acronym">
-                  ({systemInfo.acronym})
-                </span>
-              </div>
+            <PageHeading className="margin-top-2 font-body-2xl">
+              <BookmarkCardIcon
+                size="sm"
+                className="margin-right-1 system-profile__bookmark"
+              />{' '}
+              <span>{systemInfo.name} </span>
+              <span className="system-profile__acronym">
+                ({systemInfo.acronym})
+              </span>
               <div className="system-profile__summary-body">
                 <CollapsableLink
                   className="margin-top-3"
