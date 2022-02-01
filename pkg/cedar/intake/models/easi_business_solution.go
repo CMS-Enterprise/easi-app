@@ -38,7 +38,7 @@ type EASIBusinessSolution struct {
 	// security is approved
 	// Required: true
 	// Enum: [ false true]
-	SecurityIsApproved *string `json:"securityIsApproved"`
+	SecurityIsApproved *string `json:"securityIsApproved" jsonschema:"enum=,enum=false,enum=true"`
 
 	// security is being reviewed
 	// Required: true
@@ -47,7 +47,7 @@ type EASIBusinessSolution struct {
 	// solution type
 	// Required: true
 	// Enum: [preferred alternativeA alternativeB]
-	SolutionType *string `json:"solutionType"`
+	SolutionType *string `json:"solutionType" jsonschema:"enum=preferred,enum=alternativeA,enum=alternativeB"`
 
 	// summary
 	// Required: true

@@ -70,7 +70,7 @@ type EASIIntake struct {
 	// ea support request
 	// Required: true
 	// Enum: [ false true]
-	EaSupportRequest *string `json:"eaSupportRequest"`
+	EaSupportRequest *string `json:"eaSupportRequest" jsonschema:"enum=,enum=false,enum=true"`
 
 	// existing contract
 	// Required: true
@@ -79,7 +79,7 @@ type EASIIntake struct {
 	// existing funding
 	// Required: true
 	// Enum: [ false true]
-	ExistingFunding *string `json:"existingFunding"`
+	ExistingFunding *string `json:"existingFunding" jsonschema:"enum=,enum=false,enum=true"`
 
 	// funding number
 	// Required: true
