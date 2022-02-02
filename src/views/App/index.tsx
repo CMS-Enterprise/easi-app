@@ -43,6 +43,8 @@ import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
 
+import { NavContextProvider } from '../../components/Header/navContext';
+
 import shouldScroll from './scrollConfig';
 
 import './index.scss';
@@ -183,6 +185,13 @@ const AppRoutes = () => {
 };
 
 const App = () => {
+  // const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
+  // const value = { isMobileSideNavExpanded, setIsMobileSideNavExpanded };
+  // const NavContext = createContext({
+  //   isMobileSideNavExpanded,
+  //   setIsMobileSideNavExpanded
+  // });
+
   const handleSkipNav = () => {
     const mainContent = document.getElementById('main-content')!;
     if (mainContent) {
@@ -202,11 +211,13 @@ const App = () => {
             <FlagsWrapper>
               <UserInfoWrapper>
                 <TimeOutWrapper>
-                  <PageWrapper>
-                    <Header />
-                    <AppRoutes />
-                    <Footer />
-                  </PageWrapper>
+                  <NavContextProvider>
+                    <PageWrapper>
+                      <Header />
+                      <AppRoutes />
+                      <Footer />
+                    </PageWrapper>
+                  </NavContextProvider>
                 </TimeOutWrapper>
               </UserInfoWrapper>
             </FlagsWrapper>

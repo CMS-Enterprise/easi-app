@@ -19,9 +19,9 @@ type SystemHomeProps = {
 const SystemHome = ({ className, children, system }: SystemHomeProps) => {
   const { t } = useTranslation('systemProfile');
   return (
-    <Grid className="grid-container padding-left-0">
+    <Grid className="grid-container padding-left-0 padding-right-0">
       <Grid row>
-        <Grid desktop={{ col: 9 }} className="padding-right-2">
+        <Grid desktop={{ col: 9 }}>
           <Card
             data-testid="system-card"
             className={classnames('grid-col-12', className)}
@@ -30,7 +30,7 @@ const SystemHome = ({ className, children, system }: SystemHomeProps) => {
           </Card>
         </Grid>
         {/* Point of contact/ miscellaneous info */}
-        <Grid desktop={{ col: 3 }}>
+        <Grid desktop={{ col: 3 }} className="side-divider">
           <div className="top-divider" />
           <p>{t('singleSystem.pointOfContact')}</p>
           <DescriptionTerm

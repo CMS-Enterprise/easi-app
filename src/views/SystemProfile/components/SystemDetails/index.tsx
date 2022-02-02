@@ -10,6 +10,7 @@ import {
   Tag
 } from '@trussworks/react-uswds';
 
+// import { ReactComponent as VerifiedUserIcon } from 'uswds/src/img/usa-icons/verified_user.svg';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import {
@@ -57,7 +58,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                   term={t('singleSystem.systemDetails.ownership')}
                 />
                 <DescriptionDefinition
-                  className="line-height-body-3"
+                  className="font-body-md line-height-body-3"
                   definition="CMS owned"
                 />
               </Grid>
@@ -66,7 +67,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                   term={t('singleSystem.systemDetails.usersPerMonth')}
                 />
                 <DescriptionDefinition
-                  className="line-height-body-3"
+                  className="line-height-body-3 font-body-md"
                   definition="2,345"
                 />
               </Grid>
@@ -157,7 +158,14 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                   <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
                     <dt>{location.environment}</dt>
                     <div>
-                      <dd className="text-right">
+                      <dd className="text-right text-base-dark system-profile__icon-container">
+                        {/* <VerifiedUserIcon
+                          width="1rem"
+                          height="1rem"
+                          fill="#00a91c"
+                          className="margin-right-1"
+                        /> */}
+
                         <i className="fa fa-check-circle text-success margin-right-1" />
                         {location.firewall && 'Web Application Firewall'}
                         {/* TODO: Map defined CEDAR variable once availabe */}
@@ -170,6 +178,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                       {location.url ? (
                         <UswdsReactLink
                           className="system-profile__card-link"
+                          variant="external"
                           to={location.url}
                         >
                           {location.url}

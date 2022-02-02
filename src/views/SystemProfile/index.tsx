@@ -83,6 +83,42 @@ const SystemProfile = () => {
     'is-visible': isMobileSideNavExpanded
   });
 
+  const mainNavigationLink: React.ReactNode[] = [
+    <NavLink
+      to="/"
+      onClick={e => {
+        e.preventDefault();
+      }}
+      className="system-profile__main-nav-link"
+    >
+      <span>&uarr;&nbsp;&nbsp;</span>
+      <span
+        className="text-underline link-header"
+        aria-label={t('singleSystem.mainNavigation')}
+      >
+        {t('singleSystem.mainNavigation')}
+      </span>
+    </NavLink>
+  ];
+
+  const subNavigationLinks: React.ReactNode[] = Object.keys(
+    sideNavItems(systemInfo)
+  ).map((key: string) => (
+    <NavLink
+      to={sideNavItems(systemInfo)[key].route}
+      key={key}
+      onClick={() => setIsMobileSideNavExpanded(false)}
+      activeClassName="usa-current"
+      className={classnames({
+        'nav-group-border': sideNavItems(systemInfo)[key].groupEnd
+      })}
+    >
+      {t(`navigation.${key}`)}
+    </NavLink>
+  ));
+
+  const navigationLinks = mainNavigationLink.concat(subNavigationLinks);
+
   const handleClick = (e: Event) => {
     if (mobileSideNav.current?.contains(e.target as HTMLElement)) {
       return;
@@ -121,7 +157,7 @@ const SystemProfile = () => {
               </Breadcrumb>
             </BreadcrumbBar>
 
-            <PageHeading className="margin-top-2 font-body-2xl">
+            <PageHeading className="margin-top-2">
               <BookmarkCardIcon
                 size="sm"
                 className="margin-right-1 system-profile__bookmark"
@@ -221,26 +257,10 @@ const SystemProfile = () => {
         <SectionWrapper className="margin-top-5 margin-bottom-5">
           <Grid className="grid-container">
             <Grid row>
-              <Grid desktop={{ col: 3 }} className="padding-right-3">
+              <Grid desktop={{ col: 3 }} className="padding-right-2">
                 {/* Side navigation for single system */}
                 {!isMobile ? (
-                  <SideNav
-                    items={Object.keys(sideNavItems(systemInfo)).map(
-                      (key: string) => (
-                        <NavLink
-                          to={sideNavItems(systemInfo)[key].route}
-                          key={key}
-                          activeClassName="usa-current"
-                          className={classnames({
-                            'nav-group-border': sideNavItems(systemInfo)[key]
-                              .groupEnd
-                          })}
-                        >
-                          {t(`navigation.${key}`)}
-                        </NavLink>
-                      )
-                    )}
-                  />
+                  <SideNav items={subNavigationLinks} />
                 ) : (
                   <div ref={mobileSideNav} className={mobileSideNavClasses}>
                     {/* Mobile Display */}
@@ -250,22 +270,7 @@ const SystemProfile = () => {
                       }
                       mobileExpanded={isMobileSideNavExpanded}
                       aria-label="Side navigation"
-                      items={Object.keys(sideNavItems(systemInfo)).map(
-                        (key: string) => (
-                          <NavLink
-                            to={sideNavItems(systemInfo)[key].route}
-                            key={key}
-                            onClick={() => setIsMobileSideNavExpanded(false)}
-                            activeClassName="usa-current"
-                            className={classnames({
-                              'nav-group-border': sideNavItems(systemInfo)[key]
-                                .groupEnd
-                            })}
-                          >
-                            {t(`navigation.${key}`)}
-                          </NavLink>
-                        )
-                      )}
+                      items={navigationLinks}
                     />
                   </div>
                 )}

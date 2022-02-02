@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import classnames from 'classnames';
 
+import { NavContext } from 'components/Header/navContext';
 import UswdsReactLink from 'components/LinkWrapper';
 import NavigationBar from 'components/NavigationBar';
 import UsGovBanner from 'components/UsGovBanner';
@@ -19,7 +20,9 @@ export const Header = ({ children }: HeaderProps) => {
   const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
-  const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
+  const { isMobileSideNavExpanded, setIsMobileSideNavExpanded } = useContext(
+    NavContext
+  );
   const dropdownNode = useRef<any>();
   const mobileSideNav = useRef<any>();
 
@@ -38,33 +41,33 @@ export const Header = ({ children }: HeaderProps) => {
     };
   }, [authState, oktaAuth]);
 
-  const handleClick = (e: Event) => {
-    if (
-      dropdownNode &&
-      dropdownNode.current &&
-      dropdownNode.current.contains(e.target)
-    ) {
-      return;
-    }
-
-    if (
-      mobileSideNav &&
-      mobileSideNav.current &&
-      mobileSideNav.current.contains(e.target)
-    ) {
-      return;
-    }
-
-    setIsMobileSideNavExpanded(false);
-  };
-
   useEffect(() => {
+    const handleClick = (e: Event) => {
+      if (
+        dropdownNode &&
+        dropdownNode.current &&
+        dropdownNode.current.contains(e.target)
+      ) {
+        return;
+      }
+
+      if (
+        mobileSideNav &&
+        mobileSideNav.current &&
+        mobileSideNav.current.contains(e.target)
+      ) {
+        return;
+      }
+
+      setIsMobileSideNavExpanded(false);
+    };
+
     document.addEventListener('mouseup', handleClick);
 
     return () => {
       document.removeEventListener('mouseup', handleClick);
     };
-  }, []);
+  }, [setIsMobileSideNavExpanded]);
 
   useEffect(() => {
     const handleResize = () => {
