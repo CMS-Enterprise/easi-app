@@ -43,10 +43,11 @@ const checkURLsExist = (locations: tempLocationProp[]): boolean => {
 const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [fixedPosition, setFixedPosition] = useState(false);
-  const [containerWidth, setContainerWidth] = useState<Number | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null); // Used for maintaining width of contact grid once element becomes fixed upon scrolling
+  const [fixedPosition, setFixedPosition] = useState(false); // Controlls the state of fixed elements
+  const [containerWidth, setContainerWidth] = useState<Number | null>(null); // Sets the width of elements once the become fixed
 
+  // Hander for setting side nav as fixed element once element is scroll to top of window
   const handleScroll = () => {
     if (topScrollHeight && window.scrollY > topScrollHeight) {
       setFixedPosition(true);
@@ -55,6 +56,7 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
     }
   };
 
+  // Hook for attaching scroll handle listener
   useEffect(() => {
     document.addEventListener('scroll', handleScroll);
 
@@ -63,6 +65,7 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
     };
   });
 
+  // Sets the width of the fixed element once scroll threshold reached
   useLayoutEffect(() => {
     if (containerRef?.current?.clientWidth) {
       setContainerWidth(containerRef?.current?.clientWidth);

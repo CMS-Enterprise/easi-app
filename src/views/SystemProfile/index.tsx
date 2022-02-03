@@ -52,16 +52,18 @@ import './index.scss';
 
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
-  const isMobile = useCheckResponsiveScreen('tablet');
-  const [isMobileSubNavExpanded, setisMobileSubNavExpanded] = useState(false);
   const { setIsMobileSideNavExpanded } = useContext(NavContext);
-  const [fixedPosition, setFixedPosition] = useState(false);
-  const [containerWidth, setContainerWidth] = useState<number | null>(null);
-  const [topScrollHeight, setTopScrollHeight] = useState<number | null>(null);
-  const mobileSideNav = useRef<HTMLDivElement | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const topScrollRef = useRef<HTMLDivElement | null>(null);
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const isMobile = useCheckResponsiveScreen('tablet');
+  const [isMobileSubNavExpanded, setisMobileSubNavExpanded] = useState<boolean>(
+    false
+  ); // State for managing sub page side nav toggle
+  const [fixedPosition, setFixedPosition] = useState<boolean>(false); // Controlls the state of fixed elements
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true); // Managing state of summary box
+  const [containerWidth, setContainerWidth] = useState<number | null>(null); // Sets the width of elements once the become fixed
+  const [topScrollHeight, setTopScrollHeight] = useState<number | null>(null); // State that tracks height at which to fix elements
+  const mobileSideNav = useRef<HTMLDivElement | null>(null); // Ref for mobile responsiveness
+  const containerRef = useRef<HTMLDivElement | null>(null); // Used for maintaining width of contact grid once element becomes fixed upon scrolling
+  const topScrollRef = useRef<HTMLDivElement | null>(null); // Used calculation distance from top of page and summary box when elements should become fixed
 
   const { systemId, subinfo, top } = useParams<{
     systemId: string;
@@ -98,6 +100,7 @@ const SystemProfile = () => {
     'is-visible': isMobileSubNavExpanded
   });
 
+  // Main navigation link that appears at top of mobile side nav to toggle between main nav
   const mainNavigationLink: React.ReactNode[] = [
     <NavLink
       to="/"
@@ -118,6 +121,7 @@ const SystemProfile = () => {
     </NavLink>
   ];
 
+  // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(
     sideNavItems(systemInfo, topScrollHeight)
   ).map((key: string) => (
@@ -357,6 +361,7 @@ const SystemProfile = () => {
 
               <Grid desktop={{ col: 9 }}>
                 {/* This renders the selected sidenav central component */}
+                {/* Passing position that elements should become fixed when scrolling */}
                 {
                   sideNavItems(systemInfo, topScrollHeight)[subinfo || 'home']
                     .component
