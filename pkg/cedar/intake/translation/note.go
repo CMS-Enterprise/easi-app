@@ -1,7 +1,6 @@
-package intake
+package translation
 
 import (
-	"context"
 	"encoding/json"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
@@ -9,7 +8,21 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func translateNote(_ context.Context, note models.Note) (*wire.IntakeInput, error) {
+// TranslatableNote is a wrapper around our Note model for translating into the CEDAR Intake API schema
+type TranslatableNote models.Note
+
+// ObjectID is a unique identifier for a TranslatableNote
+func (note *TranslatableNote) ObjectID() string {
+	return note.ID.String()
+}
+
+// ObjectType is a human-readable identifier for the Note type, for use in logging
+func (note *TranslatableNote) ObjectType() string {
+	return "note"
+}
+
+// CreateIntakeModel translates a Note into an IntakeInput
+func (note *TranslatableNote) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := intakemodels.EASINote{
 		IntakeID:  note.SystemIntakeID.String(),
 		AuthorEUA: note.AuthorEUAID,

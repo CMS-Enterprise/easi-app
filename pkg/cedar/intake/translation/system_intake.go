@@ -1,7 +1,6 @@
-package intake
+package translation
 
 import (
-	"context"
 	"encoding/json"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
@@ -9,7 +8,21 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func translateSystemIntake(_ context.Context, si models.SystemIntake) (*wire.IntakeInput, error) {
+// TranslatableSystemIntake is a wrapper around our SystemIntake model for translating into the CEDAR Intake API schema
+type TranslatableSystemIntake models.SystemIntake
+
+// ObjectID is a unique identifier for a TranslatableSystemIntake
+func (si *TranslatableSystemIntake) ObjectID() string {
+	return si.ID.String()
+}
+
+// ObjectType is a human-readable identifier for the SystemIntake type, for use in logging
+func (si *TranslatableSystemIntake) ObjectType() string {
+	return "system intake"
+}
+
+// CreateIntakeModel translates a SystemIntake into an IntakeInput
+func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := &intakemodels.EASIIntake{
 		UserEUA:                     si.EUAUserID.ValueOrZero(),
 		Status:                      string(si.Status),

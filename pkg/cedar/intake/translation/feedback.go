@@ -1,7 +1,6 @@
-package intake
+package translation
 
 import (
-	"context"
 	"encoding/json"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
@@ -9,7 +8,21 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func translateFeedback(_ context.Context, fb models.GRTFeedback) (*wire.IntakeInput, error) {
+// TranslatableFeedback is a wrapper around our GRTFeedback model for translating into the CEDAR Intake API schema
+type TranslatableFeedback models.GRTFeedback
+
+// ObjectID is a unique identifier for a TranslatableFeedback
+func (fb *TranslatableFeedback) ObjectID() string {
+	return fb.ID.String()
+}
+
+// ObjectType is a human-readable identifier for the GRTFeedback type, for use in logging
+func (fb *TranslatableFeedback) ObjectType() string {
+	return "GRT feedback"
+}
+
+// CreateIntakeModel translates a GRTFeedback into an IntakeInput
+func (fb *TranslatableFeedback) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := intakemodels.EASIGrtFeedback{
 		IntakeID:     fb.IntakeID.String(),
 		Feedback:     fb.Feedback,

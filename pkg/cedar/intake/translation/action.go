@@ -1,7 +1,6 @@
-package intake
+package translation
 
 import (
-	"context"
 	"encoding/json"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
@@ -9,7 +8,21 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func translateAction(_ context.Context, action models.Action) (*wire.IntakeInput, error) {
+// TranslatableAction is a wrapper around our Action model for translating into the CEDAR Intake API schema
+type TranslatableAction models.Action
+
+// ObjectID is a unique identifier for a TranslatableAction
+func (action *TranslatableAction) ObjectID() string {
+	return action.ID.String()
+}
+
+// ObjectType is a human-readable identifier for the Action type, for use in logging
+func (action *TranslatableAction) ObjectType() string {
+	return "action"
+}
+
+// CreateIntakeModel translates an Action into an IntakeInput
+func (action *TranslatableAction) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := intakemodels.EASIAction{
 		IntakeID:   action.IntakeID.String(),
 		ActionType: string(action.ActionType),
