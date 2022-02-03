@@ -5,12 +5,13 @@ import React, { createContext, useState } from 'react';
 
 type NavContextState = boolean;
 
-// create context
+// Create the mobile navigation context for multiple copmponents to be able to toggle
 const NavContext = createContext({
   isMobileSideNavExpanded: false,
   setIsMobileSideNavExpanded: (isMobileSideNavExpanded: NavContextState) => {}
 });
 
+// The context provider will be a wrapper that any child components can call to toggle side nav
 type childrenProps = {
   children: React.ReactNode;
 };

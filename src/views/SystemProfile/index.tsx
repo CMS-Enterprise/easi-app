@@ -1,4 +1,10 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
@@ -14,6 +20,7 @@ import {
 import classnames from 'classnames';
 
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
+import { NavContext } from 'components/Header/navContext';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -46,8 +53,16 @@ import './index.scss';
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
-  const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
+  const [isMobileSubNavExpanded, setisMobileSubNavExpanded] = useState(false);
+  const { setIsMobileSideNavExpanded } = useContext(NavContext);
+  const [fixedPosition, setFixedPosition] = useState(false);
+  const [containerWidth, setContainerWidth] = useState<number | null>(null);
+  const [topScrollHeight, setTopScrollHeight] = useState<number | null>(null);
   const mobileSideNav = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const topScrollRef = useRef<HTMLDivElement | null>(null);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
   const { systemId, subinfo, top } = useParams<{
     systemId: string;
     subinfo: string;
@@ -80,7 +95,7 @@ const SystemProfile = () => {
   };
 
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
-    'is-visible': isMobileSideNavExpanded
+    'is-visible': isMobileSubNavExpanded
   });
 
   const mainNavigationLink: React.ReactNode[] = [
@@ -88,6 +103,8 @@ const SystemProfile = () => {
       to="/"
       onClick={e => {
         e.preventDefault();
+        setisMobileSubNavExpanded(false);
+        setIsMobileSideNavExpanded(true);
       }}
       className="system-profile__main-nav-link"
     >
@@ -102,15 +119,16 @@ const SystemProfile = () => {
   ];
 
   const subNavigationLinks: React.ReactNode[] = Object.keys(
-    sideNavItems(systemInfo)
+    sideNavItems(systemInfo, topScrollHeight)
   ).map((key: string) => (
     <NavLink
-      to={sideNavItems(systemInfo)[key].route}
+      to={sideNavItems(systemInfo, topScrollHeight)[key].route}
       key={key}
-      onClick={() => setIsMobileSideNavExpanded(false)}
+      onClick={() => setisMobileSubNavExpanded(false)}
       activeClassName="usa-current"
       className={classnames({
-        'nav-group-border': sideNavItems(systemInfo)[key].groupEnd
+        'nav-group-border': sideNavItems(systemInfo, topScrollHeight)[key]
+          .groupEnd
       })}
     >
       {t(`navigation.${key}`)}
@@ -119,13 +137,15 @@ const SystemProfile = () => {
 
   const navigationLinks = mainNavigationLink.concat(subNavigationLinks);
 
+  // Handler for detecting clicks outside of the expanded mobile nav
   const handleClick = (e: Event) => {
     if (mobileSideNav.current?.contains(e.target as HTMLElement)) {
       return;
     }
-    setIsMobileSideNavExpanded(false);
+    setisMobileSubNavExpanded(false);
   };
 
+  // Hook for attaching click handle listener
   useEffect(() => {
     document.addEventListener('mouseup', handleClick);
 
@@ -133,6 +153,40 @@ const SystemProfile = () => {
       document.removeEventListener('mouseup', handleClick);
     };
   }, []);
+
+  // Hander for setting side nav as fixed element once element is scroll to top of window
+  const handleScroll = () => {
+    if (topScrollHeight && window.scrollY > topScrollHeight) {
+      setFixedPosition(true);
+    } else {
+      setFixedPosition(false);
+    }
+  };
+
+  // Hook for attaching scroll handle listener
+  useEffect(() => {
+    document.addEventListener('scroll', handleScroll);
+
+    return () => {
+      document.removeEventListener('scroll', handleScroll);
+    };
+  });
+
+  // Hook used for detecting changes in summary box collapse state
+  // Changes from consequent offsetTop will determine when sidenav becomes fixed
+  useEffect(() => {
+    // Detecting the width for sidenav once position becomes fixed
+    if (containerRef?.current?.clientWidth) {
+      setContainerWidth(containerRef?.current?.clientWidth + 16); // 1rem padding addition
+    }
+
+    // Gets the bottom position of the summary box and offset from top of page to determine fixed threshold
+    if (topScrollRef?.current) {
+      const scrollHeight =
+        topScrollRef?.current?.getBoundingClientRect().bottom + 16; // 1rem padding addition
+      setTopScrollHeight(scrollHeight);
+    }
+  }, [loading, isCollapsed]);
 
   if (loading) {
     return <PageLoading />;
@@ -145,109 +199,119 @@ const SystemProfile = () => {
 
   return (
     <MainContent>
-      <div id="system-profile">
-        <SummaryBox heading="" className="system-profile__summary-box">
-          <Grid className="grid-container">
-            <BreadcrumbBar variant="wrap">
-              <Breadcrumb>
-                <span>&larr; </span>
-                <BreadcrumbLink asCustom={Link} to="/system-profile">
-                  <span>{t('singleSystem.summary.back')}</span>
-                </BreadcrumbLink>
-              </Breadcrumb>
-            </BreadcrumbBar>
+      <div id="system-profile" onScroll={handleScroll}>
+        <SummaryBox
+          heading=""
+          className="system-profile__summary-box padding-0"
+        >
+          {/* Setting a ref for summary box height - currently <SummaryBox /> component does not accept ref prop */}
+          <div
+            className="padding-top-3 padding-bottom-3 system-profile__summary-ref"
+            ref={topScrollRef}
+          >
+            <Grid className="grid-container">
+              <BreadcrumbBar variant="wrap">
+                <Breadcrumb>
+                  <span>&larr; </span>
+                  <BreadcrumbLink asCustom={Link} to="/system-profile">
+                    <span>{t('singleSystem.summary.back')}</span>
+                  </BreadcrumbLink>
+                </Breadcrumb>
+              </BreadcrumbBar>
 
-            <PageHeading className="margin-top-2">
-              <BookmarkCardIcon
-                size="sm"
-                className="margin-right-1 system-profile__bookmark"
-              />{' '}
-              <span>{systemInfo.name} </span>
-              <span className="system-profile__acronym">
-                ({systemInfo.acronym})
-              </span>
-              <div className="system-profile__summary-body">
-                <CollapsableLink
-                  className="margin-top-3"
-                  eyeIcon
-                  startOpen
-                  labelPosition="bottom"
-                  closeLabel={t('singleSystem.summary.hide')}
-                  styleLeftBar={false}
-                  id={t('singleSystem.id')}
-                  label={t('singleSystem.summary.expand')}
-                >
-                  <DescriptionDefinition
-                    definition={systemInfo.description}
-                    className="margin-bottom-2"
-                  />
-                  <UswdsReactLink
-                    aria-label={t('singleSystem.summary.label')}
-                    className="line-height-body-5"
-                    to="/" // TODO: Get link from CEDAR?
-                    variant="external"
-                    target="_blank"
+              <PageHeading className="margin-top-2">
+                <BookmarkCardIcon
+                  size="sm"
+                  className="margin-right-1 system-profile__bookmark"
+                />{' '}
+                <span>{systemInfo.name} </span>
+                <span className="system-profile__acronym">
+                  ({systemInfo.acronym})
+                </span>
+                <div className="system-profile__summary-body">
+                  <CollapsableLink
+                    className="margin-top-3"
+                    eyeIcon
+                    parentState={setIsCollapsed}
+                    startOpen
+                    labelPosition="bottom"
+                    closeLabel={t('singleSystem.summary.hide')}
+                    styleLeftBar={false}
+                    id={t('singleSystem.id')}
+                    label={t('singleSystem.summary.expand')}
                   >
-                    {t('singleSystem.summary.view')} {systemInfo.name}
-                    <span aria-hidden>&nbsp;</span>
-                  </UswdsReactLink>
+                    <DescriptionDefinition
+                      definition={systemInfo.description}
+                      className="margin-bottom-2"
+                    />
+                    <UswdsReactLink
+                      aria-label={t('singleSystem.summary.label')}
+                      className="line-height-body-5"
+                      to="/" // TODO: Get link from CEDAR?
+                      variant="external"
+                      target="_blank"
+                    >
+                      {t('singleSystem.summary.view')} {systemInfo.name}
+                      <span aria-hidden>&nbsp;</span>
+                    </UswdsReactLink>
 
-                  {/* TODO: Map <DescriptionTerm /> to CEDAR data */}
-                  <Grid row className="margin-top-3">
-                    <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionDefinition
-                        definition={t('singleSystem.summary.subheader1')}
-                      />
-                      <DescriptionTerm
-                        className="system-profile__subheader"
-                        term={systemInfo.businessOwnerOrg || ''}
-                      />
+                    {/* TODO: Map <DescriptionTerm /> to CEDAR data */}
+                    <Grid row className="margin-top-3">
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          definition={t('singleSystem.summary.subheader1')}
+                        />
+                        <DescriptionTerm
+                          className="system-profile__subheader"
+                          term={systemInfo.businessOwnerOrg || ''}
+                        />
+                      </Grid>
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          definition={t('singleSystem.summary.subheader2')}
+                        />
+                        <DescriptionTerm
+                          className="system-profile__subheader"
+                          term="Geraldine Hobbs"
+                        />
+                      </Grid>
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          definition={t('singleSystem.summary.subheader3')}
+                        />
+                        <DescriptionTerm
+                          className="system-profile__subheader"
+                          term="July 27, 2015"
+                        />
+                      </Grid>
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          definition={t('singleSystem.summary.subheader4')}
+                        />
+                        <DescriptionTerm
+                          className="system-profile__subheader"
+                          term="December 4, 2021"
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionDefinition
-                        definition={t('singleSystem.summary.subheader2')}
-                      />
-                      <DescriptionTerm
-                        className="system-profile__subheader"
-                        term="Geraldine Hobbs"
-                      />
-                    </Grid>
-                    <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionDefinition
-                        definition={t('singleSystem.summary.subheader3')}
-                      />
-                      <DescriptionTerm
-                        className="system-profile__subheader"
-                        term="July 27, 2015"
-                      />
-                    </Grid>
-                    <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionDefinition
-                        definition={t('singleSystem.summary.subheader4')}
-                      />
-                      <DescriptionTerm
-                        className="system-profile__subheader"
-                        term="December 4, 2021"
-                      />
-                    </Grid>
-                  </Grid>
-                </CollapsableLink>
-              </div>
-            </PageHeading>
-          </Grid>
+                  </CollapsableLink>
+                </div>
+              </PageHeading>
+            </Grid>
+          </div>
         </SummaryBox>
 
         {/* Button/Header to display when mobile/tablet */}
         <div className="grid-container system-profile__nav">
           <div
             className={classnames('usa-overlay', {
-              'is-visible': isMobileSideNavExpanded
+              'is-visible': isMobileSubNavExpanded
             })}
           />
           <button
             type="button"
             className="usa-menu-btn easi-header__basic system-profile__nav-button"
-            onClick={() => setIsMobileSideNavExpanded(true)}
+            onClick={() => setisMobileSubNavExpanded(true)}
           >
             <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>
             <span className="fa fa-bars" />
@@ -257,7 +321,24 @@ const SystemProfile = () => {
         <SectionWrapper className="margin-top-5 margin-bottom-5">
           <Grid className="grid-container">
             <Grid row>
-              <Grid desktop={{ col: 3 }} className="padding-right-2">
+              <Grid
+                desktop={{ col: 3 }}
+                className={classnames('padding-right-2', {
+                  'hide-nav': !fixedPosition
+                })}
+              />
+              <Grid
+                desktop={{ col: 3 }}
+                style={{
+                  width:
+                    fixedPosition && !isMobile ? `${containerWidth}px` : '25%'
+                }}
+                className={classnames('padding-right-2', {
+                  'fixed-nav': fixedPosition && !isMobile
+                })}
+              >
+                {/* Setting a ref here to reference the grid width for the fixed side nav */}
+                <div ref={containerRef} style={{ width: '100%' }} />
                 {/* Side navigation for single system */}
                 {!isMobile ? (
                   <SideNav items={subNavigationLinks} />
@@ -265,10 +346,8 @@ const SystemProfile = () => {
                   <div ref={mobileSideNav} className={mobileSideNavClasses}>
                     {/* Mobile Display */}
                     <PrimaryNav
-                      onToggleMobileNav={() =>
-                        setIsMobileSideNavExpanded(false)
-                      }
-                      mobileExpanded={isMobileSideNavExpanded}
+                      onToggleMobileNav={() => setisMobileSubNavExpanded(false)}
+                      mobileExpanded={isMobileSubNavExpanded}
                       aria-label="Side navigation"
                       items={navigationLinks}
                     />
@@ -278,7 +357,10 @@ const SystemProfile = () => {
 
               <Grid desktop={{ col: 9 }}>
                 {/* This renders the selected sidenav central component */}
-                {sideNavItems(systemInfo)[subinfo || 'home'].component}
+                {
+                  sideNavItems(systemInfo, topScrollHeight)[subinfo || 'home']
+                    .component
+                }
               </Grid>
             </Grid>
           </Grid>

@@ -17,14 +17,19 @@ interface sideNavProps {
 
 // groupEnd value is used to designate the end of navigation related grouping
 
-const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
+const sideNavItems = (
+  system: CedarSystemProps,
+  topScrollHeight: number | null
+): sideNavProps => ({
   home: {
     groupEnd: true,
     component: <SystemHome system={system} />,
     route: `/system-profile/${system.id}/home`
   },
   details: {
-    component: <SystemDetails system={system} />,
+    component: (
+      <SystemDetails system={system} topScrollHeight={topScrollHeight} />
+    ),
     route: `/system-profile/${system.id}/details`
   },
   'team-and-contract': {

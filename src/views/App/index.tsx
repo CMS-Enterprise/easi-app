@@ -185,13 +185,6 @@ const AppRoutes = () => {
 };
 
 const App = () => {
-  // const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
-  // const value = { isMobileSideNavExpanded, setIsMobileSideNavExpanded };
-  // const NavContext = createContext({
-  //   isMobileSideNavExpanded,
-  //   setIsMobileSideNavExpanded
-  // });
-
   const handleSkipNav = () => {
     const mainContent = document.getElementById('main-content')!;
     if (mainContent) {

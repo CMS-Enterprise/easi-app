@@ -7,6 +7,11 @@
             padding-right: 0;
         }
 
+        &__summary-ref {
+            height: 100%;
+            margin-top: -.5rem;
+        }
+
         &__acronym {
             font-size: 1.375rem;
             font-weight: normal;
@@ -18,7 +23,6 @@
         }
 
         &__subheader {
-            // font-size: 1.5rem;
             font-size: 1.17rem;
         }
 
@@ -54,6 +58,22 @@
             font-style: normal;
             padding-left: 0.35rem;
         }
+
+        &__icon-text {
+            vertical-align: text-bottom;
+            line-height: 1.3em;
+        }
+    }
+
+    .fixed-nav {
+        position: fixed;
+        top: 0;
+        margin-top: 1.25em;
+        width: inherit;
+    }
+
+    .hide-nav {
+        display: none;
     }
 
     .link-header {
