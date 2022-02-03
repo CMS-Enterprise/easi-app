@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+go run cmd/intake_schema_gen/main.go 
