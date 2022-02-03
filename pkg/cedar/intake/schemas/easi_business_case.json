@@ -1,0 +1,209 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/EASIBizCase",
+  "title": "EASIBizCaseV01",
+  "definitions": {
+    "EASIBizCase": {
+      "required": [
+        "archivedAt",
+        "asIsCons",
+        "asIsCostSavings",
+        "asIsPros",
+        "asIsSummary",
+        "asIsTitle",
+        "businessNeed",
+        "businessOwner",
+        "businessSolutions",
+        "cmsBenefit",
+        "initialSubmittedAt",
+        "intakeId",
+        "lastSubmittedAt",
+        "lifecycleCostLines",
+        "priorityAlignment",
+        "projectName",
+        "requester",
+        "requesterPhoneNumber",
+        "submittedAt",
+        "successIndicators",
+        "userEUA"
+      ],
+      "properties": {
+        "archivedAt": {
+          "type": "string"
+        },
+        "asIsCons": {
+          "type": "string"
+        },
+        "asIsCostSavings": {
+          "type": "string"
+        },
+        "asIsPros": {
+          "type": "string"
+        },
+        "asIsSummary": {
+          "type": "string"
+        },
+        "asIsTitle": {
+          "type": "string"
+        },
+        "businessNeed": {
+          "type": "string"
+        },
+        "businessOwner": {
+          "type": "string"
+        },
+        "businessSolutions": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/EASIBusinessSolution"
+          },
+          "type": "array"
+        },
+        "cmsBenefit": {
+          "type": "string"
+        },
+        "initialSubmittedAt": {
+          "type": "string"
+        },
+        "intakeId": {
+          "type": "string"
+        },
+        "lastSubmittedAt": {
+          "type": "string"
+        },
+        "lifecycleCostLines": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/EASILifecycleCost"
+          },
+          "type": "array"
+        },
+        "priorityAlignment": {
+          "type": "string"
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "requester": {
+          "type": "string"
+        },
+        "requesterPhoneNumber": {
+          "type": "string"
+        },
+        "submittedAt": {
+          "type": "string"
+        },
+        "successIndicators": {
+          "type": "string"
+        },
+        "userEUA": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "EASIBusinessSolution": {
+      "required": [
+        "acquisitionApproach",
+        "cons",
+        "costSavings",
+        "hasUI",
+        "hostingCloudServiceType",
+        "hostingLocation",
+        "hostingType",
+        "pros",
+        "securityIsApproved",
+        "securityIsBeingReviewed",
+        "solutionType",
+        "summary",
+        "title"
+      ],
+      "properties": {
+        "acquisitionApproach": {
+          "type": "string"
+        },
+        "cons": {
+          "type": "string"
+        },
+        "costSavings": {
+          "type": "string"
+        },
+        "hasUI": {
+          "type": "string"
+        },
+        "hostingCloudServiceType": {
+          "type": "string"
+        },
+        "hostingLocation": {
+          "type": "string"
+        },
+        "hostingType": {
+          "type": "string"
+        },
+        "pros": {
+          "type": "string"
+        },
+        "securityIsApproved": {
+          "enum": [
+            "",
+            "false",
+            "true"
+          ],
+          "type": "string"
+        },
+        "securityIsBeingReviewed": {
+          "type": "string"
+        },
+        "solutionType": {
+          "enum": [
+            "preferred",
+            "alternativeA",
+            "alternativeB"
+          ],
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "EASILifecycleCost": {
+      "required": [
+        "businessCaseId",
+        "cost",
+        "id",
+        "phase",
+        "solution",
+        "year"
+      ],
+      "properties": {
+        "businessCaseId": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "solution": {
+          "type": "string"
+        },
+        "year": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/EASIIntake",
+  "title": "EASIIntakeV01",
+  "definitions": {
+    "EASIIntake": {
+      "required": [
+        "adminLead",
+        "archivedAt",
+        "businessNeed",
+        "businessOwner",
+        "businessOwnerComponent",
+        "component",
+        "contractEndDate",
+        "contractStartDate",
+        "contractVehicle",
+        "contractor",
+        "costIncrease",
+        "costIncreaseAmount",
+        "decidedAt",
+        "decisionNextSteps",
+        "eaCollaborator",
+        "eaCollaboratorName",
+        "eaSupportRequest",
+        "existingContract",
+        "existingFunding",
+        "fundingNumber",
+        "fundingSource",
+        "grbDate",
+        "grtDate",
+        "grtReviewEmailBody",
+        "isso",
+        "issoName",
+        "lifecycleExpiresAt",
+        "lifecycleID",
+        "lifecycleScope",
+        "oitSecurityCollaborator",
+        "oitSecurityCollaboratorName",
+        "processStatus",
+        "productManager",
+        "productManagerComponent",
+        "projectAcronym",
+        "projectName",
+        "rejectionReason",
+        "requestType",
+        "requester",
+        "requesterEmailAddress",
+        "solution",
+        "status",
+        "submittedAt",
+        "trbCollaborator",
+        "trbCollaboratorName",
+        "userEUA"
+      ],
+      "properties": {
+        "adminLead": {
+          "type": "string"
+        },
+        "archivedAt": {
+          "type": "string"
+        },
+        "businessNeed": {
+          "type": "string"
+        },
+        "businessOwner": {
+          "type": "string"
+        },
+        "businessOwnerComponent": {
+          "type": "string"
+        },
+        "component": {
+          "type": "string"
+        },
+        "contractEndDate": {
+          "type": "string"
+        },
+        "contractStartDate": {
+          "type": "string"
+        },
+        "contractVehicle": {
+          "type": "string"
+        },
+        "contractor": {
+          "type": "string"
+        },
+        "costIncrease": {
+          "type": "string"
+        },
+        "costIncreaseAmount": {
+          "type": "string"
+        },
+        "decidedAt": {
+          "type": "string"
+        },
+        "decisionNextSteps": {
+          "type": "string"
+        },
+        "eaCollaborator": {
+          "type": "string"
+        },
+        "eaCollaboratorName": {
+          "type": "string"
+        },
+        "eaSupportRequest": {
+          "enum": [
+            "",
+            "false",
+            "true"
+          ],
+          "type": "string"
+        },
+        "existingContract": {
+          "type": "string"
+        },
+        "existingFunding": {
+          "enum": [
+            "",
+            "false",
+            "true"
+          ],
+          "type": "string"
+        },
+        "fundingNumber": {
+          "type": "string"
+        },
+        "fundingSource": {
+          "type": "string"
+        },
+        "grbDate": {
+          "type": "string"
+        },
+        "grtDate": {
+          "type": "string"
+        },
+        "grtReviewEmailBody": {
+          "type": "string"
+        },
+        "isso": {
+          "type": "string"
+        },
+        "issoName": {
+          "type": "string"
+        },
+        "lifecycleExpiresAt": {
+          "type": "string"
+        },
+        "lifecycleID": {
+          "type": "string"
+        },
+        "lifecycleScope": {
+          "type": "string"
+        },
+        "oitSecurityCollaborator": {
+          "type": "string"
+        },
+        "oitSecurityCollaboratorName": {
+          "type": "string"
+        },
+        "processStatus": {
+          "type": "string"
+        },
+        "productManager": {
+          "type": "string"
+        },
+        "productManagerComponent": {
+          "type": "string"
+        },
+        "projectAcronym": {
+          "type": "string"
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "rejectionReason": {
+          "type": "string"
+        },
+        "requestType": {
+          "type": "string"
+        },
+        "requester": {
+          "type": "string"
+        },
+        "requesterEmailAddress": {
+          "type": "string"
+        },
+        "solution": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "submittedAt": {
+          "type": "string"
+        },
+        "trbCollaborator": {
+          "type": "string"
+        },
+        "trbCollaboratorName": {
+          "type": "string"
+        },
+        "userEUA": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

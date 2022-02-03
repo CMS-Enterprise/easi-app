@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/EASIAction",
+  "title": "EASIActionV01",
+  "definitions": {
+    "EASIAction": {
+      "required": [
+        "actionType",
+        "actorEUA",
+        "feedback",
+        "intakeId"
+      ],
+      "properties": {
+        "actionType": {
+          "type": "string"
+        },
+        "actorEUA": {
+          "type": "string"
+        },
+        "feedback": {
+          "type": "string"
+        },
+        "intakeId": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}
