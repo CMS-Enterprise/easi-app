@@ -97,8 +97,37 @@ func (c *Client) CheckConnection(ctx context.Context) error {
 	return nil
 }
 
-// PublishIntake sends an object to CEDAR through the Intake API for eventual storage in Alfabet
-func (c *Client) PublishIntake(ctx context.Context, model translation.IntakeObject) error {
+// PublishSystemIntake sends a system intake to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishSystemIntake(ctx context.Context, si models.SystemIntake) error {
+	intakeObject := translation.TranslatableSystemIntake(si)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
+
+// PublishBusinessCase sends a business case to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCase) error {
+	intakeObject := translation.TranslatableBusinessCase(bc)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
+
+// PublishGRTFeedback sends an item of GRT feedback to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishGRTFeedback(ctx context.Context, feedback models.GRTFeedback) error {
+	intakeObject := translation.TranslatableFeedback(feedback)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
+
+// PublishAction sends an action to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishAction(ctx context.Context, action models.Action) error {
+	intakeObject := translation.TranslatableAction(action)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
+
+// PublishNote sends a note to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishNote(ctx context.Context, note models.Note) error {
+	intakeObject := translation.TranslatableNote(note)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
+
+func (c *Client) publishIntakeObject(ctx context.Context, model translation.IntakeObject) error {
 	id := model.ObjectID()
 	objectType := model.ObjectType()
 
