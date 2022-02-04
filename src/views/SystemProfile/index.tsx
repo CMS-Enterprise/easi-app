@@ -52,18 +52,18 @@ import './index.scss';
 
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
-  const { setIsMobileSideNavExpanded } = useContext(NavContext);
+  const { setIsMobileSideNavExpanded } = useContext(NavContext); // Context provider for allowing subnav to trigger main nav toggle
   const isMobile = useCheckResponsiveScreen('tablet');
   const [isMobileSubNavExpanded, setisMobileSubNavExpanded] = useState<boolean>(
     false
   ); // State for managing sub page side nav toggle
-  const [fixedPosition, setFixedPosition] = useState<boolean>(false); // Controlls the state of fixed elements
+  const [fixedPosition, setFixedPosition] = useState<boolean>(false); // Controlls the state of fixed elements when scrolling
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true); // Managing state of summary box
   const [containerWidth, setContainerWidth] = useState<number | null>(null); // Sets the width of elements once the become fixed
   const [topScrollHeight, setTopScrollHeight] = useState<number | null>(null); // State that tracks height at which to fix elements
   const mobileSideNav = useRef<HTMLDivElement | null>(null); // Ref for mobile responsiveness
-  const containerRef = useRef<HTMLDivElement | null>(null); // Used for maintaining width of contact grid once element becomes fixed upon scrolling
-  const topScrollRef = useRef<HTMLDivElement | null>(null); // Used calculation distance from top of page and summary box when elements should become fixed
+  const containerRef = useRef<HTMLDivElement | null>(null); // Ref used for setting containerWidth
+  const topScrollRef = useRef<HTMLDivElement | null>(null); // Ref used for setting topScrollHeight
 
   const { systemId, subinfo, top } = useParams<{
     systemId: string;
@@ -105,11 +105,12 @@ const SystemProfile = () => {
     <NavLink
       to="/"
       onClick={e => {
+        // Toggle between main and sub side navs
         e.preventDefault();
         setisMobileSubNavExpanded(false);
         setIsMobileSideNavExpanded(true);
       }}
-      className="system-profile__main-nav-link text-primary margin-top-neg-10 margin-left-neg-1 margin-bottom-2"
+      className="system-profile__main-nav-link"
     >
       <span>&uarr;&nbsp;&nbsp;</span>
       <span
@@ -178,7 +179,7 @@ const SystemProfile = () => {
 
   // Hook used for detecting changes in summary box collapse state
   // Changes from consequent offsetTop will determine when sidenav becomes fixed
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Detecting the width for sidenav once position becomes fixed
     if (containerRef?.current?.clientWidth) {
       setContainerWidth(containerRef?.current?.clientWidth + 16); // 1rem padding addition
@@ -187,7 +188,7 @@ const SystemProfile = () => {
     // Gets the bottom position of the summary box and offset from top of page to determine fixed threshold
     if (topScrollRef?.current) {
       const scrollHeight =
-        topScrollRef?.current?.getBoundingClientRect().bottom + 16; // 1rem padding addition
+        topScrollRef?.current?.getBoundingClientRect().height + 170; // TODO: pass ref from <Header /> to get component offset value
       setTopScrollHeight(scrollHeight);
     }
   }, [loading, isCollapsed]);

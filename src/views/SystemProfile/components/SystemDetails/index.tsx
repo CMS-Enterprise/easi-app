@@ -7,8 +7,7 @@ import {
   CardFooter,
   CardHeader,
   Grid,
-  GridContainer,
-  Tag
+  GridContainer
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { ReactComponent as VerifiedUserIcon } from 'uswds/src/img/usa-icons/verified_user.svg';
@@ -21,6 +20,7 @@ import {
 } from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
+import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'utils/checkMobile';
 import {
   tempCedarSystemProps,
@@ -36,6 +36,7 @@ type SystemDetailsProps = {
   topScrollHeight: number | null;
 };
 
+// Function for determining if a system has any URLs (otherwise results in alert)
 const checkURLsExist = (locations: tempLocationProp[]): boolean => {
   return locations.some((location: tempLocationProp) => location.url);
 };
@@ -197,8 +198,6 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
                             className="margin-right-1"
                             aria-label="verified"
                           />
-
-                          {/* <i className="fa fa-check-circle text-success margin-right-1" /> */}
                           <span className="text-tbottom line-height-body-3">
                             {location.firewall && 'Web Application Firewall'}
                           </span>
@@ -421,12 +420,6 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
             </SectionWrapper>
           </Grid>
           {/* Point of contact/ miscellaneous info */}
-          <Grid
-            desktop={{ col: 9 }}
-            className={classnames('padding-right-2', 'side-divider', {
-              'hide-nav': !fixedPosition
-            })}
-          />
           <Grid desktop={{ col: 3 }}>
             <div ref={containerRef} style={{ width: '100%' }} />
             <div
