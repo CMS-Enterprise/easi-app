@@ -71,8 +71,8 @@ repos:
     hooks:
       - id: check-intake-schema-generation
         name: check-intake-schema-generation
-        entry: scripts/gen_intake_schema
-        language: script
+        entry: gen_intake_schema
+        language: golang
         files: cmd/gen_intake_schema/main\.go|pkg/cedar/intake/models/.*\.go|pkg/cedar/intake/schemas/.*\.json
 
   - repo: git://github.com/awslabs/git-secrets
