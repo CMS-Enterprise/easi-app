@@ -17,7 +17,6 @@
 
         &__main-nav-link {
             color: color($theme-color-primary);
-            font-style: normal;
         }
     }
 
@@ -26,10 +25,6 @@
         top: 0;
         margin-top: 1.25em;
         width: inherit;
-    }
-
-    .hide-nav {
-        display: none;
     }
 
     .link-header {

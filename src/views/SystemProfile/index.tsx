@@ -109,7 +109,7 @@ const SystemProfile = () => {
         setisMobileSubNavExpanded(false);
         setIsMobileSideNavExpanded(true);
       }}
-      className="system-profile__main-nav-link margin-top-neg-10 margin-left-neg-1 margin-bottom-2"
+      className="system-profile__main-nav-link text-primary margin-top-neg-10 margin-left-neg-1 margin-bottom-2"
     >
       <span>&uarr;&nbsp;&nbsp;</span>
       <span
@@ -331,7 +331,7 @@ const SystemProfile = () => {
               <Grid
                 desktop={{ col: 3 }}
                 className={classnames('padding-right-2', {
-                  'hide-nav': !fixedPosition
+                  'display-none': !fixedPosition
                 })}
               />
               <Grid
