@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-sdk-go v1.42.35
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.20.1
-	github.com/go-openapi/runtime v0.21.0
+	github.com/go-openapi/runtime v0.22.0
 	github.com/go-openapi/strfmt v0.21.1
 	github.com/go-openapi/swag v0.19.15
 	github.com/go-openapi/validate v0.20.3
