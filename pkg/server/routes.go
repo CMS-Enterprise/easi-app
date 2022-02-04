@@ -21,6 +21,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
@@ -107,6 +108,7 @@ func (s *Server) routes(
 
 	// set up CEDAR core API client
 	coreClient := cedarcore.NewClient(
+		appcontext.WithLogger(context.Background(), s.logger),
 		s.Config.GetString(appconfig.CEDARAPIURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		ldClient,

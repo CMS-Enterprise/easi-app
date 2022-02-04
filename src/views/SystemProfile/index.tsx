@@ -22,7 +22,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import useCheckResponsiveScreen from 'utils/checkMobile';
+import useCheckResponsiveScreen from 'hooks/checkMobile';
 import NotFound from 'views/NotFound';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
 
