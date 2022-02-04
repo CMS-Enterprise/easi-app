@@ -199,7 +199,7 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
                           />
 
                           {/* <i className="fa fa-check-circle text-success margin-right-1" /> */}
-                          <span className="system-profile__icon-text">
+                          <span className="text-tbottom line-height-body-3">
                             {location.firewall && 'Web Application Firewall'}
                           </span>
 

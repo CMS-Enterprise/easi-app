@@ -1,40 +1,5 @@
 #system-profile {
     .system-profile {
-        &__summary-box {
-            border: 0;
-            background-color: color($theme-color-primary-lighter);
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        &__summary-ref {
-            height: 100%;
-            margin-top: -.5rem;
-        }
-
-        &__acronym {
-            font-size: 1.375rem;
-            font-weight: normal;
-        }
-
-        &__summary-body {
-            font-weight: normal;
-            font-size: 1rem;
-        }
-
-        &__subheader {
-            font-size: 1.17rem;
-        }
-
-        &__nav {
-            padding: 0;
-        }
-
-        &__nav-button {
-            width: 100%;
-            align-items: center;
-        }
-
         &__tag {
             padding: 5px 10px;
             display: inline-block;
@@ -46,22 +11,13 @@
 
         &__bookmark {
             font-size: 1.5rem;
-            vertical-align: text-top;
             padding-top: .75rem;
             cursor: initial;
         }
 
         &__main-nav-link {
-            margin-top: -5em;
-            margin-bottom: 2em;
             color: color($theme-color-primary);
             font-style: normal;
-            padding-left: 0.35rem;
-        }
-
-        &__icon-text {
-            vertical-align: text-bottom;
-            line-height: 1.3em;
         }
     }
 
@@ -80,11 +36,6 @@
         text-underline-offset: 0.25rem;
     }
 
-    .usa-breadcrumb {
-        background-color: transparent;
-        padding: 0;
-    }
-
     .usa-sidenav, .usa-nav__primary-item {
         border: none;
 
@@ -96,10 +47,6 @@
     .usa-card__container {
         border-radius: .25rem;
         margin: 0;
-    }
-
-    .usa-card__header {
-        align-items: inherit;
     }
 
     .usa-sidenav__item a:not(.usa-current) {

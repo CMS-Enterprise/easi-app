@@ -109,7 +109,7 @@ const SystemProfile = () => {
         setisMobileSubNavExpanded(false);
         setIsMobileSideNavExpanded(true);
       }}
-      className="system-profile__main-nav-link"
+      className="system-profile__main-nav-link margin-top-neg-10 margin-left-neg-1 margin-bottom-2"
     >
       <span>&uarr;&nbsp;&nbsp;</span>
       <span
@@ -206,15 +206,18 @@ const SystemProfile = () => {
       <div id="system-profile" onScroll={handleScroll}>
         <SummaryBox
           heading=""
-          className="system-profile__summary-box padding-0"
+          className="padding-0 border-0 bg-primary-lighter"
         >
           {/* Setting a ref for summary box height - currently <SummaryBox /> component does not accept ref prop */}
           <div
-            className="padding-top-3 padding-bottom-3 system-profile__summary-ref"
+            className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full"
             ref={topScrollRef}
           >
             <Grid className="grid-container">
-              <BreadcrumbBar variant="wrap">
+              <BreadcrumbBar
+                variant="wrap"
+                className="bg-transparent padding-0"
+              >
                 <Breadcrumb>
                   <span>&larr; </span>
                   <BreadcrumbLink asCustom={Link} to="/system-profile">
@@ -226,13 +229,13 @@ const SystemProfile = () => {
               <PageHeading className="margin-top-2">
                 <BookmarkCardIcon
                   size="sm"
-                  className="margin-right-1 system-profile__bookmark"
+                  className="system-profile__bookmark margin-right-1 text-ttop cursor-initial"
                 />{' '}
                 <span>{systemInfo.name} </span>
-                <span className="system-profile__acronym">
+                <span className="text-normal font-body-sm">
                   ({systemInfo.acronym})
                 </span>
-                <div className="system-profile__summary-body">
+                <div className="text-normal font-body-md">
                   <CollapsableLink
                     className="margin-top-3"
                     eyeIcon
@@ -266,7 +269,7 @@ const SystemProfile = () => {
                           definition={t('singleSystem.summary.subheader1')}
                         />
                         <DescriptionTerm
-                          className="system-profile__subheader"
+                          className="font-body-md"
                           term={systemInfo.businessOwnerOrg || ''}
                         />
                       </Grid>
@@ -275,7 +278,7 @@ const SystemProfile = () => {
                           definition={t('singleSystem.summary.subheader2')}
                         />
                         <DescriptionTerm
-                          className="system-profile__subheader"
+                          className="font-body-md"
                           term="Geraldine Hobbs"
                         />
                       </Grid>
@@ -284,7 +287,7 @@ const SystemProfile = () => {
                           definition={t('singleSystem.summary.subheader3')}
                         />
                         <DescriptionTerm
-                          className="system-profile__subheader"
+                          className="font-body-md"
                           term="July 27, 2015"
                         />
                       </Grid>
@@ -293,7 +296,7 @@ const SystemProfile = () => {
                           definition={t('singleSystem.summary.subheader4')}
                         />
                         <DescriptionTerm
-                          className="system-profile__subheader"
+                          className="font-body-md"
                           term="December 4, 2021"
                         />
                       </Grid>
@@ -306,7 +309,7 @@ const SystemProfile = () => {
         </SummaryBox>
 
         {/* Button/Header to display when mobile/tablet */}
-        <div className="grid-container system-profile__nav">
+        <div className="grid-container padding-0">
           <div
             className={classnames('usa-overlay', {
               'is-visible': isMobileSubNavExpanded
@@ -314,7 +317,7 @@ const SystemProfile = () => {
           />
           <button
             type="button"
-            className="usa-menu-btn easi-header__basic system-profile__nav-button"
+            className="usa-menu-btn easi-header__basic width-full flex-align-center"
             onClick={() => setisMobileSubNavExpanded(true)}
           >
             <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>
