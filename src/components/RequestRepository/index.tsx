@@ -3,7 +3,13 @@ import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useSortBy, useTable } from 'react-table';
+import {
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -17,6 +23,9 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import TruncatedText from 'components/shared/TruncatedText';
+import GlobalClientFilter from 'components/TableFilter';
+import TablePagination from 'components/TablePagination';
+import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { AppState } from 'reducers/rootReducer';
@@ -242,7 +251,17 @@ const RequestRepository = () => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
     rows,
+    setGlobalFilter,
+    state,
     prepareRow
   } = useTable(
     {
@@ -256,11 +275,16 @@ const RequestRepository = () => {
         }
       },
       data,
+      autoResetSortBy: false,
+      autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], [])
       }
     },
-    useSortBy
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination
   );
 
   const csvHeaders = csvHeaderMap(t);
@@ -337,13 +361,23 @@ const RequestRepository = () => {
           count: data.length
         })}
       </PageHeading>
-      {/* h1 for screen devices / complicated CSS to have them together */}
-      <h1 className="font-heading-sm" aria-hidden>
-        {t('requestRepository.requestCount', {
-          context: activeTable,
-          count: data.length
-        })}
-      </h1>
+
+      <GlobalClientFilter
+        setGlobalFilter={setGlobalFilter}
+        tableID={t('systemTable.id')}
+        tableName={t('systemTable.title')}
+        className="margin-bottom-4"
+      />
+
+      <TableResults
+        globalFilter={state.globalFilter}
+        pageIndex={state.pageIndex}
+        pageSize={state.pageSize}
+        filteredRowLength={rows.length}
+        rowLength={data.length}
+        className="margin-bottom-4"
+      />
+
       {/* This is the only table that expands past the USWDS desktop dimensions.  Only convert to scrollable when in tablet/mobile */}
       <Table
         scrollable={isMobile}
@@ -413,6 +447,20 @@ const RequestRepository = () => {
           })}
         </tbody>
       </Table>
+
+      <TablePagination
+        gotoPage={gotoPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+        canNextPage={canNextPage}
+        pageIndex={state.pageIndex}
+        pageOptions={pageOptions}
+        canPreviousPage={canPreviousPage}
+        pageCount={pageCount}
+        pageSize={state.pageSize}
+        setPageSize={setPageSize}
+        page={[]}
+      />
     </MainContent>
   );
 };

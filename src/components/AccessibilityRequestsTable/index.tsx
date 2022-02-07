@@ -2,11 +2,20 @@
 
 import React, { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSortBy, useTable } from 'react-table';
+import {
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { Table } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import GlobalClientFilter from 'components/TableFilter';
+import TablePagination from 'components/TablePagination';
+import TableResults from 'components/TableResults';
 import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
@@ -129,7 +138,17 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
     rows,
+    setGlobalFilter,
+    state,
     prepareRow
   } = useTable(
     {
@@ -144,15 +163,37 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         }
       },
       requests,
+      autoResetSortBy: false,
+      autoResetPage: false,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], [])
+        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
+        pageIndex: 0
       }
     },
-    useSortBy
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination
   );
 
   return (
     <div className="accessibility-requests-table">
+      <GlobalClientFilter
+        setGlobalFilter={setGlobalFilter}
+        tableID={t('systemTable.id')}
+        tableName={t('systemTable.title')}
+        className="margin-bottom-4"
+      />
+
+      <TableResults
+        globalFilter={state.globalFilter}
+        pageIndex={state.pageIndex}
+        pageSize={state.pageSize}
+        filteredRowLength={rows.length}
+        rowLength={data.length}
+        className="margin-bottom-4"
+      />
+
       <Table bordered={false} scrollable {...getTableProps()} fullWidth>
         <caption className="usa-sr-only">{t('requestTable.caption')}</caption>
         <thead>
@@ -220,6 +261,20 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             );
           })}
         </tbody>
+
+        <TablePagination
+          gotoPage={gotoPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+          canNextPage={canNextPage}
+          pageIndex={state.pageIndex}
+          pageOptions={pageOptions}
+          canPreviousPage={canPreviousPage}
+          pageCount={pageCount}
+          pageSize={state.pageSize}
+          setPageSize={setPageSize}
+          page={[]}
+        />
       </Table>
       <div
         className="usa-sr-only usa-table__announcement-region"

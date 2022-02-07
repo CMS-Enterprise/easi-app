@@ -1,11 +1,20 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSortBy, useTable } from 'react-table';
+import {
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
+import GlobalClientFilter from 'components/TableFilter';
+import TablePagination from 'components/TablePagination';
+import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { formatDate } from 'utils/date';
@@ -112,7 +121,17 @@ const Table = () => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
     rows,
+    setGlobalFilter,
+    state,
     prepareRow
   } = useTable(
     {
@@ -126,12 +145,17 @@ const Table = () => {
           );
         }
       },
+      autoResetSortBy: false,
+      autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
         pageIndex: 0
       }
     },
-    useSortBy
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination
   );
 
   if (loading) {
@@ -152,6 +176,21 @@ const Table = () => {
 
   return (
     <div className="accessibility-requests-table">
+      <GlobalClientFilter
+        setGlobalFilter={setGlobalFilter}
+        tableID={t('systemTable.id')}
+        tableName={t('systemTable.title')}
+        className="margin-bottom-4"
+      />
+
+      <TableResults
+        globalFilter={state.globalFilter}
+        pageIndex={state.pageIndex}
+        pageSize={state.pageSize}
+        filteredRowLength={rows.length}
+        rowLength={data.length}
+        className="margin-bottom-4"
+      />
       <UswdsTable bordered={false} {...getTableProps()} fullWidth scrollable>
         <caption className="usa-sr-only">{t('requestsTable.caption')}</caption>
         <thead>
@@ -209,6 +248,21 @@ const Table = () => {
           })}
         </tbody>
       </UswdsTable>
+
+      <TablePagination
+        gotoPage={gotoPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+        canNextPage={canNextPage}
+        pageIndex={state.pageIndex}
+        pageOptions={pageOptions}
+        canPreviousPage={canPreviousPage}
+        pageCount={pageCount}
+        pageSize={state.pageSize}
+        setPageSize={setPageSize}
+        page={[]}
+      />
+
       <div
         className="usa-sr-only usa-table__announcement-region"
         aria-live="polite"
