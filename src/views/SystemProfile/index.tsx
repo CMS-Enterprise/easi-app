@@ -93,6 +93,7 @@ const SystemProfile = () => {
   const mainNavigationLink: React.ReactNode[] = [
     <NavLink
       to="/"
+      key="main-sidenav"
       onClick={e => {
         // Toggle between main and sub side navs
         e.preventDefault();

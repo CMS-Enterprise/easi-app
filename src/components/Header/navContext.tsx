@@ -1,6 +1,5 @@
 // Context Provider for Navigation Header
 // Some sibling components other than header need to call/trigger state changes of the side mobile navigation
-// Controls state of header height for fixed scrolling child components
 
 import React, { createContext, useState } from 'react';
 
