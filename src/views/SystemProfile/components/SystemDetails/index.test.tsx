@@ -16,6 +16,7 @@ describe('The making a request page', () => {
       <MemoryRouter initialEntries={['/system-profile/326-9-0/details']}>
         <Route path="/system-profile/:systemId/:subinfo">
           <SystemDetails
+            topScrollHeight={960}
             system={{
               ...mockSystemInfo[3],
               locations: locationsInfo,
@@ -39,6 +40,7 @@ describe('The making a request page', () => {
       <MemoryRouter initialEntries={['/system-profile/326-9-0/details']}>
         <Route path="/system-profile/:systemId/:subinfo">
           <SystemDetails
+            topScrollHeight={960}
             system={{
               ...mockSystemInfo[3],
               ...locationsInfo,

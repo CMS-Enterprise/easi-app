@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
@@ -31,6 +25,8 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
+import useOutsideClick from 'hooks/useOutsideClick';
+import useScrollHeight from 'hooks/useScrollHeight';
 import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import {
   GetCedarSystem
@@ -52,7 +48,7 @@ import './index.scss';
 
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
-  const { setIsMobileSideNavExpanded } = useContext(NavContext); // Context provider for allowing subnav to trigger main nav toggle
+  const { setIsMobileSideNavExpanded, navbarHeight } = useContext(NavContext); // Context provider for allowing subnav to trigger main nav toggle
   const isMobile = useCheckResponsiveScreen('tablet');
   const [isMobileSubNavExpanded, setisMobileSubNavExpanded] = useState<boolean>(
     false
@@ -142,40 +138,11 @@ const SystemProfile = () => {
 
   const navigationLinks = mainNavigationLink.concat(subNavigationLinks);
 
-  // Handler for detecting clicks outside of the expanded mobile nav
-  const handleClick = (e: Event) => {
-    if (mobileSideNav.current?.contains(e.target as HTMLElement)) {
-      return;
-    }
-    setisMobileSubNavExpanded(false);
-  };
+  // Custom hook for handling mouse clicks outside of mobile expanded side nav
+  useOutsideClick(mobileSideNav, setisMobileSubNavExpanded);
 
-  // Hook for attaching click handle listener
-  useEffect(() => {
-    document.addEventListener('mouseup', handleClick);
-
-    return () => {
-      document.removeEventListener('mouseup', handleClick);
-    };
-  }, []);
-
-  // Hander for setting side nav as fixed element once element is scroll to top of window
-  const handleScroll = () => {
-    if (topScrollHeight && window.scrollY > topScrollHeight) {
-      setFixedPosition(true);
-    } else {
-      setFixedPosition(false);
-    }
-  };
-
-  // Hook for attaching scroll handle listener
-  useEffect(() => {
-    document.addEventListener('scroll', handleScroll);
-
-    return () => {
-      document.removeEventListener('scroll', handleScroll);
-    };
-  });
+  // Custom hook for setting side nav as fixed element once element is scroll to top of window
+  useScrollHeight(topScrollHeight, setFixedPosition);
 
   // Hook used for detecting changes in summary box collapse state
   // Changes from consequent offsetTop will determine when sidenav becomes fixed
@@ -188,10 +155,10 @@ const SystemProfile = () => {
     // Gets the bottom position of the summary box and offset from top of page to determine fixed threshold
     if (topScrollRef?.current) {
       const scrollHeight =
-        topScrollRef?.current?.getBoundingClientRect().height + 170; // TODO: pass ref from <Header /> to get component offset value
+        topScrollRef?.current?.getBoundingClientRect().height + navbarHeight; // Height state passed from NavContext
       setTopScrollHeight(scrollHeight);
     }
-  }, [loading, isCollapsed]);
+  }, [loading, isCollapsed, navbarHeight]);
 
   if (loading) {
     return <PageLoading />;
@@ -204,7 +171,7 @@ const SystemProfile = () => {
 
   return (
     <MainContent>
-      <div id="system-profile" onScroll={handleScroll}>
+      <div id="system-profile">
         <SummaryBox
           heading=""
           className="padding-0 border-0 bg-primary-lighter"
@@ -336,6 +303,7 @@ const SystemProfile = () => {
                 })}
               />
               <Grid
+                ref={containerRef}
                 desktop={{ col: 3 }}
                 style={{
                   width:

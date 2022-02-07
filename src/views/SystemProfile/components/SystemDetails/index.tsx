@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -13,7 +13,6 @@ import classnames from 'classnames';
 import { ReactComponent as VerifiedUserIcon } from 'uswds/src/img/usa-icons/verified_user.svg';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import PageHeading from 'components/PageHeading';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -21,13 +20,12 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
+import useScrollHeight from 'hooks/useScrollHeight';
 import useCheckResponsiveScreen from 'utils/checkMobile';
 import {
   tempCedarSystemProps,
   tempLocationProp
 } from 'views/Sandbox/mockSystemData';
-
-import './index.scss';
 
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
@@ -44,27 +42,12 @@ const checkURLsExist = (locations: tempLocationProp[]): boolean => {
 const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
-  const containerRef = useRef<HTMLDivElement | null>(null); // Used for maintaining width of contact grid once element becomes fixed upon scrolling
-  const [fixedPosition, setFixedPosition] = useState(false); // Controlls the state of fixed elements
+  const containerRef = useRef<HTMLDivElement | null>(null); // Used for referencing width of contact grid once element becomes fixed upon scrolling
+  const [fixedPosition, setFixedPosition] = useState(false); // State of scrolled/fixed element
   const [containerWidth, setContainerWidth] = useState<Number | null>(null); // Sets the width of elements once the become fixed
 
-  // Hander for setting side nav as fixed element once element is scroll to top of window
-  const handleScroll = () => {
-    if (topScrollHeight && window.scrollY > topScrollHeight) {
-      setFixedPosition(true);
-    } else {
-      setFixedPosition(false);
-    }
-  };
-
-  // Hook for attaching scroll handle listener
-  useEffect(() => {
-    document.addEventListener('scroll', handleScroll);
-
-    return () => {
-      document.removeEventListener('scroll', handleScroll);
-    };
-  });
+  // Custom hook for setting side nav as fixed element once element is scroll to top of window
+  useScrollHeight(topScrollHeight, setFixedPosition);
 
   // Sets the width of the fixed element once scroll threshold reached
   useLayoutEffect(() => {
@@ -79,9 +62,9 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
         <Grid row>
           <Grid desktop={{ col: 9 }}>
             <SectionWrapper borderBottom className="padding-bottom-4">
-              <PageHeading headingLevel="h2" className="margin-top-0">
+              <h2 className="margin-top-0">
                 {t('singleSystem.systemDetails.header')}
-              </PageHeading>
+              </h2>
 
               {/* TODO: Map <DescriptionTerm /> to CEDAR data */}
               <Grid row className="margin-top-3">
@@ -124,26 +107,18 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
               </Grid>
 
               {/* TODO: Map and populate tags with CEDAR */}
-              <PageHeading
-                noFocus
-                headingLevel="h3"
-                className="margin-top-0 margin-bottom-1"
-              >
+              <h3 className="margin-top-0 margin-bottom-1">
                 {t('singleSystem.systemDetails.tagHeader1')}
-              </PageHeading>
+              </h3>
               <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
                 Fee for Service (FFS)
               </Tag>
               <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
                 Million Hearts
               </Tag>
-              <PageHeading
-                noFocus
-                headingLevel="h3"
-                className="margin-top-3 margin-bottom-1"
-              >
+              <h3 className="margin-top-3 margin-bottom-1">
                 {t('singleSystem.systemDetails.tagHeader2')}
-              </PageHeading>
+              </h3>
               <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
                 Next Generation ACO Model
               </Tag>
@@ -159,9 +134,9 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
               borderBottom
               className="padding-bottom-3 margin-bottom-3"
             >
-              <PageHeading noFocus headingLevel="h2" className="margin-top-3">
+              <h2 className="margin-top-3">
                 {t('singleSystem.systemDetails.urlsAndLocations')}
-              </PageHeading>
+              </h2>
 
               <DescriptionTerm
                 term={t('singleSystem.systemDetails.migrationDate')}
@@ -267,13 +242,9 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
               borderBottom
               className="padding-bottom-5 margin-bottom-4"
             >
-              <PageHeading
-                noFocus
-                headingLevel="h2"
-                className="margin-top-4 margin-bottom-1"
-              >
+              <h2 className="margin-top-4 margin-bottom-1">
                 {t('singleSystem.systemDetails.development')}
-              </PageHeading>
+              </h2>
 
               {system.developmentTags?.map((tag: string) => (
                 <Tag
@@ -340,13 +311,9 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
                   />
                 </Grid>
                 <Grid desktop={{ col: 12 }}>
-                  <PageHeading
-                    noFocus
-                    headingLevel="h3"
-                    className="margin-top-0 margin-bottom-1"
-                  >
+                  <h3 className="margin-top-0 margin-bottom-1">
                     {t('singleSystem.systemDetails.technologyTypes')}
-                  </PageHeading>
+                  </h3>
                   {/* TODO: Map and populate tags with CEDAR */}
                   <Tag className="system-profile__tag text-base-darker bg-base-lighter">
                     Natural Language Processing
@@ -359,13 +326,9 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
             </SectionWrapper>
 
             <SectionWrapper borderBottom={isMobile} className="margin-bottom-5">
-              <PageHeading
-                noFocus
-                headingLevel="h2"
-                className="margin-top-3 margin-bottom-1"
-              >
+              <h2 className="margin-top-3 margin-bottom-1">
                 {t('singleSystem.systemDetails.ipInfo')}
-              </PageHeading>
+              </h2>
 
               {/* TODO: Map defined CEDAR variable once availabe */}
               <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
@@ -421,6 +384,7 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
           </Grid>
           {/* Point of contact/ miscellaneous info */}
           <Grid desktop={{ col: 3 }}>
+            {/* Setting a ref here to reference the grid width for the fixed side nav */}
             <div ref={containerRef} style={{ width: '100%' }} />
             <div
               style={{
@@ -430,8 +394,6 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
                 'fixed-nav': fixedPosition && !isMobile
               })}
             >
-              {/* Setting a ref here to reference the grid width for the fixed side nav */}
-
               <div className="top-divider" />
               <p className="font-body-xs margin-top-1 margin-bottom-3">
                 {t('singleSystem.pointOfContact')}

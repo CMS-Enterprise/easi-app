@@ -6,7 +6,6 @@ import './index.scss';
 type PageHeadingProps = {
   children: React.ReactNode;
   className?: string;
-  noFocus?: boolean;
   headingLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 } & JSX.IntrinsicElements['h1'];
 
@@ -19,7 +18,6 @@ type PageHeadingProps = {
 const PageHeading = ({
   children,
   className,
-  noFocus,
   headingLevel,
   ...props
 }: PageHeadingProps) => {
@@ -28,10 +26,8 @@ const PageHeading = ({
   const classes = classnames('easi-h1', className);
 
   useEffect(() => {
-    if (!noFocus) {
-      headingRef.current?.focus();
-    }
-  }, [noFocus]);
+    headingRef.current?.focus();
+  }, []);
 
   return (
     <Component
