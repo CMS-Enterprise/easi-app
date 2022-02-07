@@ -6,7 +6,7 @@ exports[`The making a request page matches snapshot 1`] = `
     id="system-detail"
   >
     <div
-      class="grid-container padding-left-0 padding-right-0"
+      class="grid-container padding-left-0 padding-right-0 padding-top-2"
       data-testid="gridContainer"
     >
       <div
