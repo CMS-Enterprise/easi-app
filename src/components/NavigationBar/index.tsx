@@ -110,7 +110,7 @@ const NavigationBar = ({
     >
       <div className="grid-container">
         <PrimaryNav
-          onToggleMobileNav={() => toggle(false)}
+          onClick={() => toggle(false)}
           mobileExpanded={mobile}
           aria-label="Primary navigation"
           items={navItems}
