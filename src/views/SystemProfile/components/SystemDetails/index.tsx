@@ -43,7 +43,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
 
   return (
     <div id="system-detail">
-      <GridContainer className="padding-left-0 padding-right-0">
+      <GridContainer className="padding-left-0 padding-right-0 padding-top-2">
         <Grid row>
           <Grid desktop={{ col: 9 }}>
             <SectionWrapper borderBottom className="padding-bottom-4">
