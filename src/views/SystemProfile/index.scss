@@ -1,38 +1,31 @@
 #system-profile {
     .system-profile {
-        &__summary-box {
-            border-top: 0;
-            background-color: color($theme-color-primary-lighter);
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        &__acronym {
-            font-size: 1rem;
-            font-weight: normal;
-        }
-
-        &__summary-body {
-            font-weight: normal;
-            font-size: 1rem;
-        }
-
-        &__subheader {
+        &__bookmark {
             font-size: 1.5rem;
+            padding-top: .75rem;
+            cursor: initial;
         }
 
-        &__nav {
-            padding: 0;
+        &__main-nav-link {
+            color: color($theme-color-primary);
+            margin-left: -0.5rem;
+            margin-top: -5rem;
+            margin-bottom: 2.5rem;
         }
+    }
 
-        &__nav-button {
-            width: 100%
-        }
-    }    
+    .sticky-nav {
+        align-self: start;
+        position: sticky;
+        position: -webkit-sticky;
+        top: 0;
+        padding-right: 1rem;
+        padding-top: 1rem;
 
-    .usa-breadcrumb {
-        background-color: transparent;
-        padding: 0;
+    }
+
+    .link-header {
+        text-underline-offset: 0.25rem;
     }
 
     .usa-sidenav, .usa-nav__primary-item {
@@ -43,8 +36,17 @@
         }
     }
 
+    .usa-card__container {
+        border-radius: .25rem;
+        margin: 0;
+    }
+
     .usa-sidenav__item a:not(.usa-current) {
         padding-left: 0;        
+    }
+
+    .usa-nav__close {
+        z-index: 1000;
     }
 
     .nav-group-border {
@@ -53,7 +55,16 @@
 }
 
 .top-divider {
-    height: .25rem;
-    width: 100%;
-    background-color: color($theme-color-primary-lighter);
+    @media screen and (min-width: $desktop) {
+        height: .25rem;
+        width: 100%;
+        background-color: color($theme-color-primary-lighter);
+    }
+}
+
+.side-divider {
+    padding-left: 1rem;
+    @media screen and (max-width: $desktop) {
+        border-left: .25rem solid color($theme-color-primary-lighter);        
+    } 
 }
