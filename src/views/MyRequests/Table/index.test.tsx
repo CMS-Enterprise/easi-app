@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 
-import Table from './Table';
+import Table from '.';
 
 describe('My Requests Table', () => {
   describe('when there are no requests', () => {

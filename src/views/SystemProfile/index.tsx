@@ -25,13 +25,13 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
+import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useOutsideClick from 'hooks/useOutsideClick';
 import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import {
   GetCedarSystem
   // GetCedarSystem_cedarSystem as CedarSystem
 } from 'queries/types/GetCedarSystem';
-import useCheckResponsiveScreen from 'utils/checkMobile';
 import NotFound from 'views/NotFound';
 import {
   developmentTags,

@@ -24,9 +24,11 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
           >
             <th
               aria-sort="none"
+              class="table-header"
               colspan="1"
               role="columnheader"
               scope="col"
+              style="min-width: 140px; width: 140px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -36,15 +38,17 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               >
                 Request name
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
             <th
               aria-sort="none"
+              class="table-header"
               colspan="1"
               role="columnheader"
               scope="col"
+              style="min-width: 140px; width: 140px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -54,15 +58,17 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               >
                 Governance
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
             <th
               aria-sort="descending"
+              class="table-header"
               colspan="1"
               role="columnheader"
               scope="col"
+              style="min-width: 140px; width: 220px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -72,15 +78,17 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               >
                 Submission date
                 <span
-                  class="margin-left-1 fa fa-caret-down fa-lg caret"
+                  class="margin-left-1 fa fa-caret-down position-absolute"
                 />
               </button>
             </th>
             <th
               aria-sort="none"
+              class="table-header"
               colspan="1"
               role="columnheader"
               scope="col"
+              style="min-width: 140px; width: 140px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -90,15 +98,17 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               >
                 Status
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
             <th
               aria-sort="none"
+              class="table-header"
               colspan="1"
               role="columnheader"
               scope="col"
+              style="min-width: 220px; width: 140px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -108,7 +118,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               >
                 Upcoming meeting date
                 <span
-                  class="margin-left-1 fa fa-sort caret"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
@@ -149,11 +159,16 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             >
               <span>
                 Open
+                <span
+                  class="text-base-dark font-body-3xs"
+                >
+                   - Changed on May 25 2021
+                </span>
               </span>
             </td>
             <td
               role="cell"
-              style="width: 180px;"
+              style="width: 220px;"
             >
               None
             </td>
@@ -189,17 +204,17 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               style="width: 200px;"
             >
               <span>
-                In remediation 
+                In remediation
                 <span
                   class="text-base-dark font-body-3xs"
                 >
-                  changed on May 26 2021
+                   - Changed on May 26 2021
                 </span>
               </span>
             </td>
             <td
               role="cell"
-              style="width: 180px;"
+              style="width: 220px;"
             >
               None
             </td>
@@ -238,7 +253,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             </td>
             <td
               role="cell"
-              style="width: 180px;"
+              style="width: 220px;"
             >
               None
             </td>
@@ -273,11 +288,11 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               role="cell"
               style="width: 200px;"
             >
-              Lifecycle ID issued: A123456
+              Lifecycle ID issued: A123456: A123456
             </td>
             <td
               role="cell"
-              style="width: 180px;"
+              style="width: 220px;"
             >
               None
             </td>
