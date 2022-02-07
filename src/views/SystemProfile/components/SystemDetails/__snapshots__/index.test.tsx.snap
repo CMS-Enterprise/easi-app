@@ -360,15 +360,11 @@ exports[`The making a request page matches snapshot 1`] = `
           </div>
         </div>
         <div
-          class="desktop:grid-col-3"
+          class="desktop:grid-col-3 sticky-nav"
           data-testid="grid"
         >
           <div
-            style="width: 100%;"
-          />
-          <div
             class="padding-right-2 side-divider"
-            style="width: 100%;"
           >
             <div
               class="top-divider"

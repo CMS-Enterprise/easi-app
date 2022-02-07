@@ -26,7 +26,6 @@ import {
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import useOutsideClick from 'hooks/useOutsideClick';
-import useScrollHeight from 'hooks/useScrollHeight';
 import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import {
   GetCedarSystem
@@ -48,18 +47,12 @@ import './index.scss';
 
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
-  const { setIsMobileSideNavExpanded, navbarHeight } = useContext(NavContext); // Context provider for allowing subnav to trigger main nav toggle
+  const { setIsMobileSideNavExpanded } = useContext(NavContext); // Context provider for allowing subnav to trigger main nav toggle
   const isMobile = useCheckResponsiveScreen('tablet');
   const [isMobileSubNavExpanded, setisMobileSubNavExpanded] = useState<boolean>(
     false
   ); // State for managing sub page side nav toggle
-  const [fixedPosition, setFixedPosition] = useState<boolean>(false); // Controlls the state of fixed elements when scrolling
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(true); // Managing state of summary box
-  const [containerWidth, setContainerWidth] = useState<number | null>(null); // Sets the width of elements once the become fixed
-  const [topScrollHeight, setTopScrollHeight] = useState<number | null>(null); // State that tracks height at which to fix elements
   const mobileSideNav = useRef<HTMLDivElement | null>(null); // Ref for mobile responsiveness
-  const containerRef = useRef<HTMLDivElement | null>(null); // Ref used for setting containerWidth
-  const topScrollRef = useRef<HTMLDivElement | null>(null); // Ref used for setting topScrollHeight
 
   const { systemId, subinfo, top } = useParams<{
     systemId: string;
@@ -120,16 +113,15 @@ const SystemProfile = () => {
 
   // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(
-    sideNavItems(systemInfo, topScrollHeight)
+    sideNavItems(systemInfo)
   ).map((key: string) => (
     <NavLink
-      to={sideNavItems(systemInfo, topScrollHeight)[key].route}
+      to={sideNavItems(systemInfo)[key].route}
       key={key}
       onClick={() => setisMobileSubNavExpanded(false)}
       activeClassName="usa-current"
       className={classnames({
-        'nav-group-border': sideNavItems(systemInfo, topScrollHeight)[key]
-          .groupEnd
+        'nav-group-border': sideNavItems(systemInfo)[key].groupEnd
       })}
     >
       {t(`navigation.${key}`)}
@@ -140,25 +132,6 @@ const SystemProfile = () => {
 
   // Custom hook for handling mouse clicks outside of mobile expanded side nav
   useOutsideClick(mobileSideNav, setisMobileSubNavExpanded);
-
-  // Custom hook for setting side nav as fixed element once element is scroll to top of window
-  useScrollHeight(topScrollHeight, setFixedPosition);
-
-  // Hook used for detecting changes in summary box collapse state
-  // Changes from consequent offsetTop will determine when sidenav becomes fixed
-  useLayoutEffect(() => {
-    // Detecting the width for sidenav once position becomes fixed
-    if (containerRef?.current?.clientWidth) {
-      setContainerWidth(containerRef?.current?.clientWidth + 16); // 1rem padding addition
-    }
-
-    // Gets the bottom position of the summary box and offset from top of page to determine fixed threshold
-    if (topScrollRef?.current) {
-      const scrollHeight =
-        topScrollRef?.current?.getBoundingClientRect().height + navbarHeight; // Height state passed from NavContext
-      setTopScrollHeight(scrollHeight);
-    }
-  }, [loading, isCollapsed, navbarHeight]);
 
   if (loading) {
     return <PageLoading />;
@@ -176,11 +149,7 @@ const SystemProfile = () => {
           heading=""
           className="padding-0 border-0 bg-primary-lighter"
         >
-          {/* Setting a ref for summary box height - currently <SummaryBox /> component does not accept ref prop */}
-          <div
-            className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full"
-            ref={topScrollRef}
-          >
+          <div className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full">
             <Grid className="grid-container">
               <BreadcrumbBar
                 variant="wrap"
@@ -207,7 +176,6 @@ const SystemProfile = () => {
                   <CollapsableLink
                     className="margin-top-3"
                     eyeIcon
-                    parentState={setIsCollapsed}
                     startOpen
                     labelPosition="bottom"
                     closeLabel={t('singleSystem.summary.hide')}
@@ -298,23 +266,10 @@ const SystemProfile = () => {
             <Grid row>
               <Grid
                 desktop={{ col: 3 }}
-                className={classnames('padding-right-2', {
-                  'display-none': !fixedPosition
-                })}
-              />
-              <Grid
-                ref={containerRef}
-                desktop={{ col: 3 }}
-                style={{
-                  width:
-                    fixedPosition && !isMobile ? `${containerWidth}px` : '25%'
-                }}
-                className={classnames('padding-right-2', {
-                  'fixed-nav': fixedPosition && !isMobile
+                className={classnames({
+                  'sticky-nav': !isMobileSubNavExpanded
                 })}
               >
-                {/* Setting a ref here to reference the grid width for the fixed side nav */}
-                <div ref={containerRef} style={{ width: '100%' }} />
                 {/* Side navigation for single system */}
                 {!isMobile ? (
                   <SideNav items={subNavigationLinks} />
@@ -333,11 +288,7 @@ const SystemProfile = () => {
 
               <Grid desktop={{ col: 9 }}>
                 {/* This renders the selected sidenav central component */}
-                {/* Passing position that elements should become fixed when scrolling */}
-                {
-                  sideNavItems(systemInfo, topScrollHeight)[subinfo || 'home']
-                    .component
-                }
+                {sideNavItems(systemInfo)[subinfo || 'home'].component}
               </Grid>
             </Grid>
           </Grid>

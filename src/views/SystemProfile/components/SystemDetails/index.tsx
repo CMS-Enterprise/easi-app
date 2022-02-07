@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -20,7 +20,6 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
-import useScrollHeight from 'hooks/useScrollHeight';
 import useCheckResponsiveScreen from 'utils/checkMobile';
 import {
   tempCedarSystemProps,
@@ -30,8 +29,7 @@ import {
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
 type SystemDetailsProps = {
-  system: tempCedarSystemProps; // TODO: Once additional CEDAR data is define, change to GQL generated type,
-  topScrollHeight: number | null;
+  system: tempCedarSystemProps; // TODO: Once additional CEDAR data is define, change to GQL generated type
 };
 
 // Function for determining if a system has any URLs (otherwise results in alert)
@@ -39,22 +37,9 @@ const checkURLsExist = (locations: tempLocationProp[]): boolean => {
   return locations.some((location: tempLocationProp) => location.url);
 };
 
-const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
+const SystemDetails = ({ system }: SystemDetailsProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
-  const containerRef = useRef<HTMLDivElement | null>(null); // Used for referencing width of contact grid once element becomes fixed upon scrolling
-  const [fixedPosition, setFixedPosition] = useState(false); // State of scrolled/fixed element
-  const [containerWidth, setContainerWidth] = useState<Number | null>(null); // Sets the width of elements once the become fixed
-
-  // Custom hook for setting side nav as fixed element once element is scroll to top of window
-  useScrollHeight(topScrollHeight, setFixedPosition);
-
-  // Sets the width of the fixed element once scroll threshold reached
-  useLayoutEffect(() => {
-    if (containerRef?.current?.clientWidth) {
-      setContainerWidth(containerRef?.current?.clientWidth);
-    }
-  }, []);
 
   return (
     <div id="system-detail">
@@ -383,17 +368,14 @@ const SystemDetails = ({ system, topScrollHeight }: SystemDetailsProps) => {
             </SectionWrapper>
           </Grid>
           {/* Point of contact/ miscellaneous info */}
-          <Grid desktop={{ col: 3 }}>
+          <Grid
+            desktop={{ col: 3 }}
+            className={classnames({
+              'sticky-nav': !isMobile
+            })}
+          >
             {/* Setting a ref here to reference the grid width for the fixed side nav */}
-            <div ref={containerRef} style={{ width: '100%' }} />
-            <div
-              style={{
-                width: fixedPosition ? `${containerWidth}px` : '100%'
-              }}
-              className={classnames('padding-right-2', 'side-divider', {
-                'fixed-nav': fixedPosition && !isMobile
-              })}
-            >
+            <div className={classnames('padding-right-2', 'side-divider')}>
               <div className="top-divider" />
               <p className="font-body-xs margin-top-1 margin-bottom-3">
                 {t('singleSystem.pointOfContact')}

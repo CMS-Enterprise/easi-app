@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
@@ -26,21 +20,12 @@ export const Header = ({ children }: HeaderProps) => {
   const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
-  const {
-    isMobileSideNavExpanded,
-    setIsMobileSideNavExpanded,
-    setNavbarHeight
-  } = useContext(NavContext);
+  const { isMobileSideNavExpanded, setIsMobileSideNavExpanded } = useContext(
+    NavContext
+  );
   const dropdownNode = useRef<any>();
   const mobileSideNav = useRef<any>();
   const navbarRef = useRef<HTMLDivElement | null>(null); // Ref used for setting setNavbarHeight
-
-  useLayoutEffect(() => {
-    // Detecting the height for nav once position becomes fixed
-    if (navbarRef?.current?.clientHeight) {
-      setNavbarHeight(navbarRef?.current?.clientHeight + 16); // 1rem padding addition
-    }
-  }, [setNavbarHeight]);
 
   useEffect(() => {
     let isMounted = true;

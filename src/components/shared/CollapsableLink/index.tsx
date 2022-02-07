@@ -13,7 +13,6 @@ type CollapsableLinkProps = {
   styleLeftBar?: boolean;
   eyeIcon?: boolean;
   startOpen?: boolean;
-  parentState?: (state: boolean) => void;
   labelPosition?: 'top' | 'bottom';
 };
 
@@ -25,7 +24,6 @@ const CollapsableLink = ({
   closeLabel,
   styleLeftBar = true,
   eyeIcon,
-  parentState,
   startOpen = false,
   labelPosition = 'top'
 }: CollapsableLinkProps) => {
@@ -47,12 +45,7 @@ const CollapsableLink = ({
   const collapseButton: React.ReactNode = (
     <Button
       type="button"
-      onClick={() => {
-        setOpen(!isOpen);
-        if (parentState) {
-          parentState(!isOpen);
-        }
-      }}
+      onClick={() => setOpen(!isOpen)}
       aria-expanded={isOpen}
       aria-controls={id}
       className={classnames({ 'text-bold': isOpen }, className)}
