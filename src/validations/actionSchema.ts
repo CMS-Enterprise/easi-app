@@ -60,11 +60,14 @@ export const extendLifecycleIdSchema = Yup.object().shape({
           year: Number(newExpirationYear) || 0
         });
 
+        // validate the old expiration date (some imported systems have invalid dates)
         const oldExpiration = DateTime.fromISO(currentExpiresAt);
         if (!oldExpiration.isValid) {
+          // if the old date isn't valid, we only need to make sure the new one is valid
           return newExpiration.isValid;
         }
 
+        // if the old date is valid, we make sure that it's not before the old one
         return newExpiration.isValid && newExpiration > oldExpiration;
       },
       otherwise: Yup.string().test(
