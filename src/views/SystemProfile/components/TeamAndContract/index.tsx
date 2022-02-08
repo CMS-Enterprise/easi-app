@@ -92,13 +92,13 @@ const SystemTeamAndContract = ({
       <GridContainer className="padding-top-2">
         <Grid row gap>
           <Grid desktop={{ col: 9 }}>
-            <SectionWrapper borderBottom className="padding-bottom-5">
+            <SectionWrapper borderBottom className="padding-bottom-2">
               <h2 className="margin-top-0 margin-bottom-4">
                 {t('teamAndContract.header.teamAndContract')}
               </h2>
               <GridContainer className="padding-x-0">
                 <Grid row>
-                  <Grid tablet={{ col: true }}>
+                  <Grid tablet={{ col: true }} className="margin-bottom-3">
                     <DescriptionTerm
                       term={t('teamAndContract.federalFullTimeEmployees')}
                     />
@@ -107,7 +107,7 @@ const SystemTeamAndContract = ({
                       definition="5"
                     />
                   </Grid>
-                  <Grid tablet={{ col: true }}>
+                  <Grid tablet={{ col: true }} className="margin-bottom-3">
                     <DescriptionTerm
                       term={t('teamAndContract.contractorFullTimeEmployees')}
                     />
@@ -258,7 +258,9 @@ const SystemTeamAndContract = ({
                 <h3 className="margin-top-0 margin-bottom-1">
                   {pointOfContactData.name}
                 </h3>
-                <div className="margin-bottom-1">{pointOfContactData.role}</div>
+                <div className="margin-bottom-1 line-height-body-5">
+                  {pointOfContactData.role}
+                </div>
                 <div className="padding-bottom-2">
                   <UswdsReactLink
                     aria-label={t('teamAndContract.sendAnEmail')}
