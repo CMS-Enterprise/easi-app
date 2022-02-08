@@ -176,3 +176,5 @@ yq
 Redis
 EASI-1505
 timestamp
+schemas
+jsonschema
