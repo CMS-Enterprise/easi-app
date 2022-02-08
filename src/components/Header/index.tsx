@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import classnames from 'classnames';
 
+import { NavContext } from 'components/Header/navContext';
 import UswdsReactLink from 'components/LinkWrapper';
 import NavigationBar from 'components/NavigationBar';
 import UsGovBanner from 'components/UsGovBanner';
@@ -19,9 +20,12 @@ export const Header = ({ children }: HeaderProps) => {
   const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
-  const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
+  const { isMobileSideNavExpanded, setIsMobileSideNavExpanded } = useContext(
+    NavContext
+  );
   const dropdownNode = useRef<any>();
   const mobileSideNav = useRef<any>();
+  const navbarRef = useRef<HTMLDivElement | null>(null); // Ref used for setting setNavbarHeight
 
   useEffect(() => {
     let isMounted = true;
@@ -38,33 +42,33 @@ export const Header = ({ children }: HeaderProps) => {
     };
   }, [authState, oktaAuth]);
 
-  const handleClick = (e: Event) => {
-    if (
-      dropdownNode &&
-      dropdownNode.current &&
-      dropdownNode.current.contains(e.target)
-    ) {
-      return;
-    }
-
-    if (
-      mobileSideNav &&
-      mobileSideNav.current &&
-      mobileSideNav.current.contains(e.target)
-    ) {
-      return;
-    }
-
-    setIsMobileSideNavExpanded(false);
-  };
-
   useEffect(() => {
+    const handleClick = (e: Event) => {
+      if (
+        dropdownNode &&
+        dropdownNode.current &&
+        dropdownNode.current.contains(e.target)
+      ) {
+        return;
+      }
+
+      if (
+        mobileSideNav &&
+        mobileSideNav.current &&
+        mobileSideNav.current.contains(e.target)
+      ) {
+        return;
+      }
+
+      setIsMobileSideNavExpanded(false);
+    };
+
     document.addEventListener('mouseup', handleClick);
 
     return () => {
       document.removeEventListener('mouseup', handleClick);
     };
-  }, []);
+  }, [setIsMobileSideNavExpanded]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -88,7 +92,7 @@ export const Header = ({ children }: HeaderProps) => {
   };
 
   return (
-    <header className="usa-header easi-header" role="banner">
+    <header className="usa-header easi-header" role="banner" ref={navbarRef}>
       <UsGovBanner />
       <div className="grid-container easi-header__basic">
         <div className="usa-logo site-logo" id="logo">
