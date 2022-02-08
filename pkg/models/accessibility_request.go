@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 )
 
 // AccessibilityRequestDeletionReason is why an accessibility request was marked as deleted
@@ -28,4 +29,5 @@ type AccessibilityRequest struct {
 	EUAUserID      string                              `json:"euaUserID" db:"eua_user_id"`
 	DeletedAt      *time.Time                          `db:"deleted_at" json:"deletedAt"`
 	DeletionReason *AccessibilityRequestDeletionReason `db:"deletion_reason" json:"deletionReason"`
+	CedarSystemID  null.String                         `json:"cedarSystemId" db:"cedar_system_id"`
 }

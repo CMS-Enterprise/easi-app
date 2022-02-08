@@ -57,6 +57,7 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	AccessibilityRequest struct {
+		CedarSystemID    func(childComplexity int) int
 		CreatedAt        func(childComplexity int) int
 		Documents        func(childComplexity int) int
 		EUAUserID        func(childComplexity int) int
@@ -594,6 +595,7 @@ type AccessibilityRequestResolver interface {
 
 	StatusRecord(ctx context.Context, obj *models.AccessibilityRequest) (*models.AccessibilityRequestStatusRecord, error)
 	Notes(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestNote, error)
+	CedarSystemID(ctx context.Context, obj *models.AccessibilityRequest) (*string, error)
 }
 type AccessibilityRequestDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error)
@@ -777,6 +779,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "AccessibilityRequest.cedarSystemId":
+		if e.complexity.AccessibilityRequest.CedarSystemID == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequest.CedarSystemID(childComplexity), true
 
 	case "AccessibilityRequest.submittedAt":
 		if e.complexity.AccessibilityRequest.CreatedAt == nil {
@@ -3616,6 +3625,7 @@ type AccessibilityRequest {
   euaUserId: String!
   statusRecord: AccessibilityRequestStatusRecord!
   notes: [AccessibilityRequestNote!]! @hasRole(role: EASI_508_TESTER_OR_USER)
+  cedarSystemId: String
 }
 
 """
@@ -3766,6 +3776,7 @@ The data needed to initialize a 508/accessibility request
 input CreateAccessibilityRequestInput {
   intakeID: UUID!
   name: String!
+  cedarSystemId: String
 }
 
 """
@@ -5906,6 +5917,38 @@ func (ec *executionContext) _AccessibilityRequest_notes(ctx context.Context, fie
 	res := resTmp.([]*models.AccessibilityRequestNote)
 	fc.Result = res
 	return ec.marshalNAccessibilityRequestNote2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestNoteᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequest_cedarSystemId(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.AccessibilityRequest().CedarSystemID(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestDocument_documentType(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
@@ -19069,6 +19112,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestInput(ctx co
 			if err != nil {
 				return it, err
 			}
+		case "cedarSystemId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+			it.CedarSystemID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -20347,6 +20398,17 @@ func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.S
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			})
+		case "cedarSystemId":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._AccessibilityRequest_cedarSystemId(ctx, field, obj)
 				return res
 			})
 		default:

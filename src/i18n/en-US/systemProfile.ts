@@ -23,6 +23,7 @@ const systemProfile = {
   },
   singleSystem: {
     id: 'single-system-profile',
+    mainNavigation: 'Main Navigation',
     pointOfContact: 'Point of Contact',
     sendEmail: 'Send and email',
     moreContact: 'More points of contact',
@@ -36,6 +37,36 @@ const systemProfile = {
       subheader2: 'Business Owner',
       subheader3: 'Go Live Date',
       subheader4: 'Most recent major change release'
+    },
+    systemDetails: {
+      header: 'System Details',
+      ownership: 'System ownership',
+      usersPerMonth: 'Users per month',
+      access: 'Internal or public access',
+      fismaID: 'FISMA Sytem ID',
+      tagHeader1: 'CMS Programs and Mission Essential Functions',
+      tagHeader2: 'CMS Innovation Center (CMMI) Models',
+      urlsAndLocations: 'URLs and Locations',
+      migrationDate: 'Cloud migration date',
+      noMigrationDate: 'No clould migration planned yet',
+      location: 'Location',
+      cloudProvider: 'Cloud Service Provider',
+      development: 'Development',
+      customDevelopment: 'Custom Development',
+      workCompleted: 'Development work completed',
+      releaseFrequency: 'Planned release frequency',
+      retirement: 'Planned retirement',
+      developmentDescription: 'Description of development work to be completed',
+      aiTechStatus: 'AI technology status',
+      technologyTypes: 'AI Technology types',
+      noURL: 'This system does not have URLS',
+      noEnvironmentURL: 'This environment does not have a url',
+      ipInfo: 'IP Information',
+      currentIP: 'Current IP access',
+      ipAssets: 'Number of IP-enabled assets',
+      ipv6Transition: 'IPv6 transition',
+      percentTransitioned: 'Percent transitioned to IPv6',
+      hardCodedIP: 'Hard-coded IP addresses'
     }
   },
   systemTable: {
@@ -68,6 +99,25 @@ const systemProfile = {
   },
   gql: {
     fail: 'Failed to retrieve systems data'
+  },
+  teamAndContract: {
+    header: {
+      teamAndContract: 'Team and Contract',
+      contractInformation: 'Contract Information',
+      pointsOfContact: 'Points of Contact'
+    },
+    federalFullTimeEmployees: 'Federal Full Time Employees',
+    contractorFullTimeEmployees: 'Contractor Full Time Employees',
+    vendors: 'Vendors',
+    contractAwardDate: 'Contract Award Date',
+    periodOfPerformance: 'Period of performance',
+    startDate: 'Start Date',
+    endDate: 'End Date',
+    contractNumber: 'Contract number',
+    technologyFunctions: 'Technology functions',
+    assetsOrServices: 'Assets or services',
+    pointOfContact: 'Point of contact',
+    sendAnEmail: 'Send an email'
   }
 };
 

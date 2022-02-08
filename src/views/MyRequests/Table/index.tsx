@@ -3,18 +3,22 @@ import { useTranslation } from 'react-i18next';
 import { useSortBy, useTable } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
-import classnames from 'classnames';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
-import { RequestType } from 'types/graphql-global-types';
-import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
+import {
+  currentTableSortDescription,
+  getColumnSortStatus,
+  getHeaderSortIcon,
+  sortColumnValues
+} from 'utils/tableSort';
 
-import './index.scss';
+import tableMap from './tableMap';
+
+import '../index.scss';
 
 const Table = () => {
   const { t } = useTranslation(['home', 'intake', 'accessibility']);
@@ -34,113 +38,75 @@ const Table = () => {
         Cell: ({ row, value }: any) => {
           let link: string;
           switch (row.original.type) {
-            case RequestType.ACCESSIBILITY_REQUEST:
+            case t('requestsTable.types.ACCESSIBILITY_REQUEST'):
               link = `/508/requests/${row.original.id}`;
               break;
-            case RequestType.GOVERNANCE_REQUEST:
+            case t('requestsTable.types.GOVERNANCE_REQUEST'):
               link = `/governance-task-list/${row.original.id}`;
               break;
             default:
               link = '/';
           }
-          return (
-            <UswdsReactLink to={link}>
-              {value || t('requestsTable.defaultName')}
-            </UswdsReactLink>
-          );
+          return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
         },
+        width: '220px',
         maxWidth: 350
       },
       {
         Header: t('requestsTable.headers.type'),
-        accessor: 'type',
-        Cell: ({ value }: any) => {
-          return t(`requestsTable.types.${value}`);
-        }
+        accessor: 'type'
       },
       {
         Header: t('requestsTable.headers.submittedAt'),
-        accessor: 'submittedAt',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
-          }
-          return t('requestsTable.defaultSubmittedAt');
-        }
+        accessor: 'submittedAt'
       },
       {
         Header: t('requestsTable.headers.status'),
         accessor: 'status',
-        width: '200px',
         Cell: ({ row, value }: any) => {
-          let statusString;
           switch (row.original.type) {
-            case RequestType.ACCESSIBILITY_REQUEST:
+            case t(`requestsTable.types.ACCESSIBILITY_REQUEST`):
               // Status hasn't changed if the status record created at is the same
               // as the 508 request's submitted at
-              if (
-                row.original.submittedAt.toISO() ===
-                row.original.statusCreatedAt.toISO()
-              ) {
-                return <span>{accessibilityRequestStatusMap[value]}</span>;
+              if (row.original.submittedAt === row.original.createdAt) {
+                return <span>{value}</span>;
               }
-
               return (
                 <span>
-                  {accessibilityRequestStatusMap[value]}{' '}
-                  <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
+                  {value}
+                  <span className="text-base-dark font-body-3xs">{` - Changed on ${formatDate(
                     row.original.statusCreatedAt
                   )}`}</span>
                 </span>
               );
-            case RequestType.GOVERNANCE_REQUEST:
-              statusString = t(`intake:statusMap.${value}`);
+            case t(`requestsTable.types.GOVERNANCE_REQUEST`):
               if (row.original.lcid) {
-                return `${statusString}: ${row.original.lcid}`;
+                return `${value}: ${row.original.lcid}`;
               }
-              return statusString;
+              return value;
             default:
               return '';
           }
-        }
+        },
+        width: '200px'
       },
       {
         Header: t('requestsTable.headers.nextMeetingDate'),
         accessor: 'nextMeetingDate',
         className: 'next-meeting-date',
-        width: '180px',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
-          }
-          return 'None';
-        }
+        width: '220px'
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Modifying data for table sorting and prepping for Cell configuration
   const data = useMemo(() => {
-    const requests =
-      tableData &&
-      tableData.requests &&
-      tableData.requests.edges.map(edge => {
-        return edge.node;
-      });
-
-    const mappedData = requests?.map(request => {
-      const submittedAt = request.submittedAt
-        ? DateTime.fromISO(request.submittedAt)
-        : null;
-
-      const statusCreatedAt = request.statusCreatedAt
-        ? DateTime.fromISO(request.statusCreatedAt)
-        : null;
-      return { ...request, submittedAt, statusCreatedAt };
-    });
-
-    return mappedData || [];
-  }, [tableData]);
+    if (tableData) {
+      return tableMap(tableData, t);
+    }
+    return [];
+  }, [tableData, t]);
 
   const {
     getTableProps,
@@ -154,49 +120,19 @@ const Table = () => {
       data,
       sortTypes: {
         alphanumeric: (rowOne, rowTwo, columnName) => {
-          const rowOneElem = rowOne.values[columnName];
-          const rowTwoElem = rowTwo.values[columnName];
-
-          // If item is a string, enforce capitalization (temporarily) and then compare
-          if (typeof rowOneElem === 'string') {
-            return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
-          }
-
-          // If item is a DateTime, convert to Number and compare
-          if (rowOneElem instanceof DateTime) {
-            return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
-          }
-
-          // If neither string nor DateTime, return bare comparison
-          return rowOneElem > rowTwoElem ? 1 : -1;
+          return sortColumnValues(
+            rowOne.values[columnName],
+            rowTwo.values[columnName]
+          );
         }
       },
       initialState: {
-        sortBy: [{ id: 'submittedAt', desc: true }]
+        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
+        pageIndex: 0
       }
     },
     useSortBy
   );
-
-  const getHeaderSortIcon = (isDesc: boolean | undefined) => {
-    return classnames('margin-left-1', {
-      'fa fa-caret-down fa-lg caret': isDesc,
-      'fa fa-caret-up fa-lg caret': !isDesc
-    });
-  };
-
-  const getColumnSortStatus = (
-    column: any
-  ): 'descending' | 'ascending' | 'none' => {
-    if (column.isSorted) {
-      if (column.isSortedDesc) {
-        return 'descending';
-      }
-      return 'ascending';
-    }
-
-    return 'none';
-  };
 
   if (loading) {
     return (
@@ -221,12 +157,17 @@ const Table = () => {
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps()}
                   aria-sort={getColumnSortStatus(column)}
-                  style={{}}
+                  className="table-header"
                   scope="col"
+                  style={{
+                    minWidth: index === 4 ? '220px' : '140px',
+                    width: index === 2 ? '220px' : '140px',
+                    position: 'relative'
+                  }}
                 >
                   <button
                     className="usa-button usa-button--unstyled"
@@ -234,14 +175,7 @@ const Table = () => {
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    {column.isSorted && (
-                      <span
-                        className={getHeaderSortIcon(column.isSortedDesc)}
-                      />
-                    )}
-                    {!column.isSorted && (
-                      <span className="margin-left-1 fa fa-sort caret" />
-                    )}
+                    <span className={getHeaderSortIcon(column)} />
                   </button>
                 </th>
               ))}
@@ -283,16 +217,6 @@ const Table = () => {
       </div>
     </div>
   );
-};
-
-const currentTableSortDescription = headerGroup => {
-  const sortedHeader = headerGroup.headers.find(header => header.isSorted);
-
-  if (sortedHeader) {
-    const direction = sortedHeader.isSortedDesc ? 'descending' : 'ascending';
-    return `Requests table sorted by ${sortedHeader.Header} ${direction}`;
-  }
-  return 'Requests table reset to default sort order';
 };
 
 export default Table;

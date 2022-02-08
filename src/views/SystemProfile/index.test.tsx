@@ -1,28 +1,28 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
+
+import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
+import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
 
 import SystemProfile from './index';
 
-jest.mock('@okta/okta-react', () => ({
-  useOktaAuth: () => {
-    return {
-      authState: {
-        isAuthenticated: true
-      },
-      oktaAuth: {
-        getUser: async () => {
-          return {
-            name: 'John Doe'
-          };
-        },
-        logout: async () => {}
+const mocks = [
+  {
+    request: {
+      query: GetCedarSystemQuery,
+      variables: {
+        id: '326-9-0'
       }
-    };
+    },
+    result: {
+      data: {
+        cedarSystem: mockSystemInfo[3]
+      }
+    }
   }
-}));
-
-// TODO: Mock cedar data once available
+];
 
 describe('The making a request page', () => {
   it('renders without errors', async () => {
@@ -31,7 +31,9 @@ describe('The making a request page', () => {
         initialEntries={['/system-profile/326-9-0/tools-and-software']}
       >
         <Route path="/system-profile/:systemId/:subinfo">
-          <SystemProfile />
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <SystemProfile />
+          </MockedProvider>
         </Route>
       </MemoryRouter>
     );
@@ -49,7 +51,9 @@ describe('The making a request page', () => {
         initialEntries={['/system-profile/326-9-0/tools-and-software']}
       >
         <Route path="/system-profile/:systemId/:subinfo">
-          <SystemProfile />
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <SystemProfile />
+          </MockedProvider>
         </Route>
       </MemoryRouter>
     );

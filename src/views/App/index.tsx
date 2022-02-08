@@ -43,6 +43,8 @@ import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
 
+import { NavContextProvider } from '../../components/Header/navContext';
+
 import shouldScroll from './scrollConfig';
 
 import './index.scss';
@@ -202,11 +204,13 @@ const App = () => {
             <FlagsWrapper>
               <UserInfoWrapper>
                 <TimeOutWrapper>
-                  <PageWrapper>
-                    <Header />
-                    <AppRoutes />
-                    <Footer />
-                  </PageWrapper>
+                  <NavContextProvider>
+                    <PageWrapper>
+                      <Header />
+                      <AppRoutes />
+                      <Footer />
+                    </PageWrapper>
+                  </NavContextProvider>
                 </TimeOutWrapper>
               </UserInfoWrapper>
             </FlagsWrapper>

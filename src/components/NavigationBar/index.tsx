@@ -65,6 +65,7 @@ const NavigationBar = ({
             to={route.link}
             activeClassName="usa-current"
             className="easi-nav__link"
+            onClick={() => toggle(false)}
             exact
           >
             <em
@@ -109,7 +110,7 @@ const NavigationBar = ({
     >
       <div className="grid-container">
         <PrimaryNav
-          onToggleMobileNav={() => toggle(false)}
+          onClick={() => toggle(false)}
           mobileExpanded={mobile}
           aria-label="Primary navigation"
           items={navItems}
