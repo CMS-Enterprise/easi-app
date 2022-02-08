@@ -22,6 +22,7 @@ This application has the following main components:
 - [Working with the database](./docs/database.md) - includes instructions on modifying the database schema
 - [Testing locally](./docs/local_testing.md)
 - [Docker Compose files and usage](./docs/docker_compose.md)
+- [Deployment Process](./docs/operations/deployment_process.md)
 
 
 ## Repository Structure
