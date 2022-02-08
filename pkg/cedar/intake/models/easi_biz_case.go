@@ -1,7 +1,7 @@
 package models
 
-// NOTE: this type is used to create a schema used by the CEDAR Intake API
-// When changing this type, add a new version for it in pkg/cedar/intake/translation/schema_versions.go
+// NOTE: these types are used to create a schema used by the CEDAR Intake API
+// When changing any of these types, add a new version for BizCase in pkg/cedar/intake/translation/schema_versions.go
 // and update the associated version in cmd/gen_intake_schema/main.go
 
 // EASIBizCase represents a business case for a system
@@ -27,4 +27,31 @@ type EASIBizCase struct {
 	SubmittedAt          string                  `json:"submittedAt"`
 	SuccessIndicators    string                  `json:"successIndicators"`
 	UserEUA              string                  `json:"userEUA"`
+}
+
+// EASIBusinessSolution represents a business solution submitted through EASi as part of a business case
+type EASIBusinessSolution struct {
+	AcquisitionApproach     string `json:"acquisitionApproach"`
+	Cons                    string `json:"cons"`
+	CostSavings             string `json:"costSavings"`
+	HasUI                   string `json:"hasUI"`
+	HostingCloudServiceType string `json:"hostingCloudServiceType"`
+	HostingLocation         string `json:"hostingLocation"`
+	HostingType             string `json:"hostingType"`
+	Pros                    string `json:"pros"`
+	SecurityIsApproved      string `json:"securityIsApproved" jsonschema:"enum=,enum=false,enum=true"`
+	SecurityIsBeingReviewed string `json:"securityIsBeingReviewed"`
+	SolutionType            string `json:"solutionType" jsonschema:"enum=preferred,enum=alternativeA,enum=alternativeB"`
+	Summary                 string `json:"summary"`
+	Title                   string `json:"title"`
+}
+
+// EASILifecycleCost represents a lifecycle cost item submitted through EASi as part of a business case
+type EASILifecycleCost struct {
+	BusinessCaseID string `json:"businessCaseId"`
+	Cost           string `json:"cost"`
+	ID             string `json:"id"`
+	Phase          string `json:"phase"`
+	Solution       string `json:"solution"`
+	Year           string `json:"year"`
 }
