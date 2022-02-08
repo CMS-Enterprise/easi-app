@@ -180,8 +180,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     <div className="accessibility-requests-table">
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
-        tableID={t('systemTable.id')}
-        tableName={t('systemTable.title')}
+        tableID={t('requestTable.id')}
+        tableName={t('requestTable.title')}
         className="margin-bottom-4"
       />
 

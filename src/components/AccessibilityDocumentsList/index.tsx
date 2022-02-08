@@ -195,8 +195,8 @@ const AccessibilityDocumentsList = ({
     <div data-testid="accessibility-documents-list">
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
-        tableID={t('systemTable.id')}
-        tableName={t('systemTable.title')}
+        tableID={t('documentTable.id')}
+        tableName={t('documentTable.title')}
         className="margin-bottom-4"
       />
 

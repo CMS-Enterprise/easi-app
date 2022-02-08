@@ -178,8 +178,8 @@ const Table = () => {
     <div className="accessibility-requests-table">
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
-        tableID={t('systemTable.id')}
-        tableName={t('systemTable.title')}
+        tableID={t('requestsTable.id')}
+        tableName={t('requestsTable.title')}
         className="margin-bottom-4"
       />
 

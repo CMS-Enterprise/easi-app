@@ -87,6 +87,8 @@ const governanceReviewTeam = {
     email_time_notification: 'An email was sent to the requester on {{date}}'
   },
   requestRepository: {
+    id: 'request-repository',
+    title: 'Request Repository',
     header: 'Requests',
     requestCount_open: 'There is {{count}} open request',
     requestCount_open_plural: 'There are {{count}} open requests',

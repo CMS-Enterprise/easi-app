@@ -13,15 +13,15 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
       <label
         class="usa-sr-only"
         data-testid="label"
-        for="systemTable.id-search"
+        for="request-table-search"
       >
         Search Table
       </label>
       <input
         class="usa-input"
         data-testid="textInput"
-        id="systemTable.id-search"
-        name="systemTable.title Search"
+        id="request-table-search"
+        name="Request Table Search"
         role="searchbox"
         type="search"
       />

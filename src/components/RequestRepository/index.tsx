@@ -364,8 +364,8 @@ const RequestRepository = () => {
 
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
-        tableID={t('systemTable.id')}
-        tableName={t('systemTable.title')}
+        tableID={t('requestRepository.id')}
+        tableName={t('requestRepository.title')}
         className="margin-bottom-4"
       />
 
