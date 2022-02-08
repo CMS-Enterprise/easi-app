@@ -11,7 +11,6 @@ import {
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import PageHeading from 'components/PageHeading';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -94,12 +93,9 @@ const SystemTeamAndContract = ({
         <Grid row gap>
           <Grid desktop={{ col: 9 }}>
             <SectionWrapper borderBottom className="padding-bottom-5">
-              <PageHeading
-                headingLevel="h2"
-                className="margin-top-0 margin-bottom-4"
-              >
+              <h2 className="margin-top-0 margin-bottom-4">
                 {t('teamAndContract.header.teamAndContract')}
-              </PageHeading>
+              </h2>
               <GridContainer className="padding-x-0">
                 <Grid row>
                   <Grid tablet={{ col: true }}>
@@ -124,31 +120,22 @@ const SystemTeamAndContract = ({
               </GridContainer>
             </SectionWrapper>
             <SectionWrapper borderBottom className="padding-bottom-5">
-              <PageHeading
-                headingLevel="h2"
-                className="margin-top-5 margin-top-4"
-              >
+              <h2 className="margin-top-5 margin-top-4">
                 {t('teamAndContract.header.contractInformation')}
-              </PageHeading>
+              </h2>
               <CardGroup className="margin-0">
                 {vendorsData.map(vendor => {
                   return (
                     <Card className="grid-col-12 margin-bottom-2">
                       <CardHeader className="padding-2 padding-bottom-0">
-                        <PageHeading
-                          headingLevel="h5"
-                          className="margin-y-0 font-sans-2xs text-normal"
-                        >
+                        <h5 className="margin-y-0 font-sans-2xs text-normal">
                           {t('teamAndContract.vendors')}
-                        </PageHeading>
-                        <PageHeading
-                          headingLevel="h3"
-                          className="margin-y-0 line-height-body-3"
-                        >
+                        </h5>
+                        <h3 className="margin-y-0 line-height-body-3">
                           {vendor.vendors.map(name => (
                             <div>{name}</div>
                           ))}
-                        </PageHeading>
+                        </h3>
                         <DescriptionTerm
                           className="padding-top-2"
                           term={t('teamAndContract.contractAwardDate')}
@@ -160,12 +147,9 @@ const SystemTeamAndContract = ({
                         <Divider className="margin-y-2" />
                       </CardHeader>
                       <CardBody className="padding-2 padding-top-0">
-                        <PageHeading
-                          headingLevel="h5"
-                          className="margin-top-2 margin-bottom-1 font-sans-2xs text-normal"
-                        >
+                        <h5 className="margin-top-2 margin-bottom-1 font-sans-2xs text-normal">
                           {t('teamAndContract.periodOfPerformance')}
-                        </PageHeading>
+                        </h5>
                         <GridContainer className="padding-x-0">
                           <Grid row>
                             <Grid col>
@@ -189,21 +173,13 @@ const SystemTeamAndContract = ({
                           </Grid>
                         </GridContainer>
                         <Divider className="margin-y-2" />
-                        <PageHeading
-                          headingLevel="h5"
-                          className="margin-y-0 font-sans-2xs text-normal"
-                        >
+                        <h5 className="margin-y-0 font-sans-2xs text-normal">
                           {t('teamAndContract.contractNumber')}
-                        </PageHeading>
-                        <PageHeading headingLevel="h3" className="margin-y-0">
-                          {vendor.contractNumber}
-                        </PageHeading>
-                        <PageHeading
-                          headingLevel="h5"
-                          className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal"
-                        >
+                        </h5>
+                        <h3 className="margin-y-0">{vendor.contractNumber}</h3>
+                        <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
                           {t('teamAndContract.technologyFunctions')}
-                        </PageHeading>
+                        </h5>
                         <div>
                           {vendor.technologyFunctions.map(name => (
                             <Tag
@@ -214,12 +190,9 @@ const SystemTeamAndContract = ({
                             </Tag>
                           ))}
                         </div>
-                        <PageHeading
-                          headingLevel="h5"
-                          className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal"
-                        >
+                        <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
                           {t('teamAndContract.assetsOrServices')}
-                        </PageHeading>
+                        </h5>
                         <div>
                           {vendor.assetsOrServices.map(name => (
                             <Tag
@@ -236,25 +209,17 @@ const SystemTeamAndContract = ({
                 })}
               </CardGroup>
             </SectionWrapper>
-            <PageHeading
-              headingLevel="h2"
-              className="margin-top-5 margin-bottom-4"
-            >
+            <h2 className="margin-top-5 margin-bottom-4">
               {t('teamAndContract.header.pointsOfContact')}
-            </PageHeading>
+            </h2>
             <CardGroup className="margin-0">
               {contactListData.map(contact => (
                 <Card key={contact.id} className="grid-col-12 margin-bottom-2">
                   <CardHeader className="padding-2 padding-bottom-0">
-                    <PageHeading
-                      headingLevel="h5"
-                      className="margin-y-0 font-sans-2xs text-normal"
-                    >
+                    <h5 className="margin-y-0 font-sans-2xs text-normal">
                       {contact.role}
-                    </PageHeading>
-                    <PageHeading headingLevel="h3" className="margin-y-0">
-                      {contact.name}
-                    </PageHeading>
+                    </h5>
+                    <h3 className="margin-y-0">{contact.name}</h3>
                     <div>
                       <UswdsReactLink
                         className="line-height-body-5"
@@ -287,18 +252,12 @@ const SystemTeamAndContract = ({
             >
               <div className="side-divider">
                 <div className="top-divider" />
-                <PageHeading
-                  headingLevel="h5"
-                  className="margin-top-0 margin-bottom-3 padding-top-1 font-sans-2xs text-normal"
-                >
+                <h5 className="margin-top-0 margin-bottom-3 padding-top-1 font-sans-2xs text-normal">
                   {t('teamAndContract.pointOfContact')}
-                </PageHeading>
-                <PageHeading
-                  headingLevel="h3"
-                  className="margin-top-0 margin-bottom-1"
-                >
+                </h5>
+                <h3 className="margin-top-0 margin-bottom-1">
                   {pointOfContactData.name}
-                </PageHeading>
+                </h3>
                 <div className="margin-bottom-1">{pointOfContactData.role}</div>
                 <div className="padding-bottom-2">
                   <UswdsReactLink
