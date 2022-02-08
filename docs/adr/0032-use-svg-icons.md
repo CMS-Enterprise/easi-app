@@ -14,7 +14,7 @@ Current implementation of icons within EASI mostly use Font-Awesome icon fonts. 
 
 * Chosen Alternative: Truss/USWDS SVG icons.
 
-Initially there was browser compatibility issues that prevented EASI from moving forward with SVG icon implementation due to Chrome’s default rasterization.  By injecting the SVG element as a React component (by way of SVGR library), rasterization of otherwise IMG element is bypassed.  
+Initially there was browser compatibility issues that prevented EASI from moving forward with SVG icon implementation due to Chrome’s default rasterization.  By injecting the SVG element as a React component (by way of SVGR library), rasterization of otherwise IMG element is bypassed.  Truss' updated icon library converts SVG to SVGR.  We will use Truss' Icon component for displaying SVG as SVGR once updated uswds-react library.
 
 ## Pros and Cons of the Alternatives
 
