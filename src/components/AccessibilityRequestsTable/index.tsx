@@ -54,10 +54,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.submissionDate'),
-        accessor: 'submittedAt',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
+        accessor: (value: AccessibilityRequests) => {
+          if (value.submittedAt) {
+            return formatDate(value.submittedAt);
           }
           return '';
         },
@@ -69,10 +68,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: 'relevantTestDate',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
+        accessor: (value: any) => {
+          if (value.relevantTestDate) {
+            return formatDate(value.relevantTestDate);
           }
           return t('requestTable.emptyTestDate');
         },
@@ -80,19 +78,24 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.status'),
-        accessor: 'statusRecord',
+        accessor: (value: any) => {
+          return value?.statusRecord?.status;
+        },
         Cell: ({ row, value }: any) => {
           // Status hasn't changed if the status record created at is the same
           // as the 508 request's submitted at
-          if (row.original.submittedAt.toISO() === value.createdAt.toISO()) {
-            return <span>{value.status}</span>;
+          if (
+            row.original?.submittedAt?.toISO() ===
+            row.original?.statusRecord?.createdAt?.toISO()
+          ) {
+            return <span>{value}</span>;
           }
 
           return (
             <span>
-              {value.status}{' '}
+              {value}{' '}
               <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
-                value.createdAt
+                row.original?.statusRecord?.createdAt
               )}`}</span>
             </span>
           );

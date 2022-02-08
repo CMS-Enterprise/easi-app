@@ -31,20 +31,10 @@ const tableMap = (tableData: SystemIntakeForm[], t: TFunction) => {
       intake.requester.component
     )}`;
 
-    const grtDate = intake.grtDate
-      ? intake.grtDate
-      : t('requestRepository.table.addDate');
-
-    const grbDate = intake.grbDate
-      ? intake.grbDate
-      : t('requestRepository.table.addDate');
-
     // Override all applicable fields in intake to use i18n translations
     return {
       ...intake,
       requester,
-      grtDate,
-      grbDate,
       status: statusTranslation,
       requestType: translateRequestType(intake.requestType)
     };

@@ -10,16 +10,6 @@ import AccessibilityRequestsTable from './index';
 
 const requests = [
   {
-    id: '123',
-    name: 'Burrito v1',
-    submittedAt: '2021-06-10T19:22:40Z',
-    system: {
-      lcid: '0000',
-      businessOwner: { name: 'Shade', component: 'OIT' }
-    },
-    statusRecord: { status: 'OPEN', createdAt: '2021-06-10T19:22:40Z' }
-  },
-  {
     id: '124',
     name: 'Burrito v2',
     relevantTestDate: { date: '2021-06-30T19:22:40Z' },
@@ -32,6 +22,16 @@ const requests = [
       status: 'IN_REMEDIATION',
       createdAt: '2021-06-11T19:22:40Z'
     }
+  },
+  {
+    id: '123',
+    name: 'Burrito v1',
+    submittedAt: '2021-06-10T19:22:40Z',
+    system: {
+      lcid: '0000',
+      businessOwner: { name: 'Shade', component: 'OIT' }
+    },
+    statusRecord: { status: 'OPEN', createdAt: '2021-06-10T19:22:40Z' }
   }
 ];
 

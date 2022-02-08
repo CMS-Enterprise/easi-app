@@ -59,8 +59,7 @@ const AccessibilityDocumentsList = ({
     return [
       {
         Header: t<string>('documentTable.header.documentName'),
-        accessor: 'documentType',
-        Cell: ({ value }: any) => translateDocumentType(value)
+        accessor: (value: any) => translateDocumentType(value.documentType)
       },
       {
         Header: t<string>('documentTable.header.uploadedAt'),

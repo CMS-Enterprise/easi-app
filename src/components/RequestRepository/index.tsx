@@ -30,7 +30,8 @@ import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
-import { formatDateAndIgnoreTimezone } from 'utils/date';
+import { SystemIntakeForm } from 'types/systemIntake';
+import { formatDate } from 'utils/date';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
@@ -59,10 +60,9 @@ const RequestRepository = () => {
 
   const submissionDateColumn = {
     Header: t('intake:fields.submissionDate'),
-    accessor: 'submittedAt',
-    Cell: ({ value }: any) => {
-      if (value) {
-        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+    accessor: (value: SystemIntakeForm) => {
+      if (value.submittedAt) {
+        return formatDate(value.submittedAt);
       }
       return t('requestRepository.table.submissionDate.null');
     }
@@ -90,25 +90,35 @@ const RequestRepository = () => {
 
   const adminLeadColumn = {
     Header: t('intake:fields.adminLead'),
-    accessor: 'adminLead',
-    Cell: ({ value }: any) => {
-      if (value) {
-        return value;
+    accessor: (value: SystemIntakeForm) => {
+      if (value.adminLead) {
+        return value.adminLead;
       }
-      return (
-        <>
-          {/* TODO: should probably make this a button that opens up the assign admin
+      return t('governanceReviewTeam:adminLeads.notAssigned');
+    },
+    Cell: ({ value }: any) => {
+      if (value === t('governanceReviewTeam:adminLeads.notAssigned')) {
+        return (
+          <>
+            {/* TODO: should probably make this a button that opens up the assign admin
                 lead automatically. Similar to the Dates functionality */}
-          <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
-          {t('governanceReviewTeam:adminLeads.notAssigned')}
-        </>
-      );
+            <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
+            {value}
+          </>
+        );
+      }
+      return value;
     }
   };
 
   const grtDateColumn = {
     Header: t('intake:fields.grtDate'),
-    accessor: 'grtDate',
+    accessor: (value: SystemIntakeForm) => {
+      if (value.grtDate) {
+        return formatDate(value.grtDate);
+      }
+      return t('requestRepository.table.addDate');
+    },
     Cell: ({ row, value }: any) => {
       if (value === t('requestRepository.table.addDate')) {
         // If date is null, return button that takes user to page to add date
@@ -121,13 +131,18 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDateAndIgnoreTimezone(value);
+      return value;
     }
   };
 
   const grbDateColumn = {
     Header: t('intake:fields.grbDate'),
-    accessor: 'grbDate',
+    accessor: (value: SystemIntakeForm) => {
+      if (value.grbDate) {
+        return formatDate(value.grbDate);
+      }
+      return t('requestRepository.table.addDate');
+    },
     Cell: ({ row, value }: any) => {
       if (value === t('requestRepository.table.addDate')) {
         // If date is null, return button that takes user to page to add date
@@ -140,7 +155,7 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDateAndIgnoreTimezone(value);
+      return value;
     }
   };
 
