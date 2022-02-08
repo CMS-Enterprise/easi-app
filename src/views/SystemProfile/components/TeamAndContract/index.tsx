@@ -91,7 +91,7 @@ const SystemTeamAndContract = ({
     <div id="system-team-and-contract">
       <GridContainer className="padding-top-2">
         <Grid row gap>
-          <Grid desktop={{ col: 9 }}>
+          <Grid desktop={{ col: 8 }}>
             <SectionWrapper borderBottom className="padding-bottom-2">
               <h2 className="margin-top-0 margin-bottom-4">
                 {t('teamAndContract.header.teamAndContract')}
@@ -238,7 +238,7 @@ const SystemTeamAndContract = ({
             </CardGroup>
           </Grid>
           <Grid
-            desktop={{ col: 3 }}
+            desktop={{ col: 4 }}
             className={classnames({
               'sticky-nav': !isMobile
             })}
