@@ -84,6 +84,8 @@ const Home = () => {
               <h2 className="margin-top-4">
                 {t('home:requestsTable.heading')}
               </h2>
+            </div>
+            <div className="tablet:grid-col-12">
               <Table />
             </div>
           </div>
