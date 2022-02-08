@@ -6,14 +6,20 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  GridContainer,
-  Tag
+  GridContainer
 } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import {
+  DescriptionDefinition,
+  DescriptionTerm
+} from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
-// import classnames from 'classnames';
+import SectionWrapper from 'components/shared/SectionWrapper';
+import Tag from 'components/shared/Tag';
+import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
 import './index.scss';
@@ -31,8 +37,24 @@ const vendorsData = [
     popStartDate: 'March 20, 2021',
     popEndDate: 'March 21, 2021',
     contractNumber: 'GS1234567890BA-987654321',
-    technologyFunctions: ['Application', 'Delivery', 'End User'],
-    assetsOrServices: ['External Labor']
+    technologyFunctions: [
+      'Application',
+      'Delivery',
+      'End User',
+      'IT Management',
+      'Platform',
+      'Security & Compliance'
+    ],
+    assetsOrServices: ['External Labor', 'Software']
+  },
+  {
+    vendors: ['SkyNet'],
+    contractAwardDate: 'April 19, 2021',
+    popStartDate: 'April 20, 2021',
+    popEndDate: 'April 21, 2021',
+    contractNumber: 'GS1234567890BA-123456789',
+    technologyFunctions: ['Network', 'Storage'],
+    assetsOrServices: ['Outside Services']
   }
 ];
 
@@ -42,6 +64,13 @@ const contactListData = [
     role: 'Business Owner',
     name: 'Geraldine Hobbs',
     email: 'geraldine.hobbs@cms.hhs.gov',
+    org: 'Web and Emerging Technologies Group (WETG)'
+  },
+  {
+    id: '2',
+    role: 'System Owner',
+    name: 'Bryce Greenwood',
+    email: 'bryce.greenwood@cms.hhs.gov',
     org: 'Web and Emerging Technologies Group (WETG)'
   }
 ];
@@ -58,149 +87,162 @@ const SystemTeamAndContract = ({
   system
 }: TeamAndContractProps) => {
   const { t } = useTranslation('systemProfile');
+  const isMobile = useCheckResponsiveScreen('tablet');
   return (
     <div id="system-team-and-contract">
-      <GridContainer>
+      <GridContainer className="padding-top-2">
         <Grid row gap>
           <Grid desktop={{ col: 9 }}>
-            <PageHeading
-              headingLevel="h2"
-              className="margin-top-0 margin-bottom-4"
-            >
-              {t('teamAndContract.header.teamAndContract')}
-            </PageHeading>
-            <GridContainer className="padding-x-0">
-              <Grid row>
-                <Grid tablet={{ col: true }}>
-                  <div>
-                    <strong>
-                      {t('teamAndContract.federalFullTimeEmployees')}
-                    </strong>
-                  </div>
-                  <div>5</div>
+            <SectionWrapper borderBottom className="padding-bottom-5">
+              <PageHeading
+                headingLevel="h2"
+                className="margin-top-0 margin-bottom-4"
+              >
+                {t('teamAndContract.header.teamAndContract')}
+              </PageHeading>
+              <GridContainer className="padding-x-0">
+                <Grid row>
+                  <Grid tablet={{ col: true }}>
+                    <DescriptionTerm
+                      term={t('teamAndContract.federalFullTimeEmployees')}
+                    />
+                    <DescriptionDefinition
+                      className="font-body-md line-height-body-3"
+                      definition="5"
+                    />
+                  </Grid>
+                  <Grid tablet={{ col: true }}>
+                    <DescriptionTerm
+                      term={t('teamAndContract.contractorFullTimeEmployees')}
+                    />
+                    <DescriptionDefinition
+                      className="font-body-md line-height-body-3"
+                      definition="6"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid tablet={{ col: true }}>
-                  <div>
-                    <strong>
-                      {t('teamAndContract.contractorFullTimeEmployees')}
-                    </strong>
-                  </div>
-                  <div>6</div>
-                </Grid>
-              </Grid>
-            </GridContainer>
-            <Divider className="margin-top-5" />
-            <PageHeading
-              headingLevel="h2"
-              className="margin-top-5 margin-top-4"
-            >
-              {t('teamAndContract.header.contractInformation')}
-            </PageHeading>
-            <CardGroup>
-              {vendorsData.map(vendor => {
-                return (
-                  <Card className="grid-col-12 margin-bottom-2">
-                    <CardHeader className="padding-2 padding-bottom-0">
-                      <PageHeading
-                        headingLevel="h5"
-                        className="margin-y-0 font-sans-2xs text-normal"
-                      >
-                        {t('teamAndContract.vendors')}
-                      </PageHeading>
-                      <PageHeading
-                        headingLevel="h3"
-                        className="margin-y-0 line-height-sans-3"
-                      >
-                        {vendor.vendors.map(name => (
-                          <div>{name}</div>
-                        ))}
-                      </PageHeading>
-                      <div className="padding-top-2">
-                        <strong>
-                          {t('teamAndContract.contractAwardDate')}
-                        </strong>
-                      </div>
-                      <div>{vendor.contractAwardDate}</div>
-                      <Divider className="margin-y-2" />
-                    </CardHeader>
-                    <CardBody className="padding-2 padding-top-0">
-                      <PageHeading
-                        headingLevel="h5"
-                        className="margin-top-0 margin-bottom-1 font-sans-2xs text-normal"
-                      >
-                        {t('teamAndContract.periodOfPerformance')}
-                      </PageHeading>
-                      <GridContainer className="padding-x-0">
-                        <Grid row>
-                          <Grid col>
-                            <div>
-                              <strong>{t('teamAndContract.startDate')}</strong>
-                            </div>
-                            <div>{vendor.popStartDate}</div>
+              </GridContainer>
+            </SectionWrapper>
+            <SectionWrapper borderBottom className="padding-bottom-5">
+              <PageHeading
+                headingLevel="h2"
+                className="margin-top-5 margin-top-4"
+              >
+                {t('teamAndContract.header.contractInformation')}
+              </PageHeading>
+              <CardGroup className="margin-0">
+                {vendorsData.map(vendor => {
+                  return (
+                    <Card className="grid-col-12 margin-bottom-2">
+                      <CardHeader className="padding-2 padding-bottom-0">
+                        <PageHeading
+                          headingLevel="h5"
+                          className="margin-y-0 font-sans-2xs text-normal"
+                        >
+                          {t('teamAndContract.vendors')}
+                        </PageHeading>
+                        <PageHeading
+                          headingLevel="h3"
+                          className="margin-y-0 line-height-body-3"
+                        >
+                          {vendor.vendors.map(name => (
+                            <div>{name}</div>
+                          ))}
+                        </PageHeading>
+                        <DescriptionTerm
+                          className="padding-top-2"
+                          term={t('teamAndContract.contractAwardDate')}
+                        />
+                        <DescriptionDefinition
+                          className="font-body-md line-height-body-3"
+                          definition={vendor.contractAwardDate}
+                        />
+                        <Divider className="margin-y-2" />
+                      </CardHeader>
+                      <CardBody className="padding-2 padding-top-0">
+                        <PageHeading
+                          headingLevel="h5"
+                          className="margin-top-2 margin-bottom-1 font-sans-2xs text-normal"
+                        >
+                          {t('teamAndContract.periodOfPerformance')}
+                        </PageHeading>
+                        <GridContainer className="padding-x-0">
+                          <Grid row>
+                            <Grid col>
+                              <DescriptionTerm
+                                term={t('teamAndContract.startDate')}
+                              />
+                              <DescriptionDefinition
+                                className="font-body-md line-height-body-3"
+                                definition={vendor.popStartDate}
+                              />
+                            </Grid>
+                            <Grid col>
+                              <DescriptionTerm
+                                term={t('teamAndContract.endDate')}
+                              />
+                              <DescriptionDefinition
+                                className="font-body-md line-height-body-3"
+                                definition={vendor.popEndDate}
+                              />
+                            </Grid>
                           </Grid>
-                          <Grid col>
-                            <div>
-                              <strong>{t('teamAndContract.endDate')}</strong>
-                            </div>
-                            <div>{vendor.popEndDate}</div>
-                          </Grid>
-                        </Grid>
-                      </GridContainer>
-                      <Divider className="margin-y-2" />
-                      <PageHeading
-                        headingLevel="h5"
-                        className="margin-y-0 font-sans-2xs text-normal"
-                      >
-                        {t('teamAndContract.contractNumber')}
-                      </PageHeading>
-                      <PageHeading headingLevel="h3" className="margin-y-0">
-                        {vendor.contractNumber}
-                      </PageHeading>
-                      <PageHeading
-                        headingLevel="h5"
-                        className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal"
-                      >
-                        {t('teamAndContract.technologyFunctions')}
-                      </PageHeading>
-                      <div>
-                        {vendor.technologyFunctions.map(name => (
-                          <Tag
-                            key={name}
-                            className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-                          >
-                            {name}
-                          </Tag>
-                        ))}
-                      </div>
-                      <PageHeading
-                        headingLevel="h5"
-                        className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal"
-                      >
-                        {t('teamAndContract.assetsOrServices')}
-                      </PageHeading>
-                      <div>
-                        {vendor.assetsOrServices.map(name => (
-                          <Tag
-                            key={name}
-                            className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-                          >
-                            {name}
-                          </Tag>
-                        ))}
-                      </div>
-                    </CardBody>
-                  </Card>
-                );
-              })}
-            </CardGroup>
-            <Divider className="margin-top-5" />
+                        </GridContainer>
+                        <Divider className="margin-y-2" />
+                        <PageHeading
+                          headingLevel="h5"
+                          className="margin-y-0 font-sans-2xs text-normal"
+                        >
+                          {t('teamAndContract.contractNumber')}
+                        </PageHeading>
+                        <PageHeading headingLevel="h3" className="margin-y-0">
+                          {vendor.contractNumber}
+                        </PageHeading>
+                        <PageHeading
+                          headingLevel="h5"
+                          className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal"
+                        >
+                          {t('teamAndContract.technologyFunctions')}
+                        </PageHeading>
+                        <div>
+                          {vendor.technologyFunctions.map(name => (
+                            <Tag
+                              key={name}
+                              className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                            >
+                              {name}
+                            </Tag>
+                          ))}
+                        </div>
+                        <PageHeading
+                          headingLevel="h5"
+                          className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal"
+                        >
+                          {t('teamAndContract.assetsOrServices')}
+                        </PageHeading>
+                        <div>
+                          {vendor.assetsOrServices.map(name => (
+                            <Tag
+                              key={name}
+                              className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                            >
+                              {name}
+                            </Tag>
+                          ))}
+                        </div>
+                      </CardBody>
+                    </Card>
+                  );
+                })}
+              </CardGroup>
+            </SectionWrapper>
             <PageHeading
               headingLevel="h2"
               className="margin-top-5 margin-bottom-4"
             >
               {t('teamAndContract.header.pointsOfContact')}
             </PageHeading>
-            <CardGroup>
+            <CardGroup className="margin-0">
               {contactListData.map(contact => (
                 <Card key={contact.id} className="grid-col-12 margin-bottom-2">
                   <CardHeader className="padding-2 padding-bottom-0">
@@ -225,32 +267,52 @@ const SystemTeamAndContract = ({
                     </div>
                     <Divider className="margin-y-2" />
                   </CardHeader>
-                  <CardBody className="padding-2 padding-top-0">
-                    {contact.org}
-                  </CardBody>
+                  <CardBody className="padding-2">{contact.org}</CardBody>
                 </Card>
               ))}
             </CardGroup>
           </Grid>
-          <Grid desktop={{ col: 3 }}>
-            <PageHeading headingLevel="h5" className="margin-y-0">
-              {t('teamAndContract.pointOfContact')}
-            </PageHeading>
-            <PageHeading headingLevel="h2" className="margin-y-0">
-              {pointOfContactData.name}
-            </PageHeading>
-            <div>{pointOfContactData.role}</div>
-            <div>
-              <UswdsReactLink
-                aria-label={t('teamAndContract.sendAnEmail')}
-                className="line-height-body-5"
-                to={pointOfContactData.email}
-                variant="external"
-                target="_blank"
-              >
-                {t('teamAndContract.sendAnEmail')}
-              </UswdsReactLink>
-            </div>
+          <Grid
+            desktop={{ col: 3 }}
+            className={classnames({
+              'sticky-nav': !isMobile
+            })}
+          >
+            <SectionWrapper
+              borderTop={isMobile}
+              className={classnames({
+                'margin-top-5': isMobile,
+                'padding-top-5': isMobile
+              })}
+            >
+              <div className="side-divider">
+                <div className="top-divider" />
+                <PageHeading
+                  headingLevel="h5"
+                  className="margin-top-0 margin-bottom-3 padding-top-1 font-sans-2xs text-normal"
+                >
+                  {t('teamAndContract.pointOfContact')}
+                </PageHeading>
+                <PageHeading
+                  headingLevel="h3"
+                  className="margin-top-0 margin-bottom-1"
+                >
+                  {pointOfContactData.name}
+                </PageHeading>
+                <div className="margin-bottom-1">{pointOfContactData.role}</div>
+                <div className="padding-bottom-2">
+                  <UswdsReactLink
+                    aria-label={t('teamAndContract.sendAnEmail')}
+                    className="line-height-body-5"
+                    to={pointOfContactData.email}
+                    variant="external"
+                    target="_blank"
+                  >
+                    {t('teamAndContract.sendAnEmail')}
+                  </UswdsReactLink>
+                </div>
+              </div>
+            </SectionWrapper>
           </Grid>
         </Grid>
       </GridContainer>
