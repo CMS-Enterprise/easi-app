@@ -78,7 +78,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.status'),
-        accessor: (value: any) => {
+        accessor: (value: AccessibilityRequests) => {
           return value?.statusRecord?.status;
         },
         Cell: ({ row, value }: any) => {
