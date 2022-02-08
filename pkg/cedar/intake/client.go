@@ -127,6 +127,7 @@ func (c *Client) PublishNote(ctx context.Context, note models.Note) error {
 	return c.publishIntakeObject(ctx, &intakeObject)
 }
 
+// private method for publishing anything that satisfies the translation.IntakeObject interface to CEDAR through the Intake API
 func (c *Client) publishIntakeObject(ctx context.Context, model translation.IntakeObject) error {
 	id := model.ObjectID()
 	objectType := model.ObjectType()

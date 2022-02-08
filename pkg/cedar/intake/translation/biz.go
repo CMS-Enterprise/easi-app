@@ -155,7 +155,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		// invariants for this type
 		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
 		Type:       pStr(wire.IntakeInputTypeEASIBizCase),
-		Schema:     pStr(wire.IntakeInputSchemaEASIBizCaseV01),
+		Schema:     versionStr(IntakeInputSchemaEASIBizCaseV01),
 	}
 
 	if bc.CreatedAt != nil {

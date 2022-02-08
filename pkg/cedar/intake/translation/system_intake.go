@@ -98,7 +98,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 
 		// invariants for this type
 		Type:       pStr(wire.IntakeInputTypeEASIIntake),
-		Schema:     pStr(wire.IntakeInputSchemaEASIIntakeV01),
+		Schema:     versionStr(IntakeInputSchemaEASIIntakeV01),
 		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
 	}
 

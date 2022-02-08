@@ -42,7 +42,7 @@ func (fb *TranslatableFeedback) CreateIntakeModel() (*wire.IntakeInput, error) {
 		Status:     pStr(wire.IntakeInputStatusFinal),
 		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
 		Type:       pStr(wire.IntakeInputTypeEASIGrtFeedback),
-		Schema:     pStr(wire.IntakeInputSchemaEASIGrtFeedbackV01),
+		Schema:     versionStr(IntakeInputSchemaEASIGrtFeedbackV01),
 	}
 
 	if fb.CreatedAt != nil {

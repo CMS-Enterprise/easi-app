@@ -52,6 +52,10 @@ func pStr(s string) *string {
 	return &s
 }
 
+func versionStr(version SchemaVersion) *string {
+	return pStr(string(version))
+}
+
 // pDate turns a Time pointer into either an empty string in the
 // negative case, or to a string rin CEDAR's preferred
 // ISO8601 format, e.g. "2006-01-02T15:04:05Z"

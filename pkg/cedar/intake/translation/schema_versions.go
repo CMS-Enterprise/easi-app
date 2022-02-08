@@ -1,4 +1,4 @@
-package intake
+package translation
 
 // SchemaVersion is a human-readable version for the schemas EASi sends to the CEDAR Intake API
 type SchemaVersion string

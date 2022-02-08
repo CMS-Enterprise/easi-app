@@ -9,11 +9,11 @@ import (
 
 	"github.com/alecthomas/jsonschema"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/intake"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
+	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
 )
 
-func generateSchema(object interface{}, version intake.SchemaVersion, filename string) {
+func generateSchema(object interface{}, version translation.SchemaVersion, filename string) {
 	schema := jsonschema.Reflect(object)
 	schema.Title = string(version)
 
@@ -47,12 +47,12 @@ func generateSchema(object interface{}, version intake.SchemaVersion, filename s
 // Note for future devs: the go/types package could be used to extract static type information on each file in that directory,
 // but there's no way to convert a types.Type to the reflect.Type that the jsonschema package could use.
 func main() {
-	generateSchema(intakemodels.EASIAction{}, intake.IntakeInputSchemaEASIActionV01, "easi_action.json")
+	generateSchema(intakemodels.EASIAction{}, translation.IntakeInputSchemaEASIActionV01, "easi_action.json")
 
 	// includes business solution and lifecycle cost as sub-items
-	generateSchema(intakemodels.EASIBizCase{}, intake.IntakeInputSchemaEASIBizCaseV01, "easi_business_case.json")
+	generateSchema(intakemodels.EASIBizCase{}, translation.IntakeInputSchemaEASIBizCaseV01, "easi_business_case.json")
 
-	generateSchema(intakemodels.EASIGrtFeedback{}, intake.IntakeInputSchemaEASIGrtFeedbackV01, "easi_grt_feedback.json")
-	generateSchema(intakemodels.EASIIntake{}, intake.IntakeInputSchemaEASIIntakeV01, "easi_system_intake.json")
-	generateSchema(intakemodels.EASINote{}, intake.IntakeInputSchemaEASINoteV01, "easi_note.json")
+	generateSchema(intakemodels.EASIGrtFeedback{}, translation.IntakeInputSchemaEASIGrtFeedbackV01, "easi_grt_feedback.json")
+	generateSchema(intakemodels.EASIIntake{}, translation.IntakeInputSchemaEASIIntakeV01, "easi_system_intake.json")
+	generateSchema(intakemodels.EASINote{}, translation.IntakeInputSchemaEASINoteV01, "easi_note.json")
 }

@@ -42,7 +42,7 @@ func (note *TranslatableNote) CreateIntakeModel() (*wire.IntakeInput, error) {
 		Status:     pStr(wire.IntakeInputStatusFinal),
 		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
 		Type:       pStr(wire.IntakeInputTypeEASINote),
-		Schema:     pStr(wire.IntakeInputSchemaEASINoteV01),
+		Schema:     versionStr(IntakeInputSchemaEASINoteV01),
 	}
 
 	if note.CreatedAt != nil {
