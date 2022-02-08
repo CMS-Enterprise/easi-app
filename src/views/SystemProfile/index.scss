@@ -19,7 +19,7 @@
         position: sticky;
         position: -webkit-sticky;
         top: 0;
-        padding-right: 1rem;
+        padding-right: 2rem;
         padding-top: 1rem;
 
     }
@@ -63,7 +63,7 @@
 }
 
 .side-divider {
-    padding-left: 1rem;
+    padding-left: 2rem;
     @media screen and (max-width: $desktop) {
         border-left: .25rem solid color($theme-color-primary-lighter);        
     } 

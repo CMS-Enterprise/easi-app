@@ -5,6 +5,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  CardGroup,
   CardHeader,
   Grid,
   GridContainer
@@ -45,7 +46,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
     <div id="system-detail">
       <GridContainer className="padding-left-0 padding-right-0 padding-top-2">
         <Grid row>
-          <Grid desktop={{ col: 9 }}>
+          <Grid desktop={{ col: 8 }}>
             <SectionWrapper borderBottom className="padding-bottom-4">
               <h2 className="margin-top-0">
                 {t('singleSystem.systemDetails.header')}
@@ -53,7 +54,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
 
               {/* TODO: Map <DescriptionTerm /> to CEDAR data */}
               <Grid row className="margin-top-3">
-                <Grid desktop={{ col: 6 }} className="margin-bottom-5">
+                <Grid tablet={{ col: 6 }} className="margin-bottom-5">
                   <DescriptionTerm
                     term={t('singleSystem.systemDetails.ownership')}
                   />
@@ -62,7 +63,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                     definition="CMS owned"
                   />
                 </Grid>
-                <Grid desktop={{ col: 6 }} className="margin-bottom-5">
+                <Grid tablet={{ col: 6 }} className="margin-bottom-5">
                   <DescriptionTerm
                     term={t('singleSystem.systemDetails.usersPerMonth')}
                   />
@@ -71,7 +72,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                     definition="2,345"
                   />
                 </Grid>
-                <Grid desktop={{ col: 6 }} className="margin-bottom-5">
+                <Grid tablet={{ col: 6 }} className="margin-bottom-5">
                   <DescriptionTerm
                     term={t('singleSystem.systemDetails.access')}
                   />
@@ -80,7 +81,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                     definition="Both public and internal access"
                   />
                 </Grid>
-                <Grid desktop={{ col: 6 }} className="margin-bottom-5">
+                <Grid tablet={{ col: 6 }} className="margin-bottom-5">
                   <DescriptionTerm
                     term={t('singleSystem.systemDetails.fismaID')}
                   />
@@ -139,88 +140,91 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                   {t('singleSystem.systemDetails.noURL')}
                 </Alert>
               )}
+              <CardGroup className="margin-0">
+                {system?.locations?.map(
+                  (location: tempLocationProp): React.ReactNode => (
+                    <Card
+                      key={location.id}
+                      data-testid="system-card"
+                      className="grid-col-12"
+                    >
+                      <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+                        <dt>{location.environment}</dt>
+                        <div>
+                          <dd className="text-right text-base-dark system-profile__icon-container">
+                            <VerifiedUserIcon
+                              width="1rem"
+                              height="1rem"
+                              fill="#00a91c"
+                              className="margin-right-1"
+                              aria-label="verified"
+                            />
+                            <span className="text-tbottom line-height-body-3">
+                              {location.firewall && 'Web Application Firewall'}
+                            </span>
 
-              {system?.locations?.map(
-                (location: tempLocationProp): React.ReactNode => (
-                  <Card
-                    key={location.id}
-                    data-testid="system-card"
-                    className="grid-col-12"
-                  >
-                    <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                      <dt>{location.environment}</dt>
-                      <div>
-                        <dd className="text-right text-base-dark system-profile__icon-container">
-                          <VerifiedUserIcon
-                            width="1rem"
-                            height="1rem"
-                            fill="#00a91c"
-                            className="margin-right-1"
-                            aria-label="verified"
-                          />
-                          <span className="text-tbottom line-height-body-3">
-                            {location.firewall && 'Web Application Firewall'}
-                          </span>
-
-                          {/* TODO: Map defined CEDAR variable once availabe */}
-                        </dd>
-                      </div>
-                    </CardHeader>
-
-                    <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
-                      <h2 className="link-header margin-top-0 margin-bottom-2">
-                        {location.url ? (
-                          <UswdsReactLink
-                            className="system-profile__card-link"
-                            variant="external"
-                            to={location.url}
-                          >
-                            {location.url}
-                          </UswdsReactLink>
-                        ) : (
-                          <dd className="margin-left-0">
-                            {t('singleSystem.systemDetails.noEnvironmentURL')}
                             {/* TODO: Map defined CEDAR variable once availabe */}
                           </dd>
-                        )}
-                      </h2>
-                      {location?.tags?.map((tag: string) => (
-                        <Tag
-                          key={tag}
-                          className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
-                        >
-                          {tag}{' '}
-                          {/* TODO: Map defined CEDAR variable once availabe */}
-                        </Tag>
-                      ))}
+                        </div>
+                      </CardHeader>
 
-                      <Divider />
-                    </CardBody>
-                    <CardFooter className="padding-0">
-                      <Grid row>
-                        <Grid desktop={{ col: 6 }} className="padding-2">
-                          <DescriptionTerm
-                            term={t('singleSystem.systemDetails.location')}
-                          />
-                          <DescriptionDefinition
-                            className="line-height-body-3"
-                            definition={location.location}
-                          />
+                      <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
+                        <h2 className="link-header margin-top-0 margin-bottom-2">
+                          {location.url ? (
+                            <UswdsReactLink
+                              className="system-profile__card-link"
+                              variant="external"
+                              to={location.url}
+                            >
+                              {location.url}
+                            </UswdsReactLink>
+                          ) : (
+                            <dd className="margin-left-0">
+                              {t('singleSystem.systemDetails.noEnvironmentURL')}
+                              {/* TODO: Map defined CEDAR variable once availabe */}
+                            </dd>
+                          )}
+                        </h2>
+                        {location?.tags?.map((tag: string) => (
+                          <Tag
+                            key={tag}
+                            className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
+                          >
+                            {tag}{' '}
+                            {/* TODO: Map defined CEDAR variable once availabe */}
+                          </Tag>
+                        ))}
+
+                        <Divider />
+                      </CardBody>
+                      <CardFooter className="padding-0">
+                        <Grid row>
+                          <Grid desktop={{ col: 6 }} className="padding-2">
+                            <DescriptionTerm
+                              term={t('singleSystem.systemDetails.location')}
+                            />
+                            <DescriptionDefinition
+                              className="line-height-body-3"
+                              definition={location.location}
+                            />
+                          </Grid>
+                          <Grid desktop={{ col: 6 }} className="padding-2">
+                            <DescriptionTerm
+                              term={t(
+                                'singleSystem.systemDetails.cloudProvider'
+                              )}
+                            />
+                            <DescriptionDefinition
+                              className="line-height-body-3"
+                              definition={location.cloudProvider}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid desktop={{ col: 6 }} className="padding-2">
-                          <DescriptionTerm
-                            term={t('singleSystem.systemDetails.cloudProvider')}
-                          />
-                          <DescriptionDefinition
-                            className="line-height-body-3"
-                            definition={location.cloudProvider}
-                          />
-                        </Grid>
-                      </Grid>
-                    </CardFooter>
-                  </Card>
-                )
-              )}
+                      </CardFooter>
+                    </Card>
+                  )
+                )}
+              </CardGroup>
             </SectionWrapper>
 
             <SectionWrapper
@@ -369,7 +373,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
           </Grid>
           {/* Point of contact/ miscellaneous info */}
           <Grid
-            desktop={{ col: 3 }}
+            desktop={{ col: 4 }}
             className={classnames({
               'sticky-nav': !isMobile
             })}

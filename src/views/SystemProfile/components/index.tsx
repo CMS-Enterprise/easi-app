@@ -2,6 +2,7 @@ import React from 'react';
 
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
+import FundingAndBudget from './FundingAndBudget';
 import SystemDetails from './SystemDetails';
 import SystemHome from './SystemHome';
 
@@ -32,7 +33,7 @@ const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
     route: `/system-profile/${system.id}/team-and-contract`
   },
   'funding-and-budget': {
-    component: <SystemHome system={system} />,
+    component: <FundingAndBudget system={system} />,
     route: `/system-profile/${system.id}/funding-and-budget`
   },
   'tools-and-software': {

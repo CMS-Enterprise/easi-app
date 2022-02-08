@@ -67,6 +67,9 @@ const systemProfile = {
       ipv6Transition: 'IPv6 transition',
       percentTransitioned: 'Percent transitioned to IPv6',
       hardCodedIP: 'Hard-coded IP addresses'
+    },
+    fundingAndBudget: {
+      header: 'Funding and Budget'
     }
   },
   systemTable: {
