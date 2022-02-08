@@ -102,6 +102,25 @@ const systemProfile = {
   },
   gql: {
     fail: 'Failed to retrieve systems data'
+  },
+  teamAndContract: {
+    header: {
+      teamAndContract: 'Team and Contract',
+      contractInformation: 'Contract Information',
+      pointsOfContact: 'Points of Contact'
+    },
+    federalFullTimeEmployees: 'Federal Full Time Employees',
+    contractorFullTimeEmployees: 'Contractor Full Time Employees',
+    vendors: 'Vendors',
+    contractAwardDate: 'Contract Award Date',
+    periodOfPerformance: 'Period of performance',
+    startDate: 'Start Date',
+    endDate: 'End Date',
+    contractNumber: 'Contract number',
+    technologyFunctions: 'Technology functions',
+    assetsOrServices: 'Assets or services',
+    pointOfContact: 'Point of contact',
+    sendAnEmail: 'Send an email'
   }
 };
 
