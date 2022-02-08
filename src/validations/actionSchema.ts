@@ -60,14 +60,12 @@ export const extendLifecycleIdSchema = Yup.object().shape({
           year: Number(newExpirationYear) || 0
         });
 
-        const oldExpiration = DateTime.fromISO(currentExpiresAt) || 0;
-        if (
-          newExpiration.isValid &&
-          newExpiration.toMillis() > oldExpiration.toMillis()
-        ) {
-          return true;
+        const oldExpiration = DateTime.fromISO(currentExpiresAt);
+        if (!oldExpiration.isValid) {
+          return newExpiration.isValid;
         }
-        return false;
+
+        return newExpiration.isValid && newExpiration > oldExpiration;
       },
       otherwise: Yup.string().test(
         'validDate',
