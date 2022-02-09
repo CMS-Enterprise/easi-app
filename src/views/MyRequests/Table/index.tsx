@@ -129,7 +129,7 @@ const Table = () => {
     nextPage,
     previousPage,
     setPageSize,
-    rows,
+    page,
     setGlobalFilter,
     state,
     prepareRow
@@ -187,7 +187,7 @@ const Table = () => {
         globalFilter={state.globalFilter}
         pageIndex={state.pageIndex}
         pageSize={state.pageSize}
-        filteredRowLength={rows.length}
+        filteredRowLength={page.length}
         rowLength={data.length}
         className="margin-bottom-4"
       />
@@ -222,7 +222,7 @@ const Table = () => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {page.map(row => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>

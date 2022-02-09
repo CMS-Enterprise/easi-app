@@ -51,6 +51,10 @@ func main() {
 	now := time.Now()
 	yyyy, mm, dd := now.Date()
 
+	for i := 0; i < 10; i++ {
+		makeAccessibilityRequest(fmt.Sprint("Request ", i), store)
+	}
+
 	makeAccessibilityRequest("Seeded 508 Request", store, func(i *models.AccessibilityRequest) {
 		i.ID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
 	})

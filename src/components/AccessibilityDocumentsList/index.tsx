@@ -158,7 +158,7 @@ const AccessibilityDocumentsList = ({
     nextPage,
     previousPage,
     setPageSize,
-    rows,
+    page,
     setGlobalFilter,
     state,
     prepareRow
@@ -203,7 +203,7 @@ const AccessibilityDocumentsList = ({
         globalFilter={state.globalFilter}
         pageIndex={state.pageIndex}
         pageSize={state.pageSize}
-        filteredRowLength={rows.length}
+        filteredRowLength={page.length}
         rowLength={data.length}
         className="margin-bottom-4"
       />
@@ -238,7 +238,7 @@ const AccessibilityDocumentsList = ({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {page.map(row => {
             prepareRow(row);
             return (
               <tr data-testurl={row.original.url} {...row.getRowProps()}>

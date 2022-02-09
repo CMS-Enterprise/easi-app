@@ -274,9 +274,9 @@ const RequestRepository = () => {
     nextPage,
     previousPage,
     setPageSize,
-    rows,
     setGlobalFilter,
     state,
+    page,
     prepareRow
   } = useTable(
     {
@@ -309,7 +309,7 @@ const RequestRepository = () => {
   };
 
   return (
-    <MainContent className="grid-container margin-bottom-5">
+    <MainContent className="padding-x-4 margin-bottom-5">
       <div className="display-flex flex-justify flex-wrap margin-bottom-2">
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
@@ -388,7 +388,7 @@ const RequestRepository = () => {
         globalFilter={state.globalFilter}
         pageIndex={state.pageIndex}
         pageSize={state.pageSize}
-        filteredRowLength={rows.length}
+        filteredRowLength={page.length}
         rowLength={data.length}
         className="margin-bottom-4"
       />
@@ -432,7 +432,7 @@ const RequestRepository = () => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {page.map(row => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()} data-testid={`${row.original.id}-row`}>

@@ -149,7 +149,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     nextPage,
     previousPage,
     setPageSize,
-    rows,
+    page,
     setGlobalFilter,
     state,
     prepareRow
@@ -192,7 +192,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         globalFilter={state.globalFilter}
         pageIndex={state.pageIndex}
         pageSize={state.pageSize}
-        filteredRowLength={rows.length}
+        filteredRowLength={page.length}
         rowLength={data.length}
         className="margin-bottom-4"
       />
@@ -229,7 +229,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {page.map(row => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
@@ -253,7 +253,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                   return (
                     <td
                       {...cell.getCellProps({
-                        style: { width: cell.column.width, maxWidth: '16em' }
+                        style: {
+                          width: cell.column.width,
+                          maxWidth: '16em'
+                        }
                       })}
                     >
                       {cell.render('Cell')}
