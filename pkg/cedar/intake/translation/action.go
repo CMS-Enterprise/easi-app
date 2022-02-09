@@ -1,0 +1,55 @@
+package translation
+
+import (
+	"encoding/json"
+
+	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
+	"github.com/cmsgov/easi-app/pkg/models"
+)
+
+// TranslatableAction is a wrapper around our Action model for translating into the CEDAR Intake API schema
+type TranslatableAction models.Action
+
+// ObjectID is a unique identifier for a TranslatableAction
+func (action *TranslatableAction) ObjectID() string {
+	return action.ID.String()
+}
+
+// ObjectType is a human-readable identifier for the Action type, for use in logging
+func (action *TranslatableAction) ObjectType() string {
+	return "action"
+}
+
+// CreateIntakeModel translates an Action into an IntakeInput
+func (action *TranslatableAction) CreateIntakeModel() (*wire.IntakeInput, error) {
+	obj := intakemodels.EASIAction{
+		IntakeID:   action.IntakeID.String(),
+		ActionType: string(action.ActionType),
+		ActorEUA:   action.ActorEUAUserID,
+		Feedback:   action.Feedback.ValueOrZero(),
+	}
+
+	blob, err := json.Marshal(&obj)
+	if err != nil {
+		return nil, err
+	}
+
+	result := wire.IntakeInput{
+		ID:   pStr(action.ID.String()),
+		Body: pStr(string(blob)),
+
+		// invariants for this type
+		Status:     pStr(wire.IntakeInputStatusFinal),
+		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
+		Type:       pStr(wire.IntakeInputTypeEASIAction),
+		Schema:     versionStr(IntakeInputSchemaEASIActionV01),
+	}
+
+	if action.CreatedAt != nil {
+		result.CreatedDate = pDateTime(action.CreatedAt)
+		result.LastUpdate = pDateTime(action.CreatedAt)
+	}
+
+	return &result, nil
+}

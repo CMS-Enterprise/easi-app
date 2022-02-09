@@ -65,13 +65,15 @@ repos:
         language: script
         files: "pkg/graph/schema\\.graphql|pkg/graph/schema\\.resolvers\\.go|src/queries/.*\\.ts"
 
+  # for some reason, trying to call "go run cmd/intake_schema_gen/main.go" directly from this config doesn't work;
+  # so call scripts/gen_intake_schema, which calls that command and works 
   - repo: local
     hooks:
-      - id: check-cedar-schema-generation
-        name: check-cedar-schema-generation
+      - id: check-intake-schema-generation
+        name: check-intake-schema-generation
         entry: scripts/gen_intake_schema
         language: script
-        files: (pkg/cedar/intake/system_intake_schema.json|pkg/cedar/intake/cedar_intake.yml)
+        files: cmd/gen_intake_schema/main\.go|pkg/cedar/intake/models/.*\.go|pkg/cedar/intake/schemas/.*\.json
 
   - repo: git://github.com/awslabs/git-secrets
     rev: 80230afa8c8bdeac766a0fece36f95ffaa0be778

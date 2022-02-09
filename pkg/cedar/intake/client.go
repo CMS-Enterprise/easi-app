@@ -13,7 +13,6 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/google/uuid"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
@@ -21,6 +20,7 @@ import (
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client"
 	apioperations "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/operations"
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -49,15 +49,6 @@ func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Cli
 	}
 
 	hc := http.DefaultClient
-	// if insecure, _ := strconv.ParseBool(os.Getenv("CEDAR_INSECURE")); insecure {
-	// 	// CEDAR certificates are weird/incorrect in DEV environment,
-	// 	// this can help you get around that problem
-	// 	hc = &http.Client{
-	// 		Transport: &http.Transport{
-	// 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	// 		},
-	// 	}
-	// }
 
 	return &Client{
 		emitToCedar: fnEmit,
@@ -106,49 +97,61 @@ func (c *Client) CheckConnection(ctx context.Context) error {
 	return nil
 }
 
-// PublishSnapshot sends the given current state of a SystemIntake and all its
-// associated entities to CEDAR for eventual storage in Alfabet
-func (c *Client) PublishSnapshot(
-	ctx context.Context,
-	si *models.SystemIntake,
-	bc *models.BusinessCase,
-	acts []*models.Action,
-	notes []*models.Note,
-	fbs []*models.GRTFeedback,
-) error {
-	id := uuid.Nil
-	if si != nil {
-		id = si.ID
-	}
+// PublishSystemIntake sends a system intake to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishSystemIntake(ctx context.Context, si models.SystemIntake) error {
+	intakeObject := translation.TranslatableSystemIntake(si)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
 
-	inputs, err := buildIntakes(ctx, si, bc, acts, notes, fbs)
-	if err != nil {
-		appcontext.ZLogger(ctx).Info(
-			"problem building cedar payload",
-			zap.String("intakeID", id.String()),
-			zap.Error(err),
-		)
-		return nil
-	}
+// PublishBusinessCase sends a business case to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCase) error {
+	intakeObject := translation.TranslatableBusinessCase(bc)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
 
-	err = validateInputs(ctx, inputs)
-	if err != nil {
-		appcontext.ZLogger(ctx).Info(
-			"problem validating cedar payload",
-			zap.String("intakeID", id.String()),
-			zap.Error(err),
-		)
-		return nil
-	}
+// PublishGRTFeedback sends an item of GRT feedback to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishGRTFeedback(ctx context.Context, feedback models.GRTFeedback) error {
+	intakeObject := translation.TranslatableFeedback(feedback)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
+
+// PublishAction sends an action to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishAction(ctx context.Context, action models.Action) error {
+	intakeObject := translation.TranslatableAction(action)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
+
+// PublishNote sends a note to CEDAR through the Intake API for eventual storage in Alfabet
+func (c *Client) PublishNote(ctx context.Context, note models.Note) error {
+	intakeObject := translation.TranslatableNote(note)
+	return c.publishIntakeObject(ctx, &intakeObject)
+}
+
+// private method for publishing anything that satisfies the translation.IntakeObject interface to CEDAR through the Intake API
+func (c *Client) publishIntakeObject(ctx context.Context, model translation.IntakeObject) error {
+	id := model.ObjectID()
+	objectType := model.ObjectType()
 
 	if !c.emitToCedar(ctx) {
-		appcontext.ZLogger(ctx).Info("snapshot publishing disabled", zap.String("intakeID", id.String()))
+		appcontext.ZLogger(ctx).Info("snapshot publishing disabled", zap.String("object ID", id), zap.String("object type", objectType))
+		return nil
+	}
+
+	input, err := model.CreateIntakeModel()
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"problem building cedar payload",
+			zap.String("object ID", id),
+			zap.String("object type", objectType),
+			zap.Error(err),
+		)
 		return nil
 	}
 
 	params := apioperations.NewIntakeAddParamsWithContext(ctx)
 	params.HTTPClient = c.hc
-	params.Body.Intakes = inputs
+	params.Body.Intakes = []*wire.IntakeInput{input}
 
 	resp, err := c.sdk.Operations.IntakeAdd(params, c.auth)
 	if err != nil {
@@ -166,51 +169,21 @@ func (c *Client) PublishSnapshot(
 	return nil
 }
 
-func buildIntakes(
+// PublishSnapshot sends the given current state of a SystemIntake and all its
+// associated entities to CEDAR for eventual storage in Alfabet
+func (c *Client) PublishSnapshot(
 	ctx context.Context,
 	si *models.SystemIntake,
 	bc *models.BusinessCase,
 	acts []*models.Action,
 	notes []*models.Note,
 	fbs []*models.GRTFeedback,
-) ([]*wire.IntakeInput, error) {
-	ii, err := translateSystemIntake(ctx, si)
-	if err != nil {
-		return nil, fmt.Errorf("unable to translate system intake: %w", err)
-	}
-	results := []*wire.IntakeInput{ii}
-
-	if bc != nil {
-		ii, err = translateBizCase(ctx, bc)
-		if err != nil {
-			return nil, fmt.Errorf("unable to translate business case: %w", err)
-		}
-		results = append(results, ii)
+) error {
+	if !c.emitToCedar(ctx) {
+		appcontext.ZLogger(ctx).Info("snapshot publishing disabled")
+		return nil
 	}
 
-	for _, act := range acts {
-		ii, err = translateAction(ctx, act)
-		if err != nil {
-			return nil, fmt.Errorf("unable to translate action: %w", err)
-		}
-		results = append(results, ii)
-	}
-
-	for _, note := range notes {
-		ii, err = translateNote(ctx, note)
-		if err != nil {
-			return nil, fmt.Errorf("unable to translate note: %w", err)
-		}
-		results = append(results, ii)
-	}
-
-	for _, fb := range fbs {
-		ii, err = translateFeedback(ctx, fb)
-		if err != nil {
-			return nil, fmt.Errorf("unable to translate grt feedback: %w", err)
-		}
-		results = append(results, ii)
-	}
-
-	return results, nil
+	appcontext.ZLogger(ctx).Info("Snapshot publishing not implemented")
+	return nil
 }

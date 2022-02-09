@@ -60,7 +60,7 @@ type Action struct {
 	ActorName                                string       `json:"actorName" db:"actor_name"`
 	ActorEmail                               EmailAddress `json:"actorEmail" db:"actor_email"`
 	ActorEUAUserID                           string       `json:"actorEuaUserId" db:"actor_eua_user_id"`
-	Feedback                                 null.String  `json:"feedback"`
+	Feedback                                 null.String  `json:"feedback"` // Feedback to requestor sent via email
 	CreatedAt                                *time.Time   `json:"createdAt" db:"created_at"`
 	LCIDExpirationChangeNewDate              *time.Time   `db:"lcid_expiration_change_new_date"`
 	LCIDExpirationChangePreviousDate         *time.Time   `db:"lcid_expiration_change_previous_date"`

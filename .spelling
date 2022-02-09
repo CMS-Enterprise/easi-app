@@ -177,5 +177,7 @@ Redis
 EASI-1505
 EASI-1447
 timestamp
+schemas
+jsonschema
 rasterization
 uswds-react

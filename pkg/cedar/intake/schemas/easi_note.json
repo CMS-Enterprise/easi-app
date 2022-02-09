@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/EASINote",
+  "title": "EASINoteV01",
+  "definitions": {
+    "EASINote": {
+      "required": [
+        "authorEUA",
+        "content",
+        "intakeId"
+      ],
+      "properties": {
+        "authorEUA": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "intakeId": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

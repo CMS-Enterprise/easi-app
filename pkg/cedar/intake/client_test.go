@@ -10,7 +10,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -70,101 +70,47 @@ func (s ClientTestSuite) TestClient() {
 }
 
 func (s ClientTestSuite) TestTranslation() {
-	ctx := appcontext.WithLogger(context.Background(), s.logger)
-
 	s.Run("action", func() {
-		action := testhelpers.NewAction()
+		action := translation.TranslatableAction(testhelpers.NewAction())
 		id := uuid.New()
 		action.IntakeID = &id
 
-		ii, err := translateAction(ctx, &action)
+		ii, err := action.CreateIntakeModel()
 		s.NoError(err)
-
-		err = validateInputs(ctx, []*wire.IntakeInput{ii})
-		s.NoError(err)
+		s.NotNil(ii)
 	})
 
 	s.Run("system intake", func() {
-		si := testhelpers.NewSystemIntake()
+		si := translation.TranslatableSystemIntake(testhelpers.NewSystemIntake())
 		si.CreatedAt = si.ContractStartDate
 		si.UpdatedAt = si.ContractStartDate
 
-		ii, err := translateSystemIntake(ctx, &si)
+		ii, err := si.CreateIntakeModel()
 		s.NoError(err)
-
-		err = validateInputs(ctx, []*wire.IntakeInput{ii})
-		s.NoError(err)
+		s.NotNil(ii)
 	})
 
 	s.Run("note", func() {
-		note := testhelpers.NewNote()
+		note := translation.TranslatableNote(testhelpers.NewNote())
 
-		ii, err := translateNote(ctx, &note)
+		ii, err := note.CreateIntakeModel()
 		s.NoError(err)
-
-		err = validateInputs(ctx, []*wire.IntakeInput{ii})
-		s.NoError(err)
+		s.NotNil(ii)
 	})
 
 	s.Run("biz case", func() {
-		bc := testhelpers.NewBusinessCase()
+		bc := translation.TranslatableBusinessCase(testhelpers.NewBusinessCase())
 
-		ii, err := translateBizCase(ctx, &bc)
+		ii, err := bc.CreateIntakeModel()
 		s.NoError(err)
-
-		err = validateInputs(ctx, []*wire.IntakeInput{ii})
-		s.NoError(err)
+		s.NotNil(ii)
 	})
 
 	s.Run("feedback", func() {
-		fb := testhelpers.NewGRTFeedback()
+		fb := translation.TranslatableFeedback(testhelpers.NewGRTFeedback())
 
-		ii, err := translateFeedback(ctx, &fb)
+		ii, err := fb.CreateIntakeModel()
 		s.NoError(err)
-
-		err = validateInputs(ctx, []*wire.IntakeInput{ii})
-		s.NoError(err)
+		s.NotNil(ii)
 	})
-
-	s.Run("nil entry throws exception", func() {
-		err := validateInputs(context.Background(), []*wire.IntakeInput{nil})
-		s.Error(err)
-	})
-
-	s.Run("unrecognized type", func() {
-		note := testhelpers.NewNote()
-
-		ii, err := translateNote(ctx, &note)
-		s.NoError(err)
-		inType := "FakeType"
-		ii.Type = &inType
-
-		err = validateInputs(ctx, []*wire.IntakeInput{ii})
-		s.Error(err)
-	})
-
-	s.Run("unrecognized schema", func() {
-		note := testhelpers.NewNote()
-
-		ii, err := translateNote(ctx, &note)
-		s.NoError(err)
-		inSchema := "FakeType01"
-		ii.Schema = &inSchema
-
-		err = validateInputs(ctx, []*wire.IntakeInput{ii})
-		s.Error(err)
-	})
-
-	s.Run("mismatch type and schema", func() {
-		note := testhelpers.NewNote()
-
-		ii, err := translateNote(ctx, &note)
-		s.NoError(err)
-		inSchema := wire.IntakeInputSchemaEASIActionV01
-		ii.Schema = &inSchema
-
-		err = validateInputs(ctx, []*wire.IntakeInput{ii})
-		s.Error(err)
-	})
-
 }
