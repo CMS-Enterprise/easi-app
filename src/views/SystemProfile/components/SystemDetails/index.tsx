@@ -45,8 +45,8 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
 
   return (
     <div id="system-detail">
-      <GridContainer className="padding-left-0 padding-right-0 padding-top-2">
-        <Grid row>
+      <GridContainer className="padding-left-0 padding-right-0">
+        <Grid row gap>
           <Grid desktop={{ col: 8 }}>
             <SectionWrapper borderBottom className="padding-bottom-4">
               <h2 className="margin-top-0">
@@ -395,7 +395,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                 <Link
                   aria-label={t('singleSystem.sendEmail')}
                   className="line-height-body-5"
-                  href="/" // TODO: Get link from CEDAR?
+                  href="mailto:patrick.segura@oddball.io" // TODO: Get link from CEDAR?
                   variant="external"
                   target="_blank"
                 >
@@ -407,7 +407,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                 <Link
                   aria-label={t('singleSystem.moreContact')}
                   className="line-height-body-5"
-                  href="/" // TODO: Get link from CEDAR?
+                  href="mailto:patrick.segura@oddball.io" // TODO: Get link from CEDAR?
                   target="_blank"
                 >
                   {t('singleSystem.moreContact')}

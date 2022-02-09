@@ -78,7 +78,7 @@ const contactListData = [
 const pointOfContactData = {
   name: 'Greta May Jones',
   role: 'Contracting Officer’s Representative (COR)',
-  email: 'gmj@gmj.gov'
+  email: 'mailto:gmj@gmj.gov'
 };
 
 const SystemTeamAndContract = ({
@@ -90,18 +90,20 @@ const SystemTeamAndContract = ({
   const isMobile = useCheckResponsiveScreen('tablet');
   return (
     <div id="system-team-and-contract">
-      <GridContainer className="padding-left-0 padding-right-0 padding-top-2">
-        <Grid row>
+      <GridContainer className="padding-left-0 padding-right-0">
+        <Grid row gap>
           <Grid desktop={{ col: 8 }}>
             <SectionWrapper borderBottom className="padding-bottom-2">
               <h2 className="margin-top-0 margin-bottom-4">
-                {t('teamAndContract.header.teamAndContract')}
+                {t('singleSystem.teamAndContract.header.teamAndContract')}
               </h2>
               <GridContainer className="padding-x-0">
                 <Grid row>
                   <Grid tablet={{ col: true }} className="margin-bottom-3">
                     <DescriptionTerm
-                      term={t('teamAndContract.federalFullTimeEmployees')}
+                      term={t(
+                        'singleSystem.teamAndContract.federalFullTimeEmployees'
+                      )}
                     />
                     <DescriptionDefinition
                       className="font-body-md line-height-body-3"
@@ -110,7 +112,9 @@ const SystemTeamAndContract = ({
                   </Grid>
                   <Grid tablet={{ col: true }} className="margin-bottom-3">
                     <DescriptionTerm
-                      term={t('teamAndContract.contractorFullTimeEmployees')}
+                      term={t(
+                        'singleSystem.teamAndContract.contractorFullTimeEmployees'
+                      )}
                     />
                     <DescriptionDefinition
                       className="font-body-md line-height-body-3"
@@ -122,7 +126,7 @@ const SystemTeamAndContract = ({
             </SectionWrapper>
             <SectionWrapper borderBottom className="padding-bottom-5">
               <h2 className="margin-top-5 margin-top-4">
-                {t('teamAndContract.header.contractInformation')}
+                {t('singleSystem.teamAndContract.header.contractInformation')}
               </h2>
               <CardGroup className="margin-0">
                 {vendorsData.map(vendor => {
@@ -130,7 +134,7 @@ const SystemTeamAndContract = ({
                     <Card className="grid-col-12 margin-bottom-2">
                       <CardHeader className="padding-2 padding-bottom-0">
                         <h5 className="margin-y-0 font-sans-2xs text-normal">
-                          {t('teamAndContract.vendors')}
+                          {t('singleSystem.teamAndContract.vendors')}
                         </h5>
                         <h3 className="margin-y-0 line-height-body-3">
                           {vendor.vendors.map(name => (
@@ -139,7 +143,9 @@ const SystemTeamAndContract = ({
                         </h3>
                         <DescriptionTerm
                           className="padding-top-2"
-                          term={t('teamAndContract.contractAwardDate')}
+                          term={t(
+                            'singleSystem.teamAndContract.contractAwardDate'
+                          )}
                         />
                         <DescriptionDefinition
                           className="font-body-md line-height-body-3"
@@ -149,13 +155,17 @@ const SystemTeamAndContract = ({
                       </CardHeader>
                       <CardBody className="padding-2 padding-top-0">
                         <h5 className="margin-top-2 margin-bottom-1 font-sans-2xs text-normal">
-                          {t('teamAndContract.periodOfPerformance')}
+                          {t(
+                            'singleSystem.teamAndContract.periodOfPerformance'
+                          )}
                         </h5>
                         <GridContainer className="padding-x-0">
                           <Grid row>
                             <Grid col>
                               <DescriptionTerm
-                                term={t('teamAndContract.startDate')}
+                                term={t(
+                                  'singleSystem.teamAndContract.startDate'
+                                )}
                               />
                               <DescriptionDefinition
                                 className="font-body-md line-height-body-3"
@@ -164,7 +174,7 @@ const SystemTeamAndContract = ({
                             </Grid>
                             <Grid col>
                               <DescriptionTerm
-                                term={t('teamAndContract.endDate')}
+                                term={t('singleSystem.teamAndContract.endDate')}
                               />
                               <DescriptionDefinition
                                 className="font-body-md line-height-body-3"
@@ -175,11 +185,13 @@ const SystemTeamAndContract = ({
                         </GridContainer>
                         <Divider className="margin-y-2" />
                         <h5 className="margin-y-0 font-sans-2xs text-normal">
-                          {t('teamAndContract.contractNumber')}
+                          {t('singleSystem.teamAndContract.contractNumber')}
                         </h5>
                         <h3 className="margin-y-0">{vendor.contractNumber}</h3>
                         <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
-                          {t('teamAndContract.technologyFunctions')}
+                          {t(
+                            'singleSystem.teamAndContract.technologyFunctions'
+                          )}
                         </h5>
                         <div>
                           {vendor.technologyFunctions.map(name => (
@@ -192,7 +204,7 @@ const SystemTeamAndContract = ({
                           ))}
                         </div>
                         <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
-                          {t('teamAndContract.assetsOrServices')}
+                          {t('singleSystem.teamAndContract.assetsOrServices')}
                         </h5>
                         <div>
                           {vendor.assetsOrServices.map(name => (
@@ -211,7 +223,7 @@ const SystemTeamAndContract = ({
               </CardGroup>
             </SectionWrapper>
             <h2 className="margin-top-5 margin-bottom-4">
-              {t('teamAndContract.header.pointsOfContact')}
+              {t('singleSystem.teamAndContract.header.pointsOfContact')}
             </h2>
             <CardGroup className="margin-0">
               {contactListData.map(contact => (
@@ -254,7 +266,7 @@ const SystemTeamAndContract = ({
               <div className="side-divider">
                 <div className="top-divider" />
                 <p className="font-body-xs margin-top-1 margin-bottom-3">
-                  {t('teamAndContract.pointOfContact')}
+                  {t('singleSystem.teamAndContract.pointOfContact')}
                 </p>
                 <h3 className="margin-top-0 margin-bottom-1">
                   {pointOfContactData.name}
@@ -264,13 +276,13 @@ const SystemTeamAndContract = ({
                 </div>
                 <div className="padding-bottom-2">
                   <Link
-                    aria-label={t('teamAndContract.sendAnEmail')}
+                    aria-label={t('singleSystem.teamAndContract.sendAnEmail')}
                     className="line-height-body-5"
                     href={pointOfContactData.email}
                     variant="external"
                     target="_blank"
                   >
-                    {t('teamAndContract.sendAnEmail')}
+                    {t('singleSystem.teamAndContract.sendAnEmail')}
                   </Link>
                 </div>
               </div>

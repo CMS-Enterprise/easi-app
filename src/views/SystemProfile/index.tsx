@@ -7,6 +7,7 @@ import {
   BreadcrumbBar,
   BreadcrumbLink,
   Grid,
+  GridContainer,
   PrimaryNav,
   SideNav,
   SummaryBox
@@ -265,8 +266,8 @@ const SystemProfile = () => {
         </div>
 
         <SectionWrapper className="margin-top-5 margin-bottom-5">
-          <Grid className="grid-container">
-            <Grid row>
+          <GridContainer>
+            <Grid row gap>
               <Grid
                 desktop={{ col: 3 }}
                 className={classnames('padding-right-4', {
@@ -294,7 +295,7 @@ const SystemProfile = () => {
                 {sideNavItems(systemInfo)[subinfo || 'home'].component}
               </Grid>
             </Grid>
-          </Grid>
+          </GridContainer>
         </SectionWrapper>
       </div>
     </MainContent>

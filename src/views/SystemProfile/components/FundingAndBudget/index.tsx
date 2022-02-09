@@ -36,8 +36,8 @@ const FundingAndBudget = ({ system }: FundingAndBudgetProps) => {
   const isMobile = useCheckResponsiveScreen('tablet');
   return (
     <div id="funding-and-budget">
-      <GridContainer className="padding-left-0 padding-right-0 padding-top-2">
-        <Grid row>
+      <GridContainer className="padding-left-0 padding-right-0">
+        <Grid row gap>
           <Grid desktop={{ col: 8 }}>
             <SectionWrapper
               borderBottom={isMobile}
@@ -146,7 +146,7 @@ const FundingAndBudget = ({ system }: FundingAndBudgetProps) => {
                 <Link
                   aria-label={t('singleSystem.sendEmail')}
                   className="line-height-body-5"
-                  href="/" // TODO: Get link from CEDAR?
+                  href="mailto:patrick.segura@oddball.io" // TODO: Get link from CEDAR?
                   variant="external"
                   target="_blank"
                 >
