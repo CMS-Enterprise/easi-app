@@ -41,37 +41,29 @@ export const extendLifecycleIdSchema = Yup.object().shape({
   newExpirationDay: Yup.string().trim().required('Please include a day'),
   newExpirationYear: Yup.string().trim().required('Please include a year'),
   validDate: Yup.string().when(
-    [
-      'newExpirationMonth',
-      'newExpirationDay',
-      'newExpirationYear',
-      'currentExpiresAt'
-    ],
+    ['newExpirationMonth', 'newExpirationDay', 'newExpirationYear'],
     {
       is: (
         newExpirationMonth: string,
         newExpirationDay: string,
-        newExpirationYear: string,
-        currentExpiresAt: string
+        newExpirationYear: string
       ) => {
-        const newExpiration = DateTime.fromObject({
-          month: Number(newExpirationMonth) || 0,
-          day: Number(newExpirationDay) || 0,
-          year: Number(newExpirationYear) || 0
-        });
+        const month = Number(newExpirationMonth);
+        const day = Number(newExpirationDay);
+        const year = Number(newExpirationYear);
 
-        const oldExpiration = DateTime.fromISO(currentExpiresAt) || 0;
-        if (
-          newExpiration.isValid &&
-          newExpiration.toMillis() > oldExpiration.toMillis()
-        ) {
-          return true;
-        }
-        return false;
+        return (
+          !(Number.isNaN(month) || Number.isNaN(day) || Number.isNaN(year)) &&
+          DateTime.fromObject({
+            month,
+            day,
+            year
+          }).isValid
+        );
       },
       otherwise: Yup.string().test(
         'validDate',
-        'Enter a valid expiration date that is later than the current expiration date',
+        'Enter a valid expiration date',
         () => false
       )
     }
