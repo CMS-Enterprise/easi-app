@@ -6,7 +6,8 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  GridContainer
+  GridContainer,
+  Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
@@ -89,8 +90,8 @@ const SystemTeamAndContract = ({
   const isMobile = useCheckResponsiveScreen('tablet');
   return (
     <div id="system-team-and-contract">
-      <GridContainer className="padding-top-2">
-        <Grid row gap>
+      <GridContainer className="padding-left-0 padding-right-0 padding-top-2">
+        <Grid row>
           <Grid desktop={{ col: 8 }}>
             <SectionWrapper borderBottom className="padding-bottom-2">
               <h2 className="margin-top-0 margin-bottom-4">
@@ -252,9 +253,9 @@ const SystemTeamAndContract = ({
             >
               <div className="side-divider">
                 <div className="top-divider" />
-                <h5 className="margin-top-0 margin-bottom-3 padding-top-1 font-sans-2xs text-normal">
+                <p className="font-body-xs margin-top-1 margin-bottom-3">
                   {t('teamAndContract.pointOfContact')}
-                </h5>
+                </p>
                 <h3 className="margin-top-0 margin-bottom-1">
                   {pointOfContactData.name}
                 </h3>
@@ -262,15 +263,15 @@ const SystemTeamAndContract = ({
                   {pointOfContactData.role}
                 </div>
                 <div className="padding-bottom-2">
-                  <UswdsReactLink
+                  <Link
                     aria-label={t('teamAndContract.sendAnEmail')}
                     className="line-height-body-5"
-                    to={pointOfContactData.email}
+                    href={pointOfContactData.email}
                     variant="external"
                     target="_blank"
                   >
                     {t('teamAndContract.sendAnEmail')}
-                  </UswdsReactLink>
+                  </Link>
                 </div>
               </div>
             </SectionWrapper>

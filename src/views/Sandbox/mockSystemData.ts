@@ -15,10 +15,26 @@ export type tempLocationProp = {
 };
 
 // Temporary extension of CEDAR types under BE integration complete
+export type tempBudgetProp = {
+  id: string;
+  title: string;
+  comment: string;
+};
+
+// Temporary extension of CEDAR types under BE integration complete
 export interface tempCedarSystemProps extends CedarSystemProps {
   locations?: tempLocationProp[];
   developmentTags?: string[];
+  budgets?: tempBudgetProp[];
 }
+
+export const budgetsInfo: tempBudgetProp[] = [
+  {
+    id: '1234567',
+    title: 'HAM Project funding',
+    comment: 'Most of this funding is directly and only for this system (80%)'
+  }
+];
 
 export const developmentTags: string[] = [
   'Agile Methodology',

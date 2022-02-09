@@ -8,7 +8,8 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  GridContainer
+  GridContainer,
+  Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { ReactComponent as VerifiedUserIcon } from 'uswds/src/img/usa-icons/verified_user.svg';
@@ -379,41 +380,40 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
             })}
           >
             {/* Setting a ref here to reference the grid width for the fixed side nav */}
-            <div className={classnames('padding-right-2', 'side-divider')}>
+            <div className="side-divider">
               <div className="top-divider" />
               <p className="font-body-xs margin-top-1 margin-bottom-3">
                 {t('singleSystem.pointOfContact')}
               </p>
-              <DescriptionTerm
-                className="system-profile__subheader margin-bottom-1"
-                term="Geraldine Hobbs"
-              />
+              <h3 className="system-profile__subheader margin-bottom-1">
+                Geraldine Hobbs
+              </h3>
               <DescriptionDefinition
                 definition={t('singleSystem.summary.subheader2')}
               />
               <p>
-                <UswdsReactLink
+                <Link
                   aria-label={t('singleSystem.sendEmail')}
                   className="line-height-body-5"
-                  to="/" // TODO: Get link from CEDAR?
+                  href="/" // TODO: Get link from CEDAR?
                   variant="external"
                   target="_blank"
                 >
                   {t('singleSystem.sendEmail')}
                   <span aria-hidden>&nbsp;</span>
-                </UswdsReactLink>
+                </Link>
               </p>
               <p>
-                <UswdsReactLink
+                <Link
                   aria-label={t('singleSystem.moreContact')}
                   className="line-height-body-5"
-                  to="/" // TODO: Get link from CEDAR?
+                  href="/" // TODO: Get link from CEDAR?
                   target="_blank"
                 >
                   {t('singleSystem.moreContact')}
                   <span aria-hidden>&nbsp;</span>
                   <span aria-hidden>&rarr; </span>
-                </UswdsReactLink>
+                </Link>
               </p>
             </div>
           </Grid>

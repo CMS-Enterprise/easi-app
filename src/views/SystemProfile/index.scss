@@ -19,9 +19,10 @@
         position: sticky;
         position: -webkit-sticky;
         top: 0;
-        padding-right: 2rem;
         padding-top: 1rem;
-
+        @media screen and (min-width: $desktop) {
+            margin-top: -1rem;
+          }
     }
 
     .link-header {

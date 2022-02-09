@@ -69,7 +69,13 @@ const systemProfile = {
       hardCodedIP: 'Hard-coded IP addresses'
     },
     fundingAndBudget: {
-      header: 'Funding and Budget'
+      header: 'Funding and Budget',
+      actualFYCost: 'Actual FY system cost',
+      budgetedFYCost: 'Budgeted FY system cost',
+      investmentNumber: 'Investment number',
+      requisitionNumber: 'Requisition number',
+      tagHeader1: 'Funding Sources',
+      budgetID: 'Budget ID: '
     }
   },
   systemTable: {
