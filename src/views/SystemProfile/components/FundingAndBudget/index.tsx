@@ -39,10 +39,7 @@ const FundingAndBudget = ({ system }: FundingAndBudgetProps) => {
       <GridContainer className="padding-left-0 padding-right-0">
         <Grid row gap>
           <Grid desktop={{ col: 8 }}>
-            <SectionWrapper
-              borderBottom={isMobile}
-              className="padding-bottom-4"
-            >
+            <SectionWrapper className="padding-bottom-4">
               <h2 className="margin-top-0">
                 {t('singleSystem.fundingAndBudget.header')}
               </h2>
@@ -95,7 +92,10 @@ const FundingAndBudget = ({ system }: FundingAndBudgetProps) => {
                 Fed Admin
               </Tag>
             </SectionWrapper>
-            <SectionWrapper borderBottom={isMobile} className="margin-bottom-5">
+            <SectionWrapper
+              borderBottom={isMobile}
+              className="margin-bottom-4 padding-bottom-4"
+            >
               <CardGroup className="margin-0">
                 {system?.budgets?.map(
                   (budget: tempBudgetProp): React.ReactNode => (
