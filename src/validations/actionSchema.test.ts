@@ -15,63 +15,73 @@ describe('extend lifecycle ID schema', () => {
     ).not.toThrowError();
   });
 
-  it('should throw a validation error when the month is not between 1 and 12', () => {
-    expect(() =>
-      extendLifecycleIdSchema.validateSync({
-        newExpirationMonth: '-2',
-        newExpirationDay: '15',
-        newExpirationYear: '2023',
-        newScope: 'A new scope',
-        newNextSteps: 'Some new next steps'
-      })
-    ).toThrowError(new ValidationError('Enter a valid expiration date'));
-  });
+  try {
+    extendLifecycleIdSchema.validateSync({
+      newExpirationMonth: '-2',
+      newExpirationDay: '15',
+      newExpirationYear: '2023',
+      newScope: 'A new scope',
+      newNextSteps: 'Some new next steps'
+    });
+    throw new Error('Should not validate successfully');
+  } catch (err) {
+    expect(err).toBeInstanceOf(ValidationError);
+    expect((err as ValidationError).path).toBe('validDate');
+  }
 
-  it('should throw a validation error when the day is not a possible day in a month', () => {
-    expect(() =>
-      extendLifecycleIdSchema.validateSync({
-        newExpirationMonth: '2',
-        newExpirationDay: '150',
-        newExpirationYear: '2023',
-        newScope: 'A new scope',
-        newNextSteps: 'Some new next steps'
-      })
-    ).toThrowError(new ValidationError('Enter a valid expiration date'));
-  });
+  try {
+    extendLifecycleIdSchema.validateSync({
+      newExpirationMonth: '2',
+      newExpirationDay: '150',
+      newExpirationYear: '2023',
+      newScope: 'A new scope',
+      newNextSteps: 'Some new next steps'
+    });
+    throw new Error('Should not validate successfully');
+  } catch (err) {
+    expect(err).toBeInstanceOf(ValidationError);
+    expect((err as ValidationError).path).toBe('validDate');
+  }
 
-  it('should throw a validation error when an invalid year string is entered for the year', () => {
-    expect(() =>
-      extendLifecycleIdSchema.validateSync({
-        newExpirationMonth: '2',
-        newExpirationDay: '15',
-        newExpirationYear: 'abcd',
-        newScope: 'A new scope',
-        newNextSteps: 'Some new next steps'
-      })
-    ).toThrowError(new ValidationError('Enter a valid expiration date'));
-  });
+  try {
+    extendLifecycleIdSchema.validateSync({
+      newExpirationMonth: '2',
+      newExpirationDay: '15',
+      newExpirationYear: 'abcd',
+      newScope: 'A new scope',
+      newNextSteps: 'Some new next steps'
+    });
+    throw new Error('Should not validate successfully');
+  } catch (err) {
+    expect(err).toBeInstanceOf(ValidationError);
+    expect((err as ValidationError).path).toBe('validDate');
+  }
 
-  it('should throw a validation error when a new scope is missing', () => {
-    expect(() =>
-      extendLifecycleIdSchema.validateSync({
-        newExpirationMonth: '2',
-        newExpirationDay: '15',
-        newExpirationYear: '2023',
-        newScope: '',
-        newNextSteps: 'Some new next steps'
-      })
-    ).toThrowError(new ValidationError('Please include a scope'));
-  });
+  try {
+    extendLifecycleIdSchema.validateSync({
+      newExpirationMonth: '2',
+      newExpirationDay: '15',
+      newExpirationYear: '2023',
+      newScope: '',
+      newNextSteps: 'Some new next steps'
+    });
+    throw new Error('Should not validate successfully');
+  } catch (err) {
+    expect(err).toBeInstanceOf(ValidationError);
+    expect((err as ValidationError).path).toBe('newScope');
+  }
 
-  it('should throw a validation error when next steps are not filled out', () => {
-    expect(() =>
-      extendLifecycleIdSchema.validateSync({
-        newExpirationMonth: '2',
-        newExpirationDay: '15',
-        newExpirationYear: '2023',
-        newScope: 'A new scope',
-        newNextSteps: ''
-      })
-    ).toThrowError(new ValidationError('Please fill out next steps'));
-  });
+  try {
+    extendLifecycleIdSchema.validateSync({
+      newExpirationMonth: '2',
+      newExpirationDay: '15',
+      newExpirationYear: '2023',
+      newScope: 'A new scope',
+      newNextSteps: ''
+    });
+    throw new Error('Should not validate successfully');
+  } catch (err) {
+    expect(err).toBeInstanceOf(ValidationError);
+    expect((err as ValidationError).path).toBe('newNextSteps');
+  }
 });
