@@ -124,8 +124,6 @@ func main() {
 		i.ID = uuid.MustParse("20cbcfbf-6459-4c96-943b-e76b83122dbf")
 	})
 
-	makeBusinessCase("TACO", logger, store, nil)
-
 	intake := makeSystemIntake("Draft Business Case", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusBIZCASEDRAFT
 	})

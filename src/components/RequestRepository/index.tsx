@@ -3,7 +3,13 @@ import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useSortBy, useTable } from 'react-table';
+import {
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -17,11 +23,15 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import TruncatedText from 'components/shared/TruncatedText';
+import GlobalClientFilter from 'components/TableFilter';
+import TablePagination from 'components/TablePagination';
+import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
-import { formatDateAndIgnoreTimezone } from 'utils/date';
+import { SystemIntakeForm } from 'types/systemIntake';
+import { formatDate } from 'utils/date';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
@@ -50,10 +60,9 @@ const RequestRepository = () => {
 
   const submissionDateColumn = {
     Header: t('intake:fields.submissionDate'),
-    accessor: 'submittedAt',
-    Cell: ({ value }: any) => {
-      if (value) {
-        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+    accessor: (value: SystemIntakeForm) => {
+      if (value.submittedAt) {
+        return formatDate(value.submittedAt);
       }
       return t('requestRepository.table.submissionDate.null');
     }
@@ -81,25 +90,35 @@ const RequestRepository = () => {
 
   const adminLeadColumn = {
     Header: t('intake:fields.adminLead'),
-    accessor: 'adminLead',
-    Cell: ({ value }: any) => {
-      if (value) {
-        return value;
+    accessor: (value: SystemIntakeForm) => {
+      if (value.adminLead) {
+        return value.adminLead;
       }
-      return (
-        <>
-          {/* TODO: should probably make this a button that opens up the assign admin
+      return t('governanceReviewTeam:adminLeads.notAssigned');
+    },
+    Cell: ({ value }: any) => {
+      if (value === t('governanceReviewTeam:adminLeads.notAssigned')) {
+        return (
+          <>
+            {/* TODO: should probably make this a button that opens up the assign admin
                 lead automatically. Similar to the Dates functionality */}
-          <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
-          {t('governanceReviewTeam:adminLeads.notAssigned')}
-        </>
-      );
+            <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
+            {value}
+          </>
+        );
+      }
+      return value;
     }
   };
 
   const grtDateColumn = {
     Header: t('intake:fields.grtDate'),
-    accessor: 'grtDate',
+    accessor: (value: SystemIntakeForm) => {
+      if (value.grtDate) {
+        return formatDate(value.grtDate);
+      }
+      return t('requestRepository.table.addDate');
+    },
     Cell: ({ row, value }: any) => {
       if (value === t('requestRepository.table.addDate')) {
         // If date is null, return button that takes user to page to add date
@@ -112,13 +131,18 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDateAndIgnoreTimezone(value);
+      return value;
     }
   };
 
   const grbDateColumn = {
     Header: t('intake:fields.grbDate'),
-    accessor: 'grbDate',
+    accessor: (value: SystemIntakeForm) => {
+      if (value.grbDate) {
+        return formatDate(value.grbDate);
+      }
+      return t('requestRepository.table.addDate');
+    },
     Cell: ({ row, value }: any) => {
       if (value === t('requestRepository.table.addDate')) {
         // If date is null, return button that takes user to page to add date
@@ -131,7 +155,7 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDateAndIgnoreTimezone(value);
+      return value;
     }
   };
 
@@ -242,7 +266,17 @@ const RequestRepository = () => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    setGlobalFilter,
+    state,
+    page,
     prepareRow
   } = useTable(
     {
@@ -256,11 +290,16 @@ const RequestRepository = () => {
         }
       },
       data,
+      autoResetSortBy: false,
+      autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], [])
       }
     },
-    useSortBy
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination
   );
 
   const csvHeaders = csvHeaderMap(t);
@@ -270,7 +309,7 @@ const RequestRepository = () => {
   };
 
   return (
-    <MainContent className="grid-container margin-bottom-5">
+    <MainContent className="padding-x-4 margin-bottom-5">
       <div className="display-flex flex-justify flex-wrap margin-bottom-2">
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
@@ -337,13 +376,23 @@ const RequestRepository = () => {
           count: data.length
         })}
       </PageHeading>
-      {/* h1 for screen devices / complicated CSS to have them together */}
-      <h1 className="font-heading-sm" aria-hidden>
-        {t('requestRepository.requestCount', {
-          context: activeTable,
-          count: data.length
-        })}
-      </h1>
+
+      <GlobalClientFilter
+        setGlobalFilter={setGlobalFilter}
+        tableID={t('requestRepository.id')}
+        tableName={t('requestRepository.title')}
+        className="margin-bottom-4"
+      />
+
+      <TableResults
+        globalFilter={state.globalFilter}
+        pageIndex={state.pageIndex}
+        pageSize={state.pageSize}
+        filteredRowLength={page.length}
+        rowLength={data.length}
+        className="margin-bottom-4"
+      />
+
       {/* This is the only table that expands past the USWDS desktop dimensions.  Only convert to scrollable when in tablet/mobile */}
       <Table
         scrollable={isMobile}
@@ -383,7 +432,7 @@ const RequestRepository = () => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {page.map(row => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()} data-testid={`${row.original.id}-row`}>
@@ -413,6 +462,20 @@ const RequestRepository = () => {
           })}
         </tbody>
       </Table>
+
+      <TablePagination
+        gotoPage={gotoPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+        canNextPage={canNextPage}
+        pageIndex={state.pageIndex}
+        pageOptions={pageOptions}
+        canPreviousPage={canPreviousPage}
+        pageCount={pageCount}
+        pageSize={state.pageSize}
+        setPageSize={setPageSize}
+        page={[]}
+      />
     </MainContent>
   );
 };

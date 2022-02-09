@@ -2,11 +2,20 @@
 
 import React, { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSortBy, useTable } from 'react-table';
+import {
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { Table } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import GlobalClientFilter from 'components/TableFilter';
+import TablePagination from 'components/TablePagination';
+import TableResults from 'components/TableResults';
 import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
@@ -45,10 +54,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.submissionDate'),
-        accessor: 'submittedAt',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
+        accessor: (value: AccessibilityRequests) => {
+          if (value.submittedAt) {
+            return formatDate(value.submittedAt);
           }
           return '';
         },
@@ -60,10 +68,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: 'relevantTestDate',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
+        accessor: (value: any) => {
+          if (value.relevantTestDate) {
+            return formatDate(value.relevantTestDate);
           }
           return t('requestTable.emptyTestDate');
         },
@@ -71,19 +78,24 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.status'),
-        accessor: 'statusRecord',
+        accessor: (value: AccessibilityRequests) => {
+          return value?.statusRecord?.status;
+        },
         Cell: ({ row, value }: any) => {
           // Status hasn't changed if the status record created at is the same
           // as the 508 request's submitted at
-          if (row.original.submittedAt.toISO() === value.createdAt.toISO()) {
-            return <span>{value.status}</span>;
+          if (
+            row.original?.submittedAt?.toISO() ===
+            row.original?.statusRecord?.createdAt?.toISO()
+          ) {
+            return <span>{value}</span>;
           }
 
           return (
             <span>
-              {value.status}{' '}
+              {value}{' '}
               <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
-                value.createdAt
+                row.original?.statusRecord?.createdAt
               )}`}</span>
             </span>
           );
@@ -129,7 +141,17 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    page,
+    setGlobalFilter,
+    state,
     prepareRow
   } = useTable(
     {
@@ -144,15 +166,37 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         }
       },
       requests,
+      autoResetSortBy: false,
+      autoResetPage: false,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], [])
+        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
+        pageIndex: 0
       }
     },
-    useSortBy
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination
   );
 
   return (
     <div className="accessibility-requests-table">
+      <GlobalClientFilter
+        setGlobalFilter={setGlobalFilter}
+        tableID={t('requestTable.id')}
+        tableName={t('requestTable.title')}
+        className="margin-bottom-4"
+      />
+
+      <TableResults
+        globalFilter={state.globalFilter}
+        pageIndex={state.pageIndex}
+        pageSize={state.pageSize}
+        filteredRowLength={page.length}
+        rowLength={data.length}
+        className="margin-bottom-4"
+      />
+
       <Table bordered={false} scrollable {...getTableProps()} fullWidth>
         <caption className="usa-sr-only">{t('requestTable.caption')}</caption>
         <thead>
@@ -185,7 +229,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {page.map(row => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
@@ -209,7 +253,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                   return (
                     <td
                       {...cell.getCellProps({
-                        style: { width: cell.column.width, maxWidth: '16em' }
+                        style: {
+                          width: cell.column.width,
+                          maxWidth: '16em'
+                        }
                       })}
                     >
                       {cell.render('Cell')}
@@ -220,6 +267,20 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             );
           })}
         </tbody>
+
+        <TablePagination
+          gotoPage={gotoPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+          canNextPage={canNextPage}
+          pageIndex={state.pageIndex}
+          pageOptions={pageOptions}
+          canPreviousPage={canPreviousPage}
+          pageCount={pageCount}
+          pageSize={state.pageSize}
+          setPageSize={setPageSize}
+          page={[]}
+        />
       </Table>
       <div
         className="usa-sr-only usa-table__announcement-region"

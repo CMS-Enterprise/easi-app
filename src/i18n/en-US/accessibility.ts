@@ -9,6 +9,8 @@ const accessibility = {
   },
   documentTable: {
     caption: 'Documents uploaded for',
+    id: '508-document-table',
+    title: '508 Document Table',
     header: {
       actions: 'Actions',
       documentName: 'Document',
@@ -36,6 +38,8 @@ const accessibility = {
   },
   requestTable: {
     caption: 'List of 508 requests',
+    id: 'request-table',
+    title: 'Request Table',
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission Date',

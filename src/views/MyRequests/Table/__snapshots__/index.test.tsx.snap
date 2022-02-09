@@ -5,6 +5,47 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
   <div
     class="accessibility-requests-table"
   >
+    <form
+      class="usa-form usa-search margin-bottom-4"
+      data-testid="table-client-filter"
+      role="search"
+    >
+      <label
+        class="usa-sr-only"
+        data-testid="label"
+        for="request-table-search"
+      >
+        Search Table
+      </label>
+      <input
+        class="usa-input"
+        data-testid="textInput"
+        id="request-table-search"
+        name="Request Table Search"
+        role="searchbox"
+        type="search"
+      />
+      <button
+        class="usa-button no-pointer"
+        data-testid="button"
+        type="submit"
+      >
+         
+        <span
+          class="usa-search__submit-text fa fa-search"
+        />
+      </button>
+    </form>
+    <div
+      class="margin-bottom-4"
+      data-testid="page-results"
+    >
+      <span>
+        <div>
+          Showing 1-4 of 4 results 
+        </div>
+      </span>
+    </div>
     <div
       class="usa-table-container--scrollable"
       data-testid="scrollable-table-container"
@@ -300,6 +341,33 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
         </tbody>
       </table>
     </div>
+    <nav
+      aria-label="Pagination"
+      class="usa-pagination padding-bottom-1"
+      data-testid="table-pagination"
+    >
+      <ul
+        class="usa-pagination__list"
+      >
+        <li
+          class="usa-pagination__item usa-pagination__page-no"
+        >
+          <div>
+            <div
+              class="usa-pagination__item"
+            >
+              <button
+                aria-label="Page 1"
+                class="usa-pagination__button usa-current"
+                type="button"
+              >
+                1
+              </button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
     <div
       aria-live="polite"
       class="usa-sr-only usa-table__announcement-region"

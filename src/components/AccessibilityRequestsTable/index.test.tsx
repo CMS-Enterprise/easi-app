@@ -1,10 +1,63 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { mount, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
+import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
+import { AccessibilityRequestStatus } from 'types/graphql-global-types';
+
 import AccessibilityRequestsTable from './index';
+
+const requests: AccessibilityRequests[] = [
+  {
+    __typename: 'AccessibilityRequest',
+    id: '124',
+    name: 'Burrito v2',
+    relevantTestDate: {
+      __typename: 'TestDate',
+      date: '2021-06-30T19:22:40Z'
+    },
+    submittedAt: '2021-06-10T19:22:40Z',
+    system: {
+      __typename: 'System',
+      lcid: '0000',
+      businessOwner: {
+        __typename: 'BusinessOwner',
+        name: 'Shade',
+        component: 'OIT'
+      }
+    },
+    statusRecord: {
+      __typename: 'AccessibilityRequestStatusRecord',
+      status: AccessibilityRequestStatus.IN_REMEDIATION,
+      createdAt: '2021-06-11T19:22:40Z'
+    }
+  },
+  {
+    __typename: 'AccessibilityRequest',
+    id: '123',
+    name: 'Burrito v1',
+    submittedAt: '2021-06-10T19:22:40Z',
+    relevantTestDate: null,
+    system: {
+      __typename: 'System',
+      lcid: '0000',
+      businessOwner: {
+        __typename: 'BusinessOwner',
+        name: 'Shade',
+        component: 'OIT'
+      }
+    },
+    statusRecord: {
+      __typename: 'AccessibilityRequestStatusRecord',
+      status: AccessibilityRequestStatus.OPEN,
+      createdAt: '2021-06-10T19:22:40Z'
+    }
+  }
+];
 
 describe('AccessibilityRequestsTable', () => {
   const wrapper = shallow(<AccessibilityRequestsTable requests={[]} />);
@@ -20,6 +73,25 @@ describe('AccessibilityRequestsTable', () => {
     expect(wrapper.find('th').at(4).contains('Status')).toBe(true);
   });
 
+  it('displays relevant results from filter', async () => {
+    render(
+      <MemoryRouter>
+        <AccessibilityRequestsTable requests={requests} />
+      </MemoryRouter>
+    );
+
+    // User event to typing in query with debounce
+    await waitFor(() => {
+      userEvent.type(screen.getByRole('searchbox'), 'Burrito v1');
+    });
+
+    // Mocked time for debounce of input
+    await waitFor(() => new Promise(res => setTimeout(res, 200)));
+
+    // Burrito v2 is a mocked table row text item that should not be included in filtered results
+    expect(await screen.queryByText('Burrito v2')).toBeNull();
+  });
+
   it('contains the expected values in the rows', () => {
     const mockStore = configureMockStore();
     const store = mockStore({
@@ -28,32 +100,6 @@ describe('AccessibilityRequestsTable', () => {
       }
     });
 
-    const requests = [
-      {
-        id: '123',
-        name: 'Burrito v1',
-        submittedAt: '2021-06-10T19:22:40Z',
-        system: {
-          lcid: '0000',
-          businessOwner: { name: 'Shade', component: 'OIT' }
-        },
-        statusRecord: { status: 'OPEN', createdAt: '2021-06-10T19:22:40Z' }
-      },
-      {
-        id: '124',
-        name: 'Burrito v2',
-        relevantTestDate: { date: '2021-06-30T19:22:40Z' },
-        submittedAt: '2021-06-10T19:22:40Z',
-        system: {
-          lcid: '0000',
-          businessOwner: { name: 'Shade', component: 'OIT' }
-        },
-        statusRecord: {
-          status: 'IN_REMEDIATION',
-          createdAt: '2021-06-11T19:22:40Z'
-        }
-      }
-    ];
     const wrapperWithRequests = mount(
       <MemoryRouter initialEntries={['/508/requests/all']}>
         <Provider store={store}>

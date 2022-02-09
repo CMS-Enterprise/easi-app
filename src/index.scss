@@ -105,7 +105,8 @@ h5 {
       }
     }
     td {
-      border-top: .5px
+      border-top: .5px;
+      white-space: unset;
     }
   }
 }

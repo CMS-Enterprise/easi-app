@@ -22,6 +22,8 @@ const home = {
   },
   requestsTable: {
     empty: 'Requests will display in a table once you add them',
+    id: 'request-table',
+    title: 'Request Table',
     breadcrumb: {
       home: 'Home',
       table: 'My governance requests'

@@ -1,11 +1,22 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Cell, Column, useSortBy, useTable } from 'react-table';
+import {
+  Cell,
+  Column,
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { Button, Link, Table } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import GlobalClientFilter from 'components/TableFilter';
+import TablePagination from 'components/TablePagination';
+import TableResults from 'components/TableResults';
 import {
   AccessibilityRequestDocumentCommonType,
   AccessibilityRequestDocumentStatus
@@ -48,8 +59,7 @@ const AccessibilityDocumentsList = ({
     return [
       {
         Header: t<string>('documentTable.header.documentName'),
-        accessor: 'documentType',
-        Cell: ({ value }: any) => translateDocumentType(value)
+        accessor: (value: Document) => translateDocumentType(value.documentType)
       },
       {
         Header: t<string>('documentTable.header.uploadedAt'),
@@ -140,7 +150,17 @@ const AccessibilityDocumentsList = ({
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    page,
+    setGlobalFilter,
+    state,
     prepareRow
   } = useTable(
     {
@@ -155,11 +175,16 @@ const AccessibilityDocumentsList = ({
       },
       data,
       documents,
+      autoResetSortBy: false,
+      autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], [])
       }
     },
-    useSortBy
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination
   );
 
   if (documents.length === 0) {
@@ -167,6 +192,22 @@ const AccessibilityDocumentsList = ({
   }
   return (
     <div data-testid="accessibility-documents-list">
+      <GlobalClientFilter
+        setGlobalFilter={setGlobalFilter}
+        tableID={t('documentTable.id')}
+        tableName={t('documentTable.title')}
+        className="margin-bottom-4"
+      />
+
+      <TableResults
+        globalFilter={state.globalFilter}
+        pageIndex={state.pageIndex}
+        pageSize={state.pageSize}
+        filteredRowLength={page.length}
+        rowLength={data.length}
+        className="margin-bottom-4"
+      />
+
       <Table bordered={false} {...getTableProps()} fullWidth scrollable>
         <caption className="usa-sr-only">
           {`${t('documentTable.caption')} ${requestName}`}
@@ -197,7 +238,7 @@ const AccessibilityDocumentsList = ({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {page.map(row => {
             prepareRow(row);
             return (
               <tr data-testurl={row.original.url} {...row.getRowProps()}>
@@ -224,6 +265,21 @@ const AccessibilityDocumentsList = ({
           })}
         </tbody>
       </Table>
+
+      <TablePagination
+        gotoPage={gotoPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+        canNextPage={canNextPage}
+        pageIndex={state.pageIndex}
+        pageOptions={pageOptions}
+        canPreviousPage={canPreviousPage}
+        pageCount={pageCount}
+        pageSize={state.pageSize}
+        setPageSize={setPageSize}
+        page={[]}
+      />
+
       <Modal isOpen={!!document} closeModal={() => setDocument(null)}>
         {document && (
           <>
