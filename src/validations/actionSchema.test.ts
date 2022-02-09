@@ -12,7 +12,7 @@ describe('extend lifecycle ID schema', () => {
         newScope: 'A new scope',
         newNextSteps: 'Some new next steps'
       })
-    );
+    ).not.toThrowError();
   });
 
   it('should throw a validation error when the month is not between 1 and 12', () => {
