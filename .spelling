@@ -175,6 +175,7 @@ base64
 yq
 Redis
 EASI-1505
+EASI-1447
 timestamp
 rasterization
 uswds-react
