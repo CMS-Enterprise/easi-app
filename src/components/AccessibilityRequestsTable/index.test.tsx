@@ -6,32 +6,56 @@ import userEvent from '@testing-library/user-event';
 import { mount, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
+import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
+import { AccessibilityRequestStatus } from 'types/graphql-global-types';
+
 import AccessibilityRequestsTable from './index';
 
-const requests = [
+const requests: AccessibilityRequests[] = [
   {
+    __typename: 'AccessibilityRequest',
     id: '124',
     name: 'Burrito v2',
-    relevantTestDate: { date: '2021-06-30T19:22:40Z' },
+    relevantTestDate: {
+      __typename: 'TestDate',
+      date: '2021-06-30T19:22:40Z'
+    },
     submittedAt: '2021-06-10T19:22:40Z',
     system: {
+      __typename: 'System',
       lcid: '0000',
-      businessOwner: { name: 'Shade', component: 'OIT' }
+      businessOwner: {
+        __typename: 'BusinessOwner',
+        name: 'Shade',
+        component: 'OIT'
+      }
     },
     statusRecord: {
-      status: 'IN_REMEDIATION',
+      __typename: 'AccessibilityRequestStatusRecord',
+      status: AccessibilityRequestStatus.IN_REMEDIATION,
       createdAt: '2021-06-11T19:22:40Z'
     }
   },
   {
+    __typename: 'AccessibilityRequest',
     id: '123',
     name: 'Burrito v1',
     submittedAt: '2021-06-10T19:22:40Z',
+    relevantTestDate: null,
     system: {
+      __typename: 'System',
       lcid: '0000',
-      businessOwner: { name: 'Shade', component: 'OIT' }
+      businessOwner: {
+        __typename: 'BusinessOwner',
+        name: 'Shade',
+        component: 'OIT'
+      }
     },
-    statusRecord: { status: 'OPEN', createdAt: '2021-06-10T19:22:40Z' }
+    statusRecord: {
+      __typename: 'AccessibilityRequestStatusRecord',
+      status: AccessibilityRequestStatus.OPEN,
+      createdAt: '2021-06-10T19:22:40Z'
+    }
   }
 ];
 
