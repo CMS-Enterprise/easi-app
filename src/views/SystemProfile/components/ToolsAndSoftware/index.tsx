@@ -24,8 +24,6 @@ import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/
 import './index.scss';
 
 type ToolsAndSoftwareProps = {
-  className?: string;
-  children?: React.ReactNode;
   system: CedarSystemProps;
 };
 
@@ -64,11 +62,7 @@ const pointOfContactData = {
   email: 'mailto:todo'
 };
 
-const SystemToolsAndSoftware = ({
-  className,
-  children,
-  system
-}: ToolsAndSoftwareProps) => {
+const SystemToolsAndSoftware = ({ system }: ToolsAndSoftwareProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   return (
@@ -82,7 +76,10 @@ const SystemToolsAndSoftware = ({
             <CardGroup className="margin-0">
               {productsData.map(product => {
                 return (
-                  <Card className="grid-col-12 margin-bottom-2">
+                  <Card
+                    key={product.id}
+                    className="grid-col-12 margin-bottom-2"
+                  >
                     <CardHeader className="padding-2 padding-bottom-0">
                       <h3 className="margin-top-0 margin-bottom-05 line-height-sans-2">
                         {product.name}
