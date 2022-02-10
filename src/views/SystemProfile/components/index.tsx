@@ -5,6 +5,7 @@ import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/
 import SystemDetails from './SystemDetails';
 import SystemHome from './SystemHome';
 import TeamAndContract from './TeamAndContract';
+import ToolsAndSoftware from './ToolsAndSoftware';
 
 type sideNavItemProps = {
   groupEnd?: boolean; // Value used to designate end of sidenav subgrouping / border-bottom
@@ -38,7 +39,7 @@ const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
   },
   'tools-and-software': {
     groupEnd: true,
-    component: <SystemHome system={system} />,
+    component: <ToolsAndSoftware system={system} />,
     route: `/system-profile/${system.id}/tools-and-software`
   },
   ato: {

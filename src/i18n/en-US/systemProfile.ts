@@ -25,7 +25,7 @@ const systemProfile = {
     id: 'single-system-profile',
     mainNavigation: 'Main Navigation',
     pointOfContact: 'Point of Contact',
-    sendEmail: 'Send and email',
+    sendEmail: 'Send an email',
     moreContact: 'More points of contact',
     summary: {
       back: 'Back to All Systems',
@@ -67,6 +67,43 @@ const systemProfile = {
       ipv6Transition: 'IPv6 transition',
       percentTransitioned: 'Percent transitioned to IPv6',
       hardCodedIP: 'Hard-coded IP addresses'
+    },
+    teamAndContract: {
+      header: {
+        teamAndContract: 'Team and Contract',
+        contractInformation: 'Contract Information',
+        pointsOfContact: 'Points of Contact'
+      },
+      federalFullTimeEmployees: 'Federal Full Time Employees',
+      contractorFullTimeEmployees: 'Contractor Full Time Employees',
+      vendors: 'Vendors',
+      contractAwardDate: 'Contract Award Date',
+      periodOfPerformance: 'Period of performance',
+      startDate: 'Start Date',
+      endDate: 'End Date',
+      contractNumber: 'Contract number',
+      technologyFunctions: 'Technology functions',
+      assetsOrServices: 'Assets or services',
+      pointOfContact: 'Point of contact',
+      sendAnEmail: 'Send an email'
+    },
+    fundingAndBudget: {
+      header: 'Funding and Budget',
+      actualFYCost: 'Actual FY system cost',
+      budgetedFYCost: 'Budgeted FY system cost',
+      investmentNumber: 'Investment number',
+      requisitionNumber: 'Requisition number',
+      tagHeader1: 'Funding Sources',
+      budgetID: 'Budget ID: '
+    },
+    toolsAndSoftware: {
+      header: 'Tools and Software',
+      productType: 'Product Type',
+      softwareVersion: 'Software version',
+      softwareEdition: 'Software edition',
+      pointOfContact: 'Point of contact',
+      sendAnEmail: 'Send an email',
+      morePointsOfContact: 'More points of contact'
     }
   },
   systemTable: {

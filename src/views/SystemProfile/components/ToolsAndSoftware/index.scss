@@ -1,0 +1,16 @@
+#system-tools-and-software {
+  /* Cards whitespace overrides */
+  .usa-card__header > h5:last-child {
+    margin-bottom: 1rem;
+  }
+
+  .usa-card__body:last-child {
+    padding-bottom: 1rem;
+  }
+  .usa-card__body > h5:first-child {
+    margin-top: 1rem;
+  }
+  .usa-card:last-of-type {
+    margin-bottom: 0;
+  }
+}
