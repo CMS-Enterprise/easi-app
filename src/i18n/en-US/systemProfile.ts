@@ -100,10 +100,7 @@ const systemProfile = {
       header: 'Tools and Software',
       productType: 'Product Type',
       softwareVersion: 'Software version',
-      softwareEdition: 'Software edition',
-      pointOfContact: 'Point of contact',
-      sendAnEmail: 'Send an email',
-      morePointsOfContact: 'More points of contact'
+      softwareEdition: 'Software edition'
     }
   },
   systemTable: {
