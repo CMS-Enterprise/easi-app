@@ -139,7 +139,7 @@ const RequestRepository = () => {
       if (!value) {
         return (
           <UswdsReactLink
-            data-testid="add-grt-date-cta"
+            data-testid="add-grb-date-cta"
             to={`/governance-review-team/${row.original.id}/dates`}
           >
             {t('requestRepository.table.addDate')}
