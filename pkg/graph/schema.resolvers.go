@@ -1200,6 +1200,16 @@ func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context,
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
 
+	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
+	cedarSystemIDStr := cedarSystemID.ValueOrZero()
+	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
+		_, err = r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
+		if err != nil {
+			return nil, err
+		}
+		intake.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
+	}
+
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,

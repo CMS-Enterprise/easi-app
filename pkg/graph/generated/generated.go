@@ -4351,6 +4351,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessNeed: String
   businessSolution: String
   needsEaSupport: Boolean
+  cedarSystemId: String
 }
 
 """
@@ -20185,6 +20186,14 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("needsEaSupport"))
 			it.NeedsEaSupport, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "cedarSystemId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+			it.CedarSystemID, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}

@@ -896,6 +896,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessNeed: String
   businessSolution: String
   needsEaSupport: Boolean
+  cedarSystemId: String
 }
 
 """

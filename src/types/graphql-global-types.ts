@@ -422,6 +422,7 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   businessNeed?: string | null;
   businessSolution?: string | null;
   needsEaSupport?: boolean | null;
+  cedarSystemId?: string | null;
 }
 
 /**
