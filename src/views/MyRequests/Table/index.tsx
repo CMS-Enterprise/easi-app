@@ -9,6 +9,7 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
@@ -18,6 +19,7 @@ import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { formatDate } from 'utils/date';
+import globalTableFilter from 'utils/globalTableFilter';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -67,7 +69,19 @@ const Table = () => {
       },
       {
         Header: t('requestsTable.headers.submittedAt'),
-        accessor: 'submittedAt'
+        accessor: (value: any) => {
+          if (value.submittedAt) {
+            return DateTime.fromISO(value.submittedAt);
+          }
+          return null;
+        },
+        Cell: ({ value }: any) => {
+          if (value) {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          }
+
+          return t('requestsTable.defaultSubmittedAt');
+        }
       },
       {
         Header: t('requestsTable.headers.status'),
@@ -101,7 +115,19 @@ const Table = () => {
       },
       {
         Header: t('requestsTable.headers.nextMeetingDate'),
-        accessor: 'nextMeetingDate',
+        accessor: (value: any) => {
+          if (value.nextMeetingDate) {
+            return DateTime.fromISO(value.nextMeetingDate);
+          }
+          return null;
+        },
+        Cell: ({ value }: any) => {
+          if (value) {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          }
+
+          return 'None';
+        },
         className: 'next-meeting-date',
         width: '220px'
       }
@@ -145,6 +171,7 @@ const Table = () => {
           );
         }
       },
+      globalFilter: useMemo(() => globalTableFilter, []),
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
