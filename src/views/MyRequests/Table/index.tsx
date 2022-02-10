@@ -69,9 +69,9 @@ const Table = () => {
       },
       {
         Header: t('requestsTable.headers.submittedAt'),
-        accessor: (value: any) => {
-          if (value.submittedAt) {
-            return DateTime.fromISO(value.submittedAt);
+        accessor: ({ submittedAt }: any) => {
+          if (submittedAt) {
+            return DateTime.fromISO(submittedAt);
           }
           return null;
         },
@@ -114,9 +114,9 @@ const Table = () => {
       },
       {
         Header: t('requestsTable.headers.nextMeetingDate'),
-        accessor: (value: any) => {
-          if (value.nextMeetingDate) {
-            return DateTime.fromISO(value.nextMeetingDate);
+        accessor: ({ nextMeetingDate }: any) => {
+          if (nextMeetingDate) {
+            return DateTime.fromISO(nextMeetingDate);
           }
           return null;
         },
