@@ -1,14 +1,4 @@
 #system-team-and-contract {
-  /* Nested responsive grid container overrides */
-  & > .grid-container {
-    padding-left: 0;
-    padding-right: 0;
-    @media screen and (min-width: $desktop) {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-  }
-
   /* Cards whitespace overrides */
   .usa-card__body:last-child {
     padding-bottom: 1rem;
@@ -18,14 +8,5 @@
   }
   .usa-card:last-of-type {
     margin-bottom: 0;
-  }
-
-  /* Point of contact sidebar grid overrides */
-  #system-profile & .sticky-nav {
-    padding-left: 0;
-    padding-right: 0;
-    @media screen and (min-width: $desktop) {
-      margin-top: -1rem;
-    }
   }
 }

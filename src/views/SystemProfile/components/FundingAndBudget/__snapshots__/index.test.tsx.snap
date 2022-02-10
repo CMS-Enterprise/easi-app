@@ -1,0 +1,182 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The making a request page matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    id="funding-and-budget"
+  >
+    <div
+      class="grid-container padding-left-0 padding-right-0"
+      data-testid="gridContainer"
+    >
+      <div
+        class="grid-row grid-gap"
+        data-testid="grid"
+      >
+        <div
+          class="desktop:grid-col-8"
+          data-testid="grid"
+        >
+          <div
+            class="easi-section padding-bottom-4"
+            data-testid="section-wrapper"
+          >
+            <h2
+              class="margin-top-0"
+            >
+              Funding and Budget
+            </h2>
+            <div
+              class="grid-row margin-top-3"
+              data-testid="grid"
+            >
+              <div
+                class="tablet:grid-col-6 margin-bottom-5"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Actual FY system cost
+                </dt>
+                <dd
+                  class="description-definition margin-0 font-body-md line-height-body-3"
+                >
+                  $4,500,000
+                </dd>
+              </div>
+              <div
+                class="tablet:grid-col-6 margin-bottom-5"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Budgeted FY system cost
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3 font-body-md"
+                >
+                  $4,500,000
+                </dd>
+              </div>
+              <div
+                class="tablet:grid-col-6 margin-bottom-5"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Investment number
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3"
+                >
+                  9333
+                </dd>
+              </div>
+              <div
+                class="tablet:grid-col-6 margin-bottom-5"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Requisition number
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3"
+                >
+                  OIT-393-2019-0686
+                </dd>
+              </div>
+            </div>
+            <h3
+              class="margin-top-0 margin-bottom-1"
+            >
+              Funding Sources
+            </h3>
+            <span
+              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+              data-testid="tag"
+            >
+              Fed Admin
+            </span>
+          </div>
+          <div
+            class="easi-section margin-bottom-4 padding-bottom-4"
+            data-testid="section-wrapper"
+          >
+            <ul
+              class="usa-card-group margin-0"
+              data-testid="CardGroup"
+            />
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4 sticky-nav"
+          data-testid="grid"
+        >
+          <div
+            class="side-divider"
+          >
+            <div
+              class="top-divider"
+            />
+            <p
+              class="font-body-xs margin-top-1 margin-bottom-3"
+            >
+              Point of contact
+            </p>
+            <h3
+              class="system-profile__subheader margin-bottom-1"
+            >
+              Geraldine Hobbs
+            </h3>
+            <dd
+              class="description-definition margin-0"
+            >
+              Business Owner
+            </dd>
+            <p>
+              <a
+                aria-label="Send and email"
+                class="usa-link usa-link--external line-height-body-5"
+                href="mailto:patrick.segura@oddball.io"
+                target="_blank"
+              >
+                Send and email
+                <span
+                  aria-hidden="true"
+                >
+                   
+                </span>
+              </a>
+            </p>
+            <p>
+              <a
+                aria-label="More points of contact"
+                class="usa-link line-height-body-5"
+                href="mailto:patrick.segura@oddball.io"
+                target="_blank"
+              >
+                More points of contact
+                <span
+                  aria-hidden="true"
+                >
+                   
+                </span>
+                <span
+                  aria-hidden="true"
+                >
+                  → 
+                </span>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

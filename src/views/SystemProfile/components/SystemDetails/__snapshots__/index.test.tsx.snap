@@ -6,15 +6,15 @@ exports[`The making a request page matches snapshot 1`] = `
     id="system-detail"
   >
     <div
-      class="grid-container padding-left-0 padding-right-0 padding-top-2"
+      class="grid-container padding-left-0 padding-right-0"
       data-testid="gridContainer"
     >
       <div
-        class="grid-row"
+        class="grid-row grid-gap"
         data-testid="grid"
       >
         <div
-          class="desktop:grid-col-9"
+          class="desktop:grid-col-8"
           data-testid="grid"
         >
           <div
@@ -31,7 +31,7 @@ exports[`The making a request page matches snapshot 1`] = `
               data-testid="grid"
             >
               <div
-                class="desktop:grid-col-6 margin-bottom-5"
+                class="tablet:grid-col-6 margin-bottom-5"
                 data-testid="grid"
               >
                 <dt
@@ -46,7 +46,7 @@ exports[`The making a request page matches snapshot 1`] = `
                 </dd>
               </div>
               <div
-                class="desktop:grid-col-6 margin-bottom-5"
+                class="tablet:grid-col-6 margin-bottom-5"
                 data-testid="grid"
               >
                 <dt
@@ -61,7 +61,7 @@ exports[`The making a request page matches snapshot 1`] = `
                 </dd>
               </div>
               <div
-                class="desktop:grid-col-6 margin-bottom-5"
+                class="tablet:grid-col-6 margin-bottom-5"
                 data-testid="grid"
               >
                 <dt
@@ -76,7 +76,7 @@ exports[`The making a request page matches snapshot 1`] = `
                 </dd>
               </div>
               <div
-                class="desktop:grid-col-6 margin-bottom-5"
+                class="tablet:grid-col-6 margin-bottom-5"
                 data-testid="grid"
               >
                 <dt
@@ -151,6 +151,10 @@ exports[`The making a request page matches snapshot 1`] = `
             >
               December 12, 2017
             </dd>
+            <ul
+              class="usa-card-group margin-0"
+              data-testid="CardGroup"
+            />
           </div>
           <div
             class="easi-section easi-section__border-bottom padding-bottom-5 margin-bottom-4"
@@ -360,11 +364,11 @@ exports[`The making a request page matches snapshot 1`] = `
           </div>
         </div>
         <div
-          class="desktop:grid-col-3 sticky-nav"
+          class="desktop:grid-col-4 sticky-nav"
           data-testid="grid"
         >
           <div
-            class="padding-right-2 side-divider"
+            class="side-divider"
           >
             <div
               class="top-divider"
@@ -372,13 +376,13 @@ exports[`The making a request page matches snapshot 1`] = `
             <p
               class="font-body-xs margin-top-1 margin-bottom-3"
             >
-              Point of Contact
+              Point of contact
             </p>
-            <dt
-              class="text-bold margin-bottom-05 system-profile__subheader margin-bottom-1"
+            <h3
+              class="system-profile__subheader margin-bottom-1"
             >
               Geraldine Hobbs
-            </dt>
+            </h3>
             <dd
               class="description-definition margin-0"
             >
@@ -386,8 +390,9 @@ exports[`The making a request page matches snapshot 1`] = `
             </dd>
             <p>
               <a
+                aria-label="Send and email"
                 class="usa-link usa-link--external line-height-body-5"
-                href="/"
+                href="mailto:patrick.segura@oddball.io"
                 target="_blank"
               >
                 Send and email
@@ -400,8 +405,9 @@ exports[`The making a request page matches snapshot 1`] = `
             </p>
             <p>
               <a
+                aria-label="More points of contact"
                 class="usa-link line-height-body-5"
-                href="/"
+                href="mailto:patrick.segura@oddball.io"
                 target="_blank"
               >
                 More points of contact
