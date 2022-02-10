@@ -95,6 +95,10 @@ const systemProfile = {
       requisitionNumber: 'Requisition number',
       tagHeader1: 'Funding Sources',
       budgetID: 'Budget ID: '
+    },
+    subSystems: {
+      header: 'Sub-systems',
+      retirementDate: 'Retirement date'
     }
   },
   systemTable: {
