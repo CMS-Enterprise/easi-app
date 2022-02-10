@@ -104,7 +104,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               </button>
             </th>
             <th
-              aria-sort="descending"
+              aria-sort="none"
               class="table-header"
               colspan="1"
               role="columnheader"
@@ -119,7 +119,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               >
                 Submission date
                 <span
-                  class="margin-left-1 fa fa-caret-down position-absolute"
+                  class="margin-left-1 fa fa-sort caret position-absolute"
                 />
               </button>
             </th>
@@ -177,39 +177,71 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             >
               <a
                 class="usa-link"
-                href="/508/requests/123"
+                href="/governance-task-list/789"
               >
-                508 Test 1
+                Intake 2
               </a>
             </th>
             <td
               role="cell"
               style="width: 150px;"
             >
-              Section 508
+              IT Governance
             </td>
             <td
               role="cell"
               style="width: 150px;"
             >
-              May 25 2021
+              May 20 2021
             </td>
             <td
               role="cell"
               style="width: 200px;"
             >
-              <span>
-                Open
-                <span
-                  class="text-base-dark font-body-3xs"
-                >
-                   - Changed on May 25 2021
-                </span>
-              </span>
+              Lifecycle ID issued: A123456: A123456
             </td>
             <td
               role="cell"
-              style="width: 220px;"
+              style="width: 150px;"
+            >
+              None
+            </td>
+          </tr>
+          <tr
+            role="row"
+          >
+            <th
+              role="cell"
+              scope="row"
+            >
+              <a
+                class="usa-link"
+                href="/governance-task-list/456"
+              >
+                Intake 1
+              </a>
+            </th>
+            <td
+              role="cell"
+              style="width: 150px;"
+            >
+              IT Governance
+            </td>
+            <td
+              role="cell"
+              style="width: 150px;"
+            >
+              May 22 2021
+            </td>
+            <td
+              role="cell"
+              style="width: 200px;"
+            >
+              Intake draft
+            </td>
+            <td
+              role="cell"
+              style="width: 150px;"
             >
               None
             </td>
@@ -255,7 +287,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             </td>
             <td
               role="cell"
-              style="width: 220px;"
+              style="width: 150px;"
             >
               None
             </td>
@@ -269,71 +301,39 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             >
               <a
                 class="usa-link"
-                href="/governance-task-list/456"
+                href="/508/requests/123"
               >
-                Intake 1
+                508 Test 1
               </a>
             </th>
             <td
               role="cell"
               style="width: 150px;"
             >
-              IT Governance
+              Section 508
             </td>
             <td
               role="cell"
               style="width: 150px;"
             >
-              May 22 2021
+              May 25 2021
             </td>
             <td
               role="cell"
               style="width: 200px;"
             >
-              Intake draft
-            </td>
-            <td
-              role="cell"
-              style="width: 220px;"
-            >
-              None
-            </td>
-          </tr>
-          <tr
-            role="row"
-          >
-            <th
-              role="cell"
-              scope="row"
-            >
-              <a
-                class="usa-link"
-                href="/governance-task-list/789"
-              >
-                Intake 2
-              </a>
-            </th>
-            <td
-              role="cell"
-              style="width: 150px;"
-            >
-              IT Governance
+              <span>
+                Open
+                <span
+                  class="text-base-dark font-body-3xs"
+                >
+                   - Changed on May 25 2021
+                </span>
+              </span>
             </td>
             <td
               role="cell"
               style="width: 150px;"
-            >
-              May 20 2021
-            </td>
-            <td
-              role="cell"
-              style="width: 200px;"
-            >
-              Lifecycle ID issued: A123456: A123456
-            </td>
-            <td
-              role="cell"
-              style="width: 220px;"
             >
               None
             </td>
@@ -372,7 +372,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
       aria-live="polite"
       class="usa-sr-only usa-table__announcement-region"
     >
-      Requests table sorted by Submission date descending
+      Requests table reset to default sort order
     </div>
   </div>
 </DocumentFragment>

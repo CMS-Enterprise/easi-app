@@ -9,6 +9,7 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
@@ -68,10 +69,15 @@ const Table = () => {
       },
       {
         Header: t('requestsTable.headers.submittedAt'),
-        accessor: 'submittedAt',
+        accessor: (value: any) => {
+          if (value.submittedAt) {
+            return DateTime.fromISO(value.submittedAt);
+          }
+          return null;
+        },
         Cell: ({ value }: any) => {
           if (value) {
-            return value;
+            return formatDate(value);
           }
           return 'Not submitted';
         }
@@ -108,15 +114,18 @@ const Table = () => {
       },
       {
         Header: t('requestsTable.headers.nextMeetingDate'),
-        accessor: 'nextMeetingDate',
+        accessor: (value: any) => {
+          if (value.nextMeetingDate) {
+            return DateTime.fromISO(value.nextMeetingDate);
+          }
+          return null;
+        },
         Cell: ({ value }: any) => {
           if (value) {
-            return value;
+            return formatDate(value);
           }
           return 'None';
-        },
-        className: 'next-meeting-date',
-        width: '220px'
+        }
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps

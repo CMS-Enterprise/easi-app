@@ -1,10 +1,8 @@
 import { TFunction } from 'i18next';
-import { DateTime } from 'luxon';
 
 import { GetRequests } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
-import { formatDate } from 'utils/date';
 
 // React table sorts on the data passed table.  The column configuration uses the accessor to access the field of the original dataset.
 // Column cell configuration is meant to wrap data in JSX components, not modify data for sorting
@@ -18,14 +16,6 @@ const tableMap = (tableData: GetRequests, t: TFunction) => {
 
   const mappedData = requests?.map(request => {
     const name = request.name ? request.name : 'Draft';
-
-    const submittedAt = request.submittedAt
-      ? formatDate(DateTime.fromISO(request.submittedAt))
-      : null;
-
-    const nextMeetingDate = request.nextMeetingDate
-      ? formatDate(DateTime.fromISO(request.nextMeetingDate))
-      : null;
 
     const type: string = request.type
       ? t(`requestsTable.types.${request.type}`)
@@ -57,8 +47,6 @@ const tableMap = (tableData: GetRequests, t: TFunction) => {
 
     return {
       ...request,
-      submittedAt,
-      nextMeetingDate,
       name,
       type,
       status
