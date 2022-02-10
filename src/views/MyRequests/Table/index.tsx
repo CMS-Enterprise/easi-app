@@ -79,8 +79,7 @@ const Table = () => {
           if (value) {
             return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
           }
-
-          return t('requestsTable.defaultSubmittedAt');
+          return 'Not submitted';
         }
       },
       {
