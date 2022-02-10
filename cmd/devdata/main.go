@@ -72,6 +72,8 @@ func main() {
 		i.ContractStartYear = null.StringFrom("2021")
 		i.ContractEndMonth = null.StringFrom("10")
 		i.ContractEndYear = null.StringFrom("2022")
+		submittedAt := time.Now().Add(-365 * 6 * time.Hour)
+		i.SubmittedAt = &submittedAt
 	})
 
 	makeSystemIntake("With Contract Dates", logger, store, func(i *models.SystemIntake) {
@@ -88,6 +90,8 @@ func main() {
 		i.ContractEndYear = null.StringFrom("2022")
 		i.ContractStartDate = date(2021, 4, 9)
 		i.ContractEndDate = date(2022, 4, 8)
+		submittedAt := time.Now().Add(-365 * 12 * time.Hour)
+		i.SubmittedAt = &submittedAt
 	})
 
 	makeSystemIntake("Ready for business case", logger, store, func(i *models.SystemIntake) {
@@ -118,6 +122,8 @@ func main() {
 		i.EASupportRequest = null.BoolFrom(false)
 		i.ExistingContract = null.StringFrom("No")
 		i.GrtReviewEmailBody = null.StringFrom("")
+		submittedAt := time.Now().Add(-365 * 12 * time.Hour)
+		i.SubmittedAt = &submittedAt
 	})
 
 	makeSystemIntake("Closable Request", logger, store, func(i *models.SystemIntake) {
@@ -135,6 +141,8 @@ func main() {
 		nextMonth := time.Now().Add(30 * 24 * time.Hour)
 		i.GRBDate = &tomorrow
 		i.GRTDate = &nextMonth
+		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
+		i.SubmittedAt = &submittedAt
 	})
 	makeBusinessCase("With GRB scheduled", logger, store, intake)
 
