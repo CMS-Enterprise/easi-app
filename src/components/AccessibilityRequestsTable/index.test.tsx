@@ -14,6 +14,27 @@ import AccessibilityRequestsTable from './index';
 const requests: AccessibilityRequests[] = [
   {
     __typename: 'AccessibilityRequest',
+    id: '123',
+    name: 'Burrito v1',
+    submittedAt: '2021-06-10T19:22:40Z',
+    relevantTestDate: null,
+    system: {
+      __typename: 'System',
+      lcid: '0000',
+      businessOwner: {
+        __typename: 'BusinessOwner',
+        name: 'Shade',
+        component: 'OIT'
+      }
+    },
+    statusRecord: {
+      __typename: 'AccessibilityRequestStatusRecord',
+      status: AccessibilityRequestStatus.OPEN,
+      createdAt: '2021-06-10T19:22:40Z'
+    }
+  },
+  {
+    __typename: 'AccessibilityRequest',
     id: '124',
     name: 'Burrito v2',
     relevantTestDate: {
@@ -34,27 +55,6 @@ const requests: AccessibilityRequests[] = [
       __typename: 'AccessibilityRequestStatusRecord',
       status: AccessibilityRequestStatus.IN_REMEDIATION,
       createdAt: '2021-06-11T19:22:40Z'
-    }
-  },
-  {
-    __typename: 'AccessibilityRequest',
-    id: '123',
-    name: 'Burrito v1',
-    submittedAt: '2021-06-10T19:22:40Z',
-    relevantTestDate: null,
-    system: {
-      __typename: 'System',
-      lcid: '0000',
-      businessOwner: {
-        __typename: 'BusinessOwner',
-        name: 'Shade',
-        component: 'OIT'
-      }
-    },
-    statusRecord: {
-      __typename: 'AccessibilityRequestStatusRecord',
-      status: AccessibilityRequestStatus.OPEN,
-      createdAt: '2021-06-10T19:22:40Z'
     }
   }
 ];
