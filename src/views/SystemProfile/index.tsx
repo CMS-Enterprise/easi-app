@@ -7,6 +7,7 @@ import {
   BreadcrumbBar,
   BreadcrumbLink,
   Grid,
+  GridContainer,
   PrimaryNav,
   SideNav,
   SummaryBox
@@ -34,6 +35,7 @@ import {
 } from 'queries/types/GetCedarSystem';
 import NotFound from 'views/NotFound';
 import {
+  budgetsInfo,
   developmentTags,
   locationsInfo,
   tempCedarSystemProps
@@ -82,7 +84,8 @@ const SystemProfile = () => {
   const systemInfo = {
     ...cedarData,
     locations: locationsInfo,
-    developmentTags
+    developmentTags,
+    budgets: budgetsInfo
   };
 
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
@@ -263,11 +266,11 @@ const SystemProfile = () => {
         </div>
 
         <SectionWrapper className="margin-top-5 margin-bottom-5">
-          <Grid className="grid-container">
-            <Grid row>
+          <GridContainer>
+            <Grid row gap>
               <Grid
                 desktop={{ col: 3 }}
-                className={classnames({
+                className={classnames('padding-right-4', {
                   'sticky-nav': !isMobileSubNavExpanded
                 })}
               >
@@ -292,7 +295,7 @@ const SystemProfile = () => {
                 {sideNavItems(systemInfo)[subinfo || 'home'].component}
               </Grid>
             </Grid>
-          </Grid>
+          </GridContainer>
         </SectionWrapper>
       </div>
     </MainContent>
