@@ -9,7 +9,10 @@ import {
   CardHeader,
   Grid,
   GridContainer,
-  Link
+  Link,
+  ProcessList,
+  ProcessListHeading,
+  ProcessListItem
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
@@ -44,8 +47,18 @@ const ATO = ({ system }: ATOProps) => {
             >
               <h2 className="margin-top-0">{t('singleSystem.ato.header')}</h2>
 
+              {/* TODO:  Map status to card colors */}
               <CardGroup className="margin-0">
-                <Card className="grid-col-12">
+                <Card
+                  className={classnames('grid-col-12', {
+                    'bg-success-dark': system.status === 'Approved',
+                    'bg-warning':
+                      system.status === 'Due Soon' ||
+                      system.status === 'In Progress',
+                    'bg-error-dark': system.status === 'Expired',
+                    'bg-base-lighter': system.status === 'No ATO'
+                  })}
+                >
                   <CardHeader className="padding-2 padding-bottom-0 text-top text-white">
                     <DescriptionTerm term={t('singleSystem.ato.status')} />
                     <DescriptionDefinition
@@ -64,6 +77,45 @@ const ATO = ({ system }: ATOProps) => {
                   </CardFooter>
                 </Card>
               </CardGroup>
+
+              {/* {system.atoStatus === 'In Progress' && (
+                {system?.activities.map((act: tempATOProp) =>  */}
+              <ProcessList>
+                <ProcessListItem>
+                  <ProcessListHeading
+                    type="h4"
+                    className="easi-header__basic flex-align-start"
+                  >
+                    <h3 className="margin-0">Start a process</h3>
+                    <div className="text-right margin-bottom-2">
+                      <Tag className="font-body-md margin-bottom-1 text-white bg-success-dark">
+                        Completed
+                      </Tag>
+                      <h5 className="text-normal margin-y-0 text-base-dark">
+                        Completed on 11/2/2021
+                      </h5>
+                    </div>
+                  </ProcessListHeading>
+                  <p className="margin-top-05">
+                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                    Morbi commodo, ipsum sed pharetra gravida, orci magna
+                    rhoncus neque.
+                  </p>
+                </ProcessListItem>
+                <ProcessListItem>
+                  <ProcessListHeading type="h4">
+                    Start a process
+                  </ProcessListHeading>
+                  <p className="margin-top-05">
+                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                    Morbi commodo, ipsum sed pharetra gravida, orci magna
+                    rhoncus neque.
+                  </p>
+                </ProcessListItem>
+              </ProcessList>
+              {/* )}
+                
+              )} */}
 
               {/* TODO: Map and populate tags with CEDAR */}
               <h3 className="margin-top-2 margin-bottom-1">

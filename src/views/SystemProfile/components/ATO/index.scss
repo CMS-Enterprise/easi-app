@@ -2,6 +2,14 @@
     .usa-card__container {
         border: 0;
         border-radius: 0;
-        background-color: color(green-cool-50);
+        // background-color: color(green-cool-50);
+        background-color: transparent;
+    }
+
+    .bg-success-dark {
+        background-color: color(green-cool-50) !important;
+      }
+    .border-success-darker {
+    background-color: color(green-cool-60) !important;
     }
 }

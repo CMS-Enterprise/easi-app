@@ -22,11 +22,60 @@ export type tempBudgetProp = {
 };
 
 // Temporary extension of CEDAR types under BE integration complete
+export type tempATOProp = {
+  id: string;
+  title: string;
+  status: 'Completed' | 'In progress' | 'Not started';
+  activityOwner: string;
+  dueDate: string;
+};
+
+// Temporary extension of CEDAR types under BE integration complete
 export interface tempCedarSystemProps extends CedarSystemProps {
   locations?: tempLocationProp[];
   developmentTags?: string[];
   budgets?: tempBudgetProp[];
+  activities: tempATOProp[];
+  atoStatus: string;
 }
+
+export const activities: tempATOProp[] = [
+  {
+    id: '1',
+    title: 'ATO Activity 1',
+    status: 'Completed',
+    activityOwner: 'Jane Doe',
+    dueDate: '11/2/2021'
+  },
+  {
+    id: '2',
+    title: 'ATO Activity 2',
+    status: 'Completed',
+    activityOwner: 'Jane Doe',
+    dueDate: '11/23/2021'
+  },
+  {
+    id: '3',
+    title: 'ATO Activity 3',
+    status: 'In progress',
+    activityOwner: 'Jane Doe',
+    dueDate: '12/2/2021'
+  },
+  {
+    id: '4',
+    title: 'ATO Activity 4',
+    status: 'Not started',
+    activityOwner: 'Jane Doe',
+    dueDate: '2/2/2022'
+  },
+  {
+    id: '5',
+    title: 'ATO Activity 5',
+    status: 'Not started',
+    activityOwner: 'Jane Doe',
+    dueDate: '2/22/2022'
+  }
+];
 
 export const budgetsInfo: tempBudgetProp[] = [
   {

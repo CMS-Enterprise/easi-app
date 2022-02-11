@@ -35,6 +35,7 @@ import {
 } from 'queries/types/GetCedarSystem';
 import NotFound from 'views/NotFound';
 import {
+  activities,
   budgetsInfo,
   developmentTags,
   locationsInfo,
@@ -85,7 +86,9 @@ const SystemProfile = () => {
     ...cedarData,
     locations: locationsInfo,
     developmentTags,
-    budgets: budgetsInfo
+    budgets: budgetsInfo,
+    activities,
+    atoStatus: 'In Progress'
   };
 
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
