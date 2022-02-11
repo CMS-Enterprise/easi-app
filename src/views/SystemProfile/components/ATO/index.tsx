@@ -54,7 +54,7 @@ const ATO = ({ system }: ATOProps) => {
               <CardGroup className="margin-0">
                 <Card
                   className={classnames('grid-col-12', {
-                    'bg-success-dark': system.atoStatus === 'Approved',
+                    'bg-success-dark': system.atoStatus === 'Active',
                     'bg-warning':
                       system.atoStatus === 'Due Soon' ||
                       system.atoStatus === 'In Progress',
@@ -67,7 +67,7 @@ const ATO = ({ system }: ATOProps) => {
                       'padding-2 padding-bottom-0 text-top',
                       {
                         'text-white':
-                          system.atoStatus === 'Approved' ||
+                          system.atoStatus === 'Active' ||
                           system.atoStatus === 'Expired',
                         'text-base-darkest':
                           system.atoStatus === 'Due Soon' ||
@@ -89,7 +89,7 @@ const ATO = ({ system }: ATOProps) => {
                       <Divider
                         className={classnames('grid-col-12', {
                           'border-success-darker':
-                            system.atoStatus === 'Approved',
+                            system.atoStatus === 'Active',
                           'border-warning-dark':
                             system.atoStatus === 'Due Soon' ||
                             system.atoStatus === 'In Progress',
@@ -103,7 +103,7 @@ const ATO = ({ system }: ATOProps) => {
                     <CardFooter
                       className={classnames('padding-2', {
                         'text-white':
-                          system.atoStatus === 'Approved' ||
+                          system.atoStatus === 'Active' ||
                           system.atoStatus === 'Expired',
                         'text-base-darkest':
                           system.atoStatus === 'Due Soon' ||
@@ -134,12 +134,14 @@ const ATO = ({ system }: ATOProps) => {
               {system.atoStatus === 'In Progress' && (
                 <ProcessList>
                   {system?.activities?.map((act: tempATOProp) => (
-                    <ProcessListItem>
+                    <ProcessListItem key={act.id}>
                       <ProcessListHeading
                         type="h4"
                         className="easi-header__basic flex-align-start"
                       >
-                        <h3 className="margin-0">Start a process</h3>
+                        <div className="margin-0 font-body-lg">
+                          Start a process
+                        </div>
                         <div className="text-right margin-bottom-0">
                           <Tag
                             className={classnames(
