@@ -64,7 +64,8 @@ const systemProfile = {
       authorizationExpiration: 'Authorization memo expiration',
       piaCompletion: 'PIA completion',
       sornCompletion: 'SORN completion',
-      lastSCA: 'Last SCA/CDM'
+      lastSCA: 'Last SCA/CDM',
+      completed: 'Completed on '
     },
     systemDetails: {
       header: 'System Details',

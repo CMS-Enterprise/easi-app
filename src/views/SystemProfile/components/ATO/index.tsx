@@ -25,7 +25,10 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
-import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
+import {
+  tempATOProp,
+  tempCedarSystemProps
+} from 'views/Sandbox/mockSystemData';
 
 import './index.scss';
 
@@ -78,44 +81,36 @@ const ATO = ({ system }: ATOProps) => {
                 </Card>
               </CardGroup>
 
-              {/* {system.atoStatus === 'In Progress' && (
-                {system?.activities.map((act: tempATOProp) =>  */}
-              <ProcessList>
-                <ProcessListItem>
-                  <ProcessListHeading
-                    type="h4"
-                    className="easi-header__basic flex-align-start"
-                  >
-                    <h3 className="margin-0">Start a process</h3>
-                    <div className="text-right margin-bottom-2">
-                      <Tag className="font-body-md margin-bottom-1 text-white bg-success-dark">
-                        Completed
-                      </Tag>
-                      <h5 className="text-normal margin-y-0 text-base-dark">
-                        Completed on 11/2/2021
-                      </h5>
+              {system.atoStatus === 'In Progress' && (
+                <ProcessList>
+                  {system?.activities?.map((act: tempATOProp) => (
+                    <div>
+                      <ProcessListItem>
+                        <ProcessListHeading
+                          type="h4"
+                          className="easi-header__basic flex-align-start"
+                        >
+                          <h3 className="margin-0">Start a process</h3>
+                          <div className="text-right margin-bottom-2">
+                            <Tag className="font-body-md margin-bottom-1 text-white bg-success-dark">
+                              {act.status}
+                            </Tag>
+                            <h5 className="text-normal margin-y-0 text-base-dark">
+                              {t('singleSystem.ato.completed')}
+                              {act.dueDate}
+                            </h5>
+                          </div>
+                        </ProcessListHeading>
+                        <p className="margin-top-05">
+                          Lorem ipsum dolor sit amet, consectetuer adipiscing
+                          elit. Morbi commodo, ipsum sed pharetra gravida, orci
+                          magna rhoncus neque.
+                        </p>
+                      </ProcessListItem>
                     </div>
-                  </ProcessListHeading>
-                  <p className="margin-top-05">
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                    Morbi commodo, ipsum sed pharetra gravida, orci magna
-                    rhoncus neque.
-                  </p>
-                </ProcessListItem>
-                <ProcessListItem>
-                  <ProcessListHeading type="h4">
-                    Start a process
-                  </ProcessListHeading>
-                  <p className="margin-top-05">
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                    Morbi commodo, ipsum sed pharetra gravida, orci magna
-                    rhoncus neque.
-                  </p>
-                </ProcessListItem>
-              </ProcessList>
-              {/* )}
-                
-              )} */}
+                  ))}
+                </ProcessList>
+              )}
 
               {/* TODO: Map and populate tags with CEDAR */}
               <h3 className="margin-top-2 margin-bottom-1">
