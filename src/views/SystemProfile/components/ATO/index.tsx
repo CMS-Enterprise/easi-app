@@ -260,7 +260,7 @@ const ATO = ({ system }: ATOProps) => {
               {/* TODO: Map and populate tags with CEDAR */}
               {system.atoStatus !== 'No ATO' && (
                 <Grid row gap className="margin-top-2 margin-bottom-2">
-                  <Grid tablet={{ col: 6 }} className="padding-right-2">
+                  <Grid className="padding-right-2 grid-col-6">
                     <DescriptionTerm
                       term={t('singleSystem.ato.totalFindings')}
                     />
@@ -276,7 +276,7 @@ const ATO = ({ system }: ATOProps) => {
                       definition="2"
                     />
                   </Grid>
-                  <Grid tablet={{ col: 6 }} className="padding-right-2">
+                  <Grid className="padding-right-2 grid-col-6">
                     <DescriptionTerm
                       term={t('singleSystem.ato.highFindings')}
                     />
