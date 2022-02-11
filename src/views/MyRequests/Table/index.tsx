@@ -9,6 +9,7 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
@@ -18,6 +19,7 @@ import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { formatDate } from 'utils/date';
+import globalTableFilter from 'utils/globalTableFilter';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -67,7 +69,18 @@ const Table = () => {
       },
       {
         Header: t('requestsTable.headers.submittedAt'),
-        accessor: 'submittedAt'
+        accessor: ({ submittedAt }: any) => {
+          if (submittedAt) {
+            return DateTime.fromISO(submittedAt);
+          }
+          return null;
+        },
+        Cell: ({ value }: any) => {
+          if (value) {
+            return formatDate(value);
+          }
+          return 'Not submitted';
+        }
       },
       {
         Header: t('requestsTable.headers.status'),
@@ -101,9 +114,18 @@ const Table = () => {
       },
       {
         Header: t('requestsTable.headers.nextMeetingDate'),
-        accessor: 'nextMeetingDate',
-        className: 'next-meeting-date',
-        width: '220px'
+        accessor: ({ nextMeetingDate }: any) => {
+          if (nextMeetingDate) {
+            return DateTime.fromISO(nextMeetingDate);
+          }
+          return null;
+        },
+        Cell: ({ value }: any) => {
+          if (value) {
+            return formatDate(value);
+          }
+          return 'None';
+        }
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,6 +167,7 @@ const Table = () => {
           );
         }
       },
+      globalFilter: useMemo(() => globalTableFilter, []),
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {

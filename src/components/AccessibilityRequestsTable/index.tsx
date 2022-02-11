@@ -19,6 +19,7 @@ import TableResults from 'components/TableResults';
 import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
+import globalTableFilter from 'utils/globalTableFilter';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -54,9 +55,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.submissionDate'),
-        accessor: (value: AccessibilityRequests) => {
-          if (value.submittedAt) {
-            return formatDate(value.submittedAt);
+        accessor: 'submittedAt',
+        Cell: ({ value }: any) => {
+          if (value) {
+            return formatDate(value);
           }
           return '';
         },
@@ -68,9 +70,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: (value: any) => {
-          if (value.relevantTestDate) {
-            return formatDate(value.relevantTestDate);
+        accessor: 'relevantTestDate',
+        Cell: ({ value }: any) => {
+          if (value) {
+            return formatDate(value);
           }
           return t('requestTable.emptyTestDate');
         },
@@ -165,6 +168,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           );
         }
       },
+      globalFilter: useMemo(() => globalTableFilter, []),
       requests,
       autoResetSortBy: false,
       autoResetPage: false,

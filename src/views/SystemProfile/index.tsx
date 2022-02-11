@@ -39,6 +39,7 @@ import {
   budgetsInfo,
   developmentTags,
   locationsInfo,
+  products,
   tempCedarSystemProps
 } from 'views/Sandbox/mockSystemData';
 
@@ -88,7 +89,8 @@ const SystemProfile = () => {
     developmentTags,
     budgets: budgetsInfo,
     activities,
-    atoStatus: 'No ATO'
+    atoStatus: 'No ATO',
+    products
   };
 
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
