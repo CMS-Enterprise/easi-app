@@ -19,42 +19,14 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
+import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
 
+// import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import './index.scss';
 
 type ToolsAndSoftwareProps = {
-  system: CedarSystemProps;
+  system: tempCedarSystemProps;
 };
-
-type ProductDataTodo = {
-  id: string;
-  name: string;
-  manufacturer: string;
-  type: string;
-  tags?: string[];
-  version: string;
-  edition?: string;
-};
-
-const productsData: ProductDataTodo[] = [
-  {
-    id: '1',
-    name: 'Drupal',
-    manufacturer: 'Drupal Association',
-    type: 'Enterprise Content Management (ECM)',
-    version: '9.3',
-    edition: 'Enterprise'
-  },
-  {
-    id: '2',
-    name: 'Kong',
-    manufacturer: 'Kong Enterprise',
-    type: 'Software Development',
-    tags: ['API Gateway'],
-    version: '2.1'
-  }
-];
 
 const pointOfContactData = {
   name: 'Greta May Jones',
@@ -74,7 +46,7 @@ const SystemToolsAndSoftware = ({ system }: ToolsAndSoftwareProps) => {
               {t('singleSystem.toolsAndSoftware.header')}
             </h2>
             <CardGroup className="margin-0">
-              {productsData.map(product => {
+              {system?.products?.map(product => {
                 return (
                   <Card
                     key={product.id}
