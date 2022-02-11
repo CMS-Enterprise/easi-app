@@ -20,39 +20,14 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
+import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
 
+// import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import './index.scss';
 
 type SubSystemsProps = {
-  system: CedarSystemProps;
+  system: tempCedarSystemProps;
 };
-
-type SubSystemDataTodo = {
-  id: string;
-  name: string;
-  acronym: string;
-  description: string;
-  retirementDate: string;
-};
-
-const subSystemsDataTodo: SubSystemDataTodo[] = [
-  {
-    id: '1',
-    name: 'Test Ocular Fiction Utensil',
-    acronym: 'TOFU',
-    description: 'Lorem ipsum description',
-    retirementDate: 'No planned retirement or replacement'
-  },
-  {
-    id: '2',
-    name: 'Bio-Energy Engagement File',
-    acronym: 'BEEF',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna. Bibendum in feugiat vitae egestas turpis augue. Vel quam donec magna eget aliquam vitae tempor, orci.',
-    retirementDate: 'Planned retirement: Q4 2022'
-  }
-];
 
 const pointOfContactDataTodo = {
   name: 'Geraldine Hobbs',
@@ -72,7 +47,7 @@ const SystemSubSystems = ({ system }: SubSystemsProps) => {
               {t('singleSystem.subSystems.header')}
             </h2>
             <CardGroup className="margin-0">
-              {subSystemsDataTodo.map(sub => {
+              {system?.subSystems?.map(sub => {
                 return (
                   <Card key={sub.id} className="grid-col-12 margin-bottom-2">
                     <CardHeader className="padding-2 padding-bottom-0">
