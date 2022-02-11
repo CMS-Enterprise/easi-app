@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Alert,
+  Button,
   Card,
   CardFooter,
   CardGroup,
@@ -20,10 +22,7 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
-import {
-  tempBudgetProp,
-  tempCedarSystemProps
-} from 'views/Sandbox/mockSystemData';
+import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
 
 import './index.scss';
 
@@ -38,13 +37,16 @@ const ATO = ({ system }: ATOProps) => {
     <div id="ato">
       <GridContainer className="padding-left-0 padding-right-0">
         <Grid row gap>
-          <Grid desktop={{ col: 8 }}>
-            <SectionWrapper className="padding-bottom-4">
+          <Grid tablet={{ col: 8 }}>
+            <SectionWrapper
+              borderBottom
+              className="margin-bottom-4 padding-bottom-4"
+            >
               <h2 className="margin-top-0">{t('singleSystem.ato.header')}</h2>
 
               <CardGroup className="margin-0">
                 <Card className="grid-col-12">
-                  <CardHeader className="padding-2 padding-bottom-0 text-top">
+                  <CardHeader className="padding-2 padding-bottom-0 text-top text-white">
                     <DescriptionTerm term={t('singleSystem.ato.status')} />
                     <DescriptionDefinition
                       className="line-height-body-3 font-body-md margin-bottom-2"
@@ -53,7 +55,7 @@ const ATO = ({ system }: ATOProps) => {
                     <Divider className="border-success-darker" />
                   </CardHeader>
 
-                  <CardFooter className="padding-2">
+                  <CardFooter className="padding-2 text-white">
                     <DescriptionTerm term={t('singleSystem.ato.expiration')} />
                     <DescriptionDefinition
                       className="line-height-body-3 font-body-md"
@@ -63,86 +65,201 @@ const ATO = ({ system }: ATOProps) => {
                 </Card>
               </CardGroup>
 
-              {/* TODO: Map <DescriptionTerm /> to CEDAR data */}
-              <Grid row className="margin-top-3">
-                <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <DescriptionTerm term={t('singleSystem.ato.actualFYCost')} />
+              {/* TODO: Map and populate tags with CEDAR */}
+              <h3 className="margin-top-2 margin-bottom-1">
+                {t('singleSystem.ato.methodologies')}
+              </h3>
+              {system?.developmentTags?.map((tag: string) => (
+                <Tag
+                  key={tag}
+                  className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
+                >
+                  <i className="fa fa-check-circle text-primary-dark margin-right-1" />
+                  {tag} {/* TODO: Map defined CEDAR variable once availabe */}
+                </Tag>
+              ))}
+            </SectionWrapper>
+            <SectionWrapper
+              borderBottom
+              className="margin-bottom-4 padding-bottom-6"
+            >
+              <h2 className="margin-top-0">{t('singleSystem.ato.POAM')}</h2>
+
+              {/* TODO: Map and populate tags with CEDAR */}
+              <Grid row gap className="margin-top-2">
+                <Grid tablet={{ col: 6 }} className="padding-right-2">
+                  <DescriptionTerm term={t('singleSystem.ato.totalPOAM')} />
                   <DescriptionDefinition
-                    className="font-body-md line-height-body-3"
-                    definition="$4,500,000"
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="12"
                   />
                 </Grid>
-                <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <DescriptionTerm
-                    term={t('singleSystem.ato.budgetedFYCost')}
-                  />
+                <Grid tablet={{ col: 6 }} className="padding-right-2">
+                  <DescriptionTerm term={t('singleSystem.ato.highPOAM')} />
                   <DescriptionDefinition
-                    className="line-height-body-3 font-body-md"
-                    definition="$4,500,000"
-                  />
-                </Grid>
-                <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <DescriptionTerm
-                    term={t('singleSystem.ato.investmentNumber')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3"
-                    definition="9333"
-                  />
-                </Grid>
-                <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <DescriptionTerm
-                    term={t('singleSystem.ato.requisitionNumber')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3"
-                    definition="OIT-393-2019-0686"
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="4"
                   />
                 </Grid>
               </Grid>
 
-              {/* TODO: Map and populate tags with CEDAR */}
-              <h3 className="margin-top-0 margin-bottom-1">
-                {t('singleSystem.ato.tagHeader1')}
-              </h3>
-              <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-                Fed Admin
-              </Tag>
+              <Grid row gap className="margin-top-2 margin-bottom-2">
+                <Grid tablet={{ col: 12 }}>
+                  <Alert type="info">{t('singleSystem.ato.cfactsInfo')}</Alert>
+                </Grid>
+              </Grid>
+              {/* TODO: Fill external CFACT link */}
+              <Link href="/" target="_blank">
+                <Button type="button" outline>
+                  {t('singleSystem.ato.viewPOAMs')}
+                </Button>
+              </Link>
             </SectionWrapper>
+
+            <SectionWrapper
+              borderBottom
+              className="margin-bottom-4 padding-bottom-6"
+            >
+              <h2 className="margin-top-0">
+                {t('singleSystem.ato.securityFindings')}
+              </h2>
+
+              {/* TODO: Map and populate tags with CEDAR */}
+              <Grid row gap className="margin-top-2 margin-bottom-2">
+                <Grid tablet={{ col: 6 }} className="padding-right-2">
+                  <DescriptionTerm term={t('singleSystem.ato.totalFindings')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="12"
+                  />
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.mediumFindings')}
+                  />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="2"
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }} className="padding-right-2">
+                  <DescriptionTerm term={t('singleSystem.ato.highFindings')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="4"
+                  />
+                  <DescriptionTerm term={t('singleSystem.ato.lowFindings')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="6"
+                  />
+                </Grid>
+              </Grid>
+              {/* TODO: Fill external CFACT link */}
+              <Link href="/" target="_blank">
+                <Button type="button" outline>
+                  {t('singleSystem.ato.viewFindings')}
+                </Button>
+              </Link>
+            </SectionWrapper>
+
             <SectionWrapper
               borderBottom={isMobile}
-              className="margin-bottom-4 padding-bottom-4"
+              className="margin-bottom-4 padding-bottom-6"
             >
-              <CardGroup className="margin-0">
-                {system?.budgets?.map(
-                  (budget: tempBudgetProp): React.ReactNode => (
-                    <Card
-                      key={budget.id}
-                      data-testid="system-card"
-                      className="grid-col-12"
-                    >
-                      <CardHeader className="padding-2 padding-bottom-0 text-top">
-                        <dt>
-                          {t('singleSystem.ato.budgetID')}
-                          {budget.id}
-                        </dt>
-                        <h3 className="margin-top-0 margin-bottom-1">
-                          {budget.title}
-                        </h3>
-                        <Divider />
-                      </CardHeader>
-                      <CardFooter className="padding-2">
-                        <dt>{budget.comment}</dt>
-                      </CardFooter>
-                    </Card>
-                  )
-                )}
-              </CardGroup>
+              <h2 className="margin-top-0 margin-bottom-2">
+                {t('singleSystem.ato.datesAndTests')}
+              </h2>
+
+              {/* TODO: Map and populate tags with CEDAR */}
+              <Grid row gap>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm term={t('singleSystem.ato.lastTest')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="Oct 12, 2021"
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.lastAssessment')}
+                  />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="September 24, 2021"
+                  />
+                </Grid>
+              </Grid>
+              <Grid row gap>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.contingencyCompletion')}
+                  />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="March 18, 2022"
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.contingencyTest')}
+                  />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="January 7, 2022"
+                  />
+                </Grid>
+              </Grid>
+              <Grid row gap>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.securityReview')}
+                  />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="Dec 2, 2021"
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.authorizationExpiration')}
+                  />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="April 14, 2022"
+                  />
+                </Grid>
+              </Grid>
+              <Grid row gap>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm term={t('singleSystem.ato.piaCompletion')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="Oct 14, 2021"
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.sornCompletion')}
+                  />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="September 2, 2021"
+                  />
+                </Grid>
+              </Grid>
+              <Grid row gap>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm term={t('singleSystem.ato.lastSCA')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition="September 2, 2021"
+                  />
+                </Grid>
+              </Grid>
             </SectionWrapper>
           </Grid>
           {/* Point of contact/ miscellaneous info */}
           <Grid
-            desktop={{ col: 4 }}
+            tablet={{ col: 4 }}
             className={classnames({
               'sticky-nav': !isMobile
             })}
