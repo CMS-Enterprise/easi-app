@@ -54,6 +54,7 @@ func main() {
 	makeAccessibilityRequest("Seeded 508 Request", store, func(i *models.AccessibilityRequest) {
 		i.ID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
 	})
+
 	// Test date is one day after the 508 request is created
 	makeTestDate(logger, store, func(i *models.TestDate) {
 		i.ID = uuid.MustParse("18624c5b-4c00-49a7-960f-ac6d8b2c58df")
@@ -72,8 +73,6 @@ func main() {
 		i.ContractStartYear = null.StringFrom("2021")
 		i.ContractEndMonth = null.StringFrom("10")
 		i.ContractEndYear = null.StringFrom("2022")
-		submittedAt := time.Now().Add(-365 * 6 * time.Hour)
-		i.SubmittedAt = &submittedAt
 	})
 
 	makeSystemIntake("With Contract Dates", logger, store, func(i *models.SystemIntake) {
@@ -90,8 +89,6 @@ func main() {
 		i.ContractEndYear = null.StringFrom("2022")
 		i.ContractStartDate = date(2021, 4, 9)
 		i.ContractEndDate = date(2022, 4, 8)
-		submittedAt := time.Now().Add(-365 * 12 * time.Hour)
-		i.SubmittedAt = &submittedAt
 	})
 
 	makeSystemIntake("Ready for business case", logger, store, func(i *models.SystemIntake) {
@@ -122,8 +119,6 @@ func main() {
 		i.EASupportRequest = null.BoolFrom(false)
 		i.ExistingContract = null.StringFrom("No")
 		i.GrtReviewEmailBody = null.StringFrom("")
-		submittedAt := time.Now().Add(-365 * 12 * time.Hour)
-		i.SubmittedAt = &submittedAt
 	})
 
 	makeSystemIntake("Closable Request", logger, store, func(i *models.SystemIntake) {
@@ -141,8 +136,6 @@ func main() {
 		nextMonth := time.Now().Add(30 * 24 * time.Hour)
 		i.GRBDate = &tomorrow
 		i.GRTDate = &nextMonth
-		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
-		i.SubmittedAt = &submittedAt
 	})
 	makeBusinessCase("With GRB scheduled", logger, store, intake)
 

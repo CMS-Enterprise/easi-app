@@ -379,7 +379,7 @@ namespace :test do
 
   desc "Run JS tests (pass path to scope to that location)"
   task :js => :consume_args do |t, args|
-    sh "yarn", "run", "craco", "test", "--u", "--watchAll=false", *args
+    sh "yarn", "run", "craco", "test", "--watchAll=false", *args
   end
   namespace :js do
     desc "Run JS tests with a matching name (pass needle as additional option)"
