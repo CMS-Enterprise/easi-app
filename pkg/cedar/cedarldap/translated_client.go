@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client/operations"
@@ -67,6 +67,10 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 			Source:    "CEDAR LDAP",
 		}
 	}
+
+	appcontext.ZLogger(ctx).Info("Successfully fetched person from CEDAR LDAP",
+		zap.String("user", euaID),
+	)
 
 	return &models2.UserInfo{
 		CommonName: resp.Payload.CommonName,
