@@ -95,6 +95,12 @@ const systemProfile = {
       requisitionNumber: 'Requisition number',
       tagHeader1: 'Funding Sources',
       budgetID: 'Budget ID: '
+    },
+    toolsAndSoftware: {
+      header: 'Tools and Software',
+      productType: 'Product Type',
+      softwareVersion: 'Software version',
+      softwareEdition: 'Software edition'
     }
   },
   systemTable: {

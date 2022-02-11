@@ -21,11 +21,22 @@ export type tempBudgetProp = {
   comment: string;
 };
 
+export type tempProductsProp = {
+  id: string;
+  name: string;
+  manufacturer: string;
+  type: string;
+  tags?: string[];
+  version: string;
+  edition?: string;
+};
+
 // Temporary extension of CEDAR types under BE integration complete
 export interface tempCedarSystemProps extends CedarSystemProps {
   locations?: tempLocationProp[];
   developmentTags?: string[];
   budgets?: tempBudgetProp[];
+  products?: tempProductsProp[];
 }
 
 export const budgetsInfo: tempBudgetProp[] = [
@@ -132,10 +143,10 @@ export const mockSystemInfo: CedarSystemProps[] = [
     acronym: 'BBC',
     status: 'Approved',
     name: 'Medicare Beneficiary Contact Center',
-    description: `The Beneficiary Contact Center (BCC) provides an unbiased 
-    central point of contact for Medicare Beneficiaries and their caregivers with 
-    scripted responses on coverage information, health care choices, claims, and 
-    preventive services.The Balanced Budget Act of 1997 mandated a toll free 
+    description: `The Beneficiary Contact Center (BCC) provides an unbiased
+    central point of contact for Medicare Beneficiaries and their caregivers with
+    scripted responses on coverage information, health care choices, claims, and
+    preventive services.The Balanced Budget Act of 1997 mandated a toll free
     line for beneficiaries. CMS created a 1-800-Medicare`,
     businessOwnerOrg: 'Division of Call Center Systems',
     businessOwnerOrgComp: 'Geraldine Hobbs',
@@ -164,5 +175,24 @@ export const mockBookmarkInfo: CedarSystemBookmark[] = [
   {
     euaUserId: 'A',
     cedarSystemId: '326-99-0'
+  }
+];
+
+export const products: tempProductsProp[] = [
+  {
+    id: '1',
+    name: 'Drupal',
+    manufacturer: 'Drupal Association',
+    type: 'Enterprise Content Management (ECM)',
+    version: '9.3',
+    edition: 'Enterprise'
+  },
+  {
+    id: '2',
+    name: 'Kong',
+    manufacturer: 'Kong Enterprise',
+    type: 'Software Development',
+    tags: ['API Gateway'],
+    version: '2.1'
   }
 ];
