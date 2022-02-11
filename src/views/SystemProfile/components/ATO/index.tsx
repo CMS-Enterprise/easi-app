@@ -124,7 +124,7 @@ const ATO = ({ system }: ATOProps) => {
               </CardGroup>
 
               {system.atoStatus === 'No ATO' && (
-                <Grid row gap className="margin-top-2 margin-bottom-4">
+                <Grid row gap className="margin-top-0 margin-bottom-4">
                   <Grid tablet={{ col: 12 }}>
                     <Alert type="info">{t('singleSystem.ato.noATO')}</Alert>
                   </Grid>

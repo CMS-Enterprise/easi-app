@@ -88,7 +88,7 @@ const SystemProfile = () => {
     developmentTags,
     budgets: budgetsInfo,
     activities,
-    atoStatus: 'In Progress'
+    atoStatus: 'No ATO'
   };
 
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
