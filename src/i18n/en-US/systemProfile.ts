@@ -96,6 +96,12 @@ const systemProfile = {
       tagHeader1: 'Funding Sources',
       budgetID: 'Budget ID: '
     },
+    toolsAndSoftware: {
+      header: 'Tools and Software',
+      productType: 'Product Type',
+      softwareVersion: 'Software version',
+      softwareEdition: 'Software edition'
+    },
     subSystems: {
       header: 'Sub-systems',
       retirementDate: 'Retirement date'
