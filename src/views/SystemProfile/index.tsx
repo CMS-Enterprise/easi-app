@@ -38,6 +38,7 @@ import {
   budgetsInfo,
   developmentTags,
   locationsInfo,
+  products,
   tempCedarSystemProps
 } from 'views/Sandbox/mockSystemData';
 
@@ -85,7 +86,8 @@ const SystemProfile = () => {
     ...cedarData,
     locations: locationsInfo,
     developmentTags,
-    budgets: budgetsInfo
+    budgets: budgetsInfo,
+    products
   };
 
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
