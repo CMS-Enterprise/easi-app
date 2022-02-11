@@ -4,14 +4,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 
 import { mockSystemInfo, subSystems } from 'views/Sandbox/mockSystemData';
 
-import ToolsAndSoftware from './index';
+import SubSystems from './index';
 
 describe('System Sub-systems subpage', () => {
   it('renders without errors', async () => {
     render(
       <MemoryRouter initialEntries={['/system-profile/326-9-0/sub-systems']}>
         <Route path="/system-profile/:systemId/:subinfo">
-          <ToolsAndSoftware
+          <SubSystems
             system={{
               ...mockSystemInfo[3],
               subSystems
@@ -35,7 +35,7 @@ describe('System Sub-systems subpage', () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={['/system-profile/326-9-0/sub-systems']}>
         <Route path="/system-profile/:systemId/:subinfo">
-          <ToolsAndSoftware
+          <SubSystems
             system={{
               ...mockSystemInfo[3],
               subSystems
