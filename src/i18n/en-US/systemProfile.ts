@@ -65,7 +65,15 @@ const systemProfile = {
       piaCompletion: 'PIA completion',
       sornCompletion: 'SORN completion',
       lastSCA: 'Last SCA/CDM',
-      completed: 'Completed on '
+      activityOwner: 'Activity owner',
+      completed: 'Completed on ',
+      due: 'Due ',
+      noATO:
+        'There is no ATO on file for this system. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+      noATOPOAM:
+        'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+      noATODates:
+        'There is no information about previous tests or assessments available for this system'
     },
     systemDetails: {
       header: 'System Details',

@@ -6,10 +6,14 @@
         background-color: transparent;
     }
 
+    .usa-process-list > .usa-process-list__item {
+        max-width: none;
+    }
+
     .bg-success-dark {
         background-color: color(green-cool-50) !important;
       }
     .border-success-darker {
-    background-color: color(green-cool-60) !important;
+        background-color: color(green-cool-60) !important;
     }
 }
