@@ -1782,6 +1782,10 @@ func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.Sy
 	}, nil
 }
 
+func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.CedarSystemID.Ptr(), nil
+}
+
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
 func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
 	return &accessibilityRequestResolver{r}

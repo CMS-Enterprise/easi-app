@@ -807,6 +807,7 @@ type SystemIntake {
   decidedAt: Time
   businessCaseId: UUID
   lastAdminNote: LastAdminNote!
+  cedarSystemId: String
 }
 
 """
