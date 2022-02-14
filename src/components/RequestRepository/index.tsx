@@ -28,6 +28,7 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -194,7 +195,12 @@ const RequestRepository = () => {
 
   const lastAdminNoteColumn = {
     Header: t('intake:fields.lastAdminNote'),
-    accessor: 'lastAdminNote',
+    accessor: (intake: SystemIntake) => {
+      if (intake?.lastAdminNote?.content) {
+        return intake.lastAdminNote.content;
+      }
+      return null;
+    },
     Cell: ({ value }: any) => {
       if (value) {
         return (
@@ -204,7 +210,7 @@ const RequestRepository = () => {
             id="last-admin-note"
             label="less"
             closeLabel="more"
-            text={value.content}
+            text={value}
             charLimit={freeFormTextCharLimit}
           />
         );
