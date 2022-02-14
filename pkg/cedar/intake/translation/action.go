@@ -36,19 +36,19 @@ func (action *TranslatableAction) CreateIntakeModel() (*wire.IntakeInput, error)
 	}
 
 	result := wire.IntakeInput{
-		ID:   pStr(action.ID.String()),
-		Body: pStr(string(blob)),
+		ClientID: pStr(action.ID.String()),
+		Body:     pStr(string(blob)),
 
 		// invariants for this type
-		Status:     pStr(wire.IntakeInputStatusFinal),
-		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
-		Type:       pStr(wire.IntakeInputTypeEASIAction),
-		Schema:     versionStr(IntakeInputSchemaEASIActionV01),
+		ClientStatus: statusStr(inputStatusFinal),
+		BodyFormat:   pStr(wire.IntakeInputBodyFormatJSON),
+		Type:         typeStr(intakeInputAction),
+		Schema:       versionStr(IntakeInputSchemaEASIActionV01),
 	}
 
 	if action.CreatedAt != nil {
-		result.CreatedDate = pDateTime(action.CreatedAt)
-		result.LastUpdate = pDateTime(action.CreatedAt)
+		result.ClientCreatedDate = pStrfmtDateTime(action.CreatedAt)
+		result.ClientLastUpdatedDate = *pStrfmtDateTime(action.CreatedAt)
 	}
 
 	return &result, nil

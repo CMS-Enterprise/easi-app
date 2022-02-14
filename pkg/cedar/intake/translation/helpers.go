@@ -56,9 +56,18 @@ func versionStr(version SchemaVersion) *string {
 	return pStr(string(version))
 }
 
+func statusStr(status intakeInputStatus) *string {
+	return pStr(string(status))
+}
+
+func typeStr(inputType intakeInputType) *string {
+	return pStr(string(inputType))
+}
+
 // pDate turns a Time pointer into either an empty string in the
 // negative case, or to a string rin CEDAR's preferred
 // ISO8601 format, e.g. "2006-01-02T15:04:05Z"
+/*
 func pDateTime(t *time.Time) *string {
 	val := ""
 	if t != nil {
@@ -66,4 +75,14 @@ func pDateTime(t *time.Time) *string {
 		val = t.UTC().Format(time.RFC3339)
 	}
 	return pStr(val)
+}
+*/
+
+func pStrfmtDateTime(t *time.Time) *strfmt.DateTime {
+	if t == nil {
+		return nil
+	}
+
+	strfmtDatetime := strfmt.DateTime(*t)
+	return &strfmtDatetime
 }

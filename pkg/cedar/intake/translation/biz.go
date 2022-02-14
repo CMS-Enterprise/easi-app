@@ -142,27 +142,27 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		return nil, err
 	}
 
-	status := wire.IntakeInputStatusInitiated
-	if bc.Status == models.BusinessCaseStatusCLOSED {
-		status = wire.IntakeInputStatusFinal
-	}
-
 	result := &wire.IntakeInput{
-		ID:     pStr(bcID),
-		Body:   pStr(string(blob)),
-		Status: pStr(status),
+		ClientID: pStr(bcID),
+		Body:     pStr(string(blob)),
 
 		// invariants for this type
 		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
-		Type:       pStr(wire.IntakeInputTypeEASIBizCase),
+		Type:       typeStr(intakeInputBizCase),
 		Schema:     versionStr(IntakeInputSchemaEASIBizCaseV01),
 	}
 
+	if bc.Status == models.BusinessCaseStatusCLOSED {
+		result.ClientStatus = statusStr(inputStatusFinal)
+	} else {
+		result.ClientStatus = statusStr(inputStatusInitiated)
+	}
+
 	if bc.CreatedAt != nil {
-		result.CreatedDate = pDateTime(bc.CreatedAt)
+		result.ClientCreatedDate = pStrfmtDateTime(bc.CreatedAt)
 	}
 	if bc.UpdatedAt != nil {
-		result.LastUpdate = pDateTime(bc.UpdatedAt)
+		result.ClientLastUpdatedDate = *pStrfmtDateTime(bc.UpdatedAt)
 	}
 
 	return result, nil

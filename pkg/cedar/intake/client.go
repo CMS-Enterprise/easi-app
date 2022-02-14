@@ -18,8 +18,8 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client"
-	apioperations "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/operations"
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/health_check"
+	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/intake"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -84,10 +84,10 @@ func (c *Client) CheckConnection(ctx context.Context) error {
 		return nil
 	}
 
-	params := apioperations.NewHealthCheckGetParamsWithContext(ctx)
+	params := health_check.NewHealthCheckParamsWithContext(ctx)
 	params.HTTPClient = c.hc
 
-	resp, err := c.sdk.Operations.HealthCheckGet(params, c.auth)
+	resp, err := c.sdk.HealthCheck.HealthCheck(params, c.auth)
 	if err != nil {
 		return err
 	}
@@ -149,11 +149,11 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 		return nil
 	}
 
-	params := apioperations.NewIntakeAddParamsWithContext(ctx)
+	params := intake.NewIntakeAddParamsWithContext(ctx)
 	params.HTTPClient = c.hc
-	params.Body.Intakes = []*wire.IntakeInput{input}
+	params.Body = input
 
-	resp, err := c.sdk.Operations.IntakeAdd(params, c.auth)
+	resp, err := c.sdk.Intake.IntakeAdd(params, c.auth)
 	if err != nil {
 		return err
 	}

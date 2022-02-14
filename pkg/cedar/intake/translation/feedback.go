@@ -35,21 +35,21 @@ func (fb *TranslatableFeedback) CreateIntakeModel() (*wire.IntakeInput, error) {
 	}
 
 	result := wire.IntakeInput{
-		ID:   pStr(fb.ID.String()),
-		Body: pStr(string(blob)),
+		ClientID: pStr(fb.ID.String()),
+		Body:     pStr(string(blob)),
 
 		// invariants for this type
-		Status:     pStr(wire.IntakeInputStatusFinal),
-		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
-		Type:       pStr(wire.IntakeInputTypeEASIGrtFeedback),
-		Schema:     versionStr(IntakeInputSchemaEASIGrtFeedbackV01),
+		ClientStatus: statusStr(inputStatusFinal),
+		BodyFormat:   pStr(wire.IntakeInputBodyFormatJSON),
+		Type:         typeStr(intakeInputGrtFeedback),
+		Schema:       versionStr(IntakeInputSchemaEASIGrtFeedbackV01),
 	}
 
 	if fb.CreatedAt != nil {
-		result.CreatedDate = pDateTime(fb.CreatedAt)
+		result.ClientCreatedDate = pStrfmtDateTime(fb.CreatedAt)
 	}
 	if fb.UpdatedAt != nil {
-		result.LastUpdate = pDateTime(fb.CreatedAt)
+		result.ClientLastUpdatedDate = *pStrfmtDateTime(fb.UpdatedAt)
 	}
 
 	return &result, nil
