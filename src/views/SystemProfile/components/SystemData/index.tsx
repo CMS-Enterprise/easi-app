@@ -22,7 +22,7 @@ import {
 } from 'components/shared/DescriptionGroup';
 // import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
-// import Tag from 'components/shared/Tag';
+import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
@@ -43,7 +43,22 @@ const SystemData = ({ system }: SystemDataProps) => {
               borderBottom
               className="margin-bottom-4 padding-bottom-4"
             >
-              <h2 className="margin-top-0">{t('singleSystem.ato.header')}</h2>
+              <h2 className="margin-top-0">
+                {t('singleSystem.systemData.header')}
+              </h2>
+
+              {/* TODO: Map and populate tags with CEDAR */}
+              <h3 className="margin-top-2 margin-bottom-1">
+                {t('singleSystem.systemData.recordCategories')}
+              </h3>
+              {system?.developmentTags?.map((tag: string) => (
+                <Tag
+                  key={tag}
+                  className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                >
+                  {tag} {/* TODO: Map defined CEDAR variable once availabe */}
+                </Tag>
+              ))}
             </SectionWrapper>
           </Grid>
           {/* Point of contact/ miscellaneous info */}
