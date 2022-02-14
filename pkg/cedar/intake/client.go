@@ -153,6 +153,8 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	params.HTTPClient = c.hc
 	params.Body = input
 
+	// TODO - set params.ValidatePayload, params.Body.Version appropriately
+
 	resp, err := c.sdk.Intake.IntakeAdd(params, c.auth)
 	if err != nil {
 		return err
