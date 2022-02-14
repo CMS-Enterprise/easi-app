@@ -121,7 +121,9 @@ const systemProfile = {
       apiGateway: 'API Gateway',
       access: 'Access',
       dataCategories: 'Data content categories',
-      dataExchanges: 'Data Exchanges'
+      dataExchanges: 'Data Exchanges',
+      dataPartner: 'Data Partner',
+      qualityAssurance: 'Quality Assurance'
     },
     systemDetails: {
       header: 'System Details',

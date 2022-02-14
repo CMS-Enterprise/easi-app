@@ -40,6 +40,23 @@ export type tempATOProp = {
   dueDate: string;
 };
 
+type dataStatus =
+  | 'Active'
+  | 'Passed'
+  | 'Requires response'
+  | 'QA review pending'
+  | 'Not applicable';
+
+export type tempSystemDataProp = {
+  id: string;
+  title: string;
+  status: dataStatus;
+  qualityStatus: dataStatus;
+  dataPartnerStatus: dataStatus;
+  dataPartner: string;
+  tags: string[];
+};
+
 // Temporary extension of CEDAR types under BE integration complete
 export interface tempCedarSystemProps extends CedarSystemProps {
   locations?: tempLocationProp[];
@@ -48,7 +65,38 @@ export interface tempCedarSystemProps extends CedarSystemProps {
   activities?: tempATOProp[];
   atoStatus?: string;
   products?: tempProductsProp[];
+  systemData: tempSystemDataProp[];
 }
+
+export const systemData: tempSystemDataProp[] = [
+  {
+    id: '1',
+    title: 'Beneficiary Information in the Cloud',
+    status: 'Active',
+    qualityStatus: 'Passed',
+    dataPartner: 'Eligibility and Enrollment Medicare Online',
+    dataPartnerStatus: 'Active',
+    tags: ['Receives Data']
+  },
+  {
+    id: '2',
+    title: 'Happiness Quality Information',
+    status: 'Requires response',
+    qualityStatus: 'QA review pending',
+    dataPartner: 'Eligibility and Enrollment Medicare Online',
+    dataPartnerStatus: 'Active',
+    tags: ['Receives Data']
+  },
+  {
+    id: '3',
+    title: 'Public Happiness Rating',
+    status: 'Active',
+    qualityStatus: 'Passed',
+    dataPartner: 'Happiness Public Reporting Info',
+    dataPartnerStatus: 'Not applicable',
+    tags: ['Receives Data', 'Public']
+  }
+];
 
 export const activities: tempATOProp[] = [
   {
