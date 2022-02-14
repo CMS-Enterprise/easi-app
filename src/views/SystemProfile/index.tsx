@@ -147,7 +147,7 @@ const SystemProfile = () => {
   }
 
   // TODO: Handle errors and loading
-  if (error || !systemInfo) {
+  if (error || !systemInfo || (subinfo && !sideNavItems(systemInfo)[subinfo])) {
     return <NotFound />;
   }
 
