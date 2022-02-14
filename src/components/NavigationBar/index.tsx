@@ -66,7 +66,7 @@ const NavigationBar = ({
             activeClassName="usa-current"
             className="easi-nav__link"
             onClick={() => toggle(false)}
-            exact
+            exact={route.link === '/'}
           >
             <em
               className="usa-logo__text easi-nav__label"
