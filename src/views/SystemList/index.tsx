@@ -75,9 +75,9 @@ export const SystemList = () => {
         <PageLoading />
       ) : (
         <>
-          <PageHeading className="margin-bottom-0">
+          <h2 className="margin-bottom-0">
             {t('systemProfile:bookmark.header')}
-          </PageHeading>
+          </h2>
 
           <p className="margin-bottom-3">
             {t('systemProfile:bookmark.subtitle')}
@@ -116,9 +116,9 @@ export const SystemList = () => {
             </SectionWrapper>
           )}
 
-          <PageHeading className="margin-bottom-0">
+          <h2 className="margin-bottom-0">
             {t('systemProfile:systemTable.title')}
-          </PageHeading>
+          </h2>
 
           <p className="margin-bottom-5">
             {t('systemProfile:systemTable.subtitle')}
