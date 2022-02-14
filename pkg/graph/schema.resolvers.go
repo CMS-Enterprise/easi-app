@@ -1462,6 +1462,33 @@ func (r *queryResolver) Roles(ctx context.Context, systemID string, roleTypeID *
 	return cedarRoles, nil
 }
 
+func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, id string) (*model.DetailedCedarSystem, error) {
+	//TODO, can this be structured better?
+	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	cedarRoles, errR := r.cedarCoreClient.GetRolesBySystem(ctx, id, null.String{})
+
+	if errR != nil {
+		return nil, errR
+	}
+	cedarDeployments, errD := r.cedarCoreClient.GetDeployments(ctx, id, nil)
+
+	if errD != nil {
+		return nil, errR
+	}
+
+	dCedarSys := model.DetailedCedarSystem{
+		CedarSystem: cedarSystem,
+		Roles:       cedarRoles,
+		Deployments: cedarDeployments,
+	}
+
+	return &dCedarSys, nil
+	//panic(fmt.Errorf("not implemented"))
+}
+
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
 	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
 	if actionsErr != nil {

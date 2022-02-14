@@ -52,6 +52,14 @@ type CedarSystem {
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
 }
+"""
+This is the Representation of Cedar system with additional related information
+"""
+type DetailedCedarSystem {
+ cedarSystem: CedarSystem!
+ roles: [CedarRole!]!
+ deployments: [CedarDeployment!]!
+}
 
 """
 Represents a user's bookmark of a cedar system
@@ -1266,6 +1274,7 @@ type Query {
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(systemId: String!, roleTypeID: String): [CedarRole!]!
+  detailedCedarSystemInfo(id: String!): DetailedCedarSystem
 }
 
 """
