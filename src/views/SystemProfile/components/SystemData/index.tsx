@@ -17,8 +17,8 @@ import {
 import classnames from 'classnames';
 
 import {
-  DescriptionDefinition
-  //   DescriptionTerm
+  DescriptionDefinition,
+  DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 // import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
@@ -59,6 +59,20 @@ const SystemData = ({ system }: SystemDataProps) => {
                   {tag} {/* TODO: Map defined CEDAR variable once availabe */}
                 </Tag>
               ))}
+
+              <Grid row>
+                <Grid tablet={{ col: true }} className="margin-bottom-3">
+                  <DescriptionTerm
+                    term={t(
+                      'singleSystem.teamAndContract.federalFullTimeEmployees'
+                    )}
+                  />
+                  <DescriptionDefinition
+                    className="font-body-md line-height-body-3"
+                    definition="5"
+                  />
+                </Grid>
+              </Grid>
             </SectionWrapper>
           </Grid>
           {/* Point of contact/ miscellaneous info */}
