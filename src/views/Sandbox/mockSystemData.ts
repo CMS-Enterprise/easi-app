@@ -31,6 +31,14 @@ export type tempProductsProp = {
   edition?: string;
 };
 
+export type tempSubSystemProp = {
+  id: string;
+  name: string;
+  acronym: string;
+  description: string;
+  retirementDate: string;
+};
+
 // Temporary extension of CEDAR types under BE integration complete
 export type tempATOProp = {
   id: string;
@@ -48,6 +56,7 @@ export interface tempCedarSystemProps extends CedarSystemProps {
   activities?: tempATOProp[];
   atoStatus?: string;
   products?: tempProductsProp[];
+  subSystems?: tempSubSystemProp[];
 }
 
 export const activities: tempATOProp[] = [
@@ -243,5 +252,23 @@ export const products: tempProductsProp[] = [
     type: 'Software Development',
     tags: ['API Gateway'],
     version: '2.1'
+  }
+];
+
+export const subSystems: tempSubSystemProp[] = [
+  {
+    id: '1',
+    name: 'Test Ocular Fiction Utensil',
+    acronym: 'TOFU',
+    description: 'Lorem ipsum description',
+    retirementDate: 'No planned retirement or replacement'
+  },
+  {
+    id: '2',
+    name: 'Bio-Energy Engagement File',
+    acronym: 'BEEF',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.',
+    retirementDate: 'Planned retirement: Q4 2022'
   }
 ];

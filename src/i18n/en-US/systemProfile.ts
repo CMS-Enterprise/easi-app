@@ -138,6 +138,10 @@ const systemProfile = {
       productType: 'Product Type',
       softwareVersion: 'Software version',
       softwareEdition: 'Software edition'
+    },
+    subSystems: {
+      header: 'Sub-systems',
+      retirementDate: 'Retirement date'
     }
   },
   systemTable: {
