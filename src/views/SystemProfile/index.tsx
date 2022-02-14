@@ -35,6 +35,7 @@ import {
 } from 'queries/types/GetCedarSystem';
 import NotFound from 'views/NotFound';
 import {
+  activities,
   budgetsInfo,
   developmentTags,
   locationsInfo,
@@ -89,6 +90,8 @@ const SystemProfile = () => {
     developmentTags,
     budgets: budgetsInfo,
     subSystems,
+    activities,
+    atoStatus: 'No ATO',
     products
   };
 
@@ -146,7 +149,7 @@ const SystemProfile = () => {
   }
 
   // TODO: Handle errors and loading
-  if (error || !systemInfo) {
+  if (error || !systemInfo || (subinfo && !sideNavItems(systemInfo)[subinfo])) {
     return <NotFound />;
   }
 
