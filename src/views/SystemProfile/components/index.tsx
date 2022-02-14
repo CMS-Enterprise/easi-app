@@ -3,6 +3,7 @@ import React from 'react';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
 import FundingAndBudget from './FundingAndBudget';
+import SystemData from './SystemData';
 import SystemDetails from './SystemDetails';
 import SystemHome from './SystemHome';
 import TeamAndContract from './TeamAndContract';
@@ -61,7 +62,7 @@ const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
     route: `/system-profile/${system.id}/sub-systems`
   },
   'system-data': {
-    component: <SystemHome system={system} />,
+    component: <SystemData system={system} />,
     route: `/system-profile/${system.id}/system-data`
   },
   documents: {
