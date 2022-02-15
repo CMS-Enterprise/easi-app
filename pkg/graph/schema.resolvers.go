@@ -1463,7 +1463,6 @@ func (r *queryResolver) Roles(ctx context.Context, systemID string, roleTypeID *
 }
 
 func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, id string) (*model.DetailedCedarSystem, error) {
-	//TODO, can this be structured better?
 	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, id)
 	if err != nil {
 		return nil, err
@@ -1486,7 +1485,6 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, id string) 
 	}
 
 	return &dCedarSys, nil
-	//panic(fmt.Errorf("not implemented"))
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
