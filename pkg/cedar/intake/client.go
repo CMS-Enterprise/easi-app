@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -129,6 +130,10 @@ func (c *Client) PublishNote(ctx context.Context, note models.Note) error {
 
 // private method for publishing anything that satisfies the translation.IntakeObject interface to CEDAR through the Intake API
 func (c *Client) publishIntakeObject(ctx context.Context, model translation.IntakeObject) error {
+	// constant values for now; may become non-constant if/when we revisit handling CEDAR validation errors
+	const objectVersion = 1
+	const isValidatedSynchronously = true
+
 	id := model.ObjectID()
 	objectType := model.ObjectType()
 
@@ -153,7 +158,10 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	params.HTTPClient = c.hc
 	params.Body = input
 
-	// TODO - set params.ValidatePayload, params.Body.Version appropriately
+	params.ValidatePayload = strconv.FormatBool(isValidatedSynchronously)
+
+	objectVersionStr := strconv.FormatInt(objectVersion, 10)
+	params.Body.Version = &objectVersionStr
 
 	resp, err := c.sdk.Intake.IntakeAdd(params, c.auth)
 	if err != nil {
