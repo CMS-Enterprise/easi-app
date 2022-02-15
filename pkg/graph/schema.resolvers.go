@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1461,6 +1462,11 @@ func (r *queryResolver) Deployments(ctx context.Context, systemID string, deploy
 	if err != nil {
 		return nil, err
 	}
+
+	if len(cedarDeployments) == 0 {
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no deployments found"), Resource: []*models.CedarDeployment{}}
+	}
+
 	return cedarDeployments, nil
 }
 
@@ -1469,6 +1475,11 @@ func (r *queryResolver) Roles(ctx context.Context, systemID string, roleTypeID *
 	if err != nil {
 		return nil, err
 	}
+
+	if len(cedarRoles) == 0 {
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no roles found"), Resource: []*models.CedarRole{}}
+	}
+
 	return cedarRoles, nil
 }
 

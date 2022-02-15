@@ -7,7 +7,10 @@ Cypress.Commands.add('login', () => {
   cy.visit('/signin');
 
   cy.get('#okta-signin-username').type(Cypress.env('username'), { log: false });
-  cy.get('#okta-signin-password').type(Cypress.env('password'), { log: false });
+  cy.get('#okta-signin-password').type(Cypress.env('password'), {
+    log: false,
+    parseSpecialCharSequences: false
+  });
   cy.get('#okta-signin-submit').click();
 
   cy.get('.beacon-loading').should('not.exist');
