@@ -24,7 +24,7 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
-import { fetchBusinessCase } from 'types/routines';
+import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedbackToBusinessOwner';
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
 import NotFound from 'views/NotFound';
@@ -72,7 +72,15 @@ const RequestOverview = () => {
     if (systemIntake?.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
-  }, [dispatch, systemIntake?.businessCaseId]);
+    if (systemIntake?.lcidExpiresAt) {
+      dispatch(fetchSystemIntake(systemIntake.id));
+    }
+  }, [
+    dispatch,
+    systemIntake?.businessCaseId,
+    systemIntake?.id,
+    systemIntake?.lcidExpiresAt
+  ]);
 
   const getNavLinkClasses = (page: string) =>
     classnames('easi-grt__nav-link', {
