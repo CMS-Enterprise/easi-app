@@ -3,6 +3,16 @@
 This folder contains code for submitting data to the CEDAR Intake API for eventual storage in Alfabet. 
 The Intake API is designed to take a JSON string in its `Body` field, as well as a schema identifier in its `Schema` field.
 
+## Swagger
+
+The Swagger file for the Intake API is saved as `cedar_intake.json` in this folder. To generate new client code from an updated Swagger file, while in this folder, run
+
+```script
+swagger generate client -f cedar_intake.json -c ./gen/client -m ./gen/models
+```
+
+See [our general CEDAR documentation](/docs/cedar.md) for info on accessing CEDAR and installing `go-swagger` for code generation.
+
 ## Schemas
 
 The CEDAR team needs a schema of the data we send them in order to decode it for storage in Alfabet. We have a script in [`cmd/gen_intake_schema/main.go`](/cmd/gen_intake_schema/main.go), which uses the [jsonschema package](https://pkg.go.dev/github.com/alecthomas/jsonschema) to generate [JSON schema](https://json-schema.org/) documents describing the possible payloads. This script gets called as a pre-commit hook if any relevant file is changed, in order to make sure the schemas are up-to-date.
