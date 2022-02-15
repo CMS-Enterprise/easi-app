@@ -170,22 +170,3 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 
 	return nil
 }
-
-// PublishSnapshot sends the given current state of a SystemIntake and all its
-// associated entities to CEDAR for eventual storage in Alfabet
-func (c *Client) PublishSnapshot(
-	ctx context.Context,
-	si *models.SystemIntake,
-	bc *models.BusinessCase,
-	acts []*models.Action,
-	notes []*models.Note,
-	fbs []*models.GRTFeedback,
-) error {
-	if !c.emitToCedar(ctx) {
-		appcontext.ZLogger(ctx).Info("snapshot publishing disabled")
-		return nil
-	}
-
-	appcontext.ZLogger(ctx).Info("Snapshot publishing not implemented")
-	return nil
-}
