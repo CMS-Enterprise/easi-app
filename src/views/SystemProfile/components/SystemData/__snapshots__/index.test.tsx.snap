@@ -175,10 +175,16 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                   />
                 </div>
                 <dd
-                  class="description-definition margin-0 line-height-body-3"
+                  class="description-definition margin-0 line-height-body-3 margin-bottom-2"
                 >
                   Kong
                 </dd>
+                <a
+                  class="usa-link"
+                  href="/system-profile/326-9-0/tools-and-software"
+                >
+                  View gateway information
+                </a>
               </div>
               <div
                 class="tablet:grid-col-6 margin-bottom-5"
