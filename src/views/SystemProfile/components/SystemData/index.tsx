@@ -197,9 +197,9 @@ const SystemData = ({ system }: SystemDataProps) => {
               </h2>
 
               <CardGroup className="margin-0">
-                {system.systemData.map((data: tempSystemDataProp) => {
+                {system?.systemData?.map((data: tempSystemDataProp) => {
                   return (
-                    <Card className="grid-col-12 margin-bottom-2">
+                    <Card key={data.id} className="grid-col-12 margin-bottom-2">
                       <CardHeader className="padding-2 padding-bottom-0">
                         <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
                           <h3 className="margin-top-0 margin-bottom-1">

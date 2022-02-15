@@ -65,7 +65,7 @@ export interface tempCedarSystemProps extends CedarSystemProps {
   activities?: tempATOProp[];
   atoStatus?: string;
   products?: tempProductsProp[];
-  systemData: tempSystemDataProp[];
+  systemData?: tempSystemDataProp[];
 }
 
 export const systemData: tempSystemDataProp[] = [
