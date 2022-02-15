@@ -123,7 +123,8 @@ const systemProfile = {
       dataCategories: 'Data content categories',
       dataExchanges: 'Data Exchanges',
       dataPartner: 'Data Partner',
-      qualityAssurance: 'Quality Assurance'
+      qualityAssurance: 'Quality Assurance',
+      viewGateway: 'View gateway information'
     },
     systemDetails: {
       header: 'System Details',

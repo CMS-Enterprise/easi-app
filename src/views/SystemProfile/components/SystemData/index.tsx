@@ -14,6 +14,7 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -155,9 +156,12 @@ const SystemData = ({ system }: SystemDataProps) => {
                     <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
                   </div>
                   <DescriptionDefinition
-                    className="line-height-body-3"
+                    className="line-height-body-3 margin-bottom-2"
                     definition="Kong"
                   />
+                  <UswdsReactLink to="tools-and-software">
+                    {t('singleSystem.systemData.viewGateway')}
+                  </UswdsReactLink>
                 </Grid>
                 <Grid tablet={{ col: 6 }} className="margin-bottom-5">
                   <div>
