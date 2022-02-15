@@ -40,6 +40,7 @@ import {
   developmentTags,
   locationsInfo,
   products,
+  subSystems,
   systemData,
   tempCedarSystemProps
 } from 'views/Sandbox/mockSystemData';
@@ -89,6 +90,7 @@ const SystemProfile = () => {
     locations: locationsInfo,
     developmentTags,
     budgets: budgetsInfo,
+    subSystems,
     activities,
     atoStatus: 'In Progress',
     products,
