@@ -39,16 +39,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                 class="tablet:grid-col margin-bottom-3"
                 data-testid="grid"
               >
-                <div>
-                  <dt
-                    class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                  >
-                    Benfeficiary addresses
-                  </dt>
-                  <i
-                    class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                  />
-                </div>
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  Benfeficiary addresses
+                </dt>
                 <dd
                   class="description-definition margin-0 font-body-md line-height-body-3"
                 >
@@ -64,16 +59,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                 class="tablet:grid-col margin-bottom-3"
                 data-testid="grid"
               >
-                <div>
-                  <dt
-                    class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                  >
-                    Personally Identifiable Information (PII)
-                  </dt>
-                  <i
-                    class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                  />
-                </div>
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  Personally Identifiable Information (PII)
+                </dt>
                 <dd
                   class="description-definition margin-0 font-body-md line-height-body-3"
                 >
@@ -89,16 +79,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                 class="tablet:grid-col margin-bottom-3"
                 data-testid="grid"
               >
-                <div>
-                  <dt
-                    class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                  >
-                    Protected Health Information (PHI)
-                  </dt>
-                  <i
-                    class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                  />
-                </div>
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  Protected Health Information (PHI)
+                </dt>
                 <dd
                   class="description-definition margin-0 font-body-md line-height-body-3"
                 >
@@ -124,16 +109,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                 class="tablet:grid-col-6 margin-bottom-5"
                 data-testid="grid"
               >
-                <div>
-                  <dt
-                    class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                  >
-                    API status
-                  </dt>
-                  <i
-                    class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                  />
-                </div>
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  API status
+                </dt>
                 <dd
                   class="description-definition margin-0 font-body-md line-height-body-3"
                 >
@@ -144,16 +124,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                 class="tablet:grid-col-6 margin-bottom-5"
                 data-testid="grid"
               >
-                <div>
-                  <dt
-                    class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                  >
-                    FHIR Useage
-                  </dt>
-                  <i
-                    class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                  />
-                </div>
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  FHIR Useage
+                </dt>
                 <dd
                   class="description-definition margin-0 line-height-body-3 font-body-md"
                 >
@@ -164,16 +139,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                 class="tablet:grid-col-6 margin-bottom-5"
                 data-testid="grid"
               >
-                <div>
-                  <dt
-                    class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                  >
-                    API Gateway
-                  </dt>
-                  <i
-                    class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                  />
-                </div>
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  API Gateway
+                </dt>
                 <dd
                   class="description-definition margin-0 line-height-body-3 margin-bottom-2"
                 >
@@ -190,16 +160,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                 class="tablet:grid-col-6 margin-bottom-5"
                 data-testid="grid"
               >
-                <div>
-                  <dt
-                    class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                  >
-                    Access
-                  </dt>
-                  <i
-                    class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                  />
-                </div>
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  Access
+                </dt>
                 <dd
                   class="description-definition margin-0 line-height-body-3"
                 >
@@ -284,16 +249,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                           <div
                             class="margin-bottom-0 easi-header__basic flex-align-baseline"
                           >
-                            <div>
-                              <dt
-                                class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                              >
-                                Data Partner
-                              </dt>
-                              <i
-                                class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                              />
-                            </div>
+                            <dt
+                              class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                            >
+                              Data Partner
+                            </dt>
                             <span
                               class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
                               data-testid="tag"
@@ -408,16 +368,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                           <div
                             class="margin-bottom-0 easi-header__basic flex-align-baseline"
                           >
-                            <div>
-                              <dt
-                                class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                              >
-                                Data Partner
-                              </dt>
-                              <i
-                                class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                              />
-                            </div>
+                            <dt
+                              class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                            >
+                              Data Partner
+                            </dt>
                             <span
                               class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
                               data-testid="tag"
@@ -532,16 +487,11 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                           <div
                             class="margin-bottom-0 easi-header__basic flex-align-baseline"
                           >
-                            <div>
-                              <dt
-                                class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                              >
-                                Data Partner
-                              </dt>
-                              <i
-                                class="fa fa-exclamation-circle text-base-light display-inline-flex"
-                              />
-                            </div>
+                            <dt
+                              class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                            >
+                              Data Partner
+                            </dt>
                             <span
                               class="easi-tag font-body-md margin-bottom-1 bg-white text-base border-base border-2px"
                               data-testid="tag"

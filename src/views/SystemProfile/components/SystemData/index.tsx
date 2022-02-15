@@ -61,13 +61,10 @@ const SystemData = ({ system }: SystemDataProps) => {
 
               <Grid row className="margin-top-4">
                 <Grid tablet={{ col: true }} className="margin-bottom-3">
-                  <div>
-                    <DescriptionTerm
-                      className="display-inline-flex margin-right-1"
-                      term={t('singleSystem.systemData.beneficiariesAddress')}
-                    />
-                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
-                  </div>
+                  <DescriptionTerm
+                    className="display-inline-flex margin-right-1"
+                    term={t('singleSystem.systemData.beneficiariesAddress')}
+                  />
 
                   <DescriptionDefinition
                     className="font-body-md line-height-body-3"
@@ -78,13 +75,11 @@ const SystemData = ({ system }: SystemDataProps) => {
 
               <Grid row className="margin-top-4">
                 <Grid tablet={{ col: true }} className="margin-bottom-3">
-                  <div>
-                    <DescriptionTerm
-                      className="display-inline-flex margin-right-1"
-                      term={t('singleSystem.systemData.pII')}
-                    />
-                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
-                  </div>
+                  <DescriptionTerm
+                    className="display-inline-flex margin-right-1"
+                    term={t('singleSystem.systemData.pII')}
+                  />
+
                   <DescriptionDefinition
                     className="font-body-md line-height-body-3"
                     definition="This system uses PII, but limited only to a username and password"
@@ -94,13 +89,11 @@ const SystemData = ({ system }: SystemDataProps) => {
 
               <Grid row className="margin-top-4">
                 <Grid tablet={{ col: true }} className="margin-bottom-3">
-                  <div>
-                    <DescriptionTerm
-                      className="display-inline-flex margin-right-1"
-                      term={t('singleSystem.systemData.pHI')}
-                    />
-                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
-                  </div>
+                  <DescriptionTerm
+                    className="display-inline-flex margin-right-1"
+                    term={t('singleSystem.systemData.pHI')}
+                  />
+
                   <DescriptionDefinition
                     className="font-body-md line-height-body-3"
                     definition="The data in this system is not considered PHI"
@@ -118,13 +111,10 @@ const SystemData = ({ system }: SystemDataProps) => {
 
               <Grid row className="margin-top-3">
                 <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <div>
-                    <DescriptionTerm
-                      className="display-inline-flex margin-right-1"
-                      term={t('singleSystem.systemData.apiStatus')}
-                    />
-                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
-                  </div>
+                  <DescriptionTerm
+                    className="display-inline-flex margin-right-1"
+                    term={t('singleSystem.systemData.apiStatus')}
+                  />
 
                   <DescriptionDefinition
                     className="font-body-md line-height-body-3"
@@ -132,26 +122,22 @@ const SystemData = ({ system }: SystemDataProps) => {
                   />
                 </Grid>
                 <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <div>
-                    <DescriptionTerm
-                      className="display-inline-flex margin-right-1"
-                      term={t('singleSystem.systemData.fHIRUsage')}
-                    />
-                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
-                  </div>
+                  <DescriptionTerm
+                    className="display-inline-flex margin-right-1"
+                    term={t('singleSystem.systemData.fHIRUsage')}
+                  />
+
                   <DescriptionDefinition
                     className="line-height-body-3 font-body-md"
                     definition="This API does not use FHIR"
                   />
                 </Grid>
                 <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <div>
-                    <DescriptionTerm
-                      className="display-inline-flex margin-right-1"
-                      term={t('singleSystem.systemData.apiGateway')}
-                    />
-                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
-                  </div>
+                  <DescriptionTerm
+                    className="display-inline-flex margin-right-1"
+                    term={t('singleSystem.systemData.apiGateway')}
+                  />
+
                   <DescriptionDefinition
                     className="line-height-body-3 margin-bottom-2"
                     definition="Kong"
@@ -161,13 +147,11 @@ const SystemData = ({ system }: SystemDataProps) => {
                   </UswdsReactLink>
                 </Grid>
                 <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <div>
-                    <DescriptionTerm
-                      className="display-inline-flex margin-right-1"
-                      term={t('singleSystem.systemData.access')}
-                    />
-                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
-                  </div>
+                  <DescriptionTerm
+                    className="display-inline-flex margin-right-1"
+                    term={t('singleSystem.systemData.access')}
+                  />
+
                   <DescriptionDefinition
                     className="line-height-body-3"
                     definition="Internal and external access"
@@ -237,15 +221,13 @@ const SystemData = ({ system }: SystemDataProps) => {
                           <Grid row>
                             <Grid col>
                               <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
-                                <div>
-                                  <DescriptionTerm
-                                    className="display-inline-flex margin-right-1"
-                                    term={t(
-                                      'singleSystem.systemData.dataPartner'
-                                    )}
-                                  />
-                                  <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
-                                </div>
+                                <DescriptionTerm
+                                  className="display-inline-flex margin-right-1"
+                                  term={t(
+                                    'singleSystem.systemData.dataPartner'
+                                  )}
+                                />
+
                                 <Tag
                                   className={classnames(
                                     'font-body-md',
