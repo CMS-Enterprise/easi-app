@@ -63,9 +63,14 @@ const SystemData = ({ system }: SystemDataProps) => {
 
               <Grid row className="margin-top-4">
                 <Grid tablet={{ col: true }} className="margin-bottom-3">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemData.beneficiariesAddress')}
-                  />
+                  <div>
+                    <DescriptionTerm
+                      className="display-inline-flex margin-right-1"
+                      term={t('singleSystem.systemData.beneficiariesAddress')}
+                    />
+                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
+                  </div>
+
                   <DescriptionDefinition
                     className="font-body-md line-height-body-3"
                     definition="This system does not use or store beneficiary addresses"
@@ -75,7 +80,13 @@ const SystemData = ({ system }: SystemDataProps) => {
 
               <Grid row className="margin-top-4">
                 <Grid tablet={{ col: true }} className="margin-bottom-3">
-                  <DescriptionTerm term={t('singleSystem.systemData.pII')} />
+                  <div>
+                    <DescriptionTerm
+                      className="display-inline-flex margin-right-1"
+                      term={t('singleSystem.systemData.pII')}
+                    />
+                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
+                  </div>
                   <DescriptionDefinition
                     className="font-body-md line-height-body-3"
                     definition="This system uses PII, but limited only to a username and password"
@@ -85,7 +96,13 @@ const SystemData = ({ system }: SystemDataProps) => {
 
               <Grid row className="margin-top-4">
                 <Grid tablet={{ col: true }} className="margin-bottom-3">
-                  <DescriptionTerm term={t('singleSystem.systemData.pHI')} />
+                  <div>
+                    <DescriptionTerm
+                      className="display-inline-flex margin-right-1"
+                      term={t('singleSystem.systemData.pHI')}
+                    />
+                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
+                  </div>
                   <DescriptionDefinition
                     className="font-body-md line-height-body-3"
                     definition="The data in this system is not considered PHI"
@@ -103,34 +120,53 @@ const SystemData = ({ system }: SystemDataProps) => {
 
               <Grid row className="margin-top-3">
                 <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemData.apiStatus')}
-                  />
+                  <div>
+                    <DescriptionTerm
+                      className="display-inline-flex margin-right-1"
+                      term={t('singleSystem.systemData.apiStatus')}
+                    />
+                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
+                  </div>
+
                   <DescriptionDefinition
                     className="font-body-md line-height-body-3"
                     definition="API developed and launched"
                   />
                 </Grid>
                 <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemData.fHIRUsage')}
-                  />
+                  <div>
+                    <DescriptionTerm
+                      className="display-inline-flex margin-right-1"
+                      term={t('singleSystem.systemData.fHIRUsage')}
+                    />
+                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
+                  </div>
                   <DescriptionDefinition
                     className="line-height-body-3 font-body-md"
                     definition="This API does not use FHIR"
                   />
                 </Grid>
                 <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemData.apiGateway')}
-                  />
+                  <div>
+                    <DescriptionTerm
+                      className="display-inline-flex margin-right-1"
+                      term={t('singleSystem.systemData.apiGateway')}
+                    />
+                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
+                  </div>
                   <DescriptionDefinition
                     className="line-height-body-3"
                     definition="Kong"
                   />
                 </Grid>
                 <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <DescriptionTerm term={t('singleSystem.systemData.access')} />
+                  <div>
+                    <DescriptionTerm
+                      className="display-inline-flex margin-right-1"
+                      term={t('singleSystem.systemData.access')}
+                    />
+                    <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
+                  </div>
                   <DescriptionDefinition
                     className="line-height-body-3"
                     definition="Internal and external access"
@@ -165,18 +201,74 @@ const SystemData = ({ system }: SystemDataProps) => {
                   return (
                     <Card className="grid-col-12 margin-bottom-2">
                       <CardHeader className="padding-2 padding-bottom-0">
-                        <h3>{data.title}</h3>
+                        <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
+                          <h3 className="margin-top-0 margin-bottom-1">
+                            {data.title}
+                          </h3>
+                          <Tag
+                            className={classnames(
+                              'font-body-md',
+                              'margin-bottom-1',
+                              {
+                                'bg-success-dark text-white':
+                                  data.status === 'Active' ||
+                                  data.status === 'Passed',
+                                'bg-warning':
+                                  data.status === 'Requires response' ||
+                                  data.status === 'QA review pending',
+                                'bg-white text-base border-base border-2px':
+                                  data.status === 'Not applicable'
+                              }
+                            )}
+                          >
+                            {data.status}
+                          </Tag>
+                        </div>
+                        <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-2">
+                          <i className="fa fa-download text-base-darker margin-right-1" />
+                          Receives Data{' '}
+                          {/* TODO: Map defined CEDAR variable once availabe */}
+                        </Tag>
                         <Divider />
                       </CardHeader>
                       <CardBody className="padding-2">
                         <GridContainer className="padding-x-0 margin-bottom-2">
                           <Grid row>
                             <Grid col>
-                              <DescriptionTerm
-                                term={t('singleSystem.systemData.dataPartner')}
-                              />
+                              <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
+                                <div>
+                                  <DescriptionTerm
+                                    className="display-inline-flex margin-right-1"
+                                    term={t(
+                                      'singleSystem.systemData.dataPartner'
+                                    )}
+                                  />
+                                  <i className="fa fa-exclamation-circle text-base-light display-inline-flex" />
+                                </div>
+                                <Tag
+                                  className={classnames(
+                                    'font-body-md',
+                                    'margin-bottom-1',
+                                    {
+                                      'bg-success-dark text-white':
+                                        data.dataPartnerStatus === 'Active' ||
+                                        data.dataPartnerStatus === 'Passed',
+                                      'bg-warning':
+                                        data.dataPartnerStatus ===
+                                          'Requires response' ||
+                                        data.dataPartnerStatus ===
+                                          'QA review pending',
+                                      'bg-white text-base border-base border-2px':
+                                        data.dataPartnerStatus ===
+                                        'Not applicable'
+                                    }
+                                  )}
+                                >
+                                  {data.dataPartnerStatus}
+                                </Tag>
+                              </div>
                               <DescriptionDefinition
-                                className="ine-height-body-3"
+                                className="line-height-body-3"
                                 definition={data.dataPartner}
                               />
                             </Grid>
@@ -188,11 +280,33 @@ const SystemData = ({ system }: SystemDataProps) => {
                         <GridContainer className="padding-x-0">
                           <Grid row>
                             <Grid col>
-                              <DescriptionTerm
-                                term={t(
-                                  'singleSystem.systemData.qualityAssurance'
-                                )}
-                              />
+                              <div className="margin-bottom-0 easi-header__basic flex-align-center">
+                                <DescriptionTerm
+                                  term={t(
+                                    'singleSystem.systemData.qualityAssurance'
+                                  )}
+                                />
+                                <Tag
+                                  className={classnames(
+                                    'font-body-md',
+                                    'margin-bottom-1',
+                                    {
+                                      'bg-success-dark text-white':
+                                        data.qualityStatus === 'Active' ||
+                                        data.qualityStatus === 'Passed',
+                                      'bg-warning':
+                                        data.qualityStatus ===
+                                          'Requires response' ||
+                                        data.qualityStatus ===
+                                          'QA review pending',
+                                      'bg-white text-base border-base border-2px':
+                                        data.qualityStatus === 'Not applicable'
+                                    }
+                                  )}
+                                >
+                                  {data.qualityStatus}
+                                </Tag>
+                              </div>
                             </Grid>
                           </Grid>
                         </GridContainer>

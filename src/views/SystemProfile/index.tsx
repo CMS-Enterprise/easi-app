@@ -90,7 +90,7 @@ const SystemProfile = () => {
     developmentTags,
     budgets: budgetsInfo,
     activities,
-    atoStatus: 'No ATO',
+    atoStatus: 'In Progress',
     products,
     systemData
   };
