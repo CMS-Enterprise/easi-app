@@ -1,5 +1,6 @@
 package translation
 
+// quoth the Swagger (cedar_intake.json): "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc."
 type intakeInputStatus string
 
 const (
@@ -7,6 +8,12 @@ const (
 	inputStatusInitiated intakeInputStatus = "Initiated"
 
 	// inputStatusFinal indicates an object has been finalized in EASi
+	// applies to:
+	// * all actions
+	// * closed business cases
+	// * all GRT feedback entries
+	// * all notes
+	// * closed system intakes
 	inputStatusFinal intakeInputStatus = "Final"
 )
 

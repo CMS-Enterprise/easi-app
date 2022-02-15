@@ -131,7 +131,11 @@ func (c *Client) PublishNote(ctx context.Context, note models.Note) error {
 // private method for publishing anything that satisfies the translation.IntakeObject interface to CEDAR through the Intake API
 func (c *Client) publishIntakeObject(ctx context.Context, model translation.IntakeObject) error {
 	// constant values for now; may become non-constant if/when we revisit handling CEDAR validation errors
+
+	// version refers to "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
 	const objectVersion = 1
+
+	// "Determines if schema validation of the payload is performed syncronously before persisting the record or asyncronously after the record has been persisted"
 	const isValidatedSynchronously = true
 
 	id := model.ObjectID()
