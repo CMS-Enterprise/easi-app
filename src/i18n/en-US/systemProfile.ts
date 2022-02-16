@@ -112,7 +112,7 @@ const systemProfile = {
     systemData: {
       header: 'System Data',
       recordCategories: 'Records management categories',
-      beneficiariesAddress: 'Benfeficiary addresses',
+      beneficiariesAddress: 'Beneficiary addresses',
       pII: 'Personally Identifiable Information (PII)',
       pHI: 'Protected Health Information (PHI)',
       apiInfo: 'API Information',
