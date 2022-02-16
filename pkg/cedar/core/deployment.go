@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apideployments "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/deployment"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -56,12 +55,6 @@ func (c *Client) GetDeployments(ctx context.Context, systemID string, optionalPa
 
 	if resp.Payload == nil {
 		return []*models.CedarDeployment{}, fmt.Errorf("no body received")
-	}
-
-	responseArray := resp.Payload.Deployments
-
-	if len(responseArray) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no deployments found"), Resource: []*models.CedarDeployment{}}
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct

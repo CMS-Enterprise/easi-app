@@ -807,6 +807,7 @@ type SystemIntake {
   decidedAt: Time
   businessCaseId: UUID
   lastAdminNote: LastAdminNote!
+  cedarSystemId: String
 }
 
 """
@@ -896,6 +897,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessNeed: String
   businessSolution: String
   needsEaSupport: Boolean
+  cedarSystemId: String
 }
 
 """

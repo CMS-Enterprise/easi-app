@@ -2,16 +2,33 @@
 
 ## Running Locally
 
-You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL playground while the Go backend is running. You will need to enter `/api/graph/query` as the query path in the UI for this to work. You'll also need to add the following to HTTP Headers (in the lower-left) to avoid auth errors:
+You can visit `http://localhost:8080/api/graph/playground` to access a GraphQL playground while the Go backend is running. You will need to enter `/api/graph/query` as the query path in the UI for this to work.
+
+### Authorization
+
+The GraphQL endpoints require a valid `Authorization` header to use, which can be set in the "HTTP Headers" section in the lower-left of the playground. The value for this header is `"Local <JSON string>"` with quotes in the JSON string escaped. At a minimum, you'll need to set `favorLocalAuth: true` in the JSON payload, like so:
+
 ```
 { "Authorization":"Local {\"favorLocalAuth\":true}"}
 ```
 
-Additionally, you can define EUA job codes in the `Authorization` header that will be used when querying endpoints such as `systemIntake` that require them. The syntax is:
+#### Job Codes
+
+Job codes can be included in an array for querying endpoints such as `systemIntake` that require them:
+
 ```
 { "Authorization":"Local {\"favorLocalAuth\":true, \"jobCodes\":[\"EASI_D_GOVTEAM\"]}"}
 ```
 Additional job codes beyond/instead of `EASI_D_GOVTEAM` can be included in the `jobCodes` array, just make sure to escape the `"`'s around the job code names.
+
+#### EUA ID
+
+An EUA ID is needed for some endpoints such as creating system intakes; this can be added with the `EUAID` field:
+
+```
+{ "Authorization":"Local {\"EUAID\":\"ABCD\",\"favorLocalAuth\":true, \"jobCodes\":[\"EASI_D_GOVTEAM\", \"EASI_D_508_USER\"]}"}
+```
+
 
 ## Running in Deployed Environments
 
