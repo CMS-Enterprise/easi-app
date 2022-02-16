@@ -142,6 +142,7 @@ const SystemData = ({ system }: SystemDataProps) => {
                     className="line-height-body-3 margin-bottom-2"
                     definition="Kong"
                   />
+                  {/* TODO: Add hash-fragment to direct and scroll on the tools subpage */}
                   <UswdsReactLink to="tools-and-software">
                     {t('singleSystem.systemData.viewGateway')}
                   </UswdsReactLink>
