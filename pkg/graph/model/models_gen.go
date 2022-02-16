@@ -533,6 +533,7 @@ type UpdateSystemIntakeRequestDetailsInput struct {
 	BusinessNeed     *string   `json:"businessNeed"`
 	BusinessSolution *string   `json:"businessSolution"`
 	NeedsEaSupport   *bool     `json:"needsEaSupport"`
+	CedarSystemID    *string   `json:"cedarSystemId"`
 }
 
 // Input data used to update GRT and GRB dates for a system request

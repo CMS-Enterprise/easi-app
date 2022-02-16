@@ -2,10 +2,13 @@ import React from 'react';
 
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
+import ATO from './ATO';
 import FundingAndBudget from './FundingAndBudget';
+import SubSystems from './SubSystems';
 import SystemDetails from './SystemDetails';
 import SystemHome from './SystemHome';
 import TeamAndContract from './TeamAndContract';
+import ToolsAndSoftware from './ToolsAndSoftware';
 
 type sideNavItemProps = {
   groupEnd?: boolean; // Value used to designate end of sidenav subgrouping / border-bottom
@@ -39,11 +42,11 @@ const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
   },
   'tools-and-software': {
     groupEnd: true,
-    component: <SystemHome system={system} />,
+    component: <ToolsAndSoftware system={system} />,
     route: `/system-profile/${system.id}/tools-and-software`
   },
   ato: {
-    component: <SystemHome system={system} />,
+    component: <ATO system={system} />,
     route: `/system-profile/${system.id}/ato`
   },
   'lifecycle-id': {
@@ -56,7 +59,7 @@ const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
     route: `/system-profile/${system.id}/section-508`
   },
   'sub-systems': {
-    component: <SystemHome system={system} />,
+    component: <SubSystems system={system} />,
     route: `/system-profile/${system.id}/sub-systems`
   },
   'system-data': {

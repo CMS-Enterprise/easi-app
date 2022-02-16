@@ -38,6 +38,43 @@ const systemProfile = {
       subheader3: 'Go Live Date',
       subheader4: 'Most recent major change release'
     },
+    ato: {
+      header: 'Authority to Operate (ATO)',
+      status: 'Status',
+      expiration: 'Expiration Date',
+      methodologies: 'Methodologies and Programs',
+      POAM: 'Plan of Action and Milestones (POAMs)',
+      totalPOAM: 'Total POAMs',
+      highPOAM: 'High POAMs',
+      cfactsInfo:
+        'CFACTS is the CMS system that stores and manages security information for systems. If you have access to CFACTS, you can view additional information about POAMs and security findings for you system.',
+      viewPOAMs: 'View POAMs in CFACTS',
+      securityFindings: 'Security Findings',
+      totalFindings: 'Total findings',
+      highFindings: 'High findings',
+      mediumFindings: 'Medium findings',
+      lowFindings: 'Low findings',
+      viewFindings: 'View findings in CFACTS',
+      datesAndTests: 'Dates and Tests',
+      lastTest: 'Last penetration test',
+      lastAssessment: 'Last assessment',
+      contingencyCompletion: 'Contengency Plan completion',
+      contingencyTest: 'Contengency Plan test',
+      securityReview: 'System Security Plan review',
+      authorizationExpiration: 'Authorization memo expiration',
+      piaCompletion: 'PIA completion',
+      sornCompletion: 'SORN completion',
+      lastSCA: 'Last SCA/CDM',
+      activityOwner: 'Activity owner',
+      completed: 'Completed on ',
+      due: 'Due ',
+      noATO:
+        'There is no ATO on file for this system. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+      noATOPOAM:
+        'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+      noATODates:
+        'There is no information about previous tests or assessments available for this system'
+    },
     systemDetails: {
       header: 'System Details',
       ownership: 'System ownership',
@@ -95,6 +132,16 @@ const systemProfile = {
       requisitionNumber: 'Requisition number',
       tagHeader1: 'Funding Sources',
       budgetID: 'Budget ID: '
+    },
+    toolsAndSoftware: {
+      header: 'Tools and Software',
+      productType: 'Product Type',
+      softwareVersion: 'Software version',
+      softwareEdition: 'Software edition'
+    },
+    subSystems: {
+      header: 'Sub-systems',
+      retirementDate: 'Retirement date'
     }
   },
   systemTable: {
