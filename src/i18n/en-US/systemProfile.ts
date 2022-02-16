@@ -75,6 +75,57 @@ const systemProfile = {
       noATODates:
         'There is no information about previous tests or assessments available for this system'
     },
+    fundingAndBudget: {
+      header: 'Funding and Budget',
+      actualFYCost: 'Actual FY system cost',
+      budgetedFYCost: 'Budgeted FY system cost',
+      investmentNumber: 'Investment number',
+      requisitionNumber: 'Requisition number',
+      tagHeader1: 'Funding Sources',
+      budgetID: 'Budget ID: '
+    },
+    teamAndContract: {
+      header: {
+        teamAndContract: 'Team and Contract',
+        contractInformation: 'Contract Information',
+        pointsOfContact: 'Points of Contact'
+      },
+      federalFullTimeEmployees: 'Federal Full Time Employees',
+      contractorFullTimeEmployees: 'Contractor Full Time Employees',
+      vendors: 'Vendors',
+      contractAwardDate: 'Contract Award Date',
+      periodOfPerformance: 'Period of performance',
+      startDate: 'Start Date',
+      endDate: 'End Date',
+      contractNumber: 'Contract number',
+      technologyFunctions: 'Technology functions',
+      assetsOrServices: 'Assets or services',
+      pointOfContact: 'Point of contact',
+      sendAnEmail: 'Send an email'
+    },
+    toolsAndSoftware: {
+      header: 'Tools and Software',
+      productType: 'Product Type',
+      softwareVersion: 'Software version',
+      softwareEdition: 'Software edition'
+    },
+    systemData: {
+      header: 'System Data',
+      recordCategories: 'Records management categories',
+      beneficiariesAddress: 'Beneficiary addresses',
+      pII: 'Personally Identifiable Information (PII)',
+      pHI: 'Protected Health Information (PHI)',
+      apiInfo: 'API Information',
+      apiStatus: 'API status',
+      fHIRUsage: 'FHIR Useage',
+      apiGateway: 'API Gateway',
+      access: 'Access',
+      dataCategories: 'Data content categories',
+      dataExchanges: 'Data Exchanges',
+      dataPartner: 'Data Partner',
+      qualityAssurance: 'Quality Assurance',
+      viewGateway: 'View gateway information'
+    },
     systemDetails: {
       header: 'System Details',
       ownership: 'System ownership',
@@ -104,40 +155,6 @@ const systemProfile = {
       ipv6Transition: 'IPv6 transition',
       percentTransitioned: 'Percent transitioned to IPv6',
       hardCodedIP: 'Hard-coded IP addresses'
-    },
-    teamAndContract: {
-      header: {
-        teamAndContract: 'Team and Contract',
-        contractInformation: 'Contract Information',
-        pointsOfContact: 'Points of Contact'
-      },
-      federalFullTimeEmployees: 'Federal Full Time Employees',
-      contractorFullTimeEmployees: 'Contractor Full Time Employees',
-      vendors: 'Vendors',
-      contractAwardDate: 'Contract Award Date',
-      periodOfPerformance: 'Period of performance',
-      startDate: 'Start Date',
-      endDate: 'End Date',
-      contractNumber: 'Contract number',
-      technologyFunctions: 'Technology functions',
-      assetsOrServices: 'Assets or services',
-      pointOfContact: 'Point of contact',
-      sendAnEmail: 'Send an email'
-    },
-    fundingAndBudget: {
-      header: 'Funding and Budget',
-      actualFYCost: 'Actual FY system cost',
-      budgetedFYCost: 'Budgeted FY system cost',
-      investmentNumber: 'Investment number',
-      requisitionNumber: 'Requisition number',
-      tagHeader1: 'Funding Sources',
-      budgetID: 'Budget ID: '
-    },
-    toolsAndSoftware: {
-      header: 'Tools and Software',
-      productType: 'Product Type',
-      softwareVersion: 'Software version',
-      softwareEdition: 'Software edition'
     },
     subSystems: {
       header: 'Sub-systems',
