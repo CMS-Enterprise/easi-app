@@ -170,7 +170,7 @@ const SystemProfile = () => {
               >
                 <Breadcrumb>
                   <span>&larr; </span>
-                  <BreadcrumbLink asCustom={Link} to="/system-profile">
+                  <BreadcrumbLink asCustom={Link} to="/systems">
                     <span>{t('singleSystem.summary.back')}</span>
                   </BreadcrumbLink>
                 </Breadcrumb>

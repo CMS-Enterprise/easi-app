@@ -48,7 +48,7 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                       >
                         <a
                           class="usa-link"
-                          href="/system-profile/326-9-0/todo"
+                          href="/systems/326-9-0/todo"
                         >
                           Test Ocular Fiction Utensil
                         </a>
@@ -115,7 +115,7 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                       >
                         <a
                           class="usa-link"
-                          href="/system-profile/326-9-0/todo"
+                          href="/systems/326-9-0/todo"
                         >
                           Bio-Energy Engagement File
                         </a>

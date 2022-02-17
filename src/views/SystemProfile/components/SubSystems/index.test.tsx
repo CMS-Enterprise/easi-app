@@ -9,8 +9,8 @@ import SubSystems from './index';
 describe('System Sub-systems subpage', () => {
   it('renders without errors', async () => {
     render(
-      <MemoryRouter initialEntries={['/system-profile/326-9-0/sub-systems']}>
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/sub-systems']}>
+        <Route path="/systems/:systemId/:subinfo">
           <SubSystems
             system={{
               ...mockSystemInfo[3],
@@ -33,8 +33,8 @@ describe('System Sub-systems subpage', () => {
 
   it('matches snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter initialEntries={['/system-profile/326-9-0/sub-systems']}>
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/sub-systems']}>
+        <Route path="/systems/:systemId/:subinfo">
           <SubSystems
             system={{
               ...mockSystemInfo[3],

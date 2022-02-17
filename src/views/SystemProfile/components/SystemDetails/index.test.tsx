@@ -13,8 +13,8 @@ import SystemDetails from './index';
 describe('The making a request page', () => {
   it('renders without errors', async () => {
     render(
-      <MemoryRouter initialEntries={['/system-profile/326-9-0/details']}>
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/details']}>
+        <Route path="/systems/:systemId/:subinfo">
           <SystemDetails
             system={{
               ...mockSystemInfo[3],
@@ -36,8 +36,8 @@ describe('The making a request page', () => {
 
   it('matches snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter initialEntries={['/system-profile/326-9-0/details']}>
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/details']}>
+        <Route path="/systems/:systemId/:subinfo">
           <SystemDetails
             system={{
               ...mockSystemInfo[3],

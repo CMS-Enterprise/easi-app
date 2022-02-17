@@ -27,10 +27,8 @@ const mocks = [
 describe('The making a request page', () => {
   it('renders without errors', async () => {
     render(
-      <MemoryRouter
-        initialEntries={['/system-profile/326-9-0/tools-and-software']}
-      >
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/tools-and-software']}>
+        <Route path="/systems/:systemId/:subinfo">
           <MockedProvider mocks={mocks} addTypename={false}>
             <SystemProfile />
           </MockedProvider>
@@ -47,10 +45,8 @@ describe('The making a request page', () => {
 
   it('matches snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter
-        initialEntries={['/system-profile/326-9-0/tools-and-software']}
-      >
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/tools-and-software']}>
+        <Route path="/systems/:systemId/:subinfo">
           <MockedProvider mocks={mocks} addTypename={false}>
             <SystemProfile />
           </MockedProvider>

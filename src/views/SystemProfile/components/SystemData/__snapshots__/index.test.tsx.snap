@@ -151,7 +151,7 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
                 </dd>
                 <a
                   class="usa-link"
-                  href="/system-profile/326-9-0/tools-and-software"
+                  href="/systems/326-9-0/tools-and-software"
                 >
                   View gateway information
                 </a>
