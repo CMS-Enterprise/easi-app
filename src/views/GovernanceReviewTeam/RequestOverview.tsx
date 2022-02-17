@@ -24,7 +24,7 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
-import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import { fetchBusinessCase } from 'types/routines';
 import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedbackToBusinessOwner';
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
 import NotFound from 'views/NotFound';
@@ -53,14 +53,14 @@ const RequestOverview = () => {
     activePage: string;
   }>();
 
-  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  const { loading, data, refetch } = useQuery<
+    GetSystemIntake,
+    GetSystemIntakeVariables
+  >(GetSystemIntakeQuery, {
+    variables: {
+      id: systemId
     }
-  );
+  });
 
   const systemIntake = data?.systemIntake;
 
@@ -72,14 +72,15 @@ const RequestOverview = () => {
     if (systemIntake?.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
-    if (systemIntake?.lcidExpiresAt) {
-      dispatch(fetchSystemIntake(systemIntake.id));
+    if (systemIntake) {
+      refetch(systemIntake.id);
     }
   }, [
     dispatch,
+    refetch,
     systemIntake?.businessCaseId,
-    systemIntake?.id,
-    systemIntake?.lcidExpiresAt
+    systemIntake,
+    systemIntake?.id
   ]);
 
   const getNavLinkClasses = (page: string) =>
