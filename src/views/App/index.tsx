@@ -70,6 +70,7 @@ const AppRoutes = () => {
       <SecureRoute path="/my-requests" component={MyRequests} />
 
       {/* 508 / Accessibility Team Routes */}
+      <Redirect exact from="/508" to="/508/making-a-request" />
       <SecureRoute path="/508" component={Accessibility} />
 
       {/* GRT/GRB Routes */}

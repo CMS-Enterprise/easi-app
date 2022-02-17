@@ -32,7 +32,7 @@ export const navLinks = (flags: Flags) => [
     isEnabled: true
   },
   {
-    link: '/508/making-a-request',
+    link: '/508',
     label: 'add508Request',
     isEnabled: true
   },
