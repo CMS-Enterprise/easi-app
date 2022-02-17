@@ -106,7 +106,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		result.ClientCreatedDate = pStrfmtDateTime(si.CreatedAt)
 	}
 	if si.UpdatedAt != nil {
-		result.ClientLastUpdatedDate = *pStrfmtDateTime(si.UpdatedAt)
+		result.ClientLastUpdatedDate = pStrfmtDateTime(si.UpdatedAt)
 	}
 
 	return &result, nil

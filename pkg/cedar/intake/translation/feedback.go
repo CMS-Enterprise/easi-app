@@ -49,7 +49,7 @@ func (fb *TranslatableFeedback) CreateIntakeModel() (*wire.IntakeInput, error) {
 		result.ClientCreatedDate = pStrfmtDateTime(fb.CreatedAt)
 	}
 	if fb.UpdatedAt != nil {
-		result.ClientLastUpdatedDate = *pStrfmtDateTime(fb.UpdatedAt)
+		result.ClientLastUpdatedDate = pStrfmtDateTime(fb.UpdatedAt)
 	}
 
 	return &result, nil

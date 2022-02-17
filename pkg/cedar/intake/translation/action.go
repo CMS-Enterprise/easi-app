@@ -48,7 +48,7 @@ func (action *TranslatableAction) CreateIntakeModel() (*wire.IntakeInput, error)
 
 	if action.CreatedAt != nil {
 		result.ClientCreatedDate = pStrfmtDateTime(action.CreatedAt)
-		result.ClientLastUpdatedDate = *pStrfmtDateTime(action.CreatedAt)
+		result.ClientLastUpdatedDate = pStrfmtDateTime(action.CreatedAt)
 	}
 
 	return &result, nil

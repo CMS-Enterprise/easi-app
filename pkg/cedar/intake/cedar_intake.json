@@ -1,528 +1,631 @@
 {
-  "swagger" : "2.0",
-  "info" : {
-    "description" : "This resource provides endpoints for consumption by external sites to send a document and attachment(s) to CEDAR.\n",
-    "version" : "1.0",
-    "title" : "CEDARIntake"
+  "swagger": "2.0",
+  "info": {
+    "description": "This resource provides endpoints for consumption by external sites to send a document and attachment(s) to CEDAR.\n",
+    "version": "1.0",
+    "title": "CEDARIntake"
   },
-  "host" : "cdrdevapigw1.awscloud.cms.local:5555",
-  "basePath" : "/gateway/CEDARIntake/1.0",
-  "tags" : [ {
-    "name" : "healthCheck",
-    "description" : ""
-  }, {
-    "name" : "intake",
-    "description" : ""
-  } ],
-  "schemes" : [ "http" ],
-  "consumes" : [ "application/json" ],
-  "produces" : [ "application/json" ],
-  "security" : [ {
-    "apiKey" : [ ]
-  } ],
-  "paths" : {
-    "/intake/status/client/{id}" : {
-      "get" : {
-        "tags" : [ "intake" ],
-        "summary" : "Retrieve an intake status based on a client ID",
-        "description" : "Retrieve an intake status based on a client ID",
-        "operationId" : "intakeStatusByClientId",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "An intakes ID assigned by the client system",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "clientStatus",
-          "in" : "query",
-          "description" : "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc.",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "version",
-          "in" : "query",
-          "description" : "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted.",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "#/definitions/IntakeStatus"
+  "host": "cdrdevapigw1.awscloud.cms.local:5555",
+  "basePath": "/gateway/CEDARIntake/1.0",
+  "tags": [
+    {
+      "name": "healthCheck",
+      "description": ""
+    },
+    {
+      "name": "intake",
+      "description": ""
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "apiKey": []
+    }
+  ],
+  "paths": {
+    "/intake/status/client/{id}": {
+      "get": {
+        "tags": [
+          "intake"
+        ],
+        "summary": "Retrieve an intake status based on a client ID",
+        "description": "Retrieve an intake status based on a client ID",
+        "operationId": "intakeStatusByClientId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "An intakes ID assigned by the client system",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clientStatus",
+            "in": "query",
+            "description": "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "description": "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/IntakeStatus"
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "401" : {
-            "description" : "Access Denied",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "500" : {
-            "description" : "Internal Server Error",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           }
         }
       }
     },
-    "/healthCheck" : {
-      "get" : {
-        "tags" : [ "healthCheck" ],
-        "summary" : "Returns a status and current date/time",
-        "description" : "Returns a status and current date/time",
-        "operationId" : "healthCheck",
-        "produces" : [ "application/json" ],
-        "parameters" : [ ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "#/definitions/HealthCheckResponse"
+    "/healthCheck": {
+      "get": {
+        "tags": [
+          "healthCheck"
+        ],
+        "summary": "Returns a status and current date/time",
+        "description": "Returns a status and current date/time",
+        "operationId": "healthCheck",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/HealthCheckResponse"
             }
           },
-          "401" : {
-            "description" : "Access Denied"
+          "401": {
+            "description": "Access Denied"
           }
         }
       }
     },
-    "/intake/status" : {
-      "get" : {
-        "tags" : [ "intake" ],
-        "summary" : "Retrieve an array of intake statuses based on search criteria",
-        "description" : "Retrieve a list of intake statuses based on search criteria",
-        "operationId" : "intakeStatusFindList",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "cedarStatus",
-          "in" : "query",
-          "description" : "CEDAR status describing the outcome of parsing, validation, and mapping of the payload",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "clientCreatedStartDate",
-          "in" : "query",
-          "description" : "The starting point to start searching for records using the clientCreatedDate value.",
-          "required" : false,
-          "type" : "string",
-          "format" : "date-time"
-        }, {
-          "name" : "pageSize",
-          "in" : "query",
-          "description" : "Number of results to return per page. If used, pageNumber must also be provided.",
-          "required" : false,
-          "type" : "string"
-        }, {
-          "name" : "pageNumber",
-          "in" : "query",
-          "description" : "Page number to return. If used, pageSize must also be provided.",
-          "required" : false,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "#/definitions/IntakeStatusResponse"
-            }
+    "/intake/status": {
+      "get": {
+        "tags": [
+          "intake"
+        ],
+        "summary": "Retrieve an array of intake statuses based on search criteria",
+        "description": "Retrieve a list of intake statuses based on search criteria",
+        "operationId": "intakeStatusFindList",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "cedarStatus",
+            "in": "query",
+            "description": "CEDAR status describing the outcome of parsing, validation, and mapping of the payload",
+            "required": true,
+            "type": "string"
           },
-          "400" : {
-            "description" : "Bad Request",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
+          {
+            "name": "clientCreatedStartDate",
+            "in": "query",
+            "description": "The starting point to start searching for records using the clientCreatedDate value.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
           },
-          "401" : {
-            "description" : "Access Denied",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of results to return per page. If used, pageNumber must also be provided.",
+            "required": false,
+            "type": "string"
           },
-          "500" : {
-            "description" : "Internal Server Error",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number to return. If used, pageSize must also be provided.",
+            "required": false,
+            "type": "string"
           }
-        }
-      }
-    },
-    "/intake/status/cedar/{id}" : {
-      "get" : {
-        "tags" : [ "intake" ],
-        "summary" : "Retrieve an intake status based on a CEDAR ID",
-        "description" : "Retrieve an intake status based on a CEDAR ID",
-        "operationId" : "intakeStatusByCedarId",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "An intake ID assigned by CEDAR",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "#/definitions/IntakeStatus"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/IntakeStatusResponse"
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "401" : {
-            "description" : "Access Denied",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "500" : {
-            "description" : "Internal Server Error",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           }
         }
       }
     },
-    "/intake/cedar/{id}" : {
-      "get" : {
-        "tags" : [ "intake" ],
-        "summary" : "Retrieve an intake based on a CEDAR ID",
-        "description" : "Retrieve an intake based on a CEDAR ID",
-        "operationId" : "intakeFindByCedarId",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "An intake ID assigned CEDAR",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "#/definitions/Intake"
+    "/intake/status/cedar/{id}": {
+      "get": {
+        "tags": [
+          "intake"
+        ],
+        "summary": "Retrieve an intake status based on a CEDAR ID",
+        "description": "Retrieve an intake status based on a CEDAR ID",
+        "operationId": "intakeStatusByCedarId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "An intake ID assigned by CEDAR",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/IntakeStatus"
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "401" : {
-            "description" : "Access Denied",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "500" : {
-            "description" : "Internal Server Error",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           }
         }
       }
     },
-    "/intake/client/{id}" : {
-      "get" : {
-        "tags" : [ "intake" ],
-        "summary" : "Retrieve an intake based on a client ID",
-        "description" : "Retrieve an intake based on a client ID",
-        "operationId" : "intakeFindByClientId",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "An intake ID assigned by the client system",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "clientStatus",
-          "in" : "query",
-          "description" : "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc.",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "version",
-          "in" : "query",
-          "description" : "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted.",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "#/definitions/Intake"
+    "/intake/cedar/{id}": {
+      "get": {
+        "tags": [
+          "intake"
+        ],
+        "summary": "Retrieve an intake based on a CEDAR ID",
+        "description": "Retrieve an intake based on a CEDAR ID",
+        "operationId": "intakeFindByCedarId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "An intake ID assigned CEDAR",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Intake"
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "401" : {
-            "description" : "Access Denied",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "500" : {
-            "description" : "Internal Server Error",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           }
         }
       }
     },
-    "/intake" : {
-      "post" : {
-        "tags" : [ "intake" ],
-        "summary" : "Add an intake",
-        "description" : "Add an intake",
-        "operationId" : "intakeAdd",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "validatePayload",
-          "in" : "query",
-          "description" : "Determines if schema validation of the payload is performed syncronously before persisting the record or asyncronously after the record has been persisted",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "in" : "body",
-          "name" : "body",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/IntakeInput"
+    "/intake/client/{id}": {
+      "get": {
+        "tags": [
+          "intake"
+        ],
+        "summary": "Retrieve an intake based on a client ID",
+        "description": "Retrieve an intake based on a client ID",
+        "operationId": "intakeFindByClientId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "An intake ID assigned by the client system",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clientStatus",
+            "in": "query",
+            "description": "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "description": "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted.",
+            "required": true,
+            "type": "string"
           }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Intake"
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "401" : {
-            "description" : "Access Denied",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           },
-          "500" : {
-            "description" : "Internal Server Error",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/intake": {
+      "post": {
+        "tags": [
+          "intake"
+        ],
+        "summary": "Add an intake",
+        "description": "Add an intake",
+        "operationId": "intakeAdd",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "validatePayload",
+            "in": "query",
+            "description": "Determines if schema validation of the payload is performed syncronously before persisting the record or asyncronously after the record has been persisted",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IntakeInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           }
         }
       }
     }
   },
-  "securityDefinitions" : {
-    "apiKey" : {
-      "type" : "apiKey",
-      "name" : "x-Gateway-APIKey",
-      "in" : "header"
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "name": "x-Gateway-APIKey",
+      "in": "header"
     }
   },
-  "definitions" : {
-    "Response" : {
-      "type" : "object",
-      "required" : [ "message", "result" ],
-      "properties" : {
-        "result" : {
-          "type" : "string"
+  "definitions": {
+    "Response": {
+      "type": "object",
+      "required": [
+        "message",
+        "result"
+      ],
+      "properties": {
+        "result": {
+          "type": "string"
         },
-        "message" : {
-          "type" : "array",
-          "items" : {
-            "type" : "string"
+        "message": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       }
     },
-    "HealthCheckResponse" : {
-      "type" : "object",
-      "required" : [ "datetime", "status", "timestamp", "version" ],
-      "properties" : {
-        "datetime" : {
-          "type" : "string"
+    "HealthCheckResponse": {
+      "type": "object",
+      "required": [
+        "datetime",
+        "status",
+        "timestamp",
+        "version"
+      ],
+      "properties": {
+        "datetime": {
+          "type": "string"
         },
-        "version" : {
-          "type" : "string"
+        "version": {
+          "type": "string"
         },
-        "status" : {
-          "type" : "string"
+        "status": {
+          "type": "string"
         },
-        "timestamp" : {
-          "type" : "string"
+        "timestamp": {
+          "type": "string"
         }
       }
     },
-    "IntakeStatus" : {
-      "type" : "object",
-      "required" : [ "cedarId", "cedarStatus", "clientId" ],
-      "properties" : {
-        "clientId" : {
-          "type" : "string",
-          "description" : "Unique ID assigned by CEDAR"
+    "IntakeStatus": {
+      "type": "object",
+      "required": [
+        "cedarId",
+        "cedarStatus",
+        "clientId"
+      ],
+      "properties": {
+        "clientId": {
+          "type": "string",
+          "description": "Unique ID assigned by CEDAR"
         },
-        "cedarStatus" : {
-          "type" : "string",
-          "description" : "CEDAR status describing the outcome of parsing, validation, and mapping of the payload"
+        "cedarStatus": {
+          "type": "string",
+          "description": "CEDAR status describing the outcome of parsing, validation, and mapping of the payload"
         },
-        "cedarStatusMessage" : {
-          "type" : "string",
-          "description" : "Message related to errors with the parsing, validation, and mapping of the payload (if applicable)"
+        "cedarStatusMessage": {
+          "type": "string",
+          "description": "Message related to errors with the parsing, validation, and mapping of the payload (if applicable)"
         },
-        "version" : {
-          "type" : "string",
-          "description" : "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
+        "version": {
+          "type": "string",
+          "description": "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
         },
-        "cedarId" : {
-          "type" : "string",
-          "description" : "Unqiue ID associated with the object in body"
+        "cedarId": {
+          "type": "string",
+          "description": "Unqiue ID associated with the object in body"
         }
       }
     },
-    "IntakeInput" : {
-      "type" : "object",
-      "required" : [ "body", "bodyFormat", "clientCreatedDate", "clientId", "clientStatus", "schema", "type", "version" ],
-      "properties" : {
-        "schema" : {
-          "type" : "string",
-          "description" : "The name and version of the schema associated with the object being transmitted, i.e. SystemIntake_v01"
+    "IntakeInput": {
+      "type": "object",
+      "required": [
+        "body",
+        "bodyFormat",
+        "clientCreatedDate",
+        "clientId",
+        "clientStatus",
+        "schema",
+        "type",
+        "version"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string",
+          "description": "The name and version of the schema associated with the object being transmitted, i.e. SystemIntake_v01"
         },
-        "clientId" : {
-          "type" : "string",
-          "description" : "Unqiue ID associated with the object in body"
+        "clientId": {
+          "type": "string",
+          "description": "Unqiue ID associated with the object in body"
         },
-        "clientStatus" : {
-          "type" : "string",
-          "description" : "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc."
+        "clientStatus": {
+          "type": "string",
+          "description": "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc."
         },
-        "type" : {
-          "type" : "string",
-          "description" : "The type of object being transmitted, i.e. SystemIntake, BusinessCase, etc"
+        "type": {
+          "type": "string",
+          "description": "The type of object being transmitted, i.e. SystemIntake, BusinessCase, etc"
         },
-        "bodyFormat" : {
-          "type" : "string",
-          "enum" : [ "JSON", "XML" ]
+        "bodyFormat": {
+          "type": "string",
+          "enum": [
+            "JSON",
+            "XML"
+          ]
         },
-        "body" : {
-          "type" : "string",
-          "description" : "The encoded, string representation of the object being transmitted"
+        "body": {
+          "type": "string",
+          "description": "The encoded, string representation of the object being transmitted"
         },
-        "version" : {
-          "type" : "string",
-          "description" : "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
+        "version": {
+          "type": "string",
+          "description": "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
         },
-        "clientCreatedDate" : {
-          "type" : "string",
-          "format" : "date-time",
-          "description" : "Creation date associated with the object being transmitted"
+        "clientCreatedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation date associated with the object being transmitted"
         },
-        "clientLastUpdatedDate" : {
-          "type" : "string",
-          "format" : "date-time",
-          "description" : "Last update date associated with the object being transmitted"
+        "clientLastUpdatedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update date associated with the object being transmitted",
+          "x-nullable": true
         }
       }
     },
-    "Intake" : {
-      "type" : "object",
-      "required" : [ "body", "bodyFormat", "cedarCreatedDate", "cedarId", "cedarStatus", "clientCreatedDate", "clientId", "clientStatus", "schema", "type", "version" ],
-      "properties" : {
-        "schema" : {
-          "type" : "string"
+    "Intake": {
+      "type": "object",
+      "required": [
+        "body",
+        "bodyFormat",
+        "cedarCreatedDate",
+        "cedarId",
+        "cedarStatus",
+        "clientCreatedDate",
+        "clientId",
+        "clientStatus",
+        "schema",
+        "type",
+        "version"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string"
         },
-        "clientId" : {
-          "type" : "string"
+        "clientId": {
+          "type": "string"
         },
-        "cedarStatusMessage" : {
-          "type" : "string"
+        "cedarStatusMessage": {
+          "type": "string"
         },
-        "clientStatus" : {
-          "type" : "string"
+        "clientStatus": {
+          "type": "string"
         },
-        "type" : {
-          "type" : "string"
+        "type": {
+          "type": "string"
         },
-        "bodyFormat" : {
-          "type" : "string",
-          "enum" : [ "JSON", "XML" ]
+        "bodyFormat": {
+          "type": "string",
+          "enum": [
+            "JSON",
+            "XML"
+          ]
         },
-        "body" : {
-          "type" : "string"
+        "body": {
+          "type": "string"
         },
-        "version" : {
-          "type" : "string"
+        "version": {
+          "type": "string"
         },
-        "clientLastUpdatedDate" : {
-          "type" : "string",
-          "format" : "date-time"
+        "clientLastUpdatedDate": {
+          "type": "string",
+          "format": "date-time"
         },
-        "cedarCreatedDate" : {
-          "type" : "string",
-          "format" : "date-time"
+        "cedarCreatedDate": {
+          "type": "string",
+          "format": "date-time"
         },
-        "cedarLastUpdatedDate" : {
-          "type" : "string",
-          "format" : "date-time"
+        "cedarLastUpdatedDate": {
+          "type": "string",
+          "format": "date-time"
         },
-        "cedarStatus" : {
-          "type" : "string"
+        "cedarStatus": {
+          "type": "string"
         },
-        "cedarId" : {
-          "type" : "string"
+        "cedarId": {
+          "type": "string"
         },
-        "clientCreatedDate" : {
-          "type" : "string",
-          "format" : "date-time"
+        "clientCreatedDate": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
-    "IntakeStatusResponse" : {
-      "type" : "object",
-      "required" : [ "count" ],
-      "properties" : {
-        "Statuses" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/IntakeStatus"
+    "IntakeStatusResponse": {
+      "type": "object",
+      "required": [
+        "count"
+      ],
+      "properties": {
+        "Statuses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IntakeStatus"
           }
         },
-        "count" : {
-          "type" : "integer",
-          "format" : "int32"
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     }

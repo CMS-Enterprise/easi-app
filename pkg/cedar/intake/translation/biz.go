@@ -162,7 +162,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		result.ClientCreatedDate = pStrfmtDateTime(bc.CreatedAt)
 	}
 	if bc.UpdatedAt != nil {
-		result.ClientLastUpdatedDate = *pStrfmtDateTime(bc.UpdatedAt)
+		result.ClientLastUpdatedDate = pStrfmtDateTime(bc.UpdatedAt)
 	}
 
 	return result, nil

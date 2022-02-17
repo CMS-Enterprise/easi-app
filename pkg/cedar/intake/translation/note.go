@@ -47,7 +47,7 @@ func (note *TranslatableNote) CreateIntakeModel() (*wire.IntakeInput, error) {
 
 	if note.CreatedAt != nil {
 		result.ClientCreatedDate = pStrfmtDateTime(note.CreatedAt)
-		result.ClientLastUpdatedDate = *pStrfmtDateTime(note.CreatedAt)
+		result.ClientLastUpdatedDate = pStrfmtDateTime(note.CreatedAt)
 	}
 
 	return &result, nil

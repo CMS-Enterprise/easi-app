@@ -40,7 +40,7 @@ type IntakeInput struct {
 
 	// Last update date associated with the object being transmitted
 	// Format: date-time
-	ClientLastUpdatedDate strfmt.DateTime `json:"clientLastUpdatedDate,omitempty"`
+	ClientLastUpdatedDate *strfmt.DateTime `json:"clientLastUpdatedDate,omitempty"`
 
 	// Client's status associated with the object being transmitted, i.e. Initiated, Final, etc.
 	// Required: true
