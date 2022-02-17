@@ -50,7 +50,7 @@ jobs:
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Set up go
-        uses: actions/setup-go@424fc82d43fa5a37540bae62709ddcc23d9520d4
+        uses: actions/setup-go@bfdd3570ce990073878bf10f6b2d79082de49492
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
       - name: Configure go cache
@@ -96,7 +96,7 @@ jobs:
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Set up go
-        uses: actions/setup-go@424fc82d43fa5a37540bae62709ddcc23d9520d4
+        uses: actions/setup-go@bfdd3570ce990073878bf10f6b2d79082de49492
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
       - name: Set up python
@@ -318,7 +318,7 @@ jobs:
           restore-keys: |
             v1-go-
       - name: Set up go
-        uses: actions/setup-go@424fc82d43fa5a37540bae62709ddcc23d9520d4
+        uses: actions/setup-go@bfdd3570ce990073878bf10f6b2d79082de49492
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
       - name: Login to Docker Hub
