@@ -14,10 +14,8 @@ import FundingAndBudget from './index';
 describe('The making a request page', () => {
   it('renders without errors', async () => {
     render(
-      <MemoryRouter
-        initialEntries={['/system-profile/326-9-0/funding-and-budget']}
-      >
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/funding-and-budget']}>
+        <Route path="/systems/:systemId/:subinfo">
           <FundingAndBudget
             system={{
               ...mockSystemInfo[3],
@@ -39,8 +37,8 @@ describe('The making a request page', () => {
 
   it('matches snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter initialEntries={['/system-profile/326-9-0/details']}>
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/details']}>
+        <Route path="/systems/:systemId/:subinfo">
           <FundingAndBudget
             system={{
               ...mockSystemInfo[3],

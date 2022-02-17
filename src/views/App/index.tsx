@@ -70,6 +70,7 @@ const AppRoutes = () => {
       <SecureRoute path="/my-requests" component={MyRequests} />
 
       {/* 508 / Accessibility Team Routes */}
+      <Redirect exact from="/508" to="/508/making-a-request" />
       <SecureRoute path="/508" component={Accessibility} />
 
       {/* GRT/GRB Routes */}
@@ -130,18 +131,18 @@ const AppRoutes = () => {
         component={SystemIntake}
       />
       {flags.systemProfile && (
-        <SecureRoute exact path="/system-profile" component={SystemList} />
+        <SecureRoute exact path="/systems" component={SystemList} />
       )}
       {flags.systemProfile && (
         <SecureRoute
-          path="/system-profile/:systemId"
+          path="/systems/:systemId"
           exact
           component={SystemProfile}
         />
       )}
       {flags.systemProfile && (
         <SecureRoute
-          path="/system-profile/:systemId/:subinfo/:top?"
+          path="/systems/:systemId/:subinfo/:top?"
           exact
           component={SystemProfile}
         />
