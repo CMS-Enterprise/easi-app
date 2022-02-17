@@ -22,7 +22,7 @@ export const navLinks = (flags: Flags) => [
     isEnabled: true
   },
   {
-    link: '/system-profile',
+    link: '/systems',
     label: 'systems',
     isEnabled: flags.systemProfile
   },
