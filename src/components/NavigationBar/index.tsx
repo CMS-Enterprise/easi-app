@@ -22,7 +22,7 @@ export const navLinks = (flags: Flags) => [
     isEnabled: true
   },
   {
-    link: '/system-profile',
+    link: '/systems',
     label: 'systems',
     isEnabled: flags.systemProfile
   },
@@ -32,7 +32,7 @@ export const navLinks = (flags: Flags) => [
     isEnabled: true
   },
   {
-    link: '/508/making-a-request',
+    link: '/508',
     label: 'add508Request',
     isEnabled: true
   },
@@ -66,7 +66,7 @@ const NavigationBar = ({
             activeClassName="usa-current"
             className="easi-nav__link"
             onClick={() => toggle(false)}
-            exact
+            exact={route.link === '/'}
           >
             <em
               className="usa-logo__text easi-nav__label"

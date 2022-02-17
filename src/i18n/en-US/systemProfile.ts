@@ -38,6 +38,94 @@ const systemProfile = {
       subheader3: 'Go Live Date',
       subheader4: 'Most recent major change release'
     },
+    ato: {
+      header: 'Authority to Operate (ATO)',
+      status: 'Status',
+      expiration: 'Expiration Date',
+      methodologies: 'Methodologies and Programs',
+      POAM: 'Plan of Action and Milestones (POAMs)',
+      totalPOAM: 'Total POAMs',
+      highPOAM: 'High POAMs',
+      cfactsInfo:
+        'CFACTS is the CMS system that stores and manages security information for systems. If you have access to CFACTS, you can view additional information about POAMs and security findings for you system.',
+      viewPOAMs: 'View POAMs in CFACTS',
+      securityFindings: 'Security Findings',
+      totalFindings: 'Total findings',
+      highFindings: 'High findings',
+      mediumFindings: 'Medium findings',
+      lowFindings: 'Low findings',
+      viewFindings: 'View findings in CFACTS',
+      datesAndTests: 'Dates and Tests',
+      lastTest: 'Last penetration test',
+      lastAssessment: 'Last assessment',
+      contingencyCompletion: 'Contengency Plan completion',
+      contingencyTest: 'Contengency Plan test',
+      securityReview: 'System Security Plan review',
+      authorizationExpiration: 'Authorization memo expiration',
+      piaCompletion: 'PIA completion',
+      sornCompletion: 'SORN completion',
+      lastSCA: 'Last SCA/CDM',
+      activityOwner: 'Activity owner',
+      completed: 'Completed on ',
+      due: 'Due ',
+      noATO:
+        'There is no ATO on file for this system. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+      noATOPOAM:
+        'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+      noATODates:
+        'There is no information about previous tests or assessments available for this system'
+    },
+    fundingAndBudget: {
+      header: 'Funding and Budget',
+      actualFYCost: 'Actual FY system cost',
+      budgetedFYCost: 'Budgeted FY system cost',
+      investmentNumber: 'Investment number',
+      requisitionNumber: 'Requisition number',
+      tagHeader1: 'Funding Sources',
+      budgetID: 'Budget ID: '
+    },
+    teamAndContract: {
+      header: {
+        teamAndContract: 'Team and Contract',
+        contractInformation: 'Contract Information',
+        pointsOfContact: 'Points of Contact'
+      },
+      federalFullTimeEmployees: 'Federal Full Time Employees',
+      contractorFullTimeEmployees: 'Contractor Full Time Employees',
+      vendors: 'Vendors',
+      contractAwardDate: 'Contract Award Date',
+      periodOfPerformance: 'Period of performance',
+      startDate: 'Start Date',
+      endDate: 'End Date',
+      contractNumber: 'Contract number',
+      technologyFunctions: 'Technology functions',
+      assetsOrServices: 'Assets or services',
+      pointOfContact: 'Point of contact',
+      sendAnEmail: 'Send an email'
+    },
+    toolsAndSoftware: {
+      header: 'Tools and Software',
+      productType: 'Product Type',
+      softwareVersion: 'Software version',
+      softwareEdition: 'Software edition'
+    },
+    systemData: {
+      header: 'System Data',
+      recordCategories: 'Records management categories',
+      beneficiariesAddress: 'Beneficiary addresses',
+      pII: 'Personally Identifiable Information (PII)',
+      pHI: 'Protected Health Information (PHI)',
+      apiInfo: 'API Information',
+      apiStatus: 'API status',
+      fHIRUsage: 'FHIR Useage',
+      apiGateway: 'API Gateway',
+      access: 'Access',
+      dataCategories: 'Data content categories',
+      dataExchanges: 'Data Exchanges',
+      dataPartner: 'Data Partner',
+      qualityAssurance: 'Quality Assurance',
+      viewGateway: 'View gateway information'
+    },
     systemDetails: {
       header: 'System Details',
       ownership: 'System ownership',
@@ -68,33 +156,9 @@ const systemProfile = {
       percentTransitioned: 'Percent transitioned to IPv6',
       hardCodedIP: 'Hard-coded IP addresses'
     },
-    teamAndContract: {
-      header: {
-        teamAndContract: 'Team and Contract',
-        contractInformation: 'Contract Information',
-        pointsOfContact: 'Points of Contact'
-      },
-      federalFullTimeEmployees: 'Federal Full Time Employees',
-      contractorFullTimeEmployees: 'Contractor Full Time Employees',
-      vendors: 'Vendors',
-      contractAwardDate: 'Contract Award Date',
-      periodOfPerformance: 'Period of performance',
-      startDate: 'Start Date',
-      endDate: 'End Date',
-      contractNumber: 'Contract number',
-      technologyFunctions: 'Technology functions',
-      assetsOrServices: 'Assets or services',
-      pointOfContact: 'Point of contact',
-      sendAnEmail: 'Send an email'
-    },
-    fundingAndBudget: {
-      header: 'Funding and Budget',
-      actualFYCost: 'Actual FY system cost',
-      budgetedFYCost: 'Budgeted FY system cost',
-      investmentNumber: 'Investment number',
-      requisitionNumber: 'Requisition number',
-      tagHeader1: 'Funding Sources',
-      budgetID: 'Budget ID: '
+    subSystems: {
+      header: 'Sub-systems',
+      retirementDate: 'Retirement date'
     }
   },
   systemTable: {

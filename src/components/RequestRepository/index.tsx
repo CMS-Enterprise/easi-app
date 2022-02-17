@@ -28,10 +28,12 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import { GetSystemIntake_systemIntake_lastAdminNote as LastAdminNote } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { formatDate } from 'utils/date';
+import globalTableFilter from 'utils/globalTableFilter';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
@@ -60,10 +62,12 @@ const RequestRepository = () => {
 
   const submissionDateColumn = {
     Header: t('intake:fields.submissionDate'),
-    accessor: (value: SystemIntakeForm) => {
-      if (value.submittedAt) {
-        return formatDate(value.submittedAt);
+    accessor: 'submittedAt',
+    Cell: ({ value }: any) => {
+      if (value) {
+        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
       }
+
       return t('requestRepository.table.submissionDate.null');
     }
   };
@@ -113,15 +117,9 @@ const RequestRepository = () => {
 
   const grtDateColumn = {
     Header: t('intake:fields.grtDate'),
-    accessor: (value: SystemIntakeForm) => {
-      if (value.grtDate) {
-        return formatDate(value.grtDate);
-      }
-      return t('requestRepository.table.addDate');
-    },
+    accessor: 'grtDate',
     Cell: ({ row, value }: any) => {
-      if (value === t('requestRepository.table.addDate')) {
-        // If date is null, return button that takes user to page to add date
+      if (!value) {
         return (
           <UswdsReactLink
             data-testid="add-grt-date-cta"
@@ -131,21 +129,15 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return value;
+      return formatDate(value);
     }
   };
 
   const grbDateColumn = {
     Header: t('intake:fields.grbDate'),
-    accessor: (value: SystemIntakeForm) => {
-      if (value.grbDate) {
-        return formatDate(value.grbDate);
-      }
-      return t('requestRepository.table.addDate');
-    },
+    accessor: 'grbDate',
     Cell: ({ row, value }: any) => {
-      if (value === t('requestRepository.table.addDate')) {
-        // If date is null, return button that takes user to page to add date
+      if (!value) {
         return (
           <UswdsReactLink
             data-testid="add-grb-date-cta"
@@ -155,7 +147,7 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return value;
+      return formatDate(value);
     }
   };
 
@@ -203,7 +195,13 @@ const RequestRepository = () => {
 
   const lastAdminNoteColumn = {
     Header: t('intake:fields.lastAdminNote'),
-    accessor: 'lastAdminNote',
+    accessor: ({ lastAdminNote }: { lastAdminNote: LastAdminNote }) => {
+      if (lastAdminNote?.content) {
+        /* eslint react/prop-types: 0 */
+        return lastAdminNote.content;
+      }
+      return null;
+    },
     Cell: ({ value }: any) => {
       if (value) {
         return (
@@ -213,7 +211,7 @@ const RequestRepository = () => {
             id="last-admin-note"
             label="less"
             closeLabel="more"
-            text={value.content}
+            text={value}
             charLimit={freeFormTextCharLimit}
           />
         );
@@ -289,6 +287,7 @@ const RequestRepository = () => {
           );
         }
       },
+      globalFilter: useMemo(() => globalTableFilter, []),
       data,
       autoResetSortBy: false,
       autoResetPage: false,

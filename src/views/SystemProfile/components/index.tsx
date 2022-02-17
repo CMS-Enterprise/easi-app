@@ -2,10 +2,14 @@ import React from 'react';
 
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
+import ATO from './ATO';
 import FundingAndBudget from './FundingAndBudget';
+import SubSystems from './SubSystems';
+import SystemData from './SystemData';
 import SystemDetails from './SystemDetails';
 import SystemHome from './SystemHome';
 import TeamAndContract from './TeamAndContract';
+import ToolsAndSoftware from './ToolsAndSoftware';
 
 type sideNavItemProps = {
   groupEnd?: boolean; // Value used to designate end of sidenav subgrouping / border-bottom
@@ -23,49 +27,49 @@ const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
   home: {
     groupEnd: true,
     component: <SystemHome system={system} />,
-    route: `/system-profile/${system.id}/home`
+    route: `/systems/${system.id}/home`
   },
   details: {
     component: <SystemDetails system={system} />,
-    route: `/system-profile/${system.id}/details`
+    route: `/systems/${system.id}/details`
   },
   'team-and-contract': {
     component: <TeamAndContract system={system} />,
-    route: `/system-profile/${system.id}/team-and-contract`
+    route: `/systems/${system.id}/team-and-contract`
   },
   'funding-and-budget': {
     component: <FundingAndBudget system={system} />,
-    route: `/system-profile/${system.id}/funding-and-budget`
+    route: `/systems/${system.id}/funding-and-budget`
   },
   'tools-and-software': {
     groupEnd: true,
-    component: <SystemHome system={system} />,
-    route: `/system-profile/${system.id}/tools-and-software`
+    component: <ToolsAndSoftware system={system} />,
+    route: `/systems/${system.id}/tools-and-software`
   },
   ato: {
-    component: <SystemHome system={system} />,
-    route: `/system-profile/${system.id}/ato`
+    component: <ATO system={system} />,
+    route: `/systems/${system.id}/ato`
   },
   'lifecycle-id': {
     component: <SystemHome system={system} />,
-    route: `/system-profile/${system.id}/lifecycle-id`
+    route: `/systems/${system.id}/lifecycle-id`
   },
   'section-508': {
     groupEnd: true,
     component: <SystemHome system={system} />,
-    route: `/system-profile/${system.id}/section-508`
+    route: `/systems/${system.id}/section-508`
   },
   'sub-systems': {
-    component: <SystemHome system={system} />,
-    route: `/system-profile/${system.id}/sub-systems`
+    component: <SubSystems system={system} />,
+    route: `/systems/${system.id}/sub-systems`
   },
   'system-data': {
-    component: <SystemHome system={system} />,
-    route: `/system-profile/${system.id}/system-data`
+    component: <SystemData system={system} />,
+    route: `/systems/${system.id}/system-data`
   },
   documents: {
     component: <SystemHome system={system} />,
-    route: `/system-profile/${system.id}/documents`
+    route: `/systems/${system.id}/documents`
   }
 });
 

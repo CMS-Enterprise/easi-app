@@ -35,9 +35,13 @@ import {
 } from 'queries/types/GetCedarSystem';
 import NotFound from 'views/NotFound';
 import {
+  activities,
   budgetsInfo,
   developmentTags,
   locationsInfo,
+  products,
+  subSystems,
+  systemData,
   tempCedarSystemProps
 } from 'views/Sandbox/mockSystemData';
 
@@ -85,7 +89,12 @@ const SystemProfile = () => {
     ...cedarData,
     locations: locationsInfo,
     developmentTags,
-    budgets: budgetsInfo
+    budgets: budgetsInfo,
+    subSystems,
+    activities,
+    atoStatus: 'In Progress',
+    products,
+    systemData
   };
 
   const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
@@ -142,7 +151,7 @@ const SystemProfile = () => {
   }
 
   // TODO: Handle errors and loading
-  if (error || !systemInfo) {
+  if (error || !systemInfo || (subinfo && !sideNavItems(systemInfo)[subinfo])) {
     return <NotFound />;
   }
 
@@ -161,7 +170,7 @@ const SystemProfile = () => {
               >
                 <Breadcrumb>
                   <span>&larr; </span>
-                  <BreadcrumbLink asCustom={Link} to="/system-profile">
+                  <BreadcrumbLink asCustom={Link} to="/systems">
                     <span>{t('singleSystem.summary.back')}</span>
                   </BreadcrumbLink>
                 </Breadcrumb>

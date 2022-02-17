@@ -9,7 +9,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -56,10 +55,6 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 
 	if resp.Payload == nil {
 		return []*models.CedarRole{}, fmt.Errorf("no body received")
-	}
-
-	if len(resp.Payload.Roles) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no roles found"), Resource: []*models.CedarRole{}}
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct
