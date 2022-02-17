@@ -20,10 +20,10 @@ var Default = NewHTTPClient(nil)
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "webmethods-apigw.cedarimpl.cms.gov"
+	DefaultHost string = "cdrdevapigw1.awscloud.cms.local:5555"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
-	DefaultBasePath string = "/gateway/CEDAR Intake/1.0"
+	DefaultBasePath string = "/gateway/CEDARIntake/1.0"
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
