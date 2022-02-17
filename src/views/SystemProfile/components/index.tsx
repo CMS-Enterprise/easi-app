@@ -2,7 +2,10 @@ import React from 'react';
 
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
+import ATO from './ATO';
 import FundingAndBudget from './FundingAndBudget';
+import SubSystems from './SubSystems';
+import SystemData from './SystemData';
 import SystemDetails from './SystemDetails';
 import SystemHome from './SystemHome';
 import TeamAndContract from './TeamAndContract';
@@ -44,7 +47,7 @@ const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
     route: `/system-profile/${system.id}/tools-and-software`
   },
   ato: {
-    component: <SystemHome system={system} />,
+    component: <ATO system={system} />,
     route: `/system-profile/${system.id}/ato`
   },
   'lifecycle-id': {
@@ -57,11 +60,11 @@ const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
     route: `/system-profile/${system.id}/section-508`
   },
   'sub-systems': {
-    component: <SystemHome system={system} />,
+    component: <SubSystems system={system} />,
     route: `/system-profile/${system.id}/sub-systems`
   },
   'system-data': {
-    component: <SystemHome system={system} />,
+    component: <SystemData system={system} />,
     route: `/system-profile/${system.id}/system-data`
   },
   documents: {
