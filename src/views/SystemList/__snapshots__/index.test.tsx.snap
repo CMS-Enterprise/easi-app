@@ -48,13 +48,11 @@ exports[`System List View when there are requests matches snapshot 1`] = `
         </div>
       </div>
     </div>
-    <h1
-      aria-live="polite"
-      class="easi-h1 margin-bottom-0"
-      tabindex="-1"
+    <h2
+      class="margin-bottom-0"
     >
       Bookmarked Systems
-    </h1>
+    </h2>
     <p
       class="margin-bottom-3"
     >
@@ -69,13 +67,11 @@ exports[`System List View when there are requests matches snapshot 1`] = `
         data-testid="CardGroup"
       />
     </div>
-    <h1
-      aria-live="polite"
-      class="easi-h1 margin-bottom-0"
-      tabindex="-1"
+    <h2
+      class="margin-bottom-0"
     >
       All Systems
-    </h1>
+    </h2>
     <p
       class="margin-bottom-5"
     >

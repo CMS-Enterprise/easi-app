@@ -13,3 +13,9 @@ $theme-font-type-sans: 'public-sans';
 
 // Override default sorted header background color
 $theme-table-sorted-header-background-color: 'white';
+
+// All utility classes use !important
+$utilities-use-important: 'true';
+
+// All heading roles use sans
+$theme-font-role-heading: 'sans';

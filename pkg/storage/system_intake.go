@@ -184,7 +184,8 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			decision_next_steps = :decision_next_steps,
 			lcid_cost_baseline = :lcid_cost_baseline,
 			rejection_reason = :rejection_reason,
-			admin_lead = :admin_lead
+			admin_lead = :admin_lead,
+			cedar_system_id = :cedar_system_id
 		WHERE system_intakes.id = :id
 	`
 	_, err := s.db.NamedExec(
