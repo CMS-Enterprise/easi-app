@@ -9,8 +9,8 @@ import SystemData from './index';
 describe('System Data sub page for System Profile', () => {
   it('matches snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter initialEntries={['/system-profile/326-9-0/system-data']}>
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/system-data']}>
+        <Route path="/systems/:systemId/:subinfo">
           <SystemData
             system={{
               ...mockSystemInfo[3],
