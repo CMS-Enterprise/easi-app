@@ -424,6 +424,7 @@ type ComplexityRoot struct {
 		BusinessNeed                func(childComplexity int) int
 		BusinessOwner               func(childComplexity int) int
 		BusinessSolution            func(childComplexity int) int
+		CedarSystemID               func(childComplexity int) int
 		Contract                    func(childComplexity int) int
 		Costs                       func(childComplexity int) int
 		CreatedAt                   func(childComplexity int) int
@@ -763,6 +764,7 @@ type SystemIntakeResolver interface {
 	GrtReviewEmailBody(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error)
+	CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error)
 }
 
 type executableSchema struct {
@@ -2682,6 +2684,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.BusinessSolution(childComplexity), true
 
+	case "SystemIntake.cedarSystemId":
+		if e.complexity.SystemIntake.CedarSystemID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.CedarSystemID(childComplexity), true
+
 	case "SystemIntake.contract":
 		if e.complexity.SystemIntake.Contract == nil {
 			break
@@ -4262,6 +4271,7 @@ type SystemIntake {
   decidedAt: Time
   businessCaseId: UUID
   lastAdminNote: LastAdminNote!
+  cedarSystemId: String
 }
 
 """
@@ -4351,6 +4361,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessNeed: String
   businessSolution: String
   needsEaSupport: Boolean
+  cedarSystemId: String
 }
 
 """
@@ -15680,6 +15691,38 @@ func (ec *executionContext) _SystemIntake_lastAdminNote(ctx context.Context, fie
 	return ec.marshalNLastAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLastAdminNote(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntake_cedarSystemId(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().CedarSystemID(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -20188,6 +20231,14 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 			if err != nil {
 				return it, err
 			}
+		case "cedarSystemId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+			it.CedarSystemID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -23016,6 +23067,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			})
+		case "cedarSystemId":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_cedarSystemId(ctx, field, obj)
 				return res
 			})
 		default:
