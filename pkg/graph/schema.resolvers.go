@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1200,6 +1201,16 @@ func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context,
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
 
+	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
+	cedarSystemIDStr := cedarSystemID.ValueOrZero()
+	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
+		_, err = r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
+		if err != nil {
+			return nil, err
+		}
+		intake.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
+	}
+
 	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
@@ -1451,6 +1462,11 @@ func (r *queryResolver) Deployments(ctx context.Context, systemID string, deploy
 	if err != nil {
 		return nil, err
 	}
+
+	if len(cedarDeployments) == 0 {
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no deployments found"), Resource: []*models.CedarDeployment{}}
+	}
+
 	return cedarDeployments, nil
 }
 
@@ -1459,6 +1475,11 @@ func (r *queryResolver) Roles(ctx context.Context, systemID string, roleTypeID *
 	if err != nil {
 		return nil, err
 	}
+
+	if len(cedarRoles) == 0 {
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no roles found"), Resource: []*models.CedarRole{}}
+	}
+
 	return cedarRoles, nil
 }
 
@@ -1770,6 +1791,10 @@ func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.Sy
 		Content:   obj.LastAdminNoteContent.Ptr(),
 		CreatedAt: obj.LastAdminNoteCreatedAt,
 	}, nil
+}
+
+func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.CedarSystemID.Ptr(), nil
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
