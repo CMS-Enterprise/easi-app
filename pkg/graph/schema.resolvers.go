@@ -14,6 +14,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -1481,6 +1482,42 @@ func (r *queryResolver) Roles(ctx context.Context, systemID string, roleTypeID *
 	}
 
 	return cedarRoles, nil
+}
+
+func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, id string) (*model.DetailedCedarSystem, error) {
+	g := new(errgroup.Group)
+	var cedarSystem *models.CedarSystem
+	var errS error
+	g.Go(func() error {
+		cedarSystem, errS = r.cedarCoreClient.GetSystem(ctx, id)
+		return errS
+	})
+
+	var cedarRoles []*models.CedarRole
+	var errR error
+	g.Go(func() error {
+		cedarRoles, errS = r.cedarCoreClient.GetRolesBySystem(ctx, id, null.String{})
+		return errR
+	})
+
+	var cedarDeployments []*models.CedarDeployment
+	var errD error
+
+	g.Go(func() error {
+		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, id, nil)
+		return errD
+	})
+	if err := g.Wait(); err != nil {
+		return nil, err
+	}
+
+	dCedarSys := model.DetailedCedarSystem{
+		CedarSystem: cedarSystem,
+		Roles:       cedarRoles,
+		Deployments: cedarDeployments,
+	}
+
+	return &dCedarSys, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
