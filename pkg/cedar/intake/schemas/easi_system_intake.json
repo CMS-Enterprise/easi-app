@@ -54,52 +54,116 @@
       ],
       "properties": {
         "adminLead": {
-          "type": "string"
+          "type": "string",
+          "description": "Government Admin responsible for handling request",
+          "examples": [
+            "John Doe"
+          ]
         },
         "archivedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "Timestamp of when request was archived",
+          "examples": [
+            "2022-02-17 14:34:43.405934+00"
+          ]
         },
         "businessNeed": {
-          "type": "string"
+          "type": "string",
+          "description": "Business Need (problem space",
+          "examples": [
+            ""
+          ]
         },
         "businessOwner": {
-          "type": "string"
+          "type": "string",
+          "description": "Person who owns a line of business related to this request",
+          "examples": [
+            "John Doe"
+          ]
         },
         "businessOwnerComponent": {
-          "type": "string"
+          "type": "string",
+          "description": "Component of the Business Owner",
+          "examples": [
+            "OIT"
+          ]
         },
         "component": {
-          "type": "string"
+          "type": "string",
+          "description": "Component of the person who submitted this request",
+          "examples": [
+            "OIT"
+          ]
         },
         "contractEndDate": {
-          "type": "string"
+          "type": "string",
+          "description": "The contract's end date",
+          "examples": [
+            "2026-10-20"
+          ]
         },
         "contractStartDate": {
-          "type": "string"
+          "type": "string",
+          "description": "The contract's start date",
+          "examples": [
+            "2022-10-20"
+          ]
         },
         "contractVehicle": {
-          "type": "string"
+          "type": "string",
+          "description": "Contract vehicle for this effort",
+          "examples": [
+            "8(a)"
+          ]
         },
         "contractor": {
-          "type": "string"
+          "type": "string",
+          "description": "Contractor who will perform the work detailed in this request",
+          "examples": [
+            "Oddball"
+          ]
         },
         "costIncrease": {
-          "type": "string"
+          "type": "string",
+          "description": "Is there a cost increase associated with this request",
+          "examples": [
+            "YES"
+          ]
         },
         "costIncreaseAmount": {
-          "type": "string"
+          "type": "string",
+          "description": "How much is the cost increase",
+          "examples": [
+            "Over two million dollars"
+          ]
         },
         "decidedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "Timestamp of when decision was reached",
+          "examples": [
+            "2022-02-17 14:34:43.405934+00"
+          ]
         },
         "decisionNextSteps": {
-          "type": "string"
+          "type": "string",
+          "description": "Steps that the business owner should take after receiving their decision",
+          "examples": [
+            "Go get a contract"
+          ]
         },
         "eaCollaborator": {
-          "type": "string"
+          "type": "string",
+          "description": "N/A",
+          "examples": [
+            "N/A"
+          ]
         },
         "eaCollaboratorName": {
-          "type": "string"
+          "type": "string",
+          "description": "Enterprise Architecture (EA) Collaborator",
+          "examples": [
+            "John Doe"
+          ]
         },
         "eaSupportRequest": {
           "enum": [
@@ -107,10 +171,18 @@
             "false",
             "true"
           ],
-          "type": "string"
+          "type": "string",
+          "description": "Does the request need EA support",
+          "examples": [
+            "True"
+          ]
         },
         "existingContract": {
-          "type": "string"
+          "type": "string",
+          "description": "Is there an existing contract for this effort",
+          "examples": [
+            "HAVE_CONTRACT"
+          ]
         },
         "existingFunding": {
           "enum": [
@@ -118,88 +190,200 @@
             "false",
             "true"
           ],
-          "type": "string"
+          "type": "string",
+          "description": "Will this project be funded out of an existing source",
+          "examples": [
+            "True"
+          ]
         },
         "fundingNumber": {
-          "type": "string"
+          "type": "string",
+          "description": "six digit funding number",
+          "examples": [
+            "123456"
+          ]
         },
         "fundingSource": {
-          "type": "string"
+          "type": "string",
+          "description": "Source of funding",
+          "examples": [
+            "Prog Ops"
+          ]
         },
         "grbDate": {
-          "type": "string"
+          "type": "string",
+          "description": "Scheduled date for the Governance Review Board (GRB) meeting",
+          "examples": [
+            "2025-12-12 00:00:00+00"
+          ]
         },
         "grtDate": {
-          "type": "string"
+          "type": "string",
+          "description": "Scheduled date for the Governance Review Team (GRT) meeting",
+          "examples": [
+            "2025-10-20 00:00:00+00"
+          ]
         },
         "grtReviewEmailBody": {
-          "type": "string"
+          "type": "string",
+          "description": "N/A",
+          "examples": [
+            "N/A"
+          ]
         },
         "isso": {
-          "type": "string"
+          "type": "string",
+          "description": "N/A",
+          "examples": [
+            "N/A"
+          ]
         },
         "issoName": {
-          "type": "string"
+          "type": "string",
+          "description": "Information System Security Officer (ISSO) for the effort detailed in this request",
+          "examples": [
+            "John Doe"
+          ]
         },
         "lifecycleExpiresAt": {
-          "type": "string"
+          "type": "string",
+          "description": "Expiration date for the LCID associated with this request",
+          "examples": [
+            "2030-12-23 00:00:00+00"
+          ]
         },
         "lifecycleID": {
-          "type": "string"
+          "type": "string",
+          "description": "LCID (if one is issued) associated with this request",
+          "examples": [
+            "220970"
+          ]
         },
         "lifecycleScope": {
-          "type": "string"
+          "type": "string",
+          "description": "Scope of LCID",
+          "examples": [
+            "This LCID covers development and operation of the application"
+          ]
         },
         "oitSecurityCollaborator": {
-          "type": "string"
+          "type": "string",
+          "description": "N/A",
+          "examples": [
+            "N/A"
+          ]
         },
         "oitSecurityCollaboratorName": {
-          "type": "string"
+          "type": "string",
+          "description": "OIT's Security and Privacy (ISPG) Collaborator",
+          "examples": [
+            "John Doe"
+          ]
         },
         "processStatus": {
-          "type": "string"
+          "type": "string",
+          "description": "Where is the business owner in process",
+          "examples": [
+            "The project is already funded"
+          ]
         },
         "productManager": {
-          "type": "string"
+          "type": "string",
+          "description": "Product Manager for the effort deatiled in this request",
+          "examples": [
+            "John Doe"
+          ]
         },
         "productManagerComponent": {
-          "type": "string"
+          "type": "string",
+          "description": "Component of the Product Manager",
+          "examples": [
+            "OIT"
+          ]
         },
         "projectAcronym": {
-          "type": "string"
+          "type": "string",
+          "description": "Acronym for project",
+          "examples": [
+            "EASi"
+          ]
         },
         "projectName": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of project",
+          "examples": [
+            "Easy Access to System Information"
+          ]
         },
         "rejectionReason": {
-          "type": "string"
+          "type": "string",
+          "description": "Reasoning for why this request was rejected",
+          "examples": [
+            "Costs too much money"
+          ]
         },
         "requestType": {
-          "type": "string"
+          "type": "string",
+          "description": "Type of request",
+          "examples": [
+            "NEW"
+          ]
         },
         "requester": {
-          "type": "string"
+          "type": "string",
+          "description": "Person who submitted request in EASi",
+          "examples": [
+            "John Doe"
+          ]
         },
         "requesterEmailAddress": {
-          "type": "string"
+          "type": "string",
+          "description": "Email address of the person who submitted this request",
+          "examples": [
+            "John.Doe@cms.hhs.gov"
+          ]
         },
         "solution": {
-          "type": "string"
+          "type": "string",
+          "description": "Initial solution",
+          "examples": [
+            "Build new application in ServiceNow"
+          ]
         },
         "status": {
-          "type": "string"
+          "type": "string",
+          "description": "Current status of this request",
+          "examples": [
+            "INTAKE_SUBMITTED"
+          ]
         },
         "submittedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "Timestamp of when request was submitted",
+          "examples": [
+            "2022-02-17 14:34:43.405934+00"
+          ]
         },
         "trbCollaborator": {
-          "type": "string"
+          "type": "string",
+          "description": "N/A",
+          "examples": [
+            "N/A"
+          ]
         },
         "trbCollaboratorName": {
-          "type": "string"
+          "type": "string",
+          "description": "Technical Review Board (TRB) Collaborator",
+          "examples": [
+            "John Doe"
+          ]
         },
         "userEUA": {
-          "type": "string"
+          "type": "string",
+          "description": "EUA id of the requester",
+          "examples": [
+            "J8YN"
+          ]
         }
       },
       "additionalProperties": false,
