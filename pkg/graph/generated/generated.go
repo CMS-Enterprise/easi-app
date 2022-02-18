@@ -23035,7 +23035,6 @@ var detailedCedarSystemImplementors = []string{"DetailedCedarSystem"}
 
 func (ec *executionContext) _DetailedCedarSystem(ctx context.Context, sel ast.SelectionSet, obj *model.DetailedCedarSystem) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, detailedCedarSystemImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -23043,17 +23042,32 @@ func (ec *executionContext) _DetailedCedarSystem(ctx context.Context, sel ast.Se
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("DetailedCedarSystem")
 		case "cedarSystem":
-			out.Values[i] = ec._DetailedCedarSystem_cedarSystem(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DetailedCedarSystem_cedarSystem(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "roles":
-			out.Values[i] = ec._DetailedCedarSystem_roles(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DetailedCedarSystem_roles(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "deployments":
-			out.Values[i] = ec._DetailedCedarSystem_deployments(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DetailedCedarSystem_deployments(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -23822,7 +23836,8 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			})
 		case "detailedCedarSystemInfo":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -23830,6 +23845,14 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}()
 				res = ec._Query_detailedCedarSystemInfo(ctx, field)
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "__type":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
