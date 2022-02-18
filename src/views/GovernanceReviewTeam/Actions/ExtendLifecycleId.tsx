@@ -48,7 +48,7 @@ type ExtendLifecycleIdProps = {
   lcidScope: string;
   lcidNextSteps: string;
   lcidCostBaseline: string;
-  refetch(): Promise<ApolloQueryResult<GetSystemIntake>>;
+  onSubmit(): Promise<ApolloQueryResult<GetSystemIntake>>;
 };
 
 const RADIX = 10;
@@ -59,7 +59,7 @@ const ExtendLifecycleId = ({
   lcidScope,
   lcidNextSteps,
   lcidCostBaseline,
-  refetch
+  onSubmit
 }: ExtendLifecycleIdProps) => {
   const { t } = useTranslation('action');
   const { systemId } = useParams<{ systemId: string }>();
@@ -106,10 +106,10 @@ const ExtendLifecycleId = ({
           costBaseline: newCostBaseline
         }
       }
-    }).then(async response => {
+    }).then(response => {
       if (!response.errors) {
-        await refetch();
         history.push(`/governance-review-team/${systemId}/notes`);
+        onSubmit();
       }
     });
   };

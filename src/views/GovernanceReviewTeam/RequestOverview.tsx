@@ -340,7 +340,7 @@ const RequestOverview = () => {
                     lcidScope={data.systemIntake?.lcidScope || ''}
                     lcidNextSteps={data.systemIntake?.decisionNextSteps || ''}
                     lcidCostBaseline={data.systemIntake?.lcidCostBaseline || ''}
-                    refetch={refetch}
+                    onSubmit={refetch}
                   />
                 )}
               />
