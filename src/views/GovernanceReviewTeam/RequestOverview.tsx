@@ -72,16 +72,7 @@ const RequestOverview = () => {
     if (systemIntake?.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
-    if (systemIntake) {
-      refetch(systemIntake.id);
-    }
-  }, [
-    dispatch,
-    refetch,
-    systemIntake?.businessCaseId,
-    systemIntake,
-    systemIntake?.id
-  ]);
+  }, [dispatch, systemIntake?.businessCaseId]);
 
   const getNavLinkClasses = (page: string) =>
     classnames('easi-grt__nav-link', {
@@ -349,6 +340,7 @@ const RequestOverview = () => {
                     lcidScope={data.systemIntake?.lcidScope || ''}
                     lcidNextSteps={data.systemIntake?.decisionNextSteps || ''}
                     lcidCostBaseline={data.systemIntake?.lcidCostBaseline || ''}
+                    refetch={refetch}
                   />
                 )}
               />
