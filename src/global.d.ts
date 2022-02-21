@@ -9,9 +9,8 @@ declare module 'launchdarkly-js-sdk-common' {
 }
 
 declare global {
-  /*~ Here, declare things that go in the global namespace, or augment
-   *~ existing declarations in the global namespace
-   */
+  // Here, declare things that go in the global namespace, or augment
+  // existing declarations in the global namespace
 
   // These types are defined in GQL generated types.  
   // Defining globally here for FE to recognize generated types.
