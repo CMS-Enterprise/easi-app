@@ -1,4 +1,5 @@
 import { Flags } from './types/flags';
+import { DateTime } from 'luxon';
 
 declare module '@okta/okta-signin-widget';
 declare module '@okta/okta-signin-widget/dist/js/okta-sign-in.min';
@@ -7,7 +8,17 @@ declare module '*.docx';
 declare module 'launchdarkly-js-sdk-common' {
   export interface LDFlagSet extends Flags {}
 }
-interface Window {
-  Cypress: any;
-  store: any;
+
+declare global {
+  /*~ Here, declare things that go in the global namespace, or augment
+   *~ existing declarations in the global namespace
+   */
+   type UUID = string;
+
+   type Time = string;
+
+   interface Window {
+    Cypress: any;
+    store: any;
+  }
 }
