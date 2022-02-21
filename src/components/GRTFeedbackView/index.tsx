@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
 
 import HelpText from 'components/shared/HelpText';
-import { GetGRTFeedback_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetGRTFeedback';
+import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
 type GRTFeedbackViewProps = {
   grtFeedbacks: GRTFeedback[];
@@ -24,7 +24,7 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
       DateTime.DATE_MED
     );
     return (
-      <div className="margin-bottom-3" key={feedback.id}>
+      <div className="margin-bottom-3" key={feedback.createdAt}>
         <h4
           className="margin-y-0"
           aria-label={t('grtFeedback.dateSRHelpText', { date: formattedDate })}

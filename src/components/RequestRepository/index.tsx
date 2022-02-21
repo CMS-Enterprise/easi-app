@@ -434,7 +434,7 @@ const RequestRepository = () => {
           {page.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} data-testid={`${row.original.id}-row`}>
+              <tr {...row.getRowProps()} data-testid={`${row.id}-row`}>
                 {row.cells.map((cell, i) => {
                   if (i === 0) {
                     return (

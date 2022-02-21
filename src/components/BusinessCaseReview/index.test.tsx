@@ -2,6 +2,8 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
 
+import { BusinessCaseModel } from 'types/businessCase';
+
 import BusinessCaseReview from './index';
 
 window.matchMedia = (): any => ({
@@ -12,6 +14,7 @@ window.matchMedia = (): any => ({
 describe('The Business Case Review Component', () => {
   const businessCase = {
     status: 'OPEN',
+    createdAt: '2021-06-10T19:22:40Z',
     systemIntakeId: '048c26ea-07be-4f40-b29e-761fc17bf414',
     systemIntakeStatus: 'BIZ_CASE_DRAFT',
     requestName: 'EASi Test',
@@ -375,7 +378,7 @@ describe('The Business Case Review Component', () => {
       },
       hasUserInterface: 'YES'
     }
-  };
+  } as BusinessCaseModel;
 
   it('renders without crashing', () => {
     shallow(<BusinessCaseReview values={businessCase} />);

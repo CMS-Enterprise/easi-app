@@ -28,7 +28,7 @@ import { getHeaderSortIcon, sortColumnValues } from 'utils/tableSort';
 type Document = {
   id: string;
   status: AccessibilityRequestDocumentStatus;
-  translatedStatus: string;
+  translatedStatus?: string;
   url: string;
   uploadedAt: string;
   documentType: {

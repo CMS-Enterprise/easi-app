@@ -21,6 +21,7 @@ export const Default = () => {
       onChange={() => {}}
       onBlur={() => {}}
       ariaDescribedBy=""
+      inputProps={<input />}
     />
   );
 };
@@ -35,6 +36,7 @@ export const Disabled = () => {
       onBlur={() => {}}
       ariaDescribedBy=""
       disabled
+      inputProps={<input />}
     />
   );
 };
@@ -49,6 +51,7 @@ export const Error = () => {
         onChange={() => {}}
         onBlur={() => {}}
         ariaDescribedBy=""
+        inputProps={<input />}
       />
     </FieldGroup>
   );
@@ -77,7 +80,7 @@ export const WithFormik = () => {
               name="document"
               ariaDescribedBy="Storybook-FileInputHelp"
               accept=".pdf,.doc"
-              onChange={event => {
+              onChange={(event: React.FormEvent<HTMLFormElement>) => {
                 setFieldValue('document', event.currentTarget.files[0]);
               }}
             />

@@ -12,6 +12,7 @@ type FileUploadProps = {
   disabled?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
+  ariaDescribedBy?: string;
   inputProps: JSX.IntrinsicElements['input'];
 };
 
@@ -26,7 +27,7 @@ const FileUpload = (props: FileUploadProps) => {
     onBlur,
     inputProps
   } = props;
-  const [file, setFile] = useState<File>(null);
+  const [file, setFile] = useState<File>();
   const [error, setError] = useState(false);
   const fileInputWrapper = classnames('easi-file-upload', 'usa-file-input', {
     'usa-file-input--disabled': disabled
@@ -39,15 +40,14 @@ const FileUpload = (props: FileUploadProps) => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // eslint-disable-next-line
-    if (e.target.files.length > 0) {
+    if (e?.target?.files && e.target.files.length > 0) {
       if (isFileTypeValid(e.target.files[0])) {
         setError(false);
         setFile(e.target.files[0]);
         onChange(e);
       } else {
         setError(true);
-        setFile(null);
+        setFile(undefined);
       }
     }
   };
