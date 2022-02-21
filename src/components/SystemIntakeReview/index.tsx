@@ -180,7 +180,7 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition definition={systemIntake.currentStage} />
           </div>
           <div>
-            <DescriptionTerm term="Does the project have funding?" />
+            <DescriptionTerm term="Will this project be funded out of an existing funding source?" />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>
