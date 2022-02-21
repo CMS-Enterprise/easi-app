@@ -6,54 +6,73 @@ Users would like to be notified 60 days before an LCID is expiring so that they 
 
 As the application grows, it would be beneficial to have standard functionality for scheduled action implementation.
 
-*[decision drivers | forces]* 
-- priority to simplicity and  extensibility
+
+- priority to simplicity, readability, and extensibility
 <!-- 
 optional -->
 
 ## Considered Alternatives
 
-* *[alternative 1]*
+* Existing Job Queue Library
 * AWS ECS Scheduled Task
-* Bespoke Publication Subscription Queue
-* *[...]* <!-- numbers of alternatives can vary -->
+* Bespoke Job / Publication Subscription Queue
+
 
 ## Decision Outcome
 
-* Chosen Alternative: *[alternative 1]*
-* *[justification.
-  e.g., only alternative,
-  which meets KO criterion decision driver
-  | which resolves force force
-  | ...
-  | comes out best (see below)]*
-* *[consequences. e.g.,
-  negative impact on quality attribute,
-  follow-up decisions required,
-  ...]* <!-- optional -->
+* Chosen Alternative: Bespoke Publication Subscription Queue
+> * On server start, create a new GoRoutine that runs on set intervals and runs jobs
+> * Can decide how often to run the job
+```mermaid
+flowchart LR
+a1(GoRoutineStarts)
+a1->a2(checks for available jobs)
+```
+* Justifiaction
+> * Simplicity: 
+>> * Writing our own publication queue will allow us to manage the job direcly from the existing repository
+>> * This avoids additional libraries and dependencies
+> * Readability: 
+>> * Because the code is in the same repo, it is easier to follow the logic.
+> * Extensibility 
+>> * We can easily add new events and extend for future uses
+
+
+* Consequences
+> * This will require boilerplate work that might be handled by a 3rd party library
+
+
+* Follow Up Decisions
+> * How customizable should this be?
+> * Should we have an entry for each event? 
+> * Will the application require a more complex event driven behavior in the future? 
+>> * Should we build a complete PUB / SUB system? Or should we focus solely on scheduling new jobs?
 
 ## Pros and Cons of the Alternatives <!-- optional -->
 
-### *[alternative 1]*
+### Existing Job Queue Library
+#### Suggested Libraries
+* https://github.com/vmihailenco/taskq - Redis, SQS, IronMQ backends
+* https://github.com/gocraft/work - Redis backend
+* https://github.com/bgentry/que-go - Postgres backend
 
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
+* `+` Leverage existing boilerplate code
+* `+` Potentially avoid overlooking use cases / unknown gotchas
+* `-` Added complexity an unnecesary dependencies
+* `-` Additional methods of accesing database data
+* `-` Not as lean of an option.
+
 
 ### AWS ECS Scheduled Tasks
-
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
-
-### Bespoke Publication Subscription Service, and Endpoint Queue
-
+[AWS Scheduled Tasks](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/scheduled_tasks.html)
+* `+` Flexible
+* `+` Control the Compute resources used to execute the job
+* `-` Added infrastructual complexity
+* `-` Added infrastructual complexity
+### Bespoke Job / Publication Subscription Queue
 * `+` Tailored specifically to applications needs
-* `+` Doesn't require the addition of a lot of additional dependencies to be added. 
+* `+` Doesn't require additional dependencies to be added. 
 * `+` Extensible if further actions should be taken on an action
 * `-` Will require extra boilerplate work that might be handled in a package
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->  
+
  
