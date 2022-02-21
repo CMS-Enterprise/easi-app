@@ -298,6 +298,12 @@ type ComplexityRoot struct {
 		UserErrors func(childComplexity int) int
 	}
 
+	DetailedCedarSystem struct {
+		CedarSystem func(childComplexity int) int
+		Deployments func(childComplexity int) int
+		Roles       func(childComplexity int) int
+	}
+
 	EstimatedLifecycleCost struct {
 		BusinessCaseID func(childComplexity int) int
 		Cost           func(childComplexity int) int
@@ -368,17 +374,18 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		AccessibilityRequest  func(childComplexity int, id uuid.UUID) int
-		AccessibilityRequests func(childComplexity int, after *string, first int) int
-		CedarSystem           func(childComplexity int, id string) int
-		CedarSystemBookmarks  func(childComplexity int) int
-		CedarSystems          func(childComplexity int) int
-		CurrentUser           func(childComplexity int) int
-		Deployments           func(childComplexity int, systemID string, deploymentType *string, state *string, status *string) int
-		Requests              func(childComplexity int, after *string, first int) int
-		Roles                 func(childComplexity int, systemID string, roleTypeID *string) int
-		SystemIntake          func(childComplexity int, id uuid.UUID) int
-		Systems               func(childComplexity int, after *string, first int) int
+		AccessibilityRequest    func(childComplexity int, id uuid.UUID) int
+		AccessibilityRequests   func(childComplexity int, after *string, first int) int
+		CedarSystem             func(childComplexity int, id string) int
+		CedarSystemBookmarks    func(childComplexity int) int
+		CedarSystems            func(childComplexity int) int
+		CurrentUser             func(childComplexity int) int
+		Deployments             func(childComplexity int, systemID string, deploymentType *string, state *string, status *string) int
+		DetailedCedarSystemInfo func(childComplexity int, id string) int
+		Requests                func(childComplexity int, after *string, first int) int
+		Roles                   func(childComplexity int, systemID string, roleTypeID *string) int
+		SystemIntake            func(childComplexity int, id uuid.UUID) int
+		Systems                 func(childComplexity int, after *string, first int) int
 	}
 
 	Request struct {
@@ -720,6 +727,7 @@ type QueryResolver interface {
 	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
 	Deployments(ctx context.Context, systemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
 	Roles(ctx context.Context, systemID string, roleTypeID *string) ([]*models.CedarRole, error)
+	DetailedCedarSystemInfo(ctx context.Context, id string) (*model.DetailedCedarSystem, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error)
@@ -1867,6 +1875,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DeleteTestDatePayload.UserErrors(childComplexity), true
 
+	case "DetailedCedarSystem.cedarSystem":
+		if e.complexity.DetailedCedarSystem.CedarSystem == nil {
+			break
+		}
+
+		return e.complexity.DetailedCedarSystem.CedarSystem(childComplexity), true
+
+	case "DetailedCedarSystem.deployments":
+		if e.complexity.DetailedCedarSystem.Deployments == nil {
+			break
+		}
+
+		return e.complexity.DetailedCedarSystem.Deployments(childComplexity), true
+
+	case "DetailedCedarSystem.roles":
+		if e.complexity.DetailedCedarSystem.Roles == nil {
+			break
+		}
+
+		return e.complexity.DetailedCedarSystem.Roles(childComplexity), true
+
 	case "EstimatedLifecycleCost.businessCaseId":
 		if e.complexity.EstimatedLifecycleCost.BusinessCaseID == nil {
 			break
@@ -2467,6 +2496,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Deployments(childComplexity, args["systemId"].(string), args["deploymentType"].(*string), args["state"].(*string), args["status"].(*string)), true
+
+	case "Query.detailedCedarSystemInfo":
+		if e.complexity.Query.DetailedCedarSystemInfo == nil {
+			break
+		}
+
+		args, err := ec.field_Query_detailedCedarSystemInfo_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.DetailedCedarSystemInfo(childComplexity, args["id"].(string)), true
 
 	case "Query.requests":
 		if e.complexity.Query.Requests == nil {
@@ -3515,6 +3556,14 @@ type CedarSystem {
 	businessOwnerOrgComp: String
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
+}
+"""
+This is the Representation of Cedar system with additional related information
+"""
+type DetailedCedarSystem {
+ cedarSystem: CedarSystem!
+ roles: [CedarRole!]!
+ deployments: [CedarDeployment!]!
 }
 
 """
@@ -4732,6 +4781,7 @@ type Query {
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(systemId: String!, roleTypeID: String): [CedarRole!]!
+  detailedCedarSystemInfo(id: String!): DetailedCedarSystem
 }
 
 """
@@ -5431,6 +5481,21 @@ func (ec *executionContext) field_Query_deployments_args(ctx context.Context, ra
 		}
 	}
 	args["status"] = arg3
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_detailedCedarSystemInfo_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -10702,6 +10767,111 @@ func (ec *executionContext) _DeleteTestDatePayload_userErrors(ctx context.Contex
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _DetailedCedarSystem_cedarSystem(ctx context.Context, field graphql.CollectedField, obj *model.DetailedCedarSystem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DetailedCedarSystem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CedarSystem, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.CedarSystem)
+	fc.Result = res
+	return ec.marshalNCedarSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DetailedCedarSystem_roles(ctx context.Context, field graphql.CollectedField, obj *model.DetailedCedarSystem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DetailedCedarSystem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Roles, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarRole)
+	fc.Result = res
+	return ec.marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DetailedCedarSystem_deployments(ctx context.Context, field graphql.CollectedField, obj *model.DetailedCedarSystem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DetailedCedarSystem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Deployments, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarDeployment)
+	fc.Result = res
+	return ec.marshalNCedarDeployment2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _EstimatedLifecycleCost_businessCaseId(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -13582,6 +13752,45 @@ func (ec *executionContext) _Query_roles(ctx context.Context, field graphql.Coll
 	res := resTmp.([]*models.CedarRole)
 	fc.Result = res
 	return ec.marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_detailedCedarSystemInfo(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_detailedCedarSystemInfo_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().DetailedCedarSystemInfo(rctx, args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DetailedCedarSystem)
+	fc.Result = res
+	return ec.marshalODetailedCedarSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDetailedCedarSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -22822,6 +23031,57 @@ func (ec *executionContext) _DeleteTestDatePayload(ctx context.Context, sel ast.
 	return out
 }
 
+var detailedCedarSystemImplementors = []string{"DetailedCedarSystem"}
+
+func (ec *executionContext) _DetailedCedarSystem(ctx context.Context, sel ast.SelectionSet, obj *model.DetailedCedarSystem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, detailedCedarSystemImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DetailedCedarSystem")
+		case "cedarSystem":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DetailedCedarSystem_cedarSystem(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "roles":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DetailedCedarSystem_roles(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "deployments":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DetailedCedarSystem_deployments(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var estimatedLifecycleCostImplementors = []string{"EstimatedLifecycleCost"}
 
 func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, obj *models.EstimatedLifecycleCost) graphql.Marshaler {
@@ -23564,6 +23824,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "detailedCedarSystemInfo":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_detailedCedarSystemInfo(ctx, field)
 				return res
 			}
 
@@ -26367,6 +26647,16 @@ func (ec *executionContext) marshalNCedarRole2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑ
 	return ec._CedarRole(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCedarSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._CedarSystem(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNCedarSystemBookmark2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmarkᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSystemBookmark) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -27787,6 +28077,13 @@ func (ec *executionContext) marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._DeleteTestDatePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODetailedCedarSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDetailedCedarSystem(ctx context.Context, sel ast.SelectionSet, v *model.DetailedCedarSystem) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DetailedCedarSystem(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {
