@@ -25,8 +25,14 @@ optional -->
 > * Can decide how often to run the job
 ```mermaid
 flowchart LR
+
 a1(GoRoutineStarts)
-a1->a2(checks for available jobs)
+a1--> a2(Check for Job)
+a2 -->a3(Jobs to Run?) 
+a3--Yes--> a4(Run Job)
+a4 --> a2
+a3 --No-->  a5(Sleep for defined interval)
+a5 --> a2
 ```
 * Justifiaction
 > * Simplicity: 
