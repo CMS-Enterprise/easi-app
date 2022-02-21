@@ -177,7 +177,7 @@ jobs:
           exit $result_code
         continue-on-error: true
       - name: Post comment with TypeScript type errors
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         if: ${{ steps.typechecker.outcome == 'failure' }}
         with:
           script: |
