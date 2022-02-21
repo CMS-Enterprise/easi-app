@@ -12,8 +12,10 @@ declare global {
   /*~ Here, declare things that go in the global namespace, or augment
    *~ existing declarations in the global namespace
    */
-   type UUID = string;
 
+  // These types are defined in GQL generated types.  
+  // Defining globally here for FE to recognize generated types.
+   type UUID = string;
    type Time = string;
 
    interface Window {
