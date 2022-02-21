@@ -1,1 +1,14 @@
-* @ClayBenson94 @DylanSpOddball @jstrang-oddball @patrickseguraoddball @adamodd @StevenWadeOddball @garyjzhao
+# Order matters in a CODEOWNERS file. The last matching pattern is what will be used for requests.
+# Anything that doesn't hit the below patterns should be sent to the entire team for review.
+* @CMSGov/easi
+
+# Frontend Changes
+/src/ @CMSGov/easi-frontend
+/cypress/ @CMSGov/easi-frontend
+/public/ @CMSGov/easi-frontend
+/.storybook/ @CMSGov/easi-frontend
+
+# Backend Changes
+/pkg/ @CMSGov/easi-backend
+/cmd/ @CMSGov/easi-backend
+/migrations/ @CMSGov/easi-backend
