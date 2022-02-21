@@ -1,5 +1,4 @@
 import { Flags } from './types/flags';
-import { DateTime } from 'luxon';
 
 declare module '@okta/okta-signin-widget';
 declare module '@okta/okta-signin-widget/dist/js/okta-sign-in.min';
