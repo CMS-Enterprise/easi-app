@@ -23,10 +23,7 @@ const PlainInfo = ({ className, children, small }: PlainInfoProps) => {
 
   return (
     <div className={classes}>
-      {/* <div > */}
-      {/* <i className="fa fa-info" /> */}
       <IconInfo className={iconClasses} />
-      {/* </div> */}
       <p className="line-height-body-5">{children}</p>
     </div>
   );
