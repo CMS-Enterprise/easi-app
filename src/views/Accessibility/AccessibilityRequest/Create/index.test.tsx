@@ -183,9 +183,11 @@ describe('Create 508 Request page', () => {
     );
     await waitForPageLoad();
 
-    const comboBoxInput = screen.getByRole('combobox', {
-      name: /application/i
-    });
+    // TODO: ask about if this is viable
+    const comboBoxInput = screen.getByRole('combobox');
+    // const comboBoxInput = screen.getByRole('combobox', {
+    //   name: /application/i
+    // });
     userEvent.type(comboBoxInput, 'TACO - 000000{enter}');
     expect(comboBoxInput).toHaveValue('TACO - 000000');
 
