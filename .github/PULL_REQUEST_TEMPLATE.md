@@ -1,21 +1,13 @@
 # EASI-000
 
-## Changes proposed in this pull request
+## Changes and Description
 
 - Change 1
 - Change 2
 
-## Reviewer Notes
+<!-- Put a description here! -->
 
-<!--
-    Is there anything you would like reviewers to give additional scrutiny?
---->
-
-## Setup & How to test
-
-- Pull the branch locally and test it
-- Check that all code is adequately covered by tests
-- Make comments, even if it's minor!
+## How to test this change
 
 <!--
     Add any steps or code to run in this section to help others run your code:
@@ -27,18 +19,13 @@
 
 ## PR Author Review Checklist
 
-- [ ] Met the ticket's acceptance criteria, or will meet them in a subsequent PR
-- [ ] Added or updated tests for backend resolvers or other functions as needed
-- [ ] Added or updated client tests for new components, parent components,
-functions, or e2e tests as necessary
-- [ ] Tested user-facing changes with voice-over and
-the [rotor menu](https://support.apple.com/guide/voiceover/with-the-voiceover-rotor-mchlp2719/mac)
-- For any new migrations/schema changes:
-  - [ ] Followed guidelines for zero-downtime deploys
-  - [ ] Deployed this branch to the remote dev environment via CI
+- [ ] Met the ticket's acceptance criteria, or will meet them in a subsequent PR.
+- [ ] Added or updated tests for backend resolvers or other functions as needed.
+- [ ] Added or updated client tests for new components, parent components, functions, or e2e tests as necessary.
+- [ ] Tested user-facing changes with voice-over and the [rotor menu](https://support.apple.com/guide/voiceover/with-the-voiceover-rotor-mchlp2719/mac)
 
-## Screenshots
 
-<!--
-    If this PR benefits from showing any visual components, put any screenshots here!
--->
+## PR Reviewer Guidelines
+- It's best to pull the branch locally and test it, rather than just looking at the code online!
+- Check that all code is adequately covered by tests - if it isn't feel free to suggest the addition of tests.
+- Always make comments, even if it's minor, or if you don't understand why something was done.
