@@ -19,7 +19,7 @@ const accessibility = {
     remove: 'Remove',
     view: 'View',
     modal: {
-      header: 'Confirm you want to remove {{name}}.',
+      header: 'Confirm that you want to remove {{name}}.',
       warning:
         'You will not be able to access this document after it is removed.',
       proceedButton: 'Remove document',

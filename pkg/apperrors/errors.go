@@ -12,7 +12,7 @@ type UnauthorizedError struct {
 
 // Error provides the error as a string
 func (e *UnauthorizedError) Error() string {
-	return fmt.Sprintf("User is unauthorized: %s", e.Err)
+	return fmt.Sprintf("User is super unauthorized: %s", e.Err)
 }
 
 // Unwrap provides the underlying error
