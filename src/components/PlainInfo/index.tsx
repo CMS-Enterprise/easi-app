@@ -1,5 +1,4 @@
 import React from 'react';
-import { IconInfo } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -23,7 +22,9 @@ const PlainInfo = ({ className, children, small }: PlainInfoProps) => {
 
   return (
     <div className={classes}>
-      <IconInfo className={iconClasses} />
+      <div className={iconClasses}>
+        <i className="fa fa-info" />
+      </div>
       <p className="line-height-body-5">{children}</p>
     </div>
   );
