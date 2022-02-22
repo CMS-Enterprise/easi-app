@@ -41,7 +41,8 @@ const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
   );
 
   const handleKeyup = (e: KeyboardEvent) => {
-    const targetTabIndex = [].indexOf.call(tabEls, e.target);
+    const arr: (EventTarget | null)[] = [];
+    const targetTabIndex = arr.indexOf.call(tabEls, e.target);
     let newActiveTab = tabEls[targetTabIndex + DIRECTION[e.key]] as HTMLElement;
 
     switch (e.key) {

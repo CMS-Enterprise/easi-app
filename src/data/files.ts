@@ -3,7 +3,11 @@ import { FileUploadForm, UploadedFile } from 'types/files';
 export const fileUploadFormInitialData: FileUploadForm = {
   file: {} as File,
   filename: '',
-  uploadURL: ''
+  uploadURL: '',
+  documentType: {
+    commonType: null,
+    otherType: ''
+  }
 };
 
 export const fileUploadTableInitialData: UploadedFile = {
@@ -14,9 +18,9 @@ export const fileUploadTableInitialData: UploadedFile = {
 
 export const prepareFileUploadForApi = (fileUpload: FileUploadForm): any => {
   const fileURL = {
-    fileName: fileUpload.file.name,
-    fileType: fileUpload.file.type,
-    fileSize: fileUpload.file.size
+    fileName: fileUpload?.file?.name,
+    fileType: fileUpload?.file?.type,
+    fileSize: fileUpload?.file?.size
   };
 
   return fileURL;
@@ -26,7 +30,11 @@ export const prepareFileUploadForApp = (fileUpload: any): FileUploadForm => {
   const upload = {
     file: fileUpload.file,
     filename: fileUpload.filename,
-    uploadURL: fileUpload.URL
+    uploadURL: fileUpload.URL,
+    documentType: {
+      commonType: null,
+      otherType: ''
+    }
   };
   return upload;
 };

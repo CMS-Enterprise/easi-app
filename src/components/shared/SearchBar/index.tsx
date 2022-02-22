@@ -27,10 +27,7 @@ const SearchBar = ({
     'aria-label': 'Search',
     name,
     value: searchValue,
-    onChange: (
-      event: React.ChangeEvent<HTMLInputElement>,
-      { newValue }: any
-    ) => {
+    onChange: (event: React.FormEvent<HTMLElement>, { newValue }: any) => {
       setSearchValue(newValue);
     }
   };
