@@ -62,25 +62,33 @@ describe('Business case request description form', () => {
       name: /business or user need/i
     });
     userEvent.type(businessNeedField, 'My business need');
-    expect(businessNeedField).toHaveValue('My business need');
+    await waitFor(() => {
+      expect(businessNeedField).toHaveValue('My business need');
+    });
 
     const cmsBenefitField = screen.getByRole('textbox', {
       name: /cms benefit/i
     });
     userEvent.type(cmsBenefitField, 'CMS benefit');
-    expect(cmsBenefitField).toHaveValue('CMS benefit');
+    await waitFor(() => {
+      expect(cmsBenefitField).toHaveValue('CMS benefit');
+    });
 
     const priorityAlignmentField = screen.getByRole('textbox', {
       name: /organizational priorities/i
     });
     userEvent.type(priorityAlignmentField, 'Organizational priorities');
-    expect(priorityAlignmentField).toHaveValue('Organizational priorities');
+    await waitFor(() => {
+      expect(priorityAlignmentField).toHaveValue('Organizational priorities');
+    });
 
     const successIndicatorsField = screen.getByRole('textbox', {
       name: /effort is successful/i
     });
     userEvent.type(successIndicatorsField, 'Success indicators');
-    expect(successIndicatorsField).toHaveValue('Success indicators');
+    await waitFor(() => {
+      expect(successIndicatorsField).toHaveValue('Success indicators');
+    });
   });
 
   it('does not run validations', async () => {
@@ -88,13 +96,13 @@ describe('Business case request description form', () => {
 
     screen.getByRole('button', { name: /Next/i }).click();
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.queryByTestId('formik-validation-errors')
       ).not.toBeInTheDocument();
     });
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByRole('heading', { name: /"As is" solution/i, level: 2 })
       ).toBeInTheDocument();
@@ -114,7 +122,9 @@ describe('Business case request description form', () => {
 
     screen.getByRole('button', { name: /back/i }).click();
 
-    expect(screen.getByTestId('general-request-info')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('general-request-info')).toBeInTheDocument();
+    });
   });
 
   it('navigates to next page', async () => {
@@ -122,7 +132,7 @@ describe('Business case request description form', () => {
 
     screen.getByRole('button', { name: /next/i }).click();
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByTestId('as-is-solution')).toBeInTheDocument();
     });
   });
@@ -155,7 +165,6 @@ describe('Business case request description form', () => {
       expect(screen.getByTestId('mandatory-fields-alert')).toBeInTheDocument();
     });
 
-    /*
     it('runs validations and renders form errors', async () => {
       window.scrollTo = jest.fn();
 
@@ -163,12 +172,11 @@ describe('Business case request description form', () => {
 
       screen.getByRole('button', { name: /Next/i }).click();
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(
           screen.getByTestId('formik-validation-errors')
         ).toBeInTheDocument();
       });
     });
-    */
   });
 });
