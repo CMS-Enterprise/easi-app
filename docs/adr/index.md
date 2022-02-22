@@ -37,6 +37,6 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0030](0030-graphql-n+1-queries.md) - GraphQL N+1 Queries
 - [ADR-0031](0031-do-not-use-server-side-pagination.md) - Server Side Pagination
 - [ADR-0032](0032-use-svg-icons.md) - SVG Icons
-- [ADR-0033](0033-technical-action-scheduling.md) - SVG Icons
+- [ADR-0033](0033-technical-action-scheduling.md) - Technical Action Scheduling
 
 <!-- adrlogstop -->
