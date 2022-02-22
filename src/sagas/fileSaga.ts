@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action } from 'redux-actions';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'typed-redux-saga';
 
 import { prepareFileUploadForApi } from 'data/files';
 import { FileUploadForm } from 'types/files';
@@ -17,11 +17,11 @@ function postFileUploadURLRequest(formData: FileUploadForm) {
 function* createFileUploadURL(action: Action<any>) {
   try {
     yield put(postFileUploadURL.request());
-    const response = yield call(postFileUploadURLRequest, action.payload);
+    const response = yield* call(postFileUploadURLRequest, action.payload);
     yield put(
       postFileUploadURL.success({ ...action.payload, ...response.data })
     );
-  } catch (error) {
+  } catch (error: any) {
     yield put(postFileUploadURL.failure(error.message));
   } finally {
     yield put(postFileUploadURL.fulfill());
@@ -30,7 +30,9 @@ function* createFileUploadURL(action: Action<any>) {
 
 function putFileS3Request(formData: FileUploadForm) {
   const data = new FormData();
-  data.append('file', formData.file);
+  if (formData.file) {
+    data.append('file', formData.file);
+  }
 
   return axios.put(formData.uploadURL, data);
 }
@@ -41,7 +43,7 @@ function* uploadFile(action: Action<any>) {
     yield call(putFileS3Request, action.payload);
     // S3 doesn't return anything besides success
     yield put(putFileS3.success(action.payload));
-  } catch (error) {
+  } catch (error: any) {
     yield put(putFileS3.failure(error.message));
   }
 }
@@ -55,7 +57,7 @@ function postFileDownloadURLRequest(file: any) {
 function* downloadFile(action: Action<any>) {
   try {
     yield put(getFileS3.request());
-    const response = yield call(postFileDownloadURLRequest, action.payload);
+    const response = yield* call(postFileDownloadURLRequest, action.payload);
 
     const link = document.createElement('a');
     link.href = response.data.URL;
@@ -64,7 +66,7 @@ function* downloadFile(action: Action<any>) {
     link.click();
 
     yield put(getFileS3.success(response.data));
-  } catch (error) {
+  } catch (error: any) {
     yield put(getFileS3.failure(error.message));
   } finally {
     yield put(getFileS3.fulfill());

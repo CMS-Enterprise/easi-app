@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action } from 'redux-actions';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'typed-redux-saga';
 
 import { fetchSystemIntakes } from 'types/routines';
 
@@ -17,9 +17,9 @@ function* getSystemIntakes(action: Action<any>) {
   const status = payload && payload.status;
   try {
     yield put(fetchSystemIntakes.request());
-    const response = yield call(getSystemIntakesRequest, status);
+    const response = yield* call(getSystemIntakesRequest, status);
     yield put(fetchSystemIntakes.success(response.data));
-  } catch (error) {
+  } catch (error: any) {
     yield put(fetchSystemIntakes.failure(error.message));
   } finally {
     yield put(fetchSystemIntakes.fulfill());

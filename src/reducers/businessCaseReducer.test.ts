@@ -13,7 +13,12 @@ import businessCaseReducer from './businessCaseReducer';
 
 describe('The business case reducer', () => {
   it('returns the initial state', () => {
-    expect(businessCaseReducer(undefined, {})).toEqual({
+    expect(
+      businessCaseReducer(undefined, {
+        payload: '',
+        type: ''
+      })
+    ).toEqual({
       form: businessCaseInitialData,
       isLoading: null,
       isSaving: false,

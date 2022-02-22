@@ -42,7 +42,7 @@ export const TestDateValidationSchema: any = Yup.object().shape({
           'score',
           'The test score must be no less than 0 and no more than 100',
           number => {
-            const float = parseFloat(number);
+            const float = number ? parseFloat(number) : 0;
             return float >= 0 && float <= 100;
           }
         )
