@@ -165,6 +165,7 @@ const Create = () => {
                         inputProps={{
                           id: '508Request-IntakeId',
                           name: 'intakeId',
+                          'aria-label': 'application',
                           'aria-describedby': '508Request-IntakeId-HelpText'
                         }}
                         options={projectComboBoxOptions}
