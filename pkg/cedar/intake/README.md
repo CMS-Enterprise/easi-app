@@ -19,6 +19,7 @@ The CEDAR team needs a schema of the data we send them in order to decode it for
 
 - `pkg/cedar/intake/gen/`: This is auto-generated code from the Intake API's Swagger file. Of note is the [`IntakeInput`](gen/models/intake_input.go) type, which will be used by the API client to submit data.
 - `pkg/cedar/intake/models/`: These struct definitions are the source of truth for generating the schema documents.
+- `pkg/cedar/intake/schemas/`: These are the generated JSON schema documents used by the CEDAR team for validating the data we send.
 - `pkg/cedar/intake/translation/`: Each file in this package corresponds to a file in `pkg/cedar/intake/models`, and contains code for the following:
     1. Translating a domain model (defined under `pkg/models`) into the type defined in `pkg/cedar/intake/models`.
     1. Marshaling that struct into a JSON string, then embedding it in an `IntakeInput` struct, tagged with the appropriate schema version.
