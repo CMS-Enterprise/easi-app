@@ -5,12 +5,13 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"go.uber.org/zap"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client/operations"
@@ -45,11 +46,18 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 
 // FetchUserInfo fetches a user's personal details
 func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*models2.UserInfo, error) {
+	if euaID == "" {
+		appcontext.ZLogger(ctx).Error("No EUA ID specified; unable to request user info from CEDAR LDAP")
+		return nil, &apperrors.InvalidParametersError{
+			FunctionName: "cedarldap.FetchUserInfo",
+		}
+	}
+
 	params := operations.NewPersonIDParams()
 	params.ID = euaID
 	resp, err := c.client.Operations.PersonID(params, c.apiAuthHeader)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err))
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err), zap.String("euaIDFetched", euaID))
 		return nil, &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     models.Person{},

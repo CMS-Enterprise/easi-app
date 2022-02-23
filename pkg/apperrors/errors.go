@@ -252,3 +252,12 @@ func (e *ResourceNotFoundError) Error() string {
 func (e *ResourceNotFoundError) Unwrap() error {
 	return e.Err
 }
+
+// InvalidParametersError is an error for calling a function with invalid parameters
+type InvalidParametersError struct {
+	FunctionName string
+}
+
+func (e *InvalidParametersError) Error() string {
+	return fmt.Sprint("Unable to run ", e.FunctionName, " due to invalid parameters")
+}
