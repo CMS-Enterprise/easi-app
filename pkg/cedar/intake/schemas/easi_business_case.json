@@ -32,7 +32,7 @@
           "type": "string",
           "description": "Timestamp of when request was archived",
           "examples": [
-            "2023-02-27 14:34:43.405934+00"
+            "2023-02-27T14:34:43Z"
           ]
         },
         "asIsCons": {
@@ -103,7 +103,7 @@
           "type": "string",
           "description": "Timestamp of when request was initially submitted",
           "examples": [
-            "2022-02-17 07:34:43.405934+00"
+            "2022-02-17T07:34:43Z"
           ]
         },
         "intakeId": {
@@ -117,7 +117,7 @@
           "type": "string",
           "description": "Timestamp of when request was last submitted",
           "examples": [
-            "2022-02-11 16:34:43.405934+00"
+            "2022-02-11T16:34:43Z"
           ]
         },
         "lifecycleCostLines": {
@@ -153,14 +153,15 @@
           "type": "string",
           "description": "Phone number of requester",
           "examples": [
-            "410-123-4567"
+            "410-123-4567",
+            "4431234567"
           ]
         },
         "submittedAt": {
           "type": "string",
           "description": "Timestamp of when request was submitted",
           "examples": [
-            "2022-02-10 19:34:43.405934+00"
+            "2022-02-10T19:34:43Z"
           ]
         },
         "successIndicators": {
@@ -338,7 +339,8 @@
           "type": "string",
           "description": "Type of work to be performed (can be more then one)",
           "examples": [
-            "Development and Operations and Maintenance"
+            "Development",
+            "Operations and Maintenance"
           ]
         },
         "solution": {

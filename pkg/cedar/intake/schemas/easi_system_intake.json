@@ -64,7 +64,7 @@
           "type": "string",
           "description": "Timestamp of when request was archived",
           "examples": [
-            "2022-02-17 14:34:43.405934+00"
+            "2022-02-17T14:34:43Z"
           ]
         },
         "businessNeed": {
@@ -141,7 +141,7 @@
           "type": "string",
           "description": "Timestamp of when decision was reached",
           "examples": [
-            "2022-02-17 14:34:43.405934+00"
+            "2022-02-17T14:34:43Z"
           ]
         },
         "decisionNextSteps": {
@@ -361,7 +361,7 @@
           "type": "string",
           "description": "Timestamp of when request was submitted",
           "examples": [
-            "2022-02-17 14:34:43.405934+00"
+            "2022-02-17T14:34:43Z"
           ]
         },
         "trbCollaborator": {

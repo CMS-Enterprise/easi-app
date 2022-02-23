@@ -7,7 +7,7 @@ package models
 // EASIIntake represents a system intake
 type EASIIntake struct {
 	AdminLead                   string `json:"adminLead" jsonschema:"description=Government Admin responsible for handling request,example=John Doe"`
-	ArchivedAt                  string `json:"archivedAt" jsonschema:"description=Timestamp of when request was archived,example=2022-02-17 14:34:43.405934+00"`
+	ArchivedAt                  string `json:"archivedAt" jsonschema:"description=Timestamp of when request was archived,example=2022-02-17T14:34:43Z"`
 	BusinessNeed                string `json:"businessNeed" jsonschema:"description=Business Need (problem space, benefits, deadlines, etc.) for the effort detailed in this request,example="`
 	BusinessOwner               string `json:"businessOwner" jsonschema:"description=Person who owns a line of business related to this request,example=John Doe"`
 	BusinessOwnerComponent      string `json:"businessOwnerComponent" jsonschema:"description=Component of the Business Owner,example=OIT"`
@@ -18,7 +18,7 @@ type EASIIntake struct {
 	Contractor                  string `json:"contractor" jsonschema:"description=Contractor who will perform the work detailed in this request,example=Oddball"`
 	CostIncrease                string `json:"costIncrease" jsonschema:"description=Is there a cost increase associated with this request,example=YES"`
 	CostIncreaseAmount          string `json:"costIncreaseAmount" jsonschema:"description=How much is the cost increase,example=Over two million dollars"`
-	DecidedAt                   string `json:"decidedAt" jsonschema:"description=Timestamp of when decision was reached,example=2022-02-17 14:34:43.405934+00"`
+	DecidedAt                   string `json:"decidedAt" jsonschema:"description=Timestamp of when decision was reached,example=2022-02-17T14:34:43Z"`
 	DecisionNextSteps           string `json:"decisionNextSteps" jsonschema:"description=Steps that the business owner should take after receiving their decision,example=Go get a contract"`
 	EaCollaborator              string `json:"eaCollaborator" jsonschema:"description=N/A,example=N/A"` // TODO: doesn't seem like this is ever populated, remove?
 	EaCollaboratorName          string `json:"eaCollaboratorName" jsonschema:"description=Enterprise Architecture (EA) Collaborator,example=John Doe"`
@@ -48,7 +48,7 @@ type EASIIntake struct {
 	RequesterEmailAddress       string `json:"requesterEmailAddress" jsonschema:"description=Email address of the person who submitted this request,example=John.Doe@cms.hhs.gov"`
 	Solution                    string `json:"solution" jsonschema:"description=Initial solution,example=Build new application in ServiceNow"`
 	Status                      string `json:"status" jsonschema:"description=Current status of this request,example=INTAKE_SUBMITTED"`
-	SubmittedAt                 string `json:"submittedAt" jsonschema:"description=Timestamp of when request was submitted,example=2022-02-17 14:34:43.405934+00"`
+	SubmittedAt                 string `json:"submittedAt" jsonschema:"description=Timestamp of when request was submitted,example=2022-02-17T14:34:43Z"`
 	TrbCollaborator             string `json:"trbCollaborator" jsonschema:"description=N/A,example=N/A"` // TODO: doesn't seem like this is ever populated, remove?
 	TrbCollaboratorName         string `json:"trbCollaboratorName" jsonschema:"description=Technical Review Board (TRB) Collaborator,example=John Doe"`
 	UserEUA                     string `json:"userEUA" jsonschema:"description=EUA id of the requester,example=J8YN"`
