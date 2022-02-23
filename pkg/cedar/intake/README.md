@@ -5,11 +5,9 @@ The Intake API is designed to take a JSON string in its `Body` field, as well as
 
 ## Swagger
 
-The Swagger file for the Intake API is saved as `cedar_intake.json` in this folder. To generate new client code from an updated Swagger file, while in this folder, run
+The Swagger file for the Intake API is saved as `cedar_intake.json` in this folder. The Swagger we get from CEDAR needs preprocessing to add the `"x-nullable": true` property to the definition of the `clientLastUpdatedDate` field on the `IntakeInput` object. This is an optional field, but without the `"x-nullable": true` property, go-swagger will generate the corresponding Go code with a `strfmt.DateTime` field. If this type is used and `.ClientLastUpdatedDate` is not set in our Go code, the zero value of `0001-01-01T00:00:00.000Z` will get sent to CEDAR Intake, which causes an error. With `"x-nullable": true` set, go-swagger generates Go code with a `*strfmt.DateTime` pointer field, and a `nil` pointer will prevent this field from being sent to CEDAR.
 
-```script
-swagger generate client -f cedar_intake.json -c ./gen/client -m ./gen/models
-```
+To run the preprocessing and regenerate code from an updated Swagger file, run `scripts/generate_cedar_intake_client`. This uses [jq](https://stedolan.github.io/jq/) to add the `"x-nullable": true` field, then calls go-swagger to regenerate code.
 
 See [our general CEDAR documentation](/docs/cedar.md) for info on accessing CEDAR and installing `go-swagger` for code generation.
 
