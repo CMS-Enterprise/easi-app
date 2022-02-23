@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+if ! command -v jq &> /dev/null
+then
+    echo "jq could not be found."
+    echo "Install jq from https://stedolan.github.io/jq/download/"
+    exit 1
+fi
+
+if ! command -v swagger &> /dev/null
+then
+    echo "go-swagger could not be found."
+    echo "Install go-swagger from https://goswagger.io/install.html"
+    exit 2
+fi
+
+# equivalent of set -e; exit on first error
+set -o errexit
+
+repoRootPath=$(git rev-parse --show-toplevel)
+swaggerFile="cedar_intake.json"
+tempFile="merged.json"
+intakeFolderPath="${repoRootPath}/pkg/cedar/intake"
+
+cd "$intakeFolderPath"
+
+# necessary for making the generated code for clientLastUpdatedDate use a *strfmt.DateTime pointer, instead of a non-pointer value (which has an invalid zero value)
+jq '.definitions.IntakeInput.properties.clientLastUpdatedDate += {"x-nullable": true}' "$swaggerFile" > "$tempFile"
+mv "$tempFile" "$swaggerFile"
+
+# regenerate code based on the updated Swagger file
+swagger generate client -f "$swaggerFile" -c ./gen/client -m ./gen/models
