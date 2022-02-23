@@ -7,7 +7,18 @@ declare module '*.docx';
 declare module 'launchdarkly-js-sdk-common' {
   export interface LDFlagSet extends Flags {}
 }
-interface Window {
-  Cypress: any;
-  store: any;
+
+declare global {
+  // Here, declare things that go in the global namespace, or augment
+  // existing declarations in the global namespace
+
+  // These types are defined in GQL generated types.  
+  // Defining globally here for FE to recognize generated types.
+   type UUID = string;
+   type Time = string;
+
+   interface Window {
+    Cypress: any;
+    store: any;
+  }
 }

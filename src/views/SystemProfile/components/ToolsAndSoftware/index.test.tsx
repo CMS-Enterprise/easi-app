@@ -9,10 +9,8 @@ import ToolsAndSoftware from './index';
 describe('System Tools and Software subpage', () => {
   it('renders without errors', async () => {
     render(
-      <MemoryRouter
-        initialEntries={['/system-profile/326-9-0/tools-and-software']}
-      >
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/tools-and-software']}>
+        <Route path="/systems/:systemId/:subinfo">
           <ToolsAndSoftware
             system={{
               ...mockSystemInfo[3],
@@ -32,10 +30,8 @@ describe('System Tools and Software subpage', () => {
 
   it('matches snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter
-        initialEntries={['/system-profile/326-9-0/tools-and-software']}
-      >
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/tools-and-software']}>
+        <Route path="/systems/:systemId/:subinfo">
           <ToolsAndSoftware
             system={{
               ...mockSystemInfo[3],

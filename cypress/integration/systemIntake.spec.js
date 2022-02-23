@@ -253,7 +253,10 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('Just an idea');
 
-    cy.contains('.easi-review-row dt', 'Does the project have funding')
+    cy.contains(
+      '.easi-review-row dt',
+      'Will this project be funded out of an existing funding source?'
+    )
       .siblings('dd')
       .contains('Yes, CLIA, 111111');
   });

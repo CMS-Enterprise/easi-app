@@ -14,8 +14,8 @@ import ATO from './index';
 describe('ATO sub page for System Profile', () => {
   it('renders the progress page when status of In Progress', async () => {
     render(
-      <MemoryRouter initialEntries={['/system-profile/326-9-0/ato']}>
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/ato']}>
+        <Route path="/systems/:systemId/:subinfo">
           <ATO
             system={{
               ...mockSystemInfo[3],
@@ -112,8 +112,8 @@ describe('ATO sub page for System Profile', () => {
 
   it('matches snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter initialEntries={['/system-profile/326-9-0/ato']}>
-        <Route path="/system-profile/:systemId/:subinfo">
+      <MemoryRouter initialEntries={['/systems/326-9-0/ato']}>
+        <Route path="/systems/:systemId/:subinfo">
           <ATO
             system={{
               ...mockSystemInfo[3],
