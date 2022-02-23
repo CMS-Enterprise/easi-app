@@ -132,9 +132,11 @@ func (c *Client) PublishNote(ctx context.Context, note models.Note) error {
 func (c *Client) publishIntakeObject(ctx context.Context, model translation.IntakeObject) error {
 	// constant values for now; may become non-constant if/when we revisit handling CEDAR validation errors
 
-	// version refers to "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
+	// from the Swagger (cedar_intake.json, definitions/IntakeInput/properties/version):
+	// "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
 	const objectVersion = 1
 
+	// from the Swagger (cedar_intake.json, paths/"/intake"/post/parameters/validatePayload):
 	// "Determines if schema validation of the payload is performed syncronously before persisting the record or asyncronously after the record has been persisted"
 	const isValidatedSynchronously = false // false for V1 schemas; this may change when we implement V2 schemas for EASI-1614
 

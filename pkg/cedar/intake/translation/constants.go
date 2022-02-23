@@ -1,6 +1,7 @@
 package translation
 
-// quoth the Swagger (cedar_intake.json): "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc."
+// from the Swagger (cedar_intake.json, definitions/IntakeInput/properties/clientStatus):
+// "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc."
 type intakeInputStatus string
 
 const (

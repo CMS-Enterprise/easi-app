@@ -64,6 +64,8 @@ func typeStr(inputType intakeInputType) *string {
 	return pStr(string(inputType))
 }
 
+// pStrfmtDateTime turns a time pointer into a strfmt.DateTime pointer;
+// fields with "format": "date-time" in Swagger correspond to *strfmt.DateTime fields in generated code
 func pStrfmtDateTime(t *time.Time) *strfmt.DateTime {
 	if t == nil {
 		return nil
