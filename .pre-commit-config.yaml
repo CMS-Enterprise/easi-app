@@ -75,6 +75,14 @@ repos:
         language: script
         files: cmd/gen_intake_schema/main\.go|pkg/cedar/intake/models/.*\.go|pkg/cedar/intake/schemas/.*\.json
 
+  - repo: local
+    hooks:
+      - id: preprocess-intake-swagger
+        name: preprocess-intake-swagger
+        entry: scripts/generate_cedar_intake_client
+        language: script
+        files: pkg/cedar/intake/cedar_intake.json
+
   - repo: git://github.com/awslabs/git-secrets
     rev: 80230afa8c8bdeac766a0fece36f95ffaa0be778
     hooks:
