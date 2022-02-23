@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -346,11 +347,22 @@ func NewCreateActionUpdateStatus(
 			}
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
+		var requesterInfo *models.UserInfo
+		if intake.EUAUserID.ValueOrZero() == "" {
+			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+				zap.String("intakeID", intake.ID.String()))
+			// TODO - send fallback email
+		} else {
+			requesterInfo, err = fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+			if err != nil {
+				return nil, err
+			}
 		}
+
 		if requesterInfo == nil || requesterInfo.Email == "" {
+			appcontext.ZLogger(ctx).Error(fmt.Sprint("Requester info fetch for EUA ID ", intake.EUAUserID.String, " was not successful when submitting an action"),
+				zap.String("intakeID", intake.ID.String()),
+				zap.String("EUAID", intake.EUAUserID.String))
 			return nil, &apperrors.ExternalAPIError{
 				Err:       errors.New("requester info fetch was not successful when submitting an action"),
 				Model:     intake,

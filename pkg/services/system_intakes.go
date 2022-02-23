@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -261,11 +262,23 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
+		var requesterInfo *models.UserInfo
+		if existing.EUAUserID.ValueOrZero() == "" {
+			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+				zap.String("intakeID", existing.ID.String()))
+			// TODO - send fallback email
+		} else {
+			requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+			if err != nil {
+				return nil, err
+			}
 		}
+
 		if requesterInfo == nil || requesterInfo.Email == "" {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprint("Requester info fetch for EUA ID ", existing.EUAUserID.String, " was not successful when updating lifecycle fields"),
+				zap.String("intakeID", existing.ID.String()),
+				zap.String("EUAID", existing.EUAUserID.String))
 			return nil, &apperrors.ExternalAPIError{
 				Err:       errors.New("requester info fetch was not successful when submitting an action"),
 				Model:     existing,
@@ -353,11 +366,23 @@ func NewUpdateRejectionFields(
 			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
+		var requesterInfo *models.UserInfo
+		if existing.EUAUserID.ValueOrZero() == "" {
+			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+				zap.String("intakeID", existing.ID.String()))
+			// TODO - send fallback email
+		} else {
+			requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+			if err != nil {
+				return nil, err
+			}
 		}
+
 		if requesterInfo == nil || requesterInfo.Email == "" {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprint("Requester info fetch for EUA ID ", existing.EUAUserID.String, " was not successful when rejecting an intake request"),
+				zap.String("intakeID", existing.ID.String()),
+				zap.String("EUAID", existing.EUAUserID.String))
 			return nil, &apperrors.ExternalAPIError{
 				Err:       errors.New("requester info fetch was not successful when submitting an action"),
 				Model:     existing,
@@ -416,11 +441,23 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
+		var requesterInfo *models.UserInfo
+		if intake.EUAUserID.ValueOrZero() == "" {
+			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+				zap.String("intakeID", intake.ID.String()))
+			// TODO - send fallback email
+		} else {
+			requesterInfo, err = fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+			if err != nil {
+				return nil, err
+			}
 		}
+
 		if requesterInfo == nil || requesterInfo.Email == "" {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprint("Requester info fetch for EUA ID ", intake.EUAUserID.String, " was not successful when submitting GRT Feedback"),
+				zap.String("intakeID", intake.ID.String()),
+				zap.String("EUAID", intake.EUAUserID.String))
 			return nil, &apperrors.ExternalAPIError{
 				Err:       errors.New("requester info fetch was not successful when submitting GRT Feedback"),
 				Model:     intake,
@@ -446,14 +483,16 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
-		err = sendReviewEmail(
-			ctx,
-			action.Feedback.String,
-			requesterInfo.Email,
-			intake.ID,
-		)
-		if err != nil {
-			return nil, err
+		if intake.EUAUserID.ValueOrZero() != "" {
+			err = sendReviewEmail(
+				ctx,
+				action.Feedback.String,
+				requesterInfo.Email,
+				intake.ID,
+			)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return grtFeedback, nil
