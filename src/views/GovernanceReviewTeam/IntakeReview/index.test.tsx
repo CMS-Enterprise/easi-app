@@ -4,6 +4,8 @@ import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+
 import IntakeReview from './index';
 
 describe('The GRT intake review view', () => {
@@ -17,15 +19,17 @@ describe('The GRT intake review view', () => {
     dateSpy.mockRestore();
   });
 
-  const mockSystemIntake = {
+  const mockSystemIntake: SystemIntake = {
     id: '53d762ea-0bc8-4af0-b24d-0b5844bacea5',
     euaUserId: 'ABCD',
+    adminLead: '',
     status: 'INTAKE_SUBMITTED',
     requester: {
       name: 'Jane Doe',
       component: 'OIT',
       email: 'jane@cms.gov'
     },
+    requestType: 'NEW',
     businessOwner: {
       name: 'Jane Doe',
       component: 'OIT'
@@ -40,7 +44,7 @@ describe('The GRT intake review view', () => {
     },
     governanceTeams: {
       isPresent: false,
-      teams: []
+      teams: null
     },
     fundingSource: {
       isFunded: false,
@@ -66,32 +70,30 @@ describe('The GRT intake review view', () => {
         year: '2020'
       }
     },
+    decisionNextSteps: '',
     businessNeed: 'The quick brown fox jumps over the lazy dog.',
     businessSolution: 'The quick brown fox jumps over the lazy dog.',
     currentStage: 'The quick brown fox jumps over the lazy dog.',
     needsEaSupport: false,
     grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
     decidedAt: new Date().toISOString(),
-    businessCaseId: null,
-    submittedAt: DateTime.fromISO(new Date(2020, 8, 30).toISOString())
-  };
+    submittedAt: DateTime.fromISO(new Date(2020, 8, 30).toISOString()).toISO()
+  } as SystemIntake;
 
   it('renders without crashing', () => {
-    const now = DateTime.local();
     render(
       <MemoryRouter>
-        <IntakeReview systemIntake={mockSystemIntake} now={now} />
+        <IntakeReview systemIntake={mockSystemIntake} />
       </MemoryRouter>
     );
     expect(screen.getByTestId('intake-review')).toBeInTheDocument();
   });
 
   it('matches the snapshot', () => {
-    const now = DateTime.fromRFC2822('30 Sep 2020 13:23:12 GMT');
     const tree = renderer
       .create(
         <MemoryRouter>
-          <IntakeReview systemIntake={mockSystemIntake} now={now} />{' '}
+          <IntakeReview systemIntake={mockSystemIntake} />{' '}
         </MemoryRouter>
       )
       .toJSON();
@@ -100,18 +102,17 @@ describe('The GRT intake review view', () => {
   });
 
   it('renders increased costs data', () => {
-    const now = DateTime.local();
-    const mockIntake = {
+    const mockIntake: SystemIntake = {
       ...mockSystemIntake,
       costs: {
         isExpectingIncrease: 'YES',
         expectedIncreaseAmount: 'less than $1 million'
       }
-    };
+    } as SystemIntake;
 
     render(
       <MemoryRouter>
-        <IntakeReview systemIntake={mockIntake} now={now} />
+        <IntakeReview systemIntake={mockIntake} />
       </MemoryRouter>
     );
 

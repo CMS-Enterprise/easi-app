@@ -92,7 +92,7 @@ const ExtendLifecycleId = ({
       parseInt(newExpirationYear, RADIX),
       parseInt(newExpirationMonth, RADIX),
       parseInt(newExpirationDay, RADIX)
-    );
+    ).toISO();
     extendLifecycleID({
       variables: {
         input: {

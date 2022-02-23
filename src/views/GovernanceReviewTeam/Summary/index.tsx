@@ -18,6 +18,7 @@ import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
+import { RequestType } from 'types/systemIntake';
 import { formatDate } from 'utils/date';
 import {
   isIntakeClosed,
@@ -32,7 +33,7 @@ type RequestSummaryProps = {
     component: string | null;
   };
   requestName: string;
-  requestType: string;
+  requestType: RequestType;
   status: string;
   adminLead: string | null;
   submittedAt: DateTime;

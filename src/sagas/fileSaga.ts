@@ -34,7 +34,9 @@ function putFileS3Request(formData: FileUploadForm) {
     data.append('file', formData.file);
   }
 
-  return axios.put(formData.uploadURL, data);
+  if (formData.uploadURL) {
+    axios.put(formData.uploadURL, data);
+  }
 }
 
 function* uploadFile(action: Action<any>) {
