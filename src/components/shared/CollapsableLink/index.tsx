@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Button } from '@trussworks/react-uswds';
+import {
+  Button,
+  IconExpandMore,
+  IconNavigateNext
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -42,6 +46,10 @@ const CollapsableLink = ({
     isOpen ? iconClasses[0] : iconClasses[1]
   );
 
+  const renderCaret = (collapsableLinkisOpen: boolean) => {
+    return collapsableLinkisOpen ? <IconExpandMore /> : <IconNavigateNext />;
+  };
+
   const collapseButton: React.ReactNode = (
     <Button
       type="button"
@@ -52,7 +60,7 @@ const CollapsableLink = ({
       unstyled
       data-testid="collapsable-link"
     >
-      <span className={arrowClassNames} />
+      {eyeIcon ? <span className={arrowClassNames} /> : renderCaret(isOpen)}
       {isOpen ? closeLabel || label : label}
     </Button>
   );
