@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import {
   Button,
   IconExpandMore,
-  IconNavigateNext
+  IconNavigateNext,
+  IconVisibilityOff,
+  IconVisiblity
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
@@ -36,15 +38,16 @@ const CollapsableLink = ({
   // That is, how do we initialize this component and set isOpen to true?
   const [isOpen, setOpen] = useState(startOpen);
 
-  const eyeIconClassNames = classnames(
-    'fa',
-    'easi-collapsable-link__square',
-    'easi-collapsable-link__eye-icon',
-    isOpen ? 'fa-eye-slash' : 'fa-eye'
-  );
+  const renderEyeIcon = () => {
+    return isOpen ? (
+      <IconVisibilityOff className="easi-collapsable-link__square easi-collapsable-link__eye-icon" />
+    ) : (
+      <IconVisiblity className="easi-collapsable-link__square easi-collapsable-link__eye-icon" />
+    );
+  };
 
-  const renderCaret = (collapsableLinkisOpen: boolean) => {
-    return collapsableLinkisOpen ? <IconExpandMore /> : <IconNavigateNext />;
+  const renderCaret = () => {
+    return isOpen ? <IconExpandMore /> : <IconNavigateNext />;
   };
 
   const collapseButton: React.ReactNode = (
@@ -57,7 +60,7 @@ const CollapsableLink = ({
       unstyled
       data-testid="collapsable-link"
     >
-      {eyeIcon ? <span className={eyeIconClassNames} /> : renderCaret(isOpen)}
+      {eyeIcon ? renderEyeIcon() : renderCaret()}
       {isOpen ? closeLabel || label : label}
     </Button>
   );
