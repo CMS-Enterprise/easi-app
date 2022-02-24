@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
+  Row,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -431,10 +432,11 @@ const RequestRepository = () => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(row => {
+          {page.map((row: Row) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} data-testid={`${row.id}-row`}>
+              // @ts-ignore
+              <tr {...row.getRowProps()} data-testid={`${row.original.id}-row`}>
                 {row.cells.map((cell, i) => {
                   if (i === 0) {
                     return (
