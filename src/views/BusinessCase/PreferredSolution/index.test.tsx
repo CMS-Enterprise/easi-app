@@ -62,13 +62,17 @@ describe('Business case preferred solution form', () => {
       name: /title/i
     });
     userEvent.type(titleField, 'Preferred solution title');
-    expect(titleField).toHaveValue('Preferred solution title');
+    await waitFor(() => {
+      expect(titleField).toHaveValue('Preferred solution title');
+    });
 
     const summaryField = screen.getByRole('textbox', {
       name: /summary/i
     });
     userEvent.type(summaryField, 'Preferred solution summary');
-    expect(summaryField).toHaveValue('Preferred solution summary');
+    await waitFor(() => {
+      expect(summaryField).toHaveValue('Preferred solution summary');
+    });
 
     const acquisitionApproachField = screen.getByRole('textbox', {
       name: /acquisition approach/i
@@ -77,16 +81,20 @@ describe('Business case preferred solution form', () => {
       acquisitionApproachField,
       'Preferred solution acquisition approach'
     );
-    expect(acquisitionApproachField).toHaveValue(
-      'Preferred solution acquisition approach'
-    );
+    await waitFor(() => {
+      expect(acquisitionApproachField).toHaveValue(
+        'Preferred solution acquisition approach'
+      );
+    });
 
     const securityFieldGroup = screen.getByTestId('security-approval');
     const securityNoRadio = within(securityFieldGroup).getByRole('radio', {
       name: /no/i
     });
     securityNoRadio.click();
-    expect(securityNoRadio).toBeChecked();
+    await waitFor(() => {
+      expect(securityNoRadio).toBeChecked();
+    });
 
     const securityApprovalProgressGroup = screen.getByTestId(
       'security-approval-in-progress'
@@ -97,19 +105,25 @@ describe('Business case preferred solution form', () => {
       name: /yes/i
     });
     securityApprovalProgressYesRadio.click();
-    expect(securityApprovalProgressYesRadio).toBeChecked();
+    await waitFor(() => {
+      expect(securityApprovalProgressYesRadio).toBeChecked();
+    });
 
     const cloudHostingRadio = screen.getByRole('radio', { name: /cloud/i });
     cloudHostingRadio.click();
-    expect(cloudHostingRadio).toBeChecked();
+    await waitFor(() => {
+      expect(cloudHostingRadio).toBeChecked();
+    });
 
     const hostingLocationField = screen.getByRole('textbox', {
       name: /where are you planning to host/i
     });
     userEvent.type(hostingLocationField, 'Preferred solution hosting location');
-    expect(hostingLocationField).toHaveValue(
-      'Preferred solution hosting location'
-    );
+    await waitFor(() => {
+      expect(hostingLocationField).toHaveValue(
+        'Preferred solution hosting location'
+      );
+    });
 
     const cloudServiceTypeField = screen.getByRole('textbox', {
       name: /cloud service/i
@@ -118,9 +132,11 @@ describe('Business case preferred solution form', () => {
       cloudServiceTypeField,
       'Preferred solution hosting cloud service'
     );
-    expect(cloudServiceTypeField).toHaveValue(
-      'Preferred solution hosting cloud service'
-    );
+    await waitFor(() => {
+      expect(cloudServiceTypeField).toHaveValue(
+        'Preferred solution hosting cloud service'
+      );
+    });
 
     const userInterfaceGroup = screen.getByTestId('user-interface-group');
     const userInterfaceYesRadio = within(userInterfaceGroup).getByRole(
@@ -130,19 +146,25 @@ describe('Business case preferred solution form', () => {
       }
     );
     userInterfaceYesRadio.click();
-    expect(userInterfaceYesRadio).toBeChecked();
+    await waitFor(() => {
+      expect(userInterfaceYesRadio).toBeChecked();
+    });
 
     const prosField = screen.getByRole('textbox', {
       name: /pros/i
     });
     userEvent.type(prosField, 'Preferred solution pros');
-    expect(prosField).toHaveValue('Preferred solution pros');
+    await waitFor(() => {
+      expect(prosField).toHaveValue('Preferred solution pros');
+    });
 
     const consField = screen.getByRole('textbox', {
       name: /cons/i
     });
     userEvent.type(consField, 'Preferred solution cons');
-    expect(consField).toHaveValue('Preferred solution cons');
+    await waitFor(() => {
+      expect(consField).toHaveValue('Preferred solution cons');
+    });
 
     // Skip Estimated Lifecycle Costs
 
@@ -150,7 +172,9 @@ describe('Business case preferred solution form', () => {
       name: /cost savings/i
     });
     userEvent.type(costSavingsField, 'Preferred solution cost savings');
-    expect(costSavingsField).toHaveValue('Preferred solution cost savings');
+    await waitFor(() => {
+      expect(costSavingsField).toHaveValue('Preferred solution cost savings');
+    });
   });
 
   it('is approved by cms security', async () => {
@@ -161,10 +185,14 @@ describe('Business case preferred solution form', () => {
       name: /yes/i
     });
     approvedRadio.click();
-    expect(approvedRadio).toBeChecked();
-    expect(
-      screen.queryByTestId('security-approval-in-progress')
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(approvedRadio).toBeChecked();
+    });
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId('security-approval-in-progress')
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('fills out data center branch', async () => {
@@ -174,7 +202,9 @@ describe('Business case preferred solution form', () => {
       name: /data center/i
     });
     dataCenterHostingRadio.click();
-    expect(dataCenterHostingRadio).toBeChecked();
+    await waitFor(() => {
+      expect(dataCenterHostingRadio).toBeChecked();
+    });
 
     const dataCenterLocationField = screen.getByRole('textbox', {
       name: /which data center/i
@@ -183,9 +213,11 @@ describe('Business case preferred solution form', () => {
       dataCenterLocationField,
       'Preferred solution data center location'
     );
-    expect(dataCenterLocationField).toHaveValue(
-      'Preferred solution data center location'
-    );
+    await waitFor(() => {
+      expect(dataCenterLocationField).toHaveValue(
+        'Preferred solution data center location'
+      );
+    });
   });
 
   it('fills out no hosting branch', async () => {
@@ -195,7 +227,9 @@ describe('Business case preferred solution form', () => {
       name: /hosting is not needed/i
     });
     dataCenterHostingRadio.click();
-    expect(dataCenterHostingRadio).toBeChecked();
+    await waitFor(() => {
+      expect(dataCenterHostingRadio).toBeChecked();
+    });
   });
 
   it('does not run validations', async () => {
@@ -203,12 +237,12 @@ describe('Business case preferred solution form', () => {
 
     screen.getByRole('button', { name: /Next/i }).click();
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.queryByTestId('formik-validation-errors')
       ).not.toBeInTheDocument();
     });
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
     });
   });
@@ -226,7 +260,9 @@ describe('Business case preferred solution form', () => {
 
     screen.getByRole('button', { name: /back/i }).click();
 
-    expect(screen.getByTestId('as-is-solution')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('as-is-solution')).toBeInTheDocument();
+    });
   });
 
   it('navigates to next page', async () => {
@@ -267,7 +303,6 @@ describe('Business case preferred solution form', () => {
       expect(screen.getByTestId('mandatory-fields-alert')).toBeInTheDocument();
     });
 
-    /*
     it('runs validations and renders form errors', async () => {
       window.scrollTo = jest.fn();
 
@@ -275,10 +310,11 @@ describe('Business case preferred solution form', () => {
 
       screen.getByRole('button', { name: /Next/i }).click();
 
-      expect(
-        screen.getByTestId('formik-validation-errors')
-      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.getByTestId('formik-validation-errors')
+        ).toBeInTheDocument();
+      });
     });
-    */
   });
 });

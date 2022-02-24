@@ -264,7 +264,7 @@ Array [
               <dt
                 className="text-bold margin-bottom-05"
               >
-                Does the project have funding?
+                Will this project be funded out of an existing funding source?
               </dt>
               <dd
                 className="description-definition margin-0"
