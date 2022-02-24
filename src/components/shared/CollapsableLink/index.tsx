@@ -36,14 +36,11 @@ const CollapsableLink = ({
   // That is, how do we initialize this component and set isOpen to true?
   const [isOpen, setOpen] = useState(startOpen);
 
-  const iconClasses: string[] = eyeIcon
-    ? ['fa-eye-slash', 'fa-eye']
-    : ['fa-caret-down', 'fa-caret-right'];
-  const arrowClassNames = classnames(
+  const eyeIconClassNames = classnames(
     'fa',
     'easi-collapsable-link__square',
-    eyeIcon && 'easi-collapsable-link__eye-icon',
-    isOpen ? iconClasses[0] : iconClasses[1]
+    'easi-collapsable-link__eye-icon',
+    isOpen ? 'fa-eye-slash' : 'fa-eye'
   );
 
   const renderCaret = (collapsableLinkisOpen: boolean) => {
@@ -60,7 +57,7 @@ const CollapsableLink = ({
       unstyled
       data-testid="collapsable-link"
     >
-      {eyeIcon ? <span className={arrowClassNames} /> : renderCaret(isOpen)}
+      {eyeIcon ? <span className={eyeIconClassNames} /> : renderCaret(isOpen)}
       {isOpen ? closeLabel || label : label}
     </Button>
   );
