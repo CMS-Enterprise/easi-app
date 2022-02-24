@@ -140,12 +140,12 @@ exports[`The making a request page matches snapshot 1`] = `
             </dd>
             <p>
               <a
-                aria-label="Send and email"
+                aria-label="Send an email"
                 class="usa-link usa-link--external line-height-body-5"
                 href="mailto:patrick.segura@oddball.io"
                 target="_blank"
               >
-                Send and email
+                Send an email
                 <span
                   aria-hidden="true"
                 >

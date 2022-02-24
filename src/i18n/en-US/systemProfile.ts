@@ -25,7 +25,7 @@ const systemProfile = {
     id: 'single-system-profile',
     mainNavigation: 'Main Navigation',
     pointOfContact: 'Point of contact',
-    sendEmail: 'Send and email',
+    sendEmail: 'Send an email',
     moreContact: 'More points of contact',
     summary: {
       back: 'Back to All Systems',
