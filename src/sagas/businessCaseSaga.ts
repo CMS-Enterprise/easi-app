@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action } from 'redux-actions';
-import { call, put, takeLatest } from 'typed-redux-saga';
+import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { prepareBusinessCaseForApi } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -17,7 +17,7 @@ function getBusinessCaseRequest(id: string) {
 function* getBusinessCase(action: Action<any>) {
   try {
     yield put(fetchBusinessCase.request());
-    const response = yield* call(getBusinessCaseRequest, action.payload);
+    const response = yield call(getBusinessCaseRequest, action.payload);
     yield put(fetchBusinessCase.success(response.data));
   } catch (error: any) {
     yield put(fetchBusinessCase.failure(error.message));
@@ -34,7 +34,7 @@ function postBusinessCaseRequest(formData: BusinessCaseModel) {
 function* createBusinessCase(action: Action<any>) {
   try {
     yield put(postBusinessCase.request());
-    const response = yield* call(postBusinessCaseRequest, action.payload);
+    const response = yield call(postBusinessCaseRequest, action.payload);
     yield put(postBusinessCase.success(response.data));
   } catch (error: any) {
     yield put(postBusinessCase.failure(error.message));
@@ -54,7 +54,7 @@ function putBusinessCaseRequest(formData: BusinessCaseModel) {
 function* updateBusinessCase(action: Action<any>) {
   try {
     yield put(putBusinessCase.request(action.payload));
-    const reponse = yield* call(putBusinessCaseRequest, action.payload);
+    const reponse = yield call(putBusinessCaseRequest, action.payload);
 
     yield put(putBusinessCase.success(reponse.data));
   } catch (error: any) {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action as ReduxAction } from 'redux-actions';
-import { call, put, takeLatest } from 'typed-redux-saga';
+import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { Action } from 'types/action';
 import { postAction } from 'types/routines';
@@ -15,7 +15,7 @@ export function postSystemIntakeActionRequest(formData: Action) {
 function* completeSystemIntake(action: ReduxAction<Action>) {
   try {
     yield put(postAction.request());
-    const response = yield* call(postSystemIntakeActionRequest, action.payload);
+    const response = yield call(postSystemIntakeActionRequest, action.payload);
     yield put(postAction.success(response.data));
   } catch (error: any) {
     yield put(postAction.failure(error.message));

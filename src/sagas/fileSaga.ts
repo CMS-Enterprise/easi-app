@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action } from 'redux-actions';
-import { call, put, takeLatest } from 'typed-redux-saga';
+import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { prepareFileUploadForApi } from 'data/files';
 import { FileUploadForm } from 'types/files';
@@ -17,7 +17,7 @@ function postFileUploadURLRequest(formData: FileUploadForm) {
 function* createFileUploadURL(action: Action<any>) {
   try {
     yield put(postFileUploadURL.request());
-    const response = yield* call(postFileUploadURLRequest, action.payload);
+    const response = yield call(postFileUploadURLRequest, action.payload);
     yield put(
       postFileUploadURL.success({ ...action.payload, ...response.data })
     );
@@ -59,7 +59,7 @@ function postFileDownloadURLRequest(file: any) {
 function* downloadFile(action: Action<any>) {
   try {
     yield put(getFileS3.request());
-    const response = yield* call(postFileDownloadURLRequest, action.payload);
+    const response = yield call(postFileDownloadURLRequest, action.payload);
 
     const link = document.createElement('a');
     link.href = response.data.URL;

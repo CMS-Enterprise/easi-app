@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action } from 'redux-actions';
-import { call, put, takeLatest } from 'typed-redux-saga';
+import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
 import {
@@ -19,7 +19,7 @@ function putSystemIntakeRequest(formData: SystemIntakeForm) {
 function* putSystemIntake(action: Action<any>) {
   try {
     yield put(saveSystemIntake.request(action.payload));
-    const response = yield* call(putSystemIntakeRequest, action.payload);
+    const response = yield call(putSystemIntakeRequest, action.payload);
     yield put(saveSystemIntake.success(response.data));
   } catch (error: any) {
     yield put(saveSystemIntake.failure(error.message));
@@ -35,7 +35,7 @@ function getSystemIntakeRequest(id: string) {
 function* getSystemIntake(action: Action<any>) {
   try {
     yield put(fetchSystemIntake.request());
-    const response = yield* call(getSystemIntakeRequest, action.payload);
+    const response = yield call(getSystemIntakeRequest, action.payload);
     yield put(fetchSystemIntake.success(response.data));
   } catch (error: any) {
     yield put(fetchSystemIntake.failure(error.message));
@@ -53,7 +53,7 @@ function deleteSystemIntakeRequest(id: string) {
 function* deleteSystemIntake(action: Action<any>) {
   try {
     yield put(archiveSystemIntake.request());
-    const response = yield* call(
+    const response = yield call(
       deleteSystemIntakeRequest,
       action.payload.intakeId
     );
