@@ -72,9 +72,9 @@
         },
         "businessNeed": {
           "type": "string",
-          "description": "What is the business and/or user need",
+          "description": "Business Need for this effort",
           "examples": [
-            "CMS wants to automate this process"
+            "Process takes too long and holds up key stakeholders"
           ]
         },
         "businessOwner": {
@@ -229,7 +229,7 @@
         },
         "hostingCloudServiceType": {
           "type": "string",
-          "description": "What",
+          "description": "What type of cloud service will be used",
           "examples": [
             "PaaS"
           ]
@@ -262,14 +262,14 @@
             "true"
           ],
           "type": "string",
-          "description": "Is this solution FedRAMP",
+          "description": "Is this solution FedRAMP/FISMA approved",
           "examples": [
             "True"
           ]
         },
         "securityIsBeingReviewed": {
           "type": "string",
-          "description": "If not approved",
+          "description": "Is this solution in the process of getting FedRAMP/FISMA approval",
           "examples": [
             "Yes"
           ]

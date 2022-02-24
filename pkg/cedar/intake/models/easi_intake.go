@@ -8,7 +8,7 @@ package models
 type EASIIntake struct {
 	AdminLead                   string `json:"adminLead" jsonschema:"description=Government Admin responsible for handling request,example=John Doe"`
 	ArchivedAt                  string `json:"archivedAt" jsonschema:"description=Timestamp of when request was archived,example=2022-02-17T14:34:43Z"`
-	BusinessNeed                string `json:"businessNeed" jsonschema:"description=Business Need (problem space, benefits, deadlines, etc.) for the effort detailed in this request,example="`
+	BusinessNeed                string `json:"businessNeed" jsonschema:"description=Business Need for the effort detailed in this request,example=Process takes too long and holds up key stakeholders"`
 	BusinessOwner               string `json:"businessOwner" jsonschema:"description=Person who owns a line of business related to this request,example=John Doe"`
 	BusinessOwnerComponent      string `json:"businessOwnerComponent" jsonschema:"description=Component of the Business Owner,example=OIT"`
 	Component                   string `json:"component" jsonschema:"description=Component of the person who submitted this request,example=OIT"`
@@ -27,12 +27,12 @@ type EASIIntake struct {
 	ExistingFunding             string `json:"existingFunding" jsonschema:"enum=,enum=false,enum=true,description=Will this project be funded out of an existing source,example=True"`
 	FundingNumber               string `json:"fundingNumber" jsonschema:"description=six digit funding number,example=123456"`
 	FundingSource               string `json:"fundingSource" jsonschema:"description=Source of funding,example=Prog Ops"`
-	GrbDate                     string `json:"grbDate" jsonschema:"description=Scheduled date for the Governance Review Board (GRB) meeting,example=2025-12-12 00:00:00+00"`
-	GrtDate                     string `json:"grtDate" jsonschema:"description=Scheduled date for the Governance Review Team (GRT) meeting,example=2025-10-20 00:00:00+00"`
+	GrbDate                     string `json:"grbDate" jsonschema:"description=Scheduled date for the Governance Review Board (GRB) meeting,example=2025-12-12T00:00:00Z"`
+	GrtDate                     string `json:"grtDate" jsonschema:"description=Scheduled date for the Governance Review Team (GRT) meeting,example=2025-10-20T00:00:00Z"`
 	GrtReviewEmailBody          string `json:"grtReviewEmailBody" jsonschema:"description=N/A,example=N/A"` // TODO: not sure when/if this is populated
 	Isso                        string `json:"isso" jsonschema:"description=N/A,example=N/A"`               // TODO: doesn't seem like this is ever populated, remove?
 	IssoName                    string `json:"issoName" jsonschema:"description=Information System Security Officer (ISSO) for the effort detailed in this request,example=John Doe"`
-	LifecycleExpiresAt          string `json:"lifecycleExpiresAt" jsonschema:"description=Expiration date for the LCID associated with this request,example=2030-12-23 00:00:00+00"`
+	LifecycleExpiresAt          string `json:"lifecycleExpiresAt" jsonschema:"description=Expiration date for the LCID associated with this request,example=2030-12-23T00:00:00Z"`
 	LifecycleID                 string `json:"lifecycleID" jsonschema:"description=LCID (if one is issued) associated with this request,example=220970"`
 	LifecycleScope              string `json:"lifecycleScope" jsonschema:"description=Scope of LCID,example=This LCID covers development and operation of the application"`
 	OitSecurityCollaborator     string `json:"oitSecurityCollaborator" jsonschema:"description=N/A,example=N/A"` // TODO: doesn't seem like this is ever populated, remove?

@@ -12,7 +12,7 @@ type EASIBizCase struct {
 	AsIsPros             string                  `json:"asIsPros" jsonschema:"description=Pros of the current solution,example=Well known workflows and end products"`
 	AsIsSummary          string                  `json:"asIsSummary" jsonschema:"description=Summary of the current solution,example=Managed through spreadsheets and email"`
 	AsIsTitle            string                  `json:"asIsTitle" jsonschema:"description=Name of the current solution,example=Spreadsheets and Email"`
-	BusinessNeed         string                  `json:"businessNeed" jsonschema:"description=What is the business and/or user need,example=CMS wants to automate this process"`
+	BusinessNeed         string                  `json:"businessNeed" jsonschema:"description=Business Need for this effort,example=Process takes too long and holds up key stakeholders"`
 	BusinessOwner        string                  `json:"businessOwner" jsonschema:"description=Business owner of this request,example=John Doe"`
 	BusinessSolutions    []*EASIBusinessSolution `json:"businessSolutions" jsonschema:"description=Array Business Solutions (preferred and alternatives),example=N/A"`
 	CmsBenefit           string                  `json:"cmsBenefit" jsonschema:"description=How CMS will benefit from this effort,example=Reduce FTE hours and generate better end products"`
@@ -35,12 +35,12 @@ type EASIBusinessSolution struct {
 	Cons                    string `json:"cons" jsonschema:"description=Cons of this solution,example=A lot of money and time required"`
 	CostSavings             string `json:"costSavings" jsonschema:"description=Cost savings of this solution,example=over ten million dollars"`
 	HasUI                   string `json:"hasUI" jsonschema:"description=Does this solution have/need a UI,example=Yes"`
-	HostingCloudServiceType string `json:"hostingCloudServiceType" jsonschema:"description=What, if any, type of cloud service will be used,example=PaaS"`
+	HostingCloudServiceType string `json:"hostingCloudServiceType" jsonschema:"description=What type of cloud service will be used,example=PaaS"`
 	HostingLocation         string `json:"hostingLocation" jsonschema:"description=Where will this solution be hosted,example=AWS"`
 	HostingType             string `json:"hostingType" jsonschema:"description=What type of hosting will this solution use,example=cloud"`
 	Pros                    string `json:"pros" jsonschema:"description=Pros of this solution,example=Will reduce FTE hours needed"`
-	SecurityIsApproved      string `json:"securityIsApproved" jsonschema:"enum=,enum=false,enum=true,description=Is this solution FedRAMP, FISMA approved,example=True"`
-	SecurityIsBeingReviewed string `json:"securityIsBeingReviewed" jsonschema:"description=If not approved, is it in the process of being CMS approved,example=Yes"`
+	SecurityIsApproved      string `json:"securityIsApproved" jsonschema:"enum=,enum=false,enum=true,description=Is this solution FedRAMP/FISMA approved,example=True"`
+	SecurityIsBeingReviewed string `json:"securityIsBeingReviewed" jsonschema:"description=Is this solution in the process of getting FedRAMP/FISMA approval,example=Yes"`
 	SolutionType            string `json:"solutionType" jsonschema:"enum=preferred,enum=alternativeA,enum=alternativeB,description=Which solution is this (preferred or alternatives),example=preferred"`
 	Summary                 string `json:"summary" jsonschema:"description=Summary of this solution,example=Building a new application in ServiceNow"`
 	Title                   string `json:"title" jsonschema:"description=Name of this solution,example=ServiceNow"`

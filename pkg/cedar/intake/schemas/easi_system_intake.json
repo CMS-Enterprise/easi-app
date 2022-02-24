@@ -69,9 +69,9 @@
         },
         "businessNeed": {
           "type": "string",
-          "description": "Business Need (problem space",
+          "description": "Business Need for the effort detailed in this request",
           "examples": [
-            ""
+            "Process takes too long and holds up key stakeholders"
           ]
         },
         "businessOwner": {
@@ -214,14 +214,14 @@
           "type": "string",
           "description": "Scheduled date for the Governance Review Board (GRB) meeting",
           "examples": [
-            "2025-12-12 00:00:00+00"
+            "2025-12-12T00:00:00Z"
           ]
         },
         "grtDate": {
           "type": "string",
           "description": "Scheduled date for the Governance Review Team (GRT) meeting",
           "examples": [
-            "2025-10-20 00:00:00+00"
+            "2025-10-20T00:00:00Z"
           ]
         },
         "grtReviewEmailBody": {
@@ -249,7 +249,7 @@
           "type": "string",
           "description": "Expiration date for the LCID associated with this request",
           "examples": [
-            "2030-12-23 00:00:00+00"
+            "2030-12-23T00:00:00Z"
           ]
         },
         "lifecycleID": {
