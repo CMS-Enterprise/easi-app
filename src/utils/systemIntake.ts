@@ -85,9 +85,10 @@ export const translateStatus = (
 
   if (statusEnum === 'LCID_ISSUED') {
     // if status is LCID_ISSUED, translate from enum to i18n and append LCID
-    statusTranslation = `${i18next.t(
-      `intake:statusMap.${statusEnum}`
-    )}: ${lcid}`;
+    // Display not available message if LCID is null (usually due to bad SharePoint data migration)
+    statusTranslation = `${i18next.t(`intake:statusMap.${statusEnum}`)}: ${
+      lcid || 'ID Not Available'
+    }`;
   } else {
     // if not just translate from enum to i18n
     statusTranslation = i18next.t(`intake:statusMap.${statusEnum}`);
