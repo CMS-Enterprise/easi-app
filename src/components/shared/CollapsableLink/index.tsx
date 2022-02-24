@@ -40,9 +40,9 @@ const CollapsableLink = ({
 
   const renderEyeIcon = () => {
     return isOpen ? (
-      <IconVisibilityOff className="easi-collapsable-link__square easi-collapsable-link__eye-icon" />
+      <IconVisibilityOff className="easi-collapsable-link__eye-icon" />
     ) : (
-      <IconVisiblity className="easi-collapsable-link__square easi-collapsable-link__eye-icon" />
+      <IconVisiblity className="easi-collapsable-link__eye-icon" />
     );
   };
 
