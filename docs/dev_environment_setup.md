@@ -122,7 +122,7 @@ The easiest way to install this specific version of Node/npm is to use [`nvm`](h
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ```
-Reload your shell, then run `nvm install 16`.
+Reload your shell, then run `nvm install`.
 
 ## Yarn
 
