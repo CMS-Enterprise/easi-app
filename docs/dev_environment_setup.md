@@ -117,13 +117,13 @@ The [`goimports`](https://pkg.go.dev/golang.org/x/tools/cmd/goimports) tool is u
 
 ## Node.js/npm
 
-We currently support Node.js v16 for this repo; Node 17 support is currently blocked by [this `create-react-app` issue](https://github.com/facebook/create-react-app/issues/11562). 
+We currently support Node.js v16 for this repo; Node 17 support is currently blocked by [this `create-react-app` issue](https://github.com/facebook/create-react-app/issues/11562).
 
-The easiest way to install this specific version of Node/npm is to use [`nvm`](https://github.com/nvm-sh/nvm). To install `nvm`, run 
+The easiest way to install this specific version of Node/npm is to use [`nvm`](https://github.com/nvm-sh/nvm). To install `nvm`, run
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ```
-Reload your shell, then run `nvm install 16`.
+Reload your shell, then run `nvm install`.
 
 ## Yarn
 
@@ -167,7 +167,7 @@ This repo uses [`pre-commit`](https://pre-commit.com/) to manage pre-commit Git 
 
 **MacOS:** Install with `brew install pre-commit`.
 
-**Windows+WSL:** 
+**Windows+WSL:**
 - First install Python's `pip` package manager with `sudo apt install python3-pip`.
 - Then, install `pre-commit` with `pip install pre-commit`. This should install `pre-commit` in the `~/.local/bin` directory.
 - Add this directory to your `PATH`. Add the following to `~/.bashrc`:
@@ -185,11 +185,11 @@ The Postgres command-line client is needed for running database-related scriptin
 
 **MacOS:** Install with `brew install postgres`. This installs the Postgres server as well; if this is an issue, see [this StackOverflow Q&A](https://stackoverflow.com/questions/44654216/correct-way-to-install-psql-without-full-postgres-on-macos) for alternatives.
 
-**Windows+WSL:** Install with `sudo apt install postgresql-client`. 
+**Windows+WSL:** Install with `sudo apt install postgresql-client`.
 
 ## Installing frontend dependencies
 
-To install the frontend's dependencies, run `yarn install --frozen-lockfile --ignore-engines`. The `--frozen-lockfile` flag will install the exact versions of all dependencies that are specified in `yarn.lock`; the `--ignore-engines` flag is necessary with Node 16 due to [this `react-uswds` issue](https://github.com/trussworks/react-uswds/issues/1582).
+To install the frontend's dependencies, run `yarn install --frozen-lockfile`. The `--frozen-lockfile` flag will install the exact versions of all dependencies that are specified in `yarn.lock`;
 
 ## jq
 
