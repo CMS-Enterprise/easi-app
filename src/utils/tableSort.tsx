@@ -1,5 +1,10 @@
+import React from 'react';
 import { HeaderGroup } from 'react-table';
-import classnames from 'classnames';
+import {
+  IconExpandLess,
+  IconExpandMore,
+  IconUnfoldMore
+} from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 export type sortColumnProps = null | string | number | DateTime;
@@ -19,19 +24,18 @@ export const getColumnSortStatus = <T extends {}>(
   return 'none';
 };
 
-// Returns header sort icon class based on sort status
-// TODO: convert to Material Icon
+// Returns header sort icon based on sort status
 export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
-  const marginClassName = 'margin-left-1';
+  const sharedClassName = 'margin-left-05 position-absolute';
   if (!column.isSorted) {
-    return classnames(marginClassName, 'fa fa-sort caret position-absolute');
+    return <IconUnfoldMore className={sharedClassName} />;
   }
 
   if (column.isSortedDesc) {
-    return classnames(marginClassName, 'fa fa-caret-down position-absolute');
+    return <IconExpandMore className={sharedClassName} />;
   }
 
-  return classnames(marginClassName, 'fa fa-caret-up position-absolute');
+  return <IconExpandLess className={sharedClassName} />;
 };
 
 // Description beneath tables for sorting status
