@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action } from 'redux-actions';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, StrictEffect, takeLatest } from 'redux-saga/effects';
 
 import { prepareFileUploadForApi } from 'data/files';
 import { FileUploadForm } from 'types/files';
@@ -14,7 +14,9 @@ function postFileUploadURLRequest(formData: FileUploadForm) {
   );
 }
 
-function* createFileUploadURL(action: Action<any>) {
+function* createFileUploadURL(
+  action: Action<any>
+): Generator<StrictEffect, any, { data: any }> {
   try {
     yield put(postFileUploadURL.request());
     const response = yield call(postFileUploadURLRequest, action.payload);
@@ -39,7 +41,9 @@ function putFileS3Request(formData: FileUploadForm) {
   }
 }
 
-function* uploadFile(action: Action<any>) {
+function* uploadFile(
+  action: Action<any>
+): Generator<StrictEffect, any, { data: any }> {
   try {
     yield put(putFileS3.request());
     yield call(putFileS3Request, action.payload);
@@ -56,7 +60,9 @@ function postFileDownloadURLRequest(file: any) {
   );
 }
 
-function* downloadFile(action: Action<any>) {
+function* downloadFile(
+  action: Action<any>
+): Generator<StrictEffect, any, { data: any }> {
   try {
     yield put(getFileS3.request());
     const response = yield call(postFileDownloadURLRequest, action.payload);

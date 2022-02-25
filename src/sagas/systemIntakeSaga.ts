@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action } from 'redux-actions';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, StrictEffect, takeLatest } from 'redux-saga/effects';
 
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
 import {
@@ -16,7 +16,9 @@ function putSystemIntakeRequest(formData: SystemIntakeForm) {
   return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }
 
-function* putSystemIntake(action: Action<any>) {
+function* putSystemIntake(
+  action: Action<any>
+): Generator<StrictEffect, any, { data: any }> {
   try {
     yield put(saveSystemIntake.request(action.payload));
     const response = yield call(putSystemIntakeRequest, action.payload);
@@ -32,7 +34,9 @@ function getSystemIntakeRequest(id: string) {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}`);
 }
 
-function* getSystemIntake(action: Action<any>) {
+function* getSystemIntake(
+  action: Action<any>
+): Generator<StrictEffect, any, { data: any }> {
   try {
     yield put(fetchSystemIntake.request());
     const response = yield call(getSystemIntakeRequest, action.payload);
@@ -50,7 +54,9 @@ function deleteSystemIntakeRequest(id: string) {
   );
 }
 
-function* deleteSystemIntake(action: Action<any>) {
+function* deleteSystemIntake(
+  action: Action<any>
+): Generator<StrictEffect, any, { data: any }> {
   try {
     yield put(archiveSystemIntake.request());
     const response = yield call(
