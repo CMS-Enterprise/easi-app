@@ -34,12 +34,7 @@ func NewServer(config *viper.Viper) *Server {
 		log.Fatalf("Unable to set environment: %v", err)
 	}
 
-	var zapLogger *zap.Logger
-	if environment.Dev() || environment.Local() {
-		zapLogger, err = zap.NewDevelopment()
-	} else {
-		zapLogger, err = zap.NewProduction()
-	}
+	zapLogger, err := zap.NewProduction()
 	if err != nil {
 		log.Fatalf("Failed to initial logger: %v", err)
 	}
