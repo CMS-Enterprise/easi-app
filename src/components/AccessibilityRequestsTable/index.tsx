@@ -225,7 +225,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    <span className={getHeaderSortIcon(column)} />
+                    {getHeaderSortIcon(column)}
                   </button>
                 </th>
               ))}
