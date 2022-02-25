@@ -75,13 +75,13 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: ({ relevantTestDate }: any) => {
+        accessor: ({ relevantTestDate }: { relevantTestDate: string }) => {
           if (relevantTestDate) {
             return DateTime.fromISO(relevantTestDate);
           }
           return null;
         },
-        Cell: ({ value }: any) => {
+        Cell: ({ value }: any): any => {
           if (value) {
             return formatDate(value);
           }
