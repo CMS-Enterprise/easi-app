@@ -1,7 +1,7 @@
 package models
 
 // NOTE: these types are used to create a schema used by the CEDAR Intake API
-// When changing any of these types, add a new version for BizCase in pkg/cedar/intake/translation/schema_versions.go
+// When changing any of these types, add a new version for BizCase in pkg/cedar/intake/translation/constants.go
 // and update the associated version in cmd/gen_intake_schema/main.go
 
 // EASIBizCase represents a business case for a system

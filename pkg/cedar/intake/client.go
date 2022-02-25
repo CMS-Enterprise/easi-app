@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -18,8 +19,8 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client"
-	apioperations "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/operations"
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
+	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/health_check"
+	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/intake"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -84,10 +85,10 @@ func (c *Client) CheckConnection(ctx context.Context) error {
 		return nil
 	}
 
-	params := apioperations.NewHealthCheckGetParamsWithContext(ctx)
+	params := health_check.NewHealthCheckParamsWithContext(ctx)
 	params.HTTPClient = c.hc
 
-	resp, err := c.sdk.Operations.HealthCheckGet(params, c.auth)
+	resp, err := c.sdk.HealthCheck.HealthCheck(params, c.auth)
 	if err != nil {
 		return err
 	}
@@ -129,6 +130,16 @@ func (c *Client) PublishNote(ctx context.Context, note models.Note) error {
 
 // private method for publishing anything that satisfies the translation.IntakeObject interface to CEDAR through the Intake API
 func (c *Client) publishIntakeObject(ctx context.Context, model translation.IntakeObject) error {
+	// constant values for now; may become non-constant if/when we revisit handling CEDAR validation errors
+
+	// from the Swagger (cedar_intake.json, definitions/IntakeInput/properties/version):
+	// "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
+	const objectVersion = 1
+
+	// from the Swagger (cedar_intake.json, paths/"/intake"/post/parameters/validatePayload):
+	// "Determines if schema validation of the payload is performed syncronously before persisting the record or asyncronously after the record has been persisted"
+	const isValidatedSynchronously = false // false for V1 schemas; this may change when we implement V2 schemas for EASI-1614
+
 	id := model.ObjectID()
 	objectType := model.ObjectType()
 
@@ -149,11 +160,16 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 		return nil
 	}
 
-	params := apioperations.NewIntakeAddParamsWithContext(ctx)
+	params := intake.NewIntakeAddParamsWithContext(ctx)
 	params.HTTPClient = c.hc
-	params.Body.Intakes = []*wire.IntakeInput{input}
+	params.Body = input
 
-	resp, err := c.sdk.Operations.IntakeAdd(params, c.auth)
+	params.ValidatePayload = strconv.FormatBool(isValidatedSynchronously)
+
+	objectVersionStr := strconv.FormatInt(objectVersion, 10)
+	params.Body.Version = &objectVersionStr
+
+	resp, err := c.sdk.Intake.IntakeAdd(params, c.auth)
 	if err != nil {
 		return err
 	}
@@ -166,24 +182,5 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	// appcontext.ZLogger(ctx).Info(fmt.Sprintf("results: %v", resp.Payload))
 	_ = resp
 
-	return nil
-}
-
-// PublishSnapshot sends the given current state of a SystemIntake and all its
-// associated entities to CEDAR for eventual storage in Alfabet
-func (c *Client) PublishSnapshot(
-	ctx context.Context,
-	si *models.SystemIntake,
-	bc *models.BusinessCase,
-	acts []*models.Action,
-	notes []*models.Note,
-	fbs []*models.GRTFeedback,
-) error {
-	if !c.emitToCedar(ctx) {
-		appcontext.ZLogger(ctx).Info("snapshot publishing disabled")
-		return nil
-	}
-
-	appcontext.ZLogger(ctx).Info("Snapshot publishing not implemented")
 	return nil
 }
