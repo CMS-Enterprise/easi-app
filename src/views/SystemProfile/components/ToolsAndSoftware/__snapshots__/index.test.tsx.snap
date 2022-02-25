@@ -220,12 +220,12 @@ exports[`System Tools and Software subpage matches snapshot 1`] = `
                 class="padding-bottom-3"
               >
                 <a
-                  aria-label="Send and email"
+                  aria-label="Send an email"
                   class="usa-link usa-link--external line-height-body-5"
                   href="mailto:todo"
                   target="_blank"
                 >
-                  Send and email
+                  Send an email
                   <span
                     aria-hidden="true"
                   >
