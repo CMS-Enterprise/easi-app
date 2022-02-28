@@ -80,12 +80,12 @@ const SystemIntakeValidationSchema: any = {
     businessSolution: Yup.string()
       .trim()
       .required('Tell us how you think of solving your business need'),
+    currentStage: Yup.string().required('Tell us where you are in the process'),
     needsEaSupport: Yup.boolean()
       .nullable()
       .required('Tell us if you need Enterprise Architecture (EA) support')
   }),
   contractDetails: Yup.object().shape({
-    currentStage: Yup.string().required('Tell us where you are in the process'),
     fundingSource: Yup.object().shape({
       isFunded: Yup.boolean()
         .nullable()
