@@ -23,7 +23,8 @@ import { formatDate } from 'utils/date';
 import {
   isIntakeClosed,
   isIntakeOpen,
-  translateRequestType
+  translateRequestType,
+  translateStatus
 } from 'utils/systemIntake';
 
 type RequestSummaryProps = {
@@ -162,12 +163,11 @@ const RequestSummary = ({
               >
                 {isIntakeClosed(status) ? t('status.closed') : t('status.open')}
               </dd>
-              {lcid && (
-                <>
-                  <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
-                  <dd data-testid="grt-lcid">{lcid}</dd>
-                </>
-              )}
+              <>
+                <dt data-testid="grt-current-status">
+                  {translateStatus(status, lcid)}
+                </dt>
+              </>
             </div>
             <div className="text-gray-90">
               <dt className="text-bold">{t('intake:fields.adminLead')}</dt>

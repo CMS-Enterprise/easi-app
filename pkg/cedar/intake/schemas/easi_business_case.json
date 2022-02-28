@@ -29,75 +29,154 @@
       ],
       "properties": {
         "archivedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "Timestamp of when request was archived",
+          "examples": [
+            "2023-02-27T14:34:43Z"
+          ]
         },
         "asIsCons": {
-          "type": "string"
+          "type": "string",
+          "description": "Cons of the current solution",
+          "examples": [
+            "Multiple FTEs required"
+          ]
         },
         "asIsCostSavings": {
-          "type": "string"
+          "type": "string",
+          "description": "Cost savings of the current solution",
+          "examples": [
+            "No additional development required"
+          ]
         },
         "asIsPros": {
-          "type": "string"
+          "type": "string",
+          "description": "Pros of the current solution",
+          "examples": [
+            "Well known workflows and end products"
+          ]
         },
         "asIsSummary": {
-          "type": "string"
+          "type": "string",
+          "description": "Summary of the current solution",
+          "examples": [
+            "Managed through spreadsheets and email"
+          ]
         },
         "asIsTitle": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of the current solution",
+          "examples": [
+            "Spreadsheets and Email"
+          ]
         },
         "businessNeed": {
-          "type": "string"
+          "type": "string",
+          "description": "Business Need for this effort",
+          "examples": [
+            "Process takes too long and holds up key stakeholders"
+          ]
         },
         "businessOwner": {
-          "type": "string"
+          "type": "string",
+          "description": "Business owner of this request",
+          "examples": [
+            "John Doe"
+          ]
         },
         "businessSolutions": {
           "items": {
             "$schema": "http://json-schema.org/draft-04/schema#",
             "$ref": "#/definitions/EASIBusinessSolution"
           },
-          "type": "array"
+          "type": "array",
+          "description": "Array Business Solutions (preferred and alternatives)"
         },
         "cmsBenefit": {
-          "type": "string"
+          "type": "string",
+          "description": "How CMS will benefit from this effort",
+          "examples": [
+            "Reduce FTE hours and generate better end products"
+          ]
         },
         "initialSubmittedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "Timestamp of when request was initially submitted",
+          "examples": [
+            "2022-02-17T07:34:43Z"
+          ]
         },
         "intakeId": {
-          "type": "string"
+          "type": "string",
+          "description": "Unique ID of the intake associated with this business case",
+          "examples": [
+            "36b85781-169a-4539-aa66-916663d8118c"
+          ]
         },
         "lastSubmittedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "Timestamp of when request was last submitted",
+          "examples": [
+            "2022-02-11T16:34:43Z"
+          ]
         },
         "lifecycleCostLines": {
           "items": {
             "$schema": "http://json-schema.org/draft-04/schema#",
             "$ref": "#/definitions/EASILifecycleCost"
           },
-          "type": "array"
+          "type": "array",
+          "description": "Array of LifecycleCostLines (costs associated with upcoming Fiscal Years)"
         },
         "priorityAlignment": {
-          "type": "string"
+          "type": "string",
+          "description": "The ways this effort align with organizational priorities",
+          "examples": [
+            "Aligns with CMS' automation push"
+          ]
         },
         "projectName": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of the project",
+          "examples": [
+            "Easy Access to System"
+          ]
         },
         "requester": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of the requester",
+          "examples": [
+            "John Doe"
+          ]
         },
         "requesterPhoneNumber": {
-          "type": "string"
+          "type": "string",
+          "description": "Phone number of requester",
+          "examples": [
+            "410-123-4567",
+            "4431234567"
+          ]
         },
         "submittedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "Timestamp of when request was submitted",
+          "examples": [
+            "2022-02-10T19:34:43Z"
+          ]
         },
         "successIndicators": {
-          "type": "string"
+          "type": "string",
+          "description": "How this effort will be determined as successful",
+          "examples": [
+            "Workflows are streamlined"
+          ]
         },
         "userEUA": {
-          "type": "string"
+          "type": "string",
+          "description": "EUA id of the requester",
+          "examples": [
+            "J8YN"
+          ]
         }
       },
       "additionalProperties": false,
@@ -121,28 +200,60 @@
       ],
       "properties": {
         "acquisitionApproach": {
-          "type": "string"
+          "type": "string",
+          "description": "Approach to acquiring the products and services required to deliver the system",
+          "examples": [
+            "COTS"
+          ]
         },
         "cons": {
-          "type": "string"
+          "type": "string",
+          "description": "Cons of this solution",
+          "examples": [
+            "A lot of money and time required"
+          ]
         },
         "costSavings": {
-          "type": "string"
+          "type": "string",
+          "description": "Cost savings of this solution",
+          "examples": [
+            "over ten million dollars"
+          ]
         },
         "hasUI": {
-          "type": "string"
+          "type": "string",
+          "description": "Does this solution have/need a UI",
+          "examples": [
+            "Yes"
+          ]
         },
         "hostingCloudServiceType": {
-          "type": "string"
+          "type": "string",
+          "description": "What type of cloud service will be used",
+          "examples": [
+            "PaaS"
+          ]
         },
         "hostingLocation": {
-          "type": "string"
+          "type": "string",
+          "description": "Where will this solution be hosted",
+          "examples": [
+            "AWS"
+          ]
         },
         "hostingType": {
-          "type": "string"
+          "type": "string",
+          "description": "What type of hosting will this solution use",
+          "examples": [
+            "cloud"
+          ]
         },
         "pros": {
-          "type": "string"
+          "type": "string",
+          "description": "Pros of this solution",
+          "examples": [
+            "Will reduce FTE hours needed"
+          ]
         },
         "securityIsApproved": {
           "enum": [
@@ -150,10 +261,18 @@
             "false",
             "true"
           ],
-          "type": "string"
+          "type": "string",
+          "description": "Is this solution FedRAMP/FISMA approved",
+          "examples": [
+            "True"
+          ]
         },
         "securityIsBeingReviewed": {
-          "type": "string"
+          "type": "string",
+          "description": "Is this solution in the process of getting FedRAMP/FISMA approval",
+          "examples": [
+            "Yes"
+          ]
         },
         "solutionType": {
           "enum": [
@@ -161,13 +280,25 @@
             "alternativeA",
             "alternativeB"
           ],
-          "type": "string"
+          "type": "string",
+          "description": "Which solution is this (preferred or alternatives)",
+          "examples": [
+            "preferred"
+          ]
         },
         "summary": {
-          "type": "string"
+          "type": "string",
+          "description": "Summary of this solution",
+          "examples": [
+            "Building a new application in ServiceNow"
+          ]
         },
         "title": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of this solution",
+          "examples": [
+            "ServiceNow"
+          ]
         }
       },
       "additionalProperties": false,
@@ -184,22 +315,47 @@
       ],
       "properties": {
         "businessCaseId": {
-          "type": "string"
+          "type": "string",
+          "description": "Unique ID of the business case this cost line is associated with",
+          "examples": [
+            "91e5c1f3-11fb-4124-805c-adbdd02c5395"
+          ]
         },
         "cost": {
-          "type": "string"
+          "type": "string",
+          "description": "Fiscal year cost",
+          "examples": [
+            "10000"
+          ]
         },
         "id": {
-          "type": "string"
+          "type": "string",
+          "description": "Unique ID of this cost line",
+          "examples": [
+            "17f51e0f-c9ab-4d8a-8d6f-03aef2d3404d"
+          ]
         },
         "phase": {
-          "type": "string"
+          "type": "string",
+          "description": "Type of work to be performed (can be more then one)",
+          "examples": [
+            "Development",
+            "Operations and Maintenance"
+          ]
         },
         "solution": {
-          "type": "string"
+          "type": "string",
+          "description": "Which solution is this (preferred or alternatives)",
+          "examples": [
+            "Preferred"
+          ]
         },
         "year": {
-          "type": "string"
+          "type": "string",
+          "description": "Which fiscal year does this line pertain to",
+          "examples": [
+            "3"
+          ]
         }
       },
       "additionalProperties": false,

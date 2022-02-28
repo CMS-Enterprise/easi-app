@@ -15,46 +15,48 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// IntakeInput { "id": "5555", "type": "SystemTest", "schema": "SystemTestV01", "status": "Initiated", "bodyFormat": "json", "body": "{\"id\":\"5555\",\"eua_user_id\":\"test\",\"requester\":\"John Doe\",\"requester_component\":\"test\",\"system_name\":\"Test\"}", "createdDate": "2021-02-05 10:39:00", "lastUpdate": "2021-02-05 10:39:00" }
+// IntakeInput intake input
 //
 // swagger:model IntakeInput
 type IntakeInput struct {
 
-	// The actual record data string. For json posts, the data must be json encoded.
+	// The encoded, string representation of the object being transmitted
 	// Required: true
 	Body *string `json:"body"`
 
-	// The data type of the string being transmitted, i.e. json, xml, etc
+	// body format
 	// Required: true
-	// Enum: [json]
+	// Enum: [JSON XML]
 	BodyFormat *string `json:"bodyFormat"`
 
-	// Customers createDate
+	// Creation date associated with the object being transmitted
 	// Required: true
-	CreatedDate *string `json:"createdDate"`
+	// Format: date-time
+	ClientCreatedDate *strfmt.DateTime `json:"clientCreatedDate"`
 
-	// Customer UUID for the record
+	// Unqiue ID associated with the object in body
 	// Required: true
-	ID *string `json:"id"`
+	ClientID *string `json:"clientId"`
 
-	// Customers lastUpdate
-	// Required: true
-	LastUpdate *string `json:"lastUpdate"`
+	// Last update date associated with the object being transmitted
+	// Format: date-time
+	ClientLastUpdatedDate *strfmt.DateTime `json:"clientLastUpdatedDate,omitempty"`
 
-	// The name and version of the corresponding schema
+	// Client's status associated with the object being transmitted, i.e. Initiated, Final, etc.
 	// Required: true
-	// Enum: [EASIActionV01 EASIBizCaseV01 EASIGrtFeedbackV01 EASIIntakeV01 EASINoteV01]
+	ClientStatus *string `json:"clientStatus"`
+
+	// The name and version of the schema associated with the object being transmitted, i.e. SystemIntake_v01
+	// Required: true
 	Schema *string `json:"schema"`
 
-	// Customer status for the record being transmitted, i.e. Initiated, Final, etc.
+	// The type of object being transmitted, i.e. SystemIntake, BusinessCase, etc
 	// Required: true
-	// Enum: [Initiated Final]
-	Status *string `json:"status"`
-
-	// The type of record being transmitted, i.e.
-	// Required: true
-	// Enum: [EASIAction EASIBizCase EASIGrtFeedback EASIIntake EASINote]
 	Type *string `json:"type"`
+
+	// The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted.
+	// Required: true
+	Version *string `json:"version"`
 }
 
 // Validate validates this intake input
@@ -69,15 +71,19 @@ func (m *IntakeInput) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateCreatedDate(formats); err != nil {
+	if err := m.validateClientCreatedDate(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateID(formats); err != nil {
+	if err := m.validateClientID(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateLastUpdate(formats); err != nil {
+	if err := m.validateClientLastUpdatedDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateClientStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -85,11 +91,11 @@ func (m *IntakeInput) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateStatus(formats); err != nil {
+	if err := m.validateType(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateType(formats); err != nil {
+	if err := m.validateVersion(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -112,7 +118,7 @@ var intakeInputTypeBodyFormatPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["json"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["JSON","XML"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -122,8 +128,11 @@ func init() {
 
 const (
 
-	// IntakeInputBodyFormatJSON captures enum value "json"
-	IntakeInputBodyFormatJSON string = "json"
+	// IntakeInputBodyFormatJSON captures enum value "JSON"
+	IntakeInputBodyFormatJSON string = "JSON"
+
+	// IntakeInputBodyFormatXML captures enum value "XML"
+	IntakeInputBodyFormatXML string = "XML"
 )
 
 // prop value enum
@@ -148,68 +157,46 @@ func (m *IntakeInput) validateBodyFormat(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *IntakeInput) validateCreatedDate(formats strfmt.Registry) error {
+func (m *IntakeInput) validateClientCreatedDate(formats strfmt.Registry) error {
 
-	if err := validate.Required("createdDate", "body", m.CreatedDate); err != nil {
+	if err := validate.Required("clientCreatedDate", "body", m.ClientCreatedDate); err != nil {
+		return err
+	}
+
+	if err := validate.FormatOf("clientCreatedDate", "body", "date-time", m.ClientCreatedDate.String(), formats); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *IntakeInput) validateID(formats strfmt.Registry) error {
+func (m *IntakeInput) validateClientID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("clientId", "body", m.ClientID); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *IntakeInput) validateLastUpdate(formats strfmt.Registry) error {
+func (m *IntakeInput) validateClientLastUpdatedDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.ClientLastUpdatedDate) { // not required
+		return nil
+	}
 
-	if err := validate.Required("lastUpdate", "body", m.LastUpdate); err != nil {
+	if err := validate.FormatOf("clientLastUpdatedDate", "body", "date-time", m.ClientLastUpdatedDate.String(), formats); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-var intakeInputTypeSchemaPropEnum []interface{}
+func (m *IntakeInput) validateClientStatus(formats strfmt.Registry) error {
 
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["EASIActionV01","EASIBizCaseV01","EASIGrtFeedbackV01","EASIIntakeV01","EASINoteV01"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		intakeInputTypeSchemaPropEnum = append(intakeInputTypeSchemaPropEnum, v)
-	}
-}
-
-const (
-
-	// IntakeInputSchemaEASIActionV01 captures enum value "EASIActionV01"
-	IntakeInputSchemaEASIActionV01 string = "EASIActionV01"
-
-	// IntakeInputSchemaEASIBizCaseV01 captures enum value "EASIBizCaseV01"
-	IntakeInputSchemaEASIBizCaseV01 string = "EASIBizCaseV01"
-
-	// IntakeInputSchemaEASIGrtFeedbackV01 captures enum value "EASIGrtFeedbackV01"
-	IntakeInputSchemaEASIGrtFeedbackV01 string = "EASIGrtFeedbackV01"
-
-	// IntakeInputSchemaEASIIntakeV01 captures enum value "EASIIntakeV01"
-	IntakeInputSchemaEASIIntakeV01 string = "EASIIntakeV01"
-
-	// IntakeInputSchemaEASINoteV01 captures enum value "EASINoteV01"
-	IntakeInputSchemaEASINoteV01 string = "EASINoteV01"
-)
-
-// prop value enum
-func (m *IntakeInput) validateSchemaEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, intakeInputTypeSchemaPropEnum, true); err != nil {
+	if err := validate.Required("clientStatus", "body", m.ClientStatus); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -219,92 +206,6 @@ func (m *IntakeInput) validateSchema(formats strfmt.Registry) error {
 		return err
 	}
 
-	// value enum
-	if err := m.validateSchemaEnum("schema", "body", *m.Schema); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var intakeInputTypeStatusPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["Initiated","Final"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		intakeInputTypeStatusPropEnum = append(intakeInputTypeStatusPropEnum, v)
-	}
-}
-
-const (
-
-	// IntakeInputStatusInitiated captures enum value "Initiated"
-	IntakeInputStatusInitiated string = "Initiated"
-
-	// IntakeInputStatusFinal captures enum value "Final"
-	IntakeInputStatusFinal string = "Final"
-)
-
-// prop value enum
-func (m *IntakeInput) validateStatusEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, intakeInputTypeStatusPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *IntakeInput) validateStatus(formats strfmt.Registry) error {
-
-	if err := validate.Required("status", "body", m.Status); err != nil {
-		return err
-	}
-
-	// value enum
-	if err := m.validateStatusEnum("status", "body", *m.Status); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var intakeInputTypeTypePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["EASIAction","EASIBizCase","EASIGrtFeedback","EASIIntake","EASINote"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		intakeInputTypeTypePropEnum = append(intakeInputTypeTypePropEnum, v)
-	}
-}
-
-const (
-
-	// IntakeInputTypeEASIAction captures enum value "EASIAction"
-	IntakeInputTypeEASIAction string = "EASIAction"
-
-	// IntakeInputTypeEASIBizCase captures enum value "EASIBizCase"
-	IntakeInputTypeEASIBizCase string = "EASIBizCase"
-
-	// IntakeInputTypeEASIGrtFeedback captures enum value "EASIGrtFeedback"
-	IntakeInputTypeEASIGrtFeedback string = "EASIGrtFeedback"
-
-	// IntakeInputTypeEASIIntake captures enum value "EASIIntake"
-	IntakeInputTypeEASIIntake string = "EASIIntake"
-
-	// IntakeInputTypeEASINote captures enum value "EASINote"
-	IntakeInputTypeEASINote string = "EASINote"
-)
-
-// prop value enum
-func (m *IntakeInput) validateTypeEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, intakeInputTypeTypePropEnum, true); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -314,8 +215,12 @@ func (m *IntakeInput) validateType(formats strfmt.Registry) error {
 		return err
 	}
 
-	// value enum
-	if err := m.validateTypeEnum("type", "body", *m.Type); err != nil {
+	return nil
+}
+
+func (m *IntakeInput) validateVersion(formats strfmt.Registry) error {
+
+	if err := validate.Required("version", "body", m.Version); err != nil {
 		return err
 	}
 

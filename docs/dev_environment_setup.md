@@ -18,7 +18,8 @@ In general, the necessary tools are:
 - [`direnv`](https://direnv.net/)
 - [`pre-commit`](https://pre-commit.com/) (Installation requires Python)
 - `psql` (Postgres command-line client)
-- `yq` (Used for manipulating YAML to generate a JSON Schema file)
+- `jq` (Used for preprocessing Swagger JSON files)
+- `go-swagger` (Used for generating Go code based on Swagger files)
 
 ## Basic Prerequisites
 
@@ -116,13 +117,13 @@ The [`goimports`](https://pkg.go.dev/golang.org/x/tools/cmd/goimports) tool is u
 
 ## Node.js/npm
 
-We currently support Node.js v16 for this repo; Node 17 support is currently blocked by [this `create-react-app` issue](https://github.com/facebook/create-react-app/issues/11562). 
+We currently support Node.js v16 for this repo; Node 17 support is currently blocked by [this `create-react-app` issue](https://github.com/facebook/create-react-app/issues/11562).
 
-The easiest way to install this specific version of Node/npm is to use [`nvm`](https://github.com/nvm-sh/nvm). To install `nvm`, run 
+The easiest way to install this specific version of Node/npm is to use [`nvm`](https://github.com/nvm-sh/nvm). To install `nvm`, run
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ```
-Reload your shell, then run `nvm install 16`.
+Reload your shell, then run `nvm install`.
 
 ## Yarn
 
@@ -166,7 +167,7 @@ This repo uses [`pre-commit`](https://pre-commit.com/) to manage pre-commit Git 
 
 **MacOS:** Install with `brew install pre-commit`.
 
-**Windows+WSL:** 
+**Windows+WSL:**
 - First install Python's `pip` package manager with `sudo apt install python3-pip`.
 - Then, install `pre-commit` with `pip install pre-commit`. This should install `pre-commit` in the `~/.local/bin` directory.
 - Add this directory to your `PATH`. Add the following to `~/.bashrc`:
@@ -184,19 +185,39 @@ The Postgres command-line client is needed for running database-related scriptin
 
 **MacOS:** Install with `brew install postgres`. This installs the Postgres server as well; if this is an issue, see [this StackOverflow Q&A](https://stackoverflow.com/questions/44654216/correct-way-to-install-psql-without-full-postgres-on-macos) for alternatives.
 
-**Windows+WSL:** Install with `sudo apt install postgresql-client`. 
+**Windows+WSL:** Install with `sudo apt install postgresql-client`.
 
 ## Installing frontend dependencies
 
-To install the frontend's dependencies, run `yarn install --frozen-lockfile --ignore-engines`. The `--frozen-lockfile` flag will install the exact versions of all dependencies that are specified in `yarn.lock`; the `--ignore-engines` flag is necessary with Node 16 due to [this `react-uswds` issue](https://github.com/trussworks/react-uswds/issues/1582).
+To install the frontend's dependencies, run `yarn install --frozen-lockfile`. The `--frozen-lockfile` flag will install the exact versions of all dependencies that are specified in `yarn.lock`;
 
-## yq
+## jq
 
-[`yq`](https://github.com/mikefarah/yq) is used for generating a JSON schema file for the System Intake data we push over to CEDAR.
+[`jq`](https://stedolan.github.io/jq) is used for preprocessing the Swagger file from CEDAR's Intake API, before we run code generation. It may already be installed on your system, but if not:
 
-**MacOS:** Install with `brew install yq`.
+**MacOS:** Install with `brew install jq`.
 
-**Windows+WSL:**: Download and install with `wget https://github.com/mikefarah/yq/releases/download/v4.16.2/yq_linux_amd64 -O yq && sudo mv yq /usr/bin/yq && chmod +x /usr/bin/yq`.
+**Windows+WSL:**: Download and install with `sudo apt-get install jq`.
+
+## go-swagger
+
+[`go-swagger`](https://goswagger.io/install.html) is used for generating code based on Swagger files that describe the CEDAR APIs.
+
+**MacOS:** Install with
+```terminal
+brew tap go-swagger/go-swagger
+brew install go-swagger
+```
+
+**Windows+WSL:** Install with
+```terminal
+sudo apt update
+sudo apt install -y apt-transport-https gnupg curl
+curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/gpg.2F8CB673971B5C9E.key' | sudo apt-key add -
+curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/config.deb.txt?distro=debian&codename=any-version' | sudo tee /etc/apt/sources.list.d/go-swagger-go-swagger.list
+sudo apt update
+sudo apt install swagger
+```
 
 ## VSCode-specific tools
 
