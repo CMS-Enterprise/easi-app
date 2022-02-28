@@ -132,6 +132,7 @@ const ATO = ({ system }: ATOProps) => {
               )}
 
               {system.atoStatus === 'In Progress' && (
+                // @ts-expect-error
                 <ProcessList>
                   {system?.activities?.map((act: tempATOProp) => (
                     <ProcessListItem key={act.id}>

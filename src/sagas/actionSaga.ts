@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action as ReduxAction } from 'redux-actions';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, StrictEffect, takeLatest } from 'redux-saga/effects';
 
 import { Action } from 'types/action';
 import { postAction } from 'types/routines';
@@ -12,12 +12,14 @@ export function postSystemIntakeActionRequest(formData: Action) {
   );
 }
 
-function* completeSystemIntake(action: ReduxAction<Action>) {
+function* completeSystemIntake(
+  action: ReduxAction<Action>
+): Generator<StrictEffect, any, { data: any }> {
   try {
     yield put(postAction.request());
     const response = yield call(postSystemIntakeActionRequest, action.payload);
     yield put(postAction.success(response.data));
-  } catch (error) {
+  } catch (error: any) {
     yield put(postAction.failure(error.message));
   } finally {
     yield put(postAction.fulfill());
