@@ -21,7 +21,7 @@ optional -->
 ## Decision Outcome
 
 * Chosen Alternative: Bespoke Publication Subscription Queue
-> * On server start, create a new GoRoutine that runs on set intervals and runs jobs
+> * On server start, create a new Go Routine that runs on set intervals and runs jobs
 > * Can decide how often to run the job
 ```mermaid
 flowchart LR
@@ -34,9 +34,9 @@ a4 --> a2
 a3 --No-->  a5(Sleep for defined interval)
 a5 --> a2
 ```
-* Justifiaction
+* Justification
 > * Simplicity: 
->> * Writing our own publication queue will allow us to manage the job direcly from the existing repository
+>> * Writing our own publication queue will allow us to manage the job directly from the existing repository
 >> * This avoids additional libraries and dependencies
 > * Readability: 
 >> * Because the code is in the same repo, it is easier to follow the logic.
@@ -58,14 +58,14 @@ a5 --> a2
 
 ### Existing Job Queue Library
 #### Suggested Libraries
-* https://github.com/vmihailenco/taskq - Redis, SQS, IronMQ backends
+* https://github.com/vmihailenco/taskq - Redis, SQS, IronMQ backend
 * https://github.com/gocraft/work - Redis backend
 * https://github.com/bgentry/que-go - Postgres backend
 
 * `+` Leverage existing boilerplate code
 * `+` Potentially avoid overlooking use cases / unknown gotchas
-* `-` Added complexity an unnecesary dependencies
-* `-` Additional methods of accesing database data
+* `-` Added complexity an unnecessary dependencies
+* `-` Additional methods of accessing database data
 * `-` Not as lean of an option.
 
 
@@ -73,8 +73,7 @@ a5 --> a2
 [AWS Scheduled Tasks](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/scheduled_tasks.html)
 * `+` Flexible
 * `+` Control the Compute resources used to execute the job
-* `-` Added infrastructual complexity
-* `-` Added infrastructual complexity
+* `-` Added infrastructural complexity
 ### Bespoke Job / Publication Subscription Queue
 * `+` Tailored specifically to applications needs
 * `+` Doesn't require additional dependencies to be added. 
