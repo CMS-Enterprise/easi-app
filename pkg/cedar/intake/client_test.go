@@ -46,7 +46,7 @@ func (s ClientTestSuite) TestClient() {
 		si := testhelpers.NewSystemIntake()
 		si.CreatedAt = si.ContractStartDate
 		si.UpdatedAt = si.ContractStartDate
-		err = c.PublishSnapshot(ctx, &si, nil, nil, nil, nil)
+		err = c.PublishSystemIntake(ctx, si)
 		s.NoError(err)
 	})
 

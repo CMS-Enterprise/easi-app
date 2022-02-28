@@ -131,17 +131,17 @@ const SystemIntakeValidationSchema: any = {
         'Tell us whether you have a contract to support this effort'
       ),
       contractor: Yup.string().when('hasContract', {
-        is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
+        is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string()
           .trim()
           .required('Tell us whether you have selected a contractor(s)')
       }),
       vehicle: Yup.string().when('hasContract', {
-        is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
+        is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string().trim().required('Tell us about the contract vehicle')
       }),
       startDate: Yup.mixed().when('hasContract', {
-        is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
+        is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.object().shape({
           month: Yup.string()
             .trim()
@@ -170,7 +170,7 @@ const SystemIntakeValidationSchema: any = {
         })
       }),
       endDate: Yup.mixed().when('hasContract', {
-        is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
+        is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.object().shape({
           month: Yup.string().trim().required('Tell us the contract end month'),
           day: Yup.string().trim().required('Tell us the contract end day'),

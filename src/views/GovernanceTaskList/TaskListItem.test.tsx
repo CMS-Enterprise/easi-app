@@ -5,12 +5,14 @@ import TaskListItem, { TaskListDescription } from './TaskListItem';
 
 describe('The TaskListItem', () => {
   it('renders without crashing', () => {
-    shallow(<TaskListItem heading="Test Heading" status="CANNOT_START" />);
+    shallow(
+      <TaskListItem testId="1" heading="Test Heading" status="CANNOT_START" />
+    );
   });
 
   it('displays cannot start tag', () => {
     const component = shallow(
-      <TaskListItem heading="Test Heading" status="CANNOT_START" />
+      <TaskListItem testId="1" heading="Test Heading" status="CANNOT_START" />
     );
 
     expect(
@@ -20,7 +22,7 @@ describe('The TaskListItem', () => {
 
   it('displays completed tag', () => {
     const component = shallow(
-      <TaskListItem heading="Test Heading" status="COMPLETED" />
+      <TaskListItem testId="1" heading="Test Heading" status="COMPLETED" />
     );
 
     expect(
@@ -30,7 +32,7 @@ describe('The TaskListItem', () => {
 
   it('displays children', () => {
     const component = shallow(
-      <TaskListItem heading="Test Heading" status="START">
+      <TaskListItem testId="1" heading="Test Heading" status="START">
         <TaskListDescription>Hello</TaskListDescription>
         <div id="test-div">Test</div>
       </TaskListItem>

@@ -48,6 +48,9 @@ needs "gotest", install_with: "go get -u github.com/rakyll/gotest"
 needs "goimports", install_with: "go get -u golang.org/x/tools/cmd/goimports"
 needs "pgcli", install_with: "brew install pgcli"
 
+needs "swagger"
+needs "jq"
+
 # Gracefully handle folks trying to explore using common help flags
 ["--help", "-help", "--h", "-h"].each do |flag|
   if ARGV == [flag]

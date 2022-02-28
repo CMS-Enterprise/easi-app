@@ -53,14 +53,14 @@ const RequestOverview = () => {
     activePage: string;
   }>();
 
-  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  const { loading, data, refetch } = useQuery<
+    GetSystemIntake,
+    GetSystemIntakeVariables
+  >(GetSystemIntakeQuery, {
+    variables: {
+      id: systemId
     }
-  );
+  });
 
   const systemIntake = data?.systemIntake;
 
@@ -336,10 +336,11 @@ const RequestOverview = () => {
                 render={() => (
                   <ExtendLifecycleId
                     lcid={data.systemIntake?.lcid || ''}
-                    lcidExpiresAt={data.systemIntake?.lcidExpiresAt}
+                    lcidExpiresAt={data.systemIntake?.lcidExpiresAt || ''}
                     lcidScope={data.systemIntake?.lcidScope || ''}
                     lcidNextSteps={data.systemIntake?.decisionNextSteps || ''}
                     lcidCostBaseline={data.systemIntake?.lcidCostBaseline || ''}
+                    onSubmit={refetch}
                   />
                 )}
               />

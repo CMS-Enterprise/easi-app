@@ -54,7 +54,13 @@ const TestDate = () => {
     date => date.id === testDateId
   );
 
-  const testDate = DateTime.fromISO(test?.date);
+  const testDate = test?.date
+    ? DateTime.fromISO(test.date)
+    : {
+        month: '',
+        day: '',
+        year: ''
+      };
   const initialValues: TestDateFormType = {
     dateMonth: String(testDate.month),
     dateDay: String(testDate.day),

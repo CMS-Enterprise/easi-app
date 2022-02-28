@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { ApolloQueryResult, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
@@ -24,6 +24,7 @@ import {
   CreateSystemIntakeActionExtendLifecycleId,
   CreateSystemIntakeActionExtendLifecycleIdVariables
 } from 'queries/types/CreateSystemIntakeActionExtendLifecycleId';
+import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import { extendLifecycleIdSchema } from 'validations/actionSchema';
@@ -47,6 +48,7 @@ type ExtendLifecycleIdProps = {
   lcidScope: string;
   lcidNextSteps: string;
   lcidCostBaseline: string;
+  onSubmit(): Promise<ApolloQueryResult<GetSystemIntake>>;
 };
 
 const RADIX = 10;
@@ -56,7 +58,8 @@ const ExtendLifecycleId = ({
   lcidExpiresAt,
   lcidScope,
   lcidNextSteps,
-  lcidCostBaseline
+  lcidCostBaseline,
+  onSubmit
 }: ExtendLifecycleIdProps) => {
   const { t } = useTranslation('action');
   const { systemId } = useParams<{ systemId: string }>();
@@ -92,7 +95,7 @@ const ExtendLifecycleId = ({
       parseInt(newExpirationYear, RADIX),
       parseInt(newExpirationMonth, RADIX),
       parseInt(newExpirationDay, RADIX)
-    );
+    ).toISO();
     extendLifecycleID({
       variables: {
         input: {
@@ -106,6 +109,7 @@ const ExtendLifecycleId = ({
     }).then(response => {
       if (!response.errors) {
         history.push(`/governance-review-team/${systemId}/notes`);
+        onSubmit();
       }
     });
   };

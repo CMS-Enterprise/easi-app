@@ -38,7 +38,7 @@ function generatePDF(filename: string, content: string) {
 const downloadRefAsPDF = (
   title: string,
   filename: string,
-  ref: React.Ref<HTMLDivElement>
+  ref: React.RefObject<HTMLDivElement>
 ): void => {
   // Collect any stylesheets that are linked to. These are used in production.
   const { origin } = document.location;

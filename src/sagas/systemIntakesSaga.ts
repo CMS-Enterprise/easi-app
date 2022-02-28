@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Action } from 'redux-actions';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, StrictEffect, takeLatest } from 'redux-saga/effects';
 
 import { fetchSystemIntakes } from 'types/routines';
 
@@ -12,14 +12,16 @@ function getSystemIntakesRequest(status: string | null) {
   return axios.get(route);
 }
 
-function* getSystemIntakes(action: Action<any>) {
+function* getSystemIntakes(
+  action: Action<any>
+): Generator<StrictEffect, any, { data: any }> {
   const { payload } = action;
   const status = payload && payload.status;
   try {
     yield put(fetchSystemIntakes.request());
     const response = yield call(getSystemIntakesRequest, status);
     yield put(fetchSystemIntakes.success(response.data));
-  } catch (error) {
+  } catch (error: any) {
     yield put(fetchSystemIntakes.failure(error.message));
   } finally {
     yield put(fetchSystemIntakes.fulfill());

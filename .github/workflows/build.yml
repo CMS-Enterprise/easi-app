@@ -9,7 +9,7 @@ on:
       - master
 
 env:
-  EASI_APP_NODE_VERSION: '12.22.1'
+  EASI_APP_NODE_VERSION: '16.14.0'
   EASI_APP_GO_VERSION: '1.16.6'
   # Set the IMAGE_TAG in a way that works for both pull_request and push events.
   # For pull_request events, use github.event.pull_request.head.sha (see
@@ -124,6 +124,16 @@ jobs:
           key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             v1-yarn-
+      # go-swagger is used for pre-commit hooks
+      - name: Install go-swagger
+        id: install-go-swagger
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apt-transport-https gnupg curl
+          curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/gpg.2F8CB673971B5C9E.key' | sudo apt-key add -
+          curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/config.deb.txt?distro=debian&codename=any-version' | sudo tee /etc/apt/sources.list.d/go-swagger-go-swagger.list
+          sudo apt-get update
+          sudo apt-get install -y swagger
       - name: Pre-commit checks
         uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe
         with:
@@ -177,7 +187,7 @@ jobs:
           exit $result_code
         continue-on-error: true
       - name: Post comment with TypeScript type errors
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         if: ${{ steps.typechecker.outcome == 'failure' }}
         with:
           script: |

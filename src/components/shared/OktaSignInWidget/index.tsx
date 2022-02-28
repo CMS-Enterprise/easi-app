@@ -1,6 +1,8 @@
 // src/OktaSignInWidget.js
+// okta-signin-widget has no typescript support yet.  If becomes available, install and remove disable
 
 import React, { useEffect, useRef } from 'react';
+// @ts-expect-error
 import OktaSignIn from '@okta/okta-signin-widget';
 
 import './index.scss';
