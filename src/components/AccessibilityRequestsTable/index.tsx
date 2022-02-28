@@ -12,7 +12,6 @@ import {
 import { Table } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
-// import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import UswdsReactLink from 'components/LinkWrapper';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePagination from 'components/TablePagination';

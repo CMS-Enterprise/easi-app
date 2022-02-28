@@ -9,12 +9,11 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 
+import RemediationPlanDoc from 'assets/files/CMS508RemediationPlanTemplate.pdf';
+import TestPlanDoc from 'assets/files/Section508TestPlanTemplate.pdf';
 import PageHeading from 'components/PageHeading';
 
 import './index.scss';
-
-const RemediationPlanDoc = require('assets/files/CMS508RemediationPlanTemplate.pdf');
-const TestPlanDoc = require('assets/files/Section508TestPlanTemplate.pdf');
 
 const TestingTemplates = () => {
   const { t } = useTranslation('accessibility');

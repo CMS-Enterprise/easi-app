@@ -12,7 +12,7 @@ window.matchMedia = (): any => ({
 });
 
 describe('The Business Case Review Component', () => {
-  const businessCase = {
+  const businessCase: BusinessCaseModel = {
     status: 'OPEN',
     createdAt: '2021-06-10T19:22:40Z',
     systemIntakeId: '048c26ea-07be-4f40-b29e-761fc17bf414',
@@ -378,7 +378,7 @@ describe('The Business Case Review Component', () => {
       },
       hasUserInterface: 'YES'
     }
-  } as BusinessCaseModel;
+  };
 
   it('renders without crashing', () => {
     shallow(<BusinessCaseReview values={businessCase} />);
