@@ -28,14 +28,18 @@ export const getColumnSortStatus = <T extends {}>(
 export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
   const sharedClassName = 'margin-left-05 position-absolute';
   if (!column.isSorted) {
-    return <IconUnfoldMore className={sharedClassName} />;
+    return (
+      <IconUnfoldMore className={sharedClassName} data-testid="caret--sort" />
+    );
   }
 
   if (column.isSortedDesc) {
-    return <IconExpandMore className={sharedClassName} />;
+    return (
+      <IconExpandMore className={sharedClassName} data-testid="caret--down" />
+    );
   }
 
-  return <IconExpandLess className={sharedClassName} />;
+  return <IconExpandLess className={sharedClassName} data-testid="caret--up" />;
 };
 
 // Description beneath tables for sorting status
