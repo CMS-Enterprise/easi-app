@@ -35,19 +35,19 @@ func (note *TranslatableNote) CreateIntakeModel() (*wire.IntakeInput, error) {
 	}
 
 	result := wire.IntakeInput{
-		ID:   pStr(note.ID.String()),
-		Body: pStr(string(blob)),
+		ClientID: pStr(note.ID.String()),
+		Body:     pStr(string(blob)),
 
 		// invariants for this type
-		Status:     pStr(wire.IntakeInputStatusFinal),
-		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
-		Type:       pStr(wire.IntakeInputTypeEASINote),
-		Schema:     versionStr(IntakeInputSchemaEASINoteV01),
+		ClientStatus: statusStr(inputStatusFinal),
+		BodyFormat:   pStr(wire.IntakeInputBodyFormatJSON),
+		Type:         typeStr(intakeInputNote),
+		Schema:       versionStr(IntakeInputSchemaEASINoteV01),
 	}
 
 	if note.CreatedAt != nil {
-		result.CreatedDate = pDateTime(note.CreatedAt)
-		result.LastUpdate = pDateTime(note.CreatedAt)
+		result.ClientCreatedDate = pStrfmtDateTime(note.CreatedAt)
+		result.ClientLastUpdatedDate = pStrfmtDateTime(note.CreatedAt)
 	}
 
 	return &result, nil

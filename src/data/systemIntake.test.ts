@@ -93,15 +93,18 @@ describe('The system intake data modifiers', () => {
           teams: [
             {
               name: 'Technical Review Board',
-              collaborator: 'Chris TRB'
+              collaborator: 'Chris TRB',
+              key: '1'
             },
             {
               name: "OIT's Security and Privacy Group",
-              collaborator: 'Sam OIT Security'
+              collaborator: 'Sam OIT Security',
+              key: '2'
             },
             {
               name: 'Enterprise Architecture',
-              collaborator: 'Todd EA'
+              collaborator: 'Todd EA',
+              key: '3'
             }
           ]
         },
@@ -238,8 +241,7 @@ describe('The system intake data modifiers', () => {
           component: '',
           email: ''
         },
-        status: 'INTAKE_DRAFT',
-        requestType: 'NEW'
+        status: 'INTAKE_DRAFT'
       };
 
       expect(isIntakeStarted(data)).toEqual(false);

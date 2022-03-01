@@ -13,6 +13,7 @@ describe('File Upload component', () => {
         onChange={() => {}}
         onBlur={() => {}}
         ariaDescribedBy=""
+        inputProps={<input />}
       />
     );
   });
@@ -27,6 +28,7 @@ describe('File Upload component', () => {
         onBlur={() => {}}
         ariaDescribedBy=""
         disabled
+        inputProps={<input />}
       />
     );
 
@@ -51,6 +53,7 @@ describe('File Upload component', () => {
         onBlur={() => {}}
         ariaDescribedBy=""
         disabled
+        inputProps={<input />}
       />
     );
 
@@ -96,6 +99,7 @@ describe('File Upload component', () => {
         onBlur={() => {}}
         ariaDescribedBy=""
         disabled
+        inputProps={<input />}
       />
     );
 

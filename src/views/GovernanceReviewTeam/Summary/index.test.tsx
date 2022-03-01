@@ -100,7 +100,9 @@ describe('The GRT Review page', () => {
     );
 
     expect(
-      within(screen.getByTestId('grt-lcid')).getByText('123456')
+      within(screen.getByTestId('grt-current-status')).getByText(
+        'Lifecycle ID issued: 123456'
+      )
     ).toBeInTheDocument();
   });
 });

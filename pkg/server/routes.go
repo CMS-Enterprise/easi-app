@@ -238,10 +238,10 @@ func (s *Server) routes(
 				serviceConfig,
 				services.AuthorizeUserIsIntakeRequester,
 				store.UpdateSystemIntake,
-				func(c context.Context, si *models.SystemIntake) (string, error) {
-					// quick adapter to retrofit the new interface to take the place
-					// of the old interface
-					err := publisher.PublishSnapshot(c, si, nil, nil, nil, nil)
+				// quick adapter to retrofit the new interface to take the place
+				// of the old interface
+				func(ctx context.Context, si *models.SystemIntake) (string, error) {
+					err := publisher.PublishSystemIntake(ctx, *si)
 					return "", err
 				},
 				saveAction,
@@ -381,10 +381,10 @@ func (s *Server) routes(
 					serviceConfig,
 					services.AuthorizeUserIsIntakeRequester,
 					store.UpdateSystemIntake,
-					func(c context.Context, si *models.SystemIntake) (string, error) {
-						// quick adapter to retrofit the new interface to take the place
-						// of the old interface
-						err := publisher.PublishSnapshot(c, si, nil, nil, nil, nil)
+					// quick adapter to retrofit the new interface to take the place
+					// of the old interface
+					func(ctx context.Context, si *models.SystemIntake) (string, error) {
+						err := publisher.PublishSystemIntake(ctx, *si)
 						return "", err
 					},
 					saveAction,

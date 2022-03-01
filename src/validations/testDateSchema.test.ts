@@ -5,7 +5,7 @@ describe('test date validation', () => {
     it(`requires a score to be a number within 0 and 100: ${value}`, async () => {
       const result = await TestDateValidationSchema.validateAt('score', {
         score: { isPresent: true, value }
-      }).catch(err => {
+      }).catch((err: any) => {
         return err;
       });
 
@@ -18,7 +18,7 @@ describe('test date validation', () => {
       it(`accepts a valid test score: ${valid}`, async () => {
         const result = await TestDateValidationSchema.validateAt('score', {
           score: { isPresent: true, value: valid }
-        }).catch(err => {
+        }).catch((err: any) => {
           return err;
         });
 

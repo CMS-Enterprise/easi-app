@@ -83,30 +83,30 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		return nil, err
 	}
 
-	status := wire.IntakeInputStatusInitiated
+	status := inputStatusInitiated
 	for _, stat := range closedStatuses {
 		if si.Status == stat {
-			status = wire.IntakeInputStatusFinal
+			status = inputStatusFinal
 			break
 		}
 	}
 
 	result := wire.IntakeInput{
-		ID:     pStr(si.ID.String()),
-		Body:   pStr(string(blob)),
-		Status: pStr(status),
+		ClientID:     pStr(si.ID.String()),
+		Body:         pStr(string(blob)),
+		ClientStatus: statusStr(status),
 
 		// invariants for this type
-		Type:       pStr(wire.IntakeInputTypeEASIIntake),
+		Type:       typeStr(intakeInputSystemIntake),
 		Schema:     versionStr(IntakeInputSchemaEASIIntakeV01),
 		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
 	}
 
 	if si.CreatedAt != nil {
-		result.CreatedDate = pDateTime(si.CreatedAt)
+		result.ClientCreatedDate = pStrfmtDateTime(si.CreatedAt)
 	}
 	if si.UpdatedAt != nil {
-		result.LastUpdate = pDateTime(si.UpdatedAt)
+		result.ClientLastUpdatedDate = pStrfmtDateTime(si.UpdatedAt)
 	}
 
 	return &result, nil

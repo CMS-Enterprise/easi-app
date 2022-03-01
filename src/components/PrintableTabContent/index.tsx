@@ -2,7 +2,7 @@ import React from 'react';
 
 type PrintableTabContentProps = {
   visible: boolean;
-  children: React.Node;
+  children: JSX.Element;
 };
 
 const PrintableTabContent = ({

@@ -1,11 +1,10 @@
 import React from 'react';
-import { DateTime } from 'luxon';
 
 import './index.scss';
 
 type UpcomingActionsProps = {
   children: any;
-  timestamp: DateTime | null;
+  timestamp: string | null;
 };
 
 const UpcomingActions = ({ children, timestamp }: UpcomingActionsProps) => {
