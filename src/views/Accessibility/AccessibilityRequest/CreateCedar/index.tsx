@@ -24,6 +24,8 @@ import { AccessibilityRequestFormCedar } from 'types/accessibility';
 import flattenErrors from 'utils/flattenErrors';
 import accessibilitySchema from 'validations/accessibilitySchema';
 
+import './index.scss';
+
 const CreateCedar = () => {
   const history = useHistory();
   const { t } = useTranslation('accessibility');
@@ -78,7 +80,10 @@ const CreateCedar = () => {
 
   return (
     <>
-      <div className="grid-container" data-testid="create-508-request">
+      <div
+        className="grid-container create-508-request"
+        data-testid="create-508-request"
+      >
         <PageHeading>{t('newRequestForm.heading')}</PageHeading>
         <Formik
           initialValues={initialAccessibilityRequestFormDataCedar}
