@@ -17,6 +17,7 @@ import NewTestDateView from 'views/TestDate/NewTestDate';
 import UpdateTestDateView from 'views/TestDate/UpdateTestDate';
 
 import Create from './AccessibilityRequest/Create';
+import CreateCedar from './AccessibilityRequest/CreateCedar';
 import AccessibilityRequestsDocumentsNew from './AccessibilityRequest/Documents/New';
 import List from './AccessibilityRequest/List';
 import AccessibilityRequestDetailPage from './AccessibilityRequestDetailPage';
@@ -31,6 +32,14 @@ const NewRequest = (
     path="/508/requests/new"
     exact
     component={Create}
+  />
+);
+const NewRequestCedar = (
+  <Route
+    key="create-508-request"
+    path="/508/requests/new"
+    exact
+    component={CreateCedar}
   />
 );
 const AllRequests = (
@@ -166,7 +175,7 @@ const Accessibility = () => {
       return (
         <PageTemplate surveyUrl={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY}>
           {[
-            NewRequest,
+            flags.cedar508Requests ? NewRequestCedar : NewRequest,
             AllRequests,
             AccessibilityTestingOverview,
             MakingANewRequest,
@@ -185,7 +194,7 @@ const Accessibility = () => {
     return (
       <PageTemplate surveyUrl={REPORT_PROBLEM_BASIC_USER_SURVEY}>
         {[
-          NewRequest,
+          flags.cedar508Requests ? NewRequestCedar : NewRequest,
           AccessibilityTestingOverview,
           MakingANewRequest,
           AccessibilityTestingTemplates,
