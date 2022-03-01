@@ -123,7 +123,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
       data-testid="scrollable-table-container"
     >
       <table
-        class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
+        class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--3-K3t"
         data-testid="table"
       >
         <caption
