@@ -8,10 +8,6 @@ const processStages = [
     name: 'I have done some initial research'
   },
   {
-    value: 'funded',
-    name: 'The project is already funded'
-  },
-  {
     value: 'inDevelopment',
     name: 'Initial development underway'
   },
