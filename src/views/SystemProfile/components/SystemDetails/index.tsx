@@ -49,7 +49,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
         <Grid row gap>
           <Grid desktop={{ col: 8 }}>
             <SectionWrapper borderBottom className="padding-bottom-4">
-              <h2 className="margin-top-0">
+              <h2 className="margin-top-0 margin-bottom-4">
                 {t('singleSystem.systemDetails.header')}
               </h2>
 

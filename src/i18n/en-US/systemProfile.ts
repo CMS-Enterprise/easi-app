@@ -42,6 +42,8 @@ const systemProfile = {
       header: 'Authority to Operate (ATO)',
       status: 'Status',
       expiration: 'Expiration Date',
+      atoExpiration: 'ATO Expiration',
+      currentActivity: 'Current activity',
       methodologies: 'Methodologies and Programs',
       POAM: 'Plan of Action and Milestones (POAMs)',
       totalPOAM: 'Total POAMs',
