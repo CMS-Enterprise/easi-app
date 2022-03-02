@@ -93,6 +93,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
                 Request name
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -127,6 +128,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
                 Governance
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -161,6 +163,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
                 Submission date
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -195,6 +198,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
                 Status
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -229,6 +233,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
                 Upcoming meeting date
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
