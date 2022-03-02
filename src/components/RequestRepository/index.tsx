@@ -15,6 +15,7 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
+  IconFileDownload,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -325,7 +326,7 @@ const RequestRepository = () => {
           filename="request-repository.csv"
           headers={csvHeaders}
         >
-          <i className="fa fa-download" />
+          <IconFileDownload />
           &nbsp;{' '}
           <span className="text-underline">
             Download all requests as excel file
@@ -424,7 +425,7 @@ const RequestRepository = () => {
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    <span className={getHeaderSortIcon(column)} />
+                    {getHeaderSortIcon(column)}
                   </button>
                 </th>
               ))}

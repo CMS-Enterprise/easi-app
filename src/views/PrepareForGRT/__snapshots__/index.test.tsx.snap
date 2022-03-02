@@ -141,9 +141,23 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
                 onClick={[Function]}
                 type="button"
               >
-                <span
-                  className="fa easi-collapsable-link__square fa-caret-right"
-                />
+                <svg
+                  className="usa-icon"
+                  focusable={false}
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
                 Capital Planning and Investment Control (CPIC)
               </button>
             </div>
@@ -162,9 +176,23 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
                 onClick={[Function]}
                 type="button"
               >
-                <span
-                  className="fa easi-collapsable-link__square fa-caret-right"
-                />
+                <svg
+                  className="usa-icon"
+                  focusable={false}
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
                 Enterprise Architecture and Data
               </button>
             </div>
@@ -183,9 +211,23 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
                 onClick={[Function]}
                 type="button"
               >
-                <span
-                  className="fa easi-collapsable-link__square fa-caret-right"
-                />
+                <svg
+                  className="usa-icon"
+                  focusable={false}
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
                 Shared Services and Data Hosting
               </button>
             </div>
@@ -204,9 +246,23 @@ exports[`The prepare for GRT info page matches the snapshot 1`] = `
                 onClick={[Function]}
                 type="button"
               >
-                <span
-                  className="fa easi-collapsable-link__square fa-caret-right"
-                />
+                <svg
+                  className="usa-icon"
+                  focusable={false}
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
                 IT Security/Privacy
               </button>
             </div>

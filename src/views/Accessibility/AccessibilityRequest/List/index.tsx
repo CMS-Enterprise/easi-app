@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
-import { Alert } from '@trussworks/react-uswds';
+import { Alert, IconFileDownload } from '@trussworks/react-uswds';
 import axios from 'axios';
 
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
@@ -79,12 +79,12 @@ const List = () => {
           <PageHeading>{t('accessibility.heading')}</PageHeading>
           <div className="flex-align-self-center">
             <button
-              className="usa-button usa-button--unstyled easi-no-print display-block margin-bottom-4 text-no-underline"
+              className="usa-button usa-button--unstyled easi-no-print display-flex margin-bottom-4 text-no-underline"
               type="button"
               onClick={fetchCSV}
             >
-              <i className="fa fa-download" />
-              &nbsp;{' '}
+              <IconFileDownload />
+              &nbsp;
               <span className="text-underline">
                 Download all requests as excel file
               </span>
