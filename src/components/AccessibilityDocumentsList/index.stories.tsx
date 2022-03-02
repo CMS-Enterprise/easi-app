@@ -16,7 +16,7 @@ export default {
 export const Default = () => {
   const documents = [
     {
-      name: 'Document 1',
+      id: 'Document 1',
       status: AccessibilityRequestDocumentStatus.AVAILABLE,
       uploadedAt: DateTime.local().toString(),
       url: 'https://example.com/document.pdf',
@@ -26,7 +26,7 @@ export const Default = () => {
       }
     },
     {
-      name: 'Document 2',
+      id: 'Document 2',
       status: AccessibilityRequestDocumentStatus.UNAVAILABLE,
       uploadedAt: DateTime.local().toString(),
       url: 'https://example.com/document.pdf',
@@ -36,7 +36,7 @@ export const Default = () => {
       }
     },
     {
-      name: 'Document 3',
+      id: 'Document 3',
       status: AccessibilityRequestDocumentStatus.PENDING,
       uploadedAt: DateTime.local().toString(),
       url: 'https://example.com/document.pdf',

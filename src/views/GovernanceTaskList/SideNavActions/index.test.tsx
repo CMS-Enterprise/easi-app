@@ -4,13 +4,16 @@ import { shallow } from 'enzyme';
 
 import Modal from 'components/Modal';
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntakeForm } from 'types/systemIntake';
 
 import SideNavActions from './index';
 
 const renderComponent = () => {
-  return shallow(
-    <SideNavActions intake={initialSystemIntakeForm} archiveIntake={() => {}} />
-  );
+  const intake: SystemIntake = {
+    ...initialSystemIntakeForm
+  } as SystemIntake & SystemIntakeForm;
+  return shallow(<SideNavActions intake={intake} archiveIntake={() => {}} />);
 };
 
 describe('The TaskListSideNavActions', () => {

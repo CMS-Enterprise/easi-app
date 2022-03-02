@@ -67,26 +67,24 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
             solution={preferredSolution}
           />
         </PrintableTabContent>
-
-        <PrintableTabContent visible={activeSolutionTab === 'Alternative A'}>
-          {alternativeA && alternativeSolutionHasFilledFields(alternativeA) && (
+        {alternativeA && alternativeSolutionHasFilledFields(alternativeA) && (
+          <PrintableTabContent visible={activeSolutionTab === 'Alternative A'}>
             <ProposedBusinessCaseSolutionReview
               name="Alternative A"
               fiscalYear={fiscalYear}
               solution={alternativeA}
             />
-          )}
-        </PrintableTabContent>
-
-        <PrintableTabContent visible={activeSolutionTab === 'Alternative B'}>
-          {alternativeB && alternativeSolutionHasFilledFields(alternativeB) && (
+          </PrintableTabContent>
+        )}
+        {alternativeB && alternativeSolutionHasFilledFields(alternativeB) && (
+          <PrintableTabContent visible={activeSolutionTab === 'Alternative B'}>
             <ProposedBusinessCaseSolutionReview
               name="Alternative B"
               fiscalYear={fiscalYear}
               solution={alternativeB}
             />
-          )}
-        </PrintableTabContent>
+          </PrintableTabContent>
+        )}
       </div>
     </ResponsiveTabs>
   );

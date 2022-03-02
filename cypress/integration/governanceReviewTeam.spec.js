@@ -163,12 +163,12 @@ describe('Governance Review Team', () => {
     ).click();
 
     cy.contains('h1', 'Decision - Approved');
-    cy.get('[data-testid="grt-lcid"]')
+    cy.get('[data-testid="grt-current-status"]')
       .invoke('text')
       .then(text => {
-        expect(text.length).to.equal(6);
+        expect(text.length).to.equal(27);
       });
-    cy.contains('p', 'LCID issued');
+    cy.contains('dt', 'Lifecycle ID issued');
 
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/lcid"]'

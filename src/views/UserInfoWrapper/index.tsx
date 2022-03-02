@@ -10,6 +10,12 @@ type UserInfoWrapperProps = {
   children: React.ReactNode;
 };
 
+type oktaUserProps = {
+  name?: string;
+  euaId?: string;
+  groups?: string[];
+};
+
 const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   const dispatch = useDispatch();
   const { authState, oktaAuth } = useOktaAuth();
@@ -20,7 +26,7 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
       window.localStorage[localAuthStorageKey] &&
       JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
     ) {
-      const oktaUser = await oktaAuth.getUser();
+      const oktaUser: oktaUserProps = await oktaAuth.getUser();
       const user = {
         name: oktaUser.name,
         euaId: oktaUser.euaId || '',
@@ -31,6 +37,7 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
       const user = {
         name: authState?.idToken?.claims.name,
         euaId: authState?.idToken?.claims.preferred_username,
+        // @ts-ignore
         groups: authState?.accessToken?.claims.groups || []
       };
       dispatch(setUser(user));

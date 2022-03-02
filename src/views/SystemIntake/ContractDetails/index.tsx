@@ -108,14 +108,14 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       month: Number(values.contract.startDate.month),
       year: Number(values.contract.startDate.year),
       zone: 'UTC'
-    });
+    }).toISO();
 
     const endDate = DateTime.fromObject({
       day: Number(values.contract.endDate.day),
       month: Number(values.contract.endDate.month),
       year: Number(values.contract.endDate.year),
       zone: 'UTC'
-    });
+    }).toISO();
 
     return {
       id,

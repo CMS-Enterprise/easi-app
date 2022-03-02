@@ -376,7 +376,7 @@ const GovernanceTaskList = () => {
                     address the concerns to proceed.
                   </p>
                 </TaskListDescription>
-                <DecisionCta id={id} status={status || ''} />
+                <DecisionCta id={id || ''} status={status || ''} />
               </TaskListItem>
             </ol>
           </div>

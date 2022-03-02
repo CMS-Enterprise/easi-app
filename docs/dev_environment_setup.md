@@ -225,6 +225,7 @@ sudo apt install swagger
 
 **All developers:**
 - VS Code will recommend installing the extensions specified in [`.vscode/extensions.json`](./.vscode/extensions.json). Install all of them.
+> - **Windows+WSL:** The GitLens extension will likely not work. It is dependent on another extension which VSCode installs on the windows side. If it doesn't work, you can safely ignore it.
 - The Go extension should prompt you to install the analysis tools it uses. Install all of them. See [these instructions](https://github.com/golang/vscode-go/blob/master/README.md#tools) for more details.
 
 ## Starting the application
