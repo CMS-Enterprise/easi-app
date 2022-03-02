@@ -8,6 +8,7 @@ import {
   BreadcrumbLink,
   Grid,
   GridContainer,
+  IconMenu,
   PrimaryNav,
   SideNav,
   SummaryBox
@@ -270,7 +271,7 @@ const SystemProfile = () => {
             onClick={() => setisMobileSubNavExpanded(true)}
           >
             <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>
-            <span className="fa fa-bars" />
+            <IconMenu size={3} />
           </button>
         </div>
 
