@@ -3,12 +3,15 @@
 * @CMSGov/easi
 
 # Frontend Changes
-/package-lock.json @CMSGov/easi-frontend
+/yarn.lock @CMSGov/easi-frontend
 /package.json @CMSGov/easi-frontend
 /src/ @CMSGov/easi-frontend
 /cypress/ @CMSGov/easi-frontend
 /public/ @CMSGov/easi-frontend
 /.storybook/ @CMSGov/easi-frontend
+*.js @CMSGov/easi-frontend
+*.ts @CMSGov/easi-frontend
+*.tsx @CMSGov/easi-frontend
 
 # Backend Changes
 /go.mod @CMSGov/easi-backend
@@ -16,3 +19,4 @@
 /pkg/ @CMSGov/easi-backend
 /cmd/ @CMSGov/easi-backend
 /migrations/ @CMSGov/easi-backend
+*.go @CMSGov/easi-backend
