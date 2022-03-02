@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Button } from '@trussworks/react-uswds';
+import {
+  Button,
+  IconExpandMore,
+  IconNavigateNext,
+  IconVisibilityOff,
+  IconVisiblity
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -32,15 +38,17 @@ const CollapsableLink = ({
   // That is, how do we initialize this component and set isOpen to true?
   const [isOpen, setOpen] = useState(startOpen);
 
-  const iconClasses: string[] = eyeIcon
-    ? ['fa-eye-slash', 'fa-eye']
-    : ['fa-caret-down', 'fa-caret-right'];
-  const arrowClassNames = classnames(
-    'fa',
-    'easi-collapsable-link__square',
-    eyeIcon && 'easi-collapsable-link__eye-icon',
-    isOpen ? iconClasses[0] : iconClasses[1]
-  );
+  const renderEyeIcon = () => {
+    return isOpen ? (
+      <IconVisibilityOff className="easi-collapsable-link__eye-icon" />
+    ) : (
+      <IconVisiblity className="easi-collapsable-link__eye-icon" />
+    );
+  };
+
+  const renderCaret = () => {
+    return isOpen ? <IconExpandMore /> : <IconNavigateNext />;
+  };
 
   const collapseButton: React.ReactNode = (
     <Button
@@ -52,7 +60,7 @@ const CollapsableLink = ({
       unstyled
       data-testid="collapsable-link"
     >
-      <span className={arrowClassNames} />
+      {eyeIcon ? renderEyeIcon() : renderCaret()}
       {isOpen ? closeLabel || label : label}
     </Button>
   );
