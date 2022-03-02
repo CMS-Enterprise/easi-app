@@ -169,6 +169,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 />
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -203,6 +204,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 Acronym
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -237,6 +239,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 System Name
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--up"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -271,6 +274,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 CMS Component
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -305,6 +309,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 ATO Status
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
                   focusable="false"
                   height="1em"
                   role="img"
