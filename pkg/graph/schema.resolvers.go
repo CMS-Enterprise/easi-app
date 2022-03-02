@@ -96,7 +96,7 @@ func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj
 }
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
-	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
+	system, systemErr := r.store.FetchSystemByIntakeID(ctx, *obj.IntakeID)
 	if systemErr != nil {
 		return nil, systemErr
 	}
@@ -489,25 +489,34 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
-	intake, err := r.store.FetchSystemIntakeByID(ctx, input.IntakeID)
-	if err != nil {
-		return nil, err
+	if input.IntakeID == nil && (input.CedarSystemID == nil || len(*input.CedarSystemID) == 0) {
+		return nil, errors.New("Either a system intake ID or a CEDAR system ID is required to create a 508 request")
 	}
 
 	newRequest := &models.AccessibilityRequest{
 		EUAUserID: requesterEUAID,
 		Name:      input.Name,
-		IntakeID:  input.IntakeID,
+	}
+
+	var applicationName string
+	if input.IntakeID != nil {
+		intake, err2 := r.store.FetchSystemIntakeByID(ctx, *input.IntakeID)
+		if err2 != nil {
+			return nil, err2
+		}
+		newRequest.IntakeID = &intake.ID
+		applicationName = intake.ProjectName.String
 	}
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
 	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
-		_, err = r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
-		if err != nil {
-			return nil, err
+		cedarSystem, err3 := r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
+		if err3 != nil {
+			return nil, err3
 		}
 		newRequest.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
+		applicationName = cedarSystem.Name
 	}
 
 	request, err := r.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, newRequest)
@@ -519,7 +528,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		ctx,
 		requesterInfo.CommonName,
 		request.Name,
-		intake.ProjectName.String,
+		applicationName,
 		request.ID,
 	)
 	if err != nil {
