@@ -12,7 +12,7 @@ describe('Accessibility Requests', () => {
     cy.visit('/508/requests/new');
     cy.contains('h1', 'Request 508 testing');
     cy.contains('label', "Choose the application you'd like to test");
-    cy.get('#508Request-IntakeId')
+    cy.get('#508Request-IntakeComboBox')
       .type('TACO - 000000{enter}')
       .should('have.value', 'TACO - 000000');
     cy.contains('button', 'Send 508 testing request').click();

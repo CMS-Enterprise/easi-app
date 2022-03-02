@@ -98,14 +98,27 @@ exports[`System List View when there are requests matches snapshot 1`] = `
         type="search"
       />
       <button
-        class="usa-button no-pointer"
+        class="usa-button grid-row flex-justify-center flex-align-center no-pointer"
         data-testid="button"
         type="submit"
       >
-         
-        <span
-          class="usa-search__submit-text fa fa-search"
-        />
+        <svg
+          class="usa-icon usa-icon--size-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+          />
+        </svg>
       </button>
     </form>
     <div
@@ -123,7 +136,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
       data-testid="scrollable-table-container"
     >
       <table
-        class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--3-K3t"
+        class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
         data-testid="table"
       >
         <caption
@@ -154,9 +167,24 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                   class="fa fa-bookmark bookmark__icon fa-1x"
                   data-testid="bookmark-icon"
                 />
-                <span
-                  class="margin-left-1 fa fa-sort caret position-absolute"
-                />
+                <svg
+                  class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
               </button>
             </th>
             <th
@@ -174,9 +202,24 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 type="button"
               >
                 Acronym
-                <span
-                  class="margin-left-1 fa fa-sort caret position-absolute"
-                />
+                <svg
+                  class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
               </button>
             </th>
             <th
@@ -194,9 +237,24 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 type="button"
               >
                 System Name
-                <span
-                  class="margin-left-1 fa fa-caret-up position-absolute"
-                />
+                <svg
+                  class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--up"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"
+                  />
+                </svg>
               </button>
             </th>
             <th
@@ -214,9 +272,24 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 type="button"
               >
                 CMS Component
-                <span
-                  class="margin-left-1 fa fa-sort caret position-absolute"
-                />
+                <svg
+                  class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
               </button>
             </th>
             <th
@@ -234,9 +307,24 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 type="button"
               >
                 ATO Status
-                <span
-                  class="margin-left-1 fa fa-sort caret position-absolute"
-                />
+                <svg
+                  class="usa-icon margin-left-05 position-absolute"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
               </button>
             </th>
           </tr>

@@ -8,6 +8,7 @@ describe('The Dropdown Field component', () => {
     shallow(
       <DropdownField
         id="TestDropdown"
+        value="Value Group"
         name="testDropdown"
         onBlur={() => {}}
         onChange={() => {}}

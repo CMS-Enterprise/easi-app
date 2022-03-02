@@ -10,6 +10,7 @@ import configureMockStore from 'redux-mock-store';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
+import { Flags } from 'types/flags';
 import Table from 'views/MyRequests/Table';
 
 import Home from './index';
@@ -31,12 +32,12 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
-const defaultFlags = {
+const defaultFlags: Flags = {
   downgrade508Tester: false,
   downgrade508User: false,
   downgradeGovTeam: false,
   sandbox: true
-};
+} as Flags;
 
 describe('The home page', () => {
   beforeEach(() => {

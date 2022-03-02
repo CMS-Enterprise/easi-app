@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
+  Row,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -14,6 +15,7 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
+  IconFileDownload,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -324,7 +326,7 @@ const RequestRepository = () => {
           filename="request-repository.csv"
           headers={csvHeaders}
         >
-          <i className="fa fa-download" />
+          <IconFileDownload />
           &nbsp;{' '}
           <span className="text-underline">
             Download all requests as excel file
@@ -423,7 +425,7 @@ const RequestRepository = () => {
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    <span className={getHeaderSortIcon(column)} />
+                    {getHeaderSortIcon(column)}
                   </button>
                 </th>
               ))}
@@ -431,9 +433,10 @@ const RequestRepository = () => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(row => {
+          {page.map((row: Row) => {
             prepareRow(row);
             return (
+              // @ts-ignore
               <tr {...row.getRowProps()} data-testid={`${row.original.id}-row`}>
                 {row.cells.map((cell, i) => {
                   if (i === 0) {

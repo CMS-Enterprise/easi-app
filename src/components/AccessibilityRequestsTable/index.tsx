@@ -28,7 +28,6 @@ import {
 } from 'utils/tableSort';
 
 import './index.scss';
-// import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 
 type AccessibilityRequestsTableProps = {
   requests: AccessibilityRequests[];
@@ -55,7 +54,12 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.submissionDate'),
-        accessor: 'submittedAt',
+        accessor: ({ submittedAt }: { submittedAt: string }) => {
+          if (submittedAt) {
+            return DateTime.fromISO(submittedAt);
+          }
+          return null;
+        },
         Cell: ({ value }: any) => {
           if (value) {
             return formatDate(value);
@@ -70,8 +74,13 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: 'relevantTestDate',
-        Cell: ({ value }: any) => {
+        accessor: ({ relevantTestDate }: { relevantTestDate: string }) => {
+          if (relevantTestDate) {
+            return DateTime.fromISO(relevantTestDate);
+          }
+          return null;
+        },
+        Cell: ({ value }: any): any => {
           if (value) {
             return formatDate(value);
           }
@@ -88,8 +97,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           // Status hasn't changed if the status record created at is the same
           // as the 508 request's submitted at
           if (
-            row.original?.submittedAt?.toISO() ===
-            row.original?.statusRecord?.createdAt?.toISO()
+            row.original?.submittedAt === row.original?.statusRecord?.createdAt
           ) {
             return <span>{value}</span>;
           }
@@ -113,24 +121,21 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
   // Modifed data can then be configured with JSX components in column cell configuration
   const data = useMemo(() => {
     const tableData = requests.map(request => {
-      const submittedAt = request.submittedAt
-        ? DateTime.fromISO(request.submittedAt)
-        : null;
       const businessOwner = `${request.system.businessOwner.name}, ${request.system.businessOwner.component}`;
       const testDate = request.relevantTestDate?.date
-        ? DateTime.fromISO(request.relevantTestDate?.date)
+        ? request.relevantTestDate?.date
         : null;
       const statusRecord = {
         status: accessibilityRequestStatusMap[`${request.statusRecord.status}`],
         createdAt: request.statusRecord.createdAt
-          ? DateTime.fromISO(request.statusRecord.createdAt)
+          ? request.statusRecord.createdAt
           : null
       };
 
       return {
         id: request.id,
         requestName: request.name,
-        submittedAt,
+        submittedAt: request.submittedAt,
         businessOwner,
         relevantTestDate: testDate,
         statusRecord
@@ -225,7 +230,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    <span className={getHeaderSortIcon(column)} />
+                    {getHeaderSortIcon(column)}
                   </button>
                 </th>
               ))}

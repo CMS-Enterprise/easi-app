@@ -26,10 +26,7 @@ const tableMap = (tableData: GetRequests, t: TFunction) => {
       case RequestType.ACCESSIBILITY_REQUEST:
         // Status hasn't changed if the status record created at is the same
         // as the 508 request's submitted at
-        if (
-          new Date(request.submittedAt).toISOString() ===
-          new Date(request.statusCreatedAt).toISOString()
-        ) {
+        if (request.submittedAt === request.statusCreatedAt) {
           status = accessibilityRequestStatusMap[request.status];
         }
         status = accessibilityRequestStatusMap[request.status];

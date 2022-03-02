@@ -8,7 +8,12 @@ import systemIntakesReducer from './systemIntakesReducer';
 
 describe('The system intakes reducer', () => {
   it('returns the initial state', () => {
-    expect(systemIntakesReducer(undefined, {})).toEqual({
+    expect(
+      systemIntakesReducer(undefined, {
+        payload: '',
+        type: ''
+      })
+    ).toEqual({
       systemIntakes: [],
       error: null,
       isLoading: null,

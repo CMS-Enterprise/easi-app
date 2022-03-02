@@ -43,17 +43,17 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
   });
 
   const { grtDate, grbDate } = systemIntake;
-  const parsedGrbDate = parseAsDate(grbDate);
-  const parsedGrtDate = parseAsDate(grtDate);
+  const parsedGrbDate = grbDate ? parseAsDate(grbDate) : null;
+  const parsedGrtDate = grtDate ? parseAsDate(grtDate) : null;
 
   // TODO: Fix Text Field so we don't have to set initial empty values
   const initialValues: SubmitDatesForm = {
-    grtDateDay: grtDate ? String(parsedGrtDate.day) : '',
-    grtDateMonth: grtDate ? String(parsedGrtDate.month) : '',
-    grtDateYear: grtDate ? String(parsedGrtDate.year) : '',
-    grbDateDay: grbDate ? String(parsedGrbDate.day) : '',
-    grbDateMonth: grbDate ? String(parsedGrbDate.month) : '',
-    grbDateYear: grbDate ? String(parsedGrbDate.year) : ''
+    grtDateDay: grtDate && parsedGrtDate ? String(parsedGrtDate.day) : '',
+    grtDateMonth: grtDate && parsedGrtDate ? String(parsedGrtDate.month) : '',
+    grtDateYear: grtDate && parsedGrtDate ? String(parsedGrtDate.year) : '',
+    grbDateDay: grbDate && parsedGrbDate ? String(parsedGrbDate.day) : '',
+    grbDateMonth: grbDate && parsedGrbDate ? String(parsedGrbDate.month) : '',
+    grbDateYear: grbDate && parsedGrbDate ? String(parsedGrbDate.year) : ''
   };
 
   const onSubmit = (values: SubmitDatesForm) => {
@@ -71,14 +71,14 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
       month: Number(grtDateMonth),
       year: Number(grtDateYear),
       zone: 'UTC'
-    });
+    }).toISO();
 
     const newGrbDate = DateTime.fromObject({
       day: Number(grbDateDay),
       month: Number(grbDateMonth),
       year: Number(grbDateYear),
       zone: 'UTC'
-    });
+    }).toISO();
 
     mutate({
       variables: {

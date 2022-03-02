@@ -93,7 +93,7 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
   describe('Desktop', () => {
     beforeEach(() => {
-      global.matchMedia = media => ({
+      global.matchMedia = (media: string) => ({
         addListener: () => {},
         removeListener: () => {},
         matches: media === '(min-width: 769px)'
@@ -129,7 +129,7 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
   describe('Mobile/Tablet', () => {
     beforeEach(() => {
-      global.matchMedia = media => ({
+      global.matchMedia = (media: string) => ({
         addListener: () => {},
         removeListener: () => {},
         matches: media === '(max-width: 768px)'

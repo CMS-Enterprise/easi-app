@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
+import { IconNavigateBefore } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import { ImproveEasiSurvey } from 'components/Survey';
@@ -20,8 +21,11 @@ const Confirmation = () => {
         </h2>
         <ImproveEasiSurvey />
         <div>
-          <Link to={`/governance-task-list/${systemId}`}>
-            <i className="fa fa-angle-left margin-x-05" aria-hidden />
+          <Link
+            to={`/governance-task-list/${systemId}`}
+            className="display-flex"
+          >
+            <IconNavigateBefore className="margin-x-05" aria-hidden />
             {t('submission.confirmation.taskListCta')}
           </Link>
         </div>
