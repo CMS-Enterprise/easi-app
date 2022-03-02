@@ -194,6 +194,7 @@ func (s *Server) routes(
 				store.CreateGRTFeedback,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+				emailClient.SendSystemIntakeReviewInvalidRequester,
 			),
 			CreateActionUpdateStatus: services.NewCreateActionUpdateStatus(
 				serviceConfig,

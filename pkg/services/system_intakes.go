@@ -434,6 +434,7 @@ func NewProvideGRTFeedback(
 	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
+	sendReviewEmailInvalidRequester func(ctx context.Context, emailText string, intakeID uuid.UUID) error,
 ) func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error) {
 	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus) (*models.GRTFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
@@ -441,11 +442,19 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
+		// TODO (for PR) - arguably, we could move this block and the block that checks for requesterInfo == nil || requesterInfo.Email == "" down, so all the email-handling stuff is in one place
+		// this would be a behavior change; right now, if requester info fetch from CEDAR LDAP fails, nothing is saved in our DB
+		// if we moved requesterInfo stuff below, we'd save feedback/action/intake in our DB, then return an error when fetching from CEDAR LDAP
+
 		var requesterInfo *models.UserInfo
 		if intake.EUAUserID.ValueOrZero() == "" {
 			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
 				zap.String("intakeID", intake.ID.String()))
-			// TODO - send fallback email
+			emailText := fmt.Sprint("The requester for intake ", intake.ID.String(), " does not have a valid EUA ID; EASi cannot email them the intake review.")
+			err = sendReviewEmailInvalidRequester(ctx, emailText, intake.ID)
+			if err != nil {
+				return nil, err
+			}
 		} else {
 			requesterInfo, err = fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
 			if err != nil {
