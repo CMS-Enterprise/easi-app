@@ -139,6 +139,9 @@ const accessibility = {
   },
   newRequestForm: {
     heading: 'Request 508 testing',
+    loadingSystems: 'Loading systems...',
+    errorSystems:
+      'We’re experiencing issues loading data, so you may not be able to complete your request at this time.',
     fields: {
       project: {
         label: "Choose the application you'd like to test",
@@ -156,6 +159,21 @@ const accessibility = {
         header: 'What if I cannot find my application or Lifecycle ID?',
         description:
           'Your application might not have a Lifecycle ID. A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your application.'
+      }
+    },
+    cedar: {
+      fields: {
+        project: {
+          label: 'Select the system you’d like to test',
+          helpText: 'Start typing the name of the system'
+        }
+      },
+      helpAndGuidance: {
+        lifecycleIdAccordion: {
+          header: 'What if I cannot find my system?',
+          description:
+            'Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your application.'
+        }
       }
     }
   },

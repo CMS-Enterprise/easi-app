@@ -4,10 +4,10 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Alert, Button, ComboBox, Link } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import { Form as FormikForm, Formik, FormikProps } from 'formik';
 
 import PageHeading from 'components/PageHeading';
-import PageLoading from 'components/PageLoading';
 import { AlertText } from 'components/shared/Alert';
 import CollapsibleLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -15,6 +15,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import Spinner from 'components/Spinner';
 import { initialAccessibilityRequestFormDataCedar } from 'data/accessibility';
 import useMessage from 'hooks/useMessage';
 import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
@@ -31,7 +32,9 @@ const CreateCedar = () => {
   const { t } = useTranslation('accessibility');
   const { showMessageOnNextPage } = useMessage();
 
-  const { data, loading } = useQuery<GetCedarSystemIds>(GetCedarSystemIdsQuery);
+  const { data, loading, error } = useQuery<GetCedarSystemIds>(
+    GetCedarSystemIdsQuery
+  );
 
   const [mutate, mutationResult] = useMutation(CreateAccessibilityRequestQuery);
   const handleSubmitForm = (values: AccessibilityRequestFormCedar) => {
@@ -74,10 +77,6 @@ const CreateCedar = () => {
     });
   }, [data]);
 
-  if (loading) {
-    return <PageLoading />;
-  }
-
   return (
     <>
       <div
@@ -85,6 +84,11 @@ const CreateCedar = () => {
         data-testid="create-508-request"
       >
         <PageHeading>{t('newRequestForm.heading')}</PageHeading>
+        {error && (
+          <div className="tablet:grid-col-8">
+            <Alert type="warning">{t('newRequestForm.errorSystems')}</Alert>
+          </div>
+        )}
         <Formik
           initialValues={initialAccessibilityRequestFormDataCedar}
           onSubmit={handleSubmitForm}
@@ -135,45 +139,60 @@ const CreateCedar = () => {
                       error={!!flatErrors.intakeId}
                     >
                       <Label htmlFor="508Request-IntakeId">
-                        {t('newRequestForm.fields.project.label')}
+                        {t('newRequestForm.cedar.fields.project.label')}
                       </Label>
                       <HelpText id="508Request-IntakeId-HelpText">
-                        {t('newRequestForm.fields.project.helpText')}
+                        {t('newRequestForm.cedar.fields.project.helpText')}
                       </HelpText>
                       <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
-                      <ComboBox
-                        id="508Request-IntakeComboBox"
-                        name="intakeComboBox"
-                        inputProps={{
-                          id: '508Request-IntakeId',
-                          name: 'intakeId',
-                          'aria-describedby': '508Request-IntakeId-HelpText'
-                        }}
-                        options={projectComboBoxOptions}
-                        onChange={cedarId => {
-                          const system = data?.cedarSystems?.find(
-                            cedarSystem => cedarSystem?.id === cedarId
-                          );
-                          if (system) {
-                            setFieldValue('cedarId', system.id);
-                            setFieldValue('requestName', system.name);
-                          } else {
-                            setFieldValue('cedarId', '');
-                            setFieldValue('requestName', '');
-                          }
-                        }}
-                      />
+                      {loading ? (
+                        <div className="display-flex flex-align-center padding-1 margin-top-1">
+                          <Spinner
+                            size="small"
+                            aria-valuetext={t('newRequestForm.loadingSystems')}
+                            aria-busy
+                          />
+                          <div className="margin-left-1">
+                            {t('newRequestForm.loadingSystems')}
+                          </div>
+                        </div>
+                      ) : (
+                        <ComboBox
+                          disabled={!!error}
+                          id="508Request-IntakeComboBox"
+                          name="intakeComboBox"
+                          className={classNames({ disabled: error })}
+                          inputProps={{
+                            id: '508Request-IntakeId',
+                            name: 'intakeId',
+                            'aria-describedby': '508Request-IntakeId-HelpText'
+                          }}
+                          options={projectComboBoxOptions}
+                          onChange={cedarId => {
+                            const system = data?.cedarSystems?.find(
+                              cedarSystem => cedarSystem?.id === cedarId
+                            );
+                            if (system) {
+                              setFieldValue('cedarId', system.id);
+                              setFieldValue('requestName', system.name);
+                            } else {
+                              setFieldValue('cedarId', '');
+                              setFieldValue('requestName', '');
+                            }
+                          }}
+                        />
+                      )}
                     </FieldGroup>
                     <div className="tablet:grid-col-8">
                       <div className="margin-top-4">
                         <CollapsibleLink
                           id="LifecycleIdAccordion"
                           label={t(
-                            'newRequestForm.helpAndGuidance.lifecycleIdAccordion.header'
+                            'newRequestForm.cedar.helpAndGuidance.lifecycleIdAccordion.header'
                           )}
                         >
                           <p>
-                            <Trans i18nKey="accessibility:newRequestForm.helpAndGuidance.lifecycleIdAccordion.description">
+                            <Trans i18nKey="accessibility:newRequestForm.cedar.helpAndGuidance.lifecycleIdAccordion.description">
                               indexZero
                               <Link href="mailto:IT_Governance@cms.hhs.gov">
                                 email

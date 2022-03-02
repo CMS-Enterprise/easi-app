@@ -1,5 +1,7 @@
 .create-508-request {
-  .usa-button:disabled {
+  .usa-button:disabled,
+  .usa-combo-box.disabled .usa-combo-box__toggle-list:disabled,
+  .usa-combo-box.disabled .usa-combo-box__input-button-separator {
     cursor: default;
   }
 }

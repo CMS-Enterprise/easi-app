@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -9,6 +10,7 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 
 const MakingARequest = () => {
   const { t } = useTranslation('accessibility');
+  const flags = useFlags();
 
   return (
     <div
@@ -44,9 +46,15 @@ const MakingARequest = () => {
             indexTwo
           </Trans>
         </p>
-        <h2 className="margin-top-5">{t('makingARequest.beforeYouStart')}</h2>
-        <p>{t('makingARequest.needLcid')}</p>
-        <p>{t('makingARequest.onceYouMakeRequest')}</p>
+        {!flags.cedar508Requests && (
+          <>
+            <h2 className="margin-top-5">
+              {t('makingARequest.beforeYouStart')}
+            </h2>
+            <p>{t('makingARequest.needLcid')}</p>
+          </>
+        )}
+        <p className="margin-y-3">{t('makingARequest.onceYouMakeRequest')}</p>
         <UswdsReactLink
           className="usa-button margin-bottom-3"
           to="/508/testing-overview?continue=true"
