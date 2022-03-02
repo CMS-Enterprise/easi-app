@@ -31,6 +31,7 @@ type templates struct {
 	systemIntakeSubmissionTemplate             templateCaller
 	businessCaseSubmissionTemplate             templateCaller
 	intakeReviewTemplate                       templateCaller
+	intakeReviewInvalidRequesterTemplate       templateCaller
 	namedRequestWithdrawTemplate               templateCaller
 	unnamedRequestWithdrawTemplate             templateCaller
 	issueLCIDTemplate                          templateCaller
@@ -89,6 +90,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(intakeReviewTemplateName)
 	}
 	appTemplates.intakeReviewTemplate = intakeReviewTemplate
+
+	intakeReviewWithoutRequesterTemplateName := "system_intake_review_invalid_requester.gohtml"
+	intakeReviewInvalidRequesterTemplate := rawTemplates.Lookup(intakeReviewWithoutRequesterTemplateName)
+	if intakeReviewInvalidRequesterTemplate == nil {
+		return Client{}, templateError(intakeReviewWithoutRequesterTemplateName)
+	}
+	appTemplates.intakeReviewInvalidRequesterTemplate = intakeReviewInvalidRequesterTemplate
 
 	namedRequestWithdrawTemplateName := "named_request_withdrawal.gohtml"
 	namedRequestWithdrawTemplate := rawTemplates.Lookup(namedRequestWithdrawTemplateName)

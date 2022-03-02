@@ -17,9 +17,9 @@ type intakeReview struct {
 	TaskListPath string
 }
 
-func (c Client) systemIntakeReviewBody(EmailText string, taskListPath string) (string, error) {
+func (c Client) systemIntakeReviewBody(emailText string, taskListPath string) (string, error) {
 	data := intakeReview{
-		EmailText:    EmailText,
+		EmailText:    emailText,
 		TaskListPath: c.urlFromPath(taskListPath),
 	}
 	var b bytes.Buffer
@@ -31,6 +31,25 @@ func (c Client) systemIntakeReviewBody(EmailText string, taskListPath string) (s
 		return "", err
 	}
 	return b.String(), nil
+}
+
+func (c Client) systemIntakeReviewInvalidRequesterBody(emailText string, taskListPath string) (string, error) {
+	data := intakeReview{
+		EmailText:    emailText,
+		TaskListPath: c.urlFromPath(taskListPath),
+	}
+	var b bytes.Buffer
+
+	if c.templates.intakeReviewInvalidRequesterTemplate == nil {
+		return "", errors.New("system intake review for invalid requester template is nil")
+	}
+
+	err := c.templates.intakeReviewInvalidRequesterTemplate.Execute(&b, data)
+	if err != nil {
+		return "", err
+	}
+	return b.String(), nil
+
 }
 
 // SendSystemIntakeReviewEmail sends an email for a submitted system intake
@@ -51,5 +70,23 @@ func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText strin
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
+	return nil
+}
+
+// SendSystemIntakeReviewInvalidRequester sends an email for a review of a submitted system intake whose original requester is invalid
+func (c Client) SendSystemIntakeReviewInvalidRequester(ctx context.Context, emailText string, intakeID uuid.UUID) error {
+	subject := "Unable to deliver feedback on intake request"
+	taskListPath := path.Join("governance-task-list", intakeID.String())
+
+	body, err := c.systemIntakeReviewInvalidRequesterBody(emailText, taskListPath)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
+	err = c.sender.Send(ctx, c.config.GRTEmail, nil, subject, body)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
 	return nil
 }
