@@ -32,13 +32,28 @@ exports[`The Business Case Confirmation page matches the snapshot 1`] = `
     </p>
     <div>
       <a
+        className="display-flex"
         href="/governance-task-list/12345"
         onClick={[Function]}
       >
-        <i
+        <svg
           aria-hidden={true}
-          className="fa fa-angle-left margin-x-05"
-        />
+          className="usa-icon margin-x-05"
+          focusable={false}
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+          />
+        </svg>
         Go back to Governance Task List
       </a>
     </div>

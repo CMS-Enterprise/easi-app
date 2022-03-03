@@ -8,6 +8,7 @@ import {
   CardHeader,
   Grid,
   GridContainer,
+  IconFileDownload,
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -211,7 +212,7 @@ const SystemData = ({ system }: SystemDataProps) => {
                           </Tag>
                         </div>
                         <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-2">
-                          <i className="fa fa-download text-base-darker margin-right-1" />
+                          <IconFileDownload className="text-base-darker margin-right-1" />
                           Receives Data{' '}
                           {/* TODO: Map defined CEDAR variable once availabe */}
                         </Tag>
