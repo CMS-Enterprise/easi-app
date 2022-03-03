@@ -173,7 +173,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                         <h2 className="link-header margin-top-0 margin-bottom-2">
                           {location.url ? (
                             <UswdsReactLink
-                              className="system-profile__card-link"
+                              className="link-header"
                               variant="external"
                               to={location.url}
                             >

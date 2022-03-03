@@ -106,7 +106,11 @@ const systemProfile = {
       technologyFunctions: 'Technology functions',
       assetsOrServices: 'Assets or services',
       pointOfContact: 'Point of contact',
-      sendAnEmail: 'Send an email'
+      sendAnEmail: 'Send an email',
+      totalEmployees: 'Total Full Time Employees (FTE)',
+      viewMoreInfo: 'View more Team and Contract information',
+      federalFTE: 'Federal FTE',
+      contractorFTE: 'Contractor FTE'
     },
     toolsAndSoftware: {
       header: 'Tools and Software',
@@ -130,7 +134,9 @@ const systemProfile = {
       dataPartner: 'Data Partner',
       qualityAssurance: 'Quality Assurance',
       viewGateway: 'View gateway information',
-      viewAPIInfo: 'View API information'
+      viewAPIInfo: 'View API information',
+      viewDataExchange: 'View data exchange details',
+      more: 'more'
     },
     systemDetails: {
       header: 'System Details',
@@ -166,7 +172,8 @@ const systemProfile = {
     },
     subSystems: {
       header: 'Sub-systems',
-      retirementDate: 'Retirement date'
+      retirementDate: 'Retirement date',
+      viewInfo: 'View sub-system information'
     }
   },
   systemTable: {
