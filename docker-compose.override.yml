@@ -11,16 +11,22 @@ services:
     volumes:
       - ./migrations:/flyway/sql
   easi:
+    command: go install github.com/go-delve/delve/cmd/dlv@latest
     build:
+    
       context: .
       dockerfile: Dockerfile
       target: dev
+
+    # RUN: go install github.com/go-delve/delve/cmd/dlv@latest
     image: easi-backend:latest
     volumes:
       - ./:/easi
     entrypoint: air
     ports:
       - 8080:8080
+      - 2345:2345
+    # command: ["debug", "/easi/easi serve", "--headless", "--listen:2345"]
     environment:
       - LOCAL_AUTH_ENABLED
   easi_client:
