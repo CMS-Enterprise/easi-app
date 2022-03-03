@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, IconBookmark } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -38,13 +39,28 @@ const BookmarkCardIcon = ({
     className
   );
 
+  const sizes = () => {
+    if (size === 'sm') {
+      return 3;
+    }
+    if (size === 'md') {
+      return 5;
+    }
+    if (size === 'lg') {
+      return 7;
+    }
+    return undefined;
+  };
+
   return (
-    <i
-      className={classes}
-      onClick={onClick}
-      data-testid="bookmark-icon"
-      aria-hidden="true"
-    />
+    <Button onClick={onClick} type="button" unstyled>
+      <IconBookmark
+        className={classes}
+        size={sizes(size)}
+        data-testid="bookmark-icon"
+        aria-hidden="true"
+      />
+    </Button>
   );
 };
 
