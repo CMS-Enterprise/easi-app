@@ -7,9 +7,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
-import { CardGroup, Grid, SummaryBox } from '@trussworks/react-uswds';
+import {
+  CardGroup,
+  Grid,
+  IconBookmark,
+  SummaryBox
+} from '@trussworks/react-uswds';
 
-import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -93,11 +97,11 @@ export const SystemList = () => {
                     <h3 className="margin-0">
                       {t('systemProfile:noBookmark.header')}
                     </h3>
-                    <div>
+                    <div className="display-flex align-items-center">
                       <span className="margin-0">
                         {t('systemProfile:noBookmark.text1')}
                       </span>
-                      <BookmarkCardIcon size="sm" color="black" />
+                      <IconBookmark size={3} />
                       <span className="margin-0">
                         {t('systemProfile:noBookmark.text2')}
                       </span>
