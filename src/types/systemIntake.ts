@@ -97,7 +97,6 @@ export type SystemIntakeForm = {
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
-  currentStage: string;
   fundingSource: {
     isFunded: boolean | null;
     fundingNumber: string;

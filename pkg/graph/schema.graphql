@@ -905,6 +905,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessNeed: String
   businessSolution: String
   needsEaSupport: Boolean
+  currentStage: String
   cedarSystemId: String
 }
 
@@ -941,7 +942,6 @@ Input data for updating contract details related to a system request
 """
 input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
-  currentStage: String
   fundingSource: SystemIntakeFundingSourceInput
   costs: SystemIntakeCostsInput
   contract: SystemIntakeContractInput

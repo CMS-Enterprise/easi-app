@@ -8,12 +8,21 @@ const processStages = [
     name: 'I have done some initial research'
   },
   {
-    value: 'funded',
-    name: 'The project is already funded'
+    value: 'inDevelopment',
+    name: 'Initial development underway'
   },
   {
-    value: 'inDevelopment',
-    name: 'The project is already in development'
+    value: 'inOM',
+    name: 'I am in Operations & Maintenance'
+  },
+  {
+    value: 'inOMProposal',
+    name:
+      'I am in Operations & Maintenance but will be soliciting proposals for a different direction'
+  },
+  {
+    value: 'servicesContract',
+    name: 'This project is a services contract'
   }
 ];
 
