@@ -97,11 +97,11 @@ export const SystemList = () => {
                     <h3 className="margin-0">
                       {t('systemProfile:noBookmark.header')}
                     </h3>
-                    <div className="display-flex align-items-center">
+                    <div className="display-flex flex-align-center">
                       <span className="margin-0">
                         {t('systemProfile:noBookmark.text1')}
                       </span>
-                      <IconBookmark size={3} />
+                      <IconBookmark />
                       <span className="margin-0">
                         {t('systemProfile:noBookmark.text2')}
                       </span>
