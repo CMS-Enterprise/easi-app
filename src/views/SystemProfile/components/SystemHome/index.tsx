@@ -76,7 +76,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                           <div className="margin-bottom-2">
                             <UswdsReactLink
                               className="link-header"
-                              to="details"
+                              to={`/systems/${system.id}/details`}
                             >
                               {/* TODO: Get from CEDAR */}
                               {t('singleSystem.systemDetails.view')}{' '}
@@ -133,7 +133,10 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                           March 2, 2022 {/* TODO: Get from CEDAR */}
                         </h3>
                         <div className="margin-bottom-2">
-                          <UswdsReactLink className="link-header" to="ato">
+                          <UswdsReactLink
+                            className="link-header"
+                            to={`/systems/${system.id}/ato`}
+                          >
                             {/* TODO: Get from CEDAR */}
                             {t('singleSystem.ato.viewATOInfo')}
                             <span aria-hidden>&nbsp;</span>
@@ -177,7 +180,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                         <div className="margin-bottom-2">
                           <UswdsReactLink
                             className="link-header"
-                            to="system-data"
+                            to={`/systems/${system.id}/system-data`}
                           >
                             {/* TODO: Get from CEDAR */}
                             {t('singleSystem.systemData.viewAPIInfo')}
@@ -234,7 +237,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                         </h3>
                         <UswdsReactLink
                           className="link-header"
-                          to="system-data"
+                          to={`/systems/${system.id}/funding-and-budget`}
                         >
                           {/* TODO: Get from CEDAR */}
                           {t('singleSystem.fundingAndBudget.viewMoreFunding')}
@@ -299,7 +302,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                       <Grid desktop={{ col: 12 }} className="padding-2">
                         <UswdsReactLink
                           className="link-header"
-                          to="system-data"
+                          to={`/systems/${system.id}/system-data`}
                         >
                           {/* TODO: Get from CEDAR */}
                           {t('singleSystem.systemData.viewDataExchange')}
@@ -329,7 +332,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                                 <IconBookmark className="text-base-lighter margin-right-1" />
                                 <UswdsReactLink
                                   className="link-header margin-bottom-1 text-bold"
-                                  to={`/systems/${subSystem.id}/home/top`}
+                                  to={`/systems/${system.id}/team-and-contract`}
                                   key={subSystem.id}
                                 >
                                   <span className="text-tbottom line-height-body-3">
@@ -366,7 +369,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                       <Grid desktop={{ col: 12 }} className="padding-2">
                         <UswdsReactLink
                           className="link-header"
-                          to="sub-systems"
+                          to={`/systems/${system.id}/sub-systems`}
                         >
                           {/* TODO: Get from CEDAR */}
                           {t('singleSystem.subSystems.viewInfo')}
@@ -396,7 +399,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                         </h3>
                         <UswdsReactLink
                           className="link-header"
-                          to="sub-systems"
+                          to={`/systems/${system.id}/team-and-contract`}
                         >
                           {/* TODO: Get from CEDAR */}
                           {t('singleSystem.teamAndContract.viewMoreInfo')}
