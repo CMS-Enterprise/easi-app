@@ -16,7 +16,7 @@ import {
   useTable
 } from 'react-table';
 import { useMutation } from '@apollo/client';
-import { Table as UswdsTable } from '@trussworks/react-uswds';
+import { IconBookmark, Table as UswdsTable } from '@trussworks/react-uswds';
 
 import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -81,7 +81,7 @@ export const Table = ({
 
     return [
       {
-        Header: <BookmarkCardIcon size="sm" />,
+        Header: <IconBookmark size={3} />,
         accessor: 'id',
         id: 'systemId',
         disableGlobalFilter: true,
