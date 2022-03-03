@@ -9,7 +9,7 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { Button, Link, Table } from '@trussworks/react-uswds';
+import { Button, IconError, Link, Table } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
@@ -100,10 +100,9 @@ const AccessibilityDocumentsList = ({
               </>
             )}
             {value === t('documentTable.status.unavailable') && (
-              <>
-                <i className="fa fa-exclamation-circle text-secondary" />{' '}
-                {value}
-              </>
+              <div className="display-flex flex-align-center">
+                <IconError className="text-secondary" /> {value}
+              </div>
             )}
           </>
         )
@@ -230,7 +229,7 @@ const AccessibilityDocumentsList = ({
                     {...column.getSortByToggleProps()}
                   >
                     {column.render('Header')}
-                    <span className={getHeaderSortIcon(column)} />
+                    {getHeaderSortIcon(column)}
                   </button>
                 </th>
               ))}

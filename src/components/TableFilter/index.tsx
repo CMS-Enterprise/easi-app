@@ -1,7 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FilterValue, useAsyncDebounce } from 'react-table';
-import { Button, Form, Label, TextInput } from '@trussworks/react-uswds';
+import {
+  Button,
+  Form,
+  IconSearch,
+  Label,
+  TextInput
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -53,11 +59,13 @@ const GlobalClientFilter = ({
         }}
         name={`${tableName} Search`}
       />
-      {/* Right not search button doesn't need to do anything, it searches onChange - 
+      {/* Right not search button doesn't need to do anything, it searches onChange -
         purely from wireframe.  Will change in future with CEDAR API filtering */}
-      <Button type="submit" className="no-pointer">
-        {' '}
-        <span className="usa-search__submit-text fa fa-search" />
+      <Button
+        type="submit"
+        className="grid-row flex-justify-center flex-align-center no-pointer"
+      >
+        <IconSearch size={3} />
       </Button>
     </Form>
   );
