@@ -37,7 +37,7 @@ type EASIIntake struct {
 	LifecycleScope              string `json:"lifecycleScope" jsonschema:"description=Scope of LCID,example=This LCID covers development and operation of the application"`
 	OitSecurityCollaborator     string `json:"oitSecurityCollaborator" jsonschema:"description=N/A,example=N/A"` // TODO: doesn't seem like this is ever populated, remove?
 	OitSecurityCollaboratorName string `json:"oitSecurityCollaboratorName" jsonschema:"description=OIT's Security and Privacy (ISPG) Collaborator,example=John Doe"`
-	ProcessStatus               string `json:"processStatus" jsonschema:"description=Where is the business owner in process,example=The project is already funded"`
+	ProcessStatus               string `json:"processStatus" jsonschema:"description=Where is the business owner in process,example=Initial development underway"`
 	ProductManager              string `json:"productManager" jsonschema:"description=Product Manager for the effort deatiled in this request,example=John Doe"`
 	ProductManagerComponent     string `json:"productManagerComponent" jsonschema:"description=Component of the Product Manager,example=OIT"`
 	ProjectAcronym              string `json:"projectAcronym" jsonschema:"description=Acronym for project,example=EASi"`
