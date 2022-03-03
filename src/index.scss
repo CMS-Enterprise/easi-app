@@ -73,6 +73,10 @@ h5 {
   font-size: size('body', $theme-h5-font-size);
 }
 
+.pointer {
+  cursor: pointer !important;
+}
+
 .skipnav {
   top: 0;
   left: 0;

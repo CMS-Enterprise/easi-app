@@ -75,7 +75,8 @@ const systemProfile = {
       noATOPOAM:
         'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact aaa@hhs.cms.gov',
       noATODates:
-        'There is no information about previous tests or assessments available for this system'
+        'There is no information about previous tests or assessments available for this system',
+      viewATOInfo: 'View ATO information'
     },
     fundingAndBudget: {
       header: 'Funding and Budget',
@@ -84,7 +85,9 @@ const systemProfile = {
       investmentNumber: 'Investment number',
       requisitionNumber: 'Requisition number',
       tagHeader1: 'Funding Sources',
-      budgetID: 'Budget ID: '
+      budgetID: 'Budget ID: ',
+      systemFiscalYear: 'System fiscal year (FY) cost',
+      viewMoreFunding: 'View more funding and budget information'
     },
     teamAndContract: {
       header: {
@@ -126,7 +129,8 @@ const systemProfile = {
       dataExchanges: 'Data Exchanges',
       dataPartner: 'Data Partner',
       qualityAssurance: 'Quality Assurance',
-      viewGateway: 'View gateway information'
+      viewGateway: 'View gateway information',
+      viewAPIInfo: 'View API information'
     },
     systemDetails: {
       header: 'System Details',
@@ -156,7 +160,9 @@ const systemProfile = {
       ipAssets: 'Number of IP-enabled assets',
       ipv6Transition: 'IPv6 transition',
       percentTransitioned: 'Percent transitioned to IPv6',
-      hardCodedIP: 'Hard-coded IP addresses'
+      hardCodedIP: 'Hard-coded IP addresses',
+      view: 'View',
+      moreURLs: 'more URLs'
     },
     subSystems: {
       header: 'Sub-systems',

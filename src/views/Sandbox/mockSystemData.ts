@@ -155,7 +155,9 @@ export const budgetsInfo: tempBudgetProp[] = [
 
 export const developmentTags: string[] = [
   'Agile Methodology',
-  'AI Technologies'
+  'AI Technologies',
+  'Healthcare Quality',
+  'Health Insurance Program'
 ];
 
 export const locationsInfo: tempLocationProp[] = [

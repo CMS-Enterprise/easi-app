@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Card,
@@ -32,6 +32,7 @@ type SystemHomeProps = {
 const SystemHome = ({ system }: SystemHomeProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
+  const [toggleTags, setToggleTags] = useState(false);
 
   return (
     <div id="system-detail">
@@ -49,7 +50,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                   </CardHeader>
 
                   <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
-                    <h2 className="link-header margin-top-0 margin-bottom-2">
+                    <h3 className="link-header margin-top-0 margin-bottom-2">
                       <UswdsReactLink
                         className="system-profile__card-link"
                         variant="external"
@@ -58,7 +59,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                         {/* TODO: Get from CEDAR */}
                         ham.cms.gov
                       </UswdsReactLink>
-                    </h2>
+                    </h3>
                     {system?.locations ? (
                       <div className="margin-bottom-2">
                         <UswdsReactLink
@@ -66,7 +67,9 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                           to="details"
                         >
                           {/* TODO: Get from CEDAR */}
-                          View {system.locations.length} more URLs{' '}
+                          {t('singleSystem.systemDetails.view')}{' '}
+                          {system.locations.length}{' '}
+                          {t('singleSystem.systemDetails.moreURLs')}
                           <span aria-hidden>&nbsp;</span>
                           <span aria-hidden>&rarr; </span>
                         </UswdsReactLink>
@@ -110,16 +113,16 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                   </CardHeader>
 
                   <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
-                    <h2 className="link-header margin-top-0 margin-bottom-2">
+                    <h3 className="link-header margin-top-0 margin-bottom-2">
                       March 2, 2022 {/* TODO: Get from CEDAR */}
-                    </h2>
+                    </h3>
                     <div className="margin-bottom-2">
                       <UswdsReactLink
                         className="system-profile__card-link"
                         to="ato"
                       >
                         {/* TODO: Get from CEDAR */}
-                        View ATO information
+                        {t('singleSystem.ato.viewATOInfo')}
                         <span aria-hidden>&nbsp;</span>
                         <span aria-hidden>&rarr; </span>
                       </UswdsReactLink>
@@ -139,6 +142,80 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                       </Grid>
                     </Grid>
                   </CardFooter>
+                </Card>
+                <Card className="grid-col-12">
+                  <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+                    <dt>{t('singleSystem.systemData.apiStatus')}</dt>
+                  </CardHeader>
+
+                  <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
+                    <h3 className="link-header margin-top-0 margin-bottom-2">
+                      API developed and launched {/* TODO: Get from CEDAR */}
+                    </h3>
+                    <div className="margin-bottom-2">
+                      <UswdsReactLink
+                        className="system-profile__card-link"
+                        to="system-data"
+                      >
+                        {/* TODO: Get from CEDAR */}
+                        View API information
+                        <span aria-hidden>&nbsp;</span>
+                        <span aria-hidden>&rarr; </span>
+                      </UswdsReactLink>
+                    </div>
+                    <Divider />
+                  </CardBody>
+                  <CardFooter className="padding-0">
+                    <Grid row>
+                      <Grid desktop={{ col: 12 }} className="padding-2">
+                        <DescriptionTerm
+                          term={t('singleSystem.systemData.dataCategories')}
+                        />
+                        {system?.developmentTags?.map(
+                          (tag: string, index: number) =>
+                            (index < 2 || toggleTags) && (
+                              <Tag
+                                key={tag}
+                                className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                              >
+                                {tag}{' '}
+                                {/* TODO: Map defined CEDAR variable once availabe */}
+                              </Tag>
+                            )
+                        )}
+                        {system?.developmentTags &&
+                          system.developmentTags.length > 2 && (
+                            <Tag
+                              key="expand-tags"
+                              className="system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
+                              onClick={() => setToggleTags(!toggleTags)}
+                            >
+                              {toggleTags ? '-' : '+'}
+                              {system.developmentTags.length - 2}
+                            </Tag>
+                          )}
+                      </Grid>
+                    </Grid>
+                  </CardFooter>
+                </Card>
+                <Card className="grid-col-12">
+                  <CardBody className="padding-2">
+                    <dt>
+                      {t('singleSystem.fundingAndBudget.systemFiscalYear')}
+                    </dt>
+                    <h3 className="link-header margin-top-0 margin-bottom-2">
+                      $4,500,000 {/* TODO: Get from CEDAR */}
+                    </h3>
+                    <UswdsReactLink
+                      className="system-profile__card-link"
+                      to="system-data"
+                    >
+                      {/* TODO: Get from CEDAR */}
+                      {t('singleSystem.fundingAndBudget.viewMoreFunding')}
+                      <span aria-hidden>&nbsp;</span>
+                      <span aria-hidden>&rarr; </span>
+                    </UswdsReactLink>
+                  </CardBody>
                 </Card>
               </CardGroup>
             </SectionWrapper>
