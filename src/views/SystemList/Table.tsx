@@ -81,7 +81,7 @@ export const Table = ({
 
     return [
       {
-        Header: <IconBookmark size={3} />,
+        Header: <IconBookmark />,
         accessor: 'id',
         id: 'systemId',
         disableGlobalFilter: true,
