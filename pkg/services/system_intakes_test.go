@@ -328,10 +328,14 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		IntakeID: &input.ID,
 		Feedback: null.StringFrom("Feedback"),
 	}
+	euaID := testhelpers.RandomEUAID()
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
 	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-		return &models.SystemIntake{ID: id}, nil
+		return &models.SystemIntake{
+			ID:        id,
+			EUAUserID: null.StringFrom(euaID),
+		}, nil
 	}
 	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		if i.LifecycleID.ValueOrZero() == "" {
@@ -355,7 +359,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		return &models.UserInfo{
 			Email:      "name@site.com",
 			CommonName: "NAME",
-			EuaUserID:  testhelpers.RandomEUAID(),
+			EuaUserID:  euaID,
 		}, nil
 	}
 	reviewEmailCount := 0
@@ -365,9 +369,12 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		reviewEmailCount++
 		return nil
 	}
+	fnSendLCIDInvalidRequesterEmail := func(_ context.Context, _ string, _ uuid.UUID) error {
+		return nil
+	}
 	fnGenerate := func(context.Context) (string, error) { return "123456", nil }
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate)
+	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDInvalidRequesterEmail, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
 		intake, err := happy(context.Background(), input, action)
@@ -393,6 +400,13 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	})
 
 	// build the error-generating pieces
+	fnFetchWithInvalidRequester := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{
+			ID:        id,
+			EUAUserID: null.StringFromPtr(nil),
+		}, nil
+	}
+
 	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
 	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
 	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -410,6 +424,9 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnSendLCIDEmailErr := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string) error {
 		return errors.New("send email error")
 	}
+	fnSendLCIDInvalidRequesterEmailErr := func(_ context.Context, _ string, _ uuid.UUID) error {
+		return errors.New("send invalid requester email error")
+	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
 
 	// build the table-driven test of error cases for unhappy path
@@ -417,28 +434,31 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDInvalidRequesterEmail, fnGenerate),
 		},
 		"error path auth": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDInvalidRequesterEmail, fnGenerate),
 		},
 		"error path auth fail": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDInvalidRequesterEmail, fnGenerate),
 		},
 		"error path generate": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerateErr),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDInvalidRequesterEmail, fnGenerateErr),
 		},
 		"error path save action": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDInvalidRequesterEmail, fnGenerate),
 		},
 		"error path fetch user info": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnSendLCIDInvalidRequesterEmail, fnGenerate),
 		},
 		"error path send email": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnSendLCIDInvalidRequesterEmail, fnGenerate),
+		},
+		"error path send invalid requester email": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchWithInvalidRequester, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDInvalidRequesterEmailErr, fnGenerate),
 		},
 		"error path update": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDInvalidRequesterEmail, fnGenerate),
 		},
 	}
 
@@ -464,10 +484,14 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		IntakeID: &input.ID,
 		Feedback: null.StringFrom("Feedback"),
 	}
+	euaID := testhelpers.RandomEUAID()
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
 	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-		return &models.SystemIntake{ID: id}, nil
+		return &models.SystemIntake{
+			ID:        id,
+			EUAUserID: null.StringFrom(euaID),
+		}, nil
 	}
 	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
@@ -485,7 +509,7 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		return &models.UserInfo{
 			Email:      "name@site.com",
 			CommonName: "NAME",
-			EuaUserID:  testhelpers.RandomEUAID(),
+			EuaUserID:  euaID,
 		}, nil
 	}
 	reviewEmailCount := 0
@@ -495,8 +519,11 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		reviewEmailCount++
 		return nil
 	}
+	fnSendRejectRequestInvalidRequesterEmail := func(_ context.Context, _ string, _ uuid.UUID) error {
+		return nil
+	}
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail)
+	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestInvalidRequesterEmail)
 
 	s.Run("happy path", func() {
 		intake, err := happy(context.Background(), input, action)
@@ -508,6 +535,13 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	})
 
 	// build the error-generating pieces
+	fnFetchWithInvalidRequester := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{
+			ID:        id,
+			EUAUserID: null.StringFromPtr(nil),
+		}, nil
+	}
+
 	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
 	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
 	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -525,31 +559,37 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	fnSendRejectRequestEmailErr := func(ctx context.Context, recipientAddress models.EmailAddress, reason string, nextSteps string, feedback string) error {
 		return errors.New("send email error")
 	}
+	fnSendRejectRequestInvalidRequesterEmailErr := func(_ context.Context, _ string, _ uuid.UUID) error {
+		return errors.New("send invalid requester email error")
+	}
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
 		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestInvalidRequesterEmail),
 		},
 		"error path auth": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestInvalidRequesterEmail),
 		},
 		"error path auth fail": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestInvalidRequesterEmail),
 		},
 		"error path update": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestInvalidRequesterEmail),
 		},
 		"error path fetch user info": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendRejectRequestEmail, fnSendRejectRequestInvalidRequesterEmail),
 		},
 		"error path save action": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestInvalidRequesterEmail),
 		},
 		"error path send email": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmailErr),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmailErr, fnSendRejectRequestInvalidRequesterEmail),
+		},
+		"error path send invalid requester email": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchWithInvalidRequester, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestInvalidRequesterEmailErr),
 		},
 	}
 

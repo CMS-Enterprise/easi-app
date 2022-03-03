@@ -318,6 +318,7 @@ func NewCreateActionUpdateStatus(
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
+	sendReviewEmailInvalidRequester func(ctx context.Context, emailText string, intakeID uuid.UUID) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool) (*models.SystemIntake, error) {
 	return func(
@@ -351,7 +352,11 @@ func NewCreateActionUpdateStatus(
 		if intake.EUAUserID.ValueOrZero() == "" {
 			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
 				zap.String("intakeID", intake.ID.String()))
-			// TODO - send fallback email
+			emailText := fmt.Sprint("The requester for intake ", intake.ID.String(), " does not have a valid EUA ID; EASi cannot email them the intake review.")
+			err = sendReviewEmailInvalidRequester(ctx, emailText, intake.ID)
+			if err != nil {
+				return nil, err
+			}
 		} else {
 			requesterInfo, err = fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
 			if err != nil {
@@ -372,9 +377,11 @@ func NewCreateActionUpdateStatus(
 			}
 		}
 
-		err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
-		if err != nil {
-			return nil, err
+		if intake.EUAUserID.ValueOrZero() != "" {
+			err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return intake, err

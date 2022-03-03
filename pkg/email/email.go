@@ -35,8 +35,10 @@ type templates struct {
 	namedRequestWithdrawTemplate               templateCaller
 	unnamedRequestWithdrawTemplate             templateCaller
 	issueLCIDTemplate                          templateCaller
+	issueLCIDInvalidRequesterTemplate          templateCaller
 	extendLCIDTemplate                         templateCaller
 	rejectRequestTemplate                      templateCaller
+	rejectRequestInvalidRequesterTemplate      templateCaller
 	newAccessibilityRequestTemplate            templateCaller
 	newAccessibilityRequestToRequesterTemplate templateCaller
 	removedAccessibilityRequestTemplate        templateCaller
@@ -119,6 +121,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.issueLCIDTemplate = issueLCIDTemplate
 
+	issueLCIDInvalidRequesterTemplateName := "issue_lcid_invalid_requester.gohtml"
+	issueLCIDInvalidRequesterTemplate := rawTemplates.Lookup(issueLCIDInvalidRequesterTemplateName)
+	if issueLCIDInvalidRequesterTemplate == nil {
+		return Client{}, templateError(issueLCIDInvalidRequesterTemplateName)
+	}
+	appTemplates.issueLCIDInvalidRequesterTemplate = issueLCIDInvalidRequesterTemplate
+
 	extendLCIDTemplateName := "extend_lcid.gohtml"
 	extendLCIDTemplate := rawTemplates.Lookup(extendLCIDTemplateName)
 	if extendLCIDTemplate == nil {
@@ -132,6 +141,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(rejectRequestTemplateName)
 	}
 	appTemplates.rejectRequestTemplate = rejectRequestTemplate
+
+	rejectRequestInvalidRequesterTemplateName := "reject_request_invalid_requester.gohtml"
+	rejectRequestInvalidRequesterTemplate := rawTemplates.Lookup(rejectRequestInvalidRequesterTemplateName)
+	if rejectRequestInvalidRequesterTemplate == nil {
+		return Client{}, templateError(rejectRequestInvalidRequesterTemplateName)
+	}
+	appTemplates.rejectRequestInvalidRequesterTemplate = rejectRequestInvalidRequesterTemplate
 
 	newAccessibilityRequestTemplateName := "new_508_request.gohtml"
 	newAccessibilityRequestTemplate := rawTemplates.Lookup(newAccessibilityRequestTemplateName)

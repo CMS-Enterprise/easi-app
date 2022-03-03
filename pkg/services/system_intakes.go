@@ -233,6 +233,7 @@ func NewUpdateLifecycleFields(
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string) error,
+	sendIssueLCIDInvalidRequesterEmail func(context.Context, string, uuid.UUID) error,
 	generateLCID func(context.Context) (string, error),
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
@@ -266,7 +267,11 @@ func NewUpdateLifecycleFields(
 		if existing.EUAUserID.ValueOrZero() == "" {
 			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
 				zap.String("intakeID", existing.ID.String()))
-			// TODO - send fallback email
+			emailText := fmt.Sprint("The requester for intake ", existing.ID.String(), " does not have a valid EUA ID; EASi cannot notify them of lifecycle field updates.")
+			err = sendIssueLCIDInvalidRequesterEmail(ctx, emailText, existing.ID)
+			if err != nil {
+				return nil, err
+			}
 		} else {
 			requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
 			if err != nil {
@@ -323,21 +328,22 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		// TODO: put cost baseline in email?
-		err = sendIssueLCIDEmail(
-			ctx,
-			requesterInfo.Email,
-			updated.LifecycleID.String,
-			updated.LifecycleExpiresAt,
-			updated.LifecycleScope.String,
-			updated.DecisionNextSteps.String,
-			action.Feedback.String)
-		if err != nil {
-			return nil, err
+		if existing.EUAUserID.ValueOrZero() != "" {
+			// TODO: put cost baseline in email?
+			err = sendIssueLCIDEmail(
+				ctx,
+				requesterInfo.Email,
+				updated.LifecycleID.String,
+				updated.LifecycleExpiresAt,
+				updated.LifecycleScope.String,
+				updated.DecisionNextSteps.String,
+				action.Feedback.String)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return updated, nil
-
 	}
 }
 
@@ -351,6 +357,7 @@ func NewUpdateRejectionFields(
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendRejectRequestEmail func(ctx context.Context, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestInvalidRequesterEmail func(ctx context.Context, emailText string, intakeID uuid.UUID) error,
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
@@ -370,7 +377,11 @@ func NewUpdateRejectionFields(
 		if existing.EUAUserID.ValueOrZero() == "" {
 			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
 				zap.String("intakeID", existing.ID.String()))
-			// TODO - send fallback email
+			emailText := fmt.Sprint("The requester for intake ", existing.ID.String(), " does not have a valid EUA ID; EASi cannot notify them of their request's rejection.")
+			err = sendRejectRequestInvalidRequesterEmail(ctx, emailText, existing.ID)
+			if err != nil {
+				return nil, err
+			}
 		} else {
 			requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
 			if err != nil {
@@ -410,15 +421,17 @@ func NewUpdateRejectionFields(
 			return nil, err
 		}
 
-		err = sendRejectRequestEmail(
-			ctx,
-			requesterInfo.Email,
-			existing.RejectionReason.String,
-			existing.DecisionNextSteps.String,
-			action.Feedback.String,
-		)
-		if err != nil {
-			return nil, err
+		if existing.EUAUserID.ValueOrZero() != "" {
+			err = sendRejectRequestEmail(
+				ctx,
+				requesterInfo.Email,
+				existing.RejectionReason.String,
+				existing.DecisionNextSteps.String,
+				action.Feedback.String,
+			)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return updated, nil

@@ -202,6 +202,7 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+				emailClient.SendSystemIntakeReviewInvalidRequester,
 				services.NewCloseBusinessCase(
 					serviceConfig,
 					store.FetchBusinessCaseByID,
@@ -224,6 +225,7 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendIssueLCIDEmail,
+				emailClient.SendIssueLCIDInvalidRequesterEmail,
 				store.GenerateLifecycleID,
 			),
 			RejectIntake: services.NewUpdateRejectionFields(
@@ -234,6 +236,7 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendRejectRequestEmail,
+				emailClient.SendRejectRequestInvalidRequesterEmail,
 			),
 			SubmitIntake: services.NewSubmitSystemIntake(
 				serviceConfig,
