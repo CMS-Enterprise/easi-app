@@ -9,6 +9,7 @@ import {
   CardHeader,
   Grid,
   GridContainer,
+  IconCheckCircle,
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -241,7 +242,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                   key={tag}
                   className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
                 >
-                  <i className="fa fa-check-circle text-primary-dark margin-right-1" />
+                  <IconCheckCircle className="text-primary-dark margin-right-1" />
                   {tag} {/* TODO: Map defined CEDAR variable once availabe */}
                 </Tag>
               ))}
@@ -322,7 +323,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
 
               {/* TODO: Map defined CEDAR variable once availabe */}
               <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
-                <i className="fa fa-check-circle text-primary-dark margin-right-1" />
+                <IconCheckCircle className="text-primary-dark margin-right-1" />
                 E-CAP Initiative
               </Tag>
 
