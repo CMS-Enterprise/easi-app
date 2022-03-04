@@ -16,9 +16,12 @@ import {
   useTable
 } from 'react-table';
 import { useMutation } from '@apollo/client';
-import { IconBookmark, Table as UswdsTable } from '@trussworks/react-uswds';
+import {
+  Button,
+  IconBookmark,
+  Table as UswdsTable
+} from '@trussworks/react-uswds';
 
-import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import UswdsReactLink from 'components/LinkWrapper';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import GlobalClientFilter from 'components/TableFilter';
@@ -91,16 +94,21 @@ export const Table = ({
         },
         Cell: ({ row }: { row: Row<CedarSystem> }) =>
           bookmarkIdSet.has(row.original.id) ? (
-            <BookmarkCardIcon
-              size="sm"
+            <Button
               onClick={() => handleDeleteBookmark(row.original.id)}
-            />
+              type="button"
+              unstyled
+            >
+              <IconBookmark />
+            </Button>
           ) : (
-            <BookmarkCardIcon
-              color="lightgrey"
-              size="sm"
+            <Button
               onClick={() => handleCreateBookmark(row.original.id)}
-            />
+              type="button"
+              unstyled
+            >
+              <IconBookmark className="bookmarkIcon--lightgrey" />
+            </Button>
           )
       },
       {
