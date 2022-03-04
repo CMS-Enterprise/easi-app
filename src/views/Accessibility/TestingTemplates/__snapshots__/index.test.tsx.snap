@@ -208,11 +208,25 @@ exports[`TestingTemplates matches the snapshot 1`] = `
                   from the Information Technology Industry Council (ITI) website.
                 </p>
                 <p
-                  className="display-flex flex-row flex-align-center accessibility-testing-templates__alert-note"
+                  className="display-flex flex-row flex-align-center"
                 >
-                  <i
-                    className="fa fa-exclamation-circle margin-right-1"
-                  />
+                  <svg
+                    className="usa-icon margin-right-1"
+                    focusable={false}
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                    />
+                  </svg>
                    
                   Do not skip any row in the document. This will result in delays.
                 </p>

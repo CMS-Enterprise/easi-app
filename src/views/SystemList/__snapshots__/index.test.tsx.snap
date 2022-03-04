@@ -162,11 +162,23 @@ exports[`System List View when there are requests matches snapshot 1`] = `
                 title="Toggle SortBy"
                 type="button"
               >
-                <i
-                  aria-hidden="true"
-                  class="fa fa-bookmark bookmark__icon fa-1x"
-                  data-testid="bookmark-icon"
-                />
+                <svg
+                  class="usa-icon"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
                   data-testid="caret--sort"
@@ -339,11 +351,29 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               role="cell"
               style="padding-left: .5em;"
             >
-              <i
-                aria-hidden="true"
-                class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
-                data-testid="bookmark-icon"
-              />
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                <svg
+                  class="usa-icon bookmarkIcon--lightgrey"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </button>
             </th>
             <th
               role="cell"
@@ -371,10 +401,23 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               role="cell"
             >
               <div>
-                <i
-                  class="fa system-health-icon-warning fa-exclamation-circle margin-right-1"
-                  data-testid="system-health-icon"
-                />
+                <svg
+                  class="usa-icon system-health-icon-warning margin-right-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                  />
+                </svg>
                 <span>
                   Draft
                 </span>
@@ -388,11 +431,29 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               role="cell"
               style="padding-left: .5em;"
             >
-              <i
-                aria-hidden="true"
-                class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
-                data-testid="bookmark-icon"
-              />
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                <svg
+                  class="usa-icon bookmarkIcon--lightgrey"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </button>
             </th>
             <th
               role="cell"
@@ -420,10 +481,23 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               role="cell"
             >
               <div>
-                <i
-                  class="fa system-health-icon-success fa-check-circle margin-right-1"
-                  data-testid="system-health-icon"
-                />
+                <svg
+                  class="usa-icon system-health-icon-success margin-right-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                  />
+                </svg>
                 <span>
                   Approved
                 </span>
@@ -437,11 +511,29 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               role="cell"
               style="padding-left: .5em;"
             >
-              <i
-                aria-hidden="true"
-                class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
-                data-testid="bookmark-icon"
-              />
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                <svg
+                  class="usa-icon bookmarkIcon--lightgrey"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </button>
             </th>
             <th
               role="cell"
@@ -469,10 +561,23 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               role="cell"
             >
               <div>
-                <i
-                  class="fa system-health-icon-success fa-check-circle margin-right-1"
-                  data-testid="system-health-icon"
-                />
+                <svg
+                  class="usa-icon system-health-icon-success margin-right-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                  />
+                </svg>
                 <span>
                   Approved
                 </span>
@@ -486,11 +591,29 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               role="cell"
               style="padding-left: .5em;"
             >
-              <i
-                aria-hidden="true"
-                class="fa fa-bookmark bookmark__icon fa-1x lightgrey"
-                data-testid="bookmark-icon"
-              />
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                <svg
+                  class="usa-icon bookmarkIcon--lightgrey"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </button>
             </th>
             <th
               role="cell"
@@ -518,10 +641,23 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               role="cell"
             >
               <div>
-                <i
-                  class="fa system-health-icon-fail fa-times-circle margin-right-1"
-                  data-testid="system-health-icon"
-                />
+                <svg
+                  class="usa-icon system-health-icon-fail margin-right-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
+                  />
+                </svg>
                 <span />
               </div>
             </th>
