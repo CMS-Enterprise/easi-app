@@ -47,13 +47,31 @@ const SystemHealthIcon = ({
 
   const iconSwitcher = (iconStatus: string) => {
     if (iconStatus === 'success') {
-      return <IconCheckCircle className={classes} size={sizeChecker(size)} />;
+      return (
+        <IconCheckCircle
+          className={classes}
+          size={sizeChecker(size)}
+          data-testid="system-health-icon"
+        />
+      );
     }
     if (iconStatus === 'fail') {
-      return <IconCancel className={classes} size={sizeChecker(size)} />;
+      return (
+        <IconCancel
+          className={classes}
+          size={sizeChecker(size)}
+          data-testid="system-health-icon"
+        />
+      );
     }
     if (iconStatus === 'warning') {
-      return <IconError className={classes} size={sizeChecker(size)} />;
+      return (
+        <IconError
+          className={classes}
+          size={sizeChecker(size)}
+          data-testid="system-health-icon"
+        />
+      );
     }
     return null;
   };
