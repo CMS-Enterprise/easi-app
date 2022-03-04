@@ -53,7 +53,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                   <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
                     <Grid row>
                       <Grid desktop={{ col: 12 }} className="padding-0">
-                        <dt>Production Environment</dt>{' '}
+                        <dt>Production Environment</dt>
                         {/* TODO: Get from CEDAR */}
                       </Grid>
                     </Grid>
@@ -328,11 +328,14 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                         {system?.subSystems?.map(
                           (subSystem, index) =>
                             (index < 2 || toggleSubSystems) && (
-                              <div className="margin-bottom-1">
+                              <div
+                                className="margin-bottom-1"
+                                key={subSystem.id}
+                              >
                                 <IconBookmark className="text-base-lighter margin-right-1" />
                                 <UswdsReactLink
                                   className="link-header margin-bottom-1 text-bold"
-                                  to={`/systems/${system.id}/team-and-contract`}
+                                  to={`/systems/${system.id}/sub-systems`}
                                   key={subSystem.id}
                                 >
                                   <span className="text-tbottom line-height-body-3">
@@ -450,7 +453,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                 {t('singleSystem.pointOfContact')}
               </p>
               <h3 className="system-profile__subheader margin-bottom-1">
-                Geraldine Hobbs
+                Geraldine Hobbs {/* TODO: Get from CEDAR */}
               </h3>
               <DescriptionDefinition
                 definition={t('singleSystem.summary.subheader2')}
