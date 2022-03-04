@@ -1,6 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Label, Textarea, TextInput } from '@trussworks/react-uswds';
+import {
+  Button,
+  IconNavigateBefore,
+  Label,
+  Textarea,
+  TextInput
+} from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
@@ -337,7 +343,7 @@ const AsIsSolution = ({
                 }}
               >
                 <span>
-                  <i className="fa fa-angle-left" /> Save & Exit
+                  <IconNavigateBefore /> Save & Exit
                 </span>
               </Button>
             </div>

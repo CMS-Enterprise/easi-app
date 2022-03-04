@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
+  IconNavigateBefore,
   Label,
   Radio,
   Textarea,
@@ -702,7 +703,7 @@ const PreferredSolution = ({
                 }}
               >
                 <span>
-                  <i className="fa fa-angle-left" /> Save & Exit
+                  <IconNavigateBefore /> Save & Exit
                 </span>
               </Button>
             </div>

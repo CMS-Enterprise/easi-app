@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Alert, Button } from '@trussworks/react-uswds';
+import { Alert, Button, IconNavigateBefore } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
 import PageHeading from 'components/PageHeading';
@@ -182,7 +182,7 @@ const AlternativeSolutionB = ({
                 }}
               >
                 <span>
-                  <i className="fa fa-angle-left" /> Save & Exit
+                  <IconNavigateBefore /> Save & Exit
                 </span>
               </Button>
             </div>
