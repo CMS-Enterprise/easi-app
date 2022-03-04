@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Button } from '@trussworks/react-uswds';
+import {
+  Button,
+  IconExpandMore,
+  IconNavigateNext
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 // This component takes free form text and a character limit and
@@ -26,10 +30,6 @@ const TruncatedText = ({
   className
 }: TruncatedTextProps) => {
   const [isOpen, setOpen] = useState(true);
-  const arrowClassNames = classnames(
-    'fa',
-    isOpen ? 'fa-caret-down' : 'fa-caret-right'
-  );
 
   // If text is shorter then specified character limit, just
   // return the whole text
@@ -53,7 +53,7 @@ const TruncatedText = ({
         className={classnames({ 'text-bold': isOpen })}
         unstyled
       >
-        <span className={arrowClassNames} />
+        {isOpen ? <IconExpandMore /> : <IconNavigateNext />}
         {isOpen ? closeLabel || label : label}
       </Button>
     </div>
