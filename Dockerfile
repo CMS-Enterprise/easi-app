@@ -8,9 +8,6 @@ COPY go.mod ./
 COPY go.sum ./
 RUN go mod download
 
-# RUN go get github.com/go-delve/deve/cmd/dlv
-RUN go install github.com/go-delve/delve/cmd/dlv@latest
-
 FROM modules AS build
 
 COPY cmd ./cmd
@@ -56,12 +53,8 @@ ENV EMAIL_TEMPLATE_DIR=/easi/templates
 USER 1000
 
 ENTRYPOINT ["/easi/easi"]
-# ENTRYPOINT ["/dlv"]
 
 CMD ["serve"]
-# CMD ["debug", "/easi/easi serve", "--headless", "--listen:2345"]
 
-
-# 2345 is for the delve debugger
-# EXPOSE 8080 2345
-# EXPOSE 2345
+FROM dev as debug
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
