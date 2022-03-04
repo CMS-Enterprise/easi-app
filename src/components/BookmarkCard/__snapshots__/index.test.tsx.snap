@@ -92,6 +92,7 @@ exports[`BookmarkCard matches the snapshot 1`] = `
           </div>
           <svg
             class="usa-icon usa-icon--size-7 system-health-icon-success margin-top-3"
+            data-testid="system-health-icon"
             focusable="false"
             height="1em"
             role="img"

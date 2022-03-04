@@ -403,6 +403,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               <div>
                 <svg
                   class="usa-icon system-health-icon-warning margin-right-1"
+                  data-testid="system-health-icon"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -483,6 +484,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               <div>
                 <svg
                   class="usa-icon system-health-icon-success margin-right-1"
+                  data-testid="system-health-icon"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -563,6 +565,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               <div>
                 <svg
                   class="usa-icon system-health-icon-success margin-right-1"
+                  data-testid="system-health-icon"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -643,6 +646,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
               <div>
                 <svg
                   class="usa-icon system-health-icon-fail margin-right-1"
+                  data-testid="system-health-icon"
                   focusable="false"
                   height="1em"
                   role="img"
