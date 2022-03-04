@@ -36,7 +36,6 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 
 	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindListParams()
-	params.SetVersion(null.StringFrom("22").Ptr()) // TODO: This is really nasty, and should be removed upon completion of https://jiraent.cms.gov/browse/CI-168
 	params.SetState(null.StringFrom("active").Ptr())
 	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
 	params.HTTPClient = c.hc

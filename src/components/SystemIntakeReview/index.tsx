@@ -162,6 +162,12 @@ export const SystemIntakeReview = ({
         </div>
         <ReviewRow>
           <div>
+            <DescriptionTerm term="Where are you in the process?" />
+            <DescriptionDefinition definition={systemIntake.currentStage} />
+          </div>
+        </ReviewRow>
+        <ReviewRow>
+          <div>
             <DescriptionTerm term="Do you need Enterprise Architecture (EA) support?" />
             <DescriptionDefinition
               definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
@@ -175,10 +181,6 @@ export const SystemIntakeReview = ({
 
       <DescriptionList title="Contract Details">
         <ReviewRow>
-          <div>
-            <DescriptionTerm term="Where are you in the process?" />
-            <DescriptionDefinition definition={systemIntake.currentStage} />
-          </div>
           <div>
             <DescriptionTerm term="Will this project be funded out of an existing funding source?" />
             <DescriptionDefinition definition={fundingDefinition()} />
