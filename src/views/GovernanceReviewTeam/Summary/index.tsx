@@ -6,7 +6,8 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Button
+  Button,
+  IconError
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
@@ -75,10 +76,10 @@ const RequestSummary = ({
       return adminLead;
     }
     return (
-      <>
-        <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
+      <div className="display-flex flex-align-center">
+        <IconError className="text-secondary margin-right-05" />
         {t('governanceReviewTeam:adminLeads.notAssigned')}
-      </>
+      </div>
     );
   };
 
