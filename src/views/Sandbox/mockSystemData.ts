@@ -327,6 +327,6 @@ export const subSystems: tempSubSystemProp[] = [
     acronym: 'BIC',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.',
-    retirementDate: 'Planned retirement: Q4 2022'
+    retirementDate: 'Planned retirement: Q2 2023'
   }
 ];
