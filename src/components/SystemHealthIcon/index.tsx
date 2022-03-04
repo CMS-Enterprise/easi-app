@@ -1,4 +1,9 @@
 import React from 'react';
+import {
+  IconCancel,
+  IconCheckCircle,
+  IconError
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import { IconStatus } from 'types/iconStatus';
@@ -19,22 +24,10 @@ const SystemHealthIcon = ({
   className
 }: SystemHealthIconProps) => {
   const classes = classnames(
-    'fa',
     {
       'system-health-icon-success': status === 'success',
       'system-health-icon-warning': status === 'warning',
       'system-health-icon-fail': status === 'fail'
-    },
-    {
-      'fa-check-circle': status === 'success',
-      'fa-exclamation-circle': status === 'warning',
-      'fa-times-circle': status === 'fail'
-    },
-    {
-      'fa-2x': size === 'lg'
-    },
-    {
-      'fa-3x': size === 'xl'
     },
     {
       'margin-right-05': label !== undefined && size === 'medium'
@@ -42,9 +35,32 @@ const SystemHealthIcon = ({
     className
   );
 
+  const sizeChecker = (iconSize: string) => {
+    if (iconSize === 'lg') {
+      return 5;
+    }
+    if (iconSize === 'xl') {
+      return 7;
+    }
+    return undefined;
+  };
+
+  const iconSwitcher = (iconStatus: string) => {
+    if (iconStatus === 'success') {
+      return <IconCheckCircle className={classes} size={sizeChecker(size)} />;
+    }
+    if (iconStatus === 'fail') {
+      return <IconCancel className={classes} size={sizeChecker(size)} />;
+    }
+    if (iconStatus === 'warning') {
+      return <IconError className={classes} size={sizeChecker(size)} />;
+    }
+    return null;
+  };
+
   return (
     <>
-      <i className={classes} data-testid="system-health-icon" />
+      {iconSwitcher(status)}
       {label}
     </>
   );
