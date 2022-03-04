@@ -51,8 +51,9 @@ a5 --> a2
 * Follow Up Decisions
 > * How customizable should this be?
 > * Should we have an entry for each event? 
+>> * It was noted that having one task specific to emailing all expiring LCIDS would be simplest, but it would also lack the granularity to retry actions upon failure.
 > * Will the application require a more complex event driven behavior in the future? 
->> * Should we build a complete PUB / SUB system? Or should we focus solely on scheduling new jobs?
+>> * If so, should we build a complete PUB / SUB system? Or should we focus solely on scheduling new jobs?
 
 ## Pros and Cons of the Alternatives <!-- optional -->
 
