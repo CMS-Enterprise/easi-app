@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
+  IconNavigateBefore,
   Label,
   Radio,
   Textarea,
@@ -370,7 +371,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                     }}
                   >
                     <span>
-                      <i className="fa fa-angle-left" /> Save & Exit
+                      <IconNavigateBefore /> Save & Exit
                     </span>
                   </Button>
                 </div>
