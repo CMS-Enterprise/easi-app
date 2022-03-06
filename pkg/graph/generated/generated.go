@@ -4410,6 +4410,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessNeed: String
   businessSolution: String
   needsEaSupport: Boolean
+  currentStage: String
   cedarSystemId: String
 }
 
@@ -4446,7 +4447,6 @@ Input data for updating contract details related to a system request
 """
 input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
-  currentStage: String
   fundingSource: SystemIntakeFundingSourceInput
   costs: SystemIntakeCostsInput
   contract: SystemIntakeContractInput
@@ -20375,14 +20375,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput
 			if err != nil {
 				return it, err
 			}
-		case "currentStage":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentStage"))
-			it.CurrentStage, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "fundingSource":
 			var err error
 
@@ -20459,6 +20451,14 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("needsEaSupport"))
 			it.NeedsEaSupport, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "currentStage":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentStage"))
+			it.CurrentStage, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}

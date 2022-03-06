@@ -407,7 +407,6 @@ export interface UpdateSystemIntakeContactDetailsInput {
  */
 export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
-  currentStage?: string | null;
   fundingSource?: SystemIntakeFundingSourceInput | null;
   costs?: SystemIntakeCostsInput | null;
   contract?: SystemIntakeContractInput | null;
@@ -422,6 +421,7 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   businessNeed?: string | null;
   businessSolution?: string | null;
   needsEaSupport?: boolean | null;
+  currentStage?: string | null;
   cedarSystemId?: string | null;
 }
 
