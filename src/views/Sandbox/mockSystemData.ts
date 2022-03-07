@@ -155,7 +155,9 @@ export const budgetsInfo: tempBudgetProp[] = [
 
 export const developmentTags: string[] = [
   'Agile Methodology',
-  'AI Technologies'
+  'AI Technologies',
+  'Healthcare Quality',
+  'Health Insurance Program'
 ];
 
 export const locationsInfo: tempLocationProp[] = [
@@ -305,18 +307,26 @@ export const products: tempProductsProp[] = [
 
 export const subSystems: tempSubSystemProp[] = [
   {
-    id: '1',
+    id: '326-2592-0',
     name: 'Test Ocular Fiction Utensil',
     acronym: 'TOFU',
     description: 'Lorem ipsum description',
     retirementDate: 'No planned retirement or replacement'
   },
   {
-    id: '2',
+    id: '326-2085-0',
     name: 'Bio-Energy Engagement File',
     acronym: 'BEEF',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.',
     retirementDate: 'Planned retirement: Q4 2022'
+  },
+  {
+    id: '326-2551-0',
+    name: 'Beneficiary Information in the Cloud',
+    acronym: 'BIC',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.',
+    retirementDate: 'Planned retirement: Q2 2023'
   }
 ];
