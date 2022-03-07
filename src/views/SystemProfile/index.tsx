@@ -178,10 +178,7 @@ const SystemProfile = () => {
               </BreadcrumbBar>
 
               <PageHeading className="margin-top-2">
-                <IconBookmark
-                  size={3}
-                  className="system-profile__bookmark margin-right-1 text-ttop cursor-initial"
-                />{' '}
+                <IconBookmark size={4} className="text-primary" />{' '}
                 <span>{systemInfo.name} </span>
                 <span className="text-normal font-body-sm">
                   ({systemInfo.acronym})
