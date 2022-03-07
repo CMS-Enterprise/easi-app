@@ -184,8 +184,6 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                 </div>
               </div>
             </li>
-<<<<<<< Updated upstream
-=======
             <li
               class="usa-card grid-col-12 margin-bottom-2"
               data-testid="Card"
@@ -265,7 +263,6 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                 </div>
               </div>
             </li>
->>>>>>> Stashed changes
           </ul>
         </div>
         <div
@@ -332,7 +329,7 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                   <span
                     aria-hidden="true"
                   >
-                    → 
+                    →
                   </span>
                 </a>
               </div>
