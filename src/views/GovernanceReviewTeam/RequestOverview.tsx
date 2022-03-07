@@ -101,8 +101,8 @@ const RequestOverview = () => {
       <section className="grid-container grid-row margin-y-5 ">
         <nav className="tablet:grid-col-2 margin-right-2">
           <ul className="easi-grt__nav-list">
-            <li>
-              <IconNavigateBefore className="margin-x-05" aria-hidden />
+            <li className="display-flex flex-align-center">
+              <IconNavigateBefore aria-hidden />
               <Link to="/">{t('back.allRequests')}</Link>
             </li>
             <li>
