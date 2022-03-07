@@ -271,7 +271,7 @@ const RequestDescription = ({
                   );
                 }}
               >
-                <span>
+                <span className="display-flex flex-align-center">
                   <IconNavigateBefore /> Save & Exit
                 </span>
               </Button>

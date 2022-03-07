@@ -574,7 +574,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       });
                     }}
                   >
-                    <span>
+                    <span className="display-flex flex-align-center">
                       <IconNavigateBefore /> Save & Exit
                     </span>
                   </Button>
