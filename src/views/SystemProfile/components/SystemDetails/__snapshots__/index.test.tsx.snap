@@ -22,7 +22,7 @@ exports[`The making a request page matches snapshot 1`] = `
             data-testid="section-wrapper"
           >
             <h2
-              class="margin-top-0"
+              class="margin-top-0 margin-bottom-4"
             >
               System Details
             </h2>
