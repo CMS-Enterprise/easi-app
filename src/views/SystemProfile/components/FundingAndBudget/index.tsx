@@ -40,7 +40,7 @@ const FundingAndBudget = ({ system }: FundingAndBudgetProps) => {
         <Grid row gap>
           <Grid desktop={{ col: 8 }}>
             <SectionWrapper className="padding-bottom-4">
-              <h2 className="margin-top-0">
+              <h2 className="margin-top-0 margin-bottom-4">
                 {t('singleSystem.fundingAndBudget.header')}
               </h2>
 

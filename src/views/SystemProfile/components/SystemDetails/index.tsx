@@ -51,7 +51,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
         <Grid row gap>
           <Grid desktop={{ col: 8 }}>
             <SectionWrapper borderBottom className="padding-bottom-4">
-              <h2 className="margin-top-0">
+              <h2 className="margin-top-0 margin-bottom-4">
                 {t('singleSystem.systemDetails.header')}
               </h2>
 
@@ -175,7 +175,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                         <h2 className="link-header margin-top-0 margin-bottom-2">
                           {location.url ? (
                             <UswdsReactLink
-                              className="system-profile__card-link"
+                              className="link-header"
                               variant="external"
                               to={location.url}
                             >

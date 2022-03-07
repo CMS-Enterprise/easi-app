@@ -215,6 +215,73 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                     <div
                       class="flex-auto"
                     >
+                      <i
+                        aria-hidden="true"
+                        class="fa fa-bookmark bookmark__icon fa-1x lightgrey padding-y-05 padding-x-1"
+                        data-testid="bookmark-icon"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
+                  >
+                    BIC
+                  </div>
+                </header>
+                <div
+                  class="usa-card__body padding-2"
+                  data-testid="CardBody"
+                >
+                  <div>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.
+                  </div>
+                  <div
+                    class="easi-divider margin-y-2"
+                  />
+                  <dt
+                    class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
+                  >
+                    Retirement date
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
+                  >
+                    Planned retirement: Q2 2023
+                  </dd>
+                </div>
+              </div>
+            </li>
+            <li
+              class="usa-card grid-col-12 margin-bottom-2"
+              data-testid="Card"
+            >
+              <div
+                class="usa-card__container"
+              >
+                <header
+                  class="usa-card__header padding-2 padding-bottom-0"
+                  data-testid="CardHeader"
+                >
+                  <div
+                    class="display-flex margin-bottom-105"
+                  >
+                    <div
+                      class="flex-fill"
+                    >
+                      <h3
+                        class="margin-y-0 line-height-body-2"
+                      >
+                        <a
+                          class="usa-link"
+                          href="/systems/326-9-0/todo"
+                        >
+                          Beneficiary Information in the Cloud
+                        </a>
+                      </h3>
+                    </div>
+                    <div
+                      class="flex-auto"
+                    >
                       <svg
                         class="usa-icon usa-icon--size-4 bookmark__icon"
                         focusable="false"
