@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 export interface AccessibilityRequestSchema {
   id: string;
   name: string;
-  intakeID: string;
+  intakeID?: string;
   createdAt: DateTime;
   updatedAt: DateTime;
   euaUserID: string;
