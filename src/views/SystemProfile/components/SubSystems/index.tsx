@@ -60,10 +60,7 @@ const SystemSubSystems = ({ system }: SubSystemsProps) => {
                           </h3>
                         </div>
                         <div className="flex-auto">
-                          <IconBookmark
-                            size={6}
-                            className="bookmark__icon padding-y-05 padding-x-1"
-                          />
+                          <IconBookmark size={4} className="bookmark__icon" />
                         </div>
                       </div>
                       <div className="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1">
