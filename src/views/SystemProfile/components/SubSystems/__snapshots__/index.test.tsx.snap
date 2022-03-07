@@ -58,7 +58,7 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                       class="flex-auto"
                     >
                       <svg
-                        class="usa-icon usa-icon--size-6 bookmark__icon padding-y-05 padding-x-1"
+                        class="usa-icon usa-icon--size-4 bookmark__icon"
                         focusable="false"
                         height="1em"
                         role="img"
@@ -137,7 +137,7 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                       class="flex-auto"
                     >
                       <svg
-                        class="usa-icon usa-icon--size-6 bookmark__icon padding-y-05 padding-x-1"
+                        class="usa-icon usa-icon--size-4 bookmark__icon"
                         focusable="false"
                         height="1em"
                         role="img"
