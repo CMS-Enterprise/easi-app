@@ -93,13 +93,13 @@ const SystemTeamAndContract = ({
       <GridContainer className="padding-left-0 padding-right-0">
         <Grid row gap>
           <Grid desktop={{ col: 8 }}>
-            <SectionWrapper borderBottom className="padding-bottom-2">
+            <SectionWrapper borderBottom className="padding-bottom-4">
               <h2 className="margin-top-0 margin-bottom-4">
                 {t('singleSystem.teamAndContract.header.teamAndContract')}
               </h2>
               <GridContainer className="padding-x-0">
                 <Grid row>
-                  <Grid tablet={{ col: true }} className="margin-bottom-3">
+                  <Grid tablet={{ col: true }}>
                     <DescriptionTerm
                       term={t(
                         'singleSystem.teamAndContract.federalFullTimeEmployees'
@@ -110,7 +110,7 @@ const SystemTeamAndContract = ({
                       definition="5"
                     />
                   </Grid>
-                  <Grid tablet={{ col: true }} className="margin-bottom-3">
+                  <Grid tablet={{ col: true }}>
                     <DescriptionTerm
                       term={t(
                         'singleSystem.teamAndContract.contractorFullTimeEmployees'

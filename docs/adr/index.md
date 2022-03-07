@@ -32,5 +32,11 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0025](0025-provide-testing-environments.md) - *Provide a Testing Environment for Non-Engineers*
 - [ADR-0026](0026-cedar-data-definition.md) - CEDAR Data Model Definition
 - [ADR-0027](0027-code-coverage.md) - Add code coverage and threshold
+- [ADR-0028](0028-use-react-testing-library.md) - Use React Testing Library
+- [ADR-0029](0029-server-side-caching.md) - Server Side Caching
+- [ADR-0030](0030-graphql-n+1-queries.md) - GraphQL N+1 Queries
+- [ADR-0031](0031-do-not-use-server-side-pagination.md) - Server Side Pagination
+- [ADR-0032](0032-use-svg-icons.md) - SVG Icons
+- [ADR-0033](0033-technical-action-scheduling.md) - Technical Action Scheduling
 
 <!-- adrlogstop -->

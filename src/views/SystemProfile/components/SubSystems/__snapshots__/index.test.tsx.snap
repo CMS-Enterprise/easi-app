@@ -158,7 +158,7 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                   <div
                     class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
                   >
-                    BEEF
+                    BIC
                   </div>
                 </header>
                 <div
@@ -179,7 +179,7 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                   <dd
                     class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
                   >
-                    Planned retirement: Q4 2022
+                    Planned retirement: Q2 2023
                   </dd>
                 </div>
               </div>

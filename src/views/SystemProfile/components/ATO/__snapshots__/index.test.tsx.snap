@@ -22,7 +22,7 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
             data-testid="section-wrapper"
           >
             <h2
-              class="margin-top-0"
+              class="margin-top-0 margin-bottom-4"
             >
               Authority to Operate (ATO)
             </h2>
