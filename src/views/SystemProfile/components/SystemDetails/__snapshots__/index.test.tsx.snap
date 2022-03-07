@@ -287,7 +287,7 @@ exports[`The making a request page matches snapshot 1`] = `
               data-testid="tag"
             >
               <svg
-                class="usa-icon text-primary-dark margin-right-1"
+                class="usa-icon system-profile__icon text-primary-dark margin-right-1"
                 focusable="false"
                 height="1em"
                 role="img"
