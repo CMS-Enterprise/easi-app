@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { IconExpandMore, IconNavigateNext } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -169,7 +170,7 @@ const ResponsiveTabs = ({
             <button
               type="button"
               // ref={dropdownNode}
-              className="easi-responsive-tabs__more-btn"
+              className="easi-responsive-tabs__more-btn display-flex flex-align-center"
               onClick={() => {
                 setIsMoreMenuOpen(prevOpen => !prevOpen);
               }}
@@ -181,16 +182,11 @@ const ResponsiveTabs = ({
               aria-controls="ResponsiveTabs-MoreMenu"
               aria-expanded={isMoreMenuOpen}
             >
-              <i
-                className={classnames(
-                  'fa',
-                  {
-                    'fa-angle-right': !isMoreMenuOpen,
-                    'fa-angle-down': isMoreMenuOpen
-                  },
-                  'easi-responsive-tabs__angle-right'
-                )}
-              />
+              {isMoreMenuOpen ? (
+                <IconExpandMore size={5} />
+              ) : (
+                <IconNavigateNext size={5} />
+              )}
               <span>More</span>
             </button>
           )}

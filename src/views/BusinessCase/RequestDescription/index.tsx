@@ -1,6 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Label, Textarea } from '@trussworks/react-uswds';
+import {
+  Button,
+  IconNavigateBefore,
+  Label,
+  Textarea
+} from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
@@ -266,8 +271,8 @@ const RequestDescription = ({
                   );
                 }}
               >
-                <span>
-                  <i className="fa fa-angle-left" /> Save & Exit
+                <span className="display-flex flex-align-center">
+                  <IconNavigateBefore /> Save & Exit
                 </span>
               </Button>
             </div>

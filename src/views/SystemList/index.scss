@@ -16,7 +16,12 @@
             font-weight: bold;
             &:visited {
                 color: $easi-blue;
-            }             
+            }
         }
-    }    
+    }
+    .bookmarkIcon {
+      &--lightgrey {
+        color: $medium-gray;
+      }
+    }
 }

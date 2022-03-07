@@ -7,11 +7,11 @@ import {
   CardHeader,
   Grid,
   GridContainer,
+  IconBookmark,
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
-import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import UswdsReactLink from 'components/LinkWrapper';
 import {
   DescriptionDefinition,
@@ -60,11 +60,7 @@ const SystemSubSystems = ({ system }: SubSystemsProps) => {
                           </h3>
                         </div>
                         <div className="flex-auto">
-                          <BookmarkCardIcon
-                            size="sm"
-                            color="lightgrey"
-                            className="padding-y-05 padding-x-1"
-                          />
+                          <IconBookmark size={4} className="bookmark__icon" />
                         </div>
                       </div>
                       <div className="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1">

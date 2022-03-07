@@ -25,11 +25,29 @@ exports[`BookmarkCard matches the snapshot 1`] = `
               Happiness Achievement Module
             </a>
           </h2>
-          <i
-            aria-hidden="true"
-            class="fa fa-bookmark bookmark__icon fa-2x"
-            data-testid="bookmark-icon"
-          />
+          <button
+            class="usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              class="usa-icon usa-icon--size-5"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+              />
+            </svg>
+          </button>
         </div>
         <p
           class="margin-0"
@@ -72,10 +90,24 @@ exports[`BookmarkCard matches the snapshot 1`] = `
               Approved
             </p>
           </div>
-          <i
-            class="fa system-health-icon-success fa-check-circle fa-3x margin-top-3"
+          <svg
+            class="usa-icon usa-icon--size-7 system-health-icon-success margin-top-3"
             data-testid="system-health-icon"
-          />
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0V0zm0 0h24v24H0V0z"
+              fill="none"
+            />
+            <path
+              d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+            />
+          </svg>
         </div>
       </div>
     </div>
