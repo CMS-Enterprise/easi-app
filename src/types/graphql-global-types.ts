@@ -166,7 +166,7 @@ export interface CreateAccessibilityRequestDocumentInput {
  * The data needed to initialize a 508/accessibility request
  */
 export interface CreateAccessibilityRequestInput {
-  intakeID: UUID;
+  intakeID?: UUID | null;
   name: string;
   cedarSystemId?: string | null;
 }

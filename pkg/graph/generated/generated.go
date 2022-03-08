@@ -3832,7 +3832,7 @@ type SystemEdge {
 The data needed to initialize a 508/accessibility request
 """
 input CreateAccessibilityRequestInput {
-  intakeID: UUID!
+  intakeID: UUID
   name: String!
   cedarSystemId: String
 }
@@ -19374,7 +19374,7 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestInput(ctx co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeID"))
-			it.IntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			it.IntakeID, err = ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
