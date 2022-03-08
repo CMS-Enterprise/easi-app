@@ -9,6 +9,7 @@ import {
   CardHeader,
   Grid,
   GridContainer,
+  IconCheckCircle,
   Link,
   ProcessList,
   ProcessListHeading,
@@ -48,7 +49,9 @@ const ATO = ({ system }: ATOProps) => {
               borderBottom
               className="margin-bottom-4 padding-bottom-4"
             >
-              <h2 className="margin-top-0">{t('singleSystem.ato.header')}</h2>
+              <h2 className="margin-top-0 margin-bottom-4">
+                {t('singleSystem.ato.header')}
+              </h2>
 
               {/* TODO:  Map status to card colors */}
               <CardGroup className="margin-0">
@@ -188,7 +191,7 @@ const ATO = ({ system }: ATOProps) => {
                   key={tag}
                   className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
                 >
-                  <i className="fa fa-check-circle text-primary-dark margin-right-1" />
+                  <IconCheckCircle className="text-primary-dark margin-right-1" />
                   {tag} {/* TODO: Map defined CEDAR variable once availabe */}
                 </Tag>
               ))}

@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
+  Dropdown,
+  IconNavigateBefore,
   Label,
   Radio,
   Textarea,
@@ -20,6 +22,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import processStages from 'constants/enums/processStages';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -34,6 +37,7 @@ type RequestDetailsForm = {
   requestName: string;
   businessNeed: string;
   businessSolution: string;
+  currentStage: string;
   needsEaSupport: boolean | null;
 };
 
@@ -47,6 +51,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     requestName,
     businessNeed,
     businessSolution,
+    currentStage,
     needsEaSupport
   } = systemIntake;
   const formikRef = useRef<FormikProps<RequestDetailsForm>>(null);
@@ -56,6 +61,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     requestName: requestName || '',
     businessNeed: businessNeed || '',
     businessSolution: businessSolution || '',
+    currentStage: currentStage || '',
     needsEaSupport
   };
 
@@ -236,6 +242,42 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
                 <FieldGroup
                   className="margin-bottom-4"
+                  scrollElement="currentStage"
+                  error={!!flatErrors.currentStage}
+                >
+                  <Label htmlFor="IntakeForm-CurrentStage">
+                    Where are you in the process?
+                  </Label>
+                  <HelpText id="IntakeForm-ProcessHelp" className="margin-y-1">
+                    This helps the governance team provide the right type of
+                    guidance for your request
+                  </HelpText>
+                  <FieldErrorMsg>{flatErrors.CurrentStage}</FieldErrorMsg>
+                  <Field
+                    as={Dropdown}
+                    id="IntakeForm-CurrentStage"
+                    name="currentStage"
+                    aria-describedby="IntakeForm-ProcessHelp"
+                  >
+                    <option value="" disabled>
+                      Select an option
+                    </option>
+                    {processStages.map(stage => {
+                      const { name, value } = stage;
+                      return (
+                        <option
+                          key={`ProcessStageComponent-${value}`}
+                          value={name}
+                        >
+                          {name}
+                        </option>
+                      );
+                    })}
+                  </Field>
+                </FieldGroup>
+
+                <FieldGroup
+                  className="margin-bottom-4"
                   scrollElement="needsEaSupport"
                   error={!!flatErrors.needsEaSupport}
                 >
@@ -369,8 +411,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                       });
                     }}
                   >
-                    <span>
-                      <i className="fa fa-angle-left" /> Save & Exit
+                    <span className="display-flex flex-align-center">
+                      <IconNavigateBefore /> Save & Exit
                     </span>
                   </Button>
                 </div>

@@ -6,6 +6,7 @@ import {
   Button,
   Checkbox,
   Dropdown,
+  IconNavigateBefore,
   Label,
   Radio,
   TextInput
@@ -573,8 +574,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       });
                     }}
                   >
-                    <span>
-                      <i className="fa fa-angle-left" /> Save & Exit
+                    <span className="display-flex flex-align-center">
+                      <IconNavigateBefore /> Save & Exit
                     </span>
                   </Button>
                 </div>

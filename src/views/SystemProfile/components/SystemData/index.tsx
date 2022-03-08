@@ -89,7 +89,7 @@ const SystemData = ({ system }: SystemDataProps) => {
               </Grid>
 
               <Grid row className="margin-top-4">
-                <Grid tablet={{ col: true }} className="margin-bottom-3">
+                <Grid tablet={{ col: true }}>
                   <DescriptionTerm
                     className="display-inline-flex margin-right-1"
                     term={t('singleSystem.systemData.pHI')}
