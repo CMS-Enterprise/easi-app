@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, Route, Switch, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
@@ -26,6 +27,7 @@ import SystemIntakeView from './ViewOnly';
 import './index.scss';
 
 export const SystemIntake = () => {
+  const { t } = useTranslation();
   const { systemId } = useParams<{
     systemId: string;
     formPage: string;
@@ -55,7 +57,7 @@ export const SystemIntake = () => {
       <BreadcrumbBar variant="wrap">
         <Breadcrumb>
           <BreadcrumbLink asCustom={Link} to="/">
-            <span>Home</span>
+            <span>{t('taskList:navigation.home')}</span>
           </BreadcrumbLink>
         </Breadcrumb>
         <Breadcrumb>
@@ -63,7 +65,7 @@ export const SystemIntake = () => {
             asCustom={Link}
             to={`/governance-task-list/${systemId}`}
           >
-            <span>Get governance approval</span>
+            <span>{t('taskList:navigation.governanceTaskList')}</span>
           </BreadcrumbLink>
         </Breadcrumb>
         <Breadcrumb current>Intake Request</Breadcrumb>

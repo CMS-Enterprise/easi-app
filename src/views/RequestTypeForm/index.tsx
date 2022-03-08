@@ -80,10 +80,10 @@ const RequestTypeForm = () => {
       <BreadcrumbBar variant="wrap">
         <Breadcrumb>
           <BreadcrumbLink asCustom={Link} to="/">
-            <span>Home</span>
+            <span>{t('navigation.itGovernance')}</span>
           </BreadcrumbLink>
         </Breadcrumb>
-        <Breadcrumb current>Make a request</Breadcrumb>
+        <Breadcrumb current>{t('navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
       <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
       <Formik

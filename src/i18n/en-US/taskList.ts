@@ -27,9 +27,11 @@ const taskList = {
       'Finish these next steps to complete the governance review process.'
   },
   navigation: {
-    home: 'Home',
-    governanceApproval: 'Get governance approval',
+    home: 'IT Governance',
+    governanceTaskList: 'Governance Task List',
     feedback: 'Feedback',
+    lcidInfo: 'About this LCID',
+    nextSteps: 'Decision and next steps',
     returnToTaskList: 'Return to task list'
   },
   feedback: {

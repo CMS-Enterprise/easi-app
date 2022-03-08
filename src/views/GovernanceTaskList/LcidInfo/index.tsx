@@ -44,7 +44,7 @@ const LcidInfo = () => {
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/">
-              <span>Home</span>
+              <span>{t('navigation.home')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb>
@@ -52,10 +52,10 @@ const LcidInfo = () => {
               asCustom={Link}
               to={`/governance-task-list/${systemId}`}
             >
-              <span>Get governance approval</span>
+              <span>{t('navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
-          <Breadcrumb current>About this LCID</Breadcrumb>
+          <Breadcrumb current>{t('navigation.lcidInfo')}</Breadcrumb>
         </BreadcrumbBar>
       </div>
       {loading && <PageLoading />}

@@ -26,7 +26,7 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
             onClick={[Function]}
           >
             <span>
-              Home
+              IT Governance
             </span>
           </a>
         </li>
@@ -39,7 +39,7 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
             onClick={[Function]}
           >
             <span>
-              Get governance approval
+              Governance Task List
             </span>
           </a>
         </li>
@@ -47,7 +47,7 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
           aria-current="page"
           className="usa-breadcrumb__list-item usa-current"
         >
-          Prepare for the Review Board meeting
+          Prepare for GRB meeting
         </li>
       </ol>
     </nav>
