@@ -3,12 +3,13 @@ import { DateTime } from 'luxon';
 export interface AccessibilityRequestSchema {
   id: string;
   name: string;
-  intakeID?: string;
+  intakeID: string;
   createdAt: DateTime;
   updatedAt: DateTime;
   euaUserID: string;
   deletedAt?: DateTime;
   deletionReason?: string;
+  cedarSystemId?: string;
 }
 
 Cypress.Commands.add(

@@ -14,7 +14,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/google/uuid"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/spf13/cobra"
@@ -38,15 +37,21 @@ var accessibilityRequestCmd = &cobra.Command{
 	Short: "Generate an Accessibility Request",
 	Run: func(cmd *cobra.Command, args []string) {
 		connect()
+		fmt.Println("1")
 		modelData := os.Getenv("SEED_INPUT")
+		fmt.Println("2")
 		var accessibilityRequest models.AccessibilityRequest
+		fmt.Println("3")
 		if deserializeErr := json.Unmarshal([]byte(modelData), &accessibilityRequest); deserializeErr != nil {
 			template, _ := json.MarshalIndent(accessibilityRequest, "", "  ")
 			fmt.Printf("Please provide input in the following format:\n %s\n", template)
 			log.Fatal(deserializeErr)
 		}
+		fmt.Println("4")
 		makeAccessibilityRequest(&accessibilityRequest, store)
+		fmt.Println("5")
 		serialized, serializeErr := json.MarshalIndent(accessibilityRequest, "", "  ")
+		fmt.Println("6")
 		if serializeErr != nil {
 			log.Fatal(serializeErr)
 		}
@@ -103,7 +108,7 @@ func main() {
 func makeAccessibilityRequest(accessibilityRequest *models.AccessibilityRequest, store *storage.Store) *models.AccessibilityRequest {
 	ctx := context.Background()
 
-	if *accessibilityRequest.IntakeID == uuid.Nil {
+	if accessibilityRequest.IntakeID == nil {
 		intake := models.SystemIntake{
 			Status:                 models.SystemIntakeStatusLCIDISSUED,
 			RequestType:            models.SystemIntakeRequestTypeNEW,
