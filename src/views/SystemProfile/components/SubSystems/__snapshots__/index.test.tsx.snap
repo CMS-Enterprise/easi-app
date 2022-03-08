@@ -215,11 +215,23 @@ exports[`System Sub-systems subpage matches snapshot 1`] = `
                     <div
                       class="flex-auto"
                     >
-                      <i
-                        aria-hidden="true"
-                        class="fa fa-bookmark bookmark__icon fa-1x lightgrey padding-y-05 padding-x-1"
-                        data-testid="bookmark-icon"
-                      />
+                      <svg
+                        class="usa-icon usa-icon--size-4 bookmark__icon"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                        />
+                      </svg>
                     </div>
                   </div>
                   <div
