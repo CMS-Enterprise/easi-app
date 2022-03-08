@@ -1126,6 +1126,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 				RequestName      string
 				BusinessSolution string
 				BusinessNeed     string
+				CurrentStage     string
 				NeedsEaSupport   bool
 			}
 		}
@@ -1140,6 +1141,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 				requestName: "My request",
 				businessSolution: "My solution",
 				businessNeed: "My need",
+				currentStage:  "Just an idea",
 				needsEaSupport: false
 			}) {
 				systemIntake {
@@ -1147,6 +1149,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 					requestName
 					businessSolution
 					businessNeed
+					currentStage
 					needsEaSupport
 				}
 			}
@@ -1158,6 +1161,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.Equal(respIntake.RequestName, "My request")
 	s.Equal(respIntake.BusinessSolution, "My solution")
 	s.Equal(respIntake.BusinessNeed, "My need")
+	s.Equal(respIntake.CurrentStage, "Just an idea")
 	s.False(respIntake.NeedsEaSupport)
 }
 
@@ -1174,7 +1178,6 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 		UpdateSystemIntakeContractDetails struct {
 			SystemIntake struct {
 				ID            string
-				CurrentStage  string
 				FundingSource struct {
 					FundingNumber string
 					IsFunded      bool
@@ -1207,7 +1210,6 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 		`mutation {
 			updateSystemIntakeContractDetails(input: {
 				id: "%s",
-				currentStage: "Just an idea"
 				fundingSource: {
 					fundingNumber: "123456"
 					isFunded: true
@@ -1227,7 +1229,6 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 			}) {
 				systemIntake {
 					id
-					currentStage
 					fundingSource {
 						fundingNumber
 						isFunded
@@ -1259,7 +1260,6 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
-	s.Equal(respIntake.CurrentStage, "Just an idea")
 
 	fundingSource := respIntake.FundingSource
 	s.Equal(fundingSource.FundingNumber, "123456")
@@ -1412,9 +1412,8 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	var resp struct {
 		UpdateSystemIntakeContractDetails struct {
 			SystemIntake struct {
-				ID           string
-				CurrentStage string
-				Contract     struct {
+				ID       string
+				Contract struct {
 					Contractor *string
 					EndDate    struct {
 						Day   *string

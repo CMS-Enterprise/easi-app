@@ -284,7 +284,7 @@
           "type": "string",
           "description": "Where is the business owner in process",
           "examples": [
-            "The project is already funded"
+            "Initial development underway"
           ]
         },
         "productManager": {

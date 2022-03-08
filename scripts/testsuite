@@ -8,6 +8,9 @@ set -eu -o pipefail
 builddir="$(git rev-parse --show-toplevel)"
 export EMAIL_TEMPLATE_DIR=$builddir/pkg/email/templates
 
+red_color_code="\e[31m"
+reset_color_code="\e[0m"
+
 "$builddir"/bin/easi test
 
 # Convert go-coverage.out to txt and html
@@ -23,7 +26,7 @@ if python -c "exit(1) if ${percent} < ${goal_percent} else exit()"; then
     echo "total coverage is ${percent}%"
 else
     # coverage is under goal
-    echo -e "${RED}total coverage has dropped to ${percent}% needs to be at least ${goal_percent}%${NC}"
+    echo -e "${red_color_code}total coverage has dropped to ${percent}%; needs to be at least ${goal_percent}%${reset_color_code}"
     # fail build
     exit 1
 fi

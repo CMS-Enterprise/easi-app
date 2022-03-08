@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/guregu/null"
+
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
@@ -34,6 +36,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 
 	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindListParams()
+	params.SetState(null.StringFrom("active").Ptr())
+	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
 	params.HTTPClient = c.hc
 
 	// Make the API call
