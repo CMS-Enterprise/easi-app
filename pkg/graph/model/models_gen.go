@@ -478,6 +478,18 @@ type SystemIntakeRequesterWithComponentInput struct {
 	Component string `json:"component"`
 }
 
+// Parameters for updating a 508/accessibility request's associated CEDAR system
+type UpdateAccessibilityRequestCedarSystemInput struct {
+	ID            uuid.UUID `json:"id"`
+	CedarSystemID *string   `json:"cedarSystemId"`
+}
+
+// Result of updating a 508/accessibility request's associated CEDAR system
+type UpdateAccessibilityRequestCedarSystemPayload struct {
+	ID                   uuid.UUID                    `json:"id"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
+}
+
 // Parameters for updating a 508/accessibility request's status
 type UpdateAccessibilityRequestStatus struct {
 	RequestID uuid.UUID                         `json:"requestID"`

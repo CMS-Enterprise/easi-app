@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -185,4 +186,28 @@ func (s *Store) FetchAccessibilityRequestMetrics(_ context.Context, startTime ti
 	metrics.CreatedAndInRemediation = createdResponse.CreatedAndInRemediationCount
 
 	return metrics, nil
+}
+
+// UpdateAccessibilityRequestCedarSystem updates the CEDAR system ID associated with a 508 request
+func (s *Store) UpdateAccessibilityRequestCedarSystem(ctx context.Context, id uuid.UUID, cedarSystemID null.String) (*models.AccessibilityRequest, error) {
+	updatedAt := s.clock.Now()
+	request := &models.AccessibilityRequest{
+		ID:            id,
+		CedarSystemID: cedarSystemID,
+		UpdatedAt:     &updatedAt,
+	}
+
+	const updateSystemIntakeSQL = `
+		UPDATE accessibility_requests
+		SET
+			updated_at = :updated_at,
+			cedar_system_id = :cedar_system_id
+		WHERE accessibility_requests.id = :id
+	`
+
+	_, err := s.db.NamedExec(
+		updateSystemIntakeSQL,
+		request,
+	)
+	return request, err
 }

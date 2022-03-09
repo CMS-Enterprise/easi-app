@@ -765,6 +765,23 @@ func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context,
 	}, nil
 }
 
+func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error) {
+	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
+	cedarSystemIDStr := cedarSystemID.ValueOrZero()
+	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
+		_, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	updatedRequest, err := r.store.UpdateAccessibilityRequestCedarSystem(ctx, input.ID, cedarSystemID)
+	return &model.UpdateAccessibilityRequestCedarSystemPayload{
+		ID:                   updatedRequest.ID,
+		AccessibilityRequest: updatedRequest,
+	}, err
+}
+
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
