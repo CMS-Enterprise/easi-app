@@ -348,8 +348,28 @@ func NewCreateActionUpdateStatus(
 			}
 		}
 
+		requesterHasValidEUAID := intake.EUAUserID.ValueOrZero() != ""
+
 		var requesterInfo *models.UserInfo
-		if intake.EUAUserID.ValueOrZero() == "" {
+		if requesterHasValidEUAID {
+			requesterInfo, err = fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+			if err != nil {
+				return nil, err
+			}
+
+			if requesterInfo == nil || requesterInfo.Email == "" {
+				appcontext.ZLogger(ctx).Error(fmt.Sprint("Requester info fetch for EUA ID ", intake.EUAUserID.String, " was not successful when submitting an action"),
+					zap.String("intakeID", intake.ID.String()),
+					zap.String("EUAID", intake.EUAUserID.String))
+				return nil, &apperrors.ExternalAPIError{
+					Err:       errors.New("requester info fetch was not successful when submitting an action"),
+					Model:     intake,
+					ModelID:   intake.ID.String(),
+					Operation: apperrors.Fetch,
+					Source:    "CEDAR LDAP",
+				}
+			}
+		} else {
 			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
 				zap.String("intakeID", intake.ID.String()))
 			emailText := fmt.Sprint("The requester for intake ", intake.ID.String(), " does not have a valid EUA ID; EASi cannot email them the intake review.")
@@ -357,27 +377,9 @@ func NewCreateActionUpdateStatus(
 			if err != nil {
 				return nil, err
 			}
-		} else {
-			requesterInfo, err = fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-			if err != nil {
-				return nil, err
-			}
 		}
 
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			appcontext.ZLogger(ctx).Error(fmt.Sprint("Requester info fetch for EUA ID ", intake.EUAUserID.String, " was not successful when submitting an action"),
-				zap.String("intakeID", intake.ID.String()),
-				zap.String("EUAID", intake.EUAUserID.String))
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
-
-		if intake.EUAUserID.ValueOrZero() != "" {
+		if requesterHasValidEUAID {
 			err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
 			if err != nil {
 				return nil, err

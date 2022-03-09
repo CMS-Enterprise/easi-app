@@ -254,6 +254,8 @@ func NewUpdateLifecycleFields(
 			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
+		requesterHasValidEUAID := existing.EUAUserID.ValueOrZero() != ""
+
 		// don't allow overwriting an existing LCID
 		if existing.LifecycleID.ValueOrZero() != "" {
 			return nil, &apperrors.ResourceConflictError{
@@ -264,32 +266,32 @@ func NewUpdateLifecycleFields(
 		}
 
 		var requesterInfo *models.UserInfo
-		if existing.EUAUserID.ValueOrZero() == "" {
+		if requesterHasValidEUAID {
+			requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+			if err != nil {
+				return nil, err
+			}
+
+			if requesterInfo == nil || requesterInfo.Email == "" {
+				appcontext.ZLogger(ctx).Error(
+					fmt.Sprint("Requester info fetch for EUA ID ", existing.EUAUserID.String, " was not successful when updating lifecycle fields"),
+					zap.String("intakeID", existing.ID.String()),
+					zap.String("EUAID", existing.EUAUserID.String))
+				return nil, &apperrors.ExternalAPIError{
+					Err:       errors.New("requester info fetch was not successful when submitting an action"),
+					Model:     existing,
+					ModelID:   existing.ID.String(),
+					Operation: apperrors.Fetch,
+					Source:    "CEDAR LDAP",
+				}
+			}
+		} else {
 			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
 				zap.String("intakeID", existing.ID.String()))
 			emailText := fmt.Sprint("The requester for intake ", existing.ID.String(), " does not have a valid EUA ID; EASi cannot notify them of lifecycle field updates.")
 			err = sendIssueLCIDInvalidRequesterEmail(ctx, emailText, existing.ID)
 			if err != nil {
 				return nil, err
-			}
-		} else {
-			requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
-			if err != nil {
-				return nil, err
-			}
-		}
-
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			appcontext.ZLogger(ctx).Error(
-				fmt.Sprint("Requester info fetch for EUA ID ", existing.EUAUserID.String, " was not successful when updating lifecycle fields"),
-				zap.String("intakeID", existing.ID.String()),
-				zap.String("EUAID", existing.EUAUserID.String))
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     existing,
-				ModelID:   existing.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
 			}
 		}
 
@@ -328,7 +330,7 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		if existing.EUAUserID.ValueOrZero() != "" {
+		if requesterHasValidEUAID {
 			// TODO: put cost baseline in email?
 			err = sendIssueLCIDEmail(
 				ctx,
@@ -373,33 +375,35 @@ func NewUpdateRejectionFields(
 			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
+		requesterHasValidEUAID := existing.EUAUserID.ValueOrZero() != ""
+
 		var requesterInfo *models.UserInfo
-		if existing.EUAUserID.ValueOrZero() == "" {
+		if requesterHasValidEUAID {
+			requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+			if err != nil {
+				return nil, err
+			}
+
+			if requesterInfo == nil || requesterInfo.Email == "" {
+				appcontext.ZLogger(ctx).Error(
+					fmt.Sprint("Requester info fetch for EUA ID ", existing.EUAUserID.String, " was not successful when rejecting an intake request"),
+					zap.String("intakeID", existing.ID.String()),
+					zap.String("EUAID", existing.EUAUserID.String))
+				return nil, &apperrors.ExternalAPIError{
+					Err:       errors.New("requester info fetch was not successful when submitting an action"),
+					Model:     existing,
+					ModelID:   existing.ID.String(),
+					Operation: apperrors.Fetch,
+					Source:    "CEDAR LDAP",
+				}
+			}
+		} else {
 			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
 				zap.String("intakeID", existing.ID.String()))
 			emailText := fmt.Sprint("The requester for intake ", existing.ID.String(), " does not have a valid EUA ID; EASi cannot notify them of their request's rejection.")
 			err = sendRejectRequestInvalidRequesterEmail(ctx, emailText, existing.ID)
 			if err != nil {
 				return nil, err
-			}
-		} else {
-			requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
-			if err != nil {
-				return nil, err
-			}
-		}
-
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			appcontext.ZLogger(ctx).Error(
-				fmt.Sprint("Requester info fetch for EUA ID ", existing.EUAUserID.String, " was not successful when rejecting an intake request"),
-				zap.String("intakeID", existing.ID.String()),
-				zap.String("EUAID", existing.EUAUserID.String))
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     existing,
-				ModelID:   existing.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
 			}
 		}
 
@@ -455,37 +459,39 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
+		requesterHasValidEUAID := intake.EUAUserID.ValueOrZero() != ""
+
 		// TODO (for PR) - arguably, we could move this block and the block that checks for requesterInfo == nil || requesterInfo.Email == "" down, so all the email-handling stuff is in one place
 		// this would be a behavior change; right now, if requester info fetch from CEDAR LDAP fails, nothing is saved in our DB
 		// if we moved requesterInfo stuff below, we'd save feedback/action/intake in our DB, then return an error when fetching from CEDAR LDAP
 
 		var requesterInfo *models.UserInfo
-		if intake.EUAUserID.ValueOrZero() == "" {
+		if requesterHasValidEUAID {
+			requesterInfo, err = fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+			if err != nil {
+				return nil, err
+			}
+
+			if requesterInfo == nil || requesterInfo.Email == "" {
+				appcontext.ZLogger(ctx).Error(
+					fmt.Sprint("Requester info fetch for EUA ID ", intake.EUAUserID.String, " was not successful when submitting GRT Feedback"),
+					zap.String("intakeID", intake.ID.String()),
+					zap.String("EUAID", intake.EUAUserID.String))
+				return nil, &apperrors.ExternalAPIError{
+					Err:       errors.New("requester info fetch was not successful when submitting GRT Feedback"),
+					Model:     intake,
+					ModelID:   intake.ID.String(),
+					Operation: apperrors.Fetch,
+					Source:    "CEDAR LDAP",
+				}
+			}
+		} else {
 			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
 				zap.String("intakeID", intake.ID.String()))
 			emailText := fmt.Sprint("The requester for intake ", intake.ID.String(), " does not have a valid EUA ID; EASi cannot email them the intake review.")
 			err = sendReviewEmailInvalidRequester(ctx, emailText, intake.ID)
 			if err != nil {
 				return nil, err
-			}
-		} else {
-			requesterInfo, err = fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-			if err != nil {
-				return nil, err
-			}
-		}
-
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			appcontext.ZLogger(ctx).Error(
-				fmt.Sprint("Requester info fetch for EUA ID ", intake.EUAUserID.String, " was not successful when submitting GRT Feedback"),
-				zap.String("intakeID", intake.ID.String()),
-				zap.String("EUAID", intake.EUAUserID.String))
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting GRT Feedback"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
 			}
 		}
 
@@ -505,7 +511,7 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
-		if intake.EUAUserID.ValueOrZero() != "" {
+		if requesterHasValidEUAID {
 			err = sendReviewEmail(
 				ctx,
 				action.Feedback.String,
