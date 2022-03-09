@@ -431,11 +431,7 @@ func NewCreateActionExtendLifecycleID(
 		}
 
 		intake.LifecycleExpiresAt = expirationDate
-
-		// TODO: set scope, next steps, etc. as well
-
 		intake.Status = models.SystemIntakeStatusLCIDISSUED
-
 		intake.LifecycleScope = null.StringFrom(scope)
 		intake.DecisionNextSteps = null.StringFromPtr(nextSteps)
 		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)
@@ -459,10 +455,8 @@ func NewCreateActionExtendLifecycleID(
 			}
 		}
 
-		// err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
-		// if err != nil {
-		// 	return nil, err
-		// }
+		// don't need to send the email from here; the GraphQL resolver sends the email
+		// pkg/graph/schema.resolvers.go, CreateSystemIntakeActionExtendLifecycleID()
 
 		return intake, err
 	}
