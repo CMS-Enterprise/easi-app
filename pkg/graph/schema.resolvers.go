@@ -503,9 +503,9 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 
 	var applicationName string
 	if input.IntakeID != nil {
-		intake, err2 := r.store.FetchSystemIntakeByID(ctx, *input.IntakeID)
-		if err2 != nil {
-			return nil, err2
+		intake, intakeErr := r.store.FetchSystemIntakeByID(ctx, *input.IntakeID)
+		if intakeErr != nil {
+			return nil, intakeErr
 		}
 		newRequest.IntakeID = &intake.ID
 		applicationName = intake.ProjectName.String
@@ -514,9 +514,9 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
 	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
-		cedarSystem, err3 := r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
-		if err3 != nil {
-			return nil, err3
+		cedarSystem, cedarSystemErr := r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
+		if cedarSystemErr != nil {
+			return nil, cedarSystemErr
 		}
 		newRequest.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
 		applicationName = cedarSystem.Name
