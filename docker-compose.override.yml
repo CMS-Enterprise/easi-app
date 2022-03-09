@@ -14,7 +14,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: ${DOCKER_TARGET}
+      target: dev
     image: easi-backend:latest
     volumes:
       - ./:/easi

@@ -112,9 +112,7 @@ end
 
 def up(frontend_included, *args, debug:false, wait:false)
   conf=" "
-  dock = "dev"
   if debug
-    dock = "debug"
     conf =ENV["AIR_CONFIG_DEBUG"]
     if wait
       conf =ENV["AIR_CONFIG_DEBUG_WAIT"]
@@ -123,7 +121,6 @@ def up(frontend_included, *args, debug:false, wait:false)
   environment = {
     "COMPOSE_HTTP_TIMEOUT" => "120",
     "AIR_CONFIG" =>conf,
-    "DOCKER_TARGET" => dock
   }
   command = "docker-compose #{"--profile frontend" if frontend_included } up --build"
 
@@ -137,7 +134,7 @@ def up(frontend_included, *args, debug:false, wait:false)
   else
     check = "echo '{\"method\":\"RPCServer.State\",\"params\":[],\"id\":1}' | nc -w 1 localhost 2345 | grep 'result' -q" 
     wait_for_success("Waiting for backend debug server...", check) 
-    puts "✨ Make sure to connect the debugger, or the service won't start ✨ "
+    puts "✨ Make sure to connect the debugger, or the backend service won't start ✨ "
   end
 
   if frontend_included
@@ -160,7 +157,7 @@ namespace :up do
   task :debug do
     up(true, "-d", debug: true)
   end
-  desc "Starts all services in the project. With backend DEBUGGING, and also will wait to start the service until the debugger attaches"    
+  desc "Starts all services in the project. With backend DEBUGGING, and also will wait to start the backend service until the debugger attaches"    
   namespace :debug do
     task :wait do
       up(true, "-d", debug: true, wait: true)
@@ -182,7 +179,7 @@ namespace :up do
     task :debug do
       up(false, "-d", debug: true)
     end
-    desc "Starts all services in the foreground except the frontend (runs more quickly, if frontend isn't needed). With DEBUGGING, and also will wait to start the service until the debugger attaches"    
+    desc "Starts all services in the foreground except the frontend (runs more quickly, if frontend isn't needed). With DEBUGGING, and also will wait to start the backend service until the debugger attaches"    
     namespace :debug do
       task :wait do
         up(false, "-d", debug: true, wait: true)
