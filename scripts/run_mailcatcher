@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-docker run --name='mailcatcher' --rm -d \
-  --publish=1080:1080 \
-  --publish=1025:1025 \
-dockage/mailcatcher:0.6.5
