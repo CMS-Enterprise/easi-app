@@ -96,6 +96,9 @@ func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj
 }
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
+	if obj.IntakeID == nil {
+		return nil, nil
+	}
 	system, systemErr := r.store.FetchSystemByIntakeID(ctx, *obj.IntakeID)
 	if systemErr != nil {
 		return nil, systemErr
