@@ -391,4 +391,8 @@ describe('The Business Case Review Component', () => {
 
     expect(tree).toMatchSnapshot();
   });
+
+  it('Should fail on purpose', () => {
+    expect(true).toBe(false);
+  });
 });
