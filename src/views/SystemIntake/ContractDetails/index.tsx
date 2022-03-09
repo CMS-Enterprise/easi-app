@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import {
   Button,
   Dropdown,
+  IconNavigateBefore,
   Label,
   Link,
   Radio,
@@ -973,8 +974,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       });
                     }}
                   >
-                    <span>
-                      <i className="fa fa-angle-left" /> Save & Exit
+                    <span className="display-flex flex-align-center">
+                      <IconNavigateBefore /> Save & Exit
                     </span>
                   </Button>
                 </div>

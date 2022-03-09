@@ -36,17 +36,36 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
       </li>
     </ol>
   </nav>
-  <a
-    href="/"
-    onClick={[Function]}
+  <div
+    className="display-flex"
   >
-    <i
-      className="fa fa-angle-left margin-right-05 text-no-underline"
-    />
-    <span>
-      Back
-    </span>
-  </a>
+    <a
+      className="display-flex flex-align-center"
+      href="/"
+      onClick={[Function]}
+    >
+      <svg
+        className="usa-icon text-no-underline"
+        focusable={false}
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+        />
+      </svg>
+      <span>
+        Back
+      </span>
+    </a>
+  </div>
   <h1
     aria-live="polite"
     className="easi-h1"
@@ -293,17 +312,36 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
       </li>
     </ol>
   </nav>
-  <a
-    href="/"
-    onClick={[Function]}
+  <div
+    className="display-flex"
   >
-    <i
-      className="fa fa-angle-left margin-right-05 text-no-underline"
-    />
-    <span>
-      Back
-    </span>
-  </a>
+    <a
+      className="display-flex flex-align-center"
+      href="/"
+      onClick={[Function]}
+    >
+      <svg
+        className="usa-icon text-no-underline"
+        focusable={false}
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+        />
+      </svg>
+      <span>
+        Back
+      </span>
+    </a>
+  </div>
   <h1
     aria-live="polite"
     className="easi-h1"

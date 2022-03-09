@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
-import { Card } from '@trussworks/react-uswds';
+import { Button, Card, IconBookmark } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -10,8 +10,6 @@ import SystemHealthIcon from 'components/SystemHealthIcon';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import { IconStatus } from 'types/iconStatus';
-
-import BookmarkCardIcon from './BookmarkCardIcon';
 
 import './index.scss';
 
@@ -60,10 +58,13 @@ const BookmarkCard = ({
               {name}
             </UswdsReactLink>
           </h2>
-          <BookmarkCardIcon
-            size="md"
+          <Button
             onClick={() => handleDeleteBookmark(id)}
-          />
+            type="button"
+            unstyled
+          >
+            <IconBookmark size={5} />
+          </Button>
         </div>
         <p className="margin-0">{acronym}</p>
         <p className="bookmark__body-text line-height-body-4">{description}</p>

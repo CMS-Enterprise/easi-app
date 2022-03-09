@@ -8,6 +8,7 @@ import {
   BreadcrumbLink,
   Grid,
   GridContainer,
+  IconBookmark,
   IconMenu,
   PrimaryNav,
   SideNav,
@@ -15,7 +16,6 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
-import BookmarkCardIcon from 'components/BookmarkCard/BookmarkCardIcon';
 import { NavContext } from 'components/Header/navContext';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -178,10 +178,7 @@ const SystemProfile = () => {
               </BreadcrumbBar>
 
               <PageHeading className="margin-top-2">
-                <BookmarkCardIcon
-                  size="sm"
-                  className="system-profile__bookmark margin-right-1 text-ttop cursor-initial"
-                />{' '}
+                <IconBookmark size={4} className="text-primary" />{' '}
                 <span>{systemInfo.name} </span>
                 <span className="text-normal font-body-sm">
                   ({systemInfo.acronym})

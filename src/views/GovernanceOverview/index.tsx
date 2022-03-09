@@ -4,6 +4,7 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
+  IconNavigateBefore,
   ProcessList,
   ProcessListHeading,
   ProcessListItem
@@ -33,10 +34,12 @@ const GovernanceOverview = () => {
         </Breadcrumb>
         <Breadcrumb current>Add a new system or service</Breadcrumb>
       </BreadcrumbBar>
-      <Link to="/">
-        <i className="fa fa-angle-left margin-right-05 text-no-underline" />
-        <span>Back</span>
-      </Link>
+      <div className="display-flex">
+        <Link to="/" className="display-flex flex-align-center">
+          <IconNavigateBefore className="text-no-underline" />
+          <span>Back</span>
+        </Link>
+      </div>
       <PageHeading>Add a new system or service</PageHeading>
       <p className="line-height-body-5 font-body-lg text-light">
         To add a new system or service, you need to go through a set of steps
