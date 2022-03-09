@@ -498,17 +498,16 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 
 	newRequest := &models.AccessibilityRequest{
 		EUAUserID: requesterEUAID,
-		Name:      input.Name,
 	}
 
-	var applicationName string
+	var systemName string
 	if input.IntakeID != nil {
 		intake, intakeErr := r.store.FetchSystemIntakeByID(ctx, *input.IntakeID)
 		if intakeErr != nil {
 			return nil, intakeErr
 		}
 		newRequest.IntakeID = &intake.ID
-		applicationName = intake.ProjectName.String
+		systemName = intake.ProjectName.String
 	}
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
@@ -519,8 +518,10 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 			return nil, cedarSystemErr
 		}
 		newRequest.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
-		applicationName = cedarSystem.Name
+		systemName = cedarSystem.Name
 	}
+
+	newRequest.Name = systemName
 
 	request, err := r.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, newRequest)
 	if err != nil {
@@ -531,7 +532,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		ctx,
 		requesterInfo.CommonName,
 		request.Name,
-		applicationName,
+		systemName,
 		request.ID,
 	)
 	if err != nil {
