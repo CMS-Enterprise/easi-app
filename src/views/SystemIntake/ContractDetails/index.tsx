@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import {
   Button,
   Dropdown,
+  IconNavigateBefore,
   Label,
   Link,
   Radio,
@@ -28,7 +29,6 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import fundingSources from 'constants/enums/fundingSources';
-import processStages from 'constants/enums/processStages';
 import { yesNoMap } from 'data/common';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -49,9 +49,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
   const formikRef = useRef<FormikProps<ContractDetailsForm>>(null);
 
-  const { id, currentStage, fundingSource, costs, contract } = systemIntake;
+  const { id, fundingSource, costs, contract } = systemIntake;
   const initialValues: ContractDetailsForm = {
-    currentStage: currentStage || '',
     fundingSource: {
       isFunded: fundingSource.isFunded,
       fundingNumber: fundingSource.fundingNumber || '',
@@ -176,42 +175,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 <MandatoryFieldsAlert />
               </div>
               <Form>
-                <FieldGroup
-                  className="margin-bottom-4"
-                  scrollElement="currentStage"
-                  error={!!flatErrors.currentStage}
-                >
-                  <Label htmlFor="IntakeForm-CurrentStage">
-                    Where are you in the process?
-                  </Label>
-                  <HelpText id="IntakeForm-ProcessHelp" className="margin-y-1">
-                    This helps the governance team provide the right type of
-                    guidance for your request
-                  </HelpText>
-                  <FieldErrorMsg>{flatErrors.CurrentStage}</FieldErrorMsg>
-                  <Field
-                    as={Dropdown}
-                    id="IntakeForm-CurrentStage"
-                    name="currentStage"
-                    aria-describedby="IntakeForm-ProcessHelp"
-                  >
-                    <option value="" disabled>
-                      Select an option
-                    </option>
-                    {processStages.map(stage => {
-                      const { name, value } = stage;
-                      return (
-                        <option
-                          key={`ProcessStageComponent-${value}`}
-                          value={name}
-                        >
-                          {name}
-                        </option>
-                      );
-                    })}
-                  </Field>
-                </FieldGroup>
-
                 <FieldGroup
                   scrollElement="fundingSource.isFunded"
                   error={!!flatErrors['fundingSource.isFunded']}
@@ -1011,8 +974,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       });
                     }}
                   >
-                    <span>
-                      <i className="fa fa-angle-left" /> Save & Exit
+                    <span className="display-flex flex-align-center">
+                      <IconNavigateBefore /> Save & Exit
                     </span>
                   </Button>
                 </div>

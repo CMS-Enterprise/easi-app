@@ -115,7 +115,7 @@ func main() {
 		i.FundingNumber = null.StringFrom("")
 		i.BusinessNeed = null.StringFrom("Business Need: The quick brown fox jumps over the lazy dog.")
 		i.Solution = null.StringFrom("The quick brown fox jumps over the lazy dog.")
-		i.ProcessStatus = null.StringFrom("The project is already funded")
+		i.ProcessStatus = null.StringFrom("Initial development underway")
 		i.EASupportRequest = null.BoolFrom(false)
 		i.ExistingContract = null.StringFrom("No")
 		i.GrtReviewEmailBody = null.StringFrom("")

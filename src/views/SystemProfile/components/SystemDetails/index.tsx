@@ -9,6 +9,7 @@ import {
   CardHeader,
   Grid,
   GridContainer,
+  IconCheckCircle,
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -29,6 +30,7 @@ import {
 } from 'views/Sandbox/mockSystemData';
 
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
+import 'index.scss';
 
 type SystemDetailsProps = {
   system: tempCedarSystemProps; // TODO: Once additional CEDAR data is define, change to GQL generated type
@@ -49,7 +51,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
         <Grid row gap>
           <Grid desktop={{ col: 8 }}>
             <SectionWrapper borderBottom className="padding-bottom-4">
-              <h2 className="margin-top-0">
+              <h2 className="margin-top-0 margin-bottom-4">
                 {t('singleSystem.systemDetails.header')}
               </h2>
 
@@ -173,7 +175,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                         <h2 className="link-header margin-top-0 margin-bottom-2">
                           {location.url ? (
                             <UswdsReactLink
-                              className="system-profile__card-link"
+                              className="link-header"
                               variant="external"
                               to={location.url}
                             >
@@ -241,7 +243,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                   key={tag}
                   className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
                 >
-                  <i className="fa fa-check-circle text-primary-dark margin-right-1" />
+                  <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
                   {tag} {/* TODO: Map defined CEDAR variable once availabe */}
                 </Tag>
               ))}
@@ -322,7 +324,7 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
 
               {/* TODO: Map defined CEDAR variable once availabe */}
               <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
-                <i className="fa fa-check-circle text-primary-dark margin-right-1" />
+                <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
                 E-CAP Initiative
               </Tag>
 

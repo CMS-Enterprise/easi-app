@@ -1197,6 +1197,7 @@ func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
 	intake.ProjectName = null.StringFromPtr(input.RequestName)
 	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
@@ -1223,8 +1224,6 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	if err != nil {
 		return nil, err
 	}
-
-	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
 
 	if input.FundingSource != nil {
 		if null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {

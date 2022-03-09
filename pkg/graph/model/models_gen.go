@@ -514,7 +514,6 @@ type UpdateSystemIntakeContactDetailsInput struct {
 // Input data for updating contract details related to a system request
 type UpdateSystemIntakeContractDetailsInput struct {
 	ID            uuid.UUID                       `json:"id"`
-	CurrentStage  *string                         `json:"currentStage"`
 	FundingSource *SystemIntakeFundingSourceInput `json:"fundingSource"`
 	Costs         *SystemIntakeCostsInput         `json:"costs"`
 	Contract      *SystemIntakeContractInput      `json:"contract"`
@@ -533,6 +532,7 @@ type UpdateSystemIntakeRequestDetailsInput struct {
 	BusinessNeed     *string   `json:"businessNeed"`
 	BusinessSolution *string   `json:"businessSolution"`
 	NeedsEaSupport   *bool     `json:"needsEaSupport"`
+	CurrentStage     *string   `json:"currentStage"`
 	CedarSystemID    *string   `json:"cedarSystemId"`
 }
 

@@ -224,6 +224,22 @@ Array [
               <dt
                 className="text-bold margin-bottom-05"
               >
+                Where are you in the process?
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                The quick brown fox jumps over the lazy dog.
+              </dd>
+            </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
                 Do you need Enterprise Architecture (EA) support?
               </dt>
               <dd
@@ -248,18 +264,6 @@ Array [
           <div
             className="easi-review-row"
           >
-            <div>
-              <dt
-                className="text-bold margin-bottom-05"
-              >
-                Where are you in the process?
-              </dt>
-              <dd
-                className="description-definition margin-0"
-              >
-                The quick brown fox jumps over the lazy dog.
-              </dd>
-            </div>
             <div>
               <dt
                 className="text-bold margin-bottom-05"

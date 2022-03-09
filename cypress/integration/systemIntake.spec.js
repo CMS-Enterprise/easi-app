@@ -47,12 +47,13 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
-    cy.contains('button', 'Next').click();
-
-    // Contract Details
     cy.get('#IntakeForm-CurrentStage')
       .select('Just an idea')
       .should('have.value', 'Just an idea');
+
+    cy.contains('button', 'Next').click();
+
+    // Contract Details
 
     cy.get('#IntakeForm-HasFundingSourceNo')
       .check({ force: true })
@@ -109,12 +110,13 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
-    cy.contains('button', 'Next').click();
-
-    // Contract Details
     cy.get('#IntakeForm-CurrentStage')
       .select('Just an idea')
       .should('have.value', 'Just an idea');
+
+    cy.contains('button', 'Next').click();
+
+    // Contract Details
 
     cy.get('#IntakeForm-HasFundingSourceYes')
       .check({ force: true })

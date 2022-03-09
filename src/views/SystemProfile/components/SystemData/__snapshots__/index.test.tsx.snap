@@ -76,7 +76,7 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
               data-testid="grid"
             >
               <div
-                class="tablet:grid-col margin-bottom-3"
+                class="tablet:grid-col"
                 data-testid="grid"
               >
                 <dt

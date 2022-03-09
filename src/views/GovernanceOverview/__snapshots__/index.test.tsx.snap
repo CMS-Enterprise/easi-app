@@ -24,7 +24,7 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
           onClick={[Function]}
         >
           <span>
-            Home
+            IT Governance
           </span>
         </a>
       </li>
@@ -32,28 +32,47 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
         aria-current="page"
         className="usa-breadcrumb__list-item usa-current"
       >
-        Add a new system or service
+        Start a request
       </li>
     </ol>
   </nav>
-  <a
-    href="/"
-    onClick={[Function]}
-  >
-    <i
-      className="fa fa-angle-left margin-right-05 text-no-underline"
-    />
-    <span>
-      Back
-    </span>
-  </a>
   <h1
     aria-live="polite"
-    className="easi-h1"
+    className="easi-h1 margin-bottom-2"
     tabIndex={-1}
   >
     Add a new system or service
   </h1>
+  <div
+    className="display-flex"
+  >
+    <a
+      className="display-flex flex-align-center"
+      href="/system/request-type"
+      onClick={[Function]}
+    >
+      <svg
+        className="usa-icon text-no-underline"
+        focusable={false}
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+        />
+      </svg>
+      <span>
+        Change request type
+      </span>
+    </a>
+  </div>
   <p
     className="line-height-body-5 font-body-lg text-light"
   >
@@ -281,7 +300,7 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
           onClick={[Function]}
         >
           <span>
-            Home
+            IT Governance
           </span>
         </a>
       </li>
@@ -289,28 +308,47 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
         aria-current="page"
         className="usa-breadcrumb__list-item usa-current"
       >
-        Add a new system or service
+        Start a request
       </li>
     </ol>
   </nav>
-  <a
-    href="/"
-    onClick={[Function]}
-  >
-    <i
-      className="fa fa-angle-left margin-right-05 text-no-underline"
-    />
-    <span>
-      Back
-    </span>
-  </a>
   <h1
     aria-live="polite"
-    className="easi-h1"
+    className="easi-h1 margin-bottom-2"
     tabIndex={-1}
   >
     Add a new system or service
   </h1>
+  <div
+    className="display-flex"
+  >
+    <a
+      className="display-flex flex-align-center"
+      href="/system/request-type"
+      onClick={[Function]}
+    >
+      <svg
+        className="usa-icon text-no-underline"
+        focusable={false}
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+        />
+      </svg>
+      <span>
+        Change request type
+      </span>
+    </a>
+  </div>
   <p
     className="line-height-body-5 font-body-lg text-light"
   >

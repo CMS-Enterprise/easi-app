@@ -145,10 +145,12 @@ const GovernanceTaskList = () => {
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/">
-              <span>Home</span>
+              <span>{t('taskList:navigation.home')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
-          <Breadcrumb current>Get governance approval</Breadcrumb>
+          <Breadcrumb current>
+            {t('taskList:navigation.governanceTaskList')}
+          </Breadcrumb>
         </BreadcrumbBar>
       </div>
       {loading && <PageLoading />}
