@@ -7,10 +7,10 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 
 	"github.com/google/uuid"
-	mailsender "github.com/jordan-wright/email"
 	"go.uber.org/zap"
 )
 
@@ -22,25 +22,6 @@ func noErr(err error) {
 	}
 }
 
-type localPostfixSender struct {
-}
-
-func (sender localPostfixSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
-	e := mailsender.Email{
-		From:    "testsender@oddball.dev",
-		To:      []string{toAddress.String()},
-		Subject: subject,
-		HTML:    []byte(body),
-	}
-	if ccAddress != nil {
-		e.Cc = []string{ccAddress.String()}
-	}
-
-	mailserverAddr := "localhost:1025"
-	err := e.Send(mailserverAddr, nil)
-	return err
-}
-
 func createEmailClient() email.Client {
 	emailConfig := email.Config{
 		GRTEmail:               models.NewEmailAddress("grt_email@cms.gov"),
@@ -50,7 +31,7 @@ func createEmailClient() email.Client {
 		TemplateDirectory:      os.Getenv("EMAIL_TEMPLATE_DIR"),
 	}
 
-	sender := localPostfixSender{}
+	sender := local.NewPostfixSender("localhost:1025")
 	emailClient, err := email.NewClient(emailConfig, sender)
 	noErr(err)
 	return emailClient
