@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
@@ -24,6 +25,7 @@ import './index.scss';
 
 const RequestDecision = () => {
   const { systemId } = useParams<{ systemId: string }>();
+  const { t } = useTranslation('taskList');
 
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
     GetSystemIntakeQuery,
@@ -42,7 +44,7 @@ const RequestDecision = () => {
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/">
-              <span>Home</span>
+              <span>{t('navigation.home')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb>
@@ -50,10 +52,10 @@ const RequestDecision = () => {
               asCustom={Link}
               to={`/governance-task-list/${systemId}`}
             >
-              <span>Get governance approval</span>
+              <span>{t('navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
-          <Breadcrumb current>Decision and next steps</Breadcrumb>
+          <Breadcrumb current>{t('navigation.nextSteps')}</Breadcrumb>
         </BreadcrumbBar>
       </div>
       {loading && <PageLoading />}

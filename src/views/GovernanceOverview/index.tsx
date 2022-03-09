@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
@@ -18,6 +19,7 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import './index.scss';
 
 const GovernanceOverview = () => {
+  const { t } = useTranslation('intake');
   const { systemId } = useParams<{
     systemId: string;
   }>();
@@ -29,18 +31,23 @@ const GovernanceOverview = () => {
       <BreadcrumbBar variant="wrap">
         <Breadcrumb>
           <BreadcrumbLink asCustom={Link} to="/">
-            <span>Home</span>
+            <span>{t('navigation.itGovernance')}</span>
           </BreadcrumbLink>
         </Breadcrumb>
-        <Breadcrumb current>Add a new system or service</Breadcrumb>
+        <Breadcrumb current>{t('navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
+      <PageHeading className="margin-bottom-2">
+        Add a new system or service
+      </PageHeading>
       <div className="display-flex">
-        <Link to="/" className="display-flex flex-align-center">
+        <Link
+          to="/system/request-type"
+          className="display-flex flex-align-center"
+        >
           <IconNavigateBefore className="text-no-underline" />
-          <span>Back</span>
+          <span>{t('navigation.changeRequestType')}</span>
         </Link>
       </div>
-      <PageHeading>Add a new system or service</PageHeading>
       <p className="line-height-body-5 font-body-lg text-light">
         To add a new system or service, you need to go through a set of steps
         and get approved by the Governance Review Board (GRB).

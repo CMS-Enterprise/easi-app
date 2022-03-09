@@ -24,7 +24,7 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
           onClick={[Function]}
         >
           <span>
-            Home
+            IT Governance
           </span>
         </a>
       </li>
@@ -32,16 +32,23 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
         aria-current="page"
         className="usa-breadcrumb__list-item usa-current"
       >
-        Add a new system or service
+        Start a request
       </li>
     </ol>
   </nav>
+  <h1
+    aria-live="polite"
+    className="easi-h1 margin-bottom-2"
+    tabIndex={-1}
+  >
+    Add a new system or service
+  </h1>
   <div
     className="display-flex"
   >
     <a
       className="display-flex flex-align-center"
-      href="/"
+      href="/system/request-type"
       onClick={[Function]}
     >
       <svg
@@ -62,17 +69,10 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
         />
       </svg>
       <span>
-        Back
+        Change request type
       </span>
     </a>
   </div>
-  <h1
-    aria-live="polite"
-    className="easi-h1"
-    tabIndex={-1}
-  >
-    Add a new system or service
-  </h1>
   <p
     className="line-height-body-5 font-body-lg text-light"
   >
@@ -300,7 +300,7 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
           onClick={[Function]}
         >
           <span>
-            Home
+            IT Governance
           </span>
         </a>
       </li>
@@ -308,16 +308,23 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
         aria-current="page"
         className="usa-breadcrumb__list-item usa-current"
       >
-        Add a new system or service
+        Start a request
       </li>
     </ol>
   </nav>
+  <h1
+    aria-live="polite"
+    className="easi-h1 margin-bottom-2"
+    tabIndex={-1}
+  >
+    Add a new system or service
+  </h1>
   <div
     className="display-flex"
   >
     <a
       className="display-flex flex-align-center"
-      href="/"
+      href="/system/request-type"
       onClick={[Function]}
     >
       <svg
@@ -338,17 +345,10 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
         />
       </svg>
       <span>
-        Back
+        Change request type
       </span>
     </a>
   </div>
-  <h1
-    aria-live="polite"
-    className="easi-h1"
-    tabIndex={-1}
-  >
-    Add a new system or service
-  </h1>
   <p
     className="line-height-body-5 font-body-lg text-light"
   >
