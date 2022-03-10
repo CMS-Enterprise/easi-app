@@ -3,7 +3,13 @@ import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Alert, Button, ComboBox, Link } from '@trussworks/react-uswds';
+import {
+  Alert,
+  Button,
+  ComboBox,
+  IconLaunch,
+  Link
+} from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { Form as FormikForm, Formik, FormikProps } from 'formik';
 
@@ -60,6 +66,7 @@ const CreateCedar = () => {
               rel="noopener noreferrer"
             >
               {t('newRequestForm.surveyLink')}
+              <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
             </Link>
           </>
         );
@@ -127,7 +134,7 @@ const CreateCedar = () => {
                     })}
                   </ErrorAlert>
                 )}
-                <div className="margin-bottom-7">
+                <div className="margin-bottom-4">
                   <FormikForm
                     onSubmit={e => {
                       handleSubmit(e);
@@ -204,7 +211,7 @@ const CreateCedar = () => {
                       </div>
                     </div>
                     <div className="tablet:grid-col-8">
-                      <div className="margin-top-2 margin-bottom-2">
+                      <div className="margin-y-4">
                         <Alert type="info">{t('newRequestForm.info')}</Alert>
                       </div>
                     </div>

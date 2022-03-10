@@ -1,7 +1,7 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
-  reportProblem: 'Report a problem (opens in a new tab)',
+  reportProblem: 'Report a problem',
   requestStatus: {
     open: 'Open',
     remediation: 'In remediation',
@@ -86,9 +86,9 @@ const accessibility = {
       formErrorMessage: 'Error saving note.'
     },
     documentUpload: 'Upload a document',
-    other: 'Other request details',
-    testingTemplates: '508 testing templates (opens in a new tab)',
-    testingSteps: 'Steps involved in 508 testing (opens in a new tab)',
+    requestDetails: 'Request details',
+    testingTemplates: '508 testing templates',
+    testingSteps: 'Steps involved in 508 testing',
     remove: 'Remove this request from EASi',
     modal: {
       header: 'Confirm you want to remove {{-requestName}}',
@@ -99,7 +99,16 @@ const accessibility = {
     },
     activeDocumentTab: 'Displaying documents',
     activeNoteTab: 'Displaying notes',
-    removeConfirmationText: '{{-requestName}} successfully removed'
+    removeConfirmationText: '{{-requestName}} successfully removed',
+    testDatesAndScores: 'Test dates and scores',
+    systemInformation: 'System information',
+    actionRequired: 'Action required',
+    linkRequestToSystem: 'Link this request to a system',
+    heading: 'Link 508 request with a system',
+    back: 'Back',
+    saveSystem: 'Save system',
+    selectSystemRequest: 'Select the system this request belongs to',
+    viewSystemProfile: 'View system profile'
   },
   testDateForm: {
     header: {
@@ -153,7 +162,7 @@ const accessibility = {
     submitBtn: 'Send 508 testing request',
     confirmation:
       '508 testing request created. We have sent you a confirmation email.',
-    surveyLink: 'Tell us what you think of this service (opens in a new tab)',
+    surveyLink: 'Tell us what you think of this service',
     helpAndGuidance: {
       lifecycleIdAccordion: {
         header: 'What if I cannot find my application or Lifecycle ID?',
@@ -269,7 +278,10 @@ const accessibility = {
     continueButton: 'Continue to steps involved',
     noLcidHeader: 'What if I don’t have a Lifecycle ID?',
     noLcidBody:
-      'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your system.'
+      'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your system.',
+    cedar: {
+      request508TestingBullet: 'request 508 testing for your system'
+    }
   },
   testingTemplates: {
     heading: 'Templates for 508 testing',
