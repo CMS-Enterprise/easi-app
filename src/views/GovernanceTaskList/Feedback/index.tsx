@@ -71,7 +71,7 @@ const GovernanceFeedback = () => {
               asCustom={Link}
               to={`/governance-task-list/${systemId}`}
             >
-              <span>{t('navigation.governanceApproval')}</span>
+              <span>{t('navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb current>{t('navigation.feedback')}</Breadcrumb>

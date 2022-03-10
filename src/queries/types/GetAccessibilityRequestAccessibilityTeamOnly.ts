@@ -64,7 +64,7 @@ export interface GetAccessibilityRequestAccessibilityTeamOnly_accessibilityReque
   euaUserId: string;
   submittedAt: Time;
   name: string;
-  system: GetAccessibilityRequestAccessibilityTeamOnly_accessibilityRequest_system;
+  system: GetAccessibilityRequestAccessibilityTeamOnly_accessibilityRequest_system | null;
   documents: GetAccessibilityRequestAccessibilityTeamOnly_accessibilityRequest_documents[];
   testDates: GetAccessibilityRequestAccessibilityTeamOnly_accessibilityRequest_testDates[];
   statusRecord: GetAccessibilityRequestAccessibilityTeamOnly_accessibilityRequest_statusRecord;

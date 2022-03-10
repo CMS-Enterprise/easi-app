@@ -44,6 +44,7 @@ tmp
 
 # Binaries
 /bin/
+__debug_bin
 
 # devlocal cert, keys
 devlocal-https.*

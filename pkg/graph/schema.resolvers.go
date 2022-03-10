@@ -96,6 +96,9 @@ func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj
 }
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
+	if obj.IntakeID == nil {
+		return nil, nil
+	}
 	system, systemErr := r.store.FetchSystemByIntakeID(ctx, *obj.IntakeID)
 	if systemErr != nil {
 		return nil, systemErr
@@ -495,29 +498,30 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 
 	newRequest := &models.AccessibilityRequest{
 		EUAUserID: requesterEUAID,
-		Name:      input.Name,
 	}
 
-	var applicationName string
+	var systemName string
 	if input.IntakeID != nil {
-		intake, err2 := r.store.FetchSystemIntakeByID(ctx, *input.IntakeID)
-		if err2 != nil {
-			return nil, err2
+		intake, intakeErr := r.store.FetchSystemIntakeByID(ctx, *input.IntakeID)
+		if intakeErr != nil {
+			return nil, intakeErr
 		}
 		newRequest.IntakeID = &intake.ID
-		applicationName = intake.ProjectName.String
+		systemName = intake.ProjectName.String
 	}
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
 	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
-		cedarSystem, err3 := r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
-		if err3 != nil {
-			return nil, err3
+		cedarSystem, cedarSystemErr := r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
+		if cedarSystemErr != nil {
+			return nil, cedarSystemErr
 		}
 		newRequest.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
-		applicationName = cedarSystem.Name
+		systemName = cedarSystem.Name
 	}
+
+	newRequest.Name = systemName
 
 	request, err := r.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, newRequest)
 	if err != nil {
@@ -528,7 +532,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		ctx,
 		requesterInfo.CommonName,
 		request.Name,
-		applicationName,
+		systemName,
 		request.ID,
 	)
 	if err != nil {
