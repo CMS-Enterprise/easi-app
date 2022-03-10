@@ -81,7 +81,7 @@ func (c Client) SendRejectRequestEmail(ctx context.Context, recipient models.Ema
 // SendRejectRequestInvalidRequesterEmail sends an email to the governance team when a system intake with an invalid original requester is rejected
 func (c Client) SendRejectRequestInvalidRequesterEmail(ctx context.Context, emailText string, intakeID uuid.UUID) error {
 	subject := "Unable to notify requester of intake request rejection"
-	taskListPath := path.Join("governance-task-list", intakeID.String())
+	taskListPath := path.Join("governance-review-team", intakeID.String(), "intake-request")
 
 	body, err := c.rejectRequestInvalidRequesterBody(emailText, taskListPath)
 	if err != nil {

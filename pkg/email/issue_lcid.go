@@ -86,7 +86,7 @@ func (c Client) SendIssueLCIDEmail(ctx context.Context, recipient models.EmailAd
 // SendIssueLCIDInvalidRequesterEmail sends an email to the governance team when an LCID is issued to a system intake with an invalid original requester
 func (c Client) SendIssueLCIDInvalidRequesterEmail(ctx context.Context, emailText string, intakeID uuid.UUID) error {
 	subject := "Unable to notify requester of LCID issuance"
-	taskListPath := path.Join("governance-task-list", intakeID.String())
+	taskListPath := path.Join("governance-review-team", intakeID.String(), "intake-request")
 
 	body, err := c.issueLCIDInvalidRequesterBody(emailText, taskListPath)
 	if err != nil {

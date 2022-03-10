@@ -76,7 +76,7 @@ func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText strin
 // SendSystemIntakeReviewInvalidRequester sends an email to the governance team when a review of a submitted system intake has an invalid original requester
 func (c Client) SendSystemIntakeReviewInvalidRequester(ctx context.Context, emailText string, intakeID uuid.UUID) error {
 	subject := "Unable to deliver feedback on intake request"
-	taskListPath := path.Join("governance-task-list", intakeID.String())
+	taskListPath := path.Join("governance-review-team", intakeID.String(), "intake-request")
 
 	body, err := c.systemIntakeReviewInvalidRequesterBody(emailText, taskListPath)
 	if err != nil {
