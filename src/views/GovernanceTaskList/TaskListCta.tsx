@@ -62,7 +62,6 @@ export const BusinessCaseDraftCta = ({
   systemIntake: SystemIntake;
 }) => {
   const { id, status, businessCaseId } = systemIntake || {};
-  console.log(systemIntake);
   const history = useHistory();
   switch (status) {
     case 'NEED_BIZ_CASE':
