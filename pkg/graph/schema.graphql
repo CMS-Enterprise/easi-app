@@ -173,7 +173,7 @@ type AccessibilityRequest {
   name: String!
   relevantTestDate: TestDate
   submittedAt: Time!
-  system: System!
+  system: System
   testDates: [TestDate!]!
   euaUserId: String!
   statusRecord: AccessibilityRequestStatusRecord!
@@ -343,7 +343,7 @@ type SystemEdge {
 The data needed to initialize a 508/accessibility request
 """
 input CreateAccessibilityRequestInput {
-  intakeID: UUID!
+  intakeID: UUID
   name: String!
   cedarSystemId: String
 }

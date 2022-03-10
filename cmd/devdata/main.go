@@ -322,7 +322,7 @@ func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...fu
 
 	accessibilityRequest := models.AccessibilityRequest{
 		Name:      fmt.Sprintf("%s v2", name),
-		IntakeID:  intake.ID,
+		IntakeID:  &intake.ID,
 		EUAUserID: "ABCD",
 	}
 	for _, cb := range callbacks {

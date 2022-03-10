@@ -96,7 +96,10 @@ func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj
 }
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
-	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
+	if obj.IntakeID == nil {
+		return nil, nil
+	}
+	system, systemErr := r.store.FetchSystemByIntakeID(ctx, *obj.IntakeID)
 	if systemErr != nil {
 		return nil, systemErr
 	}
@@ -489,26 +492,36 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
-	intake, err := r.store.FetchSystemIntakeByID(ctx, input.IntakeID)
-	if err != nil {
-		return nil, err
+	if input.IntakeID == nil && (input.CedarSystemID == nil || len(*input.CedarSystemID) == 0) {
+		return nil, errors.New("Either a system intake ID or a CEDAR system ID is required to create a 508 request")
 	}
 
 	newRequest := &models.AccessibilityRequest{
 		EUAUserID: requesterEUAID,
-		Name:      input.Name,
-		IntakeID:  input.IntakeID,
+	}
+
+	var systemName string
+	if input.IntakeID != nil {
+		intake, intakeErr := r.store.FetchSystemIntakeByID(ctx, *input.IntakeID)
+		if intakeErr != nil {
+			return nil, intakeErr
+		}
+		newRequest.IntakeID = &intake.ID
+		systemName = intake.ProjectName.String
 	}
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
 	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
-		_, err = r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
-		if err != nil {
-			return nil, err
+		cedarSystem, cedarSystemErr := r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
+		if cedarSystemErr != nil {
+			return nil, cedarSystemErr
 		}
 		newRequest.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
+		systemName = cedarSystem.Name
 	}
+
+	newRequest.Name = systemName
 
 	request, err := r.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, newRequest)
 	if err != nil {
@@ -519,7 +532,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 		ctx,
 		requesterInfo.CommonName,
 		request.Name,
-		intake.ProjectName.String,
+		systemName,
 		request.ID,
 	)
 	if err != nil {

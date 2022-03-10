@@ -66,7 +66,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByID() {
 
 	s.Run("retrieves an active accessibility request", func() {
 		accessibilityRequest := models.AccessibilityRequest{
-			IntakeID:  intake.ID,
+			IntakeID:  &intake.ID,
 			Name:      "My Accessibility Request",
 			EUAUserID: "ASDF",
 		}
@@ -81,7 +81,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByID() {
 
 	s.Run("does not retrieve a deleted accessibility request", func() {
 		deletedAccessibilityRequest := models.AccessibilityRequest{
-			IntakeID:  intake.ID,
+			IntakeID:  &intake.ID,
 			Name:      "My Accessibility Request",
 			EUAUserID: "ASDF",
 		}
@@ -106,7 +106,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByIDIncludingDeleted() {
 	s.NoError(err)
 
 	deletedAccessibilityRequest := models.AccessibilityRequest{
-		IntakeID:  intake.ID,
+		IntakeID:  &intake.ID,
 		Name:      "My Accessibility Request",
 		EUAUserID: "ASDF",
 	}
@@ -144,7 +144,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequests() {
 		s.NoError(err)
 
 		newRequest3Deleted := models.AccessibilityRequest{
-			IntakeID:  intake.ID,
+			IntakeID:  &intake.ID,
 			Name:      "My Deleted Request",
 			EUAUserID: "ASDF",
 		}

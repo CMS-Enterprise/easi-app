@@ -110,19 +110,32 @@ end
 
 ### Tasks
 
-def up(frontend_included, *args)
+def up(frontend_included, *args, debug:false, wait:false)
+  conf=" "
+  if debug
+    conf =ENV["AIR_CONFIG_DEBUG"]
+    if wait
+      conf =ENV["AIR_CONFIG_DEBUG_WAIT"]
+    end      
+  end
   environment = {
-    "COMPOSE_HTTP_TIMEOUT" => "120"
+    "COMPOSE_HTTP_TIMEOUT" => "120",
+    "AIR_CONFIG" =>conf,
   }
   command = "docker-compose #{"--profile frontend" if frontend_included } up --build"
 
   if args.any?
     command = "#{command} #{args.join(' ')}"
   end
-
   sh(environment, command, verbose: true)
 
-  wait_for_success("Waiting for the back end to build...", "curl --silent --output /dev/null -m 1 localhost:8080/api/v1/healthcheck")
+  if !wait
+    wait_for_success("Waiting for the back end to build...", "curl --silent --output /dev/null -m 1 localhost:8080/api/v1/healthcheck")  
+  else
+    check = "echo '{\"method\":\"RPCServer.State\",\"params\":[],\"id\":1}' | nc -w 1 localhost 2345 | grep 'result' -q" 
+    wait_for_success("Waiting for backend debug server...", check) 
+    puts "✨ Make sure to connect the debugger, or the backend service won't start ✨ "
+  end
 
   if frontend_included
     wait_for_success("Waiting for the front end to build...", "curl --silent --output /dev/null -m 1 localhost:3000")
@@ -140,6 +153,17 @@ namespace :up do
     up(true)
   end
 
+  desc "Starts all services in the project. With backend DEBUGGING"    
+  task :debug do
+    up(true, "-d", debug: true)
+  end
+  desc "Starts all services in the project. With backend DEBUGGING, and also will wait to start the backend service until the debugger attaches"    
+  namespace :debug do
+    task :wait do
+      up(true, "-d", debug: true, wait: true)
+    end
+  end
+
   desc "Starts all services except the frontend (runs more quickly, if frontend isn't needed)"
   task :backend do
     up(false, "-d")
@@ -150,6 +174,19 @@ namespace :up do
     task :watch do
       up(false)
     end
+
+    desc "Starts all services in the foreground except the frontend (runs more quickly, if frontend isn't needed). With DEBUGGING"    
+    task :debug do
+      up(false, "-d", debug: true)
+    end
+    desc "Starts all services in the foreground except the frontend (runs more quickly, if frontend isn't needed). With DEBUGGING, and also will wait to start the backend service until the debugger attaches"    
+    namespace :debug do
+      task :wait do
+        up(false, "-d", debug: true, wait: true)
+      end
+
+    end
+
   end
 end
 
