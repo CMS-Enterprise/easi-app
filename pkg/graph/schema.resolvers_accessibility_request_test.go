@@ -35,7 +35,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	s.NoError(updateErr)
 
 	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
-		IntakeID:  intake.ID,
+		IntakeID:  &intake.ID,
 		EUAUserID: "ABCD",
 	})
 	s.NoError(requestErr)
@@ -174,7 +174,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 	s.NoError(updateErr)
 
 	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
-		IntakeID:  intake.ID,
+		IntakeID:  &intake.ID,
 		EUAUserID: "ABCD",
 	})
 	s.NoError(requestErr)
@@ -276,7 +276,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 	s.NoError(updateErr)
 
 	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
-		IntakeID:  intake.ID,
+		IntakeID:  &intake.ID,
 		EUAUserID: "ABCD",
 	})
 	s.NoError(requestErr)
@@ -359,7 +359,7 @@ func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 	s.NoError(updateErr)
 
 	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
-		IntakeID:  intake.ID,
+		IntakeID:  &intake.ID,
 		EUAUserID: "ABCD",
 	})
 	s.NoError(requestErr)
@@ -426,7 +426,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 	s.NoError(updateErr)
 
 	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &models.AccessibilityRequest{
-		IntakeID:  intake.ID,
+		IntakeID:  &intake.ID,
 		EUAUserID: "ABCD",
 	})
 	s.NoError(requestErr)
@@ -475,7 +475,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 		s.NoError(err)
 
 		accessibilityRequest, err = s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
-			IntakeID:  intake.ID,
+			IntakeID:  &intake.ID,
 			EUAUserID: "UXYZ",
 		})
 		s.NoError(err)
