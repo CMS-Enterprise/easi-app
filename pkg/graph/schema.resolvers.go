@@ -779,16 +779,12 @@ func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context,
 }
 
 func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error) {
-	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
-	cedarSystemIDStr := cedarSystemID.ValueOrZero()
-	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
-		_, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
-		if err != nil {
-			return nil, err
-		}
+	_, err := r.cedarCoreClient.GetSystem(ctx, input.CedarSystemID)
+	if err != nil {
+		return nil, err
 	}
 
-	updatedRequest, err := r.store.UpdateAccessibilityRequestCedarSystem(ctx, input.ID, cedarSystemID)
+	updatedRequest, err := r.store.UpdateAccessibilityRequestCedarSystem(ctx, input.ID, null.StringFrom(input.CedarSystemID))
 	return &model.UpdateAccessibilityRequestCedarSystemPayload{
 		ID:                   updatedRequest.ID,
 		AccessibilityRequest: updatedRequest,

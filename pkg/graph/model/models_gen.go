@@ -481,7 +481,7 @@ type SystemIntakeRequesterWithComponentInput struct {
 // Parameters for updating a 508/accessibility request's associated CEDAR system
 type UpdateAccessibilityRequestCedarSystemInput struct {
 	ID            uuid.UUID `json:"id"`
-	CedarSystemID *string   `json:"cedarSystemId"`
+	CedarSystemID string    `json:"cedarSystemId"`
 }
 
 // Result of updating a 508/accessibility request's associated CEDAR system

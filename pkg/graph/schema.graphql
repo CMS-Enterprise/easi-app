@@ -226,7 +226,7 @@ Parameters for updating a 508/accessibility request's associated CEDAR system
 """
 input UpdateAccessibilityRequestCedarSystemInput {
   id: UUID!
-  cedarSystemId: String
+  cedarSystemId: String!
 }
 
 """

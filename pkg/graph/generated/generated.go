@@ -3764,7 +3764,7 @@ Parameters for updating a 508/accessibility request's associated CEDAR system
 """
 input UpdateAccessibilityRequestCedarSystemInput {
   id: UUID!
-  cedarSystemId: String
+  cedarSystemId: String!
 }
 
 """
@@ -20424,7 +20424,7 @@ func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestCedarSystemI
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-			it.CedarSystemID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.CedarSystemID, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
