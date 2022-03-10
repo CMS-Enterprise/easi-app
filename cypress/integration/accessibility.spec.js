@@ -30,7 +30,7 @@ describe('Accessibility Requests', () => {
     cy.contains('.usa-button', 'Upload a document');
 
     cy.get('.accessibility-request__side-nav').within(() => {
-      cy.contains('h2', 'Test Dates and Scores');
+      cy.contains('h2', 'Test dates and scores');
       cy.get('.accessibility-request__other-details').within(() => {
         cy.contains('dt', 'Submission date');
         const dateString = formatDate(new Date().toISOString());
