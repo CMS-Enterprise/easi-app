@@ -409,7 +409,6 @@ func NewCreateActionExtendLifecycleID(
 		scope string,
 		costBaseline *string,
 	) (*models.SystemIntake, error) {
-
 		intake, err := fetchSystemIntake(ctx, id)
 		if err != nil {
 			return nil, err
@@ -443,23 +442,9 @@ func NewCreateActionExtendLifecycleID(
 			return nil, updateErr
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
-		}
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
-
-		// don't need to send the email from here; the GraphQL resolver sends the email
+		// don't need to send the notification email from here; the GraphQL resolver sends the email
 		// pkg/graph/schema.resolvers.go, CreateSystemIntakeActionExtendLifecycleID()
 
-		return intake, err
+		return intake, nil
 	}
 }
