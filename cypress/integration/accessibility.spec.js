@@ -30,7 +30,7 @@ describe('Accessibility Requests', () => {
     cy.contains('.usa-button', 'Upload a document');
 
     cy.get('.accessibility-request__side-nav').within(() => {
-      cy.contains('h2', 'Test Dates and Scores');
+      cy.contains('h3', 'Test dates and scores');
       cy.get('.accessibility-request__other-details').within(() => {
         cy.contains('dt', 'Submission date');
         const dateString = formatDate(new Date().toISOString());
@@ -46,8 +46,8 @@ describe('Accessibility Requests', () => {
         cy.contains('dd', '000000');
       });
 
-      cy.contains('a', '508 testing templates (opens in a new tab)');
-      cy.contains('a', 'Steps involved in 508 testing (opens in a new tab)');
+      cy.contains('a', '508 testing templates');
+      cy.contains('a', 'Steps involved in 508 testing');
       cy.contains('button', 'Remove this request from EASi');
     });
   });
