@@ -17,7 +17,6 @@ import PageHeading from 'components/PageHeading';
 import { AlertText } from 'components/shared/Alert';
 import CollapsibleLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
@@ -28,7 +27,6 @@ import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQ
 import GetCedarSystemIdsQuery from 'queries/GetCedarSystemIdsQuery';
 import { GetCedarSystemIds } from 'queries/types/GetCedarSystemIds';
 import { AccessibilityRequestFormCedar } from 'types/accessibility';
-import flattenErrors from 'utils/flattenErrors';
 import accessibilitySchema from 'validations/accessibilitySchema';
 
 import './index.scss';
@@ -105,8 +103,7 @@ const CreateCedar = () => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<AccessibilityRequestFormCedar>) => {
-            const { errors, setFieldValue, handleSubmit, dirty } = formikProps;
-            const flatErrors = flattenErrors(errors);
+            const { setFieldValue, handleSubmit, dirty } = formikProps;
             return (
               <>
                 {mutationResult.error && (
@@ -117,23 +114,6 @@ const CreateCedar = () => {
                     />
                   </ErrorAlert>
                 )}
-                {Object.keys(errors).length > 0 && (
-                  <ErrorAlert
-                    testId="508-request-errors"
-                    classNames="margin-bottom-4 margin-top-4"
-                    heading="There is a problem"
-                  >
-                    {Object.keys(flatErrors).map(key => {
-                      return (
-                        <ErrorAlertMessage
-                          key={`Error.${key}`}
-                          errorKey={key}
-                          message={flatErrors[key]}
-                        />
-                      );
-                    })}
-                  </ErrorAlert>
-                )}
                 <div className="margin-bottom-4">
                   <FormikForm
                     onSubmit={e => {
@@ -141,23 +121,20 @@ const CreateCedar = () => {
                       window.scrollTo(0, 0);
                     }}
                   >
-                    <FieldGroup
-                      scrollElement="intakeId"
-                      error={!!flatErrors.intakeId}
-                    >
-                      <Label htmlFor="508Request-IntakeId">
+                    <FieldGroup scrollElement="cedarSystemId">
+                      <Label htmlFor="508Request-CedarSystemId">
                         {t('newRequestForm.cedar.fields.project.label')}
                       </Label>
-                      <HelpText id="508Request-IntakeId-HelpText">
+                      <HelpText id="508Request-CedarSystemId-HelpText">
                         {t('newRequestForm.cedar.fields.project.helpText')}
                       </HelpText>
-                      <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
                       {loading ? (
                         <div className="display-flex flex-align-center padding-1 margin-top-1">
                           <Spinner
                             size="small"
                             aria-valuetext={t('newRequestForm.loadingSystems')}
                             aria-busy
+                            data-testid="cedar-systems-loading"
                           />
                           <div className="margin-left-1">
                             {t('newRequestForm.loadingSystems')}
@@ -166,13 +143,14 @@ const CreateCedar = () => {
                       ) : (
                         <ComboBox
                           disabled={!!error}
-                          id="508Request-IntakeComboBox"
-                          name="intakeComboBox"
+                          id="508Request-CedarSystemId"
+                          name="cedarSystemComboBox"
                           className={classNames({ disabled: error })}
                           inputProps={{
-                            id: '508Request-IntakeId',
-                            name: 'intakeId',
-                            'aria-describedby': '508Request-IntakeId-HelpText'
+                            id: '508Request-CedarSystemId',
+                            name: 'cedarSystemId',
+                            'aria-describedby':
+                              '508Request-CedarSystemId-HelpText'
                           }}
                           options={projectComboBoxOptions}
                           onChange={cedarId => {
