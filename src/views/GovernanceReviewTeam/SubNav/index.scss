@@ -1,0 +1,24 @@
+.easi-grt {
+  &__subNav-accordion {
+    button.usa-menu-btn {
+      text-transform: capitalize;
+    }
+  }
+
+  &__subNav__content {
+    background-color: $easi-dark-blue;
+    padding: 16px;
+  }
+  &__subNav__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    a {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
+}
