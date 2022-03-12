@@ -23,19 +23,45 @@ const SubNav = () => {
         )}
       </button>
       {isSubNavOpen && (
-        <nav className="easi-grt__subNav__content">
-          <ul className="easi-grt__subNav__list">
-            <NavLink
-              to="/governance-review-team/3/intake-request"
-              key="/governance-review-team/3/intake-request"
-              // onClick={() => setisMobileSubNavExpanded(false)}
-              activeClassName="usa-current"
-              className={classNames({
-                'nav-group-border': false
-              })}
-            >
-              general:intake
-            </NavLink>
+        <nav className="easi-grt__subNav__list-container">
+          <ul className="easi-grt__subNav__list subNav">
+            <li>
+              <NavLink
+                to="/governance-review-team/3/intake-request"
+                key="/governance-review-team/3/intake-request"
+                // onClick={() => setisMobileSubNavExpanded(false)}
+                activeClassName="usa-current"
+                className={classNames({
+                  'nav-group-border': false
+                })}
+              >
+                general:intake
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/governance-review-team/3/intake-request"
+                key="/governance-review-team/3/intake-request"
+                // onClick={() => setisMobileSubNavExpanded(false)}
+                activeClassName="subNav--current"
+                className="subNav--current"
+              >
+                general:intake
+              </NavLink>
+            </li>
+            <li className="subNav__item--group-border">
+              <NavLink
+                to="/governance-review-team/3/intake-request"
+                key="/governance-review-team/3/intake-request"
+                // onClick={() => setisMobileSubNavExpanded(false)}
+                activeClassName="usa-current"
+                className={classNames({
+                  'nav-group-border': false
+                })}
+              >
+                general:intake
+              </NavLink>
+            </li>
           </ul>
         </nav>
       )}

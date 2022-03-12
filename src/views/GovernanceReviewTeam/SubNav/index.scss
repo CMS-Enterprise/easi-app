@@ -5,7 +5,7 @@
     }
   }
 
-  &__subNav__content {
+  &__subNav__list-container {
     background-color: $easi-dark-blue;
     padding: 16px;
   }
@@ -15,10 +15,39 @@
     padding: 0;
     width: 100%;
 
-    a {
-      color: #fff;
-      text-decoration: none;
+    &.subNav {
+      li {
+        margin-bottom: 0.75rem;
+
+        &.subNav__item--group-border {
+          border-bottom: 1px solid $easi-blue;
+          padding-bottom: 0.75rem;
+        }
+      }
+
+      a {
+        display: flex;
+        color: $white;
+        text-decoration: none;
+        position: relative;
+
+        &.subNav--current {
+          padding: 0.5rem 1rem;
+          font-weight: bold;
+
+          &::after {
+            background-color: $white;
+            border-radius: 99rem;
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: 0.25rem;
+            top: 0.25rem;
+            width: 0.25rem;
+            left: 0;
+          }
+        }
+      }
     }
   }
-
 }
