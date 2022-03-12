@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Accordion, IconArrowBack } from '@trussworks/react-uswds';
+import { IconArrowBack } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import MainContent from 'components/MainContent';
@@ -35,6 +35,7 @@ import ExtendLifecycleId from './Actions/ExtendLifecycleId';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
 import RejectIntake from './Actions/RejectIntake';
 import SubmitAction from './Actions/SubmitAction';
+import SubNav from './SubNav/SubNav';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
@@ -84,91 +85,6 @@ const RequestOverview = () => {
     return <NotFound />;
   }
 
-  const testItems = [
-    {
-      title: `${activePage}`,
-      headingLevel: 'h3',
-      content: (
-        <nav className="subNav__content">
-          <ul className="easi-grt__nav-list">
-            <li>
-              <Link to="/" className="display-flex flex-align-center">
-                <IconArrowBack className="margin-right-1" aria-hidden />
-                {t('back.allRequests')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/intake-request`}
-                aria-label={t('aria.openIntake')}
-                className={getNavLinkClasses('intake-request')}
-              >
-                {t('general:intake')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/business-case`}
-                aria-label={t('aria.openBusiness')}
-                className={getNavLinkClasses('business-case')}
-              >
-                {t('general:businessCase')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/decision`}
-                aria-label={t('aria.openDecision')}
-                className={getNavLinkClasses('decision')}
-              >
-                {t('decision.title')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/lcid`}
-                aria-label={t('aria.openLcid')}
-                className={getNavLinkClasses('lcid')}
-              >
-                {t('lifecycleID.title')}
-              </Link>
-            </li>
-          </ul>
-          <hr />
-          <ul className="easi-grt__nav-list">
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/actions`}
-                className={getNavLinkClasses('actions')}
-                data-testid="grt-nav-actions-link"
-              >
-                {t('actions')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/notes`}
-                className={getNavLinkClasses('notes')}
-              >
-                {t('notes.heading')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/dates`}
-                className={getNavLinkClasses('dates')}
-              >
-                {t('dates.heading')}
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      ),
-      expanded: false,
-      id: '123'
-    }
-  ];
-
   return (
     <MainContent className="easi-grt" data-testid="grt-request-overview">
       {systemIntake && (
@@ -183,12 +99,7 @@ const RequestOverview = () => {
           lcid={systemIntake.lcid}
         />
       )}
-      <Accordion
-        bordered={false}
-        items={testItems}
-        // className="tablet:display-none easi-grt__subNav-accordion"
-        className="easi-grt__subNav-accordion"
-      />
+      <SubNav />
       <section className="grid-container grid-row margin-y-5 ">
         <nav className="tablet:grid-col-2 tablet:display-block display-none margin-right-2">
           <ul className="easi-grt__nav-list">
