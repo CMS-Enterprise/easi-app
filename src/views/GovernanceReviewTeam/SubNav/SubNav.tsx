@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { IconExpandLess, IconExpandMore } from '@trussworks/react-uswds';
-import classNames from 'classnames';
+import {
+  IconArrowBack,
+  IconExpandLess,
+  IconExpandMore
+} from '@trussworks/react-uswds';
 
+// import classNames from 'classnames';
 import './index.scss';
 
 const SubNav = () => {
@@ -29,11 +33,7 @@ const SubNav = () => {
               <NavLink
                 to="/governance-review-team/3/intake-request"
                 key="/governance-review-team/3/intake-request"
-                // onClick={() => setisMobileSubNavExpanded(false)}
                 activeClassName="usa-current"
-                className={classNames({
-                  'nav-group-border': false
-                })}
               >
                 general:intake
               </NavLink>
@@ -42,7 +42,6 @@ const SubNav = () => {
               <NavLink
                 to="/governance-review-team/3/intake-request"
                 key="/governance-review-team/3/intake-request"
-                // onClick={() => setisMobileSubNavExpanded(false)}
                 activeClassName="subNav--current"
                 className="subNav--current"
               >
@@ -53,13 +52,19 @@ const SubNav = () => {
               <NavLink
                 to="/governance-review-team/3/intake-request"
                 key="/governance-review-team/3/intake-request"
-                // onClick={() => setisMobileSubNavExpanded(false)}
                 activeClassName="usa-current"
-                className={classNames({
-                  'nav-group-border': false
-                })}
               >
                 general:intake
+              </NavLink>
+            </li>
+            <li className="">
+              <NavLink
+                to="/"
+                key="home"
+                className="display-flex flex-align-center"
+              >
+                <IconArrowBack className="margin-right-1" aria-hidden />
+                Back to all requests
               </NavLink>
             </li>
           </ul>

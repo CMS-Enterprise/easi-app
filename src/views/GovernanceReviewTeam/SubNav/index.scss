@@ -18,6 +18,12 @@
     &.subNav {
       li {
         margin-bottom: 0.75rem;
+        &:last-child {
+          margin-top: 2rem;
+          margin-bottom: 0;
+          text-decoration: underline;
+        }
+
 
         &.subNav__item--group-border {
           border-bottom: 1px solid $easi-blue;
