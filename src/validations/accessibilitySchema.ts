@@ -10,6 +10,14 @@ const accessibilitySchema = {
     requestName: Yup.string().required('Enter a name for this request')
   }),
 
+  requestFormCedar: Yup.object().shape({
+    // Don't need to validate businessOwner name or component
+    cedarId: Yup.string().required(
+      'Select the project this request belongs to'
+    ),
+    requestName: Yup.string().required('Enter a name for this request')
+  }),
+
   deleteForm: Yup.object().shape({
     deletionReason: Yup.string()
       .required('Choose the reason for removing this request')

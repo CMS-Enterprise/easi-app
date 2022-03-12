@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach To Docker",
+            "debugAdapter": "dlv-dap",
+            "type": "go",
+            "request": "attach",
+            "mode": "remote",
+            "port": 2345,
+            "substitutePath": [
+                { "from": "${workspaceFolder}", "to": "/easi" },
+            ]
+        }
+    ]
+}

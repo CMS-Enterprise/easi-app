@@ -9,7 +9,7 @@ import (
 // NewAccessibilityRequest generates an test date to use in tests
 func NewAccessibilityRequest(intakeID uuid.UUID) models.AccessibilityRequest {
 	return models.AccessibilityRequest{
-		IntakeID:  intakeID,
+		IntakeID:  &intakeID,
 		Name:      "My Accessibility Request",
 		EUAUserID: RandomEUAID(),
 	}
@@ -18,7 +18,7 @@ func NewAccessibilityRequest(intakeID uuid.UUID) models.AccessibilityRequest {
 // NewAccessibilityRequestForUser generates an test date to use in tests
 func NewAccessibilityRequestForUser(intakeID uuid.UUID, euaID string) models.AccessibilityRequest {
 	return models.AccessibilityRequest{
-		IntakeID:  intakeID,
+		IntakeID:  &intakeID,
 		Name:      "My Accessibility Request",
 		EUAUserID: euaID,
 	}

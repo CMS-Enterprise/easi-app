@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { Link } from '@trussworks/react-uswds';
+import { IconLaunch, Link } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
@@ -17,6 +17,7 @@ import NewTestDateView from 'views/TestDate/NewTestDate';
 import UpdateTestDateView from 'views/TestDate/UpdateTestDate';
 
 import Create from './AccessibilityRequest/Create';
+import CreateCedar from './AccessibilityRequest/CreateCedar';
 import AccessibilityRequestsDocumentsNew from './AccessibilityRequest/Documents/New';
 import List from './AccessibilityRequest/List';
 import AccessibilityRequestDetailPage from './AccessibilityRequestDetailPage';
@@ -31,6 +32,14 @@ const NewRequest = (
     path="/508/requests/new"
     exact
     component={Create}
+  />
+);
+const NewRequestCedar = (
+  <Route
+    key="create-508-request"
+    path="/508/requests/new"
+    exact
+    component={CreateCedar}
   />
 );
 const AllRequests = (
@@ -131,9 +140,15 @@ const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 const ReportProblemLinkArea = ({ url }: { url: string }) => {
   const { t } = useTranslation('accessibility');
   return (
-    <div className="grid-container width-full padding-bottom-2 report-problem-link-area">
-      <Link href={url} target="_blank" rel="noopener noreferrer">
+    <div className="grid-container width-full padding-bottom-4 report-problem-link-area">
+      <Link
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="line-height-body-4"
+      >
         {t('reportProblem')}
+        <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
       </Link>
     </div>
   );
@@ -166,7 +181,7 @@ const Accessibility = () => {
       return (
         <PageTemplate surveyUrl={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY}>
           {[
-            NewRequest,
+            flags.cedar508Requests ? NewRequestCedar : NewRequest,
             AllRequests,
             AccessibilityTestingOverview,
             MakingANewRequest,
@@ -185,7 +200,7 @@ const Accessibility = () => {
     return (
       <PageTemplate surveyUrl={REPORT_PROBLEM_BASIC_USER_SURVEY}>
         {[
-          NewRequest,
+          flags.cedar508Requests ? NewRequestCedar : NewRequest,
           AccessibilityTestingOverview,
           MakingANewRequest,
           AccessibilityTestingTemplates,
