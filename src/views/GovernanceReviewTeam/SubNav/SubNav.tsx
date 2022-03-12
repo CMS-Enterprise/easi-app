@@ -33,7 +33,6 @@ const SubNav = () => {
               <NavLink
                 to="/governance-review-team/3/intake-request"
                 key="/governance-review-team/3/intake-request"
-                activeClassName="usa-current"
               >
                 general:intake
               </NavLink>
@@ -42,7 +41,8 @@ const SubNav = () => {
               <NavLink
                 to="/governance-review-team/3/intake-request"
                 key="/governance-review-team/3/intake-request"
-                activeClassName="subNav--current"
+                // TODO: Determine how this works
+                // activeClassName="subNav--current"
                 className="subNav--current"
               >
                 general:intake
@@ -52,7 +52,6 @@ const SubNav = () => {
               <NavLink
                 to="/governance-review-team/3/intake-request"
                 key="/governance-review-team/3/intake-request"
-                activeClassName="usa-current"
               >
                 general:intake
               </NavLink>
