@@ -111,4 +111,28 @@
     padding-bottom: 2em;
     border-bottom: 1px solid #979797;
   }
+
+  &__subNav-accordion {
+    button.usa-accordion__button {
+      &,
+      &:hover {
+        background-color: $easi-bright-blue;
+        color: #fff;
+      }
+
+      // TODO: find local instance of icon
+      background-image: url('https://easi.cms.gov/static/media/expand_less.018f82c5.svg'), linear-gradient(transparent, transparent);
+
+      &[aria-expanded=false] {
+        background-image: url('https://easi.cms.gov/static/media/expand_more.7bdcd639.svg'), linear-gradient(transparent, transparent);
+      }
+    }
+
+    .usa-accordion__content {
+      background-color: #1A4480;
+      a {
+        color: white;
+      }
+    }
+  }
 }
