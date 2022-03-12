@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { IconNavigateBefore } from '@trussworks/react-uswds';
+import { IconArrowBack } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import MainContent from 'components/MainContent';
@@ -101,9 +101,11 @@ const RequestOverview = () => {
       <section className="grid-container grid-row margin-y-5 ">
         <nav className="tablet:grid-col-2 margin-right-2">
           <ul className="easi-grt__nav-list">
-            <li className="display-flex flex-align-center">
-              <IconNavigateBefore aria-hidden />
-              <Link to="/">{t('back.allRequests')}</Link>
+            <li>
+              <Link to="/" className="display-flex flex-align-center">
+                <IconArrowBack className="margin-right-1" aria-hidden />
+                {t('back.allRequests')}
+              </Link>
             </li>
             <li>
               <Link
