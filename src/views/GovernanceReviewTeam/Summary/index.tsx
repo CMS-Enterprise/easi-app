@@ -170,11 +170,11 @@ const RequestSummary = ({
                 </dt>
               </>
             </div>
-            <div className="text-gray-90">
-              <dt className="text-bold">{t('intake:fields.adminLead')}</dt>
-              <dd className="margin-left-0 padding-1" data-testid="admin-lead">
+            <div className="display-flex text-gray-90">
+              <span className="text-bold">{t('intake:fields.adminLead')}</span>
+              <span className="margin-x-1" data-testid="admin-lead">
                 {getAdminLead()}
-              </dd>
+              </span>
               <Button
                 type="button"
                 unstyled
