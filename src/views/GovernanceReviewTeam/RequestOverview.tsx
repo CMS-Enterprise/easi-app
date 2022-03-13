@@ -99,7 +99,7 @@ const RequestOverview = () => {
           lcid={systemIntake.lcid}
         />
       )}
-      <SubNav />
+      <SubNav systemId={systemId} />
       <section className="grid-container grid-row margin-y-5 ">
         <nav className="tablet:grid-col-2 tablet:display-block display-none margin-right-2">
           <ul className="easi-grt__nav-list">
