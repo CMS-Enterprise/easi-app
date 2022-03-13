@@ -58,10 +58,10 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
                 className={classnames({
                   'subNav__item--group-border': groupEnd
                 })}
+                key={page}
               >
                 <NavLink
                   to={`/governance-review-team/${systemId}/${page}`}
-                  key={page}
                   className={classnames({
                     'subNav--current': page === activePage
                   })}
