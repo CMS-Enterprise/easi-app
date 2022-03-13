@@ -42,6 +42,7 @@ import Decision from './Decision';
 import IntakeReview from './IntakeReview';
 import LifecycleID from './LifecycleID';
 import Notes from './Notes';
+import subNavItems from './sideNavItems';
 import Summary from './Summary';
 
 import './index.scss';
@@ -99,7 +100,7 @@ const RequestOverview = () => {
           lcid={systemIntake.lcid}
         />
       )}
-      <SubNav systemId={systemId} />
+      <SubNav systemId={systemId} subNavItems={subNavItems} />
       <section className="grid-container grid-row margin-y-5 ">
         <nav className="desktop:grid-col-2 desktop:display-block display-none margin-right-2">
           <ul className="easi-grt__nav-list">

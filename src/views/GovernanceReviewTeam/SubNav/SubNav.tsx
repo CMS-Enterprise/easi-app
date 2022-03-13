@@ -10,11 +10,18 @@ import classnames from 'classnames';
 
 import './index.scss';
 
-type SubNavProps = {
-  systemId: string;
+type SubNavItemProps = {
+  groupEnd?: boolean;
+  page: string;
+  text: string;
 };
 
-const SubNav = ({ systemId }: SubNavProps) => {
+type SubNavProps = {
+  systemId: string;
+  subNavItems: SubNavItemProps[];
+};
+
+const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const [isSubNavOpen, setIsSubNavOpen] = useState<boolean>(false);
   const [activePageTitle, setActivePageTitle] = useState<string>(
@@ -28,38 +35,6 @@ const SubNav = ({ systemId }: SubNavProps) => {
     setIsSubNavOpen(!isSubNavOpen);
     setActivePageTitle(text);
   };
-
-  const subNavItems = [
-    {
-      page: `intake-request`,
-      text: 'general:intake'
-    },
-    {
-      page: `business-case`,
-      text: 'general:businessCase'
-    },
-    {
-      page: `decision`,
-      text: 'decision.title'
-    },
-    {
-      page: `lcid`,
-      text: 'lifecycleID.title',
-      groupEnd: true
-    },
-    {
-      page: `actions`,
-      text: 'actions'
-    },
-    {
-      page: `notes`,
-      text: 'notes.heading'
-    },
-    {
-      page: `dates`,
-      text: 'dates.heading'
-    }
-  ];
 
   return (
     <div className="easi-grt__subNav-accordion">
