@@ -1,19 +1,23 @@
 const subNavItems = [
   {
     page: `intake-request`,
-    text: 'general:intake'
+    text: 'general:intake',
+    aria: 'aria.openIntake'
   },
   {
     page: `business-case`,
-    text: 'general:businessCase'
+    text: 'general:businessCase',
+    aria: 'aria.openBusiness'
   },
   {
     page: `decision`,
-    text: 'decision.title'
+    text: 'decision.title',
+    aria: 'aria.openDecision'
   },
   {
     page: `lcid`,
     text: 'lifecycleID.title',
+    aria: 'aria.openLcid',
     groupEnd: true
   },
   {
