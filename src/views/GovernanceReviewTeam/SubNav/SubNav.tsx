@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, useParams } from 'react-router-dom';
 import {
@@ -7,6 +7,8 @@ import {
   IconExpandMore
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+
+import useCheckResponsiveScreen from 'hooks/checkMobile';
 
 import './index.scss';
 
@@ -23,6 +25,7 @@ type SubNavProps = {
 
 const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
   const { t } = useTranslation('governanceReviewTeam');
+  const isMobile = useCheckResponsiveScreen('tablet');
   const [isSubNavOpen, setIsSubNavOpen] = useState<boolean>(false);
   const [activePageTitle, setActivePageTitle] = useState<string>(
     'general:intake'
@@ -35,6 +38,15 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
     setIsSubNavOpen(!isSubNavOpen);
     setActivePageTitle(text);
   };
+
+  useEffect(() => {
+    // Deals with an edge case  user expands the window really fast,
+    // like using window manager to expand the window while
+    // where subnavigation is open
+    if (!isMobile) {
+      setIsSubNavOpen(false);
+    }
+  }, [isMobile]);
 
   return (
     <div className="easi-grt__subNav-accordion">
