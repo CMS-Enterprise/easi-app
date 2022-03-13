@@ -101,7 +101,7 @@ const RequestOverview = () => {
       )}
       <SubNav systemId={systemId} />
       <section className="grid-container grid-row margin-y-5 ">
-        <nav className="tablet:grid-col-2 tablet:display-block display-none margin-right-2">
+        <nav className="desktop:grid-col-2 desktop:display-block display-none margin-right-2">
           <ul className="easi-grt__nav-list">
             <li>
               <Link to="/" className="display-flex flex-align-center">
@@ -181,7 +181,7 @@ const RequestOverview = () => {
           </div>
         )}
         {!loading && !!systemIntake && (
-          <section className="tablet:grid-col-9">
+          <section className="desktop:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/intake-request"
               render={() => {
