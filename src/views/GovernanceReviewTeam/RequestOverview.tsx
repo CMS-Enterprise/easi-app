@@ -110,70 +110,30 @@ const RequestOverview = () => {
                 {t('back.allRequests')}
               </Link>
             </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/intake-request`}
-                aria-label={t('aria.openIntake')}
-                className={getNavLinkClasses('intake-request')}
+            {subNavItems.map(({ aria, groupEnd, page, text }) => (
+              <li
+                className={classnames({
+                  'easi-grt__nav-link--border': groupEnd
+                })}
               >
-                {t('general:intake')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/business-case`}
-                aria-label={t('aria.openBusiness')}
-                className={getNavLinkClasses('business-case')}
-              >
-                {t('general:businessCase')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/decision`}
-                aria-label={t('aria.openDecision')}
-                className={getNavLinkClasses('decision')}
-              >
-                {t('decision.title')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/lcid`}
-                aria-label={t('aria.openLcid')}
-                className={getNavLinkClasses('lcid')}
-              >
-                {t('lifecycleID.title')}
-              </Link>
-            </li>
-          </ul>
-          <hr />
-          <ul className="easi-grt__nav-list">
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/actions`}
-                className={getNavLinkClasses('actions')}
-                data-testid="grt-nav-actions-link"
-              >
-                {t('actions')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/notes`}
-                className={getNavLinkClasses('notes')}
-              >
-                {t('notes.heading')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={`/governance-review-team/${systemId}/dates`}
-                className={getNavLinkClasses('dates')}
-              >
-                {t('dates.heading')}
-              </Link>
-            </li>
+                {aria ? (
+                  <Link
+                    to={`/governance-review-team/${systemId}/${page}`}
+                    aria-label={t(aria)}
+                    className={getNavLinkClasses(page)}
+                  >
+                    {t(text)}
+                  </Link>
+                ) : (
+                  <Link
+                    to={`/governance-review-team/${systemId}/${page}`}
+                    className={getNavLinkClasses(page)}
+                  >
+                    {t(text)}
+                  </Link>
+                )}
+              </li>
+            ))}
           </ul>
         </nav>
         {loading && (
