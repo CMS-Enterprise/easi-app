@@ -66,13 +66,18 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 			Source:    "CEDAR LDAP",
 		}
 	}
-	if resp.Payload == nil || resp.Payload.UserName == "" {
+	if resp.Payload == nil {
 		return nil, &apperrors.ExternalAPIError{
 			Err:       errors.New("failed to return person from CEDAR LDAP"),
 			ModelID:   euaID,
 			Model:     models.Person{},
 			Operation: apperrors.Fetch,
 			Source:    "CEDAR LDAP",
+		}
+	}
+	if resp.Payload.UserName == "" {
+		return nil, &apperrors.InvalidEUAIDError{
+			EUAID: euaID,
 		}
 	}
 

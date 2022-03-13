@@ -31,18 +31,17 @@ type templates struct {
 	systemIntakeSubmissionTemplate             templateCaller
 	businessCaseSubmissionTemplate             templateCaller
 	intakeReviewTemplate                       templateCaller
-	intakeReviewInvalidRequesterTemplate       templateCaller
 	namedRequestWithdrawTemplate               templateCaller
 	unnamedRequestWithdrawTemplate             templateCaller
 	issueLCIDTemplate                          templateCaller
-	issueLCIDInvalidRequesterTemplate          templateCaller
 	extendLCIDTemplate                         templateCaller
 	rejectRequestTemplate                      templateCaller
-	rejectRequestInvalidRequesterTemplate      templateCaller
 	newAccessibilityRequestTemplate            templateCaller
 	newAccessibilityRequestToRequesterTemplate templateCaller
 	removedAccessibilityRequestTemplate        templateCaller
 	newDocumentTemplate                        templateCaller
+	intakeInvalidEUAIDTemplate                 templateCaller
+	intakeNoEUAIDTemplate                      templateCaller
 	changeAccessibilityRequestStatus           templateCaller
 	newAccessibilityRequestNote                templateCaller
 }
@@ -93,13 +92,6 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.intakeReviewTemplate = intakeReviewTemplate
 
-	intakeReviewWithoutRequesterTemplateName := "system_intake_review_invalid_requester.gohtml"
-	intakeReviewInvalidRequesterTemplate := rawTemplates.Lookup(intakeReviewWithoutRequesterTemplateName)
-	if intakeReviewInvalidRequesterTemplate == nil {
-		return Client{}, templateError(intakeReviewWithoutRequesterTemplateName)
-	}
-	appTemplates.intakeReviewInvalidRequesterTemplate = intakeReviewInvalidRequesterTemplate
-
 	namedRequestWithdrawTemplateName := "named_request_withdrawal.gohtml"
 	namedRequestWithdrawTemplate := rawTemplates.Lookup(namedRequestWithdrawTemplateName)
 	if namedRequestWithdrawTemplate == nil {
@@ -121,13 +113,6 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.issueLCIDTemplate = issueLCIDTemplate
 
-	issueLCIDInvalidRequesterTemplateName := "issue_lcid_invalid_requester.gohtml"
-	issueLCIDInvalidRequesterTemplate := rawTemplates.Lookup(issueLCIDInvalidRequesterTemplateName)
-	if issueLCIDInvalidRequesterTemplate == nil {
-		return Client{}, templateError(issueLCIDInvalidRequesterTemplateName)
-	}
-	appTemplates.issueLCIDInvalidRequesterTemplate = issueLCIDInvalidRequesterTemplate
-
 	extendLCIDTemplateName := "extend_lcid.gohtml"
 	extendLCIDTemplate := rawTemplates.Lookup(extendLCIDTemplateName)
 	if extendLCIDTemplate == nil {
@@ -141,13 +126,6 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(rejectRequestTemplateName)
 	}
 	appTemplates.rejectRequestTemplate = rejectRequestTemplate
-
-	rejectRequestInvalidRequesterTemplateName := "reject_request_invalid_requester.gohtml"
-	rejectRequestInvalidRequesterTemplate := rawTemplates.Lookup(rejectRequestInvalidRequesterTemplateName)
-	if rejectRequestInvalidRequesterTemplate == nil {
-		return Client{}, templateError(rejectRequestInvalidRequesterTemplateName)
-	}
-	appTemplates.rejectRequestInvalidRequesterTemplate = rejectRequestInvalidRequesterTemplate
 
 	newAccessibilityRequestTemplateName := "new_508_request.gohtml"
 	newAccessibilityRequestTemplate := rawTemplates.Lookup(newAccessibilityRequestTemplateName)
@@ -176,6 +154,20 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(newDocumentTemplateName)
 	}
 	appTemplates.newDocumentTemplate = newDocumentTemplate
+
+	intakeInvalidEUAIDTemplateName := "intake_invalid_euaid.gohtml"
+	intakeInvalidEUAIDTemplate := rawTemplates.Lookup(intakeInvalidEUAIDTemplateName)
+	if intakeInvalidEUAIDTemplate == nil {
+		return Client{}, templateError(intakeInvalidEUAIDTemplateName)
+	}
+	appTemplates.intakeInvalidEUAIDTemplate = intakeInvalidEUAIDTemplate
+
+	intakeNoEUAIDTemplateName := "intake_no_euaid.gohtml"
+	intakeNoEUAIDTemplate := rawTemplates.Lookup(intakeNoEUAIDTemplateName)
+	if intakeNoEUAIDTemplate == nil {
+		return Client{}, templateError(intakeNoEUAIDTemplateName)
+	}
+	appTemplates.intakeNoEUAIDTemplate = intakeNoEUAIDTemplate
 
 	changeAccessibilityRequestStatusTemplateName := "change_508_status.gohtml"
 	changeAccessibilityRequestStatusTemplate := rawTemplates.Lookup(changeAccessibilityRequestStatusTemplateName)

@@ -44,12 +44,9 @@ func main() {
 
 	client := createEmailClient()
 
-	err = client.SendSystemIntakeReviewInvalidRequester(ctx, "Intake review body filler", uuid.New())
+	err = client.SendIntakeInvalidEUAIDEmail(ctx, "project with invalid EUA ID", "ABCD", uuid.New())
 	noErr(err)
 
-	err = client.SendIssueLCIDInvalidRequesterEmail(ctx, "Issue LCID body filler", uuid.New())
-	noErr(err)
-
-	err = client.SendRejectRequestInvalidRequesterEmail(ctx, "Reject request body filler", uuid.New())
+	err = client.SendIntakeNoEUAIDEmail(ctx, "project with no EUA ID", uuid.New())
 	noErr(err)
 }

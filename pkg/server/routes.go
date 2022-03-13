@@ -209,7 +209,8 @@ func (s *Server) routes(
 				store.CreateGRTFeedback,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
-				emailClient.SendSystemIntakeReviewInvalidRequester,
+				emailClient.SendIntakeInvalidEUAIDEmail,
+				emailClient.SendIntakeNoEUAIDEmail,
 			),
 			CreateActionUpdateStatus: services.NewCreateActionUpdateStatus(
 				serviceConfig,
@@ -217,7 +218,8 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
-				emailClient.SendSystemIntakeReviewInvalidRequester,
+				emailClient.SendIntakeInvalidEUAIDEmail,
+				emailClient.SendIntakeNoEUAIDEmail,
 				services.NewCloseBusinessCase(
 					serviceConfig,
 					store.FetchBusinessCaseByID,
@@ -240,7 +242,8 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendIssueLCIDEmail,
-				emailClient.SendIssueLCIDInvalidRequesterEmail,
+				emailClient.SendIntakeInvalidEUAIDEmail,
+				emailClient.SendIntakeNoEUAIDEmail,
 				store.GenerateLifecycleID,
 			),
 			RejectIntake: services.NewUpdateRejectionFields(
@@ -251,7 +254,8 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendRejectRequestEmail,
-				emailClient.SendRejectRequestInvalidRequesterEmail,
+				emailClient.SendIntakeInvalidEUAIDEmail,
+				emailClient.SendIntakeNoEUAIDEmail,
 			),
 			SubmitIntake: services.NewSubmitSystemIntake(
 				serviceConfig,
