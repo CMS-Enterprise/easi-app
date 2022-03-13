@@ -112,6 +112,7 @@ const RequestOverview = () => {
             </li>
             {subNavItems.map(({ aria, groupEnd, page, text }) => (
               <li
+                key={`desktop-sidenav-${page}`}
                 className={classnames({
                   'easi-grt__nav-link--border': groupEnd
                 })}

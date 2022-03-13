@@ -55,10 +55,10 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
           <ul className="easi-grt__subNav__list subNav">
             {subNavItems.map(({ groupEnd, page, text }) => (
               <li
+                key={`mobile-subnav--${page}`}
                 className={classnames({
                   'subNav__item--group-border': groupEnd
                 })}
-                key={page}
               >
                 <NavLink
                   to={`/governance-review-team/${systemId}/${page}`}
