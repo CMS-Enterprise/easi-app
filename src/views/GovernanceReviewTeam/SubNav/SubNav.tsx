@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import {
   IconArrowBack,
   IconExpandLess,
@@ -17,35 +17,46 @@ type SubNavProps = {
 const SubNav = ({ systemId }: SubNavProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const [isSubNavOpen, setIsSubNavOpen] = useState<boolean>(false);
+  const [activePageTitle, setActivePageTitle] = useState<string>(
+    'general:intake'
+  );
+  const { activePage } = useParams<{
+    activePage: string;
+  }>();
+
+  const navLinkClickHandler = (text: string) => {
+    setIsSubNavOpen(!isSubNavOpen);
+    setActivePageTitle(text);
+  };
 
   const subNavItems = [
     {
-      to: `/governance-review-team/${systemId}/intake-request`,
+      page: `intake-request`,
       text: 'general:intake'
     },
     {
-      to: `/governance-review-team/${systemId}/business-case`,
+      page: `business-case`,
       text: 'general:businessCase'
     },
     {
-      to: `/governance-review-team/${systemId}/decision`,
+      page: `decision`,
       text: 'decision.title'
     },
     {
-      to: `/governance-review-team/${systemId}/lcid`,
+      page: `lcid`,
       text: 'lifecycleID.title',
       groupEnd: true
     },
     {
-      to: `/governance-review-team/${systemId}/actions`,
+      page: `actions`,
       text: 'actions'
     },
     {
-      to: `/governance-review-team/${systemId}/notes`,
+      page: `notes`,
       text: 'notes.heading'
     },
     {
-      to: `/governance-review-team/${systemId}/dates`,
+      page: `dates`,
       text: 'dates.heading'
     }
   ];
@@ -57,7 +68,7 @@ const SubNav = ({ systemId }: SubNavProps) => {
         className="usa-menu-btn easi-header__basic width-full"
         onClick={() => setIsSubNavOpen(!isSubNavOpen)}
       >
-        <h3 className="padding-left-1">To be Determined</h3>
+        <h3 className="padding-left-1">{t(activePageTitle)}</h3>
         {!isSubNavOpen ? (
           <IconExpandMore size={3} />
         ) : (
@@ -67,20 +78,21 @@ const SubNav = ({ systemId }: SubNavProps) => {
       {isSubNavOpen && (
         <nav className="easi-grt__subNav__list-container">
           <ul className="easi-grt__subNav__list subNav">
-            {subNavItems.map(subNavItem => (
+            {subNavItems.map(({ groupEnd, page, text }) => (
               <li
                 className={classnames({
-                  'subNav__item--group-border': subNavItem.groupEnd
+                  'subNav__item--group-border': groupEnd
                 })}
               >
                 <NavLink
-                  to={subNavItem.to}
-                  key={subNavItem.to}
+                  to={`/governance-review-team/${systemId}/${page}`}
+                  key={page}
                   className={classnames({
-                    'subNav--current': false
+                    'subNav--current': page === activePage
                   })}
+                  onClick={() => navLinkClickHandler(text)}
                 >
-                  {t(subNavItem.text)}
+                  {t(text)}
                 </NavLink>
               </li>
             ))}
