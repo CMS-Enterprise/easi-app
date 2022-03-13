@@ -40,7 +40,7 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
   };
 
   useEffect(() => {
-    // Deals with an edge case  user expands the window really fast,
+    // Deals with an edge case user expands the window really fast,
     // like using window manager to expand the window while
     // where subnavigation is open
     if (!isMobile) {
