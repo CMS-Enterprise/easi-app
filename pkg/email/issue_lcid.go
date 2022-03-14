@@ -11,20 +11,22 @@ import (
 )
 
 type issueLCID struct {
-	LifecycleID string
-	ExpiresAt   string
-	Scope       string
-	NextSteps   string
-	Feedback    string
+	LifecycleID           string
+	ExpiresAt             string
+	Scope                 string
+	LifecycleCostBaseline string
+	NextSteps             string
+	Feedback              string
 }
 
-func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, nextSteps string, feedback string) (string, error) {
+func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, nextSteps string, costBaseline string, feedback string) (string, error) {
 	data := issueLCID{
-		LifecycleID: lcid,
-		ExpiresAt:   expiresAt.Format("January 2, 2006"),
-		Scope:       scope,
-		NextSteps:   nextSteps,
-		Feedback:    feedback,
+		LifecycleID:           lcid,
+		ExpiresAt:             expiresAt.Format("January 2, 2006"),
+		Scope:                 scope,
+		LifecycleCostBaseline: costBaseline,
+		NextSteps:             nextSteps,
+		Feedback:              feedback,
 	}
 	var b bytes.Buffer
 	if c.templates.issueLCIDTemplate == nil {
@@ -38,9 +40,9 @@ func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, n
 }
 
 // SendIssueLCIDEmail sends an email for issuing an LCID
-func (c Client) SendIssueLCIDEmail(ctx context.Context, recipient models.EmailAddress, lcid string, expirationDate *time.Time, scope string, nextSteps string, feedback string) error {
+func (c Client) SendIssueLCIDEmail(ctx context.Context, recipient models.EmailAddress, lcid string, expirationDate *time.Time, scope string, lifecycleCostBaseline string, nextSteps string, feedback string) error {
 	subject := "Your request has been approved"
-	body, err := c.issueLCIDBody(lcid, expirationDate, scope, nextSteps, feedback)
+	body, err := c.issueLCIDBody(lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

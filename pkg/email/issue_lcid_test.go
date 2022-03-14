@@ -15,6 +15,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	lcid := "123456"
 	expiresAt, _ := time.Parse("2006-01-02", "2021-12-25")
 	scope := "scope"
+	lifecycleCostBaseline := "lifecycleCostBaseline"
 	nextSteps := "nextSteps"
 	feedback := "feedback"
 
@@ -22,9 +23,12 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: December 25, 2021</p>\n<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">scope</pre></p>\n" +
-			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">nextSteps</pre></p>\n\n<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
+		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: December 25, 2021</p>\n" +
+			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">scope</pre></p>\n" +
+			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">lifecycleCostBaseline</pre></p>\n" +
+			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">nextSteps</pre></p>\n\n" +
+			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
@@ -35,10 +39,10 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	s.Run("successful call has the right content with no next steps", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-
-		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: December 25, 2021</p>\n<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">scope</pre></p>" +
-			"\n\n<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, "", feedback)
+		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: December 25, 2021</p>\n" +
+			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">scope</pre></p>\n" +
+			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">lifecycleCostBaseline</pre></p>\n"
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
@@ -51,7 +55,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -65,7 +69,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates.issueLCIDTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -80,7 +84,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})

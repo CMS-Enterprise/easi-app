@@ -231,7 +231,7 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string) error,
+	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string, string) error,
 	generateLCID func(context.Context) (string, error),
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
@@ -310,13 +310,13 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		// TODO: put cost baseline in email?
 		err = sendIssueLCIDEmail(
 			ctx,
 			requesterInfo.Email,
 			updated.LifecycleID.String,
 			updated.LifecycleExpiresAt,
 			updated.LifecycleScope.String,
+			updated.LifecycleCostBaseline.String,
 			updated.DecisionNextSteps.String,
 			action.Feedback.String)
 		if err != nil {
