@@ -23,7 +23,6 @@ jobs:
       matrix: 
         env: [dev, impl, prod]
     needs: Server_Test
-    concurrency: ci-${{ github.ref }}
     if: ${{ github.ref == 'refs/heads/master' }}
     # needs: [ lint, client_test, server_test, e2e_tests, anti_virus ]
     runs-on: ubuntu-latest
