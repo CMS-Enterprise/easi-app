@@ -52,6 +52,8 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
         type="button"
         className="usa-menu-btn easi-header__basic width-full"
         onClick={() => setIsSubNavOpen(!isSubNavOpen)}
+        aria-expanded={isSubNavOpen}
+        aria-controls="easi-grt__subNav"
       >
         <h3 className="padding-left-1">{t(activePageTitle)}</h3>
         {!isSubNavOpen ? (
@@ -61,7 +63,7 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
         )}
       </button>
       {isSubNavOpen && (
-        <nav className="easi-grt__subNav__list-container">
+        <div id="easi-grt__subNav" className="easi-grt__subNav__list-container">
           <ul className="easi-grt__subNav__list subNav">
             {subNavItems.map(({ groupEnd, page, text }) => (
               <li
@@ -92,7 +94,7 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
               </NavLink>
             </li>
           </ul>
-        </nav>
+        </div>
       )}
     </div>
   );
