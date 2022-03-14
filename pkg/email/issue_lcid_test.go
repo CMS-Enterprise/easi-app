@@ -41,7 +41,8 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: December 25, 2021</p>\n" +
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">scope</pre></p>\n" +
-			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">lifecycleCostBaseline</pre></p>\n"
+			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">lifecycleCostBaseline</pre></p>\n\n" +
+			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
 		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
 
 		s.NoError(err)

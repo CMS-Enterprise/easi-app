@@ -19,12 +19,12 @@ type issueLCID struct {
 	Feedback              string
 }
 
-func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, nextSteps string, costBaseline string, feedback string) (string, error) {
+func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, lifecycleCostBaseline string, nextSteps string, feedback string) (string, error) {
 	data := issueLCID{
 		LifecycleID:           lcid,
 		ExpiresAt:             expiresAt.Format("January 2, 2006"),
 		Scope:                 scope,
-		LifecycleCostBaseline: costBaseline,
+		LifecycleCostBaseline: lifecycleCostBaseline,
 		NextSteps:             nextSteps,
 		Feedback:              feedback,
 	}
