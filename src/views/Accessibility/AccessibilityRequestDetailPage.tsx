@@ -620,6 +620,21 @@ const AccessibilityRequestDetailPage = () => {
                   <dd className="margin-0 margin-bottom-3">{lcid}</dd>
                 </dl>
               </div>
+              {flags.cedar508Requests && (
+                <div>
+                  <h3>{t('requestDetails.systemInformation')}</h3>
+                  <Alert
+                    type="warning"
+                    heading={t('requestDetails.actionRequired')}
+                  >
+                    <Link
+                      to={`/508/requests/${accessibilityRequestId}/cedar-system`}
+                    >
+                      {t('requestDetails.linkRequestToSystem')}
+                    </Link>
+                  </Alert>
+                </div>
+              )}
               <UswdsReactLink
                 className="display-inline-block margin-top-3"
                 target="_blank"

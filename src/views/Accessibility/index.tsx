@@ -129,6 +129,15 @@ const RequestDetails = (
   />
 );
 
+const RequestLinkCedarSystem = (
+  <Route
+    exact
+    key="508-request-cedar-system-link"
+    path="/508/requests/:accessibilityRequestId/cedar-system"
+    component={CreateCedar}
+  />
+);
+
 const NotFound = () => (
   <div className="grid-container">
     <NotFoundPartial />
@@ -192,6 +201,7 @@ const Accessibility = () => {
             NewTestDate,
             DocumentsRedirect,
             RequestDetails,
+            RequestLinkCedarSystem,
             Default
           ]}
         </PageTemplate>
@@ -207,6 +217,7 @@ const Accessibility = () => {
           NewDocument,
           DocumentsRedirect,
           RequestDetails,
+          RequestLinkCedarSystem,
           Default
         ]}
       </PageTemplate>
