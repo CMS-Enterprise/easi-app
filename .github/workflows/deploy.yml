@@ -71,7 +71,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-duration-seconds: 1800
           role-skip-session-tagging: true
       - name: Clean the database
@@ -97,10 +97,10 @@ jobs:
           ./scripts/healthcheck "$IMAGE_TAG"
       - name: Build static assets and release to S3
         env:
-          LD_CLIENT_ID_DEV: ${{ secrets.LD_CLIENT_ID_DEV }}
-          OKTA_CLIENT_ID_DEV: ${{ secrets.OKTA_CLIENT_ID_DEV }}
-          OKTA_SERVER_ID_DEV: ${{ secrets.OKTA_SERVER_ID_DEV }}
-          STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET_DEV }}
+          LD_CLIENT_ID_DEV: ${{ secrets.LD_CLIENT_ID }}
+          OKTA_CLIENT_ID_DEV: ${{ secrets.OKTA_CLIENT_ID }}
+          OKTA_SERVER_ID_DEV: ${{ secrets.OKTA_SERVER_ID }}
+          STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET }}
         run: |
           ./scripts/release_static
       - name: Announce failure
