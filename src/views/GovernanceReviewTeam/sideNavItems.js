@@ -19,7 +19,7 @@ const subNavItems = [
     text: 'lifecycleID.title',
     aria: 'aria.openLcid',
     groupEnd: true
-    // if true, then a bottom border is added to the list item
+    // Value used to designate end of sidenav subgrouping / border-bottom
   },
   {
     page: `actions`,
