@@ -75,7 +75,7 @@ const AccordionNavigation = ({
                 <NavLink
                   to={route}
                   className={classnames({
-                    'subNav--current': route === activePage
+                    'subNav--current': route.split('/')[3] === activePage
                   })}
                   onClick={() => navLinkClickHandler(text)}
                 >
