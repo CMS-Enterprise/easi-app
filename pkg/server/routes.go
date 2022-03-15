@@ -129,7 +129,6 @@ func (s *Server) routes(
 		emailConfig.GRTEmail = models.NewEmailAddress("grt_email@cms.gov")
 		emailConfig.AccessibilityTeamEmail = models.NewEmailAddress("508_team@cms.gov")
 
-		// postfixSender := local.NewPostfixSender("localhost:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
 		postfixSender := local.NewPostfixSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
 		emailClient, err = email.NewClient(emailConfig, postfixSender)
 		if err != nil {
