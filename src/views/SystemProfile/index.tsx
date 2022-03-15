@@ -30,8 +30,6 @@ import {
   GetCedarSystem
   // GetCedarSystem_cedarSystem as CedarSystem
 } from 'queries/types/GetCedarSystem';
-import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation/AccordionNavigation';
-import subNavItems from 'views/GovernanceReviewTeam/subNavItems';
 import NotFound from 'views/NotFound';
 import {
   activities,
@@ -47,6 +45,7 @@ import {
 // components/index contains all the sideNavItems components, routes, labels and translations
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
 import sideNavItems from './components/index';
+import SystemSubNav from './components/SystemSubNav/index';
 
 import './index.scss';
 
@@ -54,8 +53,7 @@ const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
 
-  const { systemId, subinfo, top, activePage } = useParams<{
-    activePage: string;
+  const { systemId, subinfo, top } = useParams<{
     subinfo: string;
     systemId: string;
     top: string;
@@ -215,27 +213,7 @@ const SystemProfile = () => {
             </Grid>
           </div>
         </SummaryBox>
-        <AccordionNavigation
-          systemId={systemId}
-          subNavItems={subNavItems}
-          activePage={activePage}
-        />
-        {/* Button/Header to display when mobile/tablet */}
-        {/* <div className="grid-container padding-0">
-          <div
-            className={classnames('usa-overlay', {
-              'is-visible': isMobileSubNavExpanded
-            })}
-          />
-          <button
-            type="button"
-            className="usa-menu-btn easi-header__basic width-full flex-align-center"
-            onClick={() => setisMobileSubNavExpanded(true)}
-          >
-            <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>
-            <IconMenu size={3} />
-          </button>
-        </div> */}
+        <SystemSubNav subinfo={subinfo} systemInfo={systemInfo} />
         <SectionWrapper className="margin-top-5 margin-bottom-5">
           <GridContainer>
             <Grid row gap>
