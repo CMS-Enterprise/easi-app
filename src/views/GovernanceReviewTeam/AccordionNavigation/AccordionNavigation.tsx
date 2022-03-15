@@ -21,13 +21,11 @@ type AccordionNavigationItemProps = {
 type AccordionNavigationProps = {
   activePage: string;
   subNavItems: AccordionNavigationItemProps[];
-  systemId: string;
 };
 
 const AccordionNavigation = ({
   activePage,
-  subNavItems,
-  systemId
+  subNavItems
 }: AccordionNavigationProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const isMobile = useCheckResponsiveScreen('tablet');

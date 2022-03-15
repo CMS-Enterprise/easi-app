@@ -101,9 +101,8 @@ const RequestOverview = () => {
         />
       )}
       <AccordionNavigation
-        systemId={systemId}
-        subNavItems={subNavItems(systemId)}
         activePage={activePage}
+        subNavItems={subNavItems(systemId)}
       />
       <section className="grid-container grid-row margin-y-5 ">
         <nav className="desktop:grid-col-2 desktop:display-block display-none margin-right-2">
