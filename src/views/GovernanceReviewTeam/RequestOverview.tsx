@@ -30,12 +30,12 @@ import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Action
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
 import NotFound from 'views/NotFound';
 
-import AccordionNavigation from './AccordionNavigation/AccordionNavigation';
 import ChooseAction from './Actions/ChooseAction';
 import ExtendLifecycleId from './Actions/ExtendLifecycleId';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
 import RejectIntake from './Actions/RejectIntake';
 import SubmitAction from './Actions/SubmitAction';
+import AccordionNavigation from './AccordionNavigation';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
