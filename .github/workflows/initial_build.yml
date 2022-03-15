@@ -4,6 +4,11 @@ name: Initial building of images
 
 on: 
   workflow_call:
+
+env: 
+  EASI_APP_NODE_VERSION: '16.14.0'
+  EASI_APP_GO_VERSION: '1.16.6'
+  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
     
 
 jobs: 

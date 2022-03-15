@@ -4,7 +4,12 @@ name: Server Test
 on: 
   workflow_call:
     
-
+env: 
+  EASI_APP_NODE_VERSION: '16.14.0'
+  EASI_APP_GO_VERSION: '1.16.6'
+  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  DOCKER_BUILDKIT: 1
 
 jobs: 
   server_test:
@@ -303,8 +308,8 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     permissions:
-      pull-requests: write
-      issues: write
+      pull-requests: none
+      issues: none
     steps:
       - name: Check out code
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.3.4
