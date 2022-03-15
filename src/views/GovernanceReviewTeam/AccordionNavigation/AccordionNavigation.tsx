@@ -31,7 +31,7 @@ const AccordionNavigation = ({
   const isMobile = useCheckResponsiveScreen('tablet');
   const [isAccordionOpen, setIsAccordionOpen] = useState<boolean>(false);
   const [activePageTitle, setActivePageTitle] = useState<string>(
-    'Initial State of Accordion Navigation'
+    'Intake Request'
   );
 
   const navLinkClickHandler = (text: string) => {
