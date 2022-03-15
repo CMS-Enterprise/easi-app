@@ -1,4 +1,4 @@
-import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
@@ -9,14 +9,11 @@ import {
   Grid,
   GridContainer,
   IconBookmark,
-  IconMenu,
-  PrimaryNav,
   SideNav,
   SummaryBox
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
-import { NavContext } from 'components/Header/navContext';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -28,12 +25,13 @@ import {
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import useOutsideClick from 'hooks/useOutsideClick';
 import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import {
   GetCedarSystem
   // GetCedarSystem_cedarSystem as CedarSystem
 } from 'queries/types/GetCedarSystem';
+import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation/AccordionNavigation';
+import subNavItems from 'views/GovernanceReviewTeam/sideNavItems';
 import NotFound from 'views/NotFound';
 import {
   activities,
@@ -54,16 +52,12 @@ import './index.scss';
 
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
-  const { setIsMobileSideNavExpanded } = useContext(NavContext); // Context provider for allowing subnav to trigger main nav toggle
   const isMobile = useCheckResponsiveScreen('tablet');
-  const [isMobileSubNavExpanded, setisMobileSubNavExpanded] = useState<boolean>(
-    false
-  ); // State for managing sub page side nav toggle
-  const mobileSideNav = useRef<HTMLDivElement | null>(null); // Ref for mobile responsiveness
 
-  const { systemId, subinfo, top } = useParams<{
-    systemId: string;
+  const { systemId, subinfo, top, activePage } = useParams<{
+    activePage: string;
     subinfo: string;
+    systemId: string;
     top: string;
   }>();
 
@@ -98,33 +92,6 @@ const SystemProfile = () => {
     systemData
   };
 
-  const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
-    'is-visible': isMobileSubNavExpanded
-  });
-
-  // Main navigation link that appears at top of mobile side nav to toggle between main nav
-  const mainNavigationLink: React.ReactNode[] = [
-    <NavLink
-      to="/"
-      key="main-sidenav"
-      onClick={e => {
-        // Toggle between main and sub side navs
-        e.preventDefault();
-        setisMobileSubNavExpanded(false);
-        setIsMobileSideNavExpanded(true);
-      }}
-      className="system-profile__main-nav-link"
-    >
-      <span>&uarr;&nbsp;&nbsp;</span>
-      <span
-        className="text-underline link-header"
-        aria-label={t('singleSystem.mainNavigation')}
-      >
-        {t('singleSystem.mainNavigation')}
-      </span>
-    </NavLink>
-  ];
-
   // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(
     sideNavItems(systemInfo)
@@ -132,7 +99,6 @@ const SystemProfile = () => {
     <NavLink
       to={sideNavItems(systemInfo)[key].route}
       key={key}
-      onClick={() => setisMobileSubNavExpanded(false)}
       activeClassName="usa-current"
       className={classnames({
         'nav-group-border': sideNavItems(systemInfo)[key].groupEnd
@@ -141,11 +107,6 @@ const SystemProfile = () => {
       {t(`navigation.${key}`)}
     </NavLink>
   ));
-
-  const navigationLinks = mainNavigationLink.concat(subNavigationLinks);
-
-  // Custom hook for handling mouse clicks outside of mobile expanded side nav
-  useOutsideClick(mobileSideNav, setisMobileSubNavExpanded);
 
   if (loading) {
     return <PageLoading />;
@@ -254,9 +215,13 @@ const SystemProfile = () => {
             </Grid>
           </div>
         </SummaryBox>
-
+        <AccordionNavigation
+          systemId={systemId}
+          subNavItems={subNavItems}
+          activePage={activePage}
+        />
         {/* Button/Header to display when mobile/tablet */}
-        <div className="grid-container padding-0">
+        {/* <div className="grid-container padding-0">
           <div
             className={classnames('usa-overlay', {
               'is-visible': isMobileSubNavExpanded
@@ -270,32 +235,19 @@ const SystemProfile = () => {
             <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>
             <IconMenu size={3} />
           </button>
-        </div>
-
+        </div> */}
         <SectionWrapper className="margin-top-5 margin-bottom-5">
           <GridContainer>
             <Grid row gap>
-              <Grid
-                desktop={{ col: 3 }}
-                className={classnames('padding-right-4', {
-                  'sticky-nav': !isMobileSubNavExpanded
-                })}
-              >
-                {/* Side navigation for single system */}
-                {!isMobile ? (
+              {!isMobile && (
+                <Grid
+                  desktop={{ col: 3 }}
+                  className="padding-right-4 sticky-nav"
+                >
+                  {/* Side navigation for single system */}
                   <SideNav items={subNavigationLinks} />
-                ) : (
-                  <div ref={mobileSideNav} className={mobileSideNavClasses}>
-                    {/* Mobile Display */}
-                    <PrimaryNav
-                      onToggleMobileNav={() => setisMobileSubNavExpanded(false)}
-                      mobileExpanded={isMobileSubNavExpanded}
-                      aria-label="Side navigation"
-                      items={navigationLinks}
-                    />
-                  </div>
-                )}
-              </Grid>
+                </Grid>
+              )}
 
               <Grid desktop={{ col: 9 }}>
                 {/* This renders the selected sidenav central component */}
