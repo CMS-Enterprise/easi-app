@@ -42,7 +42,7 @@ import Decision from './Decision';
 import IntakeReview from './IntakeReview';
 import LifecycleID from './LifecycleID';
 import Notes from './Notes';
-import subNavItems from './sideNavItems';
+import subNavItems from './subNavItems';
 import Summary from './Summary';
 
 import './index.scss';

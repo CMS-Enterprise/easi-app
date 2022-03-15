@@ -31,7 +31,7 @@ import {
   // GetCedarSystem_cedarSystem as CedarSystem
 } from 'queries/types/GetCedarSystem';
 import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation/AccordionNavigation';
-import subNavItems from 'views/GovernanceReviewTeam/sideNavItems';
+import subNavItems from 'views/GovernanceReviewTeam/subNavItems';
 import NotFound from 'views/NotFound';
 import {
   activities,
