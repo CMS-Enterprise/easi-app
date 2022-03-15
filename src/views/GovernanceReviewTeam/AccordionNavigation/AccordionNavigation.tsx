@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
   IconArrowBack,
   IconExpandLess,
@@ -19,13 +19,15 @@ type AccordionNavigationItemProps = {
 };
 
 type AccordionNavigationProps = {
-  systemId: string;
+  activePage: string;
   subNavItems: AccordionNavigationItemProps[];
+  systemId: string;
 };
 
 const AccordionNavigation = ({
-  systemId,
-  subNavItems
+  activePage,
+  subNavItems,
+  systemId
 }: AccordionNavigationProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const isMobile = useCheckResponsiveScreen('tablet');
@@ -33,9 +35,6 @@ const AccordionNavigation = ({
   const [activePageTitle, setActivePageTitle] = useState<string>(
     'general:intake'
   );
-  const { activePage } = useParams<{
-    activePage: string;
-  }>();
 
   const navLinkClickHandler = (text: string) => {
     setIsAccordionOpen(!isAccordionOpen);

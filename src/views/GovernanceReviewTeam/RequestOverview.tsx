@@ -30,12 +30,12 @@ import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Action
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
 import NotFound from 'views/NotFound';
 
+import AccordionNavigation from './AccordionNavigation/AccordionNavigation';
 import ChooseAction from './Actions/ChooseAction';
 import ExtendLifecycleId from './Actions/ExtendLifecycleId';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
 import RejectIntake from './Actions/RejectIntake';
 import SubmitAction from './Actions/SubmitAction';
-import SubNav from './SubNav/SubNav';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
@@ -100,7 +100,11 @@ const RequestOverview = () => {
           lcid={systemIntake.lcid}
         />
       )}
-      <SubNav systemId={systemId} subNavItems={subNavItems} />
+      <AccordionNavigation
+        systemId={systemId}
+        subNavItems={subNavItems}
+        activePage={activePage}
+      />
       <section className="grid-container grid-row margin-y-5 ">
         <nav className="desktop:grid-col-2 desktop:display-block display-none margin-right-2">
           <ul className="easi-grt__nav-list">
