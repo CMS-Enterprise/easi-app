@@ -114,25 +114,25 @@ const RequestOverview = () => {
                 {t('back.allRequests')}
               </Link>
             </li>
-            {subNavItems.map(({ aria, groupEnd, page, text }) => (
+            {subNavItems.map(({ aria, groupEnd, route, text }) => (
               <li
-                key={`desktop-sidenav-${page}`}
+                key={`desktop-sidenav-${route}`}
                 className={classnames({
                   'easi-grt__nav-link--border': groupEnd
                 })}
               >
                 {aria ? (
                   <Link
-                    to={`/governance-review-team/${systemId}/${page}`}
+                    to={`/governance-review-team/${systemId}/${route}`}
                     aria-label={t(aria)}
-                    className={getNavLinkClasses(page)}
+                    className={getNavLinkClasses(route)}
                   >
                     {t(text)}
                   </Link>
                 ) : (
                   <Link
-                    to={`/governance-review-team/${systemId}/${page}`}
-                    className={getNavLinkClasses(page)}
+                    to={`/governance-review-team/${systemId}/${route}`}
+                    className={getNavLinkClasses(route)}
                   >
                     {t(text)}
                   </Link>

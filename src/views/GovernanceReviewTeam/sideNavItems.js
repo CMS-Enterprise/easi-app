@@ -1,36 +1,36 @@
 const subNavItems = [
   {
-    page: `intake-request`,
+    route: `intake-request`,
     text: 'general:intake',
     aria: 'aria.openIntake'
   },
   {
-    page: `business-case`,
+    route: `business-case`,
     text: 'general:businessCase',
     aria: 'aria.openBusiness'
   },
   {
-    page: `decision`,
+    route: `decision`,
     text: 'decision.title',
     aria: 'aria.openDecision'
   },
   {
-    page: `lcid`,
+    route: `lcid`,
     text: 'lifecycleID.title',
     aria: 'aria.openLcid',
     groupEnd: true
     // Value used to designate end of sidenav subgrouping / border-bottom
   },
   {
-    page: `actions`,
+    route: `actions`,
     text: 'actions'
   },
   {
-    page: `notes`,
+    route: `notes`,
     text: 'notes.heading'
   },
   {
-    page: `dates`,
+    route: `dates`,
     text: 'dates.heading'
   }
 ];

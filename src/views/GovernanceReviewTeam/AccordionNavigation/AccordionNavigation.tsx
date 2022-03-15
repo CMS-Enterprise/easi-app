@@ -14,7 +14,7 @@ import './index.scss';
 
 type AccordionNavigationItemProps = {
   groupEnd?: boolean;
-  page: string;
+  route: string;
   text: string;
 };
 
@@ -33,7 +33,7 @@ const AccordionNavigation = ({
   const isMobile = useCheckResponsiveScreen('tablet');
   const [isAccordionOpen, setIsAccordionOpen] = useState<boolean>(false);
   const [activePageTitle, setActivePageTitle] = useState<string>(
-    'general:intake'
+    'Initial State of Accordion Navigation'
   );
 
   const navLinkClickHandler = (text: string) => {
@@ -67,17 +67,17 @@ const AccordionNavigation = ({
       {isAccordionOpen && (
         <div id="easi-grt__subNav" className="easi-grt__subNav__list-container">
           <ul className="easi-grt__subNav__list subNav">
-            {subNavItems.map(({ groupEnd, page, text }) => (
+            {subNavItems.map(({ groupEnd, route, text }) => (
               <li
-                key={`mobile-subnav--${page}`}
+                key={`mobile-subnav--${text}`}
                 className={classnames({
                   'subNav__item--group-border': groupEnd
                 })}
               >
                 <NavLink
-                  to={`/governance-review-team/${systemId}/${page}`}
+                  to={route}
                   className={classnames({
-                    'subNav--current': page === activePage
+                    'subNav--current': route === activePage
                   })}
                   onClick={() => navLinkClickHandler(text)}
                 >
