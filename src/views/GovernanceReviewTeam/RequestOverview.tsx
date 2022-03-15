@@ -102,7 +102,7 @@ const RequestOverview = () => {
       )}
       <AccordionNavigation
         systemId={systemId}
-        subNavItems={subNavItems}
+        subNavItems={subNavItems(systemId)}
         activePage={activePage}
       />
       <section className="grid-container grid-row margin-y-5 ">
@@ -114,26 +114,23 @@ const RequestOverview = () => {
                 {t('back.allRequests')}
               </Link>
             </li>
-            {subNavItems.map(({ aria, groupEnd, route, text }) => (
+            {subNavItems(systemId).map(({ aria, groupEnd, route, text }) => (
               <li
-                key={`desktop-sidenav-${route}`}
+                key={`desktop-sidenav-${text}`}
                 className={classnames({
                   'easi-grt__nav-link--border': groupEnd
                 })}
               >
                 {aria ? (
                   <Link
-                    to={`/governance-review-team/${systemId}/${route}`}
+                    to={route}
                     aria-label={t(aria)}
                     className={getNavLinkClasses(route)}
                   >
                     {t(text)}
                   </Link>
                 ) : (
-                  <Link
-                    to={`/governance-review-team/${systemId}/${route}`}
-                    className={getNavLinkClasses(route)}
-                  >
+                  <Link to={route} className={getNavLinkClasses(route)}>
                     {t(text)}
                   </Link>
                 )}

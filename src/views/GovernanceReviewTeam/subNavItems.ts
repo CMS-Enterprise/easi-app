@@ -1,36 +1,36 @@
-const subNavItems = [
+const subNavItems = (systemId: string) => [
   {
-    route: `intake-request`,
+    route: `/governance-review-team/${systemId}/intake-request`,
     text: 'general:intake',
     aria: 'aria.openIntake'
   },
   {
-    route: `business-case`,
+    route: `/governance-review-team/${systemId}/business-case`,
     text: 'general:businessCase',
     aria: 'aria.openBusiness'
   },
   {
-    route: `decision`,
+    route: `/governance-review-team/${systemId}/decision`,
     text: 'decision.title',
     aria: 'aria.openDecision'
   },
   {
-    route: `lcid`,
+    route: `/governance-review-team/${systemId}/lcid`,
     text: 'lifecycleID.title',
     aria: 'aria.openLcid',
     groupEnd: true
     // Value used to designate end of sidenav subgrouping / border-bottom
   },
   {
-    route: `actions`,
+    route: `/governance-review-team/${systemId}/actions`,
     text: 'actions'
   },
   {
-    route: `notes`,
+    route: `/governance-review-team/${systemId}/notes`,
     text: 'notes.heading'
   },
   {
-    route: `dates`,
+    route: `/governance-review-team/${systemId}/dates`,
     text: 'dates.heading'
   }
 ];
