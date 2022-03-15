@@ -44,9 +44,9 @@ func main() {
 
 	client := createEmailClient()
 
-	err = client.SendIntakeInvalidEUAIDEmail(ctx, "project with invalid EUA ID", "ABCD", uuid.New())
+	err = client.SendIntakeInvalidEUAIDEmail(ctx, "Some Project With An Invalid EUA ID", "ABCD", uuid.New())
 	noErr(err)
 
-	err = client.SendIntakeNoEUAIDEmail(ctx, "project with no EUA ID", uuid.New())
+	err = client.SendIntakeNoEUAIDEmail(ctx, "Some Project With No EUA ID", uuid.New())
 	noErr(err)
 }
