@@ -4,6 +4,13 @@ name: Initial building of images
 
 on: 
   workflow_call:
+    secrets: 
+      DOCKERHUB_USERNAME: 
+        required: true 
+      DOCKERHUB_TOKEN:
+        required: true 
+        
+      
 
 env: 
   EASI_APP_NODE_VERSION: '16.14.0'
