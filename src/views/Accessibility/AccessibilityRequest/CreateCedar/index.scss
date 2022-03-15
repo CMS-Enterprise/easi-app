@@ -7,7 +7,7 @@
 
   .system-info-card__description {
     overflow: hidden;
-    height: 1.6rem * 3;
+    max-height: 1.6rem * 3;
   }
 
   h3.usa-alert__heading {

@@ -7,8 +7,7 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Button,
-  IconLaunch
+  Button
 } from '@trussworks/react-uswds';
 import {
   Field,
@@ -82,6 +81,7 @@ import accessibilitySchema from 'validations/accessibilitySchema';
 import { NotFoundPartial } from 'views/NotFound';
 
 import RequestDeleted from './RequestDeleted';
+import SidebarTestingLinks from './SidebarTestingLinks';
 
 import './index.scss';
 
@@ -635,24 +635,7 @@ const AccessibilityRequestDetailPage = () => {
                   </Alert>
                 </div>
               )}
-              <UswdsReactLink
-                className="display-inline-block margin-top-3"
-                target="_blank"
-                rel="noopener noreferrer"
-                to="/508/templates"
-              >
-                {t('requestDetails.testingTemplates')}
-                <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
-              </UswdsReactLink>
-              <UswdsReactLink
-                className="display-inline-block margin-top-1"
-                target="_blank"
-                rel="noopener noreferrer"
-                to="/508/testing-overview"
-              >
-                {t('requestDetails.testingSteps')}
-                <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
-              </UswdsReactLink>
+              <SidebarTestingLinks />
               {userEuaId === requestOwnerEuaId && (
                 <button
                   type="button"
