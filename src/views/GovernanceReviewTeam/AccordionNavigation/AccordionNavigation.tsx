@@ -12,21 +12,24 @@ import useCheckResponsiveScreen from 'hooks/checkMobile';
 
 import './index.scss';
 
-type SubNavItemProps = {
+type AccordionNavigationItemProps = {
   groupEnd?: boolean;
   page: string;
   text: string;
 };
 
-type SubNavProps = {
+type AccordionNavigationProps = {
   systemId: string;
-  subNavItems: SubNavItemProps[];
+  subNavItems: AccordionNavigationItemProps[];
 };
 
-const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
+const AccordionNavigation = ({
+  systemId,
+  subNavItems
+}: AccordionNavigationProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const isMobile = useCheckResponsiveScreen('tablet');
-  const [isSubNavOpen, setIsSubNavOpen] = useState<boolean>(false);
+  const [isAccordionOpen, setIsAccordionOpen] = useState<boolean>(false);
   const [activePageTitle, setActivePageTitle] = useState<string>(
     'general:intake'
   );
@@ -35,14 +38,14 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
   }>();
 
   const navLinkClickHandler = (text: string) => {
-    setIsSubNavOpen(!isSubNavOpen);
+    setIsAccordionOpen(!isAccordionOpen);
     setActivePageTitle(text);
   };
 
   useEffect(() => {
     // Fixes edge case: subnavigation remains open when user (when in small screen size) expands window to large size really fast (using window manager)
     if (!isMobile) {
-      setIsSubNavOpen(false);
+      setIsAccordionOpen(false);
     }
   }, [isMobile]);
 
@@ -51,18 +54,18 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
       <button
         type="button"
         className="usa-menu-btn easi-header__basic width-full"
-        onClick={() => setIsSubNavOpen(!isSubNavOpen)}
-        aria-expanded={isSubNavOpen}
+        onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+        aria-expanded={isAccordionOpen}
         aria-controls="easi-grt__subNav"
       >
         <h3 className="padding-left-1">{t(activePageTitle)}</h3>
-        {!isSubNavOpen ? (
+        {!isAccordionOpen ? (
           <IconExpandMore size={3} />
         ) : (
           <IconExpandLess size={3} />
         )}
       </button>
-      {isSubNavOpen && (
+      {isAccordionOpen && (
         <div id="easi-grt__subNav" className="easi-grt__subNav__list-container">
           <ul className="easi-grt__subNav__list subNav">
             {subNavItems.map(({ groupEnd, page, text }) => (
@@ -100,4 +103,4 @@ const SubNav = ({ systemId, subNavItems }: SubNavProps) => {
   );
 };
 
-export default SubNav;
+export default AccordionNavigation;
