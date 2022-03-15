@@ -3,7 +3,30 @@ name: Server Test
 
 on: 
   workflow_call:
-    
+    secrets: 
+      SLACK_WEBHOOK_URL:
+        required: true 
+      DOCKERHUB_USERNAME: 
+        required: true 
+      DOCKERHUB_TOKEN:
+        required: true 
+      AWS_ACCESS_KEY_ID:
+        required: true 
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_SES_SOURCE_ARN:
+        required: true
+      OKTA_TEST_PASSWORD:
+        required: true
+      OKTA_TEST_SECRET:
+        required: true
+      OKTA_TEST_USERNAME:
+        required: true
+      AWS_ROLE_TO_ASSUME:
+        required: true
+      STORYBOOK_S3_BUCKET_DEV:
+        required: true
+
 env: 
   EASI_APP_NODE_VERSION: '16.14.0'
   EASI_APP_GO_VERSION: '1.16.6'

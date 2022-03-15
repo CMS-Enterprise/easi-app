@@ -17,12 +17,31 @@ env:
  
 
 jobs:
-  Build: 
+  Build:
     uses: ./.github/workflows/initial_build.yml 
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+
 
   Server_Test: 
     uses: ./.github/workflows/server_test.yml 
     needs: Build
+    secrets: 
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
+      OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
+      OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
+      OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
+        
 
   deploy: 
     strategy:

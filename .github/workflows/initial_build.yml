@@ -1,7 +1,5 @@
 name: Initial building of images 
 
-
-
 on: 
   workflow_call:
     secrets: 
@@ -9,8 +7,10 @@ on:
         required: true 
       DOCKERHUB_TOKEN:
         required: true 
-        
-      
+      AWS_ACCESS_KEY_ID:
+        required: true 
+      AWS_SECRET_ACCESS_KEY:
+        required: true
 
 env: 
   EASI_APP_NODE_VERSION: '16.14.0'
