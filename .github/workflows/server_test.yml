@@ -389,7 +389,7 @@ jobs:
           role-skip-session-tagging: true
       - name: Deploy storybook assets
         env:
-          STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET }}
+          STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
         run: |
           ./scripts/release_storybook_static
       - name: Announce failure
