@@ -28,13 +28,13 @@ const SystemSubNav = ({ subinfo, systemInfo }: SystemSubNavProps) => {
   }, [isMobile]);
 
   return (
-    <div className="easi-grt__subNav-accordion">
+    <div className="system-detail__subNav-accordion">
       <button
         type="button"
         className="usa-menu-btn easi-header__basic width-full"
         onClick={() => setIsAccordionOpen(!isAccordionOpen)}
         aria-expanded={isAccordionOpen}
-        aria-controls="easi-grt__subNav"
+        aria-controls="system-detail__subNav"
       >
         <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>
         {!isAccordionOpen ? (
@@ -44,8 +44,11 @@ const SystemSubNav = ({ subinfo, systemInfo }: SystemSubNavProps) => {
         )}
       </button>
       {isAccordionOpen && (
-        <div id="easi-grt__subNav" className="easi-grt__subNav__list-container">
-          <ul className="easi-grt__subNav__list subNav">
+        <div
+          id="system-detail__subNav"
+          className="system-detail__subNav__list-container"
+        >
+          <ul className="system-detail__subNav__list subNav">
             {Object.keys(sideNavItems(systemInfo)).map((key: string) => (
               <li
                 key={key}
