@@ -40,7 +40,6 @@ jobs:
       STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
 
   client_typecheck:
-    needs: Server_Test
     runs-on: ubuntu-latest
     continue-on-error: true
     permissions:
