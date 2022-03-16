@@ -29,10 +29,13 @@ export const SystemIntakeReview = ({
     const isFundedText = convertBoolToYesNo(isFunded);
 
     if (isFunded) {
-      // In case of 'Unknown', no funding number is required
-      return source === 'Unknown'
-        ? `${isFundedText}, but funding source and number are unknown`
-        : `${isFundedText}, ${source}, ${fundingNumber}`;
+      if (source === 'Unknown') {
+        // Unknown funding sources have an optional number
+        return fundingNumber === null || ''
+          ? `${isFundedText}, but funding source and number are unknown`
+          : `${isFundedText}, ${fundingNumber}, but funding source is unknown`;
+      }
+      return `${isFundedText}, ${source}, ${fundingNumber}`;
     }
     return isFundedText;
   };
