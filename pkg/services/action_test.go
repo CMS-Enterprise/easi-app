@@ -654,20 +654,18 @@ func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
 	serviceConfig := NewConfig(logger, nil)
 	ctx := context.Background()
 
-	s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data", func() {
-		euaID := "ABCD"
-
-		updateIntakeStatus := func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
+	s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP", func() {
+		updateIntakeStatus := func(ctx context.Context, statusID uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
 			return &models.SystemIntake{
-				EUAUserID: null.StringFrom(euaID),
+				EUAUserID: null.StringFrom("ABCD"),
 			}, nil
 		}
 
-		saveAction := func(context.Context, *models.Action) error {
+		saveAction := func(ctx context.Context, action *models.Action) error {
 			return nil
 		}
 
-		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+		fetchEmptyUserInfo := func(ctx context.Context, euaID string) (*models.UserInfo, error) {
 			return nil, &apperrors.InvalidEUAIDError{
 				EUAID: euaID,
 			}
@@ -678,7 +676,7 @@ func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
 		}
 
 		emailSentForInvalidEUAID := false
-		sendIntakeInvalidEUAIDEmail := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+		sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
 			emailSentForInvalidEUAID = true
 			return nil
 		}
@@ -687,7 +685,7 @@ func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
 			return nil
 		}
 
-		closeBusinessCase := func(context.Context, uuid.UUID) error {
+		closeBusinessCase := func(ctx context.Context, bizCaseID uuid.UUID) error {
 			return nil
 		}
 
@@ -697,7 +695,7 @@ func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
 			saveAction,
 			fetchEmptyUserInfo,
 			sendReviewEmail,
-			sendIntakeInvalidEUAIDEmail,
+			sendIntakeInvalidEUAIDEmailMock,
 			sendIntakeNoEUAIDEmail,
 			closeBusinessCase,
 		)
@@ -714,17 +712,17 @@ func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
 	})
 
 	s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
-		updateIntakeStatus := func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
+		updateIntakeStatus := func(c context.Context, statusID uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
 			return &models.SystemIntake{
 				EUAUserID: null.StringFrom(""),
 			}, nil
 		}
 
-		saveAction := func(context.Context, *models.Action) error {
+		saveAction := func(ctx context.Context, action *models.Action) error {
 			return nil
 		}
 
-		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+		fetchEmptyUserInfo := func(ctx context.Context, euaID string) (*models.UserInfo, error) {
 			return &models.UserInfo{}, nil
 		}
 
@@ -737,12 +735,12 @@ func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
 		}
 
 		emailSentForNoEUAID := false
-		sendIntakeNoEUAIDEmail := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+		sendIntakeNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
 			emailSentForNoEUAID = true
 			return nil
 		}
 
-		closeBusinessCase := func(context.Context, uuid.UUID) error {
+		closeBusinessCase := func(ctx context.Context, bizCaseID uuid.UUID) error {
 			return nil
 		}
 
@@ -753,7 +751,7 @@ func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
 			fetchEmptyUserInfo,
 			sendReviewEmail,
 			sendIntakeInvalidEUAIDEmail,
-			sendIntakeNoEUAIDEmail,
+			sendIntakeNoEUAIDEmailMock,
 			closeBusinessCase,
 		)
 
