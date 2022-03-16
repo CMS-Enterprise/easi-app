@@ -227,22 +227,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             as={Dropdown}
                             id="IntakeForm-FundingSource"
                             name="fundingSource.source"
-                            // manual onChange to catch case where user selects 'Unknown' funding source
-                            // TODO: I feel like there should be a better option for this use case
-                            //       but I could not find anything cleaner then this solution
-                            onChange={(changeEvent: React.ChangeEvent<any>) => {
-                              formikProps.handleChange(changeEvent);
-
-                              // If funding source is changed to 'Unkown' set funding number to '', this is due to
-                              // the 'Unknown' source not requiring a funding number (funding number field is
-                              // disabled in this case)
-                              if (changeEvent.target.value === 'Unknown') {
-                                setFieldValue(
-                                  'fundingSource.fundingNumber',
-                                  ''
-                                );
-                              }
-                            }}
                           >
                             <option value="" disabled>
                               Select an option
@@ -278,14 +262,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             maxLength={6}
                             name="fundingSource.fundingNumber"
                             aria-describedby="IntakeForm-FundingNumberRestrictions IntakeForm-FundingNumberHelp"
-                            // If funding source is 'Unknown' disable funding number input and set
-                            // placeholder to 'N/A' (funding number value is set to '')
-                            disabled={values.fundingSource.source === 'Unknown'}
-                            placeholder={
-                              values.fundingSource.source === 'Unknown'
-                                ? 'N/A'
-                                : ''
-                            }
                           />
                           <HelpText
                             id="IntakeForm-FundingNumberHelp"
