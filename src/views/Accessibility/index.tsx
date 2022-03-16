@@ -19,7 +19,7 @@ import UpdateTestDateView from 'views/TestDate/UpdateTestDate';
 import Create from './AccessibilityRequest/Create';
 import AccessibilityRequestsDocumentsNew from './AccessibilityRequest/Documents/New';
 import List from './AccessibilityRequest/List';
-import RequestLinkCedarSystem from './AccessibilityRequest/RequestLinkCedarSystem';
+import RequestCedarSystem from './AccessibilityRequest/RequestCedarSystem';
 import AccessibilityRequestDetailPage from './AccessibilityRequestDetailPage';
 import AccessibilityTestingStepsOverview from './AccessibilityTestingStepsOverview';
 import ChangeRequestStatus from './ChangeRequestStatus';
@@ -39,7 +39,7 @@ const NewRequestCedarSystem = (
     key="create-508-request"
     path="/508/requests/new"
     exact
-    component={RequestLinkCedarSystem}
+    component={RequestCedarSystem}
   />
 );
 const AllRequests = (
@@ -129,12 +129,12 @@ const RequestDetails = (
   />
 );
 
-const UpdateRequestLinkCedarSystem = (
+const UpdateRequestCedarSystem = (
   <Route
     exact
     key="508-request-cedar-system-link"
     path="/508/requests/:accessibilityRequestId/cedar-system"
-    component={RequestLinkCedarSystem}
+    component={RequestCedarSystem}
   />
 );
 
@@ -201,7 +201,7 @@ const Accessibility = () => {
             NewTestDate,
             DocumentsRedirect,
             RequestDetails,
-            UpdateRequestLinkCedarSystem,
+            UpdateRequestCedarSystem,
             Default
           ]}
         </PageTemplate>
@@ -217,7 +217,7 @@ const Accessibility = () => {
           NewDocument,
           DocumentsRedirect,
           RequestDetails,
-          UpdateRequestLinkCedarSystem,
+          UpdateRequestCedarSystem,
           Default
         ]}
       </PageTemplate>

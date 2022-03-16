@@ -18,7 +18,7 @@ import GetCedarSystemIdsQuery from 'queries/GetCedarSystemIdsQuery';
 import UpdateAccessibilityRequestQuery from 'queries/UpdateAccessibilityRequestQuery';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 
-import RequestLinkCedarSystem from './index';
+import RequestCedarSystem from './index';
 
 describe('Create 508 Request page', () => {
   const mockStore = configureMockStore();
@@ -146,7 +146,7 @@ describe('Create 508 Request page', () => {
           <MockedProvider mocks={[defaultQuery]} addTypename={false}>
             <Provider store={defaultStore}>
               <Route path={`/508/requests/${subPath}`}>
-                <RequestLinkCedarSystem />
+                <RequestCedarSystem />
               </Route>
             </Provider>
           </MockedProvider>
@@ -190,7 +190,7 @@ describe('Create 508 Request page', () => {
           >
             <Provider store={defaultStore}>
               <Route path="/508/requests/new">
-                <RequestLinkCedarSystem />
+                <RequestCedarSystem />
               </Route>
               <Route path="/508/requests/:accessibilityRequestId/documents">
                 <AccessibilityRequestDetailPage />
@@ -243,7 +243,7 @@ describe('Create 508 Request page', () => {
           >
             <Provider store={defaultStore}>
               <Route path="/508/requests/:accessibilityRequestId/cedar-system">
-                <RequestLinkCedarSystem />
+                <RequestCedarSystem />
               </Route>
               <Route path="/508/requests/:accessibilityRequestId/documents">
                 <AccessibilityRequestDetailPage />
@@ -287,7 +287,7 @@ describe('Create 508 Request page', () => {
           <MockedProvider mocks={[errorQuery]} addTypename={false}>
             <Provider store={defaultStore}>
               <Route path="/508/requests/new">
-                <RequestLinkCedarSystem />
+                <RequestCedarSystem />
               </Route>
             </Provider>
           </MockedProvider>

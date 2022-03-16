@@ -298,7 +298,7 @@ const RequestFormWrapper = ({
   );
 };
 
-const RequestLinkCedarSystem = () => {
+const RequestCedarSystem = () => {
   const { t } = useTranslation('accessibility');
   const history = useHistory();
 
@@ -418,4 +418,4 @@ const RequestLinkCedarSystem = () => {
   );
 };
 
-export default RequestLinkCedarSystem;
+export default RequestCedarSystem;
