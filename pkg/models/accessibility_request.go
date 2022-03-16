@@ -23,7 +23,7 @@ const (
 type AccessibilityRequest struct {
 	ID             uuid.UUID                           `json:"id"`
 	Name           string                              `json:"name"`
-	IntakeID       uuid.UUID                           `db:"intake_id" json:"intakeID"`
+	IntakeID       *uuid.UUID                          `db:"intake_id" json:"intakeID"`
 	CreatedAt      *time.Time                          `db:"created_at" gqlgen:"submittedAt" json:"createdAt"`
 	UpdatedAt      *time.Time                          `db:"updated_at" json:"updatedAt"`
 	EUAUserID      string                              `json:"euaUserID" db:"eua_user_id"`

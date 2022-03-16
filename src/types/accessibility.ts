@@ -8,6 +8,11 @@ export type AccessibilityRequestForm = {
   requestName: string;
 };
 
+export type AccessibilityRequestFormCedar = {
+  cedarId: string;
+  requestName: string;
+};
+
 export type DeleteAccessibilityRequestForm = {
   deletionReason: string;
 };

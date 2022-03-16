@@ -100,9 +100,9 @@ type CreateAccessibilityRequestDocumentPayload struct {
 
 // The data needed to initialize a 508/accessibility request
 type CreateAccessibilityRequestInput struct {
-	IntakeID      uuid.UUID `json:"intakeID"`
-	Name          string    `json:"name"`
-	CedarSystemID *string   `json:"cedarSystemId"`
+	IntakeID      *uuid.UUID `json:"intakeID"`
+	Name          string     `json:"name"`
+	CedarSystemID *string    `json:"cedarSystemId"`
 }
 
 // The data used when adding a note to a 508/accessibility request
@@ -476,6 +476,18 @@ type SystemIntakeRequesterInput struct {
 type SystemIntakeRequesterWithComponentInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
+}
+
+// Parameters for updating a 508/accessibility request's associated CEDAR system
+type UpdateAccessibilityRequestCedarSystemInput struct {
+	ID            uuid.UUID `json:"id"`
+	CedarSystemID string    `json:"cedarSystemId"`
+}
+
+// Result of updating a 508/accessibility request's associated CEDAR system
+type UpdateAccessibilityRequestCedarSystemPayload struct {
+	ID                   uuid.UUID                    `json:"id"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
 }
 
 // Parameters for updating a 508/accessibility request's status

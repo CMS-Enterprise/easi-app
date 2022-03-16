@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/facebookgo/clock"
+	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -65,7 +66,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByID() {
 
 	s.Run("retrieves an active accessibility request", func() {
 		accessibilityRequest := models.AccessibilityRequest{
-			IntakeID:  intake.ID,
+			IntakeID:  &intake.ID,
 			Name:      "My Accessibility Request",
 			EUAUserID: "ASDF",
 		}
@@ -80,7 +81,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByID() {
 
 	s.Run("does not retrieve a deleted accessibility request", func() {
 		deletedAccessibilityRequest := models.AccessibilityRequest{
-			IntakeID:  intake.ID,
+			IntakeID:  &intake.ID,
 			Name:      "My Accessibility Request",
 			EUAUserID: "ASDF",
 		}
@@ -105,7 +106,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByIDIncludingDeleted() {
 	s.NoError(err)
 
 	deletedAccessibilityRequest := models.AccessibilityRequest{
-		IntakeID:  intake.ID,
+		IntakeID:  &intake.ID,
 		Name:      "My Accessibility Request",
 		EUAUserID: "ASDF",
 	}
@@ -143,7 +144,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequests() {
 		s.NoError(err)
 
 		newRequest3Deleted := models.AccessibilityRequest{
-			IntakeID:  intake.ID,
+			IntakeID:  &intake.ID,
 			Name:      "My Deleted Request",
 			EUAUserID: "ASDF",
 		}
@@ -158,5 +159,26 @@ func (s StoreTestSuite) TestFetchAccessibilityRequests() {
 		s.NoError(fetchError)
 		expectedNumRequests := len(requestsBefore) + 2
 		s.Equal(expectedNumRequests, len(requests))
+	})
+}
+
+func (s StoreTestSuite) TestUpdateAccessibilityRequestCedarSystem() {
+	ctx := context.Background()
+	intake := testhelpers.NewSystemIntake()
+	createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	request := testhelpers.NewAccessibilityRequest(createdIntake.ID)
+	createdRequest, err2 := s.store.CreateAccessibilityRequest(ctx, &request)
+	s.NoError(err2)
+
+	s.Run("updates CEDAR system ID", func() {
+		cedarSystemID := "326-1556-0"
+		_, err := s.store.UpdateAccessibilityRequestCedarSystem(ctx, createdRequest.ID, null.StringFrom(cedarSystemID))
+		s.NoError(err, "failed to update accessessibility request")
+
+		fetchedRequest, err2 := s.store.FetchAccessibilityRequestByID(ctx, createdRequest.ID)
+		s.NoError(err2, "failed to fetch accessessibility request")
+		s.Equal(fetchedRequest.CedarSystemID.String, cedarSystemID)
 	})
 }

@@ -232,7 +232,7 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string) error,
+	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string, string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	generateLCID func(context.Context) (string, error),
@@ -344,13 +344,13 @@ func NewUpdateLifecycleFields(
 		}
 
 		if requesterHasValidEUAID {
-			// TODO: put cost baseline in email?
 			err = sendIssueLCIDEmail(
 				ctx,
 				requesterInfo.Email,
 				updated.LifecycleID.String,
 				updated.LifecycleExpiresAt,
 				updated.LifecycleScope.String,
+				updated.LifecycleCostBaseline.String,
 				updated.DecisionNextSteps.String,
 				action.Feedback.String)
 			if err != nil {

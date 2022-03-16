@@ -364,6 +364,7 @@ type ComplexityRoot struct {
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
+		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
 		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
 		UpdateSystemIntakeAdminLead                      func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
 		UpdateSystemIntakeContactDetails                 func(childComplexity int, input model.UpdateSystemIntakeContactDetailsInput) int
@@ -569,6 +570,11 @@ type ComplexityRoot struct {
 		TestType func(childComplexity int) int
 	}
 
+	UpdateAccessibilityRequestCedarSystemPayload struct {
+		AccessibilityRequest func(childComplexity int) int
+		ID                   func(childComplexity int) int
+	}
+
 	UpdateAccessibilityRequestStatusPayload struct {
 		EuaUserID  func(childComplexity int) int
 		ID         func(childComplexity int) int
@@ -688,6 +694,7 @@ type MutationResolver interface {
 	CreateAccessibilityRequestNote(ctx context.Context, input model.CreateAccessibilityRequestNoteInput) (*model.CreateAccessibilityRequestNotePayload, error)
 	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
 	UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error)
+	UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error)
 	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
@@ -2344,6 +2351,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.SubmitIntake(childComplexity, args["input"].(model.SubmitIntakeInput)), true
 
+	case "Mutation.updateAccessibilityRequestCedarSystem":
+		if e.complexity.Mutation.UpdateAccessibilityRequestCedarSystem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateAccessibilityRequestCedarSystem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateAccessibilityRequestCedarSystem(childComplexity, args["input"].(*model.UpdateAccessibilityRequestCedarSystemInput)), true
+
 	case "Mutation.updateAccessibilityRequestStatus":
 		if e.complexity.Mutation.UpdateAccessibilityRequestStatus == nil {
 			break
@@ -3362,6 +3381,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TestDate.TestType(childComplexity), true
 
+	case "UpdateAccessibilityRequestCedarSystemPayload.accessibilityRequest":
+		if e.complexity.UpdateAccessibilityRequestCedarSystemPayload.AccessibilityRequest == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccessibilityRequestCedarSystemPayload.AccessibilityRequest(childComplexity), true
+
+	case "UpdateAccessibilityRequestCedarSystemPayload.id":
+		if e.complexity.UpdateAccessibilityRequestCedarSystemPayload.ID == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccessibilityRequestCedarSystemPayload.ID(childComplexity), true
+
 	case "UpdateAccessibilityRequestStatusPayload.euaUserId":
 		if e.complexity.UpdateAccessibilityRequestStatusPayload.EuaUserID == nil {
 			break
@@ -3678,7 +3711,7 @@ type AccessibilityRequest {
   name: String!
   relevantTestDate: TestDate
   submittedAt: Time!
-  system: System!
+  system: System
   testDates: [TestDate!]!
   euaUserId: String!
   statusRecord: AccessibilityRequestStatusRecord!
@@ -3724,6 +3757,22 @@ type UpdateAccessibilityRequestStatusPayload {
   status: AccessibilityRequestStatus!
   euaUserId: String!
   userErrors: [UserError!]
+}
+
+"""
+Parameters for updating a 508/accessibility request's associated CEDAR system
+"""
+input UpdateAccessibilityRequestCedarSystemInput {
+  id: UUID!
+  cedarSystemId: String!
+}
+
+"""
+Result of updating a 508/accessibility request's associated CEDAR system
+"""
+type UpdateAccessibilityRequestCedarSystemPayload {
+  id: UUID!
+  accessibilityRequest: AccessibilityRequest
 }
 
 """
@@ -3832,7 +3881,7 @@ type SystemEdge {
 The data needed to initialize a 508/accessibility request
 """
 input CreateAccessibilityRequestInput {
-  intakeID: UUID!
+  intakeID: UUID
   name: String!
   cedarSystemId: String
 }
@@ -4698,6 +4747,9 @@ type Mutation {
     input: UpdateAccessibilityRequestStatus
   ): UpdateAccessibilityRequestStatusPayload
     @hasRole(role: EASI_508_TESTER_OR_USER)
+  updateAccessibilityRequestCedarSystem(
+    input: UpdateAccessibilityRequestCedarSystemInput
+  ): UpdateAccessibilityRequestCedarSystemPayload
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -5260,6 +5312,21 @@ func (ec *executionContext) field_Mutation_submitIntake_args(ctx context.Context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNSubmitIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSubmitIntakeInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateAccessibilityRequestCedarSystem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.UpdateAccessibilityRequestCedarSystemInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOUpdateAccessibilityRequestCedarSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestCedarSystemInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5836,14 +5903,11 @@ func (ec *executionContext) _AccessibilityRequest_system(ctx context.Context, fi
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*models.System)
 	fc.Result = res
-	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequest_testDates(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
@@ -11882,6 +11946,45 @@ func (ec *executionContext) _Mutation_updateAccessibilityRequestStatus(ctx conte
 	return ec.marshalOUpdateAccessibilityRequestStatusPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatusPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updateAccessibilityRequestCedarSystem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateAccessibilityRequestCedarSystem_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAccessibilityRequestCedarSystem(rctx, args["input"].(*model.UpdateAccessibilityRequestCedarSystemInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateAccessibilityRequestCedarSystemPayload)
+	fc.Result = res
+	return ec.marshalOUpdateAccessibilityRequestCedarSystemPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestCedarSystemPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_createSystemIntakeActionBusinessCaseNeeded(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -17721,6 +17824,73 @@ func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphq
 	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _UpdateAccessibilityRequestCedarSystemPayload_id(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestCedarSystemPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccessibilityRequestCedarSystemPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAccessibilityRequestCedarSystemPayload_accessibilityRequest(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestCedarSystemPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccessibilityRequestCedarSystemPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccessibilityRequest, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.AccessibilityRequest)
+	fc.Result = res
+	return ec.marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequest(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_id(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -19374,7 +19544,7 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestInput(ctx co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeID"))
-			it.IntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			it.IntakeID, err = ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -20233,6 +20403,37 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequesterWithComponentInpu
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestCedarSystemInput(ctx context.Context, obj interface{}) (model.UpdateAccessibilityRequestCedarSystemInput, error) {
+	var it model.UpdateAccessibilityRequestCedarSystemInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "cedarSystemId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+			it.CedarSystemID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestStatus(ctx context.Context, obj interface{}) (model.UpdateAccessibilityRequestStatus, error) {
 	var it model.UpdateAccessibilityRequestStatus
 	asMap := map[string]interface{}{}
@@ -20657,9 +20858,6 @@ func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.S
 					}
 				}()
 				res = ec._AccessibilityRequest_system(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -23415,6 +23613,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
+		case "updateAccessibilityRequestCedarSystem":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateAccessibilityRequestCedarSystem(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "createSystemIntakeActionBusinessCaseNeeded":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createSystemIntakeActionBusinessCaseNeeded(ctx, field)
@@ -25670,6 +25875,44 @@ func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet,
 	return out
 }
 
+var updateAccessibilityRequestCedarSystemPayloadImplementors = []string{"UpdateAccessibilityRequestCedarSystemPayload"}
+
+func (ec *executionContext) _UpdateAccessibilityRequestCedarSystemPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateAccessibilityRequestCedarSystemPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccessibilityRequestCedarSystemPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateAccessibilityRequestCedarSystemPayload")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAccessibilityRequestCedarSystemPayload_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "accessibilityRequest":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAccessibilityRequestCedarSystemPayload_accessibilityRequest(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var updateAccessibilityRequestStatusPayloadImplementors = []string{"UpdateAccessibilityRequestStatusPayload"}
 
 func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateAccessibilityRequestStatusPayload) graphql.Marshaler {
@@ -27052,10 +27295,6 @@ func (ec *executionContext) unmarshalNSubmitIntakeInput2githubᚗcomᚋcmsgovᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSystem2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx context.Context, sel ast.SelectionSet, v models.System) graphql.Marshaler {
-	return ec._System(ctx, sel, &v)
-}
-
 func (ec *executionContext) marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx context.Context, sel ast.SelectionSet, v *models.System) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -28261,6 +28500,13 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
+func (ec *executionContext) marshalOSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx context.Context, sel ast.SelectionSet, v *models.System) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._System(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOSystemConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemConnection(ctx context.Context, sel ast.SelectionSet, v *model.SystemConnection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -28435,6 +28681,21 @@ func (ec *executionContext) marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(
 	}
 	res := models.MarshalUUID(*v)
 	return res
+}
+
+func (ec *executionContext) unmarshalOUpdateAccessibilityRequestCedarSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestCedarSystemInput(ctx context.Context, v interface{}) (*model.UpdateAccessibilityRequestCedarSystemInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputUpdateAccessibilityRequestCedarSystemInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOUpdateAccessibilityRequestCedarSystemPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestCedarSystemPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateAccessibilityRequestCedarSystemPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateAccessibilityRequestCedarSystemPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOUpdateAccessibilityRequestStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatus(ctx context.Context, v interface{}) (*model.UpdateAccessibilityRequestStatus, error) {

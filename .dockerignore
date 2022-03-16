@@ -13,3 +13,4 @@ cypress/results
 
 # build artifacts
 bin
+__debug_bin

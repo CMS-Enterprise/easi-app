@@ -1,5 +1,8 @@
 // Data for the Accessibility/508 process
-import { AccessibilityRequestForm } from 'types/accessibility';
+import {
+  AccessibilityRequestForm,
+  AccessibilityRequestFormCedar
+} from 'types/accessibility';
 
 // eslint-disable-next-line
 export const initialAccessibilityRequestFormData: AccessibilityRequestForm = {
@@ -8,5 +11,10 @@ export const initialAccessibilityRequestFormData: AccessibilityRequestForm = {
     name: '',
     component: ''
   },
+  requestName: ''
+};
+
+export const initialAccessibilityRequestFormDataCedar: AccessibilityRequestFormCedar = {
+  cedarId: '',
   requestName: ''
 };

@@ -56,7 +56,7 @@ export interface GetAccessibilityRequest_accessibilityRequest {
   euaUserId: string;
   submittedAt: Time;
   name: string;
-  system: GetAccessibilityRequest_accessibilityRequest_system;
+  system: GetAccessibilityRequest_accessibilityRequest_system | null;
   documents: GetAccessibilityRequest_accessibilityRequest_documents[];
   testDates: GetAccessibilityRequest_accessibilityRequest_testDates[];
   statusRecord: GetAccessibilityRequest_accessibilityRequest_statusRecord;

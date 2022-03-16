@@ -38,7 +38,7 @@ export interface GetAccessibilityRequests_accessibilityRequests_edges_node {
   name: string;
   relevantTestDate: GetAccessibilityRequests_accessibilityRequests_edges_node_relevantTestDate | null;
   submittedAt: Time;
-  system: GetAccessibilityRequests_accessibilityRequests_edges_node_system;
+  system: GetAccessibilityRequests_accessibilityRequests_edges_node_system | null;
   statusRecord: GetAccessibilityRequests_accessibilityRequests_edges_node_statusRecord;
 }
 
