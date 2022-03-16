@@ -125,11 +125,16 @@ const RequestOverview = () => {
                     to={route}
                     aria-label={t(aria)}
                     className={getNavLinkClasses(route)}
+                    data-testid={`grt-nav-${text}-link`}
                   >
                     {t(text)}
                   </Link>
                 ) : (
-                  <Link to={route} className={getNavLinkClasses(route)}>
+                  <Link
+                    to={route}
+                    className={getNavLinkClasses(route)}
+                    data-testid={`grt-nav-${text}-link`}
+                  >
                     {t(text)}
                   </Link>
                 )}
