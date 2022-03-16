@@ -1,6 +1,8 @@
 <p>Lifecycle ID: {{.LifecycleID}}</p>
 <p>Expiration Date: {{.ExpiresAt}}</p>
 <p>Scope: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.Scope}}</pre></p>
-{{if .LifecycleCostBaseline}}<p>Project Cost Baseline: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.LifecycleCostBaseline}}</pre></p>{{end}}
-{{if .NextSteps}}<p>Next Steps: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.NextSteps}}</pre></p>{{end}}
+{{if .LifecycleCostBaseline}}<p>Project Cost Baseline: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.LifecycleCostBaseline}}</pre></p>
+{{end}}
+{{if .NextSteps}}<p>Next Steps: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.NextSteps}}</pre></p>
+{{end}}
 <p>Feedback: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.Feedback}}</pre></p>
