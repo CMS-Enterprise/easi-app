@@ -12,7 +12,6 @@ env:
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   DOCKER_BUILDKIT: 1
  
-
 jobs:
   Build:
     uses: ./.github/workflows/initial_build.yml 
@@ -21,7 +20,6 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-
 
   Server_Test: 
     uses: ./.github/workflows/server_test.yml 
@@ -40,9 +38,7 @@ jobs:
       STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
 
   client_typecheck:
-    needs: Server_Test
     runs-on: ubuntu-latest
-    continue-on-error: true
     permissions:
       pull-requests: write
       issues: write
@@ -79,7 +75,7 @@ jobs:
           cat test.log >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           exit $result_code
-        continue-on-error: true
+        
       - name: Post comment with TypeScript type errors
         uses: actions/github-script@v6
         if: ${{ steps.typechecker.outcome == 'failure' }}
@@ -103,96 +99,51 @@ jobs:
               body: commentBody
             });
 
-        
-
-  deploy: 
-    strategy:
-      matrix: 
-        env: [dev, impl, prod]
-        deployment_version: [9, 8, 7]
-        exclude: 
-          - env: dev 
-            deployment_version: 8 
-          - env: dev 
-            deployment_version: 7 
-          - env: impl 
-            deployment_version: 9 
-          - env: impl
-            deployment_version: 7 
-          - env: prod
-            deployment_version: 8 
-          - env: prod 
-            deployment_version: 9 
+  deploy_dev: 
     needs: Server_Test
-    if: ${{ github.ref == 'refs/heads/master' }}
-    # needs: [ lint, client_test, server_test, e2e_tests, anti_virus ]
-    runs-on: ubuntu-latest
-    environment: ${{ matrix.env }}
-    env:
-      APP_ENV: ${{ matrix.env }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Set up node
-        uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a
-        with:
-          node-version: ${{ env.EASI_APP_NODE_VERSION }}
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Configure yarn cache
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: |
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            ./node_modules
-          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            v1-yarn-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@05b148adc31e091bafbaf404f745055d4d3bc9d2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-duration-seconds: 1800
-          role-skip-session-tagging: true
-      - name: Clean the database
-        run: |
-          ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
-      - name: Run migrations
-        env:
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: easi-db-migrate
-          DEPLOYMENT_VERSION: ${{ matrix.deployment_version }}
-        run: |
-          ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "$DEPLOYMENT_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "$DEPLOYMENT_VERSION" "easi-app-db-migrate"
-      - name: Deploy ECS service
-        env:
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: easi-backend
-          DEPLOYMENT_VERSION: ${{ matrix.deployment_version }}
-        run: |
-          ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "$DEPLOYMENT_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          ./scripts/healthcheck "$IMAGE_TAG"
-      - name: Build static assets and release to S3
-        env:
-          LD_CLIENT_ID_DEV: ${{ secrets.LD_CLIENT_ID }}
-          OKTA_CLIENT_ID_DEV: ${{ secrets.OKTA_CLIENT_ID }}
-          OKTA_SERVER_ID_DEV: ${{ secrets.OKTA_SERVER_ID }}
-          STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET }}
-        run: |
-          ./scripts/release_static
-      - name: Announce failure
-        if: ${{ failure() }}
-        run: |
-          ./scripts/github-action-announce-broken-branch
+    uses: ./.github/workflows/deployments.yml 
+    with: 
+      env: dev 
+      lambda_version: 9 
+    secrets: 
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID_DEV }}
+      OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID_DEV }}
+      OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID_DEV }}
+      STATIC_S3_BUCKET:  ${{ secrets.STATIC_S3_BUCKET_DEV }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}  
+      ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
+     
+  deploy_impl: 
+    needs: deploy_dev
+    uses: ./.github/workflows/deployments.yml 
+    with: 
+      env: impl 
+      lambda_version: 8 
+    secrets: 
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID_IMPL }}
+      OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID_IMPL }}
+      OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID_IMPL }}
+      STATIC_S3_BUCKET:  ${{ secrets.STATIC_S3_BUCKET_IMPL }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_IMPL }}  
+      ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
 
+  deploy_prod: 
+    needs: deploy_impl
+    uses: ./.github/workflows/deployments.yml 
+    with: 
+      env: prod
+      lambda_version: 7 
+    secrets: 
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID_PROD }}
+      OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID_PROD }}
+      OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID_PROD }}
+      STATIC_S3_BUCKET:  ${{ secrets.STATIC_S3_BUCKET_PROD }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_PROD }}  
+      ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
   
