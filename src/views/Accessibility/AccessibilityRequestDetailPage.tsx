@@ -627,11 +627,11 @@ const AccessibilityRequestDetailPage = () => {
                     type="warning"
                     heading={t('requestDetails.actionRequired')}
                   >
-                    <Link
+                    <UswdsReactLink
                       to={`/508/requests/${accessibilityRequestId}/cedar-system`}
                     >
                       {t('requestDetails.linkRequestToSystem')}
-                    </Link>
+                    </UswdsReactLink>
                   </Alert>
                 </div>
               )}
