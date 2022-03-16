@@ -490,10 +490,6 @@ func NewProvideGRTFeedback(
 		requesterHasEUAID := euaID != ""
 		requesterHasValidEUAID := requesterHasEUAID
 
-		// TODO (for PR) - arguably, we could move this block and the block that checks for requesterInfo == nil || requesterInfo.Email == "" down, so all the email-handling stuff is in one place
-		// this would be a behavior change; right now, if requester info fetch from CEDAR LDAP fails, nothing is saved in our DB
-		// if we moved requesterInfo stuff below, we'd save feedback/action/intake in our DB, then return an error when fetching from CEDAR LDAP
-
 		var requesterInfo *models.UserInfo
 		if requesterHasEUAID {
 			requesterInfo, err = fetchUserInfo(ctx, euaID)
