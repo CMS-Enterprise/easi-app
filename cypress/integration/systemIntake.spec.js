@@ -123,12 +123,18 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     cy.get('#IntakeForm-FundingSource')
-      .select('CLIA')
-      .should('have.value', 'CLIA');
+      .select('Unknown')
+      .should('have.value', 'Unknown');
 
     cy.get('#IntakeForm-FundingNumber')
       .type('111111')
       .should('have.value', '111111');
+
+    cy.get('#IntakeForm-FundingSource')
+      .select('CLIA')
+      .should('have.value', 'CLIA');
+
+    cy.get('#IntakeForm-FundingNumber').should('have.value', '111111');
 
     cy.get('#IntakeForm-CostsExpectingIncreaseYes')
       .check({ force: true })
