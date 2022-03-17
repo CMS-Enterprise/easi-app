@@ -1,6 +1,7 @@
 const governanceReviewTeam = {
   prepare: {
     title: 'Prepare for Governance Review Team meeting',
+    breadcrumb: 'Prepare for GRT meeting',
 
     whatToExpect: {
       title: 'What to expect',

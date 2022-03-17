@@ -24,7 +24,7 @@ const PrepareForGRB = () => {
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/">
-              <span>Home</span>
+              <span>{t('taskList:navigation.home')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb>
@@ -32,10 +32,10 @@ const PrepareForGRB = () => {
               asCustom={Link}
               to={`/governance-task-list/${systemId}`}
             >
-              <span>Get governance approval</span>
+              <span>{t('taskList:navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
-          <Breadcrumb current>{t('prepare.title')}</Breadcrumb>
+          <Breadcrumb current>{t('prepare.breadcrumb')}</Breadcrumb>
         </BreadcrumbBar>
         <div className="grid-row">
           <div className="grid-col-10">

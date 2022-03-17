@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Link,
@@ -50,6 +51,7 @@ export const BusinessCase = () => {
   const formikRef: any = useRef();
   const dispatch = useDispatch();
   const location = useLocation<any>();
+  const { t } = useTranslation('taskList');
 
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
@@ -123,7 +125,7 @@ export const BusinessCase = () => {
               asCustom={Link}
               to={`/governance-task-list/${businessCase.systemIntakeId}`}
             >
-              <span>Get governance approval</span>
+              <span>{t('navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb current>Business Case</Breadcrumb>

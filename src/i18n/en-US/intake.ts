@@ -1,4 +1,9 @@
 const intake = {
+  navigation: {
+    itGovernance: 'IT Governance',
+    startRequest: 'Start a request',
+    changeRequestType: 'Change request type'
+  },
   fields: {
     projectName: 'Project name',
     requester: 'Requester',
