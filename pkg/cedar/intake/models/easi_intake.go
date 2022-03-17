@@ -32,6 +32,7 @@ type EASIIntake struct {
 	GrtReviewEmailBody          string `json:"grtReviewEmailBody" jsonschema:"description=N/A,example=N/A"` // TODO: not sure when/if this is populated
 	Isso                        string `json:"isso" jsonschema:"description=N/A,example=N/A"`               // TODO: doesn't seem like this is ever populated, remove?
 	IssoName                    string `json:"issoName" jsonschema:"description=Information System Security Officer (ISSO) for the effort detailed in this request,example=John Doe"`
+	LifecycleCostBaseline       string `json:"lifecycleCostBaseline" jsonschema:"description=Cost baseline associated with this LCID,example=about $10 million"`
 	LifecycleExpiresAt          string `json:"lifecycleExpiresAt" jsonschema:"description=Expiration date for the LCID associated with this request,example=2030-12-23T00:00:00Z"`
 	LifecycleID                 string `json:"lifecycleID" jsonschema:"description=LCID (if one is issued) associated with this request,example=220970"`
 	LifecycleScope              string `json:"lifecycleScope" jsonschema:"description=Scope of LCID,example=This LCID covers development and operation of the application"`

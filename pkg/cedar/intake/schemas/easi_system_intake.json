@@ -31,6 +31,7 @@
         "grtReviewEmailBody",
         "isso",
         "issoName",
+        "lifecycleCostBaseline",
         "lifecycleExpiresAt",
         "lifecycleID",
         "lifecycleScope",
@@ -243,6 +244,13 @@
           "description": "Information System Security Officer (ISSO) for the effort detailed in this request",
           "examples": [
             "John Doe"
+          ]
+        },
+        "lifecycleCostBaseline": {
+          "type": "string",
+          "description": "Cost baseline associated with this LCID",
+          "examples": [
+            "about $10 million"
           ]
         },
         "lifecycleExpiresAt": {
