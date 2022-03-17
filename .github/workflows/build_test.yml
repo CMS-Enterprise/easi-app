@@ -77,7 +77,7 @@ jobs:
           cat test.log >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           exit $result_code
-       
+        continue-on-error: true 
       - name: Post comment with TypeScript type errors
         uses: actions/github-script@v6
         if: ${{ steps.typechecker.outcome == 'failure' }}
