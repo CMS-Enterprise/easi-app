@@ -15,9 +15,10 @@ import { MessageProvider } from 'hooks/useMessage';
 import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
 import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
 import GetCedarSystemIdsQuery from 'queries/GetCedarSystemIdsQuery';
+import UpdateAccessibilityRequestQuery from 'queries/UpdateAccessibilityRequestQuery';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 
-import Create from './index';
+import RequestCedarSystem from './index';
 
 describe('Create 508 Request page', () => {
   const mockStore = configureMockStore();
@@ -68,7 +69,7 @@ describe('Create 508 Request page', () => {
       query: CreateAccessibilityRequestQuery,
       variables: {
         input: {
-          name: 'CMS Operations Information Network',
+          name: '',
           cedarSystemId: '000-0000-4'
         }
       }
@@ -81,6 +82,29 @@ describe('Create 508 Request page', () => {
             name: 'CMS Operations Information Network'
           },
           userErrors: null
+        }
+      }
+    }
+  };
+
+  const update508Request = {
+    request: {
+      query: UpdateAccessibilityRequestQuery,
+      variables: {
+        input: {
+          id: '00000000-0000-0000-0000-000000000001',
+          cedarSystemId: '000-0000-4'
+        }
+      }
+    },
+    result: {
+      data: {
+        updateAccessibilityRequestCedarSystem: {
+          id: '00000000-0000-0000-0000-000000000001',
+          accessibilityRequest: {
+            id: '00000000-0000-0000-0000-000000000001',
+            name: ''
+          }
         }
       }
     }
@@ -112,30 +136,45 @@ describe('Create 508 Request page', () => {
     }
   };
 
-  const submitTextMatch = /send 508 testing request/i;
+  const createSubmitTextMatch = /send 508 testing request/i;
+  const updateSubmitTextMatch = /save system/i;
 
-  it('renders without errors', async () => {
+  const renderPage = (subPath: string) => {
     render(
-      <MemoryRouter initialEntries={['/508/requests/new']}>
+      <MemoryRouter initialEntries={[`/508/requests/${subPath}`]}>
         <MessageProvider>
           <MockedProvider mocks={[defaultQuery]} addTypename={false}>
             <Provider store={defaultStore}>
-              <Route path="/508/requests/new">
-                <Create />
+              <Route path={`/508/requests/${subPath}`}>
+                <RequestCedarSystem />
               </Route>
             </Provider>
           </MockedProvider>
         </MessageProvider>
       </MemoryRouter>
     );
+  };
+
+  it('renders create without errors', async () => {
+    renderPage('new');
 
     expect(screen.getByTestId('create-508-request')).toBeInTheDocument();
-    expect(screen.getByText(submitTextMatch)).toHaveAttribute('disabled');
+    expect(screen.getByText(createSubmitTextMatch)).toHaveAttribute('disabled');
 
     await waitForElementToBeRemoved(() =>
       screen.getByTestId('cedar-systems-loading')
     );
 
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+  });
+
+  it('renders update without errors', async () => {
+    renderPage('00000000-0000-0000-0000-000000000001/cedar-system');
+    expect(screen.getByTestId('create-508-request')).toBeInTheDocument();
+    expect(screen.getByText(updateSubmitTextMatch)).toHaveAttribute('disabled');
+    await waitForElementToBeRemoved(() =>
+      screen.getByTestId('cedar-systems-loading')
+    );
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
@@ -151,7 +190,7 @@ describe('Create 508 Request page', () => {
           >
             <Provider store={defaultStore}>
               <Route path="/508/requests/new">
-                <Create />
+                <RequestCedarSystem />
               </Route>
               <Route path="/508/requests/:accessibilityRequestId/documents">
                 <AccessibilityRequestDetailPage />
@@ -171,7 +210,7 @@ describe('Create 508 Request page', () => {
     userEvent.click(await screen.findByTestId('combo-box-option-000-0000-4'));
     expect(cedarSystemsInput).toHaveValue('CMS Operations Information Network');
 
-    userEvent.click(screen.getByText(submitTextMatch));
+    userEvent.click(screen.getByText(createSubmitTextMatch));
 
     await screen.findByTestId('page-loading');
     await waitFor(() => {
@@ -188,6 +227,59 @@ describe('Create 508 Request page', () => {
     ).toBeInTheDocument();
   });
 
+  it('can update a 508 testing request', async () => {
+    window.scrollTo = jest.fn();
+
+    render(
+      <MemoryRouter
+        initialEntries={[
+          '/508/requests/00000000-0000-0000-0000-000000000001/cedar-system'
+        ]}
+      >
+        <MessageProvider>
+          <MockedProvider
+            mocks={[defaultQuery, update508Request, get508RequestQuery]}
+            addTypename={false}
+          >
+            <Provider store={defaultStore}>
+              <Route path="/508/requests/:accessibilityRequestId/cedar-system">
+                <RequestCedarSystem />
+              </Route>
+              <Route path="/508/requests/:accessibilityRequestId/documents">
+                <AccessibilityRequestDetailPage />
+              </Route>
+            </Provider>
+          </MockedProvider>
+        </MessageProvider>
+      </MemoryRouter>
+    );
+
+    await waitForElementToBeRemoved(() =>
+      screen.getByTestId('cedar-systems-loading')
+    );
+
+    const cedarSystemsInput = await screen.findByTestId('combo-box-input');
+    userEvent.type(cedarSystemsInput, 'cms');
+    userEvent.click(await screen.findByTestId('combo-box-option-000-0000-4'));
+    expect(cedarSystemsInput).toHaveValue('CMS Operations Information Network');
+
+    userEvent.click(screen.getByText(updateSubmitTextMatch));
+
+    await screen.findByTestId('page-loading');
+    await waitFor(() => {
+      expect(screen.queryByTestId('page-loading')).not.toBeInTheDocument();
+    });
+
+    expect(screen.queryByText(/no action required/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/has been tied to/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /CMS Operations Information Network/i
+      })
+    ).toBeInTheDocument();
+  });
+
   it('renders loading error warning alert', async () => {
     render(
       <MemoryRouter initialEntries={['/508/requests/new']}>
@@ -195,7 +287,7 @@ describe('Create 508 Request page', () => {
           <MockedProvider mocks={[errorQuery]} addTypename={false}>
             <Provider store={defaultStore}>
               <Route path="/508/requests/new">
-                <Create />
+                <RequestCedarSystem />
               </Route>
             </Provider>
           </MockedProvider>
@@ -207,6 +299,6 @@ describe('Create 508 Request page', () => {
     expect(await screen.findByTestId('combo-box-input')).toHaveAttribute(
       'disabled'
     );
-    expect(screen.getByText(submitTextMatch)).toHaveAttribute('disabled');
+    expect(screen.getByText(createSubmitTextMatch)).toHaveAttribute('disabled');
   });
 });

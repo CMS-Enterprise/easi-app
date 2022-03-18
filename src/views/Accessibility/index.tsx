@@ -17,9 +17,9 @@ import NewTestDateView from 'views/TestDate/NewTestDate';
 import UpdateTestDateView from 'views/TestDate/UpdateTestDate';
 
 import Create from './AccessibilityRequest/Create';
-import CreateCedar from './AccessibilityRequest/CreateCedar';
 import AccessibilityRequestsDocumentsNew from './AccessibilityRequest/Documents/New';
 import List from './AccessibilityRequest/List';
+import RequestCedarSystem from './AccessibilityRequest/RequestCedarSystem';
 import AccessibilityRequestDetailPage from './AccessibilityRequestDetailPage';
 import AccessibilityTestingStepsOverview from './AccessibilityTestingStepsOverview';
 import ChangeRequestStatus from './ChangeRequestStatus';
@@ -34,12 +34,12 @@ const NewRequest = (
     component={Create}
   />
 );
-const NewRequestCedar = (
+const NewRequestCedarSystem = (
   <Route
     key="create-508-request"
     path="/508/requests/new"
     exact
-    component={CreateCedar}
+    component={RequestCedarSystem}
   />
 );
 const AllRequests = (
@@ -129,6 +129,15 @@ const RequestDetails = (
   />
 );
 
+const UpdateRequestCedarSystem = (
+  <Route
+    exact
+    key="508-request-cedar-system-link"
+    path="/508/requests/:accessibilityRequestId/cedar-system"
+    component={RequestCedarSystem}
+  />
+);
+
 const NotFound = () => (
   <div className="grid-container">
     <NotFoundPartial />
@@ -181,7 +190,7 @@ const Accessibility = () => {
       return (
         <PageTemplate surveyUrl={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY}>
           {[
-            flags.cedar508Requests ? NewRequestCedar : NewRequest,
+            flags.cedar508Requests ? NewRequestCedarSystem : NewRequest,
             AllRequests,
             AccessibilityTestingOverview,
             MakingANewRequest,
@@ -192,6 +201,7 @@ const Accessibility = () => {
             NewTestDate,
             DocumentsRedirect,
             RequestDetails,
+            UpdateRequestCedarSystem,
             Default
           ]}
         </PageTemplate>
@@ -200,13 +210,14 @@ const Accessibility = () => {
     return (
       <PageTemplate surveyUrl={REPORT_PROBLEM_BASIC_USER_SURVEY}>
         {[
-          flags.cedar508Requests ? NewRequestCedar : NewRequest,
+          flags.cedar508Requests ? NewRequestCedarSystem : NewRequest,
           AccessibilityTestingOverview,
           MakingANewRequest,
           AccessibilityTestingTemplates,
           NewDocument,
           DocumentsRedirect,
           RequestDetails,
+          UpdateRequestCedarSystem,
           Default
         ]}
       </PageTemplate>
