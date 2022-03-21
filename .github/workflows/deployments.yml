@@ -6,7 +6,7 @@ on:
       env: 
         required: true
         type: string 
-      lambda_verions: 
+      lambda_version: 
         required: true
         type: string
     secrets: 
