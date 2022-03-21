@@ -1,5 +1,11 @@
 package main
 
+// Prerequisites: MailCatcher container running (use scripts/dev up:backend to start)
+
+// This script tests the email notifications for invalid/missing EUA IDs introduced for EASI-1569;
+// other email methods can be tested by calling email.Client's methods.
+// To view emails, visit the MailCatcher web UI at http://127.0.0.1:1080/.
+
 import (
 	"context"
 	"fmt"

@@ -34,3 +34,7 @@ There are multiple ways to run the Cypress tests:
   database, migrations, backend, and frontend locally in Docker, similar to how
   they run in CI. Running the tests in this way takes time, but is useful
   for troubleshooting integration test failures in CI.
+
+## Testing email
+
+In order to test sending email, the Docker Compose files for running the application locally include a container running [MailCatcher](https://mailcatcher.me/), which acts as a basic SMTP server. It also provides a web UI at http://127.0.0.1:1080/ for viewing all emails sent via the MailCatcher container. EASi is configured to use this as its email server when running locally; when running tests or using EASi locally, the MailCatcher UI can be used to verify that emails are being sent to/from the correct addresses, with the correct contents.
