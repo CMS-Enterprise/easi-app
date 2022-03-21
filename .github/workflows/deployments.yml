@@ -71,11 +71,11 @@ jobs:
           role-duration-seconds: 1800
           role-skip-session-tagging: true
       - name: Clean the database
-        if: ${{ inputs.env == 'dev' }}
+        if: contains(inputs.env, 'dev')
         run: |
           ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
       - name: Backup the database
-        if: ${{ inputs.env == 'impl'}} || ${{ inputs.env == 'prod' }}  
+        if: contains(inputs.env, 'impl') || contains(inputs.env, 'prod') 
         run: | 
           ./scripts/rds-snapshot-app-db
       - name: Run migrations
