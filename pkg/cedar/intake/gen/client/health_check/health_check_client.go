@@ -51,7 +51,7 @@ func (a *Client) HealthCheck(params *HealthCheckParams, authInfo runtime.ClientA
 		PathPattern:        "/healthCheck",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &HealthCheckReader{formats: a.formats},
 		AuthInfo:           authInfo,

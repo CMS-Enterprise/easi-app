@@ -90,24 +90,27 @@ const SystemIntakeValidationSchema: any = {
       isFunded: Yup.boolean()
         .nullable()
         .required('Select Yes or No to indicate if you have funding'),
-      fundingNumber: Yup.string().when(['isFunded', 'source'], {
-        is: (isFunded: boolean, source: string) => {
-          if (isFunded) {
-            // If funding source is Unknown then no funding number is required
-            if (source !== 'Unknown') {
-              return true;
-            }
+      fundingNumber: Yup.string().when(
+        ['isFunded', 'source'],
+        (isFunded, source, schema) => {
+          // when() typescript def issue
+          // https://github.com/jquense/yup/issues/1529
+
+          if (!isFunded) return schema;
+
+          // Funding number is optional if the source is Unknown
+          const conditionalSchema = schema
+            .trim()
+            .length(6, 'Funding number must be exactly 6 digits')
+            .matches(/^\d+$/, 'Funding number can only contain digits');
+          if (source === 'Unknown') {
+            return conditionalSchema.optional();
           }
-          return false;
-        },
-        then: Yup.string()
-          .trim()
-          .length(6, 'Funding number must be exactly 6 digits')
-          .matches(/^\d+$/, 'Funding number can only contain digits')
-          .required(
+          return conditionalSchema.required(
             'Tell us your funding number. This is a six digit number and starts with 00'
-          )
-      }),
+          );
+        }
+      ),
       source: Yup.string().when('isFunded', {
         is: true,
         then: Yup.string().required('Tell us your funding source')

@@ -4,4 +4,14 @@
   .usa-combo-box.disabled .usa-combo-box__input-button-separator {
     cursor: default;
   }
+
+  .system-info-card__description {
+    overflow: hidden;
+    max-height: 1.6rem * 3;
+  }
+
+  h3.usa-alert__heading {
+    font-size: 1.38rem;
+    margin-top: 0;
+  }
 }
