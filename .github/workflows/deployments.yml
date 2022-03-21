@@ -84,24 +84,26 @@ jobs:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-db-migrate
           LAMBDA_VERSION: ${{ inputs.lambda_version }}
+          ENV: ${{ inputs.env }}
         run: |
-          ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "$LAMBDA_VERSION" "easi-app-db-migrate"
+          ./scripts/deploy_service "easi-app-db-migrate" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/db_lambda_invoke "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-app-db-migrate"
       - name: Deploy ECS service
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-backend
-          LAMBDA_VERSION: ${{ inputs.lambda_version }}
+          LAMBDA_VERSION: ${{ inputs.lambda_version }} 
+          ENV: ${{ inputs.env }}
         run: |
-          ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           ./scripts/healthcheck "$IMAGE_TAG"
       - name: Build static assets and release to S3
         env:
-          LD_CLIENT_ID_DEV: ${{ secrets.LD_CLIENT_ID }}
-          OKTA_CLIENT_ID_DEV: ${{ secrets.OKTA_CLIENT_ID }}
-          OKTA_SERVER_ID_DEV: ${{ secrets.OKTA_SERVER_ID }}
-          STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET }}
+          LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
+          OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
+          OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID }}
+          STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
         run: |
           ./scripts/release_static
       - name: Announce failure
