@@ -77,9 +77,9 @@ const RequestOverview = () => {
     }
   }, [dispatch, systemIntake?.businessCaseId]);
 
-  const getNavLinkClasses = (page: string) =>
+  const getNavLinkClasses = (route: string) =>
     classnames('easi-grt__nav-link', {
-      'easi-grt__nav-link--active': page === activePage
+      'easi-grt__nav-link--active': route.split('/')[3] === activePage
     });
 
   if (!loading && !systemIntake) {
