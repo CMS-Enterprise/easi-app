@@ -39,7 +39,7 @@ type EASIBusinessSolution struct {
 	HostingLocation         string `json:"hostingLocation" jsonschema:"description=Where will this solution be hosted,example=AWS"`
 	HostingType             string `json:"hostingType" jsonschema:"description=What type of hosting will this solution use,example=cloud"`
 	Pros                    string `json:"pros" jsonschema:"description=Pros of this solution,example=Will reduce FTE hours needed"`
-	SecurityIsApproved      string `json:"securityIsApproved" jsonschema:"enum=,enum=false,enum=true,description=Is this solution FedRAMP/FISMA approved,example=True"`
+	SecurityIsApproved      string `json:"securityIsApproved,omitempty" jsonschema:"enum=,enum=false,enum=true,description=Is this solution FedRAMP/FISMA approved,example=True"`
 	SecurityIsBeingReviewed string `json:"securityIsBeingReviewed" jsonschema:"description=Is this solution in the process of getting FedRAMP/FISMA approval,example=Yes"`
 	SolutionType            string `json:"solutionType" jsonschema:"enum=preferred,enum=alternativeA,enum=alternativeB,description=Which solution is this (preferred or alternatives),example=preferred"`
 	Summary                 string `json:"summary" jsonschema:"description=Summary of this solution,example=Building a new application in ServiceNow"`
