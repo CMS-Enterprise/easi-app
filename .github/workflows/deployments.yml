@@ -95,10 +95,10 @@ jobs:
           ./scripts/healthcheck "$IMAGE_TAG"
       - name: Build static assets and release to S3
         env:
-          LD_CLIENT_ID_DEV: ${{ secrets.LD_CLIENT_ID }}
-          OKTA_CLIENT_ID_DEV: ${{ secrets.OKTA_CLIENT_ID }}
-          OKTA_SERVER_ID_DEV: ${{ secrets.OKTA_SERVER_ID }}
-          STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET }}
+          LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
+          OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
+          OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID }}
+          STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
         run: |
           ./scripts/release_static
       - name: Announce failure
