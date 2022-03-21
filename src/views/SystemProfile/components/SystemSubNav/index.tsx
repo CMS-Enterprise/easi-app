@@ -46,7 +46,7 @@ const SystemSubNav = ({ subinfo, systemInfo }: SystemSubNavProps) => {
       {isAccordionOpen && (
         <div
           id="system-detail__subNav"
-          className="system-detail__subNav__list-container"
+          className="system-detail__subNav__list-container bg-primary-dark"
         >
           <ul className="system-detail__subNav__list subNav">
             {Object.keys(sideNavItems(systemInfo)).map((key: string) => (

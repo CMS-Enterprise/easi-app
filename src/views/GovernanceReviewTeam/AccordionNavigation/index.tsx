@@ -63,7 +63,10 @@ const AccordionNavigation = ({
         )}
       </button>
       {isAccordionOpen && (
-        <div id="easi-grt__subNav" className="easi-grt__subNav__list-container">
+        <div
+          id="easi-grt__subNav"
+          className="easi-grt__subNav__list-container bg-primary-dark"
+        >
           <ul className="easi-grt__subNav__list subNav">
             {subNavItems.map(({ groupEnd, route, text }) => (
               <li
