@@ -8,25 +8,25 @@ case "$APP_ENV" in
     STATIC_S3_BUCKET="$STATIC_S3_BUCKET"
     EASI_URL="https://dev.easi.cms.gov"
     export REACT_APP_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
-    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_DEV"
-    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV"
-    export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID_DEV"
+    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID"
+    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID"
+    export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID"
     ;;
   "impl")
     STATIC_S3_BUCKET="$STATIC_S3_BUCKET"
     EASI_URL="https://impl.easi.cms.gov"
     export REACT_APP_OKTA_DOMAIN="https://impl.idp.idm.cms.gov"
-    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_IMPL"
-    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_IMPL"
-    export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID_IMPL"
+    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID"
+    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID"
+    export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID"
     ;;
   "prod")
     STATIC_S3_BUCKET="$STATIC_S3_BUCKET"
     EASI_URL="https://easi.cms.gov"
     export REACT_APP_OKTA_DOMAIN="https://idm.cms.gov"
-    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_PROD"
-    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_PROD"
-    export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID_PROD"
+    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID"
+    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID"
+    export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID"
     ;;
   *)
     echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
