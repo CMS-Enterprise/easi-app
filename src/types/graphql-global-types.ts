@@ -373,6 +373,14 @@ export interface SystemIntakeRequesterWithComponentInput {
 }
 
 /**
+ * Parameters for updating a 508/accessibility request's associated CEDAR system
+ */
+export interface UpdateAccessibilityRequestCedarSystemInput {
+  id: UUID;
+  cedarSystemId: string;
+}
+
+/**
  * Parameters for updating a 508/accessibility request's status
  */
 export interface UpdateAccessibilityRequestStatus {
