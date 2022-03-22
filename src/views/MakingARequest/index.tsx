@@ -5,6 +5,8 @@ import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import { RequestType } from 'types/graphql-global-types';
+import Table from 'views/MyRequests/Table';
 
 const MakingARequest = () => {
   const { t } = useTranslation('makingARequest');
@@ -39,6 +41,13 @@ const MakingARequest = () => {
       <Link to="/system/request-type" className="usa-button">
         {t('nextStep')}
       </Link>
+      <h2 className="padding-top-2 margin-top-5 easi-section__border-top">
+        {t('myRequests')}
+      </h2>
+      <Table
+        type={RequestType.GOVERNANCE_REQUEST}
+        hiddenColumns={['Governance', 'Upcoming meeting date']}
+      />
     </MainContent>
   );
 };
