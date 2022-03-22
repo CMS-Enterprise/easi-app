@@ -32,7 +32,9 @@ const MakingARequest = () => {
           heading=""
           className="bg-base-lightest border-0 radius-0 padding-2"
         >
-          <p>{t('makingARequest.useThisService')}</p>
+          <p className="margin-0 margin-bottom-1">
+            {t('makingARequest.useThisService')}
+          </p>
           <ul className="padding-left-205 margin-0 line-height-body-5">
             <li>
               {t(
@@ -56,9 +58,9 @@ const MakingARequest = () => {
         </p>
         {!flags.cedar508Requests && (
           <>
-            <h2 className="margin-top-5">
+            <h3 className="margin-top-5 margin-bottom-2">
               {t('makingARequest.beforeYouStart')}
-            </h2>
+            </h3>
             <p>{t('makingARequest.needLcid')}</p>
           </>
         )}
