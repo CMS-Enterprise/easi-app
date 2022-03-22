@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { Link as UswdsLink, SummaryBox } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -28,17 +28,23 @@ const MakingARequest = () => {
           </Trans>
         </Alert>
         <PageHeading>{t('makingARequest.heading')}</PageHeading>
-        <p>{t('makingARequest.useThisService')}</p>
-        <ul className="margin-y-3 line-height-body-5">
-          <li>
-            {t(
-              flags.cedar508Requests
-                ? 'makingARequest.cedar.request508TestingBullet'
-                : 'makingARequest.request508TestingBullet'
-            )}
-          </li>
-          <li>{t('makingARequest.uploadDocumentsBullet')}</li>
-        </ul>
+        <SummaryBox
+          heading=""
+          className="bg-base-lightest border-0 radius-0 padding-2"
+        >
+          <p>{t('makingARequest.useThisService')}</p>
+          <ul className="padding-left-205 margin-0 line-height-body-5">
+            <li>
+              {t(
+                flags.cedar508Requests
+                  ? 'makingARequest.cedar.request508TestingBullet'
+                  : 'makingARequest.request508TestingBullet'
+              )}
+            </li>
+            <li>{t('makingARequest.uploadDocumentsBullet')}</li>
+          </ul>
+        </SummaryBox>
+
         <p className="line-height-body-5">
           <Trans i18nKey="accessibility:makingARequest.email508Team">
             indexZero
@@ -56,7 +62,6 @@ const MakingARequest = () => {
             <p>{t('makingARequest.needLcid')}</p>
           </>
         )}
-        <p className="margin-y-3">{t('makingARequest.onceYouMakeRequest')}</p>
         <UswdsReactLink
           className="usa-button"
           to="/508/testing-overview?continue=true"
