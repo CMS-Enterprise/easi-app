@@ -1,17 +1,16 @@
-name: Server Test 
+name: Server Test
 
-
-on: 
+on:
   workflow_call:
-    secrets: 
+    secrets:
       SLACK_WEBHOOK_URL:
-        required: true 
-      DOCKERHUB_USERNAME: 
-        required: true 
+        required: true
+      DOCKERHUB_USERNAME:
+        required: true
       DOCKERHUB_TOKEN:
-        required: true 
+        required: true
       AWS_ACCESS_KEY_ID:
-        required: true 
+        required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
       AWS_SES_SOURCE_ARN:
@@ -27,14 +26,14 @@ on:
       STORYBOOK_S3_BUCKET_DEV:
         required: true
 
-env: 
-  EASI_APP_NODE_VERSION: '16.14.0'
-  EASI_APP_GO_VERSION: '1.16.6'
+env:
+  EASI_APP_NODE_VERSION: "16.14.0"
+  EASI_APP_GO_VERSION: "1.16.6"
   IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   DOCKER_BUILDKIT: 1
 
-jobs: 
+jobs:
   server_test:
     #needs: [  ]
     runs-on: ubuntu-latest
@@ -88,8 +87,8 @@ jobs:
           OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
           OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
           OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
-          OKTA_TEST_SECRET : ${{ secrets.OKTA_TEST_SECRET }}
-          OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
+          OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
+          OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
@@ -172,8 +171,8 @@ jobs:
           AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
-          OKTA_TEST_SECRET : ${{ secrets.OKTA_TEST_SECRET }}
-          OKTA_TEST_USERNAME : ${{ secrets.OKTA_TEST_USERNAME }}
+          OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
+          OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
         run: |
           ./scripts/run-cypress-test-docker
       - name: Upload cypress videos
@@ -215,7 +214,7 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@7f80679172b057fc5e90d70d197929d454754a5a
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Configure go cache
         uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
         with:
@@ -287,7 +286,6 @@ jobs:
         run: |
           ./scripts/github-action-announce-broken-branch
 
-
   storybook_build:
     #needs: pre_deps
     runs-on: ubuntu-latest
@@ -326,7 +324,6 @@ jobs:
         run: |
           ./scripts/github-action-announce-broken-branch
 
-  
   deploy_storybook_dev:
     if: ${{ github.ref == 'refs/heads/master' }}
     needs: storybook_build

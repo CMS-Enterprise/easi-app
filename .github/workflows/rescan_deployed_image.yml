@@ -2,7 +2,7 @@ name: rescan_deployed_image
 
 on:
   schedule:
-    - cron:  '0 6 * * *' # 2300 PST, 0200 EST
+    - cron: "0 6 * * *" # 2300 PST, 0200 EST
 
 env:
   AWS_DEFAULT_REGION: us-west-2
@@ -23,7 +23,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
       - name: Check deployed image for vulnerability findings - impl
-        env: 
+        env:
           APP_ENV: impl
         run: bash ./scripts/check_deployed_image_findings "easi-backend" "7"
       - name: Check deployed image for vulnerability findings - prod

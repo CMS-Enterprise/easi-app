@@ -1,24 +1,26 @@
-name: Initial building of images 
+name: Initial building of images
 
-on: 
+on:
   workflow_call:
-    secrets: 
-      DOCKERHUB_USERNAME: 
-        required: true 
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
       DOCKERHUB_TOKEN:
-        required: true 
+        required: true
       AWS_ACCESS_KEY_ID:
-        required: true 
+        required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
+      SLACK_WEBHOOK_URL:
+        required: true
 
-env: 
-  EASI_APP_NODE_VERSION: '16.14.0'
-  EASI_APP_GO_VERSION: '1.16.6'
+env:
+  EASI_APP_NODE_VERSION: "16.14.0"
+  EASI_APP_GO_VERSION: "1.16.6"
   IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
-    
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-jobs: 
+jobs:
   pre_deps:
     runs-on: ubuntu-latest
     steps:
@@ -63,7 +65,7 @@ jobs:
         if: ${{ failure() }}
         run: |
           ./scripts/github-action-announce-broken-branch
-  
+
   anti_virus:
     runs-on: ubuntu-latest
     container:
@@ -81,7 +83,6 @@ jobs:
         if: ${{ failure() }}
         run: |
           ./scripts/github-action-announce-broken-branch
-
 
   build_db_migrate_image:
     runs-on: ubuntu-latest
