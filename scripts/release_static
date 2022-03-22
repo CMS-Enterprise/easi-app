@@ -57,3 +57,4 @@ else
   echo "Error reading the S3 bucket. Are you authenticated?" 1>&2
   exit 1
 fi
+
