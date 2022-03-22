@@ -360,7 +360,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 	reviewEmailCount := 0
 	feedbackForEmailText := ""
-	fnSendLCIDEmail := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _string, emailText string) error {
+	fnSendLCIDEmail := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
 		reviewEmailCount++
 		return nil
@@ -407,7 +407,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendLCIDEmailErr := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string) error {
+	fnSendLCIDEmailErr := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
 		return errors.New("send email error")
 	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }

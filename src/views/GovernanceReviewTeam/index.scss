@@ -50,6 +50,11 @@
       font-weight: bold;
       color: $easi-bright-blue;
     }
+
+    &--border {
+      border-bottom: 1px solid #e6e6e6;
+      padding-bottom: 0.75rem;
+    }
   }
 
   &__status {

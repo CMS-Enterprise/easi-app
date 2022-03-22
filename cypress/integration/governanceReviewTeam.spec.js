@@ -24,7 +24,7 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="button"]').contains('Save').click();
     cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
-    cy.get('dd[data-testid="admin-lead"]').contains('Ann Rudolph');
+    cy.get('span[data-testid="admin-lead"]').contains('Ann Rudolph');
   });
 
   it('can add GRT/GRB dates', () => {

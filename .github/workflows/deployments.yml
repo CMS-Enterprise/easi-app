@@ -1,22 +1,44 @@
-name: deploy-dev
+name: Deployments 
 
-on: workflow_dispatch
+on: 
+  workflow_call:
+    inputs: 
+      env: 
+        required: true
+        type: string 
+      lambda_version: 
+        required: true
+        type: string
+    secrets: 
+      AWS_ACCESS_KEY_ID:
+        required: true 
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      LD_CLIENT_ID: 
+        required: true 
+      OKTA_CLIENT_ID:
+        required: true
+      OKTA_SERVER_ID: 
+        required: true
+      STATIC_S3_BUCKET: 
+        required: true
+      AWS_ROLE_TO_ASSUME: 
+        required: true
+      ECR_REGISTRY: 
+        required: true
 
-env:
-  EASI_APP_NODE_VERSION: '12.22.1'
-  # Set the IMAGE_TAG in a way that works for both pull_request and push events.
-  # For pull_request events, use github.event.pull_request.head.sha (see
-  # https://github.com/actions/checkout#Checkout-pull-request-HEAD-commit-instead-of-merge-commit).
-  # For push events, where github.event.pull_request.head.sha is not defined, use github.sha.
+env: 
+  EASI_APP_NODE_VERSION: '16.14.0'
+  EASI_APP_GO_VERSION: '1.16.6'
   IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-jobs:
-  deploy_dev:
+jobs: 
+  deploy: 
+    if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ inputs.env }}
     env:
-      APP_ENV: dev
+      APP_ENV: ${{ inputs.env }}
     steps:
       - name: Check out code
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
@@ -45,34 +67,43 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-duration-seconds: 1800
           role-skip-session-tagging: true
       - name: Clean the database
+        if: contains(inputs.env, 'dev')
         run: |
           ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
+      - name: Backup the database
+        if: contains(inputs.env, 'impl') || contains(inputs.env, 'prod') 
+        run: | 
+          ./scripts/rds-snapshot-app-db
       - name: Run migrations
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-db-migrate
+          LAMBDA_VERSION: ${{ inputs.lambda_version }}
+          ENV: ${{ inputs.env }}
         run: |
-          ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "9" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "9" "easi-app-db-migrate"
+          ./scripts/deploy_service "easi-app-db-migrate" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/db_lambda_invoke "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-app-db-migrate"
       - name: Deploy ECS service
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-backend
+          LAMBDA_VERSION: ${{ inputs.lambda_version }} 
+          ENV: ${{ inputs.env }}
         run: |
-          ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "9" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           ./scripts/healthcheck "$IMAGE_TAG"
       - name: Build static assets and release to S3
         env:
-          LD_CLIENT_ID_DEV: ${{ secrets.LD_CLIENT_ID_DEV }}
-          OKTA_CLIENT_ID_DEV: ${{ secrets.OKTA_CLIENT_ID_DEV }}
-          OKTA_SERVER_ID_DEV: ${{ secrets.OKTA_SERVER_ID_DEV }}
-          STATIC_S3_BUCKET_DEV: ${{ secrets.STATIC_S3_BUCKET_DEV }}
+          LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
+          OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
+          OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID }}
+          STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
         run: |
           ./scripts/release_static
       - name: Announce failure
