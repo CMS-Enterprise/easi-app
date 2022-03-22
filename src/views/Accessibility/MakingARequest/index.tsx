@@ -11,6 +11,8 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
+import { RequestType } from 'types/graphql-global-types';
+import Table from 'views/MyRequests/Table';
 
 const MakingARequest = () => {
   const { t } = useTranslation('accessibility');
@@ -106,6 +108,13 @@ const MakingARequest = () => {
             </p>
           </CollapsableLink>
         )}
+        <h2 className="padding-top-2 margin-top-5 easi-section__border-top">
+          {t('makingARequest.myRequests')}
+        </h2>
+        <Table
+          type={RequestType.ACCESSIBILITY_REQUEST}
+          hiddenColumns={['Governance', 'Upcoming meeting date']}
+        />
       </div>
     </div>
   );
