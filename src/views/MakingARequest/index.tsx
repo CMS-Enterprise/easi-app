@@ -17,7 +17,9 @@ const MakingARequest = () => {
       className="grid-container line-height-body-5 margin-bottom-5"
       data-testid="making-a-system-request"
     >
-      <PageHeading className="margin-bottom-0">{t('heading')}</PageHeading>
+      <PageHeading className="margin-bottom-0 margin-top-5">
+        {t('heading')}
+      </PageHeading>
       <p className="margin-top-0 font-body-lg">{t('subheading')}</p>
 
       <SummaryBox
