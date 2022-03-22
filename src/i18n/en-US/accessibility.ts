@@ -282,7 +282,8 @@ const accessibility = {
       'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your system.',
     cedar: {
       request508TestingBullet: 'request 508 testing for your system'
-    }
+    },
+    myRequests: 'My 508 testing requests'
   },
   testingTemplates: {
     heading: 'Templates for 508 testing',
