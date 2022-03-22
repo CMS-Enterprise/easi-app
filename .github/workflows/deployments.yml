@@ -34,6 +34,8 @@ env:
 
 jobs: 
   deploy: 
+    concurrency:
+      group: ${{ inputs.env }}
     if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
