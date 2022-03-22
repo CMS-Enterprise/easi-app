@@ -16,11 +16,10 @@ import (
 
 // CreateSystemIntakeContact creates a new system intake contact object in the database
 func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
-	euaUserID := appcontext.Principal(ctx).ID()
-	createAt := s.clock.Now().UTC()
-
-	systemIntakeContact.CreatedAt = &createAt
-	systemIntakeContact.EUAUserID = euaUserID
+	if systemIntakeContact.CreatedAt == nil {
+		createAt := s.clock.Now().UTC()
+		systemIntakeContact.CreatedAt = &createAt
+	}
 	const createSystemIntakeContactSQL = `
 		INSERT INTO system_intake_contacts (
 			eua_user_id,
