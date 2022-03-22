@@ -1,5 +1,6 @@
 const makingARequest = {
   heading: 'IT Governance requests',
+  subheading: 'Request new Lifecycle IDs for your systems.',
   reasonList: {
     intro: 'You can make a request to:',
     options: [
