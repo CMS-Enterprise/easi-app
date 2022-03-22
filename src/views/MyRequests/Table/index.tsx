@@ -237,6 +237,7 @@ const Table = ({ type, hiddenColumns }: myRequestsTableProps) => {
                     style={{
                       minWidth: index === 4 ? '220px' : '140px',
                       width: index === 2 ? '220px' : '140px',
+                      paddingLeft: '0',
                       position: 'relative'
                     }}
                   >
@@ -266,7 +267,11 @@ const Table = ({ type, hiddenColumns }: myRequestsTableProps) => {
                   .map((cell, i) => {
                     if (i === 0) {
                       return (
-                        <th {...cell.getCellProps()} scope="row">
+                        <th
+                          {...cell.getCellProps()}
+                          scope="row"
+                          style={{ paddingLeft: '0' }}
+                        >
                           {cell.render('Cell')}
                         </th>
                       );
@@ -274,7 +279,7 @@ const Table = ({ type, hiddenColumns }: myRequestsTableProps) => {
                     return (
                       <td
                         {...cell.getCellProps()}
-                        style={{ width: cell.column.width }}
+                        style={{ width: cell.column.width, paddingLeft: '0' }}
                       >
                         {cell.render('Cell')}
                       </td>

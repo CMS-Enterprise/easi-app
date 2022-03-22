@@ -1,5 +1,5 @@
 const makingARequest = {
-  heading: 'IT Governance',
+  heading: 'IT Governance requests',
   reasonList: {
     intro: 'You can make a request to:',
     options: [
@@ -20,7 +20,7 @@ const makingARequest = {
     email: 'IT_Governance@cms.hhs.gov'
   },
   nextStep: 'Start a new request',
-  myRequests: 'My IT Governance Requests'
+  myRequests: 'My IT governance requests'
 };
 
 export default makingARequest;
