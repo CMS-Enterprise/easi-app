@@ -264,6 +264,9 @@ const accessibility = {
     info:
       'EASi is replacing Service Now for making 508 requests for applications. This means you can manage all your 508 requests for applications within EASi. For all other 508 assistance, please email the Section 508 team at <1>CMS_Section508@cms.hhs.gov</1>.',
     heading: 'Section 508 testing',
+    subheading:
+      'Keep your system compliant with accessibility guidelines by completing Section 508 testing. To learn more about Section 508, please visit ',
+    subheadingLink: 'www.section508.gov',
     useThisService: 'You can use this service:',
     request508TestingBullet: 'request 508 testing for your application',
     uploadDocumentsBullet:

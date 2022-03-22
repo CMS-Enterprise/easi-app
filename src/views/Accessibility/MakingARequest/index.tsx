@@ -1,6 +1,10 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link as UswdsLink, SummaryBox } from '@trussworks/react-uswds';
+import {
+  IconLaunch,
+  Link as UswdsLink,
+  SummaryBox
+} from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -27,7 +31,21 @@ const MakingARequest = () => {
             indexTwo
           </Trans>
         </Alert>
-        <PageHeading>{t('makingARequest.heading')}</PageHeading>
+        <PageHeading className="margin-bottom-1">
+          {t('makingARequest.heading')}
+        </PageHeading>
+        <p className="font-body-lg line-height-sans-5 margin-top-0">
+          {t('makingARequest.subheading')}
+          <UswdsLink
+            href="https://www.section508.gov/"
+            target="_blank"
+            className="display-inline-flex flex-align-center"
+          >
+            {t('makingARequest.subheadingLink')}
+            <IconLaunch className="margin-left-05" />
+          </UswdsLink>
+          . {/* Period at the end of sentence */}
+        </p>
         <SummaryBox
           heading=""
           className="bg-base-lightest border-0 radius-0 padding-2"
