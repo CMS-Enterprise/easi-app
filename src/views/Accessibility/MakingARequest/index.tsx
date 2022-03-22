@@ -17,7 +17,7 @@ const MakingARequest = () => {
       className="grid-container margin-top-3"
       data-testid="making-a-508-request"
     >
-      <div className="tablet:grid-col-10">
+      <div className="tablet:grid-col-12">
         <Alert type="info">
           <Trans i18nKey="accessibility:makingARequest.info">
             indexZero
