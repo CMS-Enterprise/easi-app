@@ -17,7 +17,9 @@ const action = {
     sendEmail: 'Send email',
     guideReceivedClose: 'Decomission guide received. Close the request',
     notRespondingClose: 'Project team not responding. Close the request',
-    extendLifecycleID: 'Extend Lifecycle ID'
+    extendLifecycleID: 'Extend Lifecycle ID',
+    continue: 'Continue',
+    completeWithoutEmail: 'Complete action without sending an email'
   },
   issueLCID: {
     backLink: 'Change',
