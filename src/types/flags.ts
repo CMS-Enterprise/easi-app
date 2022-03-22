@@ -5,6 +5,7 @@ export type Flags = {
   downgrade508Tester: boolean;
   systemProfile: boolean;
   help: boolean;
+  cedar508Requests: boolean;
 };
 
 export type FlagsState = {
