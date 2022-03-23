@@ -21,7 +21,15 @@ import { ProvideGRTFeedbackForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { provideGRTFeedbackSchema } from 'validations/actionSchema';
 
-const ProvideGRTRecommendationsToGRB = () => {
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+
+type ProvideGRTRecommendationsToGRBProps = {
+  allowCompleteWithoutEmail?: boolean;
+};
+
+const ProvideGRTRecommendationsToGRB = ({
+  allowCompleteWithoutEmail
+}: ProvideGRTRecommendationsToGRBProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
@@ -133,9 +141,16 @@ const ProvideGRTRecommendationsToGRB = () => {
                     name="emailBody"
                   />
                 </FieldGroup>
-                <Button className="margin-top-2" type="submit">
-                  {t('provideGRTFeedback.submit')}
-                </Button>
+                <div>
+                  <Button className="margin-top-2" type="submit">
+                    {t('provideGRTFeedback.submit')}
+                  </Button>
+                </div>
+                {allowCompleteWithoutEmail && (
+                  <div>
+                    <CompleteWithoutEmailButton />
+                  </div>
+                )}
               </Form>
             </div>
           </>

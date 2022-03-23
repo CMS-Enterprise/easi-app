@@ -71,6 +71,11 @@ const RequestOverview = () => {
     (state: AppState) => state.businessCase.form
   );
 
+  // const emailsToNotify =
+  //   systemIntake && systemIntake.requester.email !== null
+  //     ? [systemIntake.requester.email]
+  //     : [];
+
   useEffect(() => {
     if (systemIntake?.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
@@ -207,6 +212,7 @@ const RequestOverview = () => {
                 <SubmitAction
                   query={CreateSystemIntakeActionBusinessCaseNeeded}
                   actionName={actionsT('actions.needBizCase')}
+                  allowCompleteWithoutEmail
                 />
               )}
             />
@@ -216,6 +222,7 @@ const RequestOverview = () => {
                 <ProvideGRTFeedbackToBusinessOwner
                   query={AddGRTFeedbackRequestBizCaseQuery}
                   actionName={actionsT('actions.provideFeedbackNeedBizCase')}
+                  allowCompleteWithoutEmail
                 />
               )}
             />
@@ -243,12 +250,15 @@ const RequestOverview = () => {
                 <SubmitAction
                   query={CreateSystemIntakeActionReadyForGRT}
                   actionName={actionsT('actions.readyForGrt')}
+                  allowCompleteWithoutEmail
                 />
               )}
             />
             <Route
               path="/governance-review-team/:systemId/actions/ready-for-grb"
-              render={() => <ProvideGRTRecommendationsToGRB />}
+              render={() => (
+                <ProvideGRTRecommendationsToGRB allowCompleteWithoutEmail />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/actions/biz-case-needs-changes"

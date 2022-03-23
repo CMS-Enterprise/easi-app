@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, IconArrowForward } from '@trussworks/react-uswds';
-import classnames from 'classnames';
+import { Button } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
@@ -279,27 +278,9 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
             )}
           </RadioGroup>
         </ActionContext.Provider>
-        <div>
-          <Button
-            className="margin-top-5"
-            type="submit"
-            disabled={!actionRoute}
-          >
-            {t('actions.continue')}
-          </Button>
-        </div>
-        <div>
-          <Button
-            type="button"
-            unstyled
-            className={classnames('margin-top-2', {
-              'text-gray-30': !actionRoute
-            })}
-          >
-            {t('actions.completeWithoutEmail')}{' '}
-            <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
-          </Button>
-        </div>
+        <Button className="margin-top-5" type="submit" disabled={!actionRoute}>
+          {t('actions.continue')}
+        </Button>
       </form>
       <AnythingWrongSurvey />
     </>

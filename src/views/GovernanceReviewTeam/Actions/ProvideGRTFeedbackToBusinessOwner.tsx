@@ -20,14 +20,18 @@ import { ProvideGRTFeedbackForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { provideGRTFeedbackSchema } from 'validations/actionSchema';
 
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+
 type ProvideGRTFeedbackProps = {
   actionName: string;
   query: DocumentNode;
+  allowCompleteWithoutEmail?: boolean;
 };
 
 const ProvideGRTFeedbackToBusinessOwner = ({
   actionName,
-  query
+  query,
+  allowCompleteWithoutEmail
 }: ProvideGRTFeedbackProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
@@ -140,9 +144,16 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     name="emailBody"
                   />
                 </FieldGroup>
-                <Button className="margin-top-2" type="submit">
-                  {t('provideGRTFeedback.submit')}
-                </Button>
+                <div>
+                  <Button className="margin-top-2" type="submit">
+                    {t('provideGRTFeedback.submit')}
+                  </Button>
+                </div>
+                {allowCompleteWithoutEmail && (
+                  <div>
+                    <CompleteWithoutEmailButton />
+                  </div>
+                )}
               </Form>
             </div>
           </>

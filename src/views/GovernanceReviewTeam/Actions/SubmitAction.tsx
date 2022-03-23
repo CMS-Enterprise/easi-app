@@ -16,6 +16,8 @@ import { BasicActionInput } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import { actionSchema } from 'validations/actionSchema';
 
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+
 type ActionInput = {
   input: BasicActionInput;
 };
@@ -23,9 +25,16 @@ type ActionInput = {
 type SubmitActionProps = {
   actionName: string;
   query: DocumentNode;
+  // emailsToNotify?: string[]; // tbd
+  allowCompleteWithoutEmail?: boolean;
 };
 
-const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
+const SubmitAction = ({
+  actionName,
+  query,
+  // emailsToNotify,
+  allowCompleteWithoutEmail
+}: SubmitActionProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('action');
   const history = useHistory();
@@ -124,13 +133,24 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                     name="feedback"
                   />
                 </FieldGroup>
-                <Button
-                  className="margin-top-2"
-                  type="submit"
-                  // disabled={isSubmitting}
-                >
-                  {t('submitAction.submit')}
-                </Button>
+                <div>
+                  <Button
+                    className="margin-top-2"
+                    type="submit"
+                    // disabled={isSubmitting}
+                  >
+                    {t('submitAction.submit')}
+                  </Button>
+                </div>
+                {allowCompleteWithoutEmail && (
+                  <div>
+                    <CompleteWithoutEmailButton
+                      onClick={() => {
+                        // todo
+                      }}
+                    />
+                  </div>
+                )}
               </Form>
             </div>
           </>
