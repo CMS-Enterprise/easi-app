@@ -32,10 +32,13 @@ env:
   EASI_APP_GO_VERSION: '1.16.6'
   IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
 
+
+concurrency: 
+  group: deploy
+
 jobs: 
   deploy: 
-    concurrency:
-      group: ${{ inputs.env }}
+
     if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
