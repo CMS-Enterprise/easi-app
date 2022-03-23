@@ -5,7 +5,6 @@ set -eu -o pipefail
 
 case "$APP_ENV" in
   "dev")
-    STATIC_S3_BUCKET="$STATIC_S3_BUCKET"
     EASI_URL="https://dev.easi.cms.gov"
     export REACT_APP_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
     export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID"
@@ -13,7 +12,6 @@ case "$APP_ENV" in
     export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID"
     ;;
   "impl")
-    STATIC_S3_BUCKET="$STATIC_S3_BUCKET"
     EASI_URL="https://impl.easi.cms.gov"
     export REACT_APP_OKTA_DOMAIN="https://impl.idp.idm.cms.gov"
     export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID"
@@ -21,7 +19,6 @@ case "$APP_ENV" in
     export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID"
     ;;
   "prod")
-    STATIC_S3_BUCKET="$STATIC_S3_BUCKET"
     EASI_URL="https://easi.cms.gov"
     export REACT_APP_OKTA_DOMAIN="https://idm.cms.gov"
     export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID"

@@ -1,18 +1,18 @@
 ---
 repos:
   - repo: https://github.com/detailyang/pre-commit-shell
-    rev: 1.0.5
+    rev: v1.0.6
     hooks:
       - id: shell-lint
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.1.0
     hooks:
       - id: check-yaml
       - id: detect-private-key
 
   - repo: https://github.com/trussworks/pre-commit-hooks
-    rev: v1.1.0
+    rev: v1.1.1
     hooks:
       - id: gen-docs
         args: ['docs/adr']
@@ -31,7 +31,7 @@ repos:
       - id: go-fmt-import
 
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.41.1
+    rev: v1.45.0
     hooks:
       - id: golangci-lint
         entry: bash -c 'exec golangci-lint run -j=${GOLANGCI_LINT_CONCURRENCY:-1}' # custom bash so we can override concurrency for faster dev runs
@@ -84,7 +84,7 @@ repos:
         files: pkg/cedar/intake/cedar_intake.json
 
   - repo: https://github.com/awslabs/git-secrets
-    rev: 80230afa8c8bdeac766a0fece36f95ffaa0be778
+    rev: b9e96b3212fa06aea65964ff0d5cda84ce935f38
     hooks:
       - id: git-secrets
         entry: git-secrets --pre_commit_hook
@@ -94,4 +94,4 @@ repos:
     hooks:
       - id: end-of-file-fixer
         name: Add newlines to end of files
-        files: \.(sql|scss|md|js|ts|tsx|go)$
+        files: \.(sql|scss|md|js|ts|tsx|go|yml|yaml)$
