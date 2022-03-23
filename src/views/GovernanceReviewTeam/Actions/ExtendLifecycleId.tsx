@@ -30,16 +30,16 @@ import flattenErrors from 'utils/flattenErrors';
 import { extendLifecycleIdSchema } from 'validations/actionSchema';
 
 type ExtendLCIDForm = {
-  currentExpiresAt: string;
-  newExpirationDay: string;
-  newExpirationMonth: string;
-  newExpirationYear: string;
-  currentScope: string;
-  newScope: string;
-  currentNextSteps: string;
-  newNextSteps: string;
   currentCostBaseline: string;
+  currentExpiresAt: string;
+  currentNextSteps: string;
+  currentScope: string;
+  expirationDateDay: string;
+  expirationDateMonth: string;
+  expirationDateYear: string;
   newCostBaseline: string;
+  newNextSteps: string;
+  newScope: string;
 };
 
 type ExtendLifecycleIdProps = {
@@ -66,9 +66,9 @@ const ExtendLifecycleId = ({
   const history = useHistory();
   const initialValues: ExtendLCIDForm = {
     currentExpiresAt: lcidExpiresAt,
-    newExpirationDay: '',
-    newExpirationMonth: '',
-    newExpirationYear: '',
+    expirationDateDay: '',
+    expirationDateMonth: '',
+    expirationDateYear: '',
     currentScope: lcidScope,
     newScope: '',
     currentNextSteps: lcidNextSteps,
@@ -84,17 +84,17 @@ const ExtendLifecycleId = ({
 
   const handleSubmit = (values: ExtendLCIDForm) => {
     const {
-      newExpirationMonth = '',
-      newExpirationDay = '',
-      newExpirationYear = '',
+      expirationDateMonth = '',
+      expirationDateDay = '',
+      expirationDateYear = '',
       newScope = '',
       newNextSteps = '',
       newCostBaseline = ''
     } = values;
     const expiresAt = DateTime.utc(
-      parseInt(newExpirationYear, RADIX),
-      parseInt(newExpirationMonth, RADIX),
-      parseInt(newExpirationDay, RADIX)
+      parseInt(expirationDateYear, RADIX),
+      parseInt(expirationDateMonth, RADIX),
+      parseInt(expirationDateDay, RADIX)
     ).toISO();
     extendLifecycleID({
       variables: {
@@ -198,46 +198,48 @@ const ExtendLifecycleId = ({
                     <HelpText>
                       {t('extendLcid.expirationDate.helpText')}
                     </HelpText>
-                    <FieldErrorMsg>{flatErrors.newExpirationDay}</FieldErrorMsg>
                     <FieldErrorMsg>
-                      {flatErrors.newExpirationMonth}
+                      {flatErrors.expirationDateDay}
                     </FieldErrorMsg>
                     <FieldErrorMsg>
-                      {flatErrors.newExpirationYear}
+                      {flatErrors.expirationDateMonth}
+                    </FieldErrorMsg>
+                    <FieldErrorMsg>
+                      {flatErrors.expirationDateYear}
                     </FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.validDate}</FieldErrorMsg>
                     <div className="usa-memorable-date">
                       <div className="usa-form-group usa-form-group--month">
-                        <Label htmlFor="ExtendLifecycleId-NewExpirationMonth">
+                        <Label htmlFor="ExtendLifecycleId-expirationDateMonth">
                           {t('extendLcid.expirationDate.month')}
                         </Label>
                         <Field
                           as={DateInputMonth}
-                          error={!!flatErrors.newExpirationMonth}
-                          id="ExtendLifecycleId-NewExpirationMonth"
-                          name="newExpirationMonth"
+                          error={!!flatErrors.expirationDateMonth}
+                          id="ExtendLifecycleId-expirationDateMonth"
+                          name="expirationDateMonth"
                         />
                       </div>
                       <div className="usa-form-group usa-form-group--day">
-                        <Label htmlFor="ExtendLifecycleId-NewExpirationDay">
+                        <Label htmlFor="ExtendLifecycleId-expirationDateDay">
                           {t('extendLcid.expirationDate.day')}
                         </Label>
                         <Field
                           as={DateInputDay}
-                          error={!!flatErrors.newExpirationDay}
-                          id="ExtendLifecycleId-NewExpirationDay"
-                          name="newExpirationDay"
+                          error={!!flatErrors.expirationDateDay}
+                          id="ExtendLifecycleId-expirationDateDay"
+                          name="expirationDateDay"
                         />
                       </div>
                       <div className="usa-form-group usa-form-group--year">
-                        <Label htmlFor="ExtendLifecycleId-NewExpirationYear">
+                        <Label htmlFor="ExtendLifecycleId-expirationDateYear">
                           {t('extendLcid.expirationDate.year')}
                         </Label>
                         <Field
                           as={DateInputYear}
-                          error={!!flatErrors.newExpirationYear}
-                          id="ExtendLifecycleId-NewExpirationYear"
-                          name="newExpirationYear"
+                          error={!!flatErrors.expirationDateYear}
+                          id="ExtendLifecycleId-expirationDateYear"
+                          name="expirationDateYear"
                         />
                       </div>
                     </div>
