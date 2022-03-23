@@ -222,7 +222,6 @@ const RequestOverview = () => {
                 <ProvideGRTFeedbackToBusinessOwner
                   query={AddGRTFeedbackRequestBizCaseQuery}
                   actionName={actionsT('actions.provideFeedbackNeedBizCase')}
-                  allowCompleteWithoutEmail
                 />
               )}
             />
@@ -256,9 +255,7 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/actions/ready-for-grb"
-              render={() => (
-                <ProvideGRTRecommendationsToGRB allowCompleteWithoutEmail />
-              )}
+              render={() => <ProvideGRTRecommendationsToGRB />}
             />
             <Route
               path="/governance-review-team/:systemId/actions/biz-case-needs-changes"

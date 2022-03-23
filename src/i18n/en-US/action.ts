@@ -17,18 +17,13 @@ const action = {
     sendEmail: 'Send email',
     guideReceivedClose: 'Decomission guide received. Close the request',
     notRespondingClose: 'Project team not responding. Close the request',
-    extendLifecycleID: 'Extend Lifecycle ID',
-    continue: 'Continue',
-    completeWithoutEmail: 'Complete action without sending an email'
+    extendLifecycleID: 'Extend Lifecycle ID'
   },
   issueLCID: {
     backLink: 'Change',
     heading: 'Actions on request',
     subheading: 'How to proceed?',
     feedbackLabel: 'This email will be sent to the requester',
-    submit: 'Email decision and close this request',
-    submitHelp:
-      'The information you add to ‘Scope of Lifecycle ID’ and ‘Next Steps’ will be added to this email and then sent. Do not repeat any of that information in the field below.',
     nextStepsLabel: 'Next Steps',
     nextStepsHelpText:
       'Provide the requester with some recommendations on how to continue their process. For example, “begin your ATO” or “update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID.',
@@ -93,7 +88,6 @@ const action = {
   },
   provideGRTFeedback: {
     grtFeedbackLabel: 'GRT feedback to the business owner',
-    submit: 'Email Decision & Progress to next step',
     grtFeedbackHelpText:
       'This feedback will be added to the bottom of both the Draft Business Case and Final Business Case pages.'
   },
@@ -102,11 +96,19 @@ const action = {
     recommendationHelpText:
       'These are the Governance Review Team recommendations for the Governance Review Board.'
   },
+  emailRecipients: {
+    email: 'Email',
+    optional: '(optional)',
+    emailRequired:
+      'An email to the Requester is required when closing, approving, or denying the request.'
+  },
   submitAction: {
     backLink: 'Change',
     heading: 'Actions on request',
     feedbackLabel: 'This email will be sent to the requester',
     subheading: 'How to proceed?',
+    continue: 'Continue',
+    completeWithoutEmail: 'Complete action without sending an email',
     submit: 'Send email',
     otherOptions: 'show other options'
   },

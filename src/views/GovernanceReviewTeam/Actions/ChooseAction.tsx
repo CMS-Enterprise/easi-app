@@ -251,10 +251,13 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
 
   return (
     <>
-      <PageHeading data-testid="grt-actions-view">
+      <PageHeading
+        data-testid="grt-actions-view"
+        className="margin-top-0 margin-bottom-3"
+      >
         {t('submitAction.heading')}
       </PageHeading>
-      <h2 className="margin-y-3">{t('submitAction.subheading')}</h2>
+      <h3 className="margin-y-3">{t('submitAction.subheading')}</h3>
       <form onSubmit={onSubmit}>
         <ActionContext.Provider
           value={{

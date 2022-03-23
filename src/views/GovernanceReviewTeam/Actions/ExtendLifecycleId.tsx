@@ -29,6 +29,8 @@ import { formatDateAndIgnoreTimezone } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import { extendLifecycleIdSchema } from 'validations/actionSchema';
 
+import EmailRecipientsFields from './EmailRecipientsFields';
+
 type ExtendLCIDForm = {
   currentExpiresAt: string;
   newExpirationDay: string;
@@ -286,6 +288,7 @@ const ExtendLifecycleId = ({
                     name="newCostBaseline"
                   />
                 </FieldGroup>
+                <EmailRecipientsFields />
                 <p className="margin-top-6 line-height-body-3">
                   {t('extendLcid.submissionInfo')}
                 </p>
@@ -294,7 +297,7 @@ const ExtendLifecycleId = ({
                   type="submit"
                   disabled={extendLifecycleIDStatus.loading}
                 >
-                  {t('extendLcid.submit')}
+                  {t('submitAction.submit')}
                 </Button>
               </Form>
             </div>

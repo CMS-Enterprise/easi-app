@@ -24,7 +24,7 @@ export default ({
       disabled={disabled}
       onClick={onClick}
     >
-      {t('actions.completeWithoutEmail')}{' '}
+      {t('submitAction.completeWithoutEmail')}{' '}
       <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
     </Button>
   );

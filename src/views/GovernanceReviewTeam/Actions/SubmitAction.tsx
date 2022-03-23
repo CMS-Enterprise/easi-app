@@ -17,6 +17,7 @@ import flattenErrors from 'utils/flattenErrors';
 import { actionSchema } from 'validations/actionSchema';
 
 import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+import EmailRecipientsFields from './EmailRecipientsFields';
 
 type ActionInput = {
   input: BasicActionInput;
@@ -102,10 +103,13 @@ const SubmitAction = ({
                 />
               </ErrorAlert>
             )}
-            <PageHeading data-testid="grt-submit-action-view">
+            <PageHeading
+              data-testid="grt-submit-action-view"
+              className="margin-top-0 margin-bottom-3"
+            >
               {t('submitAction.heading')}
             </PageHeading>
-            <h2>{t('submitAction.subheading')}</h2>
+            <h3>{t('submitAction.subheading')}</h3>
             <p>
               {actionName}&nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
@@ -117,11 +121,15 @@ const SubmitAction = ({
                   window.scrollTo(0, 0);
                 }}
               >
+                <EmailRecipientsFields optional={allowCompleteWithoutEmail} />
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
                 >
-                  <Label htmlFor="SubmitActionForm-Feedback">
+                  <Label
+                    htmlFor="SubmitActionForm-Feedback"
+                    className="text-normal"
+                  >
                     {t('action:submitAction.feedbackLabel')}
                   </Label>
                   <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>

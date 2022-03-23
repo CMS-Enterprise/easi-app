@@ -27,6 +27,8 @@ import { SubmitLifecycleIdForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
+import EmailRecipientsFields from './EmailRecipientsFields';
+
 const RADIX = 10;
 
 const IssueLifecycleId = () => {
@@ -126,10 +128,13 @@ const IssueLifecycleId = () => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading data-testid="issue-lcid">
+            <PageHeading
+              data-testid="issue-lcid"
+              className="margin-top-0 margin-bottom-3"
+            >
               {t('issueLCID.heading')}
             </PageHeading>
-            <h2>{t('issueLCID.subheading')}</h2>
+            <h3>{t('issueLCID.subheading')}</h3>
             <p>
               Approve request and issue Lifecycle ID{' '}
               <Link to={backLink}>Change</Link>
@@ -306,16 +311,17 @@ const IssueLifecycleId = () => {
                     name="costBaseline"
                   />
                 </FieldGroup>
+                <EmailRecipientsFields />
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
                 >
-                  <Label htmlFor="IssueLifecycleIdForm-Feedback">
+                  <Label
+                    htmlFor="IssueLifecycleIdForm-Feedback"
+                    className="text-normal"
+                  >
                     {t('issueLCID.feedbackLabel')}
                   </Label>
-                  <HelpText id="IssueLifecycleIdForm-SubmitHelp">
-                    {t('issueLCID.submitHelp')}
-                  </HelpText>
                   <FieldErrorMsg>{flatErrors.feedback}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -331,7 +337,7 @@ const IssueLifecycleId = () => {
                   type="submit"
                   // disabled={isSubmitting}
                 >
-                  {t('issueLCID.submit')}
+                  {t('submitAction.submit')}
                 </Button>
               </Form>
               <UswdsLink

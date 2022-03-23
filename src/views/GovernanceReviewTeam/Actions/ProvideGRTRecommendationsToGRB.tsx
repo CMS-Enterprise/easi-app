@@ -5,7 +5,6 @@ import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -22,14 +21,9 @@ import flattenErrors from 'utils/flattenErrors';
 import { provideGRTFeedbackSchema } from 'validations/actionSchema';
 
 import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+import EmailRecipientsFields from './EmailRecipientsFields';
 
-type ProvideGRTRecommendationsToGRBProps = {
-  allowCompleteWithoutEmail?: boolean;
-};
-
-const ProvideGRTRecommendationsToGRB = ({
-  allowCompleteWithoutEmail
-}: ProvideGRTRecommendationsToGRBProps) => {
+const ProvideGRTRecommendationsToGRB = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
@@ -91,14 +85,11 @@ const ProvideGRTRecommendationsToGRB = ({
               </ErrorAlert>
             )}
             <h1 data-testid="ready-for-grb">{t('submitAction.heading')}</h1>
-            <h2>{t('submitAction.subheading')}</h2>
+            <h3>{t('submitAction.subheading')}</h3>
             <p>
               {t('actions.readyForGrb')} &nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
-            <div className="tablet:grid-col-6">
-              <MandatoryFieldsAlert />
-            </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form
                 onSubmit={e => {
@@ -125,11 +116,15 @@ const ProvideGRTRecommendationsToGRB = ({
                     name="grtFeedback"
                   />
                 </FieldGroup>
+                <EmailRecipientsFields optional />
                 <FieldGroup
                   scrollElement="emailBody"
                   error={!!flatErrors.emailBody}
                 >
-                  <Label htmlFor="ProvideGRTFeedbackForm-EmailBody">
+                  <Label
+                    htmlFor="ProvideGRTFeedbackForm-EmailBody"
+                    className="text-normal"
+                  >
                     {t('submitAction.feedbackLabel')}
                   </Label>
                   <FieldErrorMsg>{flatErrors.emailBody}</FieldErrorMsg>
@@ -143,14 +138,12 @@ const ProvideGRTRecommendationsToGRB = ({
                 </FieldGroup>
                 <div>
                   <Button className="margin-top-2" type="submit">
-                    {t('provideGRTFeedback.submit')}
+                    {t('submitAction.submit')}
                   </Button>
                 </div>
-                {allowCompleteWithoutEmail && (
-                  <div>
-                    <CompleteWithoutEmailButton />
-                  </div>
-                )}
+                <div>
+                  <CompleteWithoutEmailButton />
+                </div>
               </Form>
             </div>
           </>

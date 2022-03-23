@@ -173,12 +173,15 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
       }
     }
   });
+
+  const emailButtonMatch = /send email/i;
+
   describe('actions', () => {
     it('displays formik validation errors', async () => {
       renderActionPage('provide-feedback-need-biz-case', [intakeQuery]);
       await waitForPageLoad();
 
-      screen.getByRole('button', { name: /email decision/i }).click();
+      screen.getByRole('button', { name: emailButtonMatch }).click();
 
       expect(
         await screen.findByTestId('formik-validation-errors')
@@ -250,7 +253,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
       userEvent.type(emailField, 'Test email');
       expect(emailField).toHaveValue('Test email');
 
-      screen.getByRole('button', { name: /email decision/i }).click();
+      screen.getByRole('button', { name: emailButtonMatch }).click();
 
       expect(await screen.findByTestId('grt-notes-view')).toBeInTheDocument();
     });
@@ -297,7 +300,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
       userEvent.type(emailField, 'Test email');
       expect(emailField).toHaveValue('Test email');
 
-      screen.getByRole('button', { name: /email decision/i }).click();
+      screen.getByRole('button', { name: emailButtonMatch }).click();
 
       expect(await screen.findByTestId('grt-notes-view')).toBeInTheDocument();
     });
@@ -344,7 +347,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
       userEvent.type(emailField, 'Test email');
       expect(emailField).toHaveValue('Test email');
 
-      screen.getByRole('button', { name: /email decision/i }).click();
+      screen.getByRole('button', { name: emailButtonMatch }).click();
 
       expect(await screen.findByTestId('grt-notes-view')).toBeInTheDocument();
     });
