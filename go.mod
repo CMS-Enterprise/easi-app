@@ -18,6 +18,7 @@ require (
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/jmoiron/sqlx v1.2.0
+	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/lib/pq v1.10.3
 	github.com/okta/okta-jwt-verifier-golang v1.1.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
@@ -30,5 +31,5 @@ require (
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.5.0
-	gopkg.in/launchdarkly/go-server-sdk.v5 v5.6.0
+	gopkg.in/launchdarkly/go-server-sdk.v5 v5.8.1
 )

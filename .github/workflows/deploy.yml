@@ -1,0 +1,130 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  EASI_APP_NODE_VERSION: "16.14.0"
+  EASI_APP_GO_VERSION: "1.16.6"
+  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  DOCKER_BUILDKIT: 1
+
+jobs:
+  Build:
+    uses: ./.github/workflows/initial_build.yml
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+
+  Server_Test:
+    uses: ./.github/workflows/server_test.yml
+    needs: Build
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
+      OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
+      OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
+      OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+      STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
+
+  client_typecheck:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Check out code
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up node
+        uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a # v2.1.5
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # v2.1.6
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Run typechecking
+        id: typechecker
+        # Uses GitHub environment files to store typechecker output and pass to next stage
+        # see https://github.com/actions/toolkit/blob/main/docs/commands.md#environment-files
+        run: |
+          yarn build:ts 2>&1 | tee test.log
+          result_code=${PIPESTATUS[0]}
+          echo 'TS_LOG<<EOF' >> $GITHUB_ENV
+          cat test.log >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+          exit $result_code
+        continue-on-error: true
+
+  deploy_dev:
+    needs: Server_Test
+    uses: ./.github/workflows/deployments.yml
+    with:
+      env: dev
+      lambda_version: 9
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID_DEV }}
+      OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID_DEV }}
+      OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID_DEV }}
+      STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET_DEV }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+      ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
+
+  deploy_impl:
+    needs: deploy_dev
+    uses: ./.github/workflows/deployments.yml
+    with:
+      env: impl
+      lambda_version: 8
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID_IMPL }}
+      OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID_IMPL }}
+      OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID_IMPL }}
+      STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET_IMPL }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_IMPL }}
+      ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
+
+  deploy_prod:
+    needs: deploy_impl
+    uses: ./.github/workflows/deployments.yml
+    with:
+      env: prod
+      lambda_version: 7
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID_PROD }}
+      OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID_PROD }}
+      OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID_PROD }}
+      STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET_PROD }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_PROD }}
+      ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
