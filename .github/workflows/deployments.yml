@@ -35,8 +35,11 @@ env:
   IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-jobs:
-  deploy:
+concurrency: 
+  group: deploy
+
+jobs: 
+  deploy: 
     if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
