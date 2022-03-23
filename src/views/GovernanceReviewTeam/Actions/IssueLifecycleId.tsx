@@ -226,7 +226,6 @@ const IssueLifecycleId = () => {
                     <FieldErrorMsg>
                       {flatErrors.expirationDateYear}
                     </FieldErrorMsg>
-                    <FieldErrorMsg>{flatErrors.validDate}</FieldErrorMsg>
                     <div className="usa-memorable-date">
                       <div className="usa-form-group usa-form-group--month">
                         <Label htmlFor="IssueLifecycleIdForm-ExpirationDateMonth">
