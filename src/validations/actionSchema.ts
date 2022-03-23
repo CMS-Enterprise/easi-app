@@ -6,14 +6,14 @@ export const actionSchema = Yup.object().shape({
 });
 
 export const lifecycleIdSchema = Yup.object().shape({
-  expirationDateDay: Yup.string()
-    .trim()
-    .length(2)
-    .required('Please include a day'),
-  expirationDateMonth: Yup.string()
-    .trim()
-    .length(2)
+  expirationDateMonth: Yup.number()
+    .integer()
+    .max(12, 'Please enter valid month')
     .required('Please include a month'),
+  expirationDateDay: Yup.number()
+    .integer()
+    .max(31, 'Please enter valid day')
+    .required('Please include a day'),
   expirationDateYear: Yup.string()
     .trim()
     .length(4)
