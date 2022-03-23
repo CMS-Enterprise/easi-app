@@ -17,9 +17,9 @@ type intakeReview struct {
 	TaskListPath string
 }
 
-func (c Client) systemIntakeReviewBody(EmailText string, taskListPath string) (string, error) {
+func (c Client) systemIntakeReviewBody(emailText string, taskListPath string) (string, error) {
 	data := intakeReview{
-		EmailText:    EmailText,
+		EmailText:    emailText,
 		TaskListPath: c.urlFromPath(taskListPath),
 	}
 	var b bytes.Buffer
