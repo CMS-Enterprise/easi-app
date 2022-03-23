@@ -217,6 +217,7 @@ const IssueLifecycleId = () => {
                     <HelpText>
                       {t('issueLCID.expirationDate.helpText')}
                     </HelpText>
+                    <FieldErrorMsg>{flatErrors.validDate}</FieldErrorMsg>
                     <FieldErrorMsg>
                       {flatErrors.expirationDateMonth}
                     </FieldErrorMsg>
