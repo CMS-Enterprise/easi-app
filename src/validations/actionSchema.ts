@@ -18,6 +18,34 @@ export const lifecycleIdSchema = Yup.object().shape({
     .trim()
     .length(4)
     .required('Please include a year'),
+  validDate: Yup.string().when(
+    ['expirationDateMonth', 'expirationDateDay', 'expirationDateYear'],
+    {
+      is: (
+        expirationDateMonth: string,
+        expirationDateDay: string,
+        expirationDateYear: string
+      ) => {
+        const month = Number(expirationDateMonth);
+        const day = Number(expirationDateDay);
+        const year = Number(expirationDateYear);
+
+        return (
+          !(Number.isNaN(month) || Number.isNaN(day) || Number.isNaN(year)) &&
+          DateTime.fromObject({
+            month,
+            day,
+            year
+          }).isValid
+        );
+      },
+      otherwise: Yup.string().test(
+        'validDate',
+        'Enter a valid expiration date',
+        () => false
+      )
+    }
+  ),
   scope: Yup.string().trim().required('Please include a scope'),
   nextSteps: Yup.string().trim().required('Please fill out next steps'),
   feedback: Yup.string().trim().required('Please fill out email'),
