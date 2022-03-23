@@ -1,17 +1,17 @@
 ---
 repos:
-  - repo: git://github.com/detailyang/pre-commit-shell
+  - repo: https://github.com/detailyang/pre-commit-shell
     rev: 1.0.5
     hooks:
       - id: shell-lint
 
-  - repo: git://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
       - id: check-yaml
       - id: detect-private-key
 
-  - repo: git://github.com/trussworks/pre-commit-hooks
+  - repo: https://github.com/trussworks/pre-commit-hooks
     rev: v1.1.0
     hooks:
       - id: gen-docs
@@ -25,12 +25,12 @@ repos:
             docs/adr/index.md
           )$
 
-  - repo: git://github.com/Bahjat/pre-commit-golang
+  - repo: https://github.com/Bahjat/pre-commit-golang
     rev: c3086eea8af86847dbdff2e46b85a5fe3c9d9656
     hooks:
       - id: go-fmt-import
 
-  - repo: git://github.com/golangci/golangci-lint
+  - repo: https://github.com/golangci/golangci-lint
     rev: v1.41.1
     hooks:
       - id: golangci-lint
@@ -83,13 +83,13 @@ repos:
         language: script
         files: pkg/cedar/intake/cedar_intake.json
 
-  - repo: git://github.com/awslabs/git-secrets
+  - repo: https://github.com/awslabs/git-secrets
     rev: 80230afa8c8bdeac766a0fece36f95ffaa0be778
     hooks:
       - id: git-secrets
         entry: git-secrets --pre_commit_hook
 
-  - repo: git://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
       - id: end-of-file-fixer
