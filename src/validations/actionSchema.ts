@@ -6,6 +6,18 @@ export const actionSchema = Yup.object().shape({
 });
 
 const validDateSchema = Yup.object().shape({
+  expirationDateMonth: Yup.number()
+    .integer()
+    .max(12, 'Please enter valid month')
+    .required('Please include a month'),
+  expirationDateDay: Yup.number()
+    .integer()
+    .max(31, 'Please enter valid day')
+    .required('Please include a day'),
+  expirationDateYear: Yup.string()
+    .trim()
+    .length(4)
+    .required('Please include a year'),
   validDate: Yup.string().when(
     ['expirationDateMonth', 'expirationDateDay', 'expirationDateYear'],
     {
@@ -37,18 +49,6 @@ const validDateSchema = Yup.object().shape({
 });
 
 export const lifecycleIdSchema = validDateSchema.shape({
-  expirationDateMonth: Yup.number()
-    .integer()
-    .max(12, 'Please enter valid month')
-    .required('Please include a month'),
-  expirationDateDay: Yup.number()
-    .integer()
-    .max(31, 'Please enter valid day')
-    .required('Please include a day'),
-  expirationDateYear: Yup.string()
-    .trim()
-    .length(4)
-    .required('Please include a year'),
   scope: Yup.string().trim().required('Please include a scope'),
   nextSteps: Yup.string().trim().required('Please fill out next steps'),
   feedback: Yup.string().trim().required('Please fill out email'),
@@ -67,38 +67,7 @@ export const lifecycleIdSchema = validDateSchema.shape({
   })
 });
 
-export const extendLifecycleIdSchema = Yup.object().shape({
-  newExpirationMonth: Yup.string().trim().required('Please include a month'),
-  newExpirationDay: Yup.string().trim().required('Please include a day'),
-  newExpirationYear: Yup.string().trim().required('Please include a year'),
-  validDate: Yup.string().when(
-    ['newExpirationMonth', 'newExpirationDay', 'newExpirationYear'],
-    {
-      is: (
-        newExpirationMonth: string,
-        newExpirationDay: string,
-        newExpirationYear: string
-      ) => {
-        const month = Number(newExpirationMonth);
-        const day = Number(newExpirationDay);
-        const year = Number(newExpirationYear);
-
-        return (
-          !(Number.isNaN(month) || Number.isNaN(day) || Number.isNaN(year)) &&
-          DateTime.fromObject({
-            month,
-            day,
-            year
-          }).isValid
-        );
-      },
-      otherwise: Yup.string().test(
-        'validDate',
-        'Enter a valid expiration date',
-        () => false
-      )
-    }
-  ),
+export const extendLifecycleIdSchema = validDateSchema.shape({
   newScope: Yup.string().trim().required('Please include a scope'),
   newNextSteps: Yup.string().trim().required('Please fill out next steps')
 });
