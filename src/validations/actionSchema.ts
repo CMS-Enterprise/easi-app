@@ -6,18 +6,37 @@ export const actionSchema = Yup.object().shape({
 });
 
 export const lifecycleIdSchema = Yup.object().shape({
-  expirationDateDay: Yup.string()
-    .trim()
-    .length(2)
-    .required('Please include a day'),
-  expirationDateMonth: Yup.string()
-    .trim()
-    .length(2)
-    .required('Please include a month'),
-  expirationDateYear: Yup.string()
-    .trim()
-    .length(4)
-    .required('Please include a year'),
+  expirationDateMonth: Yup.string().trim().required('Please include a month'),
+  expirationDateDay: Yup.string().trim().required('Please include a day'),
+  expirationDateYear: Yup.string().trim().required('Please include a year'),
+  validDate: Yup.string().when(
+    ['expirationDateMonth', 'expirationDateDay', 'expirationDateYear'],
+    {
+      is: (
+        expirationDateMonth: string,
+        expirationDateDay: string,
+        expirationDateYear: string
+      ) => {
+        const month = Number(expirationDateMonth);
+        const day = Number(expirationDateDay);
+        const year = Number(expirationDateYear);
+
+        return (
+          !(Number.isNaN(month) || Number.isNaN(day) || Number.isNaN(year)) &&
+          DateTime.fromObject({
+            month,
+            day,
+            year
+          }).isValid
+        );
+      },
+      otherwise: Yup.string().test(
+        'validDate',
+        'Enter a valid expiration date',
+        () => false
+      )
+    }
+  ),
   scope: Yup.string().trim().required('Please include a scope'),
   nextSteps: Yup.string().trim().required('Please fill out next steps'),
   feedback: Yup.string().trim().required('Please fill out email'),
