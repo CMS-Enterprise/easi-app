@@ -215,7 +215,10 @@ const ExtendLifecycleId = ({
                         </Label>
                         <Field
                           as={DateInputMonth}
-                          error={!!flatErrors.expirationDateMonth}
+                          error={
+                            !!flatErrors.expirationDateMonth ||
+                            !!flatErrors.validDate
+                          }
                           id="ExtendLifecycleId-expirationDateMonth"
                           name="expirationDateMonth"
                         />
@@ -226,7 +229,10 @@ const ExtendLifecycleId = ({
                         </Label>
                         <Field
                           as={DateInputDay}
-                          error={!!flatErrors.expirationDateDay}
+                          error={
+                            !!flatErrors.expirationDateDay ||
+                            !!flatErrors.validDate
+                          }
                           id="ExtendLifecycleId-expirationDateDay"
                           name="expirationDateDay"
                         />
