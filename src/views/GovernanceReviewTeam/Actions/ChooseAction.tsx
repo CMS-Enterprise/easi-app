@@ -282,7 +282,7 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
           </RadioGroup>
         </ActionContext.Provider>
         <Button className="margin-top-5" type="submit" disabled={!actionRoute}>
-          {t('actions.continue')}
+          {t('submitAction.continue')}
         </Button>
       </form>
       <AnythingWrongSurvey />
