@@ -60,7 +60,7 @@ describe('Accessibility Requests', () => {
     cy.location().should(loc => {
       expect(loc.pathname).to.eq('/508/making-a-request');
     });
-    cy.contains('h1', 'Making a 508 testing request');
+    cy.contains('h1', 'Section 508 testing');
     cy.contains('a', 'steps involved').click();
 
     cy.location().should(loc => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
@@ -36,7 +37,9 @@ describe('The 508 making a request page', () => {
         <Provider store={defaultStore}>
           <MessageProvider>
             <Route path="/508/making-a-request">
-              <MakingARequest />
+              <MockedProvider>
+                <MakingARequest />
+              </MockedProvider>
             </Route>
           </MessageProvider>
         </Provider>
