@@ -18,6 +18,7 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
+import { RequestType } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
 import globalTableFilter from 'utils/globalTableFilter';
 import {
@@ -31,7 +32,12 @@ import tableMap from './tableMap';
 
 import '../index.scss';
 
-const Table = () => {
+type myRequestsTableProps = {
+  type?: RequestType;
+  hiddenColumns?: string[];
+};
+
+const Table = ({ type, hiddenColumns }: myRequestsTableProps) => {
   const { t } = useTranslation(['home', 'intake', 'accessibility']);
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
@@ -134,10 +140,10 @@ const Table = () => {
   // Modifying data for table sorting and prepping for Cell configuration
   const data = useMemo(() => {
     if (tableData) {
-      return tableMap(tableData, t);
+      return tableMap(tableData, t, type);
     }
     return [];
-  }, [tableData, t]);
+  }, [tableData, t, type]);
 
   const {
     getTableProps,
@@ -219,28 +225,32 @@ const Table = () => {
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
-                <th
-                  {...column.getHeaderProps()}
-                  aria-sort={getColumnSortStatus(column)}
-                  className="table-header"
-                  scope="col"
-                  style={{
-                    minWidth: index === 4 ? '220px' : '140px',
-                    width: index === 2 ? '220px' : '140px',
-                    position: 'relative'
-                  }}
-                >
-                  <button
-                    className="usa-button usa-button--unstyled"
-                    type="button"
-                    {...column.getSortByToggleProps()}
+              {headerGroup.headers
+                // @ts-ignore
+                .filter(column => !hiddenColumns?.includes(column.Header))
+                .map((column, index) => (
+                  <th
+                    {...column.getHeaderProps()}
+                    aria-sort={getColumnSortStatus(column)}
+                    className="table-header"
+                    scope="col"
+                    style={{
+                      minWidth: index === 4 ? '220px' : '140px',
+                      width: index === 2 ? '220px' : '140px',
+                      paddingLeft: '0',
+                      position: 'relative'
+                    }}
                   >
-                    {column.render('Header')}
-                    {getHeaderSortIcon(column)}
-                  </button>
-                </th>
-              ))}
+                    <button
+                      className="usa-button usa-button--unstyled"
+                      type="button"
+                      {...column.getSortByToggleProps()}
+                    >
+                      {column.render('Header')}
+                      {getHeaderSortIcon(column)}
+                    </button>
+                  </th>
+                ))}
             </tr>
           ))}
         </thead>
@@ -249,23 +259,32 @@ const Table = () => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
-                {row.cells.map((cell, i) => {
-                  if (i === 0) {
+                {row.cells
+                  .filter(cell => {
+                    // @ts-ignore
+                    return !hiddenColumns?.includes(cell.column.Header);
+                  })
+                  .map((cell, i) => {
+                    if (i === 0) {
+                      return (
+                        <th
+                          {...cell.getCellProps()}
+                          scope="row"
+                          style={{ paddingLeft: '0' }}
+                        >
+                          {cell.render('Cell')}
+                        </th>
+                      );
+                    }
                     return (
-                      <th {...cell.getCellProps()} scope="row">
+                      <td
+                        {...cell.getCellProps()}
+                        style={{ width: cell.column.width, paddingLeft: '0' }}
+                      >
                         {cell.render('Cell')}
-                      </th>
+                      </td>
                     );
-                  }
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      style={{ width: cell.column.width }}
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
+                  })}
               </tr>
             );
           })}
