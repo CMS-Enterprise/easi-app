@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"github.com/guregu/null"
-
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -62,7 +60,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Title:                   bc.PreferredTitle.ValueOrZero(),
 		Summary:                 bc.PreferredSummary.ValueOrZero(),
 		AcquisitionApproach:     bc.PreferredAcquisitionApproach.ValueOrZero(),
-		SecurityIsApproved:      null.Bool.Ptr(bc.PreferredSecurityIsApproved),
+		SecurityIsApproved:      bc.PreferredSecurityIsApproved.Ptr(),
 		SecurityIsBeingReviewed: bc.PreferredSecurityIsBeingReviewed.ValueOrZero(),
 		HostingType:             bc.PreferredHostingType.ValueOrZero(),
 		HostingLocation:         bc.PreferredHostingLocation.ValueOrZero(),
@@ -83,7 +81,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Title:                   bc.AlternativeATitle.ValueOrZero(),
 		Summary:                 bc.AlternativeASummary.ValueOrZero(),
 		AcquisitionApproach:     bc.AlternativeAAcquisitionApproach.ValueOrZero(),
-		SecurityIsApproved:      null.Bool.Ptr(bc.AlternativeASecurityIsApproved),
+		SecurityIsApproved:      bc.AlternativeASecurityIsApproved.Ptr(),
 		SecurityIsBeingReviewed: bc.AlternativeASecurityIsBeingReviewed.ValueOrZero(),
 		HostingType:             bc.AlternativeAHostingType.ValueOrZero(),
 		HostingLocation:         bc.AlternativeAHostingLocation.ValueOrZero(),
@@ -101,7 +99,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Title:                   bc.AlternativeBTitle.ValueOrZero(),
 		Summary:                 bc.AlternativeBSummary.ValueOrZero(),
 		AcquisitionApproach:     bc.AlternativeBAcquisitionApproach.ValueOrZero(),
-		SecurityIsApproved:      null.Bool.Ptr(bc.AlternativeBSecurityIsApproved),
+		SecurityIsApproved:      bc.AlternativeBSecurityIsApproved.Ptr(),
 		SecurityIsBeingReviewed: bc.AlternativeBSecurityIsBeingReviewed.ValueOrZero(),
 		HostingType:             bc.AlternativeBHostingType.ValueOrZero(),
 		HostingLocation:         bc.AlternativeBHostingLocation.ValueOrZero(),
