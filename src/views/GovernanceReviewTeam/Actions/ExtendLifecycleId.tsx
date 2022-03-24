@@ -124,7 +124,7 @@ const ExtendLifecycleId = ({
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ExtendLCIDForm>) => {
-        const { errors } = formikProps;
+        const { errors, setErrors } = formikProps;
         const flatErrors = flattenErrors(errors);
 
         return (
@@ -292,6 +292,7 @@ const ExtendLifecycleId = ({
                 <Button
                   className="margin-y-2"
                   type="submit"
+                  onClick={() => setErrors({})}
                   disabled={extendLifecycleIDStatus.loading}
                 >
                   {t('extendLcid.submit')}

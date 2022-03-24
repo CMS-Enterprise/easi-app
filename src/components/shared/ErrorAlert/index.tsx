@@ -21,13 +21,6 @@ export const ErrorAlert = ({
     classNames
   );
 
-  const childErrors = React.Children.map(children, element => {
-    if (React.isValidElement(element)) {
-      return element.props.errorKey;
-    }
-    return '';
-  })?.toString();
-
   const headingEl = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -35,7 +28,7 @@ export const ErrorAlert = ({
     if (current) {
       current.focus();
     }
-  }, [childErrors]);
+  }, []);
 
   return (
     <div className={errorAlertClasses} role="alert" data-testid={testId}>

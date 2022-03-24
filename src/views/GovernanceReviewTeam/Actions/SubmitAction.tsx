@@ -64,7 +64,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ActionForm>) => {
-        const { errors, handleSubmit } = formikProps;
+        const { errors, setErrors, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -127,6 +127,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                 <Button
                   className="margin-top-2"
                   type="submit"
+                  onClick={() => setErrors({})}
                   // disabled={isSubmitting}
                 >
                   {t('submitAction.submit')}
