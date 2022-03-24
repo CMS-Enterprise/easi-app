@@ -15,6 +15,7 @@ describe('Draft Business Case schema validation', () => {
       expect(result.errors).toBeUndefined();
     });
   });
+
   ['123456789', '123-456-789', 'asdf'].forEach(value => {
     it(`throws error for the following values: ${value}`, async () => {
       const result = await BusinessCaseDraftValidationSchema.generalRequestInfo
