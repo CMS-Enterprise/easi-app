@@ -53,7 +53,13 @@ const TestDateForm = ({
       validateOnMount={false}
     >
       {(formikProps: FormikProps<TestDateFormType>) => {
-        const { errors, setFieldValue, values, handleSubmit } = formikProps;
+        const {
+          errors,
+          setErrors,
+          setFieldValue,
+          values,
+          handleSubmit
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -270,7 +276,11 @@ const TestDateForm = ({
                       )}
                     </fieldset>
                   </FieldGroup>
-                  <Button className="margin-top-4" type="submit">
+                  <Button
+                    className="margin-top-4"
+                    type="submit"
+                    onClick={() => setErrors({})}
+                  >
                     {t(`testDateForm.submitButton.${formType}`)}
                   </Button>
                   <Link

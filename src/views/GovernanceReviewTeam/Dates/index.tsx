@@ -103,7 +103,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitDatesForm>) => {
-        const { errors, handleSubmit } = formikProps;
+        const { errors, setErrors, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -258,7 +258,11 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                   </fieldset>
                 </FieldGroup>
                 {/* End GRB Date Fields */}
-                <Button className="margin-top-2" type="submit">
+                <Button
+                  className="margin-top-2"
+                  type="submit"
+                  onClick={() => setErrors({})}
+                >
                   {t('governanceReviewTeam:dates.submit')}
                 </Button>
               </Form>
