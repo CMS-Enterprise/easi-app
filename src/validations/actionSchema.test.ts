@@ -6,9 +6,9 @@ describe('extend lifecycle ID schema', () => {
   it('should correctly validate a schema that is valid', () => {
     expect(() =>
       extendLifecycleIdSchema.validateSync({
-        newExpirationMonth: '2',
-        newExpirationDay: '15',
-        newExpirationYear: '2023',
+        expirationDateMonth: '2',
+        expirationDateDay: '15',
+        expirationDateYear: '2023',
         newScope: 'A new scope',
         newNextSteps: 'Some new next steps'
       })
@@ -17,9 +17,37 @@ describe('extend lifecycle ID schema', () => {
 
   try {
     extendLifecycleIdSchema.validateSync({
-      newExpirationMonth: '-2',
-      newExpirationDay: '15',
-      newExpirationYear: '2023',
+      expirationDateMonth: '32',
+      expirationDateDay: '15',
+      expirationDateYear: '2023',
+      newScope: 'A new scope',
+      newNextSteps: 'Some new next steps'
+    });
+    throw new Error('Should not validate successfully');
+  } catch (err) {
+    expect(err).toBeInstanceOf(ValidationError);
+    expect((err as ValidationError).path).toBe('expirationDateMonth');
+  }
+
+  try {
+    extendLifecycleIdSchema.validateSync({
+      expirationDateMonth: '2',
+      expirationDateDay: '150',
+      expirationDateYear: '2023',
+      newScope: 'A new scope',
+      newNextSteps: 'Some new next steps'
+    });
+    throw new Error('Should not validate successfully');
+  } catch (err) {
+    expect(err).toBeInstanceOf(ValidationError);
+    expect((err as ValidationError).path).toBe('expirationDateDay');
+  }
+
+  try {
+    extendLifecycleIdSchema.validateSync({
+      expirationDateMonth: '2',
+      expirationDateDay: '15',
+      expirationDateYear: 'abcd',
       newScope: 'A new scope',
       newNextSteps: 'Some new next steps'
     });
@@ -31,37 +59,9 @@ describe('extend lifecycle ID schema', () => {
 
   try {
     extendLifecycleIdSchema.validateSync({
-      newExpirationMonth: '2',
-      newExpirationDay: '150',
-      newExpirationYear: '2023',
-      newScope: 'A new scope',
-      newNextSteps: 'Some new next steps'
-    });
-    throw new Error('Should not validate successfully');
-  } catch (err) {
-    expect(err).toBeInstanceOf(ValidationError);
-    expect((err as ValidationError).path).toBe('validDate');
-  }
-
-  try {
-    extendLifecycleIdSchema.validateSync({
-      newExpirationMonth: '2',
-      newExpirationDay: '15',
-      newExpirationYear: 'abcd',
-      newScope: 'A new scope',
-      newNextSteps: 'Some new next steps'
-    });
-    throw new Error('Should not validate successfully');
-  } catch (err) {
-    expect(err).toBeInstanceOf(ValidationError);
-    expect((err as ValidationError).path).toBe('validDate');
-  }
-
-  try {
-    extendLifecycleIdSchema.validateSync({
-      newExpirationMonth: '2',
-      newExpirationDay: '15',
-      newExpirationYear: '2023',
+      expirationDateMonth: '2',
+      expirationDateDay: '15',
+      expirationDateYear: '2023',
       newScope: '',
       newNextSteps: 'Some new next steps'
     });
@@ -73,9 +73,9 @@ describe('extend lifecycle ID schema', () => {
 
   try {
     extendLifecycleIdSchema.validateSync({
-      newExpirationMonth: '2',
-      newExpirationDay: '15',
-      newExpirationYear: '2023',
+      expirationDateMonth: '2',
+      expirationDateDay: '15',
+      expirationDateYear: '2023',
       newScope: 'A new scope',
       newNextSteps: ''
     });
