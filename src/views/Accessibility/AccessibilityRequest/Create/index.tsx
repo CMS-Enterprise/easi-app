@@ -112,7 +112,12 @@ const Create = () => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<AccessibilityRequestForm>) => {
-            const { errors, setFieldValue, handleSubmit } = formikProps;
+            const {
+              errors,
+              setErrors,
+              setFieldValue,
+              handleSubmit
+            } = formikProps;
             const flatErrors = flattenErrors(errors);
             return (
               <>
@@ -211,7 +216,7 @@ const Create = () => {
                         <PlainInfo>{t('newRequestForm.info')}</PlainInfo>
                       </div>
                     </div>
-                    <Button type="submit">
+                    <Button type="submit" onClick={() => setErrors({})}>
                       {t('newRequestForm.submitBtn')}
                     </Button>
                   </FormikForm>

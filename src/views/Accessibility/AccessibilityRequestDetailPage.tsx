@@ -672,7 +672,7 @@ const AccessibilityRequestDetailPage = () => {
                   {(
                     formikProps: FormikProps<DeleteAccessibilityRequestForm>
                   ) => {
-                    const { errors, values } = formikProps;
+                    const { errors, setErrors, values } = formikProps;
                     const flatErrors = flattenErrors(errors);
                     return (
                       <>
@@ -730,7 +730,11 @@ const AccessibilityRequestDetailPage = () => {
                           </FieldGroup>
 
                           <div className="display-flex margin-top-2">
-                            <Button type="submit" className="margin-right-5">
+                            <Button
+                              type="submit"
+                              onClick={() => setErrors({})}
+                              className="margin-right-5"
+                            >
                               {t('requestDetails.modal.confirm')}
                             </Button>
                             <Button
