@@ -139,6 +139,7 @@ describe('Governance Review Team', () => {
       .clear()
       .type('25')
       .should('have.value', '25');
+
     cy.get('#IssueLifecycleIdForm-ExpirationDateYear')
       .clear()
       .type('2020')
