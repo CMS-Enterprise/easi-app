@@ -1,4 +1,4 @@
-name: Deployments
+name: Deploy to Environment
 
 on:
   workflow_call:
@@ -6,8 +6,11 @@ on:
       env:
         required: true
         type: string
-      lambda_version:
+  workflow_dispatch:
+    inputs:
+      env:
         required: true
+        description: Environment to deploy to. Can be 'dev', 'impl', or 'prod'.
         type: string
     secrets:
       AWS_ACCESS_KEY_ID:
@@ -32,15 +35,15 @@ on:
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
   EASI_APP_GO_VERSION: "1.16.6"
-  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
+  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }} # Use the manually entered git hash if input - otherwise fall back to PR head or GitHub commit hash
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  ENV: ${{ inputs.env }}
 
 concurrency: 
   group: deploy
 
 jobs: 
   deploy: 
-    if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     env:
@@ -84,12 +87,31 @@ jobs:
         if: contains(inputs.env, 'impl') || contains(inputs.env, 'prod')
         run: |
           ./scripts/rds-snapshot-app-db
+      - name: Get ECS manager lambda version
+        id: get-ecs-manager-lambda-version
+        run: |
+          case "$ENV" in
+            "dev")
+              echo "::set-output name=LAMBDA_VERSION::9"
+              ;;
+            "impl")
+              echo "::set-output name=LAMBDA_VERSION::8"
+              ;;
+            "prod")
+              echo "::set-output name=LAMBDA_VERSION::7"
+              ;;
+            *)
+              echo "ENV value not recognized: ${ENV:-unset}"
+              echo "Allowed values: 'dev', 'impl', 'prod'"
+              exit 1
+              ;;
+          esac
       - name: Run migrations
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-db-migrate
-          LAMBDA_VERSION: ${{ inputs.lambda_version }}
+          LAMBDA_VERSION: ${{ steps.get-ecs-manager-lambda-version.outputs.get-ecs-manager-lambda-version }}
           ENV: ${{ inputs.env }}
         run: |
           ./scripts/deploy_service "easi-app-db-migrate" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
@@ -99,7 +121,7 @@ jobs:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-backend
-          LAMBDA_VERSION: ${{ inputs.lambda_version }}
+          LAMBDA_VERSION: ${{ steps.get-ecs-manager-lambda-version.outputs.get-ecs-manager-lambda-version }}
           ENV: ${{ inputs.env }}
         run: |
           ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

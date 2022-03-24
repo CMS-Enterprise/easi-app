@@ -1,9 +1,9 @@
-name: Build and Test
+name: Deploy Pipeline
 
 on:
-  pull_request:
+  push:
     branches:
-      - "**"
+      - master
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
@@ -13,18 +13,18 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
-  Build:
-    uses: ./.github/workflows/initial_build.yml
+  Build_Application_Images:
+    uses: ./.github/workflows/build_application_images.yml
     secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  Server_Test:
-    uses: ./.github/workflows/server_test.yml
-    needs: Build
+  Run_Tests:
+    uses: ./.github/workflows/run_tests.yml
+    needs: Build_Application_Images
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -35,7 +35,7 @@ jobs:
       OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
       OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
       OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
-      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
       STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
 
   client_typecheck:
@@ -77,25 +77,51 @@ jobs:
           echo 'EOF' >> $GITHUB_ENV
           exit $result_code
         continue-on-error: true
-      - name: Post comment with TypeScript type errors
-        uses: actions/github-script@v6
-        if: ${{ steps.typechecker.outcome == 'failure' }}
-        with:
-          script: |
-            const typeScriptLog = process.env.TS_LOG;
 
-            const commentBody = `
-            <details>
-            <summary>TypeScript compile errors</summary>
+  deploy_dev:
+    needs: Run_Tests
+    uses: ./.github/workflows/deploy_to_environment.yml
+    with:
+      env: dev
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID_DEV }}
+      OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID_DEV }}
+      OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID_DEV }}
+      STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET_DEV }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+      ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
 
-            \`\`\`shell
-            ${typeScriptLog}
-            \`\`\`
-            </details>`;
+  deploy_impl:
+    needs: deploy_dev
+    uses: ./.github/workflows/deploy_to_environment.yml
+    with:
+      env: impl
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID_IMPL }}
+      OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID_IMPL }}
+      OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID_IMPL }}
+      STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET_IMPL }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_IMPL }}
+      ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: commentBody
-            });
+  deploy_prod:
+    needs: deploy_impl
+    uses: ./.github/workflows/deploy_to_environment.yml
+    with:
+      env: prod
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID_PROD }}
+      OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID_PROD }}
+      OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID_PROD }}
+      STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET_PROD }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_PROD }}
+      ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
