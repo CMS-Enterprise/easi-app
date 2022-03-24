@@ -190,7 +190,7 @@ const ExtendLifecycleId = ({
               </dl>
               <hr />
               <Form>
-                <FieldGroup>
+                <FieldGroup scrollElement="validDate">
                   <fieldset className="usa-fieldset margin-top-2">
                     <legend className="usa-label margin-bottom-1">
                       {t('extendLcid.expirationDate.label')}

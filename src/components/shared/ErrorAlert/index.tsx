@@ -21,6 +21,13 @@ export const ErrorAlert = ({
     classNames
   );
 
+  const childErrors = React.Children.map(children, element => {
+    if (React.isValidElement(element)) {
+      return element.props.errorKey;
+    }
+    return '';
+  })?.toString();
+
   const headingEl = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -28,7 +35,7 @@ export const ErrorAlert = ({
     if (current) {
       current.focus();
     }
-  }, []);
+  }, [childErrors]);
 
   return (
     <div className={errorAlertClasses} role="alert" data-testid={testId}>
@@ -55,7 +62,6 @@ export const ErrorAlertMessage = ({
     className="usa-error-message usa-alert__text easi-error-alert__message"
     onClick={() => {
       const fieldGroup = document.querySelector(`[data-scroll="${errorKey}"]`);
-
       if (fieldGroup) {
         fieldGroup.scrollIntoView();
       }
