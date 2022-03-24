@@ -61,8 +61,8 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		RejectionReason:             si.RejectionReason.ValueOrZero(),
 		AdminLead:                   si.AdminLead.ValueOrZero(),
 
-		ExistingFunding:    strNullableBool(si.ExistingFunding),
-		EaSupportRequest:   strNullableBool(si.EASupportRequest),
+		ExistingFunding:    si.ExistingFunding.Ptr(),
+		EaSupportRequest:   si.EASupportRequest.Ptr(),
 		ContractStartDate:  strDate(si.ContractStartDate),
 		ContractEndDate:    strDate(si.ContractEndDate),
 		SubmittedAt:        strDateTime(si.SubmittedAt),

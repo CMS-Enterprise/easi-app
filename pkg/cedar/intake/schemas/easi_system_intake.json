@@ -21,9 +21,7 @@
         "decisionNextSteps",
         "eaCollaborator",
         "eaCollaboratorName",
-        "eaSupportRequest",
         "existingContract",
-        "existingFunding",
         "fundingNumber",
         "fundingSource",
         "grbDate",
@@ -167,16 +165,8 @@
           ]
         },
         "eaSupportRequest": {
-          "enum": [
-            "",
-            "false",
-            "true"
-          ],
-          "type": "string",
-          "description": "Does the request need EA support",
-          "examples": [
-            "True"
-          ]
+          "type": "boolean",
+          "description": "Does the request need EA support"
         },
         "existingContract": {
           "type": "string",
@@ -186,16 +176,8 @@
           ]
         },
         "existingFunding": {
-          "enum": [
-            "",
-            "false",
-            "true"
-          ],
-          "type": "string",
-          "description": "Will this project be funded out of an existing source",
-          "examples": [
-            "True"
-          ]
+          "type": "boolean",
+          "description": "Will this project be funded out of an existing source"
         },
         "fundingNumber": {
           "type": "string",

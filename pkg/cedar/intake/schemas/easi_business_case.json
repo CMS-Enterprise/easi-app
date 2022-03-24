@@ -192,7 +192,6 @@
         "hostingLocation",
         "hostingType",
         "pros",
-        "securityIsApproved",
         "securityIsBeingReviewed",
         "solutionType",
         "summary",
@@ -256,16 +255,8 @@
           ]
         },
         "securityIsApproved": {
-          "enum": [
-            "",
-            "false",
-            "true"
-          ],
-          "type": "string",
-          "description": "Is this solution FedRAMP/FISMA approved",
-          "examples": [
-            "True"
-          ]
+          "type": "boolean",
+          "description": "Is this solution FedRAMP/FISMA approved"
         },
         "securityIsBeingReviewed": {
           "type": "string",

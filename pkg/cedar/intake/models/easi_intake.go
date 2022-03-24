@@ -22,9 +22,9 @@ type EASIIntake struct {
 	DecisionNextSteps           string `json:"decisionNextSteps" jsonschema:"description=Steps that the business owner should take after receiving their decision,example=Go get a contract"`
 	EaCollaborator              string `json:"eaCollaborator" jsonschema:"description=N/A,example=N/A"` // TODO: doesn't seem like this is ever populated, remove?
 	EaCollaboratorName          string `json:"eaCollaboratorName" jsonschema:"description=Enterprise Architecture (EA) Collaborator,example=John Doe"`
-	EaSupportRequest            string `json:"eaSupportRequest" jsonschema:"enum=,enum=false,enum=true,description=Does the request need EA support,example=True"`
+	EaSupportRequest            *bool  `json:"eaSupportRequest,omitempty" jsonschema:"description=Does the request need EA support,example=True"`
 	ExistingContract            string `json:"existingContract" jsonschema:"description=Is there an existing contract for this effort,example=HAVE_CONTRACT"`
-	ExistingFunding             string `json:"existingFunding" jsonschema:"enum=,enum=false,enum=true,description=Will this project be funded out of an existing source,example=True"`
+	ExistingFunding             *bool  `json:"existingFunding,omitempty" jsonschema:"description=Will this project be funded out of an existing source,example=True"`
 	FundingNumber               string `json:"fundingNumber" jsonschema:"description=six digit funding number,example=123456"`
 	FundingSource               string `json:"fundingSource" jsonschema:"description=Source of funding,example=Prog Ops"`
 	GrbDate                     string `json:"grbDate" jsonschema:"description=Scheduled date for the Governance Review Board (GRB) meeting,example=2025-12-12T00:00:00Z"`
