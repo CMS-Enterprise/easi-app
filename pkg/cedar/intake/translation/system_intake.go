@@ -3,6 +3,8 @@ package translation
 import (
 	"encoding/json"
 
+	"github.com/guregu/null"
+
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -61,8 +63,8 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		RejectionReason:             si.RejectionReason.ValueOrZero(),
 		AdminLead:                   si.AdminLead.ValueOrZero(),
 
-		ExistingFunding:    strNullableBool(si.ExistingFunding),
-		EaSupportRequest:   strNullableBool(si.EASupportRequest),
+		ExistingFunding:    null.Bool.Ptr(si.ExistingFunding),
+		EaSupportRequest:   null.Bool.Ptr(si.EASupportRequest),
 		ContractStartDate:  strDate(si.ContractStartDate),
 		ContractEndDate:    strDate(si.ContractEndDate),
 		SubmittedAt:        strDateTime(si.SubmittedAt),

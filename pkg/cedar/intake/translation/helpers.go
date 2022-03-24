@@ -1,11 +1,9 @@
 package translation
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/go-openapi/strfmt"
-	"github.com/guregu/null"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 )
@@ -31,16 +29,6 @@ func strDateTime(t *time.Time) string {
 	str := ""
 	if t != nil {
 		str = t.UTC().Format(time.RFC3339)
-	}
-	return str
-}
-
-// pBool turns a nullable boolean into a string, using the empty
-// string to represent the un-set case, or "true" or "false" otherwise
-func strNullableBool(b null.Bool) string {
-	str := ""
-	if b.Ptr() != nil {
-		str = strconv.FormatBool(b.Bool)
 	}
 	return str
 }
