@@ -52,11 +52,14 @@ const action = {
     back: 'Change',
     heading: 'Actions on request',
     subheading: 'How to proceed?',
+    selectedAction: 'Selected action',
     action: 'Extend Lifecycle ID',
-    currentLcid: 'Lifecycle ID',
+    lifecycleId: 'Lifecycle ID',
+    currentLcid: 'Current Lifecycle ID',
     currentLcidExpiration: 'Current expiration date',
+    newLcid: 'New Lifecycle ID',
     expirationDate: {
-      label: 'New expiration date',
+      label: 'Expiration date',
       helpText: 'For example 08 02 1776',
       month: 'Month',
       day: 'Day',
@@ -64,11 +67,16 @@ const action = {
     },
     currentScope: 'Current Scope',
     currentNextSteps: 'Current Next Steps',
-    currentCostBaseline: 'Current Project Cost Baseline (Optional)',
+    currentCostBaseline: 'Current Project Cost Baseline',
     noCostBaseline: 'There is no Cost Baseline associated with this LCID',
+    scopeHelpText:
+      'Tell the Requester what is covered by this Lifecycle ID and what work it limits the project team to. This information will be included in your email to the Requester.',
+    nextStepsHelpText:
+      'Provide the Requester with some recommendations on how to continue their process. For example, “Begin your ATO” or “Update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID. This information will be included in your email to the Requester.',
+    costBaselineHelpText:
+      'Enter the current cost baseline for the project for the first two planned fisical years of the project. This information will be included in your email to the Requester.',
     submissionInfo:
-      'An email will automatically be sent to the Business Owner letting them know of the new expiration date.',
-    submit: 'Extend Lifecycle ID'
+      'The content for this email is automatically generated to notify the Requester of the new expiration date.'
   },
   rejectIntake: {
     backLink: 'Change',

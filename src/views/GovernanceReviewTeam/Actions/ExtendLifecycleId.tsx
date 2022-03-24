@@ -149,55 +149,65 @@ const ExtendLifecycleId = ({
               </ErrorAlert>
             )}
 
-            <PageHeading>{t('extendLcid.heading')}</PageHeading>
-            <h2>{t('extendLcid.subheading')}</h2>
-            <p>
+            <PageHeading className="margin-top-0 margin-bottom-3">
+              {t('extendLcid.heading')}
+            </PageHeading>
+            <h3 className="margin-top-3 margin-bottom-2">
+              {t('extendLcid.subheading')}
+            </h3>
+            <div className="margin-bottom-05 text-bold line-height-body-2">
+              {t('extendLcid.selectedAction')}
+            </div>
+            <div>
               {t('extendLcid.action')}{' '}
               <Link to={`/governance-review-team/${systemId}/actions`}>
                 {t('extendLcid.back')}
               </Link>
-            </p>
-            <div className="tablet:grid-col-6">
-              <MandatoryFieldsAlert />
             </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
-              <dl title="Existing Lifecycle ID">
-                <dt className="text-bold margin-bottom-1">
-                  {t('extendLcid.currentLcid')}
-                </dt>
-                <dd className="margin-left-0 margin-bottom-2">{lcid}</dd>
-
-                <dt className="text-bold margin-bottom-1">
+              <h3 className="margin-top-3 margin-bottom-2">
+                {t('extendLcid.currentLcid')}
+              </h3>
+              <dl title="Existing Lifecycle ID" className="margin-bottom-5">
+                <dt className="text-bold">{t('extendLcid.lifecycleId')}</dt>
+                <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
+                  {lcid}
+                </dd>
+                <dt className="text-bold">
                   {t('extendLcid.currentLcidExpiration')}
                 </dt>
-                <dd className="margin-left-0 margin-bottom-2">
+                <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
                   {formatDateAndIgnoreTimezone(lcidExpiresAt)}
                 </dd>
-                <dt className="text-bold margin-bottom-1">
-                  {t('extendLcid.currentScope')}
-                </dt>
-                <dd className="margin-left-0 margin-bottom-2">{lcidScope}</dd>
-                <dt className="text-bold margin-bottom-1">
+                <dt className="text-bold">{t('extendLcid.currentScope')}</dt>
+                <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
+                  {lcidScope}
+                </dd>
+                <dt className="text-bold">
                   {t('extendLcid.currentNextSteps')}
                 </dt>
-                <dd className="margin-left-0 margin-bottom-2">
+                <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
                   {lcidNextSteps}
                 </dd>
-                <dt className="text-bold margin-bottom-1">
+                <dt className="text-bold">
                   {t('extendLcid.currentCostBaseline')}
                 </dt>
-                <dd className="margin-left-0 margin-bottom-2">
+                <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
                   {lcidCostBaseline || t('extendLcid.noCostBaseline')}
                 </dd>
               </dl>
-              <hr />
+              <hr className="border-0 height-1px bg-base-light " />
+              <h3 className="margin-top-5 margin-bottom-2">
+                {t('extendLcid.newLcid')}
+              </h3>
+              <MandatoryFieldsAlert />
               <Form>
                 <FieldGroup>
-                  <fieldset className="usa-fieldset margin-top-2">
-                    <legend className="usa-label margin-bottom-1">
+                  <fieldset className="usa-fieldset margin-top-4">
+                    <legend className="usa-label line-height-body-2">
                       {t('extendLcid.expirationDate.label')}
                     </legend>
-                    <HelpText>
+                    <HelpText className="margin-top-05 line-height-body-5 text-base">
                       {t('extendLcid.expirationDate.helpText')}
                     </HelpText>
                     <FieldErrorMsg>{flatErrors.newExpirationDay}</FieldErrorMsg>
@@ -209,8 +219,11 @@ const ExtendLifecycleId = ({
                     </FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.validDate}</FieldErrorMsg>
                     <div className="usa-memorable-date">
-                      <div className="usa-form-group usa-form-group--month">
-                        <Label htmlFor="ExtendLifecycleId-NewExpirationMonth">
+                      <div className="usa-form-group usa-form-group--month margin-top-105 margin-right-1 width-7">
+                        <Label
+                          htmlFor="ExtendLifecycleId-NewExpirationMonth"
+                          className="line-height-body-3 text-normal"
+                        >
                           {t('extendLcid.expirationDate.month')}
                         </Label>
                         <Field
@@ -218,10 +231,14 @@ const ExtendLifecycleId = ({
                           error={!!flatErrors.newExpirationMonth}
                           id="ExtendLifecycleId-NewExpirationMonth"
                           name="newExpirationMonth"
+                          className="margin-top-05"
                         />
                       </div>
-                      <div className="usa-form-group usa-form-group--day">
-                        <Label htmlFor="ExtendLifecycleId-NewExpirationDay">
+                      <div className="usa-form-group usa-form-group--day margin-top-105 margin-right-1 width-7">
+                        <Label
+                          htmlFor="ExtendLifecycleId-NewExpirationDay"
+                          className="line-height-body-3 text-normal"
+                        >
                           {t('extendLcid.expirationDate.day')}
                         </Label>
                         <Field
@@ -229,10 +246,14 @@ const ExtendLifecycleId = ({
                           error={!!flatErrors.newExpirationDay}
                           id="ExtendLifecycleId-NewExpirationDay"
                           name="newExpirationDay"
+                          className="margin-top-05"
                         />
                       </div>
-                      <div className="usa-form-group usa-form-group--year">
-                        <Label htmlFor="ExtendLifecycleId-NewExpirationYear">
+                      <div className="usa-form-group usa-form-group--year margin-top-105 margin-right-1 width-10">
+                        <Label
+                          htmlFor="ExtendLifecycleId-NewExpirationYear"
+                          className="line-height-body-3 text-normal"
+                        >
                           {t('extendLcid.expirationDate.year')}
                         </Label>
                         <Field
@@ -240,16 +261,26 @@ const ExtendLifecycleId = ({
                           error={!!flatErrors.newExpirationYear}
                           id="ExtendLifecycleId-NewExpirationYear"
                           name="newExpirationYear"
+                          className="margin-top-05"
                         />
                       </div>
                     </div>
                   </fieldset>
                 </FieldGroup>
-                <FieldGroup scrollElement="scope" error={!!flatErrors.newScope}>
-                  <Label htmlFor="ExtendLifecycleIdForm-Scope">
+                <FieldGroup
+                  scrollElement="scope"
+                  error={!!flatErrors.newScope}
+                  className="margin-top-4"
+                >
+                  <Label
+                    htmlFor="ExtendLifecycleIdForm-Scope"
+                    className="line-height-body-2"
+                  >
                     {t('issueLCID.scopeLabel')}
                   </Label>
-                  <HelpText>{t('issueLCID.scopeHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('extendLcid.scopeHelpText')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.newScope}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -262,11 +293,17 @@ const ExtendLifecycleId = ({
                 <FieldGroup
                   scrollElement="nextSteps"
                   error={!!flatErrors.newNextSteps}
+                  className="margin-top-4"
                 >
-                  <Label htmlFor="ExtendLifecycleIdForm-NextSteps">
+                  <Label
+                    htmlFor="ExtendLifecycleIdForm-NextSteps"
+                    className="line-height-body-2"
+                  >
                     {t('issueLCID.nextStepsLabel')}
                   </Label>
-                  <HelpText>{t('issueLCID.nextStepsHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('extendLcid.nextStepsHelpText')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.newNextSteps}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -276,11 +313,16 @@ const ExtendLifecycleId = ({
                     name="newNextSteps"
                   />
                 </FieldGroup>
-                <FieldGroup>
-                  <Label htmlFor="ExtendLifecycleIdForm-CostBaseline">
+                <FieldGroup className="margin-top-4">
+                  <Label
+                    htmlFor="ExtendLifecycleIdForm-CostBaseline"
+                    className="line-height-body-2"
+                  >
                     {t('issueLCID.costBaselineLabel')}
                   </Label>
-                  <HelpText>{t('issueLCID.costBaselineHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('extendLcid.costBaselineHelpText')}
+                  </HelpText>
                   <Field
                     as={TextAreaField}
                     id="ExtendLifecycleIdForm-CostBaseline"
@@ -288,12 +330,12 @@ const ExtendLifecycleId = ({
                     name="newCostBaseline"
                   />
                 </FieldGroup>
-                <EmailRecipientsFields />
-                <p className="margin-top-6 line-height-body-3">
+                <EmailRecipientsFields className="margin-top-5" />
+                <p className="margin-top-3 margin-bottom-0 line-height-body-5 text-base">
                   {t('extendLcid.submissionInfo')}
                 </p>
                 <Button
-                  className="margin-y-2"
+                  className="margin-top-1"
                   type="submit"
                   disabled={extendLifecycleIDStatus.loading}
                 >
