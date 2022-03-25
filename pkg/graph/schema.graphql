@@ -1177,6 +1177,44 @@ type CurrentUser {
 }
 
 """
+Represents a contact associated with a system intake
+"""
+type SystemIntakeContact {
+  euaUserId: String!
+  systemIntakeId: UUID!
+}
+
+"""
+The data needed to associate a contact with a system intake
+"""
+input CreateSystemIntakeContactInput {
+  euaUserId: String!
+  systemIntakeId: UUID!
+}
+
+"""
+The data needed to delete a system intake contact
+"""
+input DeleteSystemIntakeContactInput {
+  euaUserId: String!
+  systemIntakeId: UUID!
+}
+
+"""
+The payload when creating a system intake contact
+"""
+type CreateSystemIntakeContactPayload {
+  sysemIntakeContact: SystemIntakeContact
+}
+
+"""
+The payload when deleating a system intake contact
+"""
+type DeleteSystemIntakeContactPayload {
+  sysemIntakeContact: SystemIntakeContact
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -1275,6 +1313,8 @@ type Mutation {
   deleteCedarSystemBookmark(
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
+  createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
+  deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
 }
 
 """
@@ -1296,6 +1336,7 @@ type Query {
   deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(systemId: String!, roleTypeID: String): [CedarRole!]!
   detailedCedarSystemInfo(id: String!): DetailedCedarSystem
+  systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
 }
 
 """

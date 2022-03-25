@@ -13,7 +13,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"github.com/vektah/gqlparser/v2/gqlerror"
+	"github.com/vektah/gqlparser/gqlerror"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -1331,6 +1331,31 @@ func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input 
 	return &model.DeleteCedarSystemBookmarkPayload{CedarSystemID: input.CedarSystemID}, nil
 }
 
+func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
+	contact := &models.SystemIntakeContact{
+		SystemIntakeID: input.SystemIntakeID,
+		EUAUserID:      input.EuaUserID,
+	}
+	createdContact, err := r.store.CreateSystemIntakeContact(ctx, contact)
+	return &model.CreateSystemIntakeContactPayload{
+		SysemIntakeContact: createdContact,
+	}, err
+}
+
+func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error) {
+	contact := &models.SystemIntakeContact{
+		SystemIntakeID: input.SystemIntakeID,
+		EUAUserID:      input.EuaUserID,
+	}
+	_, err := r.store.DeleteSystemIntakeContact(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
+	return &model.DeleteSystemIntakeContactPayload{
+		SysemIntakeContact: contact,
+	}, nil
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
 	accessibilityRequest, err := r.store.FetchAccessibilityRequestByIDIncludingDeleted(ctx, id)
@@ -1543,6 +1568,14 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, id string) 
 	}
 
 	return &dCedarSys, nil
+}
+
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return contacts, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
