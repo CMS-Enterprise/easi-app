@@ -99,7 +99,7 @@ jobs:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-backend
-          LAMBDA_VERSION: ${{ steps.get-ecs-manager-lambda-version.outputs.get-ecs-manager-lambda-version }}
+          LAMBDA_VERSION: ${{ inputs.lambda_version }}
           ENV: ${{ inputs.env }}
         run: |
           ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
