@@ -1,16 +1,16 @@
-import { extendLifecycleIdSchema } from './actionSchema';
+import { sharedLifecycleIdSchema } from './actionSchema';
 
 describe('extend lifecycle ID schema', () => {
   const defaultValues = {
-    expirationDateMonth: '2',
     expirationDateDay: '15',
+    expirationDateMonth: '2',
     expirationDateYear: '2023',
-    newScope: 'A new scope',
-    newNextSteps: 'Some new next steps'
+    nextSteps: 'Some new next steps',
+    scope: 'A new scope'
   };
 
   it('validates and accepts entries', async () => {
-    const result = await extendLifecycleIdSchema
+    const result = await sharedLifecycleIdSchema
       .validate(defaultValues)
       .catch((err: any) => {
         return err;
@@ -19,7 +19,7 @@ describe('extend lifecycle ID schema', () => {
   });
 
   it('throws error for invalid month', async () => {
-    const result = await extendLifecycleIdSchema
+    const result = await sharedLifecycleIdSchema
       .validate({
         ...defaultValues,
         expirationDateMonth: '123'
@@ -31,7 +31,7 @@ describe('extend lifecycle ID schema', () => {
   });
 
   it('throws error for invalid day', async () => {
-    const result = await extendLifecycleIdSchema
+    const result = await sharedLifecycleIdSchema
       .validate({
         ...defaultValues,
         expirationDateDay: '123'
@@ -43,7 +43,7 @@ describe('extend lifecycle ID schema', () => {
   });
 
   it('throws error for year in the past', async () => {
-    const result = await extendLifecycleIdSchema
+    const result = await sharedLifecycleIdSchema
       .validate({
         ...defaultValues,
         expirationDateYear: '123'
@@ -55,7 +55,7 @@ describe('extend lifecycle ID schema', () => {
   });
 
   it('throws error for invalid month', async () => {
-    const result = await extendLifecycleIdSchema
+    const result = await sharedLifecycleIdSchema
       .validate({
         ...defaultValues,
         expirationDateMonth: '-3'
@@ -67,10 +67,10 @@ describe('extend lifecycle ID schema', () => {
   });
 
   it('throws error for empty scope', async () => {
-    const result = await extendLifecycleIdSchema
+    const result = await sharedLifecycleIdSchema
       .validate({
         ...defaultValues,
-        newScope: ''
+        scope: ''
       })
       .catch((err: any) => {
         return err;
@@ -79,10 +79,10 @@ describe('extend lifecycle ID schema', () => {
   });
 
   it('throws error for empty next steps', async () => {
-    const result = await extendLifecycleIdSchema
+    const result = await sharedLifecycleIdSchema
       .validate({
         ...defaultValues,
-        newNextSteps: ''
+        nextSteps: ''
       })
       .catch((err: any) => {
         return err;

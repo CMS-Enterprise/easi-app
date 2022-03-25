@@ -142,8 +142,8 @@ describe('Governance Review Team', () => {
 
     cy.get('#IssueLifecycleIdForm-ExpirationDateYear')
       .clear()
-      .type('2020')
-      .should('have.value', '2020');
+      .type(new Date().getFullYear())
+      .should('have.value', new Date().getFullYear());
     cy.get('#IssueLifecycleIdForm-Scope')
       .type('Scope')
       .should('have.value', 'Scope');
@@ -176,7 +176,7 @@ describe('Governance Review Team', () => {
     ).click();
     cy.contains('dt', 'Lifecycle ID Expiration')
       .siblings('dd')
-      .contains('December 25 2020');
+      .contains(`December 25 ${new Date().getFullYear()}`);
     cy.contains('dt', 'Lifecycle ID Scope').siblings('dd').contains('Scope');
     cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });
