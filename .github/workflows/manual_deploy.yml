@@ -3,15 +3,20 @@ name: Manual Deployment
 on:
   workflow_dispatch:
     inputs:
-      env: 
+      env:
         required: true
-        default: 'dev'
-        type: choice 
-        options: 
-        - dev 
-        - impl 
-        - prod 
-    
+        default: "dev"
+        type: choice
+        description: Environment to deploy to
+        options:
+          - dev
+          - impl
+          - prod
+      confirm_production_deploy:
+        required: true
+        default: false
+        type: boolean
+        description: Confirm that you want to deploy to production
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
@@ -19,7 +24,6 @@ env:
   IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   DOCKER_BUILDKIT: 1
-
 
 jobs:
   Build_Application_Images:
@@ -84,7 +88,7 @@ jobs:
 
   deploy_prod:
     needs: Run_Tests
-    if: ${{ github.event.inputs.env == 'prod' }}
+    if: ${{ github.event.inputs.env == 'prod' && github.event.inputs.confirm_production_deploy == true }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: prod
