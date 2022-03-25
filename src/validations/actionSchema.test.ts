@@ -54,7 +54,21 @@ describe('extend lifecycle ID schema', () => {
     expect(result.errors).toEqual(['Date cannot be in the past']);
   });
 
-  it('throws error for invalid month', async () => {
+  it('throws error for a valid date IN THE PAST', async () => {
+    const result = await sharedLifecycleIdSchema
+      .validate({
+        ...defaultValues,
+        expirationDateMonth: '2',
+        expirationDateDay: '15',
+        expirationDateYear: '2022'
+      })
+      .catch((err: any) => {
+        return err;
+      });
+    expect(result.errors).toEqual(['Date cannot be in the past']);
+  });
+
+  it('throws error for a "negative" month', async () => {
     const result = await sharedLifecycleIdSchema
       .validate({
         ...defaultValues,

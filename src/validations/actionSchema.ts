@@ -16,11 +16,10 @@ export const sharedLifecycleIdSchema = Yup.object().shape({
     .required('Please include a day'),
   expirationDateYear: Yup.number()
     .integer()
-    .min(new Date().getFullYear(), 'Date cannot be in the past')
+    .min(DateTime.local().year, 'Date cannot be in the past')
     .required('Please include a year'),
-  validDate: Yup.string().when(
-    ['expirationDateMonth', 'expirationDateDay', 'expirationDateYear'],
-    {
+  validDate: Yup.string()
+    .when(['expirationDateMonth', 'expirationDateDay', 'expirationDateYear'], {
       is: (
         expirationDateMonth: string,
         expirationDateDay: string,
@@ -44,8 +43,32 @@ export const sharedLifecycleIdSchema = Yup.object().shape({
         'Enter a valid expiration date',
         () => false
       )
-    }
-  ),
+    })
+    .when(['expirationDateMonth', 'expirationDateDay', 'expirationDateYear'], {
+      is: (
+        expirationDateMonth: string,
+        expirationDateDay: string,
+        expirationDateYear: string
+      ) => {
+        const month = Number(expirationDateMonth);
+        const day = Number(expirationDateDay);
+        const year = Number(expirationDateYear);
+
+        return (
+          !(Number.isNaN(month) || Number.isNaN(day) || Number.isNaN(year)) &&
+          DateTime.fromObject({
+            month,
+            day,
+            year
+          }) > DateTime.local()
+        );
+      },
+      otherwise: Yup.string().test(
+        'validDate',
+        'Date cannot be in the past',
+        () => false
+      )
+    }),
   scope: Yup.string().trim().required('Please include a scope'),
   nextSteps: Yup.string().trim().required('Please fill out next steps')
 });
