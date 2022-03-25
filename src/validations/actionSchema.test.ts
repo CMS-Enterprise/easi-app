@@ -65,7 +65,7 @@ describe('extend lifecycle ID schema', () => {
       .catch((err: any) => {
         return err;
       });
-    expect(result.errors).toEqual(['Date cannot be in the past']);
+    expect(result.errors).toEqual(['Enter a valid expiration date']);
   });
 
   it('throws error for a "negative" month', async () => {

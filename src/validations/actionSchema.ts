@@ -65,7 +65,7 @@ export const sharedLifecycleIdSchema = Yup.object().shape({
       },
       otherwise: Yup.string().test(
         'validDate',
-        'Date cannot be in the past',
+        'Enter a valid expiration date',
         () => false
       )
     }),
