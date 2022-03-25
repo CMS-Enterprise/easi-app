@@ -1,87 +1,92 @@
-import ValidationError from 'yup/lib/ValidationError';
-
 import { extendLifecycleIdSchema } from './actionSchema';
 
 describe('extend lifecycle ID schema', () => {
-  it('should correctly validate a schema that is valid', () => {
-    expect(() =>
-      extendLifecycleIdSchema.validateSync({
-        expirationDateMonth: '2',
-        expirationDateDay: '15',
-        expirationDateYear: '2023',
-        newScope: 'A new scope',
-        newNextSteps: 'Some new next steps'
-      })
-    ).not.toThrowError();
+  const defaultValues = {
+    expirationDateMonth: '2',
+    expirationDateDay: '15',
+    expirationDateYear: '2023',
+    newScope: 'A new scope',
+    newNextSteps: 'Some new next steps'
+  };
+
+  it('validates and accepts entries', async () => {
+    const result = await extendLifecycleIdSchema
+      .validate(defaultValues)
+      .catch((err: any) => {
+        return err;
+      });
+    expect(result.errors).toBeUndefined();
   });
 
-  try {
-    extendLifecycleIdSchema.validateSync({
-      expirationDateMonth: '32',
-      expirationDateDay: '15',
-      expirationDateYear: '2023',
-      newScope: 'A new scope',
-      newNextSteps: 'Some new next steps'
-    });
-    throw new Error('Should not validate successfully');
-  } catch (err) {
-    expect(err).toBeInstanceOf(ValidationError);
-    expect((err as ValidationError).path).toBe('expirationDateMonth');
-  }
+  it('throws error for invalid month', async () => {
+    const result = await extendLifecycleIdSchema
+      .validate({
+        ...defaultValues,
+        expirationDateMonth: '123'
+      })
+      .catch((err: any) => {
+        return err;
+      });
+    expect(result.errors).toEqual(['Please enter valid month']);
+  });
 
-  try {
-    extendLifecycleIdSchema.validateSync({
-      expirationDateMonth: '2',
-      expirationDateDay: '150',
-      expirationDateYear: '2023',
-      newScope: 'A new scope',
-      newNextSteps: 'Some new next steps'
-    });
-    throw new Error('Should not validate successfully');
-  } catch (err) {
-    expect(err).toBeInstanceOf(ValidationError);
-    expect((err as ValidationError).path).toBe('expirationDateDay');
-  }
+  it('throws error for invalid day', async () => {
+    const result = await extendLifecycleIdSchema
+      .validate({
+        ...defaultValues,
+        expirationDateDay: '123'
+      })
+      .catch((err: any) => {
+        return err;
+      });
+    expect(result.errors).toEqual(['Please enter valid day']);
+  });
 
-  try {
-    extendLifecycleIdSchema.validateSync({
-      expirationDateMonth: '2',
-      expirationDateDay: '15',
-      expirationDateYear: 'abcd',
-      newScope: 'A new scope',
-      newNextSteps: 'Some new next steps'
-    });
-    throw new Error('Should not validate successfully');
-  } catch (err) {
-    expect(err).toBeInstanceOf(ValidationError);
-    expect((err as ValidationError).path).toBe('validDate');
-  }
+  it('throws error for year in the past', async () => {
+    const result = await extendLifecycleIdSchema
+      .validate({
+        ...defaultValues,
+        expirationDateYear: '123'
+      })
+      .catch((err: any) => {
+        return err;
+      });
+    expect(result.errors).toEqual(['Date cannot be in the past']);
+  });
 
-  try {
-    extendLifecycleIdSchema.validateSync({
-      expirationDateMonth: '2',
-      expirationDateDay: '15',
-      expirationDateYear: '2023',
-      newScope: '',
-      newNextSteps: 'Some new next steps'
-    });
-    throw new Error('Should not validate successfully');
-  } catch (err) {
-    expect(err).toBeInstanceOf(ValidationError);
-    expect((err as ValidationError).path).toBe('newScope');
-  }
+  it('throws error for invalid month', async () => {
+    const result = await extendLifecycleIdSchema
+      .validate({
+        ...defaultValues,
+        expirationDateMonth: '-3'
+      })
+      .catch((err: any) => {
+        return err;
+      });
+    expect(result.errors).toEqual(['Enter a valid expiration date']);
+  });
 
-  try {
-    extendLifecycleIdSchema.validateSync({
-      expirationDateMonth: '2',
-      expirationDateDay: '15',
-      expirationDateYear: '2023',
-      newScope: 'A new scope',
-      newNextSteps: ''
-    });
-    throw new Error('Should not validate successfully');
-  } catch (err) {
-    expect(err).toBeInstanceOf(ValidationError);
-    expect((err as ValidationError).path).toBe('newNextSteps');
-  }
+  it('throws error for empty scope', async () => {
+    const result = await extendLifecycleIdSchema
+      .validate({
+        ...defaultValues,
+        newScope: ''
+      })
+      .catch((err: any) => {
+        return err;
+      });
+    expect(result.errors).toEqual(['Please include a scope']);
+  });
+
+  it('throws error for empty next steps', async () => {
+    const result = await extendLifecycleIdSchema
+      .validate({
+        ...defaultValues,
+        newNextSteps: ''
+      })
+      .catch((err: any) => {
+        return err;
+      });
+    expect(result.errors).toEqual(['Please fill out next steps']);
+  });
 });
