@@ -6,11 +6,8 @@ on:
       env:
         required: true
         type: string
-  workflow_dispatch:
-    inputs:
-      env:
+      lambda_version: 
         required: true
-        description: Environment to deploy to. Can be 'dev', 'impl', or 'prod'.
         type: string
     secrets:
       AWS_ACCESS_KEY_ID:
@@ -87,25 +84,25 @@ jobs:
         if: contains(inputs.env, 'impl') || contains(inputs.env, 'prod')
         run: |
           ./scripts/rds-snapshot-app-db
-      - name: Get ECS manager lambda version
-        id: get-ecs-manager-lambda-version
-        run: |
-          case "$ENV" in
-            "dev")
-              echo "::set-output name=LAMBDA_VERSION::9"
-              ;;
-            "impl")
-              echo "::set-output name=LAMBDA_VERSION::8"
-              ;;
-            "prod")
-              echo "::set-output name=LAMBDA_VERSION::7"
-              ;;
-            *)
-              echo "ENV value not recognized: ${ENV:-unset}"
-              echo "Allowed values: 'dev', 'impl', 'prod'"
-              exit 1
-              ;;
-          esac
+      # - name: Get ECS manager lambda version
+      #   id: get-ecs-manager-lambda-version
+      #   run: |
+      #     case "$ENV" in
+      #       "dev")
+      #         echo "::set-output name=LAMBDA_VERSION::9"
+      #         ;;
+      #       "impl")
+      #         echo "::set-output name=LAMBDA_VERSION::8"
+      #         ;;
+      #       "prod")
+      #         echo "::set-output name=LAMBDA_VERSION::7"
+      #         ;;
+      #       *)
+      #         echo "ENV value not recognized: ${ENV:-unset}"
+      #         echo "Allowed values: 'dev', 'impl', 'prod'"
+      #         exit 1
+      #         ;;
+      #     esac
       - name: Run migrations
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}

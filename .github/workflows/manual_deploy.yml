@@ -1,9 +1,17 @@
-name: Deploy Pipeline
+name: Manual Deployment
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+    inputs:
+      env: 
+        required: true
+        default: 'dev'
+        type: choice 
+        options: 
+        - dev 
+        - impl 
+        - prod 
+    
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
@@ -11,6 +19,7 @@ env:
   IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   DOCKER_BUILDKIT: 1
+
 
 jobs:
   Build_Application_Images:
@@ -39,6 +48,7 @@ jobs:
 
   deploy_dev:
     needs: Run_Tests
+    if: ${{ github.event.inputs.env == 'dev' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: dev
@@ -54,7 +64,8 @@ jobs:
       ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
 
   deploy_impl:
-    needs: deploy_dev
+    needs: Run_Tests
+    if: ${{ github.event.inputs.env == 'impl' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: impl
@@ -70,7 +81,8 @@ jobs:
       ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
 
   deploy_prod:
-    needs: deploy_impl
+    needs: Run_Tests
+    if: ${{ github.event.inputs.env == 'dev' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: prod
@@ -84,66 +96,3 @@ jobs:
       STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET_PROD }}
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_PROD }}
       ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
-
-  client_typecheck:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      issues: write
-    steps:
-      - name: Check out code
-        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # v2.3.4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Set up node
-        uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a # v2.1.5
-        with:
-          node-version: ${{ env.EASI_APP_NODE_VERSION }}
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Configure yarn cache
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # v2.1.6
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: |
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            ./node_modules
-          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            v1-yarn-
-      - name: Run typechecking
-        id: typechecker
-        # Uses GitHub environment files to store typechecker output and pass to next stage
-        # see https://github.com/actions/toolkit/blob/main/docs/commands.md#environment-files
-        run: |
-          yarn build:ts 2>&1 | tee test.log
-          result_code=${PIPESTATUS[0]}
-          echo 'TS_LOG<<EOF' >> $GITHUB_ENV
-          cat test.log >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-          exit $result_code
-        continue-on-error: true
-      # - name: Post comment with TypeScript type errors
-      #   uses: actions/github-script@v6
-      #   if: ${{ steps.typechecker.outcome == 'failure' && github.event_name == 'pull_request'}}
-      #   with:
-      #     script: |
-      #       const typeScriptLog = process.env.TS_LOG;
-
-      #       const commentBody = `
-      #       <details>
-      #       <summary>TypeScript compile errors</summary>
-
-      #       \`\`\`shell
-      #       ${typeScriptLog}
-      #       \`\`\`
-      #       </details>`;
-
-      #       github.rest.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: commentBody
-      #       });
-
