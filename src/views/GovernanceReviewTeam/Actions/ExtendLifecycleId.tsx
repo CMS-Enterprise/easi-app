@@ -27,7 +27,7 @@ import {
 import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
-import { extendLifecycleIdSchema } from 'validations/actionSchema';
+import { sharedLifecycleIdSchema } from 'validations/actionSchema';
 
 type ExtendLCIDForm = {
   currentCostBaseline: string;
@@ -38,8 +38,8 @@ type ExtendLCIDForm = {
   expirationDateMonth: string;
   expirationDateYear: string;
   newCostBaseline: string;
-  newNextSteps: string;
-  newScope: string;
+  nextSteps: string;
+  scope: string;
 };
 
 type ExtendLifecycleIdProps = {
@@ -70,9 +70,9 @@ const ExtendLifecycleId = ({
     expirationDateMonth: '',
     expirationDateYear: '',
     currentScope: lcidScope,
-    newScope: '',
+    scope: '',
     currentNextSteps: lcidNextSteps,
-    newNextSteps: '',
+    nextSteps: '',
     currentCostBaseline: lcidCostBaseline,
     newCostBaseline: ''
   };
@@ -87,8 +87,8 @@ const ExtendLifecycleId = ({
       expirationDateMonth = '',
       expirationDateDay = '',
       expirationDateYear = '',
-      newScope = '',
-      newNextSteps = '',
+      scope = '',
+      nextSteps = '',
       newCostBaseline = ''
     } = values;
     const expiresAt = DateTime.utc(
@@ -101,8 +101,8 @@ const ExtendLifecycleId = ({
         input: {
           id: systemId,
           expirationDate: expiresAt,
-          scope: newScope,
-          nextSteps: newNextSteps,
+          scope,
+          nextSteps,
           costBaseline: newCostBaseline
         }
       }
@@ -118,7 +118,7 @@ const ExtendLifecycleId = ({
     <Formik
       initialValues={initialValues}
       onSubmit={handleSubmit}
-      validationSchema={extendLifecycleIdSchema}
+      validationSchema={sharedLifecycleIdSchema}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -251,35 +251,35 @@ const ExtendLifecycleId = ({
                     </div>
                   </fieldset>
                 </FieldGroup>
-                <FieldGroup scrollElement="scope" error={!!flatErrors.newScope}>
+                <FieldGroup scrollElement="scope" error={!!flatErrors.scope}>
                   <Label htmlFor="ExtendLifecycleIdForm-Scope">
                     {t('issueLCID.scopeLabel')}
                   </Label>
                   <HelpText>{t('issueLCID.scopeHelpText')}</HelpText>
-                  <FieldErrorMsg>{flatErrors.newScope}</FieldErrorMsg>
+                  <FieldErrorMsg>{flatErrors.scope}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    error={!!flatErrors.newScope}
+                    error={!!flatErrors.scope}
                     id="ExtendLifecycleIdForm-Scope"
                     maxLength={3000}
-                    name="newScope"
+                    name="scope"
                   />
                 </FieldGroup>
                 <FieldGroup
                   scrollElement="nextSteps"
-                  error={!!flatErrors.newNextSteps}
+                  error={!!flatErrors.nextSteps}
                 >
                   <Label htmlFor="ExtendLifecycleIdForm-NextSteps">
                     {t('issueLCID.nextStepsLabel')}
                   </Label>
                   <HelpText>{t('issueLCID.nextStepsHelpText')}</HelpText>
-                  <FieldErrorMsg>{flatErrors.newNextSteps}</FieldErrorMsg>
+                  <FieldErrorMsg>{flatErrors.nextSteps}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    error={!!flatErrors.newNextSteps}
+                    error={!!flatErrors.nextSteps}
                     id="ExtendLifecycleIdForm-NextSteps"
                     maxLength={3000}
-                    name="newNextSteps"
+                    name="nextSteps"
                   />
                 </FieldGroup>
                 <FieldGroup>

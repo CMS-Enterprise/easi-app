@@ -5,7 +5,7 @@ export const actionSchema = Yup.object().shape({
   feedback: Yup.string().required('Please fill out email')
 });
 
-const sharedValidDateSchema = Yup.object().shape({
+export const sharedLifecycleIdSchema = Yup.object().shape({
   expirationDateMonth: Yup.number()
     .integer()
     .max(12, 'Please enter valid month')
@@ -45,12 +45,12 @@ const sharedValidDateSchema = Yup.object().shape({
         () => false
       )
     }
-  )
+  ),
+  scope: Yup.string().trim().required('Please include a scope'),
+  nextSteps: Yup.string().trim().required('Please fill out next steps')
 });
 
-export const lifecycleIdSchema = sharedValidDateSchema.shape({
-  scope: Yup.string().trim().required('Please include a scope'),
-  nextSteps: Yup.string().trim().required('Please fill out next steps'),
+export const lifecycleIdSchema = sharedLifecycleIdSchema.shape({
   feedback: Yup.string().trim().required('Please fill out email'),
   newLifecycleId: Yup.boolean().required(
     'Choose if you need a new Lifecycle ID or if you will use an existing Lifecycle ID'
@@ -65,11 +65,6 @@ export const lifecycleIdSchema = sharedValidDateSchema.shape({
       )
       .required('Please enter the existing Lifecycle ID')
   })
-});
-
-export const extendLifecycleIdSchema = sharedValidDateSchema.shape({
-  newScope: Yup.string().trim().required('Please include a scope'),
-  newNextSteps: Yup.string().trim().required('Please fill out next steps')
 });
 
 export const rejectIntakeSchema = Yup.object().shape({
