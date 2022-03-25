@@ -1051,6 +1051,7 @@ input AddGRTFeedbackInput {
   emailBody: String!
   feedback: String!
   intakeID: UUID!
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -1152,6 +1153,7 @@ Input to add feedback to a system request
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
+  shouldSendEmail: Boolean! = true
 }
 
 """

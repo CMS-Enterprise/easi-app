@@ -30,9 +30,10 @@ type AccessibilityRequestsConnection struct {
 // Feedback intended for a business owner before they proceed to writing a
 // business case for a system request
 type AddGRTFeedbackInput struct {
-	EmailBody string    `json:"emailBody"`
-	Feedback  string    `json:"feedback"`
-	IntakeID  uuid.UUID `json:"intakeID"`
+	EmailBody       string    `json:"emailBody"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeID"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // Payload for adding GRT feedback to a system request (contains the system
@@ -43,8 +44,9 @@ type AddGRTFeedbackPayload struct {
 
 // Input to add feedback to a system request
 type BasicActionInput struct {
-	Feedback string    `json:"feedback"`
-	IntakeID uuid.UUID `json:"intakeId"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeId"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // An IT governance requester's explanation of alternative solutions

@@ -435,7 +435,9 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 			Feedback:   null.StringFrom(input.EmailBody),
 			ActionType: models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES,
 		},
-		models.SystemIntakeStatusBIZCASECHANGESNEEDED)
+		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+		input.ShouldSendEmail,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -456,7 +458,9 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 			Feedback:   null.StringFrom(input.EmailBody),
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
-		models.SystemIntakeStatusBIZCASEFINALNEEDED)
+		models.SystemIntakeStatusBIZCASEFINALNEEDED,
+		input.ShouldSendEmail,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -477,7 +481,9 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 			Feedback:   null.StringFrom(input.EmailBody),
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
-		models.SystemIntakeStatusNEEDBIZCASE)
+		models.SystemIntakeStatusNEEDBIZCASE,
+		input.ShouldSendEmail,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -802,6 +808,7 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNEEDBIZCASE,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -819,6 +826,7 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx 
 		input.IntakeID,
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -836,6 +844,7 @@ func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx conte
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNCOMPLETE,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -853,6 +862,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -870,6 +880,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Cont
 		input.IntakeID,
 		models.SystemIntakeStatusNOTITREQUEST,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -887,6 +898,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -904,6 +916,7 @@ func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Conte
 		input.IntakeID,
 		models.SystemIntakeStatusREADYFORGRT,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -921,6 +934,7 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNINPROGRESS,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1085,7 +1099,9 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 			Feedback:   null.StringFrom(input.EmailBody),
 			ActionType: models.ActionTypeREADYFORGRB,
 		},
-		models.SystemIntakeStatusREADYFORGRB)
+		models.SystemIntakeStatusREADYFORGRB,
+		input.ShouldSendEmail,
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -4589,6 +4589,7 @@ input AddGRTFeedbackInput {
   emailBody: String!
   feedback: String!
   intakeID: UUID!
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -4690,6 +4691,7 @@ Input to add feedback to a system request
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -19397,6 +19399,10 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 		asMap[k] = v
 	}
 
+	if _, present := asMap["shouldSendEmail"]; !present {
+		asMap["shouldSendEmail"] = true
+	}
+
 	for k, v := range asMap {
 		switch k {
 		case "emailBody":
@@ -19423,6 +19429,14 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 			if err != nil {
 				return it, err
 			}
+		case "shouldSendEmail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
+			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -19434,6 +19448,10 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
+	}
+
+	if _, present := asMap["shouldSendEmail"]; !present {
+		asMap["shouldSendEmail"] = true
 	}
 
 	for k, v := range asMap {
@@ -19451,6 +19469,14 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeId"))
 			it.IntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldSendEmail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
+			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}

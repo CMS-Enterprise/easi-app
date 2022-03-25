@@ -139,6 +139,7 @@ export interface AddGRTFeedbackInput {
   emailBody: string;
   feedback: string;
   intakeID: UUID;
+  shouldSendEmail: boolean;
 }
 
 /**
@@ -147,6 +148,7 @@ export interface AddGRTFeedbackInput {
 export interface BasicActionInput {
   feedback: string;
   intakeId: UUID;
+  shouldSendEmail: boolean;
 }
 
 /**
