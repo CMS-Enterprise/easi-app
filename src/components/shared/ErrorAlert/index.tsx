@@ -55,7 +55,6 @@ export const ErrorAlertMessage = ({
     className="usa-error-message usa-alert__text easi-error-alert__message"
     onClick={() => {
       const fieldGroup = document.querySelector(`[data-scroll="${errorKey}"]`);
-
       if (fieldGroup) {
         fieldGroup.scrollIntoView();
       }
