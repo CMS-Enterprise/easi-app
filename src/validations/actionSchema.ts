@@ -14,9 +14,9 @@ const sharedValidDateSchema = Yup.object().shape({
     .integer()
     .max(31, 'Please enter valid day')
     .required('Please include a day'),
-  expirationDateYear: Yup.string()
-    .trim()
-    .length(4)
+  expirationDateYear: Yup.number()
+    .integer()
+    .min(new Date().getFullYear(), 'Date cannot be in the past')
     .required('Please include a year'),
   validDate: Yup.string().when(
     ['expirationDateMonth', 'expirationDateDay', 'expirationDateYear'],
