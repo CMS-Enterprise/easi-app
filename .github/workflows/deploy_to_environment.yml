@@ -84,31 +84,12 @@ jobs:
         if: contains(inputs.env, 'impl') || contains(inputs.env, 'prod')
         run: |
           ./scripts/rds-snapshot-app-db
-      # - name: Get ECS manager lambda version
-      #   id: get-ecs-manager-lambda-version
-      #   run: |
-      #     case "$ENV" in
-      #       "dev")
-      #         echo "::set-output name=LAMBDA_VERSION::9"
-      #         ;;
-      #       "impl")
-      #         echo "::set-output name=LAMBDA_VERSION::8"
-      #         ;;
-      #       "prod")
-      #         echo "::set-output name=LAMBDA_VERSION::7"
-      #         ;;
-      #       *)
-      #         echo "ENV value not recognized: ${ENV:-unset}"
-      #         echo "Allowed values: 'dev', 'impl', 'prod'"
-      #         exit 1
-      #         ;;
-      #     esac
       - name: Run migrations
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-db-migrate
-          LAMBDA_VERSION: ${{ steps.get-ecs-manager-lambda-version.outputs.get-ecs-manager-lambda-version }}
+          LAMBDA_VERSION: ${{ inputs.lambda_version }}
           ENV: ${{ inputs.env }}
         run: |
           ./scripts/deploy_service "easi-app-db-migrate" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
