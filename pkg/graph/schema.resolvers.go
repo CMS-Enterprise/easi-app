@@ -971,19 +971,21 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		return nil, err
 	}
 
-	err = r.emailClient.SendExtendLCIDEmail(
-		ctx,
-		requesterInfo.Email,
-		input.ID,
-		intake.ProjectName.String,
-		input.ExpirationDate,
-		input.Scope,
-		*input.NextSteps,
-		*input.CostBaseline,
-	)
+	if input.ShouldSendEmail {
+		err = r.emailClient.SendExtendLCIDEmail(
+			ctx,
+			requesterInfo.Email,
+			input.ID,
+			intake.ProjectName.String,
+			input.ExpirationDate,
+			input.Scope,
+			*input.NextSteps,
+			*input.CostBaseline,
+		)
 
-	if err != nil {
-		return nil, err
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
@@ -1080,7 +1082,9 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 		&models.Action{
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
-		})
+		},
+		input.ShouldSendEmail,
+	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
@@ -1120,7 +1124,9 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 		&models.Action{
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
-		})
+		},
+		input.ShouldSendEmail,
+	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err

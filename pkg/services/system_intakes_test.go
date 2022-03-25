@@ -362,11 +362,11 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 			EuaUserID:  euaID,
 		}, nil
 	}
-	reviewEmailCount := 0
+	reviewEmailSent := false
 	feedbackForEmailText := ""
 	fnSendLCIDEmail := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
-		reviewEmailCount++
+		reviewEmailSent = true
 		return nil
 	}
 	fnSendIntakeInvalidEUAIDEmail := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
@@ -380,21 +380,35 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
-		intake, err := happy(context.Background(), input, action)
+		reviewEmailSent = false // clear before running test
+
+		intake, err := happy(context.Background(), input, action, true)
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.LifecycleScope, scope)
-		s.Equal(1, reviewEmailCount)
+		s.True(reviewEmailSent)
 		s.Equal("Feedback", feedbackForEmailText)
+	})
+
+	s.Run("happy path provided lcid without sending email", func() {
+		reviewEmailSent = false // clear before running test
+
+		intake, err := happy(context.Background(), input, action, false)
+		s.NoError(err)
+		s.Equal(intake.LifecycleID, lifecycleID)
+		s.Equal(intake.LifecycleExpiresAt, expiresAt)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.LifecycleScope, scope)
+		s.False(reviewEmailSent)
 	})
 
 	// from here on out, we always expect the LCID to get generated
 	input.LifecycleID = null.StringFrom("")
 
 	s.Run("happy path generates lcid", func() {
-		intake, err := happy(context.Background(), input, action)
+		intake, err := happy(context.Background(), input, action, true)
 		s.NoError(err)
 		s.NotEqual(intake.LifecycleID, "")
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -429,9 +443,39 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 			fnSendIntakeNoEUAIDEmail,
 			fnGenerate,
 		)
-		_, err := updateLifecycleFields(context.Background(), input, action)
+		_, err := updateLifecycleFields(context.Background(), input, action, true)
 		s.NoError(err)
 		s.True(emailSentForInvalidEUAID)
+	})
+
+	s.Run("should *not* send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP, but shouldSendEmail is set to false", func() {
+		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+			return nil, &apperrors.InvalidEUAIDError{
+				EUAID: euaID,
+			}
+		}
+
+		emailSentForInvalidEUAID := false
+		sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+			emailSentForInvalidEUAID = true
+			return nil
+		}
+
+		updateLifecycleFields := NewUpdateLifecycleFields(
+			cfg,
+			fnAuthorize,
+			fnFetch,
+			fnUpdate,
+			fnSaveAction,
+			fetchEmptyUserInfo,
+			fnSendLCIDEmail,
+			sendIntakeInvalidEUAIDEmailMock,
+			fnSendIntakeNoEUAIDEmail,
+			fnGenerate,
+		)
+		_, err := updateLifecycleFields(context.Background(), input, action, false)
+		s.NoError(err)
+		s.False(emailSentForInvalidEUAID)
 	})
 
 	s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
@@ -459,9 +503,39 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 			sendIntakeForNoEUAIDEmailMock,
 			fnGenerate,
 		)
-		_, err := updateLifecycleFields(context.Background(), input, action)
+		_, err := updateLifecycleFields(context.Background(), input, action, true)
 		s.NoError(err)
 		s.True(emailSentForNoEUAID)
+	})
+
+	s.Run("should *not* send notification of empty EUA ID when intake has no associated EUA ID, but shouldSendEmail is set to false", func() {
+		fetchIntakeWithNoEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				ID: id,
+			}, nil
+		}
+
+		emailSentForNoEUAID := false
+		sendIntakeForNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+			emailSentForNoEUAID = true
+			return nil
+		}
+
+		updateLifecycleFields := NewUpdateLifecycleFields(
+			cfg,
+			fnAuthorize,
+			fetchIntakeWithNoEUAID,
+			fnUpdate,
+			fnSaveAction,
+			fnFetchUserInfo,
+			fnSendLCIDEmail,
+			fnSendIntakeInvalidEUAIDEmail,
+			sendIntakeForNoEUAIDEmailMock,
+			fnGenerate,
+		)
+		_, err := updateLifecycleFields(context.Background(), input, action, false)
+		s.NoError(err)
+		s.False(emailSentForNoEUAID)
 	})
 
 	// build the error-generating pieces
@@ -505,7 +579,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
+		fn func(context.Context, *models.SystemIntake, *models.Action, bool) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
 			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
@@ -541,7 +615,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input, action)
+			_, err := tc.fn(context.Background(), input, action, true)
 			s.Error(err)
 		})
 	}
@@ -589,11 +663,13 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 			EuaUserID:  euaID,
 		}, nil
 	}
-	reviewEmailCount := 0
+
+	reviewEmailSent := false
+
 	feedbackForEmailText := ""
 	fnSendRejectRequestEmail := func(ctx context.Context, recipientAddress models.EmailAddress, reason string, nextSteps string, feedback string) error {
 		feedbackForEmailText = feedback
-		reviewEmailCount++
+		reviewEmailSent = true
 		return nil
 	}
 	fnSendIntakeInvalidEUAIDEmail := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
@@ -606,12 +682,24 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail)
 
 	s.Run("happy path", func() {
-		intake, err := happy(context.Background(), input, action)
+		reviewEmailSent = false // clear before running test
+
+		intake, err := happy(context.Background(), input, action, true)
 		s.NoError(err)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.RejectionReason, reason)
-		s.Equal(1, reviewEmailCount)
+		s.True(reviewEmailSent)
 		s.Equal("Feedback", feedbackForEmailText)
+	})
+
+	s.Run("happy path without sending emails", func() {
+		reviewEmailSent = false // clear before running test
+
+		intake, err := happy(context.Background(), input, action, false)
+		s.NoError(err)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.RejectionReason, reason)
+		s.False(reviewEmailSent)
 	})
 
 	// test cases for invalid or missing EUA ID
@@ -640,9 +728,38 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 			sendIntakeInvalidEUAIDEmailMock,
 			fnSendIntakeNoEUAIDEmail,
 		)
-		_, err := updateRejectionFields(context.Background(), input, action)
+		_, err := updateRejectionFields(context.Background(), input, action, true)
 		s.NoError(err)
 		s.True(emailSentForInvalidEUAID)
+	})
+
+	s.Run("should *not* send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP, but shouldSendEmail is set to false", func() {
+		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+			return nil, &apperrors.InvalidEUAIDError{
+				EUAID: euaID,
+			}
+		}
+
+		emailSentForInvalidEUAID := false
+		sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+			emailSentForInvalidEUAID = true
+			return nil
+		}
+
+		updateRejectionFields := NewUpdateRejectionFields(
+			cfg,
+			fnAuthorize,
+			fnFetch,
+			fnUpdate,
+			fnSaveAction,
+			fetchEmptyUserInfo,
+			fnSendRejectRequestEmail,
+			sendIntakeInvalidEUAIDEmailMock,
+			fnSendIntakeNoEUAIDEmail,
+		)
+		_, err := updateRejectionFields(context.Background(), input, action, false)
+		s.NoError(err)
+		s.False(emailSentForInvalidEUAID)
 	})
 
 	s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
@@ -669,9 +786,38 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 			fnSendIntakeInvalidEUAIDEmail,
 			sendIntakeForNoEUAIDEmailMock,
 		)
-		_, err := updateRejectionFields(context.Background(), input, action)
+		_, err := updateRejectionFields(context.Background(), input, action, true)
 		s.NoError(err)
 		s.True(emailSentForNoEUAID)
+	})
+
+	s.Run("should *not* send notification of empty EUA ID when intake has no associated EUA ID, but shouldSendEmail is set to false", func() {
+		fetchIntakeWithoutEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				ID: id,
+			}, nil
+		}
+
+		emailSentForNoEUAID := false
+		sendIntakeForNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+			emailSentForNoEUAID = true
+			return nil
+		}
+
+		updateRejectionFields := NewUpdateRejectionFields(
+			cfg,
+			fnAuthorize,
+			fetchIntakeWithoutEUAID,
+			fnUpdate,
+			fnSaveAction,
+			fnFetchUserInfo,
+			fnSendRejectRequestEmail,
+			fnSendIntakeInvalidEUAIDEmail,
+			sendIntakeForNoEUAIDEmailMock,
+		)
+		_, err := updateRejectionFields(context.Background(), input, action, false)
+		s.NoError(err)
+		s.False(emailSentForNoEUAID)
 	})
 
 	// build the error-generating pieces
@@ -714,7 +860,7 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
+		fn func(context.Context, *models.SystemIntake, *models.Action, bool) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
 			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
@@ -747,7 +893,7 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input, action)
+			_, err := tc.fn(context.Background(), input, action, true)
 			s.Error(err)
 		})
 	}

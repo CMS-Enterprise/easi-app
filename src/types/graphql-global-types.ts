@@ -198,6 +198,7 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   nextSteps?: string | null;
   scope: string;
   costBaseline?: string | null;
+  shouldSendEmail: boolean;
 }
 
 /**
@@ -270,6 +271,7 @@ export interface IssueLifecycleIdInput {
   nextSteps?: string | null;
   scope: string;
   costBaseline?: string | null;
+  shouldSendEmail: boolean;
 }
 
 /**
@@ -280,6 +282,7 @@ export interface RejectIntakeInput {
   intakeId: UUID;
   nextSteps?: string | null;
   reason: string;
+  shouldSendEmail: boolean;
 }
 
 /**
