@@ -82,7 +82,7 @@ jobs:
 
   deploy_prod:
     needs: Run_Tests
-    if: ${{ github.event.inputs.env == 'dev' }}
+    if: ${{ github.event.inputs.env == 'prod' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: prod
