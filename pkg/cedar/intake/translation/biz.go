@@ -26,6 +26,7 @@ func (bc *TranslatableBusinessCase) ObjectType() string {
 func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := intakemodels.EASIBizCase{
 		UserEUA:              bc.EUAUserID,
+		BusinessCaseID:       bc.ID.String(),
 		IntakeID:             pStr(bc.SystemIntakeID.String()),
 		ProjectName:          bc.ProjectName.Ptr(),
 		Requester:            bc.Requester.Ptr(),
