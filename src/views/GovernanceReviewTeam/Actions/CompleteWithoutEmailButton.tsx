@@ -16,6 +16,7 @@ export default ({
       unstyled
       className={classnames(
         'margin-top-2',
+        'line-height-body-5',
         {
           'text-gray-30': disabled
         },
@@ -24,7 +25,7 @@ export default ({
       disabled={disabled}
       onClick={onClick}
     >
-      {t('submitAction.completeWithoutEmail')}{' '}
+      {t('submitAction.completeWithoutEmail')}
       <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
     </Button>
   );

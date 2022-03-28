@@ -26,16 +26,9 @@ type ActionInput = {
 type SubmitActionProps = {
   actionName: string;
   query: DocumentNode;
-  // emailsToNotify?: string[]; // tbd
-  allowCompleteWithoutEmail?: boolean;
 };
 
-const SubmitAction = ({
-  actionName,
-  query,
-  // emailsToNotify,
-  allowCompleteWithoutEmail
-}: SubmitActionProps) => {
+const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('action');
   const history = useHistory();
@@ -109,11 +102,16 @@ const SubmitAction = ({
             >
               {t('submitAction.heading')}
             </PageHeading>
-            <h3>{t('submitAction.subheading')}</h3>
-            <p>
+            <h3 className="margin-top-3 margin-bottom-2">
+              {t('submitAction.subheading')}
+            </h3>
+            <div className="margin-bottom-05 text-bold line-height-body-2">
+              {t('extendLcid.selectedAction')}
+            </div>
+            <div>
               {actionName}&nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
-            </p>
+            </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form
                 onSubmit={e => {
@@ -121,10 +119,11 @@ const SubmitAction = ({
                   window.scrollTo(0, 0);
                 }}
               >
-                <EmailRecipientsFields optional={allowCompleteWithoutEmail} />
+                <EmailRecipientsFields optional className="margin-top-3" />
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
+                  className="margin-top-2"
                 >
                   <Label
                     htmlFor="SubmitActionForm-Feedback"
@@ -150,15 +149,13 @@ const SubmitAction = ({
                     {t('submitAction.submit')}
                   </Button>
                 </div>
-                {allowCompleteWithoutEmail && (
-                  <div>
-                    <CompleteWithoutEmailButton
-                      onClick={() => {
-                        // todo
-                      }}
-                    />
-                  </div>
-                )}
+                <div>
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      // todo
+                    }}
+                  />
+                </div>
               </Form>
             </div>
           </>

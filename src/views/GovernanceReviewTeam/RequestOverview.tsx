@@ -212,7 +212,6 @@ const RequestOverview = () => {
                 <SubmitAction
                   query={CreateSystemIntakeActionBusinessCaseNeeded}
                   actionName={actionsT('actions.needBizCase')}
-                  allowCompleteWithoutEmail
                 />
               )}
             />
@@ -249,7 +248,6 @@ const RequestOverview = () => {
                 <SubmitAction
                   query={CreateSystemIntakeActionReadyForGRT}
                   actionName={actionsT('actions.readyForGrt')}
-                  allowCompleteWithoutEmail
                 />
               )}
             />
