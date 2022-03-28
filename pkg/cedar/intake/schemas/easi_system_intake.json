@@ -5,50 +5,21 @@
   "definitions": {
     "EASIIntake": {
       "required": [
-        "adminLead",
-        "archivedAt",
         "businessNeed",
         "businessOwner",
         "businessOwnerComponent",
         "component",
-        "contractEndDate",
-        "contractStartDate",
-        "contractVehicle",
-        "contractor",
         "costIncrease",
-        "costIncreaseAmount",
-        "decidedAt",
-        "decisionNextSteps",
-        "eaCollaborator",
-        "eaCollaboratorName",
         "existingContract",
-        "fundingNumber",
-        "fundingSource",
-        "grbDate",
-        "grtDate",
-        "grtReviewEmailBody",
-        "isso",
-        "issoName",
-        "lifecycleCostBaseline",
-        "lifecycleExpiresAt",
-        "lifecycleID",
-        "lifecycleScope",
-        "oitSecurityCollaborator",
-        "oitSecurityCollaboratorName",
         "processStatus",
         "productManager",
         "productManagerComponent",
-        "projectAcronym",
         "projectName",
-        "rejectionReason",
         "requestType",
         "requester",
-        "requesterEmailAddress",
         "solution",
         "status",
         "submittedAt",
-        "trbCollaborator",
-        "trbCollaboratorName",
         "userEUA"
       ],
       "properties": {
@@ -126,7 +97,8 @@
           "type": "string",
           "description": "Is there a cost increase associated with this request",
           "examples": [
-            "YES"
+            "YES",
+            "NOT_SURE"
           ]
         },
         "costIncreaseAmount": {
