@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+concurrency:
+  group: deploy-pipeline
+
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
   EASI_APP_GO_VERSION: "1.16.6"
