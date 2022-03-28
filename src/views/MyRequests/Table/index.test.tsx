@@ -5,6 +5,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import GetRequestsQuery from 'queries/GetRequestsQuery';
+import { RequestType } from 'types/graphql-global-types';
 
 import Table from '.';
 
@@ -119,6 +120,38 @@ describe('My Requests Table', () => {
       );
 
       expect(await screen.findByRole('table')).toBeInTheDocument();
+    });
+
+    it('displays an IT Goverance request only table with hidden columns', async () => {
+      render(
+        <MemoryRouter>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <Table
+              type={RequestType.GOVERNANCE_REQUEST}
+              hiddenColumns={['Governance', 'Upcoming meeting date']}
+            />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.queryByText('Upcoming meeting date')
+      ).not.toBeInTheDocument();
+    });
+
+    it('displays a 508 request only table with hidden columns', async () => {
+      render(
+        <MemoryRouter>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <Table
+              type={RequestType.ACCESSIBILITY_REQUEST}
+              hiddenColumns={['Governance', 'Upcoming meeting date']}
+            />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(await screen.queryByText('Governance')).not.toBeInTheDocument();
     });
 
     it('displays relevant results from filter', async () => {

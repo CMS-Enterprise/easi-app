@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import renderer from 'react-test-renderer';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
@@ -38,13 +39,15 @@ describe('The making a request page', () => {
 
     render(
       <MemoryRouter initialEntries={['/system/making-a-request']}>
-        <Provider store={defaultStore}>
-          <MessageProvider>
-            <Route path="/system/making-a-request">
-              <MakingARequest />
-            </Route>
-          </MessageProvider>
-        </Provider>
+        <MockedProvider>
+          <Provider store={defaultStore}>
+            <MessageProvider>
+              <Route path="/system/making-a-request">
+                <MakingARequest />
+              </Route>
+            </MessageProvider>
+          </Provider>
+        </MockedProvider>
       </MemoryRouter>
     );
 
@@ -57,7 +60,9 @@ describe('The making a request page', () => {
     const tree = renderer
       .create(
         <MemoryRouter>
-          <MakingARequest />
+          <MockedProvider>
+            <MakingARequest />
+          </MockedProvider>
         </MemoryRouter>
       )
       .toJSON();

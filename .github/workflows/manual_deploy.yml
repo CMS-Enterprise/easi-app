@@ -1,9 +1,22 @@
-name: Deploy
+name: Manual Deployment
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+    inputs:
+      env:
+        required: true
+        default: "dev"
+        type: choice
+        description: Environment to deploy to
+        options:
+          - dev
+          - impl
+          - prod
+      confirm_production_deploy:
+        required: true
+        default: false
+        type: boolean
+        description: Confirm that you want to deploy to production
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
@@ -13,8 +26,8 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
-  Build:
-    uses: ./.github/workflows/initial_build.yml
+  Build_Application_Images:
+    uses: ./.github/workflows/build_application_images.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -22,9 +35,9 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 
-  Server_Test:
-    uses: ./.github/workflows/server_test.yml
-    needs: Build
+  Run_Tests:
+    uses: ./.github/workflows/run_tests.yml
+    needs: Build_Application_Images
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -36,51 +49,11 @@ jobs:
       OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
       OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
-      STORYBOOK_S3_BUCKET_DEV: ${{ secrets.STORYBOOK_S3_BUCKET_DEV }}
-
-  client_typecheck:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      issues: write
-    steps:
-      - name: Check out code
-        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # v2.3.4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Set up node
-        uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a # v2.1.5
-        with:
-          node-version: ${{ env.EASI_APP_NODE_VERSION }}
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Configure yarn cache
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # v2.1.6
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: |
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            ./node_modules
-          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            v1-yarn-
-      - name: Run typechecking
-        id: typechecker
-        # Uses GitHub environment files to store typechecker output and pass to next stage
-        # see https://github.com/actions/toolkit/blob/main/docs/commands.md#environment-files
-        run: |
-          yarn build:ts 2>&1 | tee test.log
-          result_code=${PIPESTATUS[0]}
-          echo 'TS_LOG<<EOF' >> $GITHUB_ENV
-          cat test.log >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-          exit $result_code
-        continue-on-error: true
 
   deploy_dev:
-    needs: Server_Test
-    uses: ./.github/workflows/deployments.yml
+    needs: Run_Tests
+    if: ${{ github.event.inputs.env == 'dev' }}
+    uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: dev
       lambda_version: 9
@@ -96,8 +69,9 @@ jobs:
       ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
 
   deploy_impl:
-    needs: deploy_dev
-    uses: ./.github/workflows/deployments.yml
+    needs: Run_Tests
+    if: ${{ github.event.inputs.env == 'impl' }}
+    uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: impl
       lambda_version: 8
@@ -113,8 +87,9 @@ jobs:
       ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
 
   deploy_prod:
-    needs: deploy_impl
-    uses: ./.github/workflows/deployments.yml
+    needs: Run_Tests
+    if: ${{ github.event.inputs.env == 'prod' && github.event.inputs.confirm_production_deploy == true }}
+    uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: prod
       lambda_version: 7

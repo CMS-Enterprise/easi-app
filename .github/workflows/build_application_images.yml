@@ -1,4 +1,4 @@
-name: Initial building of images
+name: Build and Push Application Images
 
 on:
   workflow_call:
