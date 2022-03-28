@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { DocumentNode, useMutation } from '@apollo/client';
@@ -32,6 +32,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('action');
   const history = useHistory();
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const [mutate, mutationResult] = useMutation<ActionInput>(query);
 
@@ -41,7 +42,8 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
       variables: {
         input: {
           intakeId: systemId,
-          feedback
+          feedback,
+          shouldSendEmail
         }
       }
     }).then(response => {
@@ -67,7 +69,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ActionForm>) => {
-        const { errors, setErrors, handleSubmit } = formikProps;
+        const { errors, setErrors, handleSubmit, submitForm } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -145,7 +147,10 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                     className="margin-top-2"
                     type="submit"
                     // disabled={isSubmitting}
-                    onClick={() => setErrors({})}
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(true);
+                    }}
                   >
                     {t('submitAction.submit')}
                   </Button>
@@ -153,7 +158,9 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                 <div>
                   <CompleteWithoutEmailButton
                     onClick={() => {
-                      // todo
+                      setErrors({});
+                      setShouldSendEmail(false);
+                      submitForm();
                     }}
                   />
                 </div>

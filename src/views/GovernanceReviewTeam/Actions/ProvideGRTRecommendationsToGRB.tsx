@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -30,6 +30,7 @@ const ProvideGRTRecommendationsToGRB = () => {
   const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(
     MarkReadyForGRBQuery
   );
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -45,7 +46,8 @@ const ProvideGRTRecommendationsToGRB = () => {
         input: {
           emailBody,
           feedback: grtFeedback,
-          intakeID: systemId
+          intakeID: systemId,
+          shouldSendEmail
         }
       }
     }).then(() => {
@@ -63,7 +65,7 @@ const ProvideGRTRecommendationsToGRB = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ProvideGRTFeedbackForm>) => {
-        const { errors, setErrors, handleSubmit } = formikProps;
+        const { errors, setErrors, handleSubmit, submitForm } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -140,13 +142,22 @@ const ProvideGRTRecommendationsToGRB = () => {
                   <Button
                     className="margin-top-2"
                     type="submit"
-                    onClick={() => setErrors({})}
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(true);
+                    }}
                   >
                     {t('submitAction.submit')}
                   </Button>
                 </div>
                 <div>
-                  <CompleteWithoutEmailButton />
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(false);
+                      submitForm();
+                    }}
+                  />
                 </div>
               </Form>
             </div>

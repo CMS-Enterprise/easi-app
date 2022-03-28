@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -27,6 +27,7 @@ import { SubmitLifecycleIdForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
 import EmailRecipientsFields from './EmailRecipientsFields';
 
 const RADIX = 10;
@@ -35,6 +36,7 @@ const IssueLifecycleId = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const [mutate, mutationResult] = useMutation<IssueLifecycleIdType>(
     IssueLifecycleIdQuery,
@@ -77,7 +79,8 @@ const IssueLifecycleId = () => {
       scope,
       costBaseline,
       lcid: lifecycleId,
-      feedback
+      feedback,
+      shouldSendEmail
     };
 
     mutate({
@@ -99,7 +102,13 @@ const IssueLifecycleId = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitLifecycleIdForm>) => {
-        const { errors, setFieldValue, values, handleSubmit } = formikProps;
+        const {
+          errors,
+          setFieldValue,
+          values,
+          handleSubmit,
+          submitForm
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -332,13 +341,26 @@ const IssueLifecycleId = () => {
                     aria-describedby="IssueLifecycleIdForm-SubmitHelp"
                   />
                 </FieldGroup>
-                <Button
-                  className="margin-y-2"
-                  type="submit"
-                  // disabled={isSubmitting}
-                >
-                  {t('submitAction.submit')}
-                </Button>
+                <div>
+                  <Button
+                    className="margin-y-2"
+                    type="submit"
+                    // disabled={isSubmitting}
+                    onClick={() => {
+                      setShouldSendEmail(true);
+                    }}
+                  >
+                    {t('submitAction.submit')}
+                  </Button>
+                </div>
+                <div>
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      setShouldSendEmail(false);
+                      submitForm();
+                    }}
+                  />
+                </div>
               </Form>
               <UswdsLink
                 href="https://www.surveymonkey.com/r/DF3Q9L2"

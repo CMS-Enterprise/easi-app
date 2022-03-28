@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useMutation } from '@apollo/client';
@@ -29,6 +29,7 @@ import { formatDateAndIgnoreTimezone } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import { extendLifecycleIdSchema } from 'validations/actionSchema';
 
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
 import EmailRecipientsFields from './EmailRecipientsFields';
 
 type ExtendLCIDForm = {
@@ -84,6 +85,8 @@ const ExtendLifecycleId = ({
     CreateSystemIntakeActionExtendLifecycleIdVariables
   >(CreateSystemIntakeActionExtendLifecycleIdQuery);
 
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
+
   const handleSubmit = (values: ExtendLCIDForm) => {
     const {
       newExpirationMonth = '',
@@ -105,7 +108,8 @@ const ExtendLifecycleId = ({
           expirationDate: expiresAt,
           scope: newScope,
           nextSteps: newNextSteps,
-          costBaseline: newCostBaseline
+          costBaseline: newCostBaseline,
+          shouldSendEmail
         }
       }
     }).then(response => {
@@ -126,7 +130,7 @@ const ExtendLifecycleId = ({
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ExtendLCIDForm>) => {
-        const { errors, setErrors } = formikProps;
+        const { errors, setErrors, submitForm } = formikProps;
         const flatErrors = flattenErrors(errors);
 
         return (
@@ -334,14 +338,28 @@ const ExtendLifecycleId = ({
                 <p className="margin-top-3 margin-bottom-0 line-height-body-5 text-base">
                   {t('extendLcid.submissionInfo')}
                 </p>
-                <Button
-                  className="margin-top-1"
-                  type="submit"
-                  onClick={() => setErrors({})}
-                  disabled={extendLifecycleIDStatus.loading}
-                >
-                  {t('submitAction.submit')}
-                </Button>
+                <div>
+                  <Button
+                    className="margin-top-1"
+                    type="submit"
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(true);
+                    }}
+                    disabled={extendLifecycleIDStatus.loading}
+                  >
+                    {t('submitAction.submit')}
+                  </Button>
+                </div>
+                <div>
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(false);
+                      submitForm();
+                    }}
+                  />
+                </div>
               </Form>
             </div>
           </>

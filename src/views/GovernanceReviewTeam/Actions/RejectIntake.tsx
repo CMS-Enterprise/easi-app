@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -21,10 +21,13 @@ import { RejectIntakeForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { rejectIntakeSchema } from 'validations/actionSchema';
 
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+
 const RejectIntake = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const [mutate, mutationResult] = useMutation<
     RejectIntakeType,
@@ -48,7 +51,8 @@ const RejectIntake = () => {
       feedback,
       intakeId: systemId,
       nextSteps,
-      reason
+      reason,
+      shouldSendEmail
     };
 
     mutate({
@@ -70,7 +74,7 @@ const RejectIntake = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<RejectIntakeForm>) => {
-        const { errors, setErrors, handleSubmit } = formikProps;
+        const { errors, setErrors, handleSubmit, submitForm } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -165,13 +169,27 @@ const RejectIntake = () => {
                     aria-describedby="RejectIntakeForm-SubmitHelp"
                   />
                 </FieldGroup>
-                <Button
-                  className="margin-top-2"
-                  type="submit"
-                  onClick={() => setErrors({})}
-                >
-                  {t('rejectIntake.submit')}
-                </Button>
+                <div>
+                  <Button
+                    className="margin-top-2"
+                    type="submit"
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(true);
+                    }}
+                  >
+                    {t('rejectIntake.submit')}
+                  </Button>
+                </div>
+                <div>
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(false);
+                      submitForm();
+                    }}
+                  />
+                </div>
               </Form>
               <UswdsLink
                 href="https://www.surveymonkey.com/r/DF3Q9L2"

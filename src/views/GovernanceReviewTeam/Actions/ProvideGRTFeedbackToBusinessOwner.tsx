@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { DocumentNode, useMutation } from '@apollo/client';
@@ -35,6 +35,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
   const history = useHistory();
   const { t } = useTranslation('action');
   const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(query);
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -50,7 +51,8 @@ const ProvideGRTFeedbackToBusinessOwner = ({
         input: {
           emailBody,
           feedback: grtFeedback,
-          intakeID: systemId
+          intakeID: systemId,
+          shouldSendEmail
         }
       }
     }).then(() => {
@@ -68,7 +70,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ProvideGRTFeedbackForm>) => {
-        const { errors, setErrors, handleSubmit } = formikProps;
+        const { errors, setErrors, handleSubmit, submitForm } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -147,13 +149,22 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                   <Button
                     className="margin-top-2"
                     type="submit"
-                    onClick={() => setErrors({})}
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(true);
+                    }}
                   >
                     {t('submitAction.submit')}
                   </Button>
                 </div>
                 <div>
-                  <CompleteWithoutEmailButton />
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(false);
+                      submitForm();
+                    }}
+                  />
                 </div>
               </Form>
             </div>
