@@ -5,26 +5,6 @@
   "definitions": {
     "EASIBizCase": {
       "required": [
-        "archivedAt",
-        "asIsCons",
-        "asIsCostSavings",
-        "asIsPros",
-        "asIsSummary",
-        "asIsTitle",
-        "businessNeed",
-        "businessOwner",
-        "businessSolutions",
-        "cmsBenefit",
-        "initialSubmittedAt",
-        "intakeId",
-        "lastSubmittedAt",
-        "lifecycleCostLines",
-        "priorityAlignment",
-        "projectName",
-        "requester",
-        "requesterPhoneNumber",
-        "submittedAt",
-        "successIndicators",
         "userEUA"
       ],
       "properties": {
@@ -184,18 +164,7 @@
     },
     "EASIBusinessSolution": {
       "required": [
-        "acquisitionApproach",
-        "cons",
-        "costSavings",
-        "hasUI",
-        "hostingCloudServiceType",
-        "hostingLocation",
-        "hostingType",
-        "pros",
-        "securityIsBeingReviewed",
-        "solutionType",
-        "summary",
-        "title"
+        "solutionType"
       ],
       "properties": {
         "acquisitionApproach": {
@@ -296,14 +265,6 @@
       "type": "object"
     },
     "EASILifecycleCost": {
-      "required": [
-        "businessCaseId",
-        "cost",
-        "id",
-        "phase",
-        "solution",
-        "year"
-      ],
       "properties": {
         "businessCaseId": {
           "type": "string",
