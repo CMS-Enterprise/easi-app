@@ -272,7 +272,7 @@ type ComplexityRoot struct {
 	}
 
 	CreateSystemIntakeContactPayload struct {
-		SysemIntakeContact func(childComplexity int) int
+		SystemIntakeContact func(childComplexity int) int
 	}
 
 	CreateTestDatePayload struct {
@@ -298,7 +298,7 @@ type ComplexityRoot struct {
 	}
 
 	DeleteSystemIntakeContactPayload struct {
-		SysemIntakeContact func(childComplexity int) int
+		SystemIntakeContact func(childComplexity int) int
 	}
 
 	DeleteTestDatePayload struct {
@@ -1838,12 +1838,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateSystemIntakeActionExtendLifecycleIdPayload.UserErrors(childComplexity), true
 
-	case "CreateSystemIntakeContactPayload.sysemIntakeContact":
-		if e.complexity.CreateSystemIntakeContactPayload.SysemIntakeContact == nil {
+	case "CreateSystemIntakeContactPayload.systemIntakeContact":
+		if e.complexity.CreateSystemIntakeContactPayload.SystemIntakeContact == nil {
 			break
 		}
 
-		return e.complexity.CreateSystemIntakeContactPayload.SysemIntakeContact(childComplexity), true
+		return e.complexity.CreateSystemIntakeContactPayload.SystemIntakeContact(childComplexity), true
 
 	case "CreateTestDatePayload.testDate":
 		if e.complexity.CreateTestDatePayload.TestDate == nil {
@@ -1894,12 +1894,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DeleteCedarSystemBookmarkPayload.CedarSystemID(childComplexity), true
 
-	case "DeleteSystemIntakeContactPayload.sysemIntakeContact":
-		if e.complexity.DeleteSystemIntakeContactPayload.SysemIntakeContact == nil {
+	case "DeleteSystemIntakeContactPayload.systemIntakeContact":
+		if e.complexity.DeleteSystemIntakeContactPayload.SystemIntakeContact == nil {
 			break
 		}
 
-		return e.complexity.DeleteSystemIntakeContactPayload.SysemIntakeContact(childComplexity), true
+		return e.complexity.DeleteSystemIntakeContactPayload.SystemIntakeContact(childComplexity), true
 
 	case "DeleteTestDatePayload.testDate":
 		if e.complexity.DeleteTestDatePayload.TestDate == nil {
@@ -4825,14 +4825,14 @@ input DeleteSystemIntakeContactInput {
 The payload when creating a system intake contact
 """
 type CreateSystemIntakeContactPayload {
-  sysemIntakeContact: SystemIntakeContact
+  systemIntakeContact: SystemIntakeContact
 }
 
 """
-The payload when deleating a system intake contact
+The payload when deleting a system intake contact
 """
 type DeleteSystemIntakeContactPayload {
-  sysemIntakeContact: SystemIntakeContact
+  systemIntakeContact: SystemIntakeContact
 }
 
 """
@@ -10721,7 +10721,7 @@ func (ec *executionContext) _CreateSystemIntakeActionExtendLifecycleIdPayload_us
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CreateSystemIntakeContactPayload_sysemIntakeContact(ctx context.Context, field graphql.CollectedField, obj *model.CreateSystemIntakeContactPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CreateSystemIntakeContactPayload_systemIntakeContact(ctx context.Context, field graphql.CollectedField, obj *model.CreateSystemIntakeContactPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10739,7 +10739,7 @@ func (ec *executionContext) _CreateSystemIntakeContactPayload_sysemIntakeContact
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SysemIntakeContact, nil
+		return obj.SystemIntakeContact, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10983,7 +10983,7 @@ func (ec *executionContext) _DeleteCedarSystemBookmarkPayload_cedarSystemId(ctx 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _DeleteSystemIntakeContactPayload_sysemIntakeContact(ctx context.Context, field graphql.CollectedField, obj *model.DeleteSystemIntakeContactPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _DeleteSystemIntakeContactPayload_systemIntakeContact(ctx context.Context, field graphql.CollectedField, obj *model.DeleteSystemIntakeContactPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -11001,7 +11001,7 @@ func (ec *executionContext) _DeleteSystemIntakeContactPayload_sysemIntakeContact
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SysemIntakeContact, nil
+		return obj.SystemIntakeContact, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -23551,9 +23551,9 @@ func (ec *executionContext) _CreateSystemIntakeContactPayload(ctx context.Contex
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CreateSystemIntakeContactPayload")
-		case "sysemIntakeContact":
+		case "systemIntakeContact":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CreateSystemIntakeContactPayload_sysemIntakeContact(ctx, field, obj)
+				return ec._CreateSystemIntakeContactPayload_systemIntakeContact(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -23739,9 +23739,9 @@ func (ec *executionContext) _DeleteSystemIntakeContactPayload(ctx context.Contex
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("DeleteSystemIntakeContactPayload")
-		case "sysemIntakeContact":
+		case "systemIntakeContact":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._DeleteSystemIntakeContactPayload_sysemIntakeContact(ctx, field, obj)
+				return ec._DeleteSystemIntakeContactPayload_systemIntakeContact(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

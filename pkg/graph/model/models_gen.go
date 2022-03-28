@@ -157,7 +157,7 @@ type CreateSystemIntakeContactInput struct {
 
 // The payload when creating a system intake contact
 type CreateSystemIntakeContactPayload struct {
-	SysemIntakeContact *models.SystemIntakeContact `json:"sysemIntakeContact"`
+	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
 }
 
 // The input data used to initialize an IT governance request for a system
@@ -226,9 +226,9 @@ type DeleteSystemIntakeContactInput struct {
 	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
 }
 
-// The payload when deleating a system intake contact
+// The payload when deleting a system intake contact
 type DeleteSystemIntakeContactPayload struct {
-	SysemIntakeContact *models.SystemIntakeContact `json:"sysemIntakeContact"`
+	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
 }
 
 // The input required to delete a test date/score

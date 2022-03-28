@@ -1316,9 +1316,12 @@ func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input 
 		CedarSystemID: input.CedarSystemID,
 	}
 	createdBookmark, err := r.store.CreateCedarSystemBookmark(ctx, &bookmark)
+	if err != nil {
+		return nil, err
+	}
 	return &model.CreateCedarSystemBookmarkPayload{
 		CedarSystemBookmark: createdBookmark,
-	}, err
+	}, nil
 }
 
 func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error) {
@@ -1337,9 +1340,12 @@ func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input 
 		EUAUserID:      input.EuaUserID,
 	}
 	createdContact, err := r.store.CreateSystemIntakeContact(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
 	return &model.CreateSystemIntakeContactPayload{
-		SysemIntakeContact: createdContact,
-	}, err
+		SystemIntakeContact: createdContact,
+	}, nil
 }
 
 func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error) {
@@ -1352,7 +1358,7 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 		return nil, err
 	}
 	return &model.DeleteSystemIntakeContactPayload{
-		SysemIntakeContact: contact,
+		SystemIntakeContact: contact,
 	}, nil
 }
 

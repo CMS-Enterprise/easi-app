@@ -1204,14 +1204,14 @@ input DeleteSystemIntakeContactInput {
 The payload when creating a system intake contact
 """
 type CreateSystemIntakeContactPayload {
-  sysemIntakeContact: SystemIntakeContact
+  systemIntakeContact: SystemIntakeContact
 }
 
 """
-The payload when deleating a system intake contact
+The payload when deleting a system intake contact
 """
 type DeleteSystemIntakeContactPayload {
-  sysemIntakeContact: SystemIntakeContact
+  systemIntakeContact: SystemIntakeContact
 }
 
 """
