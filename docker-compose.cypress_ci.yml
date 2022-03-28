@@ -2,7 +2,7 @@
 version: '3.7'
 services:
   db_migrate:
-    image: '${ECR_REGISTRY}/easi-db-migrate:${IMAGE_TAG}'
+    image: '${ECR_REGISTRY}/easi-db-migrate:${GIT_HASH}'
   db_seed:
     build:
       context: .
@@ -16,7 +16,7 @@ services:
       - PGSSLMODE=disable
       - DB_MAX_CONNECTIONS=20
   easi:
-    image: '${ECR_REGISTRY}/easi-backend:${IMAGE_TAG}'
+    image: '${ECR_REGISTRY}/easi-backend:${GIT_HASH}'
     environment:
       - APP_ENV=test
       - EMAIL_TEMPLATE_DIR=/easi/templates
