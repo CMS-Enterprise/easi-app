@@ -1,4 +1,4 @@
-name: rescan_deployed_image
+name: Scan Deployed Image
 
 on:
   schedule:

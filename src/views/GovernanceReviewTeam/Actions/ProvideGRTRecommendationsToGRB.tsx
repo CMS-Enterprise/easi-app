@@ -63,7 +63,7 @@ const ProvideGRTRecommendationsToGRB = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ProvideGRTFeedbackForm>) => {
-        const { errors, handleSubmit } = formikProps;
+        const { errors, setErrors, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -137,7 +137,11 @@ const ProvideGRTRecommendationsToGRB = () => {
                   />
                 </FieldGroup>
                 <div>
-                  <Button className="margin-top-2" type="submit">
+                  <Button
+                    className="margin-top-2"
+                    type="submit"
+                    onClick={() => setErrors({})}
+                  >
                     {t('submitAction.submit')}
                   </Button>
                 </div>

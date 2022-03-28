@@ -153,7 +153,7 @@ const GeneralRequestInfo = ({
                     Requester Phone Number
                   </Label>
                   <HelpText id="BusinessCase-PhoneNumber">
-                    For example 123456789 or 123-456-789
+                    For example 1234567890 or 123-456-7890
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['requester.phoneNumber']}

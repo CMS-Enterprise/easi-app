@@ -126,7 +126,7 @@ const ExtendLifecycleId = ({
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ExtendLCIDForm>) => {
-        const { errors } = formikProps;
+        const { errors, setErrors } = formikProps;
         const flatErrors = flattenErrors(errors);
 
         return (
@@ -202,7 +202,7 @@ const ExtendLifecycleId = ({
               </h3>
               <MandatoryFieldsAlert />
               <Form>
-                <FieldGroup>
+                <FieldGroup scrollElement="validDate">
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label line-height-body-2">
                       {t('extendLcid.expirationDate.label')}
@@ -337,6 +337,7 @@ const ExtendLifecycleId = ({
                 <Button
                   className="margin-top-1"
                   type="submit"
+                  onClick={() => setErrors({})}
                   disabled={extendLifecycleIDStatus.loading}
                 >
                   {t('submitAction.submit')}

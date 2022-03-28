@@ -145,7 +145,7 @@ The project is now using [React Testing Library](https://testing-library.com/doc
   To view  client test thresholds:
 `yarn test:coverage`
 
-To view current Go test coverage, go to Github Actions `server_test`
+To view current Go test coverage, go to Github Actions `Run_Tests`
 on the latest master build, and search for "total coverage is."
 
 There are thresholds set such that the build in Github Actions
