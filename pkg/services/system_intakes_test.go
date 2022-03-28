@@ -328,10 +328,14 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		IntakeID: &input.ID,
 		Feedback: null.StringFrom("Feedback"),
 	}
+	euaID := testhelpers.RandomEUAID()
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
 	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-		return &models.SystemIntake{ID: id}, nil
+		return &models.SystemIntake{
+			ID:        id,
+			EUAUserID: null.StringFrom(euaID),
+		}, nil
 	}
 	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		if i.LifecycleID.ValueOrZero() == "" {
@@ -355,19 +359,25 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		return &models.UserInfo{
 			Email:      "name@site.com",
 			CommonName: "NAME",
-			EuaUserID:  testhelpers.RandomEUAID(),
+			EuaUserID:  euaID,
 		}, nil
 	}
 	reviewEmailCount := 0
 	feedbackForEmailText := ""
-	fnSendLCIDEmail := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _string, emailText string) error {
+	fnSendLCIDEmail := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
 		reviewEmailCount++
 		return nil
 	}
+	fnSendIntakeInvalidEUAIDEmail := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
+		return nil
+	}
+	fnSendIntakeNoEUAIDEmail := func(_ context.Context, _ string, _ uuid.UUID) error {
+		return nil
+	}
 	fnGenerate := func(context.Context) (string, error) { return "123456", nil }
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate)
+	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
 		intake, err := happy(context.Background(), input, action)
@@ -392,7 +402,82 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		s.Equal(intake.LifecycleScope, scope)
 	})
 
+	// test cases for invalid or missing EUA ID
+
+	s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP", func() {
+		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+			return nil, &apperrors.InvalidEUAIDError{
+				EUAID: euaID,
+			}
+		}
+
+		emailSentForInvalidEUAID := false
+		sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+			emailSentForInvalidEUAID = true
+			return nil
+		}
+
+		updateLifecycleFields := NewUpdateLifecycleFields(
+			cfg,
+			fnAuthorize,
+			fnFetch,
+			fnUpdate,
+			fnSaveAction,
+			fetchEmptyUserInfo,
+			fnSendLCIDEmail,
+			sendIntakeInvalidEUAIDEmailMock,
+			fnSendIntakeNoEUAIDEmail,
+			fnGenerate,
+		)
+		_, err := updateLifecycleFields(context.Background(), input, action)
+		s.NoError(err)
+		s.True(emailSentForInvalidEUAID)
+	})
+
+	s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
+		fetchIntakeWithNoEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				ID: id,
+			}, nil
+		}
+
+		emailSentForNoEUAID := false
+		sendIntakeForNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+			emailSentForNoEUAID = true
+			return nil
+		}
+
+		updateLifecycleFields := NewUpdateLifecycleFields(
+			cfg,
+			fnAuthorize,
+			fetchIntakeWithNoEUAID,
+			fnUpdate,
+			fnSaveAction,
+			fnFetchUserInfo,
+			fnSendLCIDEmail,
+			fnSendIntakeInvalidEUAIDEmail,
+			sendIntakeForNoEUAIDEmailMock,
+			fnGenerate,
+		)
+		_, err := updateLifecycleFields(context.Background(), input, action)
+		s.NoError(err)
+		s.True(emailSentForNoEUAID)
+	})
+
 	// build the error-generating pieces
+	fnFetchReturnsNoEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{
+			ID:        id,
+			EUAUserID: null.StringFrom(""),
+		}, nil
+	}
+
+	fnFetchUserInfoReturnsInvalidEUAID := func(c context.Context, euaID string) (*models.UserInfo, error) {
+		return nil, &apperrors.InvalidEUAIDError{
+			EUAID: euaID,
+		}
+	}
+
 	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
 	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
 	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -407,8 +492,14 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendLCIDEmailErr := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string) error {
+	fnSendLCIDEmailErr := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
 		return errors.New("send email error")
+	}
+	fnSendIntakeInvalidEUAIDEmailErr := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
+		return errors.New("send intake invalid EUA ID email error")
+	}
+	fnSendIntakeNoEUAIDEmailErr := func(_ context.Context, _ string, _ uuid.UUID) error {
+		return errors.New("send intake no EUA ID email error")
 	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
 
@@ -417,28 +508,34 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path auth": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path auth fail": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path generate": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerateErr),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerateErr),
 		},
 		"error path save action": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path fetch user info": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path send email": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
+		},
+		"error path send invalid EUA ID email": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoReturnsInvalidEUAID, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmailErr, fnSendIntakeNoEUAIDEmail, fnGenerate),
+		},
+		"error path send no EUA ID email": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchReturnsNoEUAID, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmailErr, fnGenerate),
 		},
 		"error path update": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 	}
 
@@ -464,10 +561,14 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		IntakeID: &input.ID,
 		Feedback: null.StringFrom("Feedback"),
 	}
+	euaID := testhelpers.RandomEUAID()
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
 	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-		return &models.SystemIntake{ID: id}, nil
+		return &models.SystemIntake{
+			ID:        id,
+			EUAUserID: null.StringFrom(euaID),
+		}, nil
 	}
 	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
@@ -485,7 +586,7 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		return &models.UserInfo{
 			Email:      "name@site.com",
 			CommonName: "NAME",
-			EuaUserID:  testhelpers.RandomEUAID(),
+			EuaUserID:  euaID,
 		}, nil
 	}
 	reviewEmailCount := 0
@@ -495,8 +596,14 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		reviewEmailCount++
 		return nil
 	}
+	fnSendIntakeInvalidEUAIDEmail := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
+		return nil
+	}
+	fnSendIntakeNoEUAIDEmail := func(_ context.Context, _ string, _ uuid.UUID) error {
+		return nil
+	}
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail)
+	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail)
 
 	s.Run("happy path", func() {
 		intake, err := happy(context.Background(), input, action)
@@ -507,7 +614,80 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		s.Equal("Feedback", feedbackForEmailText)
 	})
 
+	// test cases for invalid or missing EUA ID
+
+	s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP", func() {
+		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+			return nil, &apperrors.InvalidEUAIDError{
+				EUAID: euaID,
+			}
+		}
+
+		emailSentForInvalidEUAID := false
+		sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+			emailSentForInvalidEUAID = true
+			return nil
+		}
+
+		updateRejectionFields := NewUpdateRejectionFields(
+			cfg,
+			fnAuthorize,
+			fnFetch,
+			fnUpdate,
+			fnSaveAction,
+			fetchEmptyUserInfo,
+			fnSendRejectRequestEmail,
+			sendIntakeInvalidEUAIDEmailMock,
+			fnSendIntakeNoEUAIDEmail,
+		)
+		_, err := updateRejectionFields(context.Background(), input, action)
+		s.NoError(err)
+		s.True(emailSentForInvalidEUAID)
+	})
+
+	s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
+		fetchIntakeWithoutEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				ID: id,
+			}, nil
+		}
+
+		emailSentForNoEUAID := false
+		sendIntakeForNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+			emailSentForNoEUAID = true
+			return nil
+		}
+
+		updateRejectionFields := NewUpdateRejectionFields(
+			cfg,
+			fnAuthorize,
+			fetchIntakeWithoutEUAID,
+			fnUpdate,
+			fnSaveAction,
+			fnFetchUserInfo,
+			fnSendRejectRequestEmail,
+			fnSendIntakeInvalidEUAIDEmail,
+			sendIntakeForNoEUAIDEmailMock,
+		)
+		_, err := updateRejectionFields(context.Background(), input, action)
+		s.NoError(err)
+		s.True(emailSentForNoEUAID)
+	})
+
 	// build the error-generating pieces
+	fnFetchReturnsNoEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{
+			ID:        id,
+			EUAUserID: null.StringFrom(""),
+		}, nil
+	}
+
+	fnFetchUserInfoReturnsInvalidEUAID := func(c context.Context, euaID string) (*models.UserInfo, error) {
+		return nil, &apperrors.InvalidEUAIDError{
+			EUAID: euaID,
+		}
+	}
+
 	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
 	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
 	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -525,31 +705,43 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	fnSendRejectRequestEmailErr := func(ctx context.Context, recipientAddress models.EmailAddress, reason string, nextSteps string, feedback string) error {
 		return errors.New("send email error")
 	}
+	fnSendIntakeInvalidEUAIDEmailErr := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
+		return errors.New("send intake invalid EUA ID email error")
+	}
+	fnSendIntakeNoEUAIDEmailErr := func(_ context.Context, _ string, _ uuid.UUID) error {
+		return errors.New("send intake no EUA ID email error")
+	}
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
 		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path auth": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path auth fail": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path update": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path fetch user info": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path save action": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendRejectRequestEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path send email": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmailErr),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmailErr, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
+		},
+		"error path send invalid EUA ID email": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoReturnsInvalidEUAID, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmailErr, fnSendIntakeNoEUAIDEmail),
+		},
+		"error path send no EUA ID email": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchReturnsNoEUAID, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmailErr),
 		},
 	}
 
@@ -559,4 +751,122 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 			s.Error(err)
 		})
 	}
+}
+
+func (s ServicesTestSuite) TestProvideGRTFeedback() {
+	logger := zap.NewNop()
+	serviceConfig := NewConfig(logger, nil)
+	ctx := context.Background()
+
+	s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP", func() {
+		fetchIntake := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				ID:        id,
+				EUAUserID: null.StringFrom("ABCD"),
+			}, nil
+		}
+
+		updateIntake := func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+			return intake, nil
+		}
+
+		saveAction := func(c context.Context, action *models.Action) error {
+			return nil
+		}
+
+		saveGRTFeedback := func(c context.Context, feedback *models.GRTFeedback) (*models.GRTFeedback, error) {
+			return feedback, nil
+		}
+
+		fetchEmptyUserInfo := func(c context.Context, euaID string) (*models.UserInfo, error) {
+			return nil, &apperrors.InvalidEUAIDError{
+				EUAID: euaID,
+			}
+		}
+
+		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		emailSentForInvalidEUAID := false
+		sendIntakeInvalidEUAIDEmailMock := func(c context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+			emailSentForInvalidEUAID = true
+			return nil
+		}
+
+		sendIntakeNoEUAIDEmail := func(c context.Context, projectName string, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		provideGRTFeedback := NewProvideGRTFeedback(
+			serviceConfig,
+			fetchIntake,
+			updateIntake,
+			saveAction,
+			saveGRTFeedback,
+			fetchEmptyUserInfo,
+			sendReviewEmail,
+			sendIntakeInvalidEUAIDEmailMock,
+			sendIntakeNoEUAIDEmail,
+		)
+
+		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED)
+		s.NoError(err)
+		s.True(emailSentForInvalidEUAID)
+	})
+
+	s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
+		fetchIntake := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				ID:        id,
+				EUAUserID: null.StringFrom(""),
+			}, nil
+		}
+
+		updateIntake := func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+			return intake, nil
+		}
+
+		saveAction := func(c context.Context, action *models.Action) error {
+			return nil
+		}
+
+		saveGRTFeedback := func(c context.Context, feedback *models.GRTFeedback) (*models.GRTFeedback, error) {
+			return feedback, nil
+		}
+
+		fetchEmptyUserInfo := func(c context.Context, euaID string) (*models.UserInfo, error) {
+			return &models.UserInfo{}, nil
+		}
+
+		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		sendIntakeInvalidEUAIDEmail := func(c context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		emailSentForNoEUAID := false
+		sendIntakeNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+			emailSentForNoEUAID = true
+			return nil
+		}
+
+		provideGRTFeedback := NewProvideGRTFeedback(
+			serviceConfig,
+			fetchIntake,
+			updateIntake,
+			saveAction,
+			saveGRTFeedback,
+			fetchEmptyUserInfo,
+			sendReviewEmail,
+			sendIntakeInvalidEUAIDEmail,
+			sendIntakeNoEUAIDEmailMock,
+		)
+
+		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED)
+		s.NoError(err)
+		s.True(emailSentForNoEUAID)
+	})
 }

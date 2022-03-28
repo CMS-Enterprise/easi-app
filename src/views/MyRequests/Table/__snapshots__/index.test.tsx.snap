@@ -82,7 +82,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 140px; width: 140px; position: relative;"
+              style="min-width: 140px; width: 140px; padding-left: 0px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -117,7 +117,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 140px; width: 140px; position: relative;"
+              style="min-width: 140px; width: 140px; padding-left: 0px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -152,7 +152,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 140px; width: 220px; position: relative;"
+              style="min-width: 140px; width: 220px; padding-left: 0px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -187,7 +187,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 140px; width: 140px; position: relative;"
+              style="min-width: 140px; width: 140px; padding-left: 0px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -222,7 +222,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
               colspan="1"
               role="columnheader"
               scope="col"
-              style="min-width: 220px; width: 140px; position: relative;"
+              style="min-width: 220px; width: 140px; padding-left: 0px; position: relative;"
             >
               <button
                 class="usa-button usa-button--unstyled"
@@ -262,6 +262,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             <th
               role="cell"
               scope="row"
+              style="padding-left: 0px;"
             >
               <a
                 class="usa-link"
@@ -272,25 +273,25 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             </th>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               IT Governance
             </td>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               May 20 2021
             </td>
             <td
               role="cell"
-              style="width: 200px;"
+              style="width: 200px; padding-left: 0px;"
             >
               Lifecycle ID issued: A123456: A123456
             </td>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               None
             </td>
@@ -301,6 +302,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             <th
               role="cell"
               scope="row"
+              style="padding-left: 0px;"
             >
               <a
                 class="usa-link"
@@ -311,25 +313,25 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             </th>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               IT Governance
             </td>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               May 22 2021
             </td>
             <td
               role="cell"
-              style="width: 200px;"
+              style="width: 200px; padding-left: 0px;"
             >
               Intake draft
             </td>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               None
             </td>
@@ -340,6 +342,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             <th
               role="cell"
               scope="row"
+              style="padding-left: 0px;"
             >
               <a
                 class="usa-link"
@@ -350,19 +353,19 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             </th>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               Section 508
             </td>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               May 25 2021
             </td>
             <td
               role="cell"
-              style="width: 200px;"
+              style="width: 200px; padding-left: 0px;"
             >
               <span>
                 In remediation
@@ -375,7 +378,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             </td>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               None
             </td>
@@ -386,6 +389,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             <th
               role="cell"
               scope="row"
+              style="padding-left: 0px;"
             >
               <a
                 class="usa-link"
@@ -396,19 +400,19 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             </th>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               Section 508
             </td>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               May 25 2021
             </td>
             <td
               role="cell"
-              style="width: 200px;"
+              style="width: 200px; padding-left: 0px;"
             >
               <span>
                 Open
@@ -421,7 +425,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             </td>
             <td
               role="cell"
-              style="width: 150px;"
+              style="width: 150px; padding-left: 0px;"
             >
               None
             </td>

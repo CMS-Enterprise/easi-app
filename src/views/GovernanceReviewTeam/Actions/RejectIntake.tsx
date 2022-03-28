@@ -70,7 +70,7 @@ const RejectIntake = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<RejectIntakeForm>) => {
-        const { errors, handleSubmit } = formikProps;
+        const { errors, setErrors, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -165,7 +165,11 @@ const RejectIntake = () => {
                     aria-describedby="RejectIntakeForm-SubmitHelp"
                   />
                 </FieldGroup>
-                <Button className="margin-top-2" type="submit">
+                <Button
+                  className="margin-top-2"
+                  type="submit"
+                  onClick={() => setErrors({})}
+                >
                   {t('rejectIntake.submit')}
                 </Button>
               </Form>

@@ -7,8 +7,7 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Button,
-  IconLaunch
+  Button
 } from '@trussworks/react-uswds';
 import {
   Field,
@@ -82,6 +81,7 @@ import accessibilitySchema from 'validations/accessibilitySchema';
 import { NotFoundPartial } from 'views/NotFound';
 
 import RequestDeleted from './RequestDeleted';
+import SidebarTestingLinks from './SidebarTestingLinks';
 
 import './index.scss';
 
@@ -624,24 +624,22 @@ const AccessibilityRequestDetailPage = () => {
                   <dd className="margin-0 margin-bottom-3">{lcid}</dd>
                 </dl>
               </div>
-              <UswdsReactLink
-                className="display-inline-block margin-top-3"
-                target="_blank"
-                rel="noopener noreferrer"
-                to="/508/templates"
-              >
-                {t('requestDetails.testingTemplates')}
-                <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
-              </UswdsReactLink>
-              <UswdsReactLink
-                className="display-inline-block margin-top-1"
-                target="_blank"
-                rel="noopener noreferrer"
-                to="/508/testing-overview"
-              >
-                {t('requestDetails.testingSteps')}
-                <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
-              </UswdsReactLink>
+              {flags.cedar508Requests && (
+                <div>
+                  <h3>{t('requestDetails.systemInformation')}</h3>
+                  <Alert
+                    type="warning"
+                    heading={t('requestDetails.actionRequired')}
+                  >
+                    <UswdsReactLink
+                      to={`/508/requests/${accessibilityRequestId}/cedar-system`}
+                    >
+                      {t('requestDetails.linkRequestToSystem')}
+                    </UswdsReactLink>
+                  </Alert>
+                </div>
+              )}
+              <SidebarTestingLinks />
               {userEuaId === requestOwnerEuaId && (
                 <button
                   type="button"
@@ -678,7 +676,7 @@ const AccessibilityRequestDetailPage = () => {
                   {(
                     formikProps: FormikProps<DeleteAccessibilityRequestForm>
                   ) => {
-                    const { errors, values } = formikProps;
+                    const { errors, setErrors, values } = formikProps;
                     const flatErrors = flattenErrors(errors);
                     return (
                       <>
@@ -736,7 +734,11 @@ const AccessibilityRequestDetailPage = () => {
                           </FieldGroup>
 
                           <div className="display-flex margin-top-2">
-                            <Button type="submit" className="margin-right-5">
+                            <Button
+                              type="submit"
+                              onClick={() => setErrors({})}
+                              className="margin-right-5"
+                            >
                               {t('requestDetails.modal.confirm')}
                             </Button>
                             <Button

@@ -65,3 +65,7 @@ services:
       - LICENSE_KEY
     volumes:
       - ./../easi-infra-modules/lambda/prince/build:/var/task:ro,delegated
+  email:
+    ports:
+      - 1025:1025
+      - 1080:1080

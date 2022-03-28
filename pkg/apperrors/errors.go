@@ -252,3 +252,21 @@ func (e *ResourceNotFoundError) Error() string {
 func (e *ResourceNotFoundError) Unwrap() error {
 	return e.Err
 }
+
+// InvalidParametersError is an error for calling a function with invalid parameters
+type InvalidParametersError struct {
+	FunctionName string
+}
+
+func (e *InvalidParametersError) Error() string {
+	return fmt.Sprint("Unable to run ", e.FunctionName, " due to invalid parameters")
+}
+
+// InvalidEUAIDError indicates that the CEDAR LDAP API didn't find a matching user for the given EUAID
+type InvalidEUAIDError struct {
+	EUAID string
+}
+
+func (e *InvalidEUAIDError) Error() string {
+	return fmt.Sprint("EUAID ", e.EUAID, " does not correspond to a valid EUA user")
+}
