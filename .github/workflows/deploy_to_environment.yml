@@ -6,7 +6,7 @@ on:
       env:
         required: true
         type: string
-      lambda_version: 
+      lambda_version:
         required: true
         type: string
     secrets:
@@ -36,11 +36,8 @@ env:
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   ENV: ${{ inputs.env }}
 
-concurrency: 
-  group: deploy
-
-jobs: 
-  deploy: 
+jobs:
+  deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     env:

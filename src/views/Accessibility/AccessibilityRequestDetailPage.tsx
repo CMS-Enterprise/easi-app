@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
@@ -291,14 +291,18 @@ const AccessibilityRequestDetailPage = () => {
           {t('requestDetails.documents.noDocs.heading')}
         </h2>
         <p className="line-height-body-4">
-          <UswdsReactLink
-            className="display-inline-block"
-            to="/508/templates"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('accessibility:requestDetails.documents.noDocs.description')}
-          </UswdsReactLink>
+          <Trans i18nKey="accessibility:requestDetails.documents.noDocs.description">
+            indexOne
+            <UswdsReactLink
+              className="display-inline-block"
+              to="/508/templates"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              templatesLink
+            </UswdsReactLink>
+            indexTwo
+          </Trans>
         </p>
       </div>
       {uploadDocumentLink}

@@ -231,6 +231,7 @@ const IssueLifecycleId = () => {
                     <HelpText>
                       {t('issueLCID.expirationDate.helpText')}
                     </HelpText>
+                    <FieldErrorMsg>{flatErrors.validDate}</FieldErrorMsg>
                     <FieldErrorMsg>
                       {flatErrors.expirationDateMonth}
                     </FieldErrorMsg>
@@ -247,7 +248,10 @@ const IssueLifecycleId = () => {
                         </Label>
                         <Field
                           as={DateInputMonth}
-                          error={!!flatErrors.expirationDateMonth}
+                          error={
+                            !!flatErrors.expirationDateMonth ||
+                            !!flatErrors.validDate
+                          }
                           id="IssueLifecycleIdForm-ExpirationDateMonth"
                           name="expirationDateMonth"
                         />
@@ -258,7 +262,10 @@ const IssueLifecycleId = () => {
                         </Label>
                         <Field
                           as={DateInputDay}
-                          error={!!flatErrors.expirationDateDay}
+                          error={
+                            !!flatErrors.expirationDateDay ||
+                            !!flatErrors.validDate
+                          }
                           id="IssueLifecycleIdForm-ExpirationDateDay"
                           name="expirationDateDay"
                         />

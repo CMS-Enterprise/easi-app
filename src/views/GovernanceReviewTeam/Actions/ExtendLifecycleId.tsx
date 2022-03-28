@@ -27,22 +27,22 @@ import {
 import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
-import { extendLifecycleIdSchema } from 'validations/actionSchema';
+import { sharedLifecycleIdSchema } from 'validations/actionSchema';
 
 import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
 import EmailRecipientsFields from './EmailRecipientsFields';
 
 type ExtendLCIDForm = {
-  currentExpiresAt: string;
-  newExpirationDay: string;
-  newExpirationMonth: string;
-  newExpirationYear: string;
-  currentScope: string;
-  newScope: string;
-  currentNextSteps: string;
-  newNextSteps: string;
   currentCostBaseline: string;
+  currentExpiresAt: string;
+  currentNextSteps: string;
+  currentScope: string;
+  expirationDateDay: string;
+  expirationDateMonth: string;
+  expirationDateYear: string;
   newCostBaseline: string;
+  nextSteps: string;
+  scope: string;
 };
 
 type ExtendLifecycleIdProps = {
@@ -69,13 +69,13 @@ const ExtendLifecycleId = ({
   const history = useHistory();
   const initialValues: ExtendLCIDForm = {
     currentExpiresAt: lcidExpiresAt,
-    newExpirationDay: '',
-    newExpirationMonth: '',
-    newExpirationYear: '',
+    expirationDateDay: '',
+    expirationDateMonth: '',
+    expirationDateYear: '',
     currentScope: lcidScope,
-    newScope: '',
+    scope: '',
     currentNextSteps: lcidNextSteps,
-    newNextSteps: '',
+    nextSteps: '',
     currentCostBaseline: lcidCostBaseline,
     newCostBaseline: ''
   };
@@ -89,25 +89,25 @@ const ExtendLifecycleId = ({
 
   const handleSubmit = (values: ExtendLCIDForm) => {
     const {
-      newExpirationMonth = '',
-      newExpirationDay = '',
-      newExpirationYear = '',
-      newScope = '',
-      newNextSteps = '',
+      expirationDateMonth = '',
+      expirationDateDay = '',
+      expirationDateYear = '',
+      scope = '',
+      nextSteps = '',
       newCostBaseline = ''
     } = values;
     const expiresAt = DateTime.utc(
-      parseInt(newExpirationYear, RADIX),
-      parseInt(newExpirationMonth, RADIX),
-      parseInt(newExpirationDay, RADIX)
+      parseInt(expirationDateYear, RADIX),
+      parseInt(expirationDateMonth, RADIX),
+      parseInt(expirationDateDay, RADIX)
     ).toISO();
     extendLifecycleID({
       variables: {
         input: {
           id: systemId,
           expirationDate: expiresAt,
-          scope: newScope,
-          nextSteps: newNextSteps,
+          scope,
+          nextSteps,
           costBaseline: newCostBaseline,
           shouldSendEmail
         }
@@ -124,7 +124,7 @@ const ExtendLifecycleId = ({
     <Formik
       initialValues={initialValues}
       onSubmit={handleSubmit}
-      validationSchema={extendLifecycleIdSchema}
+      validationSchema={sharedLifecycleIdSchema}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -214,57 +214,65 @@ const ExtendLifecycleId = ({
                     <HelpText className="margin-top-05 line-height-body-5 text-base">
                       {t('extendLcid.expirationDate.helpText')}
                     </HelpText>
-                    <FieldErrorMsg>{flatErrors.newExpirationDay}</FieldErrorMsg>
                     <FieldErrorMsg>
-                      {flatErrors.newExpirationMonth}
+                      {flatErrors.expirationDateDay}
                     </FieldErrorMsg>
                     <FieldErrorMsg>
-                      {flatErrors.newExpirationYear}
+                      {flatErrors.expirationDateMonth}
+                    </FieldErrorMsg>
+                    <FieldErrorMsg>
+                      {flatErrors.expirationDateYear}
                     </FieldErrorMsg>
                     <FieldErrorMsg>{flatErrors.validDate}</FieldErrorMsg>
                     <div className="usa-memorable-date">
                       <div className="usa-form-group usa-form-group--month margin-top-105 margin-right-1 width-7">
                         <Label
-                          htmlFor="ExtendLifecycleId-NewExpirationMonth"
+                          htmlFor="ExtendLifecycleId-expirationDateMonth"
                           className="line-height-body-3 text-normal"
                         >
                           {t('extendLcid.expirationDate.month')}
                         </Label>
                         <Field
                           as={DateInputMonth}
-                          error={!!flatErrors.newExpirationMonth}
-                          id="ExtendLifecycleId-NewExpirationMonth"
-                          name="newExpirationMonth"
+                          error={
+                            !!flatErrors.expirationDateMonth ||
+                            !!flatErrors.validDate
+                          }
+                          id="ExtendLifecycleId-expirationDateMonth"
+                          name="expirationDateMonth"
                           className="margin-top-05"
                         />
                       </div>
                       <div className="usa-form-group usa-form-group--day margin-top-105 margin-right-1 width-7">
                         <Label
-                          htmlFor="ExtendLifecycleId-NewExpirationDay"
+                          htmlFor="ExtendLifecycleId-expirationDateDay"
                           className="line-height-body-3 text-normal"
                         >
                           {t('extendLcid.expirationDate.day')}
                         </Label>
                         <Field
                           as={DateInputDay}
-                          error={!!flatErrors.newExpirationDay}
-                          id="ExtendLifecycleId-NewExpirationDay"
-                          name="newExpirationDay"
+                          error={
+                            !!flatErrors.expirationDateDay ||
+                            !!flatErrors.validDate
+                          }
+                          id="ExtendLifecycleId-expirationDateDay"
+                          name="expirationDateDay"
                           className="margin-top-05"
                         />
                       </div>
                       <div className="usa-form-group usa-form-group--year margin-top-105 margin-right-1 width-10">
                         <Label
-                          htmlFor="ExtendLifecycleId-NewExpirationYear"
+                          htmlFor="ExtendLifecycleId-expirationDateYear"
                           className="line-height-body-3 text-normal"
                         >
                           {t('extendLcid.expirationDate.year')}
                         </Label>
                         <Field
                           as={DateInputYear}
-                          error={!!flatErrors.newExpirationYear}
-                          id="ExtendLifecycleId-NewExpirationYear"
-                          name="newExpirationYear"
+                          error={!!flatErrors.expirationDateYear}
+                          id="ExtendLifecycleId-expirationDateYear"
+                          name="expirationDateYear"
                           className="margin-top-05"
                         />
                       </div>
@@ -273,7 +281,7 @@ const ExtendLifecycleId = ({
                 </FieldGroup>
                 <FieldGroup
                   scrollElement="scope"
-                  error={!!flatErrors.newScope}
+                  error={!!flatErrors.scope}
                   className="margin-top-4"
                 >
                   <Label
@@ -285,18 +293,18 @@ const ExtendLifecycleId = ({
                   <HelpText className="margin-top-05 line-height-body-5 text-base">
                     {t('extendLcid.scopeHelpText')}
                   </HelpText>
-                  <FieldErrorMsg>{flatErrors.newScope}</FieldErrorMsg>
+                  <FieldErrorMsg>{flatErrors.scope}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    error={!!flatErrors.newScope}
+                    error={!!flatErrors.scope}
                     id="ExtendLifecycleIdForm-Scope"
                     maxLength={3000}
-                    name="newScope"
+                    name="scope"
                   />
                 </FieldGroup>
                 <FieldGroup
                   scrollElement="nextSteps"
-                  error={!!flatErrors.newNextSteps}
+                  error={!!flatErrors.nextSteps}
                   className="margin-top-4"
                 >
                   <Label
@@ -308,13 +316,13 @@ const ExtendLifecycleId = ({
                   <HelpText className="margin-top-05 line-height-body-5 text-base">
                     {t('extendLcid.nextStepsHelpText')}
                   </HelpText>
-                  <FieldErrorMsg>{flatErrors.newNextSteps}</FieldErrorMsg>
+                  <FieldErrorMsg>{flatErrors.nextSteps}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    error={!!flatErrors.newNextSteps}
+                    error={!!flatErrors.nextSteps}
                     id="ExtendLifecycleIdForm-NextSteps"
                     maxLength={3000}
-                    name="newNextSteps"
+                    name="nextSteps"
                   />
                 </FieldGroup>
                 <FieldGroup className="margin-top-4">
