@@ -139,10 +139,11 @@ describe('Governance Review Team', () => {
       .clear()
       .type('25')
       .should('have.value', '25');
+
     cy.get('#IssueLifecycleIdForm-ExpirationDateYear')
       .clear()
-      .type('2020')
-      .should('have.value', '2020');
+      .type(new Date().getFullYear())
+      .should('have.value', new Date().getFullYear());
     cy.get('#IssueLifecycleIdForm-Scope')
       .type('Scope')
       .should('have.value', 'Scope');
@@ -175,7 +176,7 @@ describe('Governance Review Team', () => {
     ).click();
     cy.contains('dt', 'Lifecycle ID Expiration')
       .siblings('dd')
-      .contains('December 25 2020');
+      .contains(`December 25 ${new Date().getFullYear()}`);
     cy.contains('dt', 'Lifecycle ID Scope').siblings('dd').contains('Scope');
     cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });
@@ -230,13 +231,13 @@ describe('Governance Review Team', () => {
     cy.get('#extend-lcid').check({ force: true }).should('be.checked');
     cy.get('button[type="submit"]').click();
 
-    cy.get('#ExtendLifecycleId-NewExpirationMonth')
+    cy.get('#ExtendLifecycleId-expirationDateMonth')
       .type('08')
       .should('have.value', '08');
-    cy.get('#ExtendLifecycleId-NewExpirationDay')
+    cy.get('#ExtendLifecycleId-expirationDateDay')
       .type('31')
       .should('have.value', '31');
-    cy.get('#ExtendLifecycleId-NewExpirationYear')
+    cy.get('#ExtendLifecycleId-expirationDateYear')
       .type('2028')
       .should('have.value', '2028');
 
@@ -279,13 +280,13 @@ describe('Governance Review Team', () => {
     cy.get('#extend-lcid').check({ force: true }).should('be.checked');
     cy.get('button[type="submit"]').click();
 
-    cy.get('#ExtendLifecycleId-NewExpirationMonth')
+    cy.get('#ExtendLifecycleId-expirationDateMonth')
       .type('08')
       .should('have.value', '08');
-    cy.get('#ExtendLifecycleId-NewExpirationDay')
+    cy.get('#ExtendLifecycleId-expirationDateDay')
       .type('31')
       .should('have.value', '31');
-    cy.get('#ExtendLifecycleId-NewExpirationYear')
+    cy.get('#ExtendLifecycleId-expirationDateYear')
       .type('2029')
       .should('have.value', '2029');
 
