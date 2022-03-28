@@ -222,7 +222,8 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
             input: {
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
@@ -266,7 +267,8 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
             input: {
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
@@ -313,7 +315,8 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
             input: {
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },

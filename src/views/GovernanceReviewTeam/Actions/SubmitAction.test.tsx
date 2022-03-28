@@ -202,7 +202,8 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
@@ -241,7 +242,8 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
@@ -280,7 +282,8 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
@@ -317,7 +320,8 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
@@ -361,7 +365,8 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
@@ -399,7 +404,8 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
@@ -434,7 +440,8 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
@@ -476,7 +483,8 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: true
             }
           }
         },
