@@ -30,9 +30,10 @@ type AccessibilityRequestsConnection struct {
 // Feedback intended for a business owner before they proceed to writing a
 // business case for a system request
 type AddGRTFeedbackInput struct {
-	EmailBody string    `json:"emailBody"`
-	Feedback  string    `json:"feedback"`
-	IntakeID  uuid.UUID `json:"intakeID"`
+	EmailBody       string    `json:"emailBody"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeID"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // Payload for adding GRT feedback to a system request (contains the system
@@ -43,8 +44,9 @@ type AddGRTFeedbackPayload struct {
 
 // Input to add feedback to a system request
 type BasicActionInput struct {
-	Feedback string    `json:"feedback"`
-	IntakeID uuid.UUID `json:"intakeId"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeId"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // An IT governance requester's explanation of alternative solutions
@@ -136,11 +138,12 @@ type CreateCedarSystemBookmarkPayload struct {
 
 // Input data for extending a system request's lifecycle ID
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
-	ID             uuid.UUID  `json:"id"`
-	ExpirationDate *time.Time `json:"expirationDate"`
-	NextSteps      *string    `json:"nextSteps"`
-	Scope          string     `json:"scope"`
-	CostBaseline   *string    `json:"costBaseline"`
+	ID              uuid.UUID  `json:"id"`
+	ExpirationDate  *time.Time `json:"expirationDate"`
+	NextSteps       *string    `json:"nextSteps"`
+	Scope           string     `json:"scope"`
+	CostBaseline    *string    `json:"costBaseline"`
+	ShouldSendEmail bool       `json:"shouldSendEmail"`
 }
 
 // Payload data for extending a system request's lifecycle ID
@@ -243,13 +246,14 @@ type GeneratePresignedUploadURLPayload struct {
 // The input data required to issue a lifecycle ID for a system's IT governance
 // request
 type IssueLifecycleIDInput struct {
-	ExpiresAt    time.Time `json:"expiresAt"`
-	Feedback     string    `json:"feedback"`
-	IntakeID     uuid.UUID `json:"intakeId"`
-	Lcid         *string   `json:"lcid"`
-	NextSteps    *string   `json:"nextSteps"`
-	Scope        string    `json:"scope"`
-	CostBaseline *string   `json:"costBaseline"`
+	ExpiresAt       time.Time `json:"expiresAt"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeId"`
+	Lcid            *string   `json:"lcid"`
+	NextSteps       *string   `json:"nextSteps"`
+	Scope           string    `json:"scope"`
+	CostBaseline    *string   `json:"costBaseline"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // The most recent note added by an admin to a system request
@@ -266,10 +270,11 @@ type LaunchDarklySettings struct {
 
 // Input data for rejection of a system's IT governance request
 type RejectIntakeInput struct {
-	Feedback  string    `json:"feedback"`
-	IntakeID  uuid.UUID `json:"intakeId"`
-	NextSteps *string   `json:"nextSteps"`
-	Reason    string    `json:"reason"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeId"`
+	NextSteps       *string   `json:"nextSteps"`
+	Reason          string    `json:"reason"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // Represents a request being made with the EASi system

@@ -321,13 +321,14 @@ func NewCreateActionUpdateStatus(
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
-) func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool) (*models.SystemIntake, error) {
+) func(ctx context.Context, newAction *models.Action, intakeID uuid.UUID, newStatus models.SystemIntakeStatus, shouldCloseBusinessCase bool, shouldSendEmail bool) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
 		action *models.Action,
 		id uuid.UUID,
 		newStatus models.SystemIntakeStatus,
 		shouldCloseBusinessCase bool,
+		shouldSendEmail bool,
 	) (*models.SystemIntake, error) {
 		err := saveAction(ctx, action)
 		if err != nil {
@@ -347,6 +348,10 @@ func NewCreateActionUpdateStatus(
 			if err = closeBusinessCase(ctx, *intake.BusinessCaseID); err != nil {
 				return nil, err
 			}
+		}
+
+		if !shouldSendEmail {
+			return intake, nil
 		}
 
 		euaID := intake.EUAUserID.ValueOrZero()
