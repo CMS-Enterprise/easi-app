@@ -706,9 +706,66 @@ func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
 		}
 		statusID := uuid.New()
 		newStatus := models.SystemIntakeStatusAPPROVED
-		_, err := createActionUpdateStatus(ctx, &action, statusID, newStatus, false)
+		_, err := createActionUpdateStatus(ctx, &action, statusID, newStatus, false, true)
 		s.NoError(err)
 		s.True(emailSentForInvalidEUAID)
+	})
+
+	s.Run("should *not* send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP, but shouldSendEmail is set to false", func() {
+		updateIntakeStatus := func(ctx context.Context, statusID uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				EUAUserID: null.StringFrom("ABCD"),
+			}, nil
+		}
+
+		saveAction := func(ctx context.Context, action *models.Action) error {
+			return nil
+		}
+
+		fetchEmptyUserInfo := func(ctx context.Context, euaID string) (*models.UserInfo, error) {
+			return nil, &apperrors.InvalidEUAIDError{
+				EUAID: euaID,
+			}
+		}
+
+		sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		emailSentForInvalidEUAID := false
+		sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+			emailSentForInvalidEUAID = true
+			return nil
+		}
+
+		sendIntakeNoEUAIDEmail := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		closeBusinessCase := func(ctx context.Context, bizCaseID uuid.UUID) error {
+			return nil
+		}
+
+		createActionUpdateStatus := NewCreateActionUpdateStatus(
+			serviceConfig,
+			updateIntakeStatus,
+			saveAction,
+			fetchEmptyUserInfo,
+			sendReviewEmail,
+			sendIntakeInvalidEUAIDEmailMock,
+			sendIntakeNoEUAIDEmail,
+			closeBusinessCase,
+		)
+
+		actionID := uuid.New()
+		action := models.Action{
+			IntakeID: &actionID,
+		}
+		statusID := uuid.New()
+		newStatus := models.SystemIntakeStatusAPPROVED
+		_, err := createActionUpdateStatus(ctx, &action, statusID, newStatus, false, false)
+		s.NoError(err)
+		s.False(emailSentForInvalidEUAID)
 	})
 
 	s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
@@ -761,8 +818,64 @@ func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
 		}
 		statusID := uuid.New()
 		newStatus := models.SystemIntakeStatusAPPROVED
-		_, err := createActionUpdateStatus(ctx, &action, statusID, newStatus, false)
+		_, err := createActionUpdateStatus(ctx, &action, statusID, newStatus, false, true)
 		s.NoError(err)
 		s.True(emailSentForNoEUAID)
 	})
+
+	s.Run("should *not* send notification of empty EUA ID when intake has no associated EUA ID, but shouldSendEmail is set to false", func() {
+		updateIntakeStatus := func(c context.Context, statusID uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				EUAUserID: null.StringFrom(""),
+			}, nil
+		}
+
+		saveAction := func(ctx context.Context, action *models.Action) error {
+			return nil
+		}
+
+		fetchEmptyUserInfo := func(ctx context.Context, euaID string) (*models.UserInfo, error) {
+			return &models.UserInfo{}, nil
+		}
+
+		sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		sendIntakeInvalidEUAIDEmail := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		emailSentForNoEUAID := false
+		sendIntakeNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+			emailSentForNoEUAID = true
+			return nil
+		}
+
+		closeBusinessCase := func(ctx context.Context, bizCaseID uuid.UUID) error {
+			return nil
+		}
+
+		createActionUpdateStatus := NewCreateActionUpdateStatus(
+			serviceConfig,
+			updateIntakeStatus,
+			saveAction,
+			fetchEmptyUserInfo,
+			sendReviewEmail,
+			sendIntakeInvalidEUAIDEmail,
+			sendIntakeNoEUAIDEmailMock,
+			closeBusinessCase,
+		)
+
+		actionID := uuid.New()
+		action := models.Action{
+			IntakeID: &actionID,
+		}
+		statusID := uuid.New()
+		newStatus := models.SystemIntakeStatusAPPROVED
+		_, err := createActionUpdateStatus(ctx, &action, statusID, newStatus, false, false)
+		s.NoError(err)
+		s.False(emailSentForNoEUAID)
+	})
+
 }

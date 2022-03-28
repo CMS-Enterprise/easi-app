@@ -4510,6 +4510,7 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   nextSteps: String
   scope: String!
   costBaseline: String
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -4589,6 +4590,7 @@ input AddGRTFeedbackInput {
   emailBody: String!
   feedback: String!
   intakeID: UUID!
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -4611,6 +4613,7 @@ input IssueLifecycleIdInput {
   nextSteps: String
   scope: String!
   costBaseline: String
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -4621,6 +4624,7 @@ input RejectIntakeInput {
   intakeId: UUID!
   nextSteps: String
   reason: String!
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -4690,6 +4694,7 @@ Input to add feedback to a system request
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -19397,6 +19402,10 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 		asMap[k] = v
 	}
 
+	if _, present := asMap["shouldSendEmail"]; !present {
+		asMap["shouldSendEmail"] = true
+	}
+
 	for k, v := range asMap {
 		switch k {
 		case "emailBody":
@@ -19423,6 +19432,14 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 			if err != nil {
 				return it, err
 			}
+		case "shouldSendEmail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
+			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -19434,6 +19451,10 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
+	}
+
+	if _, present := asMap["shouldSendEmail"]; !present {
+		asMap["shouldSendEmail"] = true
 	}
 
 	for k, v := range asMap {
@@ -19451,6 +19472,14 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeId"))
 			it.IntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldSendEmail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
+			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19639,6 +19668,10 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 		asMap[k] = v
 	}
 
+	if _, present := asMap["shouldSendEmail"]; !present {
+		asMap["shouldSendEmail"] = true
+	}
+
 	for k, v := range asMap {
 		switch k {
 		case "id":
@@ -19678,6 +19711,14 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("costBaseline"))
 			it.CostBaseline, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldSendEmail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
+			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19927,6 +19968,10 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 		asMap[k] = v
 	}
 
+	if _, present := asMap["shouldSendEmail"]; !present {
+		asMap["shouldSendEmail"] = true
+	}
+
 	for k, v := range asMap {
 		switch k {
 		case "expiresAt":
@@ -19985,6 +20030,14 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			if err != nil {
 				return it, err
 			}
+		case "shouldSendEmail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
+			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -19996,6 +20049,10 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
+	}
+
+	if _, present := asMap["shouldSendEmail"]; !present {
+		asMap["shouldSendEmail"] = true
 	}
 
 	for k, v := range asMap {
@@ -20029,6 +20086,14 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
 			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldSendEmail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
+			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
