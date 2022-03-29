@@ -15,9 +15,9 @@ describe('Logging in', () => {
       const currentRetry = cy.state('runnable')._currentRetry; // eslint-disable-line no-underscore-dangle
       if (currentRetry > 0) {
         cy.log(
-          `[Attempt ${currentRetry + 1}/${maxAttempts}] Sleeping 60s for OTP`
+          `[Attempt ${currentRetry + 1}/${maxAttempts}] Sleeping 30s for OTP`
         );
-        cy.wait(60000);
+        cy.wait(30000);
       }
       cy.login();
       cy.location('pathname', { timeout: 20000 }).should('equal', '/');

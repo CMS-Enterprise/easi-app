@@ -61,7 +61,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 		if err != nil {
 			t.Logf("[Attempt %d/%d] Failed to get access token for integration testing with error: %s", attempts, maxAttempts, err)
 			attempts++
-			time.Sleep(time.Second * 60) // Wait 60 seconds to make sure One-Time-Password is new
+			time.Sleep(time.Second * 30) // Wait 30 seconds to make sure One-Time-Password is new
 		} else {
 			break
 		}
