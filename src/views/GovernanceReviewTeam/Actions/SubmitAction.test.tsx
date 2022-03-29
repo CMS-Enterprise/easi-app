@@ -192,7 +192,33 @@ describe('Submit Action', () => {
     expect(
       await screen.findByTestId('formik-validation-errors')
     ).toBeInTheDocument();
+
+    screen.getByRole('button', { name: /without sending an email/i }).click();
   });
+
+  test.each([
+    { action: 'not-it-request' },
+    { action: 'need-biz-case' },
+    { action: 'provide-feedback-need-biz-case' },
+    { action: 'ready-for-grt' },
+    { action: 'ready-for-grb' },
+    { action: 'no-governance' },
+    { action: 'issue-lcid' }
+    // { action: 'extend-lcid' } // tbd button label
+  ])(
+    'renders submit action with and without email notification %j',
+    // '$action' title sub did not work
+    async ({ action }) => {
+      renderActionPage(action, [intakeQuery]);
+      await waitForPageLoad();
+      expect(
+        screen.getByRole('button', { name: /send email/i })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /without sending an email/i })
+      ).toBeInTheDocument();
+    }
+  );
 
   describe('actions', () => {
     it('executes not an IT request mutation', async () => {

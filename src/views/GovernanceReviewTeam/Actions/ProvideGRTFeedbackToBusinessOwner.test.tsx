@@ -186,6 +186,12 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
       expect(
         await screen.findByTestId('formik-validation-errors')
       ).toBeInTheDocument();
+
+      screen.getByRole('button', { name: /without sending an email/i }).click();
+
+      expect(
+        await screen.findByTestId('formik-validation-errors')
+      ).toBeInTheDocument();
     });
 
     const renderActionPage = (slug: string, mocks: any[]) => {
