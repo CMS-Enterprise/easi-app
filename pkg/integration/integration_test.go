@@ -59,7 +59,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 	for attempts <= maxAttempts {
 		accessToken, err = testhelpers.OktaAccessToken(config)
 		if err != nil {
-			fmt.Printf("[Attempt %d/%d] Failed to get access token for integration testing with error: %s", attempts, maxAttempts, err)
+			t.Logf("[Attempt %d/%d] Failed to get access token for integration testing with error: %s", attempts, maxAttempts, err)
 			attempts++
 			time.Sleep(time.Second * 60) // Wait 60 seconds to make sure One-Time-Password is new
 		} else {
