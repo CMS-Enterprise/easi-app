@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
@@ -48,9 +49,23 @@ func TestIntegrationTestSuite(t *testing.T) {
 	testServer := httptest.NewServer(easiServer)
 	defer testServer.Close()
 
-	accessToken, err := testhelpers.OktaAccessToken(config)
-	if err != nil {
-		fmt.Printf("Failed to get access token for integration testing with error: %s", err)
+	// Make 3 attempts at getting a valid Okta Access Token
+	// This requires multiple attempts to help fix test-flakiness when running
+	// multiple of this test in parallel, as the One-Time-Password used to log in to Okta is.... one time!
+	attempts := 0
+	maxAttempts := 3
+	var accessToken string
+	var err error
+	for attempts < maxAttempts {
+		accessToken, err = testhelpers.OktaAccessToken(config)
+		if err != nil {
+			fmt.Printf("[Attempt %d/%d] Failed to get access token for integration testing with error: %s", attempts, maxAttempts, err)
+		}
+		attempts++
+		time.Sleep(time.Second * 60) // Wait 60 seconds to make sure One-Time-Password is new
+	}
+	if attempts >= maxAttempts {
+		fmt.Printf("Failed to get access token for integration testing after %d attempts with error: %s", attempts, err)
 		t.FailNow()
 	}
 
