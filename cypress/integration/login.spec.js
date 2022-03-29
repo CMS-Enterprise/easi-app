@@ -11,7 +11,7 @@ describe('Logging in', () => {
       }
     },
     () => {
-      // Get the current number of retries and sleep 60s before running the test to make sure the One-Time-Password is new
+      // Get the current number of retries and sleep before running the test to make sure the One-Time-Password is new
       const currentRetry = cy.state('runnable')._currentRetry; // eslint-disable-line no-underscore-dangle
       if (currentRetry > 0) {
         cy.log(
