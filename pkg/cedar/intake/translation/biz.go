@@ -48,8 +48,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		InitialSubmittedAt: pStr(strDateTime(bc.InitialSubmittedAt)),
 		LastSubmittedAt:    pStr(strDateTime(bc.LastSubmittedAt)),
 
-		BusinessSolutions:  []*intakemodels.EASIBusinessSolution{},
-		LifecycleCostLines: []*intakemodels.EASILifecycleCost{},
+		BusinessSolutions: []*intakemodels.EASIBusinessSolution{},
 	}
 
 	// build the collection of embedded objects
@@ -70,6 +69,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Pros:                    bc.PreferredPros.Ptr(),
 		Cons:                    bc.PreferredCons.Ptr(),
 		CostSavings:             bc.PreferredCostSavings.Ptr(),
+		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
 	obj.BusinessSolutions = append(obj.BusinessSolutions, preferredSolution)
 
@@ -91,6 +91,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Pros:                    bc.AlternativeAPros.Ptr(),
 		Cons:                    bc.AlternativeACons.Ptr(),
 		CostSavings:             bc.AlternativeACostSavings.Ptr(),
+		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
 	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeASolution)
 
@@ -109,6 +110,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Pros:                    bc.AlternativeBPros.Ptr(),
 		Cons:                    bc.AlternativeBCons.Ptr(),
 		CostSavings:             bc.AlternativeBCostSavings.Ptr(),
+		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
 	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeBSolution)
 
@@ -135,8 +137,19 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		}
 		lc.Cost = pStr(cost)
 
-		obj.LifecycleCostLines = append(obj.LifecycleCostLines, lc)
+		if line.Solution == models.LifecycleCostSolutionPREFERRED {
+			preferredSolution.LifecycleCostLines = append(preferredSolution.LifecycleCostLines, lc)
+		} else if line.Solution == models.LifecycleCostSolutionA {
+			alternativeASolution.LifecycleCostLines = append(alternativeASolution.LifecycleCostLines, lc)
+		} else if line.Solution == models.LifecycleCostSolutionB {
+			alternativeBSolution.LifecycleCostLines = append(alternativeBSolution.LifecycleCostLines, lc)
+		}
 	}
+
+	// Append all solution objects to business solutions list
+	obj.BusinessSolutions = append(obj.BusinessSolutions, preferredSolution)
+	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeASolution)
+	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeBSolution)
 
 	blob, err := json.Marshal(&obj)
 	if err != nil {
