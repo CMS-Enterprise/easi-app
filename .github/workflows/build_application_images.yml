@@ -17,7 +17,7 @@ on:
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
   EASI_APP_GO_VERSION: "1.16.6"
-  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
+  GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.GIT_HASH }}
       - name: Set up node
         uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a
         with:
@@ -74,7 +74,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.GIT_HASH }}
       - run: clamscan --version
       - run: mkdir -p /store && chown clamav /store
       - run: freshclam --config-file /etc/clamav/freshclam.conf --datadir=/store
@@ -90,7 +90,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.GIT_HASH }}
       - name: Login to Docker Hub
         uses: docker/login-action@42d299face0c5c43a0487c477f595ac9cf22f1a7
         with:
@@ -110,8 +110,8 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-db-migrate
         run: |
-          docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" --file Dockerfile.db_migrations .
-          docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" --file Dockerfile.db_migrations .
+          docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
       - name: Announce failure
         if: ${{ failure() }}
         run: |
@@ -123,7 +123,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.GIT_HASH }}
       - name: Login to Docker Hub
         uses: docker/login-action@42d299face0c5c43a0487c477f595ac9cf22f1a7
         with:
@@ -145,11 +145,11 @@ jobs:
         run: |
           APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
           APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
-          docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$IMAGE_TAG" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
-          docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$GIT_HASH" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" .
+          docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
       - name: Check for vulnerability scan findings
         run: |
-          ./scripts/check_ecr_findings "easi-backend" "$IMAGE_TAG" "7"
+          ./scripts/check_ecr_findings "easi-backend" "$GIT_HASH" "7"
       - name: Announce failure
         if: ${{ failure() }}
         run: |

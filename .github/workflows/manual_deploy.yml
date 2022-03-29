@@ -18,13 +18,6 @@ on:
         type: boolean
         description: Confirm that you want to deploy to production
 
-env:
-  EASI_APP_NODE_VERSION: "16.14.0"
-  EASI_APP_GO_VERSION: "1.16.6"
-  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  DOCKER_BUILDKIT: 1
-
 jobs:
   Build_Application_Images:
     uses: ./.github/workflows/build_application_images.yml
