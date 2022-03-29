@@ -152,6 +152,17 @@ type CreateSystemIntakeActionExtendLifecycleIDPayload struct {
 	UserErrors   []*UserError         `json:"userErrors"`
 }
 
+// The data needed to associate a contact with a system intake
+type CreateSystemIntakeContactInput struct {
+	EuaUserID      string    `json:"euaUserId"`
+	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+}
+
+// The payload when creating a system intake contact
+type CreateSystemIntakeContactPayload struct {
+	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
+}
+
 // The input data used to initialize an IT governance request for a system
 type CreateSystemIntakeInput struct {
 	RequestType models.SystemIntakeRequestType `json:"requestType"`
@@ -210,6 +221,17 @@ type DeleteAccessibilityRequestPayload struct {
 // The payload when deleting a bookmark for a cedar system
 type DeleteCedarSystemBookmarkPayload struct {
 	CedarSystemID string `json:"cedarSystemId"`
+}
+
+// The data needed to delete a system intake contact
+type DeleteSystemIntakeContactInput struct {
+	EuaUserID      string    `json:"euaUserId"`
+	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+}
+
+// The payload when deleting a system intake contact
+type DeleteSystemIntakeContactPayload struct {
+	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
 }
 
 // The input required to delete a test date/score
