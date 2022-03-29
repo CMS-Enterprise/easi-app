@@ -52,19 +52,23 @@ func TestIntegrationTestSuite(t *testing.T) {
 	// Make 3 attempts at getting a valid Okta Access Token
 	// This requires multiple attempts to help fix test-flakiness when running
 	// multiple of this test in parallel, as the One-Time-Password used to log in to Okta is.... one time!
-	attempts := 0
+	attempts := 1
 	maxAttempts := 3
 	var accessToken string
 	var err error
-	for attempts < maxAttempts {
+	for attempts <= maxAttempts {
 		accessToken, err = testhelpers.OktaAccessToken(config)
 		if err != nil {
 			fmt.Printf("[Attempt %d/%d] Failed to get access token for integration testing with error: %s", attempts, maxAttempts, err)
+			attempts++
+			time.Sleep(time.Second * 60) // Wait 60 seconds to make sure One-Time-Password is new
+		} else {
+			break
 		}
-		attempts++
-		time.Sleep(time.Second * 60) // Wait 60 seconds to make sure One-Time-Password is new
 	}
-	if attempts >= maxAttempts {
+
+	// If we broke out of the loop with an error, we need to fail the test
+	if err != nil {
 		fmt.Printf("Failed to get access token for integration testing after %d attempts with error: %s", attempts, err)
 		t.FailNow()
 	}
