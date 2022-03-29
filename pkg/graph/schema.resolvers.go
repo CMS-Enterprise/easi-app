@@ -13,7 +13,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"github.com/vektah/gqlparser/gqlerror"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
