@@ -5,6 +5,7 @@
   "definitions": {
     "EASIBizCase": {
       "required": [
+        "businessCaseId",
         "userEUA"
       ],
       "properties": {
@@ -48,6 +49,13 @@
           "description": "Name of the current solution",
           "examples": [
             "Spreadsheets and Email"
+          ]
+        },
+        "businessCaseId": {
+          "type": "string",
+          "description": "Unique ID of this business case",
+          "examples": [
+            "91e5c1f3-11fb-4124-805c-adbdd02c5395"
           ]
         },
         "businessNeed": {

@@ -16,6 +16,7 @@ type EASIBizCase struct {
 	AsIsPros             *string                 `json:"asIsPros,omitempty" jsonschema:"description=Pros of the current solution,example=Well known workflows and end products"`
 	AsIsSummary          *string                 `json:"asIsSummary,omitempty" jsonschema:"description=Summary of the current solution,example=Managed through spreadsheets and email"`
 	AsIsTitle            *string                 `json:"asIsTitle,omitempty" jsonschema:"description=Name of the current solution,example=Spreadsheets and Email"`
+	BusinessCaseID       string                  `json:"businessCaseId" jsonschema:"description=Unique ID of this business case,example=91e5c1f3-11fb-4124-805c-adbdd02c5395"`
 	BusinessNeed         *string                 `json:"businessNeed,omitempty" jsonschema:"description=Business Need for this effort,example=Process takes too long and holds up key stakeholders"`
 	BusinessOwner        *string                 `json:"businessOwner,omitempty" jsonschema:"description=Business owner of this request,example=John Doe"`
 	BusinessSolutions    []*EASIBusinessSolution `json:"businessSolutions,omitempty" jsonschema:"description=Array Business Solutions (preferred and alternatives),example=N/A"`
