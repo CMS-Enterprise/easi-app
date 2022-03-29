@@ -5,6 +5,11 @@ on:
     branches:
       - "**"
 
+# This concurrency group exists with cancel-in-progress: true so that only the latest run of the workflow is executed (as its all that should matter).
+concurrency:
+  group: pr-build-and-test-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
   EASI_APP_GO_VERSION: "1.16.6"
