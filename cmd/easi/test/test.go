@@ -22,7 +22,6 @@ func Server() {
 		"go",
 		"test",
 		"-p=1",
-		"-v",
 		"-coverprofile=go-coverage.out",
 		"./pkg/...")
 	// Replace with some sort of configured writer
