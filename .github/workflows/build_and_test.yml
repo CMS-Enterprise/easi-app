@@ -6,7 +6,6 @@ on:
       - "**"
 
 # This concurrency group exists with cancel-in-progress: true so that only the latest run of the workflow is executed (as its all that should matter).
-# TEST COMMIT
 concurrency:
   group: pr-build-and-test-${{ github.ref }}
   cancel-in-progress: true
