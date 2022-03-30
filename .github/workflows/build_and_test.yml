@@ -5,12 +5,10 @@ on:
     branches:
       - "**"
 
-env:
-  EASI_APP_NODE_VERSION: "16.14.0"
-  EASI_APP_GO_VERSION: "1.16.6"
-  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  DOCKER_BUILDKIT: 1
+# This concurrency group exists with cancel-in-progress: true so that only the latest run of the workflow is executed (as its all that should matter).
+concurrency:
+  group: pr-build-and-test-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   Build_Application_Images:
