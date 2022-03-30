@@ -306,10 +306,10 @@ const Table = ({ type, hiddenColumns }: myRequestsTableProps) => {
           pageSize={state.pageSize}
           setPageSize={setPageSize}
           page={[]}
-          className="grid-col-9"
+          className="desktop:grid-col-fill"
         />
         <TablePageSize
-          className="grid-col-3"
+          className="desktop:grid-col-auto"
           pageSize={state.pageSize}
           setPageSize={setPageSize}
         />

@@ -13,20 +13,22 @@ const TablePageSize = ({
   pageSize,
   setPageSize
 }: TablePageSizeProps) => {
-  const classNames = classnames('margin-top-2', 'grid-col-3', className);
+  const classNames = classnames('desktop:margin-top-2', className);
   return (
-    <Dropdown
-      id="table-page-size"
-      name="tablePageSize"
-      onChange={(e: any) => setPageSize(Number(e.target.value))}
-      className={classNames}
-      value={pageSize}
-    >
-      <option value={10}>10 results per page</option>
-      <option value={20}>25 results per page</option>
-      <option value={50}>50 results per page</option>
-      <option value={100}>100 results per page</option>
-    </Dropdown>
+    <div className={classNames}>
+      <Dropdown
+        className="margin-top-0 width-auto"
+        id="table-page-size"
+        name="tablePageSize"
+        onChange={(e: any) => setPageSize(Number(e.target.value))}
+        value={pageSize}
+      >
+        <option value={10}>10 results per page</option>
+        <option value={20}>25 results per page</option>
+        <option value={50}>50 results per page</option>
+        <option value={100}>100 results per page</option>
+      </Dropdown>
+    </div>
   );
 };
 
