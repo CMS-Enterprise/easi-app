@@ -16,41 +16,6 @@
             "2023-02-27T14:34:43Z"
           ]
         },
-        "asIsCons": {
-          "type": "string",
-          "description": "Cons of the current solution",
-          "examples": [
-            "Multiple FTEs required"
-          ]
-        },
-        "asIsCostSavings": {
-          "type": "string",
-          "description": "Cost savings of the current solution",
-          "examples": [
-            "No additional development required"
-          ]
-        },
-        "asIsPros": {
-          "type": "string",
-          "description": "Pros of the current solution",
-          "examples": [
-            "Well known workflows and end products"
-          ]
-        },
-        "asIsSummary": {
-          "type": "string",
-          "description": "Summary of the current solution",
-          "examples": [
-            "Managed through spreadsheets and email"
-          ]
-        },
-        "asIsTitle": {
-          "type": "string",
-          "description": "Name of the current solution",
-          "examples": [
-            "Spreadsheets and Email"
-          ]
-        },
         "businessCaseId": {
           "type": "string",
           "description": "Unique ID of this business case",
@@ -85,6 +50,13 @@
           "description": "How CMS will benefit from this effort",
           "examples": [
             "Reduce FTE hours and generate better end products"
+          ]
+        },
+        "currentSolutionSummary": {
+          "type": "string",
+          "description": "Summary of the current solution",
+          "examples": [
+            "Managed through spreadsheets and email"
           ]
         },
         "initialSubmittedAt": {
