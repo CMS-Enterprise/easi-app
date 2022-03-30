@@ -69,7 +69,13 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ActionForm>) => {
-        const { errors, setErrors, handleSubmit, submitForm } = formikProps;
+        const {
+          errors,
+          setErrors,
+          handleSubmit,
+          submitForm,
+          setFieldValue
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -150,6 +156,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                     onClick={() => {
                       setErrors({});
                       setShouldSendEmail(true);
+                      setFieldValue('skipEmail', false);
                     }}
                   >
                     {t('submitAction.submit')}
@@ -160,7 +167,9 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                     onClick={() => {
                       setErrors({});
                       setShouldSendEmail(false);
-                      submitForm();
+                      setFieldValue('skipEmail', true);
+                      // todo hack timeout to propagate skipEmail value to the validator before submission
+                      setTimeout(submitForm);
                     }}
                   />
                 </div>

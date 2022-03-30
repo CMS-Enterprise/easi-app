@@ -1,8 +1,16 @@
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
+// `skipEmail` is an explicit field flag to toggle (related) fields as optional
+// such as `setFieldValue('skipEmail', true)`
+// it is not defined in schemas or types
+
 export const actionSchema = Yup.object().shape({
-  feedback: Yup.string().required('Please fill out email')
+  feedback: Yup.string().when('skipEmail', {
+    is: true,
+    then: schema => schema.optional(),
+    otherwise: schema => schema.required('Please fill out email')
+  })
 });
 
 export const sharedLifecycleIdSchema = Yup.object().shape({
