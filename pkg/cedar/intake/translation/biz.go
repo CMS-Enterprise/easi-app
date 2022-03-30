@@ -51,10 +51,10 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		BusinessSolutions: []*intakemodels.EASIBusinessSolution{},
 	}
 
-	// build the collection of embedded objects
+	// Build the collection of embedded objects
 
-	// business solutions
-	// preferred (required)
+	// Business solutions
+	// Preferred (required)
 	preferredSolution := &intakemodels.EASIBusinessSolution{
 		SolutionType:            "preferred",
 		Title:                   bc.PreferredTitle.Ptr(),
@@ -71,12 +71,11 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		CostSavings:             bc.PreferredCostSavings.Ptr(),
 		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
-	obj.BusinessSolutions = append(obj.BusinessSolutions, preferredSolution)
 
 	// TODO: do we need to check if alternative a and b are filled out?
 	// what is the best way to do that? need to check each field individually?
 
-	// alternative a (optional)
+	// Alternative a (optional)
 	alternativeASolution := &intakemodels.EASIBusinessSolution{
 		SolutionType:            "alternativeA",
 		Title:                   bc.AlternativeATitle.Ptr(),
@@ -93,9 +92,8 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		CostSavings:             bc.AlternativeACostSavings.Ptr(),
 		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
-	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeASolution)
 
-	// alternative b (optional)
+	// Alternative b (optional)
 	alternativeBSolution := &intakemodels.EASIBusinessSolution{
 		SolutionType:            "alternativeB",
 		Title:                   bc.AlternativeBTitle.Ptr(),
@@ -112,9 +110,8 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		CostSavings:             bc.AlternativeBCostSavings.Ptr(),
 		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
-	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeBSolution)
 
-	// lifecycle cost lines
+	// Add lifecycle cost lines to business solutions
 	bcID := bc.ID.String()
 
 	for _, line := range bc.LifecycleCostLines {
