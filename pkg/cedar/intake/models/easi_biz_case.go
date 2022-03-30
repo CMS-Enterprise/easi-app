@@ -53,10 +53,9 @@ type EASIBusinessSolution struct {
 
 // EASILifecycleCost represents a lifecycle cost item submitted through EASi as part of a business case
 type EASILifecycleCost struct {
-	BusinessCaseID *string `json:"businessCaseId,omitempty" jsonschema:"description=Unique ID of the business case this cost line is associated with,example=91e5c1f3-11fb-4124-805c-adbdd02c5395"`
-	Cost           *string `json:"cost,omitempty" jsonschema:"description=Fiscal year cost,example=10000"`
-	ID             *string `json:"id,omitempty" jsonschema:"description=Unique ID of this cost line,example=17f51e0f-c9ab-4d8a-8d6f-03aef2d3404d"`
-	Phase          *string `json:"phase,omitempty" jsonschema:"description=Type of work to be performed (can be more then one),example=Development,example=Operations and Maintenance"`
-	Solution       *string `json:"solution,omitempty" jsonschema:"description=Which solution is this (preferred or alternatives),example=Preferred"`
-	Year           *string `json:"year,omitempty" jsonschema:"description=Which fiscal year does this line pertain to,example=3"`
+	Cost     *string `json:"cost,omitempty" jsonschema:"description=Fiscal year cost,example=10000"`
+	ID       *string `json:"id,omitempty" jsonschema:"description=Unique ID of this cost line,example=17f51e0f-c9ab-4d8a-8d6f-03aef2d3404d"`
+	Phase    *string `json:"phase,omitempty" jsonschema:"description=Type of work to be performed (can be more then one),example=Development,example=Operations and Maintenance"`
+	Solution *string `json:"solution,omitempty" jsonschema:"description=Which solution is this (preferred or alternatives),example=Preferred"`
+	Year     *string `json:"year,omitempty" jsonschema:"description=Which fiscal year does this line pertain to,example=3"`
 }
