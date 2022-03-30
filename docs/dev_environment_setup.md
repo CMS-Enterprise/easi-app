@@ -162,7 +162,7 @@ $
 
 ## Setting up pre-commit Git hooks
 
-This repo uses [`pre-commit`](https://pre-commit.com/) to manage pre-commit Git hooks for maintaining several quality and stylistic standards; see [`.pre-commit-config.yaml`](./.pre-commit-config.yaml) for details.
+This repo uses [`pre-commit`](https://pre-commit.com/) to manage pre-commit Git hooks for maintaining several quality and stylistic standards; see [`.pre-commit-config.yaml`](/.pre-commit-config.yaml) for details.
 
 **MacOS:** Install with `brew install pre-commit`.
 
@@ -223,7 +223,7 @@ sudo apt install swagger
 **Windows+WSL:** From the Ubuntu command line, navigate to the root of this repository, then run `code .` to open VS Code with this repository opened.
 
 **All developers:**
-- VS Code will recommend installing the extensions specified in [`.vscode/extensions.json`](./.vscode/extensions.json). Install all of them.
+- VS Code will recommend installing the extensions specified in [`.vscode/extensions.json`](/.vscode/extensions.json). Install all of them.
 > - **Windows+WSL:** The GitLens extension will likely not work. It is dependent on another extension which VSCode installs on the windows side. If it doesn't work, you can safely ignore it.
 - The Go extension should prompt you to install the analysis tools it uses. Install all of them. See [these instructions](https://github.com/golang/vscode-go/blob/master/README.md#tools) for more details.
 
