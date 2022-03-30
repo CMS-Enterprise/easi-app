@@ -24,7 +24,6 @@ type EASIBizCase struct {
 	InitialSubmittedAt   *string                 `json:"initialSubmittedAt,omitempty" jsonschema:"description=Timestamp of when request was initially submitted,example=2022-02-17T07:34:43Z"`
 	IntakeID             *string                 `json:"intakeId,omitempty" jsonschema:"description=Unique ID of the intake associated with this business case,example=36b85781-169a-4539-aa66-916663d8118c"`
 	LastSubmittedAt      *string                 `json:"lastSubmittedAt,omitempty" jsonschema:"description=Timestamp of when request was last submitted,example=2022-02-11T16:34:43Z"`
-	LifecycleCostLines   []*EASILifecycleCost    `json:"lifecycleCostLines,omitempty" jsonschema:"description=Array of LifecycleCostLines (costs associated with upcoming Fiscal Years),example=N/A"`
 	PriorityAlignment    *string                 `json:"priorityAlignment,omitempty" jsonschema:"description=The ways this effort align with organizational priorities,example=Aligns with CMS' automation push"`
 	ProjectName          *string                 `json:"projectName,omitempty" jsonschema:"description=Name of the project,example=Easy Access to System"`
 	Requester            *string                 `json:"requester,omitempty" jsonschema:"description=Name of the requester,example=John Doe"`
@@ -36,19 +35,20 @@ type EASIBizCase struct {
 
 // EASIBusinessSolution represents a business solution submitted through EASi as part of a business case
 type EASIBusinessSolution struct {
-	AcquisitionApproach     *string `json:"acquisitionApproach,omitempty" jsonschema:"description=Approach to acquiring the products and services required to deliver the system,example=COTS"`
-	Cons                    *string `json:"cons,omitempty" jsonschema:"description=Cons of this solution,example=A lot of money and time required"`
-	CostSavings             *string `json:"costSavings,omitempty" jsonschema:"description=Cost savings of this solution,example=over ten million dollars"`
-	HasUI                   *string `json:"hasUI,omitempty" jsonschema:"description=Does this solution have/need a UI,example=Yes"`
-	HostingCloudServiceType *string `json:"hostingCloudServiceType,omitempty" jsonschema:"description=What type of cloud service will be used,example=PaaS"`
-	HostingLocation         *string `json:"hostingLocation,omitempty" jsonschema:"description=Where will this solution be hosted,example=AWS"`
-	HostingType             *string `json:"hostingType,omitempty" jsonschema:"description=What type of hosting will this solution use,example=cloud"`
-	Pros                    *string `json:"pros,omitempty" jsonschema:"description=Pros of this solution,example=Will reduce FTE hours needed"`
-	SecurityIsApproved      *bool   `json:"securityIsApproved,omitempty" jsonschema:"description=Is this solution FedRAMP/FISMA approved,example=True"`
-	SecurityIsBeingReviewed *string `json:"securityIsBeingReviewed,omitempty" jsonschema:"description=Is this solution in the process of getting FedRAMP/FISMA approval,example=Yes"`
-	SolutionType            string  `json:"solutionType" jsonschema:"enum=preferred,enum=alternativeA,enum=alternativeB,description=Which solution is this (preferred or alternatives),example=preferred"`
-	Summary                 *string `json:"summary,omitempty" jsonschema:"description=Summary of this solution,example=Building a new application in ServiceNow"`
-	Title                   *string `json:"title,omitempty" jsonschema:"description=Name of this solution,example=ServiceNow"`
+	AcquisitionApproach     *string              `json:"acquisitionApproach,omitempty" jsonschema:"description=Approach to acquiring the products and services required to deliver the system,example=COTS"`
+	Cons                    *string              `json:"cons,omitempty" jsonschema:"description=Cons of this solution,example=A lot of money and time required"`
+	CostSavings             *string              `json:"costSavings,omitempty" jsonschema:"description=Cost savings of this solution,example=over ten million dollars"`
+	HasUI                   *string              `json:"hasUI,omitempty" jsonschema:"description=Does this solution have/need a UI,example=Yes"`
+	HostingCloudServiceType *string              `json:"hostingCloudServiceType,omitempty" jsonschema:"description=What type of cloud service will be used,example=PaaS"`
+	HostingLocation         *string              `json:"hostingLocation,omitempty" jsonschema:"description=Where will this solution be hosted,example=AWS"`
+	HostingType             *string              `json:"hostingType,omitempty" jsonschema:"description=What type of hosting will this solution use,example=cloud"`
+	LifecycleCostLines      []*EASILifecycleCost `json:"lifecycleCostLines,omitempty" jsonschema:"description=Array of LifecycleCostLines (costs associated with upcoming Fiscal Years) for this business solution,example=N/A"`
+	Pros                    *string              `json:"pros,omitempty" jsonschema:"description=Pros of this solution,example=Will reduce FTE hours needed"`
+	SecurityIsApproved      *bool                `json:"securityIsApproved,omitempty" jsonschema:"description=Is this solution FedRAMP/FISMA approved,example=True"`
+	SecurityIsBeingReviewed *string              `json:"securityIsBeingReviewed,omitempty" jsonschema:"description=Is this solution in the process of getting FedRAMP/FISMA approval,example=Yes"`
+	SolutionType            string               `json:"solutionType" jsonschema:"enum=preferred,enum=alternativeA,enum=alternativeB,description=Which solution is this (preferred or alternatives),example=preferred"`
+	Summary                 *string              `json:"summary,omitempty" jsonschema:"description=Summary of this solution,example=Building a new application in ServiceNow"`
+	Title                   *string              `json:"title,omitempty" jsonschema:"description=Name of this solution,example=ServiceNow"`
 }
 
 // EASILifecycleCost represents a lifecycle cost item submitted through EASi as part of a business case

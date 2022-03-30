@@ -48,14 +48,13 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		InitialSubmittedAt: pStr(strDateTime(bc.InitialSubmittedAt)),
 		LastSubmittedAt:    pStr(strDateTime(bc.LastSubmittedAt)),
 
-		BusinessSolutions:  []*intakemodels.EASIBusinessSolution{},
-		LifecycleCostLines: []*intakemodels.EASILifecycleCost{},
+		BusinessSolutions: []*intakemodels.EASIBusinessSolution{},
 	}
 
-	// build the collection of embedded objects
+	// Build the collection of embedded objects
 
-	// business solutions
-	// preferred (required)
+	// Business solutions
+	// Preferred (required)
 	preferredSolution := &intakemodels.EASIBusinessSolution{
 		SolutionType:            "preferred",
 		Title:                   bc.PreferredTitle.Ptr(),
@@ -70,13 +69,13 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Pros:                    bc.PreferredPros.Ptr(),
 		Cons:                    bc.PreferredCons.Ptr(),
 		CostSavings:             bc.PreferredCostSavings.Ptr(),
+		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
-	obj.BusinessSolutions = append(obj.BusinessSolutions, preferredSolution)
 
 	// TODO: do we need to check if alternative a and b are filled out?
 	// what is the best way to do that? need to check each field individually?
 
-	// alternative a (optional)
+	// Alternative a (optional)
 	alternativeASolution := &intakemodels.EASIBusinessSolution{
 		SolutionType:            "alternativeA",
 		Title:                   bc.AlternativeATitle.Ptr(),
@@ -91,10 +90,10 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Pros:                    bc.AlternativeAPros.Ptr(),
 		Cons:                    bc.AlternativeACons.Ptr(),
 		CostSavings:             bc.AlternativeACostSavings.Ptr(),
+		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
-	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeASolution)
 
-	// alternative b (optional)
+	// Alternative b (optional)
 	alternativeBSolution := &intakemodels.EASIBusinessSolution{
 		SolutionType:            "alternativeB",
 		Title:                   bc.AlternativeBTitle.Ptr(),
@@ -109,10 +108,10 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Pros:                    bc.AlternativeBPros.Ptr(),
 		Cons:                    bc.AlternativeBCons.Ptr(),
 		CostSavings:             bc.AlternativeBCostSavings.Ptr(),
+		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
-	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeBSolution)
 
-	// lifecycle cost lines
+	// Add lifecycle cost lines to business solutions
 	bcID := bc.ID.String()
 
 	for _, line := range bc.LifecycleCostLines {
@@ -135,8 +134,19 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		}
 		lc.Cost = pStr(cost)
 
-		obj.LifecycleCostLines = append(obj.LifecycleCostLines, lc)
+		if line.Solution == models.LifecycleCostSolutionPREFERRED {
+			preferredSolution.LifecycleCostLines = append(preferredSolution.LifecycleCostLines, lc)
+		} else if line.Solution == models.LifecycleCostSolutionA {
+			alternativeASolution.LifecycleCostLines = append(alternativeASolution.LifecycleCostLines, lc)
+		} else if line.Solution == models.LifecycleCostSolutionB {
+			alternativeBSolution.LifecycleCostLines = append(alternativeBSolution.LifecycleCostLines, lc)
+		}
 	}
+
+	// Append all solution objects to business solutions list
+	obj.BusinessSolutions = append(obj.BusinessSolutions, preferredSolution)
+	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeASolution)
+	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeBSolution)
 
 	blob, err := json.Marshal(&obj)
 	if err != nil {
