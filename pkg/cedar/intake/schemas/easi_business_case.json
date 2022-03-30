@@ -274,13 +274,6 @@
     },
     "EASILifecycleCost": {
       "properties": {
-        "businessCaseId": {
-          "type": "string",
-          "description": "Unique ID of the business case this cost line is associated with",
-          "examples": [
-            "91e5c1f3-11fb-4124-805c-adbdd02c5395"
-          ]
-        },
         "cost": {
           "type": "string",
           "description": "Fiscal year cost",
