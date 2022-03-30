@@ -23,10 +23,10 @@ const TablePageSize = ({
         onChange={(e: any) => setPageSize(Number(e.target.value))}
         value={pageSize}
       >
-        <option value={10}>10 results per page</option>
-        <option value={20}>25 results per page</option>
-        <option value={50}>50 results per page</option>
-        <option value={100}>100 results per page</option>
+        <option value={10}>Show 10</option>
+        <option value={25}>Show 25</option>
+        <option value={50}>Show 50</option>
+        <option value={100}>Show 100</option>
       </Dropdown>
     </div>
   );

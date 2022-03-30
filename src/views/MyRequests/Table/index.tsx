@@ -36,9 +36,14 @@ import '../index.scss';
 type myRequestsTableProps = {
   type?: RequestType;
   hiddenColumns?: string[];
+  defaultPageSize?: number;
 };
 
-const Table = ({ type, hiddenColumns }: myRequestsTableProps) => {
+const Table = ({
+  type,
+  hiddenColumns,
+  defaultPageSize = 10
+}: myRequestsTableProps) => {
   const { t } = useTranslation(['home', 'intake', 'accessibility']);
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
@@ -180,7 +185,7 @@ const Table = ({ type, hiddenColumns }: myRequestsTableProps) => {
       initialState: {
         sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
         pageIndex: 0,
-        pageSize: 50
+        pageSize: defaultPageSize
       }
     },
     useFilters,
