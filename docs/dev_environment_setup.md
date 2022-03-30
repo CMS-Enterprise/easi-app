@@ -135,7 +135,6 @@ We use [Yarn](https://yarnpkg.com/) to manage our JavaScript dependencies. It ca
 
 **Windows+WSL:** Install Ruby with `sudo apt install ruby-full`.
 
-(#direnv)
 ## Direnv
 
 **MacOS:** Install with `brew install direnv`.
