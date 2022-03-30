@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
@@ -6,9 +6,11 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
+  Button,
   Grid,
   GridContainer,
   IconBookmark,
+  IconExpandMore,
   SideNav,
   SummaryBox
 } from '@trussworks/react-uswds';
@@ -106,6 +108,24 @@ const SystemProfile = () => {
     </NavLink>
   ));
 
+  const descriptionRef = React.createRef<HTMLElement>();
+  const [
+    isDescriptionExpandable,
+    setIsDescriptionExpandable
+  ] = useState<boolean>(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState<boolean>(
+    false
+  );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const { current: el } = descriptionRef;
+    if (!el) return;
+    if (el.scrollHeight > el.offsetHeight) {
+      setIsDescriptionExpandable(true);
+    }
+  });
+
   if (loading) {
     return <PageLoading />;
   }
@@ -153,10 +173,40 @@ const SystemProfile = () => {
                     id={t('singleSystem.id')}
                     label={t('singleSystem.summary.expand')}
                   >
-                    <DescriptionDefinition
-                      definition={systemInfo.description}
-                      className="margin-bottom-2"
-                    />
+                    <div
+                      className={classnames(
+                        'description-truncated',
+                        'margin-bottom-2',
+                        {
+                          expanded: descriptionExpanded
+                        }
+                      )}
+                    >
+                      <DescriptionDefinition
+                        definition={systemInfo.description}
+                        ref={descriptionRef}
+                        className="font-body-lg line-height-body-5 text-light"
+                      />
+                      {isDescriptionExpandable && (
+                        <div>
+                          <Button
+                            unstyled
+                            type="button"
+                            className="margin-top-1"
+                            onClick={() => {
+                              setDescriptionExpanded(!descriptionExpanded);
+                            }}
+                          >
+                            {t(
+                              descriptionExpanded
+                                ? 'singleSystem.description.less'
+                                : 'singleSystem.description.more'
+                            )}
+                            <IconExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                     <UswdsReactLink
                       aria-label={t('singleSystem.summary.label')}
                       className="line-height-body-5"
