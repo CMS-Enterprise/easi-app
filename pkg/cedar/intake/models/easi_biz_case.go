@@ -10,27 +10,23 @@ package models
 
 // EASIBizCase represents a business case for a system
 type EASIBizCase struct {
-	ArchivedAt           *string                 `json:"archivedAt,omitempty" jsonschema:"description=Timestamp of when request was archived,example=2023-02-27T14:34:43Z"`
-	AsIsCons             *string                 `json:"asIsCons,omitempty" jsonschema:"description=Cons of the current solution,example=Multiple FTEs required"`
-	AsIsCostSavings      *string                 `json:"asIsCostSavings,omitempty" jsonschema:"description=Cost savings of the current solution,example=No additional development required"`
-	AsIsPros             *string                 `json:"asIsPros,omitempty" jsonschema:"description=Pros of the current solution,example=Well known workflows and end products"`
-	AsIsSummary          *string                 `json:"asIsSummary,omitempty" jsonschema:"description=Summary of the current solution,example=Managed through spreadsheets and email"`
-	AsIsTitle            *string                 `json:"asIsTitle,omitempty" jsonschema:"description=Name of the current solution,example=Spreadsheets and Email"`
-	BusinessCaseID       string                  `json:"businessCaseId" jsonschema:"description=Unique ID of this business case,example=91e5c1f3-11fb-4124-805c-adbdd02c5395"`
-	BusinessNeed         *string                 `json:"businessNeed,omitempty" jsonschema:"description=Business Need for this effort,example=Process takes too long and holds up key stakeholders"`
-	BusinessOwner        *string                 `json:"businessOwner,omitempty" jsonschema:"description=Business owner of this request,example=John Doe"`
-	BusinessSolutions    []*EASIBusinessSolution `json:"businessSolutions,omitempty" jsonschema:"description=Array Business Solutions (preferred and alternatives),example=N/A"`
-	CmsBenefit           *string                 `json:"cmsBenefit,omitempty" jsonschema:"description=How CMS will benefit from this effort,example=Reduce FTE hours and generate better end products"`
-	InitialSubmittedAt   *string                 `json:"initialSubmittedAt,omitempty" jsonschema:"description=Timestamp of when request was initially submitted,example=2022-02-17T07:34:43Z"`
-	IntakeID             *string                 `json:"intakeId,omitempty" jsonschema:"description=Unique ID of the intake associated with this business case,example=36b85781-169a-4539-aa66-916663d8118c"`
-	LastSubmittedAt      *string                 `json:"lastSubmittedAt,omitempty" jsonschema:"description=Timestamp of when request was last submitted,example=2022-02-11T16:34:43Z"`
-	PriorityAlignment    *string                 `json:"priorityAlignment,omitempty" jsonschema:"description=The ways this effort align with organizational priorities,example=Aligns with CMS' automation push"`
-	ProjectName          *string                 `json:"projectName,omitempty" jsonschema:"description=Name of the project,example=Easy Access to System"`
-	Requester            *string                 `json:"requester,omitempty" jsonschema:"description=Name of the requester,example=John Doe"`
-	RequesterPhoneNumber *string                 `json:"requesterPhoneNumber,omitempty" jsonschema:"description=Phone number of requester,example=410-123-4567,example=4431234567"`
-	SubmittedAt          *string                 `json:"submittedAt,omitempty" jsonschema:"description=Timestamp of when request was submitted,example=2022-02-10T19:34:43Z"`
-	SuccessIndicators    *string                 `json:"successIndicators,omitempty" jsonschema:"description=How this effort will be determined as successful,example=Workflows are streamlined"`
-	UserEUA              string                  `json:"userEUA" jsonschema:"description=EUA id of the requester,example=J8YN"`
+	ArchivedAt             *string                 `json:"archivedAt,omitempty" jsonschema:"description=Timestamp of when request was archived,example=2023-02-27T14:34:43Z"`
+	BusinessCaseID         string                  `json:"businessCaseId" jsonschema:"description=Unique ID of this business case,example=91e5c1f3-11fb-4124-805c-adbdd02c5395"`
+	BusinessNeed           *string                 `json:"businessNeed,omitempty" jsonschema:"description=Business Need for this effort,example=Process takes too long and holds up key stakeholders"`
+	BusinessOwner          *string                 `json:"businessOwner,omitempty" jsonschema:"description=Business owner of this request,example=John Doe"`
+	BusinessSolutions      []*EASIBusinessSolution `json:"businessSolutions,omitempty" jsonschema:"description=Array Business Solutions (preferred and alternatives),example=N/A"`
+	CmsBenefit             *string                 `json:"cmsBenefit,omitempty" jsonschema:"description=How CMS will benefit from this effort,example=Reduce FTE hours and generate better end products"`
+	CurrentSolutionSummary *string                 `json:"currentSolutionSummary,omitempty" jsonschema:"description=Summary of the current solution,example=Managed through spreadsheets and email"`
+	InitialSubmittedAt     *string                 `json:"initialSubmittedAt,omitempty" jsonschema:"description=Timestamp of when request was initially submitted,example=2022-02-17T07:34:43Z"`
+	IntakeID               *string                 `json:"intakeId,omitempty" jsonschema:"description=Unique ID of the intake associated with this business case,example=36b85781-169a-4539-aa66-916663d8118c"`
+	LastSubmittedAt        *string                 `json:"lastSubmittedAt,omitempty" jsonschema:"description=Timestamp of when request was last submitted,example=2022-02-11T16:34:43Z"`
+	PriorityAlignment      *string                 `json:"priorityAlignment,omitempty" jsonschema:"description=The ways this effort align with organizational priorities,example=Aligns with CMS' automation push"`
+	ProjectName            *string                 `json:"projectName,omitempty" jsonschema:"description=Name of the project,example=Easy Access to System"`
+	Requester              *string                 `json:"requester,omitempty" jsonschema:"description=Name of the requester,example=John Doe"`
+	RequesterPhoneNumber   *string                 `json:"requesterPhoneNumber,omitempty" jsonschema:"description=Phone number of requester,example=410-123-4567,example=4431234567"`
+	SubmittedAt            *string                 `json:"submittedAt,omitempty" jsonschema:"description=Timestamp of when request was submitted,example=2022-02-10T19:34:43Z"`
+	SuccessIndicators      *string                 `json:"successIndicators,omitempty" jsonschema:"description=How this effort will be determined as successful,example=Workflows are streamlined"`
+	UserEUA                string                  `json:"userEUA" jsonschema:"description=EUA id of the requester,example=J8YN"`
 }
 
 // EASIBusinessSolution represents a business solution submitted through EASi as part of a business case
