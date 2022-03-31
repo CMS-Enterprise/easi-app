@@ -17,8 +17,6 @@ import Table from 'views/MyRequests/Table';
 
 import WelcomeText from './WelcomeText';
 
-import './index.scss';
-
 const Home = () => {
   const { t } = useTranslation();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
@@ -60,11 +58,13 @@ const Home = () => {
                 </Alert>
               </div>
             )}
-            <div className="tablet:grid-col-10">
+            <div className="tablet:grid-col-12">
               <PageHeading>{t('home:title')}</PageHeading>
               <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
                 {t('home:subtitle')}
               </p>
+              <hr className="margin-bottom-4" aria-hidden />
+              <h2>{t('home:actions.title')}</h2>
               <div className="display-flex flex-row">
                 <LinkCard
                   link="/system/making-a-request"
@@ -80,10 +80,9 @@ const Home = () => {
                   {t('home:actions.508.body')}
                 </LinkCard>
               </div>
-              <hr className="home__hr margin-top-4" aria-hidden />
-              <h2 className="margin-top-4">
+              <h3 className="margin-top-4">
                 {t('home:requestsTable.heading')}
-              </h2>
+              </h3>
             </div>
             <div className="tablet:grid-col-12">
               <Table />

@@ -1,7 +1,7 @@
 const home = {
   title: 'Welcome to EASi',
   subtitle:
-    'You can use EASi to go through the set of steps needed to get a Lifecycle ID from the Governance Review Board (GRB).',
+    'The place to find CMS IT governance and Section 508 services as well as comprehensive information about CMS systems.',
   startNow: 'Start now',
   signIn: 'Sign in to start',
   accessibility: {
@@ -9,6 +9,7 @@ const home = {
     newRequest: 'Add a new request'
   },
   actions: {
+    title: 'Governance Services',
     itg: {
       heading: 'IT Governance',
       body:
