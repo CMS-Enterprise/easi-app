@@ -52,6 +52,7 @@ const SystemInformationCard = ({
         size="large"
         aria-valuetext={t('newRequestForm.loadingSystems')}
         aria-busy
+        data-testid="cedar-system-loading"
       />
     );
 
@@ -98,7 +99,7 @@ const SystemInformationCard = ({
         <CardFooter>
           <UswdsReactLink to={`/systems/${cedarSystemId}`}>
             {t('requestDetails.viewSystemProfile')}
-            <IconArrowForward className="margin-left-05" />
+            <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
           </UswdsReactLink>
         </CardFooter>
       </Card>

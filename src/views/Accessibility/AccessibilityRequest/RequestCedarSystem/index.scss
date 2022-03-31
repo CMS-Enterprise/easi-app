@@ -6,8 +6,10 @@
   }
 
   .system-info-card__description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    max-height: 1.6rem * 3;
   }
 
   h3.usa-alert__heading {
