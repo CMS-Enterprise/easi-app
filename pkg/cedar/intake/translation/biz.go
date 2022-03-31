@@ -154,7 +154,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		// invariants for this type
 		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
 		Type:       typeStr(intakeInputBizCase),
-		Schema:     versionStr(IntakeInputSchemaEASIBizCaseV01),
+		Schema:     versionStr(IntakeInputSchemaEASIBizCaseVersion),
 	}
 
 	if bc.Status == models.BusinessCaseStatusCLOSED {

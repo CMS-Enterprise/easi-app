@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIIntake",
-  "title": "EASIIntakeV01",
+  "title": "EASIIntakeV02",
   "definitions": {
     "EASIIntake": {
       "required": [
