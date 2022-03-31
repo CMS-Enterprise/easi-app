@@ -28,9 +28,9 @@ There are multiple ways to run the Cypress tests:
     - Option 2: Set up an X server on Windows and configure WSL to use it. See [this article](https://wilcovanes.ch/articles/setting-up-the-cypress-gui-in-wsl2-ubuntu-for-windows-10/) for details.
   - Note: the database, frontend, and backend must be running prior to starting the Cypress tests. Use `scripts/dev up` to start them.
   - Before each testing run, run `scripts/dev db:clean && scripts/dev db:seed` to reset the database to a pre-seeded state.
-  - The `APP_ENV` environment variable should be set to `test` in `.envrc.local`. After creating `.envrc.local` if necessary and adding `APP_ENV=test` to it, run `direnv allow` to enable it. (See [instructions above](#direnv) on `direnv` usage)
+  - The `APP_ENV` environment variable should be set to `test` in `.envrc.local`. After creating `.envrc.local` if necessary and adding `APP_ENV=test` to it, run `direnv allow` to enable it. (See [instructions](./dev_environment_setup.md#Direnv) on `direnv` usage)
   - Running `login.spec.js` requires the environment variables `OKTA_TEST_USERNAME`, `OKTA_TEST_PASSWORD`, and `OKTA_TEST_SECRET` to be set in `.envrc.local`. The values can be found in 1Password, as mentioned in the [Authentication section](#authentication).
-- `APP_ENV=test ./scripts/run-cypress-test-docker` : Run the Cypress tests,
+- `APP_ENV=test scripts/run-cypress-test-docker` : Run the Cypress tests,
   database, migrations, backend, and frontend locally in Docker, similar to how
   they run in CI. Running the tests in this way takes time, but is useful
   for troubleshooting integration test failures in CI.
