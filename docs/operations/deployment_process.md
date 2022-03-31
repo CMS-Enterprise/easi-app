@@ -24,6 +24,6 @@ If a deployment needs to be rolled back, the current procedure is to use `git re
 
 ## Details of the Deployment Process
 
-While the GitHub Actions workflow orchestrates the deployment process, the bulk of the logic is handled by bash scripts in the `scripts` directory, particularly [`scripts/deploy_service`](../scripts/deploy_service), which deploys Docker containers to Amazon ECS (Elastic Container Service) by invoking a Lambda function, which calls the ECS API. This Lambda's source is [available on GitHub](https://github.com/trussworks/terraform-aws-lambda-ecs-manager/blob/master/functions/manager.py).
+While the GitHub Actions workflow orchestrates the deployment process, the bulk of the logic is handled by bash scripts in the `scripts` directory, particularly [`scripts/deploy_service`](/scripts/deploy_service), which deploys Docker containers to Amazon ECS (Elastic Container Service) by invoking a Lambda function, which calls the ECS API. This Lambda's source is [available on GitHub](https://github.com/trussworks/terraform-aws-lambda-ecs-manager/blob/master/functions/manager.py).
 
-The Go backend is deployed as an ECS service; the React frontend is built as static content, then copied to an AWS S3 bucket by [`scripts/release_static`](../scripts/release_static).
+The Go backend is deployed as an ECS service; the React frontend is built as static content, then copied to an AWS S3 bucket by [`scripts/release_static`](/scripts/release_static).

@@ -435,7 +435,9 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 			Feedback:   null.StringFrom(input.EmailBody),
 			ActionType: models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES,
 		},
-		models.SystemIntakeStatusBIZCASECHANGESNEEDED)
+		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+		input.ShouldSendEmail,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -456,7 +458,9 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 			Feedback:   null.StringFrom(input.EmailBody),
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
-		models.SystemIntakeStatusBIZCASEFINALNEEDED)
+		models.SystemIntakeStatusBIZCASEFINALNEEDED,
+		input.ShouldSendEmail,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -477,7 +481,9 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 			Feedback:   null.StringFrom(input.EmailBody),
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
-		models.SystemIntakeStatusNEEDBIZCASE)
+		models.SystemIntakeStatusNEEDBIZCASE,
+		input.ShouldSendEmail,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -802,6 +808,7 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNEEDBIZCASE,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -819,6 +826,7 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx 
 		input.IntakeID,
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -836,6 +844,7 @@ func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx conte
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNCOMPLETE,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -853,6 +862,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -870,6 +880,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Cont
 		input.IntakeID,
 		models.SystemIntakeStatusNOTITREQUEST,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -887,6 +898,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -904,6 +916,7 @@ func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Conte
 		input.IntakeID,
 		models.SystemIntakeStatusREADYFORGRT,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -921,6 +934,7 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNINPROGRESS,
 		false,
+		input.ShouldSendEmail,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -957,19 +971,21 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		return nil, err
 	}
 
-	err = r.emailClient.SendExtendLCIDEmail(
-		ctx,
-		requesterInfo.Email,
-		input.ID,
-		intake.ProjectName.String,
-		input.ExpirationDate,
-		input.Scope,
-		*input.NextSteps,
-		*input.CostBaseline,
-	)
+	if input.ShouldSendEmail {
+		err = r.emailClient.SendExtendLCIDEmail(
+			ctx,
+			requesterInfo.Email,
+			input.ID,
+			intake.ProjectName.String,
+			input.ExpirationDate,
+			input.Scope,
+			*input.NextSteps,
+			*input.CostBaseline,
+		)
 
-	if err != nil {
-		return nil, err
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
@@ -1066,7 +1082,9 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 		&models.Action{
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
-		})
+		},
+		input.ShouldSendEmail,
+	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
@@ -1085,7 +1103,9 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 			Feedback:   null.StringFrom(input.EmailBody),
 			ActionType: models.ActionTypeREADYFORGRB,
 		},
-		models.SystemIntakeStatusREADYFORGRB)
+		models.SystemIntakeStatusREADYFORGRB,
+		input.ShouldSendEmail,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -1104,7 +1124,9 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 		&models.Action{
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
-		})
+		},
+		input.ShouldSendEmail,
+	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
@@ -1316,9 +1338,12 @@ func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input 
 		CedarSystemID: input.CedarSystemID,
 	}
 	createdBookmark, err := r.store.CreateCedarSystemBookmark(ctx, &bookmark)
+	if err != nil {
+		return nil, err
+	}
 	return &model.CreateCedarSystemBookmarkPayload{
 		CedarSystemBookmark: createdBookmark,
-	}, err
+	}, nil
 }
 
 func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error) {
@@ -1329,6 +1354,34 @@ func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input 
 		return nil, err
 	}
 	return &model.DeleteCedarSystemBookmarkPayload{CedarSystemID: input.CedarSystemID}, nil
+}
+
+func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
+	contact := &models.SystemIntakeContact{
+		SystemIntakeID: input.SystemIntakeID,
+		EUAUserID:      input.EuaUserID,
+	}
+	createdContact, err := r.store.CreateSystemIntakeContact(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
+	return &model.CreateSystemIntakeContactPayload{
+		SystemIntakeContact: createdContact,
+	}, nil
+}
+
+func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error) {
+	contact := &models.SystemIntakeContact{
+		SystemIntakeID: input.SystemIntakeID,
+		EUAUserID:      input.EuaUserID,
+	}
+	_, err := r.store.DeleteSystemIntakeContact(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
+	return &model.DeleteSystemIntakeContactPayload{
+		SystemIntakeContact: contact,
+	}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
@@ -1543,6 +1596,14 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, id string) 
 	}
 
 	return &dCedarSys, nil
+}
+
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return contacts, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {

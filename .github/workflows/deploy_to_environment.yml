@@ -6,7 +6,7 @@ on:
       env:
         required: true
         type: string
-      lambda_version: 
+      lambda_version:
         required: true
         type: string
     secrets:
@@ -32,15 +32,12 @@ on:
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
   EASI_APP_GO_VERSION: "1.16.6"
-  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }} # Use the manually entered git hash if input - otherwise fall back to PR head or GitHub commit hash
+  GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   ENV: ${{ inputs.env }}
 
-concurrency: 
-  group: deploy
-
-jobs: 
-  deploy: 
+jobs:
+  deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     env:
@@ -49,7 +46,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.GIT_HASH }}
       - name: Set up node
         uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a
         with:
@@ -58,7 +55,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Configure yarn cache
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
+        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -92,7 +89,7 @@ jobs:
           LAMBDA_VERSION: ${{ inputs.lambda_version }}
           ENV: ${{ inputs.env }}
         run: |
-          ./scripts/deploy_service "easi-app-db-migrate" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          ./scripts/deploy_service "easi-app-db-migrate" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
           ./scripts/db_lambda_invoke "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-app-db-migrate"
       - name: Deploy ECS service
         env:
@@ -102,8 +99,8 @@ jobs:
           LAMBDA_VERSION: ${{ inputs.lambda_version }}
           ENV: ${{ inputs.env }}
         run: |
-          ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          ./scripts/healthcheck "$IMAGE_TAG"
+          ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
+          ./scripts/healthcheck "$GIT_HASH"
       - name: Build static assets and release to S3
         env:
           LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}

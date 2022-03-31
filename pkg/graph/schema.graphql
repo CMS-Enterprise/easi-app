@@ -972,6 +972,7 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   nextSteps: String
   scope: String!
   costBaseline: String
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -1051,6 +1052,7 @@ input AddGRTFeedbackInput {
   emailBody: String!
   feedback: String!
   intakeID: UUID!
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -1073,6 +1075,7 @@ input IssueLifecycleIdInput {
   nextSteps: String
   scope: String!
   costBaseline: String
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -1083,6 +1086,7 @@ input RejectIntakeInput {
   intakeId: UUID!
   nextSteps: String
   reason: String!
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -1152,6 +1156,7 @@ Input to add feedback to a system request
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
+  shouldSendEmail: Boolean! = true
 }
 
 """
@@ -1174,6 +1179,44 @@ The current user of the application
 """
 type CurrentUser {
   launchDarkly: LaunchDarklySettings!
+}
+
+"""
+Represents a contact associated with a system intake
+"""
+type SystemIntakeContact {
+  euaUserId: String!
+  systemIntakeId: UUID!
+}
+
+"""
+The data needed to associate a contact with a system intake
+"""
+input CreateSystemIntakeContactInput {
+  euaUserId: String!
+  systemIntakeId: UUID!
+}
+
+"""
+The data needed to delete a system intake contact
+"""
+input DeleteSystemIntakeContactInput {
+  euaUserId: String!
+  systemIntakeId: UUID!
+}
+
+"""
+The payload when creating a system intake contact
+"""
+type CreateSystemIntakeContactPayload {
+  systemIntakeContact: SystemIntakeContact
+}
+
+"""
+The payload when deleting a system intake contact
+"""
+type DeleteSystemIntakeContactPayload {
+  systemIntakeContact: SystemIntakeContact
 }
 
 """
@@ -1275,6 +1318,8 @@ type Mutation {
   deleteCedarSystemBookmark(
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
+  createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
+  deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
 }
 
 """
@@ -1296,6 +1341,7 @@ type Query {
   deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(systemId: String!, roleTypeID: String): [CedarRole!]!
   detailedCedarSystemInfo(id: String!): DetailedCedarSystem
+  systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
 }
 
 """

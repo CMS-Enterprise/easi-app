@@ -5,12 +5,8 @@ on:
     branches:
       - master
 
-env:
-  EASI_APP_NODE_VERSION: "16.14.0"
-  EASI_APP_GO_VERSION: "1.16.6"
-  IMAGE_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  DOCKER_BUILDKIT: 1
+concurrency:
+  group: deploy-pipeline
 
 jobs:
   Build_Application_Images:
