@@ -1338,9 +1338,12 @@ func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input 
 		CedarSystemID: input.CedarSystemID,
 	}
 	createdBookmark, err := r.store.CreateCedarSystemBookmark(ctx, &bookmark)
+	if err != nil {
+		return nil, err
+	}
 	return &model.CreateCedarSystemBookmarkPayload{
 		CedarSystemBookmark: createdBookmark,
-	}, err
+	}, nil
 }
 
 func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error) {
@@ -1351,6 +1354,34 @@ func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input 
 		return nil, err
 	}
 	return &model.DeleteCedarSystemBookmarkPayload{CedarSystemID: input.CedarSystemID}, nil
+}
+
+func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
+	contact := &models.SystemIntakeContact{
+		SystemIntakeID: input.SystemIntakeID,
+		EUAUserID:      input.EuaUserID,
+	}
+	createdContact, err := r.store.CreateSystemIntakeContact(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
+	return &model.CreateSystemIntakeContactPayload{
+		SystemIntakeContact: createdContact,
+	}, nil
+}
+
+func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error) {
+	contact := &models.SystemIntakeContact{
+		SystemIntakeID: input.SystemIntakeID,
+		EUAUserID:      input.EuaUserID,
+	}
+	_, err := r.store.DeleteSystemIntakeContact(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
+	return &model.DeleteSystemIntakeContactPayload{
+		SystemIntakeContact: contact,
+	}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
@@ -1565,6 +1596,14 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, id string) 
 	}
 
 	return &dCedarSys, nil
+}
+
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return contacts, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
