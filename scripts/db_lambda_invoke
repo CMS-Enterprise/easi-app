@@ -13,7 +13,7 @@ cli_read_timeout=240
 
 if (set -x ; aws lambda invoke --qualifier "$lambda_version" --cli-read-timeout "$cli_read_timeout" --function "$function_name" --cli-binary-format raw-in-base64-out --payload "$payload" lambda_response.json) ; then
   # Log lambda_response.json for debugging
-  cat lambda_response.json
+  jq '.' lambda_response.json
 
   # Extract the exit code from the lambda_response.json
   exitCode="$(jq '.data.response.taskStatus.exitCode' < lambda_response.json)"
