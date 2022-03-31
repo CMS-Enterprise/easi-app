@@ -139,6 +139,7 @@ export interface AddGRTFeedbackInput {
   emailBody: string;
   feedback: string;
   intakeID: UUID;
+  shouldSendEmail: boolean;
 }
 
 /**
@@ -147,6 +148,7 @@ export interface AddGRTFeedbackInput {
 export interface BasicActionInput {
   feedback: string;
   intakeId: UUID;
+  shouldSendEmail: boolean;
 }
 
 /**
@@ -166,7 +168,7 @@ export interface CreateAccessibilityRequestDocumentInput {
  * The data needed to initialize a 508/accessibility request
  */
 export interface CreateAccessibilityRequestInput {
-  intakeID: UUID;
+  intakeID?: UUID | null;
   name: string;
   cedarSystemId?: string | null;
 }
@@ -196,6 +198,7 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   nextSteps?: string | null;
   scope: string;
   costBaseline?: string | null;
+  shouldSendEmail: boolean;
 }
 
 /**
@@ -268,6 +271,7 @@ export interface IssueLifecycleIdInput {
   nextSteps?: string | null;
   scope: string;
   costBaseline?: string | null;
+  shouldSendEmail: boolean;
 }
 
 /**
@@ -278,6 +282,7 @@ export interface RejectIntakeInput {
   intakeId: UUID;
   nextSteps?: string | null;
   reason: string;
+  shouldSendEmail: boolean;
 }
 
 /**
@@ -370,6 +375,14 @@ export interface SystemIntakeRequesterInput {
 export interface SystemIntakeRequesterWithComponentInput {
   name: string;
   component: string;
+}
+
+/**
+ * Parameters for updating a 508/accessibility request's associated CEDAR system
+ */
+export interface UpdateAccessibilityRequestCedarSystemInput {
+  id: UUID;
+  cedarSystemId: string;
 }
 
 /**

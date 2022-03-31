@@ -223,7 +223,6 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
       ReadyForGRB,
       ProvideFeedbackKeepDraft,
       ProvideFeedbackNeedFinal,
-      IssueLifecycleId,
       NoFurtherGovernance,
       RejectIntake
     ];
@@ -233,9 +232,13 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
       ReadyForGRT,
       ProvideFeedbackNeedBizCase,
       ReadyForGRB,
-      NoFurtherGovernance,
-      IssueLifecycleId
+      NoFurtherGovernance
     ];
+  }
+
+  // Only display Issue LCID action if intake does not have associated LCID
+  if (systemIntake.lcid == null) {
+    availableHiddenActions.unshift(IssueLifecycleId);
   }
 
   // Only display extend LCID action if status is LCID_ISSUED or there has been an lcid issued in the past

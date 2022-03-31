@@ -122,8 +122,22 @@ func (s *Server) routes(
 	if err != nil {
 		s.logger.Fatal("Failed to create email client", zap.Error(err))
 	}
-	// override email client with local one
-	if s.environment.Local() || s.environment.Test() {
+
+	// override email client to use MailCatcher when running locally
+	if s.environment.Local() {
+		// change these values so it's clear who emails are being sent to
+		emailConfig.GRTEmail = models.NewEmailAddress("grt_email@cms.gov")
+		emailConfig.AccessibilityTeamEmail = models.NewEmailAddress("508_team@cms.gov")
+
+		postfixSender := local.NewPostfixSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
+		emailClient, err = email.NewClient(emailConfig, postfixSender)
+		if err != nil {
+			s.logger.Fatal("Failed to create email client", zap.Error(err))
+		}
+	}
+
+	// override email client with dummy client that logs output when running tests
+	if s.environment.Test() {
 		localSender := local.NewSender()
 		emailClient, err = email.NewClient(emailConfig, localSender)
 		if err != nil {
@@ -194,6 +208,8 @@ func (s *Server) routes(
 				store.CreateGRTFeedback,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+				emailClient.SendIntakeInvalidEUAIDEmail,
+				emailClient.SendIntakeNoEUAIDEmail,
 			),
 			CreateActionUpdateStatus: services.NewCreateActionUpdateStatus(
 				serviceConfig,
@@ -201,6 +217,8 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+				emailClient.SendIntakeInvalidEUAIDEmail,
+				emailClient.SendIntakeNoEUAIDEmail,
 				services.NewCloseBusinessCase(
 					serviceConfig,
 					store.FetchBusinessCaseByID,
@@ -223,6 +241,8 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendIssueLCIDEmail,
+				emailClient.SendIntakeInvalidEUAIDEmail,
+				emailClient.SendIntakeNoEUAIDEmail,
 				store.GenerateLifecycleID,
 			),
 			RejectIntake: services.NewUpdateRejectionFields(
@@ -233,6 +253,8 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendRejectRequestEmail,
+				emailClient.SendIntakeInvalidEUAIDEmail,
+				emailClient.SendIntakeNoEUAIDEmail,
 			),
 			SubmitIntake: services.NewSubmitSystemIntake(
 				serviceConfig,

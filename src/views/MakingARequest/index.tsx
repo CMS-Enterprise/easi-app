@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { Link as UswdsLink, SummaryBox } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import { RequestType } from 'types/graphql-global-types';
+import Table from 'views/MyRequests/Table';
 
 const MakingARequest = () => {
   const { t } = useTranslation('makingARequest');
@@ -15,13 +17,23 @@ const MakingARequest = () => {
       className="grid-container line-height-body-5 margin-bottom-5"
       data-testid="making-a-system-request"
     >
-      <PageHeading>{t('heading')}</PageHeading>
-      <p>{t('reasonList.intro')}</p>
-      <ul>
-        {reasons.map(option => (
-          <li key={option}>{option}</li>
-        ))}
-      </ul>
+      <PageHeading className="margin-bottom-0 margin-top-5">
+        {t('heading')}
+      </PageHeading>
+      <p className="margin-top-0 font-body-lg">{t('subheading')}</p>
+
+      <SummaryBox
+        heading=""
+        className="easi-request__container margin-bottom-3 padding-x-2 padding-y-1"
+      >
+        <p>{t('reasonList.intro')}</p>
+        <ul>
+          {reasons.map(option => (
+            <li key={option}>{option}</li>
+          ))}
+        </ul>
+      </SummaryBox>
+
       <p>
         {t('forEnterpriseArchitectureHelp.message')}&nbsp;
         <UswdsLink href={`mailto:${t('forEnterpriseArchitectureHelp.email')}`}>
@@ -39,6 +51,13 @@ const MakingARequest = () => {
       <Link to="/system/request-type" className="usa-button">
         {t('nextStep')}
       </Link>
+      <h2 className="padding-top-2 margin-top-5 easi-section__border-top">
+        {t('myRequests')}
+      </h2>
+      <Table
+        type={RequestType.GOVERNANCE_REQUEST}
+        hiddenColumns={['Governance', 'Upcoming meeting date']}
+      />
     </MainContent>
   );
 };

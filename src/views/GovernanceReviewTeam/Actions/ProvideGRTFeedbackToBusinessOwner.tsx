@@ -66,7 +66,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ProvideGRTFeedbackForm>) => {
-        const { errors, handleSubmit } = formikProps;
+        const { errors, setErrors, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -140,7 +140,11 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     name="emailBody"
                   />
                 </FieldGroup>
-                <Button className="margin-top-2" type="submit">
+                <Button
+                  className="margin-top-2"
+                  type="submit"
+                  onClick={() => setErrors({})}
+                >
                   {t('provideGRTFeedback.submit')}
                 </Button>
               </Form>

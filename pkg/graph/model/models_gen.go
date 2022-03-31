@@ -30,9 +30,10 @@ type AccessibilityRequestsConnection struct {
 // Feedback intended for a business owner before they proceed to writing a
 // business case for a system request
 type AddGRTFeedbackInput struct {
-	EmailBody string    `json:"emailBody"`
-	Feedback  string    `json:"feedback"`
-	IntakeID  uuid.UUID `json:"intakeID"`
+	EmailBody       string    `json:"emailBody"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeID"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // Payload for adding GRT feedback to a system request (contains the system
@@ -43,8 +44,9 @@ type AddGRTFeedbackPayload struct {
 
 // Input to add feedback to a system request
 type BasicActionInput struct {
-	Feedback string    `json:"feedback"`
-	IntakeID uuid.UUID `json:"intakeId"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeId"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // An IT governance requester's explanation of alternative solutions
@@ -100,9 +102,9 @@ type CreateAccessibilityRequestDocumentPayload struct {
 
 // The data needed to initialize a 508/accessibility request
 type CreateAccessibilityRequestInput struct {
-	IntakeID      uuid.UUID `json:"intakeID"`
-	Name          string    `json:"name"`
-	CedarSystemID *string   `json:"cedarSystemId"`
+	IntakeID      *uuid.UUID `json:"intakeID"`
+	Name          string     `json:"name"`
+	CedarSystemID *string    `json:"cedarSystemId"`
 }
 
 // The data used when adding a note to a 508/accessibility request
@@ -136,17 +138,29 @@ type CreateCedarSystemBookmarkPayload struct {
 
 // Input data for extending a system request's lifecycle ID
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
-	ID             uuid.UUID  `json:"id"`
-	ExpirationDate *time.Time `json:"expirationDate"`
-	NextSteps      *string    `json:"nextSteps"`
-	Scope          string     `json:"scope"`
-	CostBaseline   *string    `json:"costBaseline"`
+	ID              uuid.UUID  `json:"id"`
+	ExpirationDate  *time.Time `json:"expirationDate"`
+	NextSteps       *string    `json:"nextSteps"`
+	Scope           string     `json:"scope"`
+	CostBaseline    *string    `json:"costBaseline"`
+	ShouldSendEmail bool       `json:"shouldSendEmail"`
 }
 
 // Payload data for extending a system request's lifecycle ID
 type CreateSystemIntakeActionExtendLifecycleIDPayload struct {
 	SystemIntake *models.SystemIntake `json:"systemIntake"`
 	UserErrors   []*UserError         `json:"userErrors"`
+}
+
+// The data needed to associate a contact with a system intake
+type CreateSystemIntakeContactInput struct {
+	EuaUserID      string    `json:"euaUserId"`
+	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+}
+
+// The payload when creating a system intake contact
+type CreateSystemIntakeContactPayload struct {
+	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
 }
 
 // The input data used to initialize an IT governance request for a system
@@ -209,6 +223,17 @@ type DeleteCedarSystemBookmarkPayload struct {
 	CedarSystemID string `json:"cedarSystemId"`
 }
 
+// The data needed to delete a system intake contact
+type DeleteSystemIntakeContactInput struct {
+	EuaUserID      string    `json:"euaUserId"`
+	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+}
+
+// The payload when deleting a system intake contact
+type DeleteSystemIntakeContactPayload struct {
+	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
+}
+
 // The input required to delete a test date/score
 type DeleteTestDateInput struct {
 	ID uuid.UUID `json:"id"`
@@ -243,13 +268,14 @@ type GeneratePresignedUploadURLPayload struct {
 // The input data required to issue a lifecycle ID for a system's IT governance
 // request
 type IssueLifecycleIDInput struct {
-	ExpiresAt    time.Time `json:"expiresAt"`
-	Feedback     string    `json:"feedback"`
-	IntakeID     uuid.UUID `json:"intakeId"`
-	Lcid         *string   `json:"lcid"`
-	NextSteps    *string   `json:"nextSteps"`
-	Scope        string    `json:"scope"`
-	CostBaseline *string   `json:"costBaseline"`
+	ExpiresAt       time.Time `json:"expiresAt"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeId"`
+	Lcid            *string   `json:"lcid"`
+	NextSteps       *string   `json:"nextSteps"`
+	Scope           string    `json:"scope"`
+	CostBaseline    *string   `json:"costBaseline"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // The most recent note added by an admin to a system request
@@ -266,10 +292,11 @@ type LaunchDarklySettings struct {
 
 // Input data for rejection of a system's IT governance request
 type RejectIntakeInput struct {
-	Feedback  string    `json:"feedback"`
-	IntakeID  uuid.UUID `json:"intakeId"`
-	NextSteps *string   `json:"nextSteps"`
-	Reason    string    `json:"reason"`
+	Feedback        string    `json:"feedback"`
+	IntakeID        uuid.UUID `json:"intakeId"`
+	NextSteps       *string   `json:"nextSteps"`
+	Reason          string    `json:"reason"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // Represents a request being made with the EASi system
@@ -476,6 +503,18 @@ type SystemIntakeRequesterInput struct {
 type SystemIntakeRequesterWithComponentInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
+}
+
+// Parameters for updating a 508/accessibility request's associated CEDAR system
+type UpdateAccessibilityRequestCedarSystemInput struct {
+	ID            uuid.UUID `json:"id"`
+	CedarSystemID string    `json:"cedarSystemId"`
+}
+
+// Result of updating a 508/accessibility request's associated CEDAR system
+type UpdateAccessibilityRequestCedarSystemPayload struct {
+	ID                   uuid.UUID                    `json:"id"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
 }
 
 // Parameters for updating a 508/accessibility request's status

@@ -1,0 +1,115 @@
+name: Deploy to Environment
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        required: true
+        type: string
+      lambda_version:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      LD_CLIENT_ID:
+        required: true
+      OKTA_CLIENT_ID:
+        required: true
+      OKTA_SERVER_ID:
+        required: true
+      STATIC_S3_BUCKET:
+        required: true
+      AWS_ROLE_TO_ASSUME:
+        required: true
+      ECR_REGISTRY:
+        required: true
+      SLACK_WEBHOOK_URL:
+        required: true
+
+env:
+  EASI_APP_NODE_VERSION: "16.14.0"
+  EASI_APP_GO_VERSION: "1.16.6"
+  GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  ENV: ${{ inputs.env }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
+    env:
+      APP_ENV: ${{ inputs.env }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
+        with:
+          ref: ${{ env.GIT_HASH }}
+      - name: Set up node
+        uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Configure yarn cache
+        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./node_modules
+          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v1-yarn-
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@05b148adc31e091bafbaf404f745055d4d3bc9d2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 1800
+          role-skip-session-tagging: true
+      - name: Clean the database
+        if: contains(inputs.env, 'dev')
+        run: |
+          ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
+      - name: Backup the database
+        if: contains(inputs.env, 'impl') || contains(inputs.env, 'prod')
+        run: |
+          ./scripts/rds-snapshot-app-db
+      - name: Run migrations
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-db-migrate
+          LAMBDA_VERSION: ${{ inputs.lambda_version }}
+          ENV: ${{ inputs.env }}
+        run: |
+          ./scripts/deploy_service "easi-app-db-migrate" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
+          ./scripts/db_lambda_invoke "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-app-db-migrate"
+      - name: Deploy ECS service
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-backend
+          LAMBDA_VERSION: ${{ inputs.lambda_version }}
+          ENV: ${{ inputs.env }}
+        run: |
+          ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
+          ./scripts/healthcheck "$GIT_HASH"
+      - name: Build static assets and release to S3
+        env:
+          LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
+          OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
+          OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID }}
+          STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
+        run: |
+          ./scripts/release_static
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch

@@ -14,7 +14,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/google/uuid"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/spf13/cobra"
@@ -103,7 +102,7 @@ func main() {
 func makeAccessibilityRequest(accessibilityRequest *models.AccessibilityRequest, store *storage.Store) *models.AccessibilityRequest {
 	ctx := context.Background()
 
-	if accessibilityRequest.IntakeID == uuid.Nil {
+	if accessibilityRequest.IntakeID == nil {
 		intake := models.SystemIntake{
 			Status:                 models.SystemIntakeStatusLCIDISSUED,
 			RequestType:            models.SystemIntakeRequestTypeNEW,
@@ -115,7 +114,7 @@ func makeAccessibilityRequest(accessibilityRequest *models.AccessibilityRequest,
 		must(store.CreateSystemIntake(ctx, &intake))
 		must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
 
-		accessibilityRequest.IntakeID = intake.ID
+		accessibilityRequest.IntakeID = &intake.ID
 	}
 	must(store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, accessibilityRequest))
 	return accessibilityRequest

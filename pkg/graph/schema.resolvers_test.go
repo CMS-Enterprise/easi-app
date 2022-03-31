@@ -154,7 +154,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return next(ctx)
 	}}
 
-	issueLifecycleID := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
+	issueLifecycleID := func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool) (*models.SystemIntake, error) {
 		if intake.LifecycleID.ValueOrZero() == "" {
 			intake.LifecycleID = null.StringFrom("654321B")
 		}

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { Link } from '@trussworks/react-uswds';
+import { IconLaunch, Link } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
@@ -19,6 +19,7 @@ import UpdateTestDateView from 'views/TestDate/UpdateTestDate';
 import Create from './AccessibilityRequest/Create';
 import AccessibilityRequestsDocumentsNew from './AccessibilityRequest/Documents/New';
 import List from './AccessibilityRequest/List';
+import RequestCedarSystem from './AccessibilityRequest/RequestCedarSystem';
 import AccessibilityRequestDetailPage from './AccessibilityRequestDetailPage';
 import AccessibilityTestingStepsOverview from './AccessibilityTestingStepsOverview';
 import ChangeRequestStatus from './ChangeRequestStatus';
@@ -31,6 +32,14 @@ const NewRequest = (
     path="/508/requests/new"
     exact
     component={Create}
+  />
+);
+const NewRequestCedarSystem = (
+  <Route
+    key="create-508-request"
+    path="/508/requests/new"
+    exact
+    component={RequestCedarSystem}
   />
 );
 const AllRequests = (
@@ -120,6 +129,15 @@ const RequestDetails = (
   />
 );
 
+const UpdateRequestCedarSystem = (
+  <Route
+    exact
+    key="508-request-cedar-system-link"
+    path="/508/requests/:accessibilityRequestId/cedar-system"
+    component={RequestCedarSystem}
+  />
+);
+
 const NotFound = () => (
   <div className="grid-container">
     <NotFoundPartial />
@@ -131,9 +149,15 @@ const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 const ReportProblemLinkArea = ({ url }: { url: string }) => {
   const { t } = useTranslation('accessibility');
   return (
-    <div className="grid-container width-full padding-bottom-2 report-problem-link-area">
-      <Link href={url} target="_blank" rel="noopener noreferrer">
+    <div className="grid-container width-full padding-bottom-4 report-problem-link-area">
+      <Link
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="line-height-body-4"
+      >
         {t('reportProblem')}
+        <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
       </Link>
     </div>
   );
@@ -166,7 +190,7 @@ const Accessibility = () => {
       return (
         <PageTemplate surveyUrl={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY}>
           {[
-            NewRequest,
+            flags.cedar508Requests ? NewRequestCedarSystem : NewRequest,
             AllRequests,
             AccessibilityTestingOverview,
             MakingANewRequest,
@@ -177,6 +201,7 @@ const Accessibility = () => {
             NewTestDate,
             DocumentsRedirect,
             RequestDetails,
+            UpdateRequestCedarSystem,
             Default
           ]}
         </PageTemplate>
@@ -185,13 +210,14 @@ const Accessibility = () => {
     return (
       <PageTemplate surveyUrl={REPORT_PROBLEM_BASIC_USER_SURVEY}>
         {[
-          NewRequest,
+          flags.cedar508Requests ? NewRequestCedarSystem : NewRequest,
           AccessibilityTestingOverview,
           MakingANewRequest,
           AccessibilityTestingTemplates,
           NewDocument,
           DocumentsRedirect,
           RequestDetails,
+          UpdateRequestCedarSystem,
           Default
         ]}
       </PageTemplate>

@@ -9,46 +9,52 @@ import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
 
-const tableMap = (tableData: GetRequests, t: TFunction) => {
+const tableMap = (
+  tableData: GetRequests,
+  t: TFunction,
+  requestType?: RequestType
+) => {
   const requests = tableData?.requests?.edges.map(edge => {
     return edge.node;
   });
 
-  const mappedData = requests?.map(request => {
-    const name = request.name ? request.name : 'Draft';
+  const mappedData = requests
+    ?.filter(request => (!requestType ? true : request.type === requestType)) // if filter prop exists, filter by the request type
+    .map(request => {
+      const name = request.name ? request.name : 'Draft';
 
-    const type: string = request.type
-      ? t(`requestsTable.types.${request.type}`)
-      : '';
+      const type: string = request.type
+        ? t(`requestsTable.types.${request.type}`)
+        : '';
 
-    let status;
-    switch (request.type) {
-      case RequestType.ACCESSIBILITY_REQUEST:
-        // Status hasn't changed if the status record created at is the same
-        // as the 508 request's submitted at
-        if (request.submittedAt === request.statusCreatedAt) {
+      let status;
+      switch (request.type) {
+        case RequestType.ACCESSIBILITY_REQUEST:
+          // Status hasn't changed if the status record created at is the same
+          // as the 508 request's submitted at
+          if (request.submittedAt === request.statusCreatedAt) {
+            status = accessibilityRequestStatusMap[request.status];
+          }
           status = accessibilityRequestStatusMap[request.status];
-        }
-        status = accessibilityRequestStatusMap[request.status];
-        break;
-      case RequestType.GOVERNANCE_REQUEST:
-        status = t(`intake:statusMap.${request.status}`);
-        if (request.lcid) {
-          status = `${status}: ${request.lcid}`;
-        }
-        break;
-      default:
-        status = '';
-        break;
-    }
+          break;
+        case RequestType.GOVERNANCE_REQUEST:
+          status = t(`intake:statusMap.${request.status}`);
+          if (request.lcid) {
+            status = `${status}: ${request.lcid}`;
+          }
+          break;
+        default:
+          status = '';
+          break;
+      }
 
-    return {
-      ...request,
-      name,
-      type,
-      status
-    };
-  });
+      return {
+        ...request,
+        name,
+        type,
+        status
+      };
+    });
 
   return mappedData || [];
 };

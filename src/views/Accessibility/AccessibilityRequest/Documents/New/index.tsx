@@ -180,6 +180,7 @@ const New = () => {
           {(formikProps: FormikProps<FileUploadForm>) => {
             const {
               errors,
+              setErrors,
               setFieldValue,
               values,
               handleSubmit,
@@ -342,6 +343,7 @@ const New = () => {
                       </p>
                       <Button
                         type="submit"
+                        onClick={() => setErrors({})}
                         disabled={
                           isSubmitting ||
                           generateURLStatus.loading ||

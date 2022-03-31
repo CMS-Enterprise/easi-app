@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -317,14 +318,17 @@ func NewCreateActionUpdateStatus(
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
+	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
+	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
-) func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool) (*models.SystemIntake, error) {
+) func(ctx context.Context, newAction *models.Action, intakeID uuid.UUID, newStatus models.SystemIntakeStatus, shouldCloseBusinessCase bool, shouldSendEmail bool) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
 		action *models.Action,
 		id uuid.UUID,
 		newStatus models.SystemIntakeStatus,
 		shouldCloseBusinessCase bool,
+		shouldSendEmail bool,
 	) (*models.SystemIntake, error) {
 		err := saveAction(ctx, action)
 		if err != nil {
@@ -346,23 +350,58 @@ func NewCreateActionUpdateStatus(
 			}
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
+		if !shouldSendEmail {
+			return intake, nil
 		}
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
+
+		euaID := intake.EUAUserID.ValueOrZero()
+		requesterHasEUAID := euaID != ""
+		requesterHasValidEUAID := requesterHasEUAID
+
+		var requesterInfo *models.UserInfo
+		if requesterHasEUAID {
+			requesterInfo, err = fetchUserInfo(ctx, euaID)
+
+			if err != nil {
+				if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+					appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
+						zap.String("intakeID", intake.ID.String()),
+						zap.String("euaID", euaID))
+					err = sendIntakeInvalidEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), euaID, intake.ID)
+					if err != nil {
+						return nil, err
+					}
+
+					requesterHasValidEUAID = false
+				} else {
+					return nil, err
+				}
+			} else if requesterInfo == nil || requesterInfo.Email == "" {
+				appcontext.ZLogger(ctx).Error(fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when submitting an action"),
+					zap.String("intakeID", intake.ID.String()),
+					zap.String("euaID", euaID))
+				return nil, &apperrors.ExternalAPIError{
+					Err:       errors.New("requester info fetch was not successful when submitting an action"),
+					Model:     intake,
+					ModelID:   intake.ID.String(),
+					Operation: apperrors.Fetch,
+					Source:    "CEDAR LDAP",
+				}
+			}
+		} else {
+			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+				zap.String("intakeID", intake.ID.String()))
+			err = sendIntakeNoEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), intake.ID)
+			if err != nil {
+				return nil, err
 			}
 		}
 
-		err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
-		if err != nil {
-			return nil, err
+		if requesterHasValidEUAID {
+			err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return intake, err
@@ -388,7 +427,6 @@ func NewCreateActionExtendLifecycleID(
 		scope string,
 		costBaseline *string,
 	) (*models.SystemIntake, error) {
-
 		intake, err := fetchSystemIntake(ctx, id)
 		if err != nil {
 			return nil, err
@@ -412,11 +450,7 @@ func NewCreateActionExtendLifecycleID(
 		}
 
 		intake.LifecycleExpiresAt = expirationDate
-
-		// TODO: set scope, next steps, etc. as well
-
 		intake.Status = models.SystemIntakeStatusLCIDISSUED
-
 		intake.LifecycleScope = null.StringFrom(scope)
 		intake.DecisionNextSteps = null.StringFromPtr(nextSteps)
 		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)
@@ -426,25 +460,9 @@ func NewCreateActionExtendLifecycleID(
 			return nil, updateErr
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
-		}
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
+		// don't need to send the notification email from here; the GraphQL resolver sends the email
+		// pkg/graph/schema.resolvers.go, CreateSystemIntakeActionExtendLifecycleID()
 
-		// err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
-		// if err != nil {
-		// 	return nil, err
-		// }
-
-		return intake, err
+		return intake, nil
 	}
 }

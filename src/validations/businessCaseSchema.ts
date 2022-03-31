@@ -1,7 +1,6 @@
 import * as Yup from 'yup';
 
-//
-const phoneNumberRegex = /( *-*[0-9] *?){10,}/;
+const phoneNumberRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 
 const estimatedLifecycleCostSchema = Yup.object().shape({
   year1: Yup.object()
@@ -172,10 +171,10 @@ export const BusinessCaseFinalValidationSchema = {
         .trim()
         .matches(
           phoneNumberRegex,
-          'Enter the requester’s phone number like 123456789 or 123-456-789'
+          'Enter the requester’s phone number like 1234567890 or 123-456-7890'
         )
         .required(
-          'Enter the Requester’s phone number like 123456789 or 123-456-789'
+          'Enter the requester’s phone number like 1234567890 or 123-456-7890'
         )
     }),
     businessOwner: Yup.object().shape({
@@ -438,7 +437,7 @@ export const BusinessCaseDraftValidationSchema = {
     requester: Yup.object().shape({
       phoneNumber: Yup.string().matches(
         phoneNumberRegex,
-        'Enter the requester’s phone number like 123456789 or 123-456-789'
+        'Enter the requester’s phone number like 1234567890 or 123-456-7890'
       )
     })
   }),

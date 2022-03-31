@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
@@ -81,6 +81,7 @@ import accessibilitySchema from 'validations/accessibilitySchema';
 import { NotFoundPartial } from 'views/NotFound';
 
 import RequestDeleted from './RequestDeleted';
+import SidebarTestingLinks from './SidebarTestingLinks';
 
 import './index.scss';
 
@@ -238,9 +239,9 @@ const AccessibilityRequestDetailPage = () => {
 
   const requestName = data?.accessibilityRequest?.name || '';
   const requestOwnerEuaId = data?.accessibilityRequest?.euaUserId || '';
-  const systemName = data?.accessibilityRequest?.system.name || '';
+  const systemName = data?.accessibilityRequest?.system?.name || '';
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
-  const lcid = data?.accessibilityRequest?.system.lcid;
+  const lcid = data?.accessibilityRequest?.system?.lcid;
   const businessOwnerName =
     data?.accessibilityRequest?.system?.businessOwner?.name;
   const businessOwnerComponent =
@@ -290,14 +291,18 @@ const AccessibilityRequestDetailPage = () => {
           {t('requestDetails.documents.noDocs.heading')}
         </h2>
         <p className="line-height-body-4">
-          <UswdsReactLink
-            className="display-inline-block"
-            to="/508/templates"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('accessibility:requestDetails.documents.noDocs.description')}
-          </UswdsReactLink>
+          <Trans i18nKey="accessibility:requestDetails.documents.noDocs.description">
+            indexOne
+            <UswdsReactLink
+              className="display-inline-block"
+              to="/508/templates"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              templatesLink
+            </UswdsReactLink>
+            indexTwo
+          </Trans>
         </p>
       </div>
       {uploadDocumentLink}
@@ -556,11 +561,11 @@ const AccessibilityRequestDetailPage = () => {
           </div>
           <div className="grid-col-1" />
           <div className="grid-col-3">
-            <div className="accessibility-request__side-nav">
+            <div className="accessibility-request__side-nav margin-bottom-3">
               <div>
-                <h2 className="margin-top-2 margin-bottom-3">
-                  Test Dates and Scores
-                </h2>
+                <h3 className="margin-y-3">
+                  {t('requestDetails.testDatesAndScores')}
+                </h3>
                 {[...testDates]
                   .sort(
                     (a, b) =>
@@ -579,58 +584,66 @@ const AccessibilityRequestDetailPage = () => {
                     />
                   ))}
                 {isAccessibilityTeam && (
-                  <Link
+                  <UswdsReactLink
                     to={`/508/requests/${accessibilityRequestId}/test-date`}
                     className="margin-bottom-3 display-block"
                     aria-label="Add a test date"
                   >
                     Add a date
-                  </Link>
+                  </UswdsReactLink>
                 )}
               </div>
               <div className="accessibility-request__other-details">
-                <h3>{t('requestDetails.other')}</h3>
-                <dl>
-                  <dt className="margin-bottom-1">
+                <h3 className="margin-y-3">
+                  {t('requestDetails.requestDetails')}
+                </h3>
+                <dl className="font-body-md line-height-body-4">
+                  <dt className="font-body-sm text-bold">
+                    Confirmation Number
+                  </dt>
+                  <dd className="margin-0 margin-bottom-1">{/* todo */}</dd>
+                  <dt className="font-body-sm text-bold">
                     {t('intake:fields.submissionDate')}
                   </dt>
-                  <dd className="margin-0 margin-bottom-2">
+                  <dd className="margin-0 margin-bottom-1">
                     {formatDate(submittedAt)}
                   </dd>
-                  <dt className="margin-bottom-1">
+                  <dt className="font-body-sm text-bold">
                     {t('intake:fields.businessOwner')}
                   </dt>
-                  <dd className="margin-0 margin-bottom-2">
+                  <dd className="margin-0 margin-bottom-1">
                     {businessOwnerName}, {businessOwnerComponent}
                   </dd>
-                  <dt className="margin-bottom-1">
+                  <dt className="font-body-sm text-bold">
                     {t('intake:fields:projectName')}
                   </dt>
-                  <dd className="margin-0 margin-bottom-3">{systemName}</dd>
-                  <dt className="margin-bottom-1">{t('intake:lifecycleId')}</dt>
+                  <dd className="margin-0 margin-bottom-1">{systemName}</dd>
+                  <dt className="font-body-sm text-bold">
+                    {t('intake:lifecycleId')}
+                  </dt>
                   <dd className="margin-0 margin-bottom-3">{lcid}</dd>
                 </dl>
               </div>
-              <UswdsReactLink
-                className="display-inline-block margin-top-3"
-                target="_blank"
-                rel="noopener noreferrer"
-                to="/508/templates"
-              >
-                {t('requestDetails.testingTemplates')}
-              </UswdsReactLink>
-              <UswdsReactLink
-                className="display-inline-block margin-top-3"
-                target="_blank"
-                rel="noopener noreferrer"
-                to="/508/testing-overview"
-              >
-                {t('requestDetails.testingSteps')}
-              </UswdsReactLink>
+              {flags.cedar508Requests && (
+                <div>
+                  <h3>{t('requestDetails.systemInformation')}</h3>
+                  <Alert
+                    type="warning"
+                    heading={t('requestDetails.actionRequired')}
+                  >
+                    <UswdsReactLink
+                      to={`/508/requests/${accessibilityRequestId}/cedar-system`}
+                    >
+                      {t('requestDetails.linkRequestToSystem')}
+                    </UswdsReactLink>
+                  </Alert>
+                </div>
+              )}
+              <SidebarTestingLinks />
               {userEuaId === requestOwnerEuaId && (
                 <button
                   type="button"
-                  className="accessibility-request__remove-request"
+                  className="accessibility-request__remove-request margin-top-1"
                   onClick={() => setModalOpen(true)}
                 >
                   {t('requestDetails.remove')}
@@ -663,7 +676,7 @@ const AccessibilityRequestDetailPage = () => {
                   {(
                     formikProps: FormikProps<DeleteAccessibilityRequestForm>
                   ) => {
-                    const { errors, values } = formikProps;
+                    const { errors, setErrors, values } = formikProps;
                     const flatErrors = flattenErrors(errors);
                     return (
                       <>
@@ -721,7 +734,11 @@ const AccessibilityRequestDetailPage = () => {
                           </FieldGroup>
 
                           <div className="display-flex margin-top-2">
-                            <Button type="submit" className="margin-right-5">
+                            <Button
+                              type="submit"
+                              onClick={() => setErrors({})}
+                              className="margin-right-5"
+                            >
                               {t('requestDetails.modal.confirm')}
                             </Button>
                             <Button

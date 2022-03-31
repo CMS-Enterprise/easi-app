@@ -1,14 +1,7 @@
 .accessibility-request {
 
   &__side-nav {
-    border-top: 4px solid $easi-bright-blue;
-    h3 {
-      font-size: 1rem;
-      margin-top: 1.5rem;
-    }
-    dd {
-      margin-bottom: 1.5rem;
-    }
+    border-top: 4px solid color($theme-color-primary-lighter);
   }
 
   &__other-details {
@@ -17,13 +10,13 @@
   }
 
   &__remove-request {
-    margin: 1.5em 0;
     padding: 0;
     background: none;
     border: none;
     text-align: left;
     text-decoration: underline;
     color: color($theme-color-error);
+    cursor: pointer;
   }
 
   &__note-field {
@@ -45,5 +38,5 @@
 }
 
 .report-problem-link-area {
-  margin-top: 100px;
+  margin-top: 60px;
 }

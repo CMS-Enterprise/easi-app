@@ -18,9 +18,10 @@ services:
     image: easi-backend:latest
     volumes:
       - ./:/easi
-    entrypoint: air
+    entrypoint: air ${AIR_CONFIG}
     ports:
       - 8080:8080
+      - 2345:2345 #for dlv debugging
     environment:
       - LOCAL_AUTH_ENABLED
   easi_client:
@@ -64,3 +65,7 @@ services:
       - LICENSE_KEY
     volumes:
       - ./../easi-infra-modules/lambda/prince/build:/var/task:ro,delegated
+  email:
+    ports:
+      - 1025:1025
+      - 1080:1080

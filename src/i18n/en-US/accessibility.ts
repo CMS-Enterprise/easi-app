@@ -1,7 +1,7 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
-  reportProblem: 'Report a problem (opens in a new tab)',
+  reportProblem: 'Report a problem',
   requestStatus: {
     open: 'Open',
     remediation: 'In remediation',
@@ -86,9 +86,9 @@ const accessibility = {
       formErrorMessage: 'Error saving note.'
     },
     documentUpload: 'Upload a document',
-    other: 'Other request details',
-    testingTemplates: '508 testing templates (opens in a new tab)',
-    testingSteps: 'Steps involved in 508 testing (opens in a new tab)',
+    requestDetails: 'Request details',
+    testingTemplates: '508 testing templates',
+    testingSteps: 'Steps involved in 508 testing',
     remove: 'Remove this request from EASi',
     modal: {
       header: 'Confirm you want to remove {{-requestName}}',
@@ -99,7 +99,16 @@ const accessibility = {
     },
     activeDocumentTab: 'Displaying documents',
     activeNoteTab: 'Displaying notes',
-    removeConfirmationText: '{{-requestName}} successfully removed'
+    removeConfirmationText: '{{-requestName}} successfully removed',
+    testDatesAndScores: 'Test dates and scores',
+    systemInformation: 'System information',
+    actionRequired: 'Action required',
+    linkRequestToSystem: 'Link this request to a system',
+    heading: 'Link 508 request with a system',
+    back: 'Back',
+    saveSystem: 'Save system',
+    selectSystemRequest: 'Select the system this request belongs to',
+    viewSystemProfile: 'View system profile'
   },
   testDateForm: {
     header: {
@@ -139,6 +148,9 @@ const accessibility = {
   },
   newRequestForm: {
     heading: 'Request 508 testing',
+    loadingSystems: 'Loading systems...',
+    errorSystems:
+      'We’re experiencing issues loading data, so you may not be able to complete your request at this time.',
     fields: {
       project: {
         label: "Choose the application you'd like to test",
@@ -150,12 +162,27 @@ const accessibility = {
     submitBtn: 'Send 508 testing request',
     confirmation:
       '508 testing request created. We have sent you a confirmation email.',
-    surveyLink: 'Tell us what you think of this service (opens in a new tab)',
+    surveyLink: 'Tell us what you think of this service',
     helpAndGuidance: {
       lifecycleIdAccordion: {
         header: 'What if I cannot find my application or Lifecycle ID?',
         description:
           'Your application might not have a Lifecycle ID. A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your application.'
+      }
+    },
+    cedar: {
+      fields: {
+        project: {
+          label: 'Select the system you’d like to test',
+          helpText: 'Start typing the name of the system'
+        }
+      },
+      helpAndGuidance: {
+        lifecycleIdAccordion: {
+          header: 'What if I cannot find my system?',
+          description:
+            'Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your application.'
+        }
       }
     }
   },
@@ -236,8 +263,11 @@ const accessibility = {
     breadcrumb: '508 testing',
     info:
       'EASi is replacing Service Now for making 508 requests for applications. This means you can manage all your 508 requests for applications within EASi. For all other 508 assistance, please email the Section 508 team at <1>CMS_Section508@cms.hhs.gov</1>.',
-    heading: 'Making a 508 testing request',
-    useThisService: 'Use this service to:',
+    heading: 'Section 508 testing',
+    subheading:
+      'Keep your system compliant with accessibility guidelines by completing Section 508 testing. To learn more about Section 508, please visit ',
+    subheadingLink: 'www.section508.gov',
+    useThisService: 'You can use this service:',
     request508TestingBullet: 'request 508 testing for your application',
     uploadDocumentsBullet:
       'upload and access documents related to your request like VPAT, Test plan and test results',
@@ -245,13 +275,15 @@ const accessibility = {
       'For requests related to testing COTS products, GOTS products, review of documents and training please email the Section 508 team at <1>CMS_Section508@cms.hhs.gov</1>.',
     beforeYouStart: 'Before you start',
     needLcid:
-      'You’ll need the Lifecycle ID of the application you’d like to test to use this service.',
-    onceYouMakeRequest:
-      'Once you make the request, someone from the 508 team will email you with the next steps.',
+      'To use this service, you’ll need the Lifecycle ID of the application you’d like to test. Once you make the request, someone from the 508 team will email you with the next steps.',
     continueButton: 'Continue to steps involved',
     noLcidHeader: 'What if I don’t have a Lifecycle ID?',
     noLcidBody:
-      'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your system.'
+      'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your system.',
+    cedar: {
+      request508TestingBullet: 'request 508 testing for your system'
+    },
+    myRequests: 'My 508 testing requests'
   },
   testingTemplates: {
     heading: 'Templates for 508 testing',

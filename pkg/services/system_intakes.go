@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -231,10 +232,12 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string) error,
+	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string, string) error,
+	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
+	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	generateLCID func(context.Context) (string, error),
-) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
-	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
+) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
 			return nil, &apperrors.QueryError{
@@ -261,17 +264,50 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
-		}
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     existing,
-				ModelID:   existing.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
+		var requesterHasValidEUAID bool
+		var requesterInfo *models.UserInfo
+		if shouldSendEmail {
+			euaID := existing.EUAUserID.ValueOrZero()
+			requesterHasEUAID := euaID != ""
+			requesterHasValidEUAID = requesterHasEUAID
+
+			if requesterHasEUAID {
+				requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+
+				if err != nil {
+					if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+						appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
+							zap.String("intakeID", existing.ID.String()),
+							zap.String("euaID", euaID))
+						err = sendIntakeInvalidEUAIDEmail(ctx, existing.ProjectName.ValueOrZero(), euaID, existing.ID)
+						if err != nil {
+							return nil, err
+						}
+
+						requesterHasValidEUAID = false
+					} else {
+						return nil, err
+					}
+				} else if requesterInfo == nil || requesterInfo.Email == "" {
+					appcontext.ZLogger(ctx).Error(
+						fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when updating lifecycle fields"),
+						zap.String("intakeID", existing.ID.String()),
+						zap.String("euaID", euaID))
+					return nil, &apperrors.ExternalAPIError{
+						Err:       errors.New("requester info fetch was not successful when submitting an action"),
+						Model:     existing,
+						ModelID:   existing.ID.String(),
+						Operation: apperrors.Fetch,
+						Source:    "CEDAR LDAP",
+					}
+				}
+			} else {
+				appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+					zap.String("intakeID", existing.ID.String()))
+				err = sendIntakeNoEUAIDEmail(ctx, existing.ProjectName.ValueOrZero(), existing.ID)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 
@@ -310,21 +346,22 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		// TODO: put cost baseline in email?
-		err = sendIssueLCIDEmail(
-			ctx,
-			requesterInfo.Email,
-			updated.LifecycleID.String,
-			updated.LifecycleExpiresAt,
-			updated.LifecycleScope.String,
-			updated.DecisionNextSteps.String,
-			action.Feedback.String)
-		if err != nil {
-			return nil, err
+		if shouldSendEmail && requesterHasValidEUAID {
+			err = sendIssueLCIDEmail(
+				ctx,
+				requesterInfo.Email,
+				updated.LifecycleID.String,
+				updated.LifecycleExpiresAt,
+				updated.LifecycleScope.String,
+				updated.LifecycleCostBaseline.String,
+				updated.DecisionNextSteps.String,
+				action.Feedback.String)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return updated, nil
-
 	}
 }
 
@@ -338,8 +375,10 @@ func NewUpdateRejectionFields(
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendRejectRequestEmail func(ctx context.Context, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
-) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
-	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
+	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
+	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
+) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
 			return nil, err
@@ -353,17 +392,50 @@ func NewUpdateRejectionFields(
 			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
-		}
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     existing,
-				ModelID:   existing.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
+		var requesterHasValidEUAID bool
+		var requesterInfo *models.UserInfo
+		if shouldSendEmail {
+			euaID := existing.EUAUserID.ValueOrZero()
+			requesterHasEUAID := euaID != ""
+			requesterHasValidEUAID = requesterHasEUAID
+
+			if requesterHasEUAID {
+				requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+
+				if err != nil {
+					if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+						appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
+							zap.String("intakeID", existing.ID.String()),
+							zap.String("euaID", euaID))
+						err = sendIntakeInvalidEUAIDEmail(ctx, existing.ProjectName.ValueOrZero(), euaID, existing.ID)
+						if err != nil {
+							return nil, err
+						}
+
+						requesterHasValidEUAID = false
+					} else {
+						return nil, err
+					}
+				} else if requesterInfo == nil || requesterInfo.Email == "" {
+					appcontext.ZLogger(ctx).Error(
+						fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when rejecting an intake request"),
+						zap.String("intakeID", existing.ID.String()),
+						zap.String("euaID", euaID))
+					return nil, &apperrors.ExternalAPIError{
+						Err:       errors.New("requester info fetch was not successful when submitting an action"),
+						Model:     existing,
+						ModelID:   existing.ID.String(),
+						Operation: apperrors.Fetch,
+						Source:    "CEDAR LDAP",
+					}
+				}
+			} else {
+				appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+					zap.String("intakeID", existing.ID.String()))
+				err = sendIntakeNoEUAIDEmail(ctx, existing.ProjectName.ValueOrZero(), existing.ID)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 
@@ -385,15 +457,17 @@ func NewUpdateRejectionFields(
 			return nil, err
 		}
 
-		err = sendRejectRequestEmail(
-			ctx,
-			requesterInfo.Email,
-			existing.RejectionReason.String,
-			existing.DecisionNextSteps.String,
-			action.Feedback.String,
-		)
-		if err != nil {
-			return nil, err
+		if shouldSendEmail && requesterHasValidEUAID {
+			err = sendRejectRequestEmail(
+				ctx,
+				requesterInfo.Email,
+				existing.RejectionReason.String,
+				existing.DecisionNextSteps.String,
+				action.Feedback.String,
+			)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return updated, nil
@@ -409,24 +483,60 @@ func NewProvideGRTFeedback(
 	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
-) func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error) {
-	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus) (*models.GRTFeedback, error) {
+	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
+	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
+) func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, shouldSendEmail bool) (*models.GRTFeedback, error) {
+	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, shouldSendEmail bool) (*models.GRTFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
 		if err != nil {
 			return nil, err
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-		if err != nil {
-			return nil, err
-		}
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting GRT Feedback"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
+		var requesterHasValidEUAID bool
+		var requesterInfo *models.UserInfo
+
+		if shouldSendEmail {
+			euaID := intake.EUAUserID.ValueOrZero()
+			requesterHasEUAID := euaID != ""
+			requesterHasValidEUAID = requesterHasEUAID
+
+			if requesterHasEUAID {
+				requesterInfo, err = fetchUserInfo(ctx, euaID)
+
+				if err != nil {
+					if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+						appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
+							zap.String("intakeID", intake.ID.String()),
+							zap.String("euaID", euaID))
+						err = sendIntakeInvalidEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), euaID, intake.ID)
+						if err != nil {
+							return nil, err
+						}
+
+						requesterHasValidEUAID = false
+					} else {
+						return nil, err
+					}
+				} else if requesterInfo == nil || requesterInfo.Email == "" {
+					appcontext.ZLogger(ctx).Error(
+						fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when submitting GRT Feedback"),
+						zap.String("intakeID", intake.ID.String()),
+						zap.String("euaID", euaID))
+					return nil, &apperrors.ExternalAPIError{
+						Err:       errors.New("requester info fetch was not successful when submitting GRT Feedback"),
+						Model:     intake,
+						ModelID:   intake.ID.String(),
+						Operation: apperrors.Fetch,
+						Source:    "CEDAR LDAP",
+					}
+				}
+			} else {
+				appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+					zap.String("intakeID", intake.ID.String()))
+				err = sendIntakeNoEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), intake.ID)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 
@@ -446,14 +556,16 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
-		err = sendReviewEmail(
-			ctx,
-			action.Feedback.String,
-			requesterInfo.Email,
-			intake.ID,
-		)
-		if err != nil {
-			return nil, err
+		if shouldSendEmail && requesterHasValidEUAID {
+			err = sendReviewEmail(
+				ctx,
+				action.Feedback.String,
+				requesterInfo.Email,
+				intake.ID,
+			)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return grtFeedback, nil

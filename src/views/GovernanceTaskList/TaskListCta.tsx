@@ -130,7 +130,7 @@ export const BusinessCaseDraftCta = ({
             data-testid="prepare-for-grt-cta"
             className="display-table margin-bottom-3 usa-button"
             variant="unstyled"
-            to={`/governance-task-list/${businessCaseId}/prepare-for-grt`}
+            to={`/governance-task-list/${id}/prepare-for-grt`}
           >
             Prepare for review team meeting
           </UswdsReactLink>

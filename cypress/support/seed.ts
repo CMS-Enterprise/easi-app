@@ -9,6 +9,7 @@ export interface AccessibilityRequestSchema {
   euaUserID: string;
   deletedAt?: DateTime;
   deletionReason?: string;
+  cedarSystemId?: string;
 }
 
 Cypress.Commands.add(

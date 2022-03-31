@@ -95,7 +95,7 @@ const RequestTypeForm = () => {
         validateOnMount={false}
       >
         {(formikProps: FormikProps<{ requestType: string }>) => {
-          const { values, errors, handleSubmit } = formikProps;
+          const { values, errors, setErrors, handleSubmit } = formikProps;
           const flatErrors = flattenErrors(errors);
           return (
             <>
@@ -195,7 +195,11 @@ const RequestTypeForm = () => {
                     indexTwo
                   </Trans>
                 </HelpText>
-                <Button className="margin-top-5 display-block" type="submit">
+                <Button
+                  className="margin-top-5 display-block"
+                  type="submit"
+                  onClick={() => setErrors({})}
+                >
                   Continue
                 </Button>
               </Form>
