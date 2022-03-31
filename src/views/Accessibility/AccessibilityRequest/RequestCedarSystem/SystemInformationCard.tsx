@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
 import {
+  Alert,
   Button,
   Card,
   CardBody,
@@ -34,12 +35,12 @@ const SystemInformationCard = ({
 }: SystemInformationCardProps) => {
   const { t } = useTranslation('accessibility');
 
-  const { data, loading } = useQuery<GetCedarSystem, GetCedarSystemVariables>(
-    GetCedarSystemQuery,
-    {
-      variables: { id: cedarSystemId }
-    }
-  );
+  const { data, loading, error } = useQuery<
+    GetCedarSystem,
+    GetCedarSystemVariables
+  >(GetCedarSystemQuery, {
+    variables: { id: cedarSystemId }
+  });
 
   const toggleBookmark = () => {
     toggleCedarSystemBookmark();
@@ -51,7 +52,15 @@ const SystemInformationCard = ({
         size="large"
         aria-valuetext={t('newRequestForm.loadingSystems')}
         aria-busy
+        data-testid="cedar-system-loading"
       />
+    );
+
+  if (error)
+    return (
+      <Alert type="error" slim>
+        {t('newRequestForm.errorSystemInfo')}
+      </Alert>
     );
 
   return (
@@ -90,7 +99,7 @@ const SystemInformationCard = ({
         <CardFooter>
           <UswdsReactLink to={`/systems/${cedarSystemId}`}>
             {t('requestDetails.viewSystemProfile')}
-            <IconArrowForward className="margin-left-05" />
+            <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
           </UswdsReactLink>
         </CardFooter>
       </Card>

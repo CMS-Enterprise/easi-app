@@ -151,6 +151,8 @@ const accessibility = {
     loadingSystems: 'Loading systems...',
     errorSystems:
       'We’re experiencing issues loading data, so you may not be able to complete your request at this time.',
+    errorSystemInfo:
+      "We're experiencing issues loading data and are unable to display your system's information at this time.",
     fields: {
       project: {
         label: "Choose the application you'd like to test",
