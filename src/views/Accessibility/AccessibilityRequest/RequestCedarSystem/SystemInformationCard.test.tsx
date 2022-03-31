@@ -66,6 +66,6 @@ describe('SystemInformationCard', () => {
 
     await waitForElementToBeRemoved(() => getByTestId('cedar-system-loading'));
 
-    expect(getByTestId('alert')).toMatchSnapshot();
+    expect(getByTestId('alert')).toBeInTheDocument();
   });
 });

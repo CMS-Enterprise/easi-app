@@ -103,20 +103,3 @@ exports[`SystemInformationCard renders after request 1`] = `
   </ul>
 </DocumentFragment>
 `;
-
-exports[`SystemInformationCard renders an error on request fail 1`] = `
-<div
-  class="usa-alert usa-alert--error usa-alert--slim"
-  data-testid="alert"
->
-  <div
-    class="usa-alert__body"
-  >
-    <p
-      class="usa-alert__text"
-    >
-      We're experiencing issues loading data and are unable to display your system's information at this time.
-    </p>
-  </div>
-</div>
-`;
