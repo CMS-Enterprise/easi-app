@@ -1,30 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIBizCase",
-  "title": "EASIBizCaseV01",
+  "title": "EASIBizCaseV02",
   "definitions": {
     "EASIBizCase": {
       "required": [
-        "archivedAt",
-        "asIsCons",
-        "asIsCostSavings",
-        "asIsPros",
-        "asIsSummary",
-        "asIsTitle",
-        "businessNeed",
-        "businessOwner",
-        "businessSolutions",
-        "cmsBenefit",
-        "initialSubmittedAt",
-        "intakeId",
-        "lastSubmittedAt",
-        "lifecycleCostLines",
-        "priorityAlignment",
-        "projectName",
-        "requester",
-        "requesterPhoneNumber",
-        "submittedAt",
-        "successIndicators",
+        "businessCaseId",
         "userEUA"
       ],
       "properties": {
@@ -35,39 +16,11 @@
             "2023-02-27T14:34:43Z"
           ]
         },
-        "asIsCons": {
+        "businessCaseId": {
           "type": "string",
-          "description": "Cons of the current solution",
+          "description": "Unique ID of this business case",
           "examples": [
-            "Multiple FTEs required"
-          ]
-        },
-        "asIsCostSavings": {
-          "type": "string",
-          "description": "Cost savings of the current solution",
-          "examples": [
-            "No additional development required"
-          ]
-        },
-        "asIsPros": {
-          "type": "string",
-          "description": "Pros of the current solution",
-          "examples": [
-            "Well known workflows and end products"
-          ]
-        },
-        "asIsSummary": {
-          "type": "string",
-          "description": "Summary of the current solution",
-          "examples": [
-            "Managed through spreadsheets and email"
-          ]
-        },
-        "asIsTitle": {
-          "type": "string",
-          "description": "Name of the current solution",
-          "examples": [
-            "Spreadsheets and Email"
+            "91e5c1f3-11fb-4124-805c-adbdd02c5395"
           ]
         },
         "businessNeed": {
@@ -99,6 +52,13 @@
             "Reduce FTE hours and generate better end products"
           ]
         },
+        "currentSolutionSummary": {
+          "type": "string",
+          "description": "Summary of the current solution",
+          "examples": [
+            "Managed through spreadsheets and email"
+          ]
+        },
         "initialSubmittedAt": {
           "type": "string",
           "description": "Timestamp of when request was initially submitted",
@@ -119,14 +79,6 @@
           "examples": [
             "2022-02-11T16:34:43Z"
           ]
-        },
-        "lifecycleCostLines": {
-          "items": {
-            "$schema": "http://json-schema.org/draft-04/schema#",
-            "$ref": "#/definitions/EASILifecycleCost"
-          },
-          "type": "array",
-          "description": "Array of LifecycleCostLines (costs associated with upcoming Fiscal Years)"
         },
         "priorityAlignment": {
           "type": "string",
@@ -184,19 +136,7 @@
     },
     "EASIBusinessSolution": {
       "required": [
-        "acquisitionApproach",
-        "cons",
-        "costSavings",
-        "hasUI",
-        "hostingCloudServiceType",
-        "hostingLocation",
-        "hostingType",
-        "pros",
-        "securityIsApproved",
-        "securityIsBeingReviewed",
-        "solutionType",
-        "summary",
-        "title"
+        "solutionType"
       ],
       "properties": {
         "acquisitionApproach": {
@@ -248,6 +188,14 @@
             "cloud"
           ]
         },
+        "lifecycleCostLines": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/EASILifecycleCost"
+          },
+          "type": "array",
+          "description": "Array of LifecycleCostLines (costs associated with upcoming Fiscal Years) for this business solution"
+        },
         "pros": {
           "type": "string",
           "description": "Pros of this solution",
@@ -256,16 +204,8 @@
           ]
         },
         "securityIsApproved": {
-          "enum": [
-            "",
-            "false",
-            "true"
-          ],
-          "type": "string",
-          "description": "Is this solution FedRAMP/FISMA approved",
-          "examples": [
-            "True"
-          ]
+          "type": "boolean",
+          "description": "Is this solution FedRAMP/FISMA approved"
         },
         "securityIsBeingReviewed": {
           "type": "string",
@@ -305,22 +245,7 @@
       "type": "object"
     },
     "EASILifecycleCost": {
-      "required": [
-        "businessCaseId",
-        "cost",
-        "id",
-        "phase",
-        "solution",
-        "year"
-      ],
       "properties": {
-        "businessCaseId": {
-          "type": "string",
-          "description": "Unique ID of the business case this cost line is associated with",
-          "examples": [
-            "91e5c1f3-11fb-4124-805c-adbdd02c5395"
-          ]
-        },
         "cost": {
           "type": "string",
           "description": "Fiscal year cost",

@@ -25,117 +25,122 @@ func (bc *TranslatableBusinessCase) ObjectType() string {
 // CreateIntakeModel translates a BusinessCase into an IntakeInput
 func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := intakemodels.EASIBizCase{
-		UserEUA:              bc.EUAUserID,
-		IntakeID:             bc.SystemIntakeID.String(),
-		ProjectName:          bc.ProjectName.ValueOrZero(),
-		Requester:            bc.Requester.ValueOrZero(),
-		RequesterPhoneNumber: bc.RequesterPhoneNumber.ValueOrZero(),
-		BusinessOwner:        bc.BusinessOwner.ValueOrZero(),
-		BusinessNeed:         bc.BusinessNeed.ValueOrZero(),
-		CmsBenefit:           bc.CMSBenefit.ValueOrZero(),
-		PriorityAlignment:    bc.PriorityAlignment.ValueOrZero(),
-		SuccessIndicators:    bc.SuccessIndicators.ValueOrZero(),
+		UserEUA:                bc.EUAUserID,
+		BusinessCaseID:         bc.ID.String(),
+		IntakeID:               pStr(bc.SystemIntakeID.String()),
+		ProjectName:            bc.ProjectName.Ptr(),
+		Requester:              bc.Requester.Ptr(),
+		RequesterPhoneNumber:   bc.RequesterPhoneNumber.Ptr(),
+		BusinessOwner:          bc.BusinessOwner.Ptr(),
+		BusinessNeed:           bc.BusinessNeed.Ptr(),
+		CurrentSolutionSummary: bc.AsIsSummary.Ptr(),
+		CmsBenefit:             bc.CMSBenefit.Ptr(),
+		PriorityAlignment:      bc.PriorityAlignment.Ptr(),
+		SuccessIndicators:      bc.SuccessIndicators.Ptr(),
 
-		AsIsTitle:       bc.AsIsTitle.ValueOrZero(),
-		AsIsSummary:     bc.AsIsSummary.ValueOrZero(),
-		AsIsPros:        bc.AsIsPros.ValueOrZero(),
-		AsIsCons:        bc.AsIsCons.ValueOrZero(),
-		AsIsCostSavings: bc.AsIsCons.ValueOrZero(),
+		SubmittedAt:        pStr(strDateTime(bc.SubmittedAt)),
+		ArchivedAt:         pStr(strDateTime(bc.ArchivedAt)),
+		InitialSubmittedAt: pStr(strDateTime(bc.InitialSubmittedAt)),
+		LastSubmittedAt:    pStr(strDateTime(bc.LastSubmittedAt)),
 
-		SubmittedAt:        strDateTime(bc.SubmittedAt),
-		ArchivedAt:         strDateTime(bc.ArchivedAt),
-		InitialSubmittedAt: strDateTime(bc.InitialSubmittedAt),
-		LastSubmittedAt:    strDateTime(bc.LastSubmittedAt),
-
-		BusinessSolutions:  []*intakemodels.EASIBusinessSolution{},
-		LifecycleCostLines: []*intakemodels.EASILifecycleCost{},
+		BusinessSolutions: []*intakemodels.EASIBusinessSolution{},
 	}
 
-	// build the collection of embedded objects
+	// Build the collection of embedded objects
 
-	// business solutions
-	// preferred (required)
+	// Business solutions
+	// Preferred (required)
 	preferredSolution := &intakemodels.EASIBusinessSolution{
 		SolutionType:            "preferred",
-		Title:                   bc.PreferredTitle.ValueOrZero(),
-		Summary:                 bc.PreferredSummary.ValueOrZero(),
-		AcquisitionApproach:     bc.PreferredAcquisitionApproach.ValueOrZero(),
-		SecurityIsApproved:      strNullableBool(bc.PreferredSecurityIsApproved),
-		SecurityIsBeingReviewed: bc.PreferredSecurityIsBeingReviewed.ValueOrZero(),
-		HostingType:             bc.PreferredHostingType.ValueOrZero(),
-		HostingLocation:         bc.PreferredHostingLocation.ValueOrZero(),
-		HostingCloudServiceType: bc.PreferredHostingCloudServiceType.ValueOrZero(),
-		HasUI:                   bc.PreferredHasUI.ValueOrZero(),
-		Pros:                    bc.PreferredPros.ValueOrZero(),
-		Cons:                    bc.PreferredCons.ValueOrZero(),
-		CostSavings:             bc.PreferredCostSavings.ValueOrZero(),
+		Title:                   bc.PreferredTitle.Ptr(),
+		Summary:                 bc.PreferredSummary.Ptr(),
+		AcquisitionApproach:     bc.PreferredAcquisitionApproach.Ptr(),
+		SecurityIsApproved:      bc.PreferredSecurityIsApproved.Ptr(),
+		SecurityIsBeingReviewed: bc.PreferredSecurityIsBeingReviewed.Ptr(),
+		HostingType:             bc.PreferredHostingType.Ptr(),
+		HostingLocation:         bc.PreferredHostingLocation.Ptr(),
+		HostingCloudServiceType: bc.PreferredHostingCloudServiceType.Ptr(),
+		HasUI:                   bc.PreferredHasUI.Ptr(),
+		Pros:                    bc.PreferredPros.Ptr(),
+		Cons:                    bc.PreferredCons.Ptr(),
+		CostSavings:             bc.PreferredCostSavings.Ptr(),
+		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
-	obj.BusinessSolutions = append(obj.BusinessSolutions, preferredSolution)
 
 	// TODO: do we need to check if alternative a and b are filled out?
 	// what is the best way to do that? need to check each field individually?
 
-	// alternative a (optional)
+	// Alternative a (optional)
 	alternativeASolution := &intakemodels.EASIBusinessSolution{
 		SolutionType:            "alternativeA",
-		Title:                   bc.AlternativeATitle.ValueOrZero(),
-		Summary:                 bc.AlternativeASummary.ValueOrZero(),
-		AcquisitionApproach:     bc.AlternativeAAcquisitionApproach.ValueOrZero(),
-		SecurityIsApproved:      strNullableBool(bc.AlternativeASecurityIsApproved),
-		SecurityIsBeingReviewed: bc.AlternativeASecurityIsBeingReviewed.ValueOrZero(),
-		HostingType:             bc.AlternativeAHostingType.ValueOrZero(),
-		HostingLocation:         bc.AlternativeAHostingLocation.ValueOrZero(),
-		HostingCloudServiceType: bc.AlternativeAHostingCloudServiceType.ValueOrZero(),
-		HasUI:                   bc.AlternativeAHasUI.ValueOrZero(),
-		Pros:                    bc.AlternativeAPros.ValueOrZero(),
-		Cons:                    bc.AlternativeACons.ValueOrZero(),
-		CostSavings:             bc.AlternativeACostSavings.ValueOrZero(),
+		Title:                   bc.AlternativeATitle.Ptr(),
+		Summary:                 bc.AlternativeASummary.Ptr(),
+		AcquisitionApproach:     bc.AlternativeAAcquisitionApproach.Ptr(),
+		SecurityIsApproved:      bc.AlternativeASecurityIsApproved.Ptr(),
+		SecurityIsBeingReviewed: bc.AlternativeASecurityIsBeingReviewed.Ptr(),
+		HostingType:             bc.AlternativeAHostingType.Ptr(),
+		HostingLocation:         bc.AlternativeAHostingLocation.Ptr(),
+		HostingCloudServiceType: bc.AlternativeAHostingCloudServiceType.Ptr(),
+		HasUI:                   bc.AlternativeAHasUI.Ptr(),
+		Pros:                    bc.AlternativeAPros.Ptr(),
+		Cons:                    bc.AlternativeACons.Ptr(),
+		CostSavings:             bc.AlternativeACostSavings.Ptr(),
+		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
-	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeASolution)
 
-	// alternative b (optional)
+	// Alternative b (optional)
 	alternativeBSolution := &intakemodels.EASIBusinessSolution{
 		SolutionType:            "alternativeB",
-		Title:                   bc.AlternativeBTitle.ValueOrZero(),
-		Summary:                 bc.AlternativeBSummary.ValueOrZero(),
-		AcquisitionApproach:     bc.AlternativeBAcquisitionApproach.ValueOrZero(),
-		SecurityIsApproved:      strNullableBool(bc.AlternativeBSecurityIsApproved),
-		SecurityIsBeingReviewed: bc.AlternativeBSecurityIsBeingReviewed.ValueOrZero(),
-		HostingType:             bc.AlternativeBHostingType.ValueOrZero(),
-		HostingLocation:         bc.AlternativeBHostingLocation.ValueOrZero(),
-		HostingCloudServiceType: bc.AlternativeBHostingCloudServiceType.ValueOrZero(),
-		HasUI:                   bc.AlternativeBHasUI.ValueOrZero(),
-		Pros:                    bc.AlternativeBPros.ValueOrZero(),
-		Cons:                    bc.AlternativeBCons.ValueOrZero(),
-		CostSavings:             bc.AlternativeBCostSavings.ValueOrZero(),
+		Title:                   bc.AlternativeBTitle.Ptr(),
+		Summary:                 bc.AlternativeBSummary.Ptr(),
+		AcquisitionApproach:     bc.AlternativeBAcquisitionApproach.Ptr(),
+		SecurityIsApproved:      bc.AlternativeBSecurityIsApproved.Ptr(),
+		SecurityIsBeingReviewed: bc.AlternativeBSecurityIsBeingReviewed.Ptr(),
+		HostingType:             bc.AlternativeBHostingType.Ptr(),
+		HostingLocation:         bc.AlternativeBHostingLocation.Ptr(),
+		HostingCloudServiceType: bc.AlternativeBHostingCloudServiceType.Ptr(),
+		HasUI:                   bc.AlternativeBHasUI.Ptr(),
+		Pros:                    bc.AlternativeBPros.Ptr(),
+		Cons:                    bc.AlternativeBCons.Ptr(),
+		CostSavings:             bc.AlternativeBCostSavings.Ptr(),
+		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
 	}
-	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeBSolution)
 
-	// lifecycle cost lines
+	// Add lifecycle cost lines to business solutions
 	bcID := bc.ID.String()
 
 	for _, line := range bc.LifecycleCostLines {
 		lc := &intakemodels.EASILifecycleCost{
-			ID:             bcID,
-			BusinessCaseID: bcID,
-			Solution:       string(line.Solution),
-			Year:           string(line.Year),
+			ID:       pStr(bcID),
+			Solution: pStr(string(line.Solution)),
+			Year:     pStr(string(line.Year)),
 		}
 
 		phase := ""
 		if line.Phase != nil {
 			phase = string(*line.Phase)
 		}
-		lc.Phase = phase
+		lc.Phase = pStr(phase)
 
 		cost := ""
 		if line.Cost != nil {
 			cost = strconv.Itoa(*line.Cost)
 		}
-		lc.Cost = cost
+		lc.Cost = pStr(cost)
 
-		obj.LifecycleCostLines = append(obj.LifecycleCostLines, lc)
+		if line.Solution == models.LifecycleCostSolutionPREFERRED {
+			preferredSolution.LifecycleCostLines = append(preferredSolution.LifecycleCostLines, lc)
+		} else if line.Solution == models.LifecycleCostSolutionA {
+			alternativeASolution.LifecycleCostLines = append(alternativeASolution.LifecycleCostLines, lc)
+		} else if line.Solution == models.LifecycleCostSolutionB {
+			alternativeBSolution.LifecycleCostLines = append(alternativeBSolution.LifecycleCostLines, lc)
+		}
 	}
+
+	// Append all solution objects to business solutions list
+	obj.BusinessSolutions = append(obj.BusinessSolutions, preferredSolution)
+	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeASolution)
+	obj.BusinessSolutions = append(obj.BusinessSolutions, alternativeBSolution)
 
 	blob, err := json.Marshal(&obj)
 	if err != nil {
@@ -149,7 +154,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		// invariants for this type
 		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
 		Type:       typeStr(intakeInputBizCase),
-		Schema:     versionStr(IntakeInputSchemaEASIBizCaseV01),
+		Schema:     versionStr(IntakeInputSchemaEASIBizCaseVersion),
 	}
 
 	if bc.Status == models.BusinessCaseStatusCLOSED {
