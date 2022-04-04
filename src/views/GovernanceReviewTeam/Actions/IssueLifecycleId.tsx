@@ -355,6 +355,7 @@ const IssueLifecycleId = () => {
                     // disabled={isSubmitting}
                     onClick={() => {
                       setShouldSendEmail(true);
+                      setFieldValue('skipEmail', false);
                     }}
                   >
                     {t('submitAction.submit')}
@@ -364,7 +365,8 @@ const IssueLifecycleId = () => {
                   <CompleteWithoutEmailButton
                     onClick={() => {
                       setShouldSendEmail(false);
-                      submitForm();
+                      setFieldValue('skipEmail', true);
+                      setTimeout(submitForm);
                     }}
                   />
                 </div>

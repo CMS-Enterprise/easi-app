@@ -11,7 +11,7 @@ type EmailRecipientsFieldsProps = {
 };
 
 export default ({
-  optional,
+  optional = true,
   className,
   headerClassName,
   alertClassName

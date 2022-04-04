@@ -74,7 +74,13 @@ const RejectIntake = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<RejectIntakeForm>) => {
-        const { errors, setErrors, handleSubmit, submitForm } = formikProps;
+        const {
+          errors,
+          setErrors,
+          handleSubmit,
+          submitForm,
+          setFieldValue
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -176,6 +182,7 @@ const RejectIntake = () => {
                     onClick={() => {
                       setErrors({});
                       setShouldSendEmail(true);
+                      setFieldValue('skipEmail', false);
                     }}
                   >
                     {t('rejectIntake.submit')}
@@ -186,7 +193,8 @@ const RejectIntake = () => {
                     onClick={() => {
                       setErrors({});
                       setShouldSendEmail(false);
-                      submitForm();
+                      setFieldValue('skipEmail', true);
+                      setTimeout(submitForm);
                     }}
                   />
                 </div>

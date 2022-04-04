@@ -70,7 +70,13 @@ const ProvideGRTFeedbackToBusinessOwner = ({
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ProvideGRTFeedbackForm>) => {
-        const { errors, setErrors, handleSubmit, submitForm } = formikProps;
+        const {
+          errors,
+          setErrors,
+          handleSubmit,
+          submitForm,
+          setFieldValue
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -125,7 +131,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     name="grtFeedback"
                   />
                 </FieldGroup>
-                <EmailRecipientsFields optional />
+                <EmailRecipientsFields />
                 <FieldGroup
                   scrollElement="emailBody"
                   error={!!flatErrors.emailBody}
@@ -152,6 +158,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     onClick={() => {
                       setErrors({});
                       setShouldSendEmail(true);
+                      setFieldValue('skipEmail', false);
                     }}
                   >
                     {t('submitAction.submit')}
@@ -162,7 +169,8 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     onClick={() => {
                       setErrors({});
                       setShouldSendEmail(false);
-                      submitForm();
+                      setFieldValue('skipEmail', true);
+                      setTimeout(submitForm);
                     }}
                   />
                 </div>

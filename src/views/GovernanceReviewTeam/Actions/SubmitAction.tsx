@@ -127,7 +127,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                   window.scrollTo(0, 0);
                 }}
               >
-                <EmailRecipientsFields optional className="margin-top-3" />
+                <EmailRecipientsFields className="margin-top-3" />
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
