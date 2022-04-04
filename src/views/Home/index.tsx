@@ -86,7 +86,7 @@ const Home = () => {
               </h2>
             </div>
             <div className="tablet:grid-col-12">
-              <Table />
+              <Table defaultPageSize={50} />
             </div>
           </div>
         );

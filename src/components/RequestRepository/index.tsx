@@ -27,6 +27,7 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import TruncatedText from 'components/shared/TruncatedText';
 import GlobalClientFilter from 'components/TableFilter';
+import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
@@ -295,7 +296,8 @@ const RequestRepository = () => {
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], [])
+        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
+        pageSize: 50
       }
     },
     useFilters,
@@ -466,19 +468,27 @@ const RequestRepository = () => {
         </tbody>
       </Table>
 
-      <TablePagination
-        gotoPage={gotoPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-        canNextPage={canNextPage}
-        pageIndex={state.pageIndex}
-        pageOptions={pageOptions}
-        canPreviousPage={canPreviousPage}
-        pageCount={pageCount}
-        pageSize={state.pageSize}
-        setPageSize={setPageSize}
-        page={[]}
-      />
+      <div className="grid-row grid-gap grid-gap-lg">
+        <TablePagination
+          gotoPage={gotoPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+          canNextPage={canNextPage}
+          pageIndex={state.pageIndex}
+          pageOptions={pageOptions}
+          canPreviousPage={canPreviousPage}
+          pageCount={pageCount}
+          pageSize={state.pageSize}
+          setPageSize={setPageSize}
+          page={[]}
+          className="desktop:grid-col-fill"
+        />
+        <TablePageSize
+          className="desktop:grid-col-auto"
+          pageSize={state.pageSize}
+          setPageSize={setPageSize}
+        />
+      </div>
     </MainContent>
   );
 };

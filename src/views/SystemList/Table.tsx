@@ -25,6 +25,7 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import SystemHealthIcon from 'components/SystemHealthIcon';
 import GlobalClientFilter from 'components/TableFilter';
+import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
@@ -192,7 +193,8 @@ export const Table = ({
       autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => [{ id: 'systemName', desc: false }], []),
-        pageIndex: 0
+        pageIndex: 0,
+        pageSize: 10
       }
     },
     useFilters,
@@ -272,19 +274,27 @@ export const Table = ({
         </tbody>
       </UswdsTable>
 
-      <TablePagination
-        gotoPage={gotoPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-        canNextPage={canNextPage}
-        pageIndex={pageIndex}
-        pageOptions={pageOptions}
-        canPreviousPage={canPreviousPage}
-        pageCount={pageCount}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-        page={[]}
-      />
+      <div className="grid-row grid-gap grid-gap-lg">
+        <TablePagination
+          gotoPage={gotoPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+          canNextPage={canNextPage}
+          pageIndex={state.pageIndex}
+          pageOptions={pageOptions}
+          canPreviousPage={canPreviousPage}
+          pageCount={pageCount}
+          pageSize={state.pageSize}
+          setPageSize={setPageSize}
+          page={[]}
+          className="desktop:grid-col-fill"
+        />
+        <TablePageSize
+          className="desktop:grid-col-auto"
+          pageSize={state.pageSize}
+          setPageSize={setPageSize}
+        />
+      </div>
     </>
   );
 };
