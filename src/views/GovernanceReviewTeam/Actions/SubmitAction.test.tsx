@@ -259,6 +259,37 @@ describe('Submit Action', () => {
       expect(await screen.findByTestId('intake-review')).toBeInTheDocument();
     });
 
+    it('executes not an IT request mutation without email field', async () => {
+      const notITRequestMutation = {
+        request: {
+          query: CreateSystemIntakeActionNotItRequest,
+          variables: {
+            input: {
+              feedback: '',
+              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              shouldSendEmail: false
+            }
+          }
+        },
+        result: {
+          data: {
+            createSystemIntakeActionNotItRequest: {
+              systemIntake: {
+                status: 'NOT_IT_REQUEST',
+                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              }
+            }
+          }
+        }
+      };
+      renderActionPage('not-it-request', [intakeQuery, notITRequestMutation]);
+      await waitForPageLoad();
+
+      screen.getByRole('button', { name: /without sending an email/i }).click();
+
+      expect(await screen.findByTestId('intake-review')).toBeInTheDocument();
+    });
+
     it('executes need business case mutation', async () => {
       const needBizCaseMutation = {
         request: {
