@@ -192,8 +192,6 @@ describe('Submit Action', () => {
     expect(
       await screen.findByTestId('formik-validation-errors')
     ).toBeInTheDocument();
-
-    screen.getByRole('button', { name: /without sending an email/i }).click();
   });
 
   test.each([
