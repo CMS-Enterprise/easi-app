@@ -531,18 +531,6 @@ type BusinessCaseSolution {
 }
 
 """
-An IT governance requester's explanation of alternative solutions
-to their system, which involve leaving the system "as-is"
-"""
-type BusinessCaseAsIsSolution {
-  cons: String
-  costSavings: String
-  pros: String
-  summary: String
-  title: String
-}
-
-"""
 The cost phase of a 
 """
 enum LifecycleCostPhase {
@@ -600,11 +588,11 @@ equester's justification for their system request
 type BusinessCase {
   alternativeASolution: BusinessCaseSolution
   alternativeBSolution: BusinessCaseSolution
-  asIsSolution: BusinessCaseAsIsSolution
   businessNeed: String
   businessOwner: String
   cmsBenefit: String
   createdAt: Time!
+  currentSolutionSummary: String
   euaUserId: String!
   id: UUID!
   initialSubmittedAt: Time

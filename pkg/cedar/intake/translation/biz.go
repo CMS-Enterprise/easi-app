@@ -33,7 +33,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		RequesterPhoneNumber:   bc.RequesterPhoneNumber.Ptr(),
 		BusinessOwner:          bc.BusinessOwner.Ptr(),
 		BusinessNeed:           bc.BusinessNeed.Ptr(),
-		CurrentSolutionSummary: bc.AsIsSummary.Ptr(),
+		CurrentSolutionSummary: bc.CurrentSolutionSummary.Ptr(),
 		CmsBenefit:             bc.CMSBenefit.Ptr(),
 		PriorityAlignment:      bc.PriorityAlignment.Ptr(),
 		SuccessIndicators:      bc.SuccessIndicators.Ptr(),

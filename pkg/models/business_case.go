@@ -84,14 +84,10 @@ type BusinessCase struct {
 	RequesterPhoneNumber                null.String             `json:"requesterPhoneNumber" db:"requester_phone_number"`
 	BusinessOwner                       null.String             `json:"businessOwner" db:"business_owner"`
 	BusinessNeed                        null.String             `json:"businessNeed" db:"business_need"`
+	CurrentSolutionSummary              null.String             `json:"currenSolutionSummary" db:"current_solution_summary"`
 	CMSBenefit                          null.String             `json:"cmsBenefit" db:"cms_benefit"`
 	PriorityAlignment                   null.String             `json:"priorityAlignment" db:"priority_alignment"`
 	SuccessIndicators                   null.String             `json:"successIndicators" db:"success_indicators"`
-	AsIsTitle                           null.String             `json:"asIsTitle" db:"as_is_title"`
-	AsIsSummary                         null.String             `json:"asIsSummary" db:"as_is_summary"`
-	AsIsPros                            null.String             `json:"asIsPros" db:"as_is_pros"`
-	AsIsCons                            null.String             `json:"asIsCons" db:"as_is_cons"`
-	AsIsCostSavings                     null.String             `json:"asIsCostSavings" db:"as_is_cost_savings"`
 	PreferredTitle                      null.String             `json:"preferredTitle" db:"preferred_title"`
 	PreferredSummary                    null.String             `json:"preferredSummary" db:"preferred_summary"`
 	PreferredAcquisitionApproach        null.String             `json:"preferredAcquisitionApproach" db:"preferred_acquisition_approach"`

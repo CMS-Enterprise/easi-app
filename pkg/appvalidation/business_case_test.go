@@ -272,14 +272,10 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"AlternativeAPros":"is required",` +
 			`"AlternativeASummary":"is required",` +
 			`"AlternativeATitle":"is required",` +
-			`"AsIsCons":"is required",` +
-			`"AsIsCostSavings":"is required",` +
-			`"AsIsPros":"is required",` +
-			`"AsIsSummary":"is required",` +
-			`"AsIsTitle":"is required",` +
 			`"BusinessNeed":"is required",` +
 			`"BusinessOwner":"is required",` +
 			`"CMSBenefit":"is required",` +
+			`"CurrentSolutionSummary":"is required",` +
 			`"EUAUserID":"is required",` +
 			`"ID":"is required",` +
 			`"Preferred1":"requires a phase",` +

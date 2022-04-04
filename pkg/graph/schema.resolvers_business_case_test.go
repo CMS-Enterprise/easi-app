@@ -180,12 +180,6 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery
 	cost := 1234
 	lifecycleCostLines := models.EstimatedLifecycleCosts{
 		models.EstimatedLifecycleCost{
-			Solution: models.LifecycleCostSolutionASIS,
-			Phase:    &dev,
-			Year:     models.LifecycleCostYear1,
-			Cost:     &cost,
-		},
-		models.EstimatedLifecycleCost{
 			Solution: models.LifecycleCostSolutionPREFERRED,
 			Phase:    &oam,
 			Year:     models.LifecycleCostYear2,
