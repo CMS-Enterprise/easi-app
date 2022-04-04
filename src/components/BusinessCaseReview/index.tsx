@@ -49,8 +49,8 @@ const BusinessCaseReview = ({
           <RequestDescriptionReview
             values={{
               businessNeed: values.businessNeed,
-              cmsBenefit: values.cmsBenefit,
               currentSolutionSummary: values.currentSolutionSummary,
+              cmsBenefit: values.cmsBenefit,
               priorityAlignment: values.priorityAlignment,
               successIndicators: values.successIndicators
             }}

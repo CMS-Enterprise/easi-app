@@ -167,11 +167,10 @@ const RequestDescription = ({
                     name="currentSolutionSummary"
                     aria-describedby="BusinessCase-CurrentSolutionSummaryCounter BusinessCase-CurrentSolutionSummaryHelp"
                   />
-                  {/* TODO: NJD - figure out character count (length not working on this) */}
-                  {/* <CharacterCounter
+                  <CharacterCounter
                     id="BusinessCase-CurrentSolutionSummaryCounter"
                     characterCount={2000 - values.currentSolutionSummary.length}
-                  /> */}
+                  />
                 </FieldGroup>
 
                 <FieldGroup

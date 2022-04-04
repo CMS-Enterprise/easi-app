@@ -183,8 +183,8 @@ export const prepareBusinessCaseForApp = (
       name: businessCase.businessOwner
     },
     businessNeed: businessCase.businessNeed,
-    cmsBenefit: businessCase.cmsBenefit,
     currentSolutionSummary: businessCase.currentSolutionSummary,
+    cmsBenefit: businessCase.cmsBenefit,
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
     preferredSolution: {
@@ -338,8 +338,8 @@ export const prepareBusinessCaseForApi = (
     requesterPhoneNumber: businessCase.requester.phoneNumber,
     businessOwner: businessCase.businessOwner.name,
     businessNeed: businessCase.businessNeed,
-    cmsBenefit: businessCase.cmsBenefit,
     currentSolutionSummary: businessCase.currentSolutionSummary,
+    cmsBenefit: businessCase.cmsBenefit,
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
     preferredTitle: businessCase.preferredSolution.title,
