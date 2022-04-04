@@ -43,7 +43,7 @@ func (action *TranslatableAction) CreateIntakeModel() (*wire.IntakeInput, error)
 		ClientStatus: statusStr(inputStatusFinal),
 		BodyFormat:   pStr(wire.IntakeInputBodyFormatJSON),
 		Type:         typeStr(intakeInputAction),
-		Schema:       versionStr(IntakeInputSchemaEASIActionV01),
+		Schema:       versionStr(IntakeInputSchemaEASIActionVersion),
 	}
 
 	if action.CreatedAt != nil {

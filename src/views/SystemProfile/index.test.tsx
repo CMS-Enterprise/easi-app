@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
@@ -55,6 +55,73 @@ describe('The making a request page', () => {
     );
     await waitFor(() => {
       expect(asFragment()).toMatchSnapshot();
+    });
+  });
+});
+
+describe('System profile description is expandable', () => {
+  beforeEach(() => {
+    // Fill in heights for description text element
+    // https://github.com/testing-library/react-testing-library/issues/353
+    const el = HTMLElement.prototype;
+    Object.defineProperty(el, 'offsetHeight', {
+      configurable: true,
+      value: 300
+    });
+    Object.defineProperty(el, 'scrollHeight', {
+      configurable: true,
+      value: 400
+    });
+  });
+
+  it('shows read more & less', async () => {
+    const query = {
+      request: {
+        query: GetCedarSystemQuery,
+        variables: {
+          id: '000-0000-1'
+        }
+      },
+      result: {
+        data: {
+          cedarSystem: {
+            id: '000-0000-1',
+            name: 'Application Programming Interface Gateway',
+            description: '',
+            acronym: '',
+            status: '',
+            businessOwnerOrg: '',
+            businessOwnerOrgComp: '',
+            systemMaintainerOrg: '',
+            systemMaintainerOrgComp: ''
+          }
+        }
+      }
+    };
+    const { getByText, findByTestId } = render(
+      <MemoryRouter initialEntries={['/systems/000-0000-1/home']}>
+        <Route path="/systems/:systemId/:subinfo">
+          <MockedProvider mocks={[query]} addTypename={false}>
+            <SystemProfile />
+          </MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
+
+    const loading = await findByTestId('page-loading');
+    await waitFor(() => {
+      expect(loading).not.toBeInTheDocument();
+    });
+
+    const readMore = getByText(/read more/i);
+    await waitFor(() => {
+      expect(readMore).toBeInTheDocument();
+    });
+
+    fireEvent.click(readMore);
+
+    await waitFor(() => {
+      expect(getByText(/read less/i)).toBeInTheDocument();
     });
   });
 });

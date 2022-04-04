@@ -32,18 +32,18 @@ const (
 type SchemaVersion string
 
 const (
-	// IntakeInputSchemaEASIActionV01 captures enum value "EASIActionV01"
-	IntakeInputSchemaEASIActionV01 SchemaVersion = "EASIActionV01"
+	// IntakeInputSchemaEASIActionVersion captures enum value "EASIActionV01"
+	IntakeInputSchemaEASIActionVersion SchemaVersion = "EASIActionV01"
 
-	// IntakeInputSchemaEASIBizCaseV01 captures enum value "EASIBizCaseV01"
-	IntakeInputSchemaEASIBizCaseV01 SchemaVersion = "EASIBizCaseV01"
+	// IntakeInputSchemaEASIBizCaseVersion captures enum value "EASIBizCaseV02"
+	IntakeInputSchemaEASIBizCaseVersion SchemaVersion = "EASIBizCaseV02"
 
-	// IntakeInputSchemaEASIGrtFeedbackV01 captures enum value "EASIGrtFeedbackV01"
-	IntakeInputSchemaEASIGrtFeedbackV01 SchemaVersion = "EASIGrtFeedbackV01"
+	// IntakeInputSchemaEASIGrtFeedbackVersion captures enum value "EASIGrtFeedbackV01"
+	IntakeInputSchemaEASIGrtFeedbackVersion SchemaVersion = "EASIGrtFeedbackV01"
 
-	// IntakeInputSchemaEASIIntakeV01 captures enum value "EASIIntakeV01"
-	IntakeInputSchemaEASIIntakeV01 SchemaVersion = "EASIIntakeV01"
+	// IntakeInputSchemaEASIIntakeVersion captures enum value "EASIIntakeV02"
+	IntakeInputSchemaEASIIntakeVersion SchemaVersion = "EASIIntakeV02"
 
-	// IntakeInputSchemaEASINoteV01 captures enum value "EASINoteV01"
-	IntakeInputSchemaEASINoteV01 SchemaVersion = "EASINoteV01"
+	// IntakeInputSchemaEASINoteVersion captures enum value "EASINoteV01"
+	IntakeInputSchemaEASINoteVersion SchemaVersion = "EASINoteV01"
 )

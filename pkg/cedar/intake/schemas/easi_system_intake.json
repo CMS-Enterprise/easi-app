@@ -1,55 +1,25 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIIntake",
-  "title": "EASIIntakeV01",
+  "title": "EASIIntakeV02",
   "definitions": {
     "EASIIntake": {
       "required": [
-        "adminLead",
-        "archivedAt",
         "businessNeed",
         "businessOwner",
         "businessOwnerComponent",
         "component",
-        "contractEndDate",
-        "contractStartDate",
-        "contractVehicle",
-        "contractor",
         "costIncrease",
-        "costIncreaseAmount",
-        "decidedAt",
-        "decisionNextSteps",
-        "eaCollaborator",
-        "eaCollaboratorName",
-        "eaSupportRequest",
         "existingContract",
-        "existingFunding",
-        "fundingNumber",
-        "fundingSource",
-        "grbDate",
-        "grtDate",
-        "grtReviewEmailBody",
-        "isso",
-        "issoName",
-        "lifecycleExpiresAt",
-        "lifecycleID",
-        "lifecycleScope",
-        "oitSecurityCollaborator",
-        "oitSecurityCollaboratorName",
         "processStatus",
         "productManager",
         "productManagerComponent",
-        "projectAcronym",
         "projectName",
-        "rejectionReason",
         "requestType",
         "requester",
-        "requesterEmailAddress",
         "solution",
         "status",
         "submittedAt",
-        "trbCollaborator",
-        "trbCollaboratorName",
         "userEUA"
       ],
       "properties": {
@@ -127,7 +97,8 @@
           "type": "string",
           "description": "Is there a cost increase associated with this request",
           "examples": [
-            "YES"
+            "YES",
+            "NOT_SURE"
           ]
         },
         "costIncreaseAmount": {
@@ -166,16 +137,8 @@
           ]
         },
         "eaSupportRequest": {
-          "enum": [
-            "",
-            "false",
-            "true"
-          ],
-          "type": "string",
-          "description": "Does the request need EA support",
-          "examples": [
-            "True"
-          ]
+          "type": "boolean",
+          "description": "Does the request need EA support"
         },
         "existingContract": {
           "type": "string",
@@ -185,16 +148,8 @@
           ]
         },
         "existingFunding": {
-          "enum": [
-            "",
-            "false",
-            "true"
-          ],
-          "type": "string",
-          "description": "Will this project be funded out of an existing source",
-          "examples": [
-            "True"
-          ]
+          "type": "boolean",
+          "description": "Will this project be funded out of an existing source"
         },
         "fundingNumber": {
           "type": "string",
@@ -243,6 +198,13 @@
           "description": "Information System Security Officer (ISSO) for the effort detailed in this request",
           "examples": [
             "John Doe"
+          ]
+        },
+        "lifecycleCostBaseline": {
+          "type": "string",
+          "description": "Cost baseline associated with this LCID",
+          "examples": [
+            "about $10 million"
           ]
         },
         "lifecycleExpiresAt": {
