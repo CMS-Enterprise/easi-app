@@ -40,6 +40,7 @@ const RequestDescription = ({
   const history = useHistory();
   const initialValues = {
     businessNeed: businessCase.businessNeed,
+    currentSolutionSummary: businessCase.currentSolutionSummary,
     cmsBenefit: businessCase.cmsBenefit,
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators
@@ -138,6 +139,39 @@ const RequestDescription = ({
                     id="BusinessCase-BusinessNeedCounter"
                     characterCount={2000 - values.businessNeed.length}
                   />
+                </FieldGroup>
+
+                <FieldGroup
+                  scrollElement="currentSolutionSummary"
+                  error={!!flatErrors.currentSolutionSummary}
+                >
+                  <Label htmlFor="BusinessCase-CurrentSolutionSummary">
+                    Summary of Current Solution
+                  </Label>
+                  <HelpText
+                    id="BusinessCase-CurrentSolutionSummaryHelp"
+                    className="margin-top-1"
+                  >
+                    Provide a brief summary of the solution currently in place
+                    including any associated software products and costs (e.g.
+                    services, software, Operation and Maintenance)
+                  </HelpText>
+                  <FieldErrorMsg>
+                    {flatErrors.currentSolutionSummary}
+                  </FieldErrorMsg>
+                  <Field
+                    as={Textarea}
+                    error={!!flatErrors.currentSolutionSummary}
+                    id="BusinessCase-CurrentSolutionSummary"
+                    maxLength={2000}
+                    name="currentSolutionSummary"
+                    aria-describedby="BusinessCase-CurrentSolutionSummaryCounter BusinessCase-CurrentSolutionSummaryHelp"
+                  />
+                  {/* TODO: NJD - figure out character count (length not working on this) */}
+                  {/* <CharacterCounter
+                    id="BusinessCase-CurrentSolutionSummaryCounter"
+                    characterCount={2000 - values.currentSolutionSummary.length}
+                  /> */}
                 </FieldGroup>
 
                 <FieldGroup
@@ -250,7 +284,7 @@ const RequestDescription = ({
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {
                     dispatchSave();
-                    const newUrl = 'as-is-solution';
+                    const newUrl = 'preferred-solution';
                     history.push(newUrl);
                   } else {
                     window.scrollTo(0, 0);

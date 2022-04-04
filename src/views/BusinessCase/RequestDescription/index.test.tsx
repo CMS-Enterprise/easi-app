@@ -74,6 +74,14 @@ describe('Business case request description form', () => {
       expect(cmsBenefitField).toHaveValue('CMS benefit');
     });
 
+    const currentSolutionSummaryField = screen.getByRole('textbox', {
+      name: /current solution summary/i
+    });
+    userEvent.type(currentSolutionSummaryField, 'Current Solution Summary');
+    await waitFor(() => {
+      expect(currentSolutionSummaryField).toHaveValue('Current Solution');
+    });
+
     const priorityAlignmentField = screen.getByRole('textbox', {
       name: /organizational priorities/i
     });

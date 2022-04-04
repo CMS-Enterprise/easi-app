@@ -185,6 +185,9 @@ export const BusinessCaseFinalValidationSchema = {
     businessNeed: Yup.string()
       .trim()
       .required('Tell us what the business or user need is'),
+    currentSolutionSummary: Yup.string()
+      .trim()
+      .required('Give us a summary of the current solution'),
     cmsBenefit: Yup.string()
       .trim()
       .required('Tell us how CMS will benefit from this effort'),
@@ -198,28 +201,6 @@ export const BusinessCaseFinalValidationSchema = {
       .required(
         'Tell us how you will determine whethere or not this effort is successful'
       )
-  }),
-  asIsSolution: Yup.object().shape({
-    asIsSolution: Yup.object().shape({
-      title: Yup.string()
-        .trim()
-        .required('Enter a title for the "As is" solution'),
-      summary: Yup.string()
-        .trim()
-        .required('Tell us about the "As is" solution'),
-      pros: Yup.string()
-        .trim()
-        .required('Tell us about the pros of "As is" solution'),
-      cons: Yup.string()
-        .trim()
-        .required('Tell us about the cons of "As is" solution'),
-      estimatedLifecycleCost: estimatedLifecycleCostSchema,
-      costSavings: Yup.string()
-        .trim()
-        .required(
-          'Tell us about the cost savings or avoidance associated with this solution'
-        )
-    })
   }),
   preferredSolution: Yup.object().shape({
     preferredSolution: Yup.object().shape({
@@ -442,7 +423,6 @@ export const BusinessCaseDraftValidationSchema = {
     })
   }),
   requestDescription: Yup.object().shape({}),
-  asIsSolution: Yup.object().shape({}),
   preferredSolution: Yup.object().shape({}),
   alternativeA: Yup.object().shape({}),
   alternativeB: Yup.object().shape({})

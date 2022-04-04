@@ -65,6 +65,7 @@ const BusinessCaseReview = ({
           values={{
             businessNeed: businessCase.businessNeed,
             cmsBenefit: businessCase.cmsBenefit,
+            currentSolutionSummary: businessCase.currentSolutionSummary,
             priorityAlignment: businessCase.priorityAlignment,
             successIndicators: businessCase.successIndicators
           }}
@@ -74,7 +75,6 @@ const BusinessCaseReview = ({
         </h2>
         <AlternativeAnalysisReview
           fiscalYear={getFiscalYear(DateTime.fromISO(businessCase.createdAt))}
-          asIsSolution={businessCase.asIsSolution}
           preferredSolution={businessCase.preferredSolution}
           alternativeA={businessCase.alternativeA}
           alternativeB={businessCase.alternativeB}

@@ -63,17 +63,10 @@ export const businessCaseInitialData: BusinessCaseModel = {
     name: ''
   },
   businessNeed: '',
+  currentSolutionSummary: '',
   cmsBenefit: '',
   priorityAlignment: '',
   successIndicators: '',
-  asIsSolution: {
-    title: '',
-    summary: '',
-    pros: '',
-    cons: '',
-    estimatedLifecycleCost: cloneDeep(defaultEstimatedLifecycle),
-    costSavings: ''
-  },
   preferredSolution: cloneDeep(defaultProposedSolution),
   alternativeA: cloneDeep(defaultProposedSolution),
   alternativeB: cloneDeep(defaultProposedSolution),
@@ -81,7 +74,6 @@ export const businessCaseInitialData: BusinessCaseModel = {
 };
 
 type lifecycleCostLinesType = {
-  'As Is': EstimatedLifecycleCostLines;
   Preferred: EstimatedLifecycleCostLines;
   A: EstimatedLifecycleCostLines;
   B: EstimatedLifecycleCostLines;
@@ -149,7 +141,6 @@ export const prepareBusinessCaseForApp = (
   };
 
   const lifecycleCostLines: lifecycleCostLinesType = {
-    'As Is': cloneDeep(defaultEstimatedLifecycle),
     Preferred: cloneDeep(defaultEstimatedLifecycle),
     A: cloneDeep(defaultEstimatedLifecycle),
     B: cloneDeep(defaultEstimatedLifecycle)
@@ -193,16 +184,9 @@ export const prepareBusinessCaseForApp = (
     },
     businessNeed: businessCase.businessNeed,
     cmsBenefit: businessCase.cmsBenefit,
+    currentSolutionSummary: businessCase.currentSolutionSummary,
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
-    asIsSolution: {
-      title: businessCase.asIsTitle,
-      summary: businessCase.asIsSummary,
-      pros: businessCase.asIsPros,
-      cons: businessCase.asIsCons,
-      costSavings: businessCase.asIsCostSavings,
-      estimatedLifecycleCost: lifecycleCostLines['As Is']
-    },
     preferredSolution: {
       title: businessCase.preferredTitle,
       summary: businessCase.preferredSummary,
@@ -276,11 +260,6 @@ export const prepareBusinessCaseForApi = (
     solutionLifecycleCostLines: EstimatedLifecycleCostLines;
     solutionApiName: string;
   }[] = [
-    {
-      solutionLifecycleCostLines:
-        businessCase.asIsSolution.estimatedLifecycleCost,
-      solutionApiName: 'As Is'
-    },
     {
       solutionLifecycleCostLines:
         businessCase.preferredSolution.estimatedLifecycleCost,
@@ -360,13 +339,9 @@ export const prepareBusinessCaseForApi = (
     businessOwner: businessCase.businessOwner.name,
     businessNeed: businessCase.businessNeed,
     cmsBenefit: businessCase.cmsBenefit,
+    currentSolutionSummary: businessCase.currentSolutionSummary,
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
-    asIsTitle: businessCase.asIsSolution.title,
-    asIsSummary: businessCase.asIsSolution.summary,
-    asIsPros: businessCase.asIsSolution.pros,
-    asIsCons: businessCase.asIsSolution.cons,
-    asIsCostSavings: businessCase.asIsSolution.costSavings,
     preferredTitle: businessCase.preferredSolution.title,
     preferredSummary: businessCase.preferredSolution.summary,
     preferredAcquisitionApproach:
