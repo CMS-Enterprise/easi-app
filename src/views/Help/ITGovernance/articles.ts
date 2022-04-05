@@ -1,8 +1,4 @@
-export type ArticleProps = {
-  route: string;
-  type: 'Section 508' | 'IT Governance';
-  translation: string;
-};
+import { ArticleProps } from 'types/articles';
 
 // IT Governance Articles
 const itGovernanceArticles: ArticleProps[] = [
