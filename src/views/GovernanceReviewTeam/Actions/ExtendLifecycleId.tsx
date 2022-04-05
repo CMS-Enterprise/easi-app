@@ -364,7 +364,7 @@ const ExtendLifecycleId = ({
                     onClick={() => {
                       setErrors({});
                       setShouldSendEmail(false);
-                      submitForm();
+                      setTimeout(submitForm);
                     }}
                   />
                 </div>
