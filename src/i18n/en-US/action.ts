@@ -118,7 +118,7 @@ const action = {
     subheading: 'How to proceed?',
     continue: 'Continue',
     completeWithoutEmail: 'Complete action without sending an email',
-    submit: 'Send email',
+    submit: 'Complete action and send email',
     otherOptions: 'show other options'
   },
   uploadFile: {
