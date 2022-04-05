@@ -18,7 +18,7 @@ type ArticleCardProps = {
   className?: string;
 } & ArticleProps;
 
-const BookmarkCard = ({
+const ArticleCard = ({
   className,
   type,
   route,
@@ -53,4 +53,4 @@ const BookmarkCard = ({
   );
 };
 
-export default BookmarkCard;
+export default ArticleCard;
