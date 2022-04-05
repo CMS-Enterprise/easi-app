@@ -6,12 +6,14 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
+	"context"
 
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // Person person
+//
 // swagger:model Person
 type Person struct {
 
@@ -21,14 +23,14 @@ type Person struct {
 	// email
 	Email string `json:"email,omitempty"`
 
-	// given name
-	GivenName string `json:"givenName,omitempty"`
+	// first name
+	FirstName string `json:"firstName,omitempty"`
 
-	// sur name
-	SurName string `json:"surName,omitempty"`
+	// last name
+	LastName string `json:"lastName,omitempty"`
 
-	// telephone number
-	TelephoneNumber string `json:"telephoneNumber,omitempty"`
+	// telephone
+	Telephone string `json:"telephone,omitempty"`
 
 	// user name
 	UserName string `json:"userName,omitempty"`
@@ -36,6 +38,11 @@ type Person struct {
 
 // Validate validates this person
 func (m *Person) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this person based on context it is used
+func (m *Person) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

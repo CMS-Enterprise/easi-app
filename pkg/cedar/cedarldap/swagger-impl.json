@@ -1,13 +1,13 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "Application to lookup Person info and Authenticate\n",
+    "description" : "API's supporting the LDAP API Access to user information. These Read-Only interfaces allow for the lookup and authentication of an EUA user within LDAP",
     "version" : "1.0",
-    "title" : "LDAP"
+    "title" : "LDAP APIs"
   },
-  "host" : "webmethods-apigw.cedarimpl.cms.gov",
-  "basePath" : "/gateway/LDAP/1.0",
-  "schemes" : [ "http" ],
+  "host" : "webmethods-integration.app-alb.cedar-dev.eadg.cmscloud.local",
+  "basePath" : "/api/ldap",
+  "schemes" : [ "https" ],
   "consumes" : [ "application/json" ],
   "produces" : [ "application/json" ],
   "security" : [ {
@@ -15,21 +15,18 @@
   } ],
   "paths" : {
     "/authenticate" : {
-      "get" : {
-        "description" : "Retturn success or failure based on if the passed credentials are valid",
+      "post" : {
+        "description" : "Retturn success or failure if the provided credentials are valid.",
         "operationId" : "authenticate",
-        "consumes" : [ ],
+        "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "principal",
-          "in" : "query",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "credentials",
-          "in" : "query",
-          "required" : true,
-          "type" : "string"
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Credentials"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -44,41 +41,37 @@
         }
       }
     },
-    "/person" : {
+    "/healthCheck" : {
       "get" : {
-        "description" : "Retrieve person information for a given EUA ID",
-        "operationId" : "person",
+        "description" : "Return success",
+        "operationId" : "healthCheck",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/HealthCheckResponse"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied"
+          }
+        }
+      }
+    },
+    "/person/{ids}" : {
+      "get" : {
+        "description" : "Retrieves a list of people based on EUA user IDs.",
+        "operationId" : "personIds",
         "consumes" : [ ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "first_name",
-          "in" : "query",
-          "required" : false,
-          "type" : "string"
-        }, {
-          "name" : "last_name",
-          "in" : "query",
-          "required" : false,
-          "type" : "string"
-        }, {
-          "name" : "email",
-          "in" : "query",
-          "required" : false,
-          "type" : "string"
-        }, {
-          "name" : "telephone",
-          "in" : "query",
-          "required" : false,
-          "type" : "string"
-        }, {
-          "name" : "count_limit",
-          "in" : "query",
-          "required" : false,
-          "type" : "string"
-        }, {
-          "name" : "return_attributes",
-          "in" : "query",
-          "required" : false,
+          "name" : "ids",
+          "in" : "path",
+          "description" : "Comma delimited list of EUA IDs.",
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -109,22 +102,54 @@
         }
       }
     },
-    "/person/{id}" : {
+    "/person" : {
       "get" : {
-        "operationId" : "personId",
+        "description" : "Retrieves a list of people based on search criteria.",
+        "operationId" : "person",
         "consumes" : [ ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
+          "name" : "firstName",
+          "in" : "query",
+          "description" : "The first name of the person.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "lastName",
+          "in" : "query",
+          "description" : "The last name of the person.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "commonName",
+          "in" : "query",
+          "description" : "The common name of the person.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "query",
+          "description" : "The email of the person.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "telephone",
+          "in" : "query",
+          "description" : "The telephone number of the person.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "countLimit",
+          "in" : "query",
+          "description" : "The maximum number of records to return. The maximum number of results allowed in a single call is limited by the server. This value is only used if it is less than the server-side setting",
+          "required" : false,
           "type" : "string"
         } ],
         "responses" : {
           "200" : {
             "description" : "OK",
             "schema" : {
-              "$ref" : "#/definitions/Person"
+              "$ref" : "#/definitions/PersonList"
             }
           },
           "400" : {
@@ -184,11 +209,39 @@
     "PersonList" : {
       "type" : "object",
       "properties" : {
-        "Person_List" : {
+        "Persons" : {
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/Person"
           }
+        },
+        "count" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "maxResultsExceeded" : {
+          "type" : "boolean",
+          "description" : "If the number of records found exceeds the server-side limit, this property will return true."
+        },
+        "message" : {
+          "type" : "string"
+        }
+      }
+    },
+    "HealthCheckResponse" : {
+      "type" : "object",
+      "properties" : {
+        "datetime" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "string"
         }
       }
     },
@@ -201,16 +254,28 @@
         "email" : {
           "type" : "string"
         },
-        "givenName" : {
+        "firstName" : {
           "type" : "string"
         },
-        "surName" : {
+        "lastName" : {
           "type" : "string"
         },
-        "telephoneNumber" : {
+        "telephone" : {
           "type" : "string"
         },
         "userName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Credentials" : {
+      "type" : "object",
+      "required" : [ "credentials", "principal" ],
+      "properties" : {
+        "credentials" : {
+          "type" : "string"
+        },
+        "principal" : {
           "type" : "string"
         }
       }

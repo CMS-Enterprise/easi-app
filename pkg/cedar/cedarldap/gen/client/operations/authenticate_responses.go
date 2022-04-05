@@ -10,10 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	models "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
+	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 )
 
 // AuthenticateReader is a Reader for the Authenticate structure.
@@ -36,9 +35,8 @@ func (o *AuthenticateReader) ReadResponse(response runtime.ClientResponse, consu
 			return nil, err
 		}
 		return nil, result
-
 	default:
-		return nil, runtime.NewAPIError("unknown error", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -47,7 +45,7 @@ func NewAuthenticateOK() *AuthenticateOK {
 	return &AuthenticateOK{}
 }
 
-/*AuthenticateOK handles this case with default header values.
+/* AuthenticateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -56,9 +54,8 @@ type AuthenticateOK struct {
 }
 
 func (o *AuthenticateOK) Error() string {
-	return fmt.Sprintf("[GET /authenticate][%d] authenticateOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[POST /authenticate][%d] authenticateOK  %+v", 200, o.Payload)
 }
-
 func (o *AuthenticateOK) GetPayload() *models.AuthenticateResponse {
 	return o.Payload
 }
@@ -80,7 +77,7 @@ func NewAuthenticateUnauthorized() *AuthenticateUnauthorized {
 	return &AuthenticateUnauthorized{}
 }
 
-/*AuthenticateUnauthorized handles this case with default header values.
+/* AuthenticateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -88,7 +85,7 @@ type AuthenticateUnauthorized struct {
 }
 
 func (o *AuthenticateUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /authenticate][%d] authenticateUnauthorized ", 401)
+	return fmt.Sprintf("[POST /authenticate][%d] authenticateUnauthorized ", 401)
 }
 
 func (o *AuthenticateUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
