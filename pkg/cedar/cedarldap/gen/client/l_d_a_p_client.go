@@ -12,13 +12,13 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// Default l d a p a p is HTTP client.
+// Default l d a p HTTP client.
 var Default = NewHTTPClient(nil)
 
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "webmethods-integration.app-alb.cedar-dev.eadg.cmscloud.local"
+	DefaultHost string = "cdrdevapigw1.awscloud.cms.local:5555"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
 	DefaultBasePath string = "/gateway/LDAP/1.0"
@@ -27,14 +27,14 @@ const (
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
 var DefaultSchemes = []string{"https"}
 
-// NewHTTPClient creates a new l d a p a p is HTTP client.
-func NewHTTPClient(formats strfmt.Registry) *LDAPAPIs {
+// NewHTTPClient creates a new l d a p HTTP client.
+func NewHTTPClient(formats strfmt.Registry) *LDAP {
 	return NewHTTPClientWithConfig(formats, nil)
 }
 
-// NewHTTPClientWithConfig creates a new l d a p a p is HTTP client,
+// NewHTTPClientWithConfig creates a new l d a p HTTP client,
 // using a customizable transport config.
-func NewHTTPClientWithConfig(formats strfmt.Registry, cfg *TransportConfig) *LDAPAPIs {
+func NewHTTPClientWithConfig(formats strfmt.Registry, cfg *TransportConfig) *LDAP {
 	// ensure nullable parameters have default
 	if cfg == nil {
 		cfg = DefaultTransportConfig()
@@ -45,14 +45,14 @@ func NewHTTPClientWithConfig(formats strfmt.Registry, cfg *TransportConfig) *LDA
 	return New(transport, formats)
 }
 
-// New creates a new l d a p a p is client
-func New(transport runtime.ClientTransport, formats strfmt.Registry) *LDAPAPIs {
+// New creates a new l d a p client
+func New(transport runtime.ClientTransport, formats strfmt.Registry) *LDAP {
 	// ensure nullable parameters have default
 	if formats == nil {
 		formats = strfmt.Default
 	}
 
-	cli := new(LDAPAPIs)
+	cli := new(LDAP)
 	cli.Transport = transport
 	cli.Operations = operations.New(transport, formats)
 	return cli
@@ -97,15 +97,15 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 	return cfg
 }
 
-// LDAPAPIs is a client for l d a p a p is
-type LDAPAPIs struct {
+// LDAP is a client for l d a p
+type LDAP struct {
 	Operations operations.ClientService
 
 	Transport runtime.ClientTransport
 }
 
 // SetTransport changes the transport on the client and all its subresources
-func (c *LDAPAPIs) SetTransport(transport runtime.ClientTransport) {
+func (c *LDAP) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.Operations.SetTransport(transport)
 }

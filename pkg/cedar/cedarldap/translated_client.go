@@ -21,7 +21,7 @@ import (
 
 // TranslatedClient is an API client for CEDAR LDAP using EASi language
 type TranslatedClient struct {
-	client        *apiclient.LDAPAPIs
+	client        *apiclient.LDAP
 	apiAuthHeader runtime.ClientAuthInfoWriter
 }
 
@@ -45,6 +45,8 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 }
 
 // FetchUserInfo fetches a user's personal details
+// While this does use the /person/{ids} endpoint, which supports querying multiple IDs,
+// this function only supports querying for a _single_ user's info
 func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*models2.UserInfo, error) {
 	if euaID == "" {
 		appcontext.ZLogger(ctx).Error("No EUA ID specified; unable to request user info from CEDAR LDAP")
@@ -54,7 +56,7 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 	}
 
 	params := operations.NewPersonIdsParams()
-	params.Ids = euaID // This endpoint supports a comma separated list of EUA IDs, or a single ID
+	params.Ids = euaID
 	resp, err := c.client.Operations.PersonIds(params, c.apiAuthHeader)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err), zap.String("euaIDFetched", euaID))

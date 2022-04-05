@@ -1,11 +1,11 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "API's supporting the LDAP API Access to user information. These Read-Only interfaces allow for the lookup and authentication of an EUA user within LDAP",
+    "description" : "API's supporting the LDAP API Access to user information. These Read-Only interfaces allow for the lookup and authentication of an EUA user within LDAP\n",
     "version" : "1.0",
-    "title" : "LDAP APIs"
+    "title" : "LDAP"
   },
-  "host" : "webmethods-integration.app-alb.cedar-dev.eadg.cmscloud.local",
+  "host" : "cdrdevapigw1.awscloud.cms.local:5555",
   "basePath" : "/gateway/LDAP/1.0",
   "schemes" : [ "https" ],
   "consumes" : [ "application/json" ],
