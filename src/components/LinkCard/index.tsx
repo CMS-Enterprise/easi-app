@@ -28,9 +28,9 @@ const LinkCard = ({
       )}
       {...props}
     >
-      <h2 className="margin-top-0 margin-bottom-1">
+      <h3 className="margin-top-0 margin-bottom-1">
         <UswdsReactLink to={link}>{heading}</UswdsReactLink>
-      </h2>
+      </h3>
       <div className="margin-top-1">{children}</div>
     </div>
   );
