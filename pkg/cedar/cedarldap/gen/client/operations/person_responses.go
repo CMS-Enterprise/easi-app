@@ -10,10 +10,9 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	models "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
+	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 )
 
 // PersonReader is a Reader for the Person structure.
@@ -48,9 +47,8 @@ func (o *PersonReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return nil, result
-
 	default:
-		return nil, runtime.NewAPIError("unknown error", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -59,7 +57,7 @@ func NewPersonOK() *PersonOK {
 	return &PersonOK{}
 }
 
-/*PersonOK handles this case with default header values.
+/* PersonOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -70,7 +68,6 @@ type PersonOK struct {
 func (o *PersonOK) Error() string {
 	return fmt.Sprintf("[GET /person][%d] personOK  %+v", 200, o.Payload)
 }
-
 func (o *PersonOK) GetPayload() *models.PersonList {
 	return o.Payload
 }
@@ -92,7 +89,7 @@ func NewPersonBadRequest() *PersonBadRequest {
 	return &PersonBadRequest{}
 }
 
-/*PersonBadRequest handles this case with default header values.
+/* PersonBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -103,7 +100,6 @@ type PersonBadRequest struct {
 func (o *PersonBadRequest) Error() string {
 	return fmt.Sprintf("[GET /person][%d] personBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *PersonBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -125,7 +121,7 @@ func NewPersonUnauthorized() *PersonUnauthorized {
 	return &PersonUnauthorized{}
 }
 
-/*PersonUnauthorized handles this case with default header values.
+/* PersonUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -136,7 +132,6 @@ type PersonUnauthorized struct {
 func (o *PersonUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /person][%d] personUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *PersonUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -158,7 +153,7 @@ func NewPersonInternalServerError() *PersonInternalServerError {
 	return &PersonInternalServerError{}
 }
 
-/*PersonInternalServerError handles this case with default header values.
+/* PersonInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -169,7 +164,6 @@ type PersonInternalServerError struct {
 func (o *PersonInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /person][%d] personInternalServerError  %+v", 500, o.Payload)
 }
-
 func (o *PersonInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

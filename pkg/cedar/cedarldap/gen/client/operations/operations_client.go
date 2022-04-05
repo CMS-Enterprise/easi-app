@@ -9,12 +9,11 @@ import (
 	"fmt"
 
 	"github.com/go-openapi/runtime"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 )
 
 // New creates a new operations API client.
-func New(transport runtime.ClientTransport, formats strfmt.Registry) *Client {
+func New(transport runtime.ClientTransport, formats strfmt.Registry) ClientService {
 	return &Client{transport: transport, formats: formats}
 }
 
@@ -26,28 +25,48 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
+// ClientOption is the option for Client methods
+type ClientOption func(*runtime.ClientOperation)
+
+// ClientService is the interface for Client methods
+type ClientService interface {
+	Authenticate(params *AuthenticateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AuthenticateOK, error)
+
+	HealthCheck(params *HealthCheckParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*HealthCheckOK, error)
+
+	Person(params *PersonParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonOK, error)
+
+	PersonIds(params *PersonIdsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonIdsOK, error)
+
+	SetTransport(transport runtime.ClientTransport)
+}
+
 /*
-Authenticate Retturn success or failure based on if the passed credentials are valid
+  Authenticate Retturn success or failure if the provided credentials are valid.
 */
-func (a *Client) Authenticate(params *AuthenticateParams, authInfo runtime.ClientAuthInfoWriter) (*AuthenticateOK, error) {
+func (a *Client) Authenticate(params *AuthenticateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AuthenticateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewAuthenticateParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "authenticate",
-		Method:             "GET",
+		Method:             "POST",
 		PathPattern:        "/authenticate",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &AuthenticateReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -62,27 +81,70 @@ func (a *Client) Authenticate(params *AuthenticateParams, authInfo runtime.Clien
 }
 
 /*
-Person Retrieve person information for a given EUA ID
+  HealthCheck Return success
 */
-func (a *Client) Person(params *PersonParams, authInfo runtime.ClientAuthInfoWriter) (*PersonOK, error) {
+func (a *Client) HealthCheck(params *HealthCheckParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*HealthCheckOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewHealthCheckParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "healthCheck",
+		Method:             "GET",
+		PathPattern:        "/healthCheck",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &HealthCheckReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*HealthCheckOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for healthCheck: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  Person Retrieves a list of people based on search criteria.
+*/
+func (a *Client) Person(params *PersonParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPersonParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "person",
 		Method:             "GET",
 		PathPattern:        "/person",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PersonReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -97,37 +159,41 @@ func (a *Client) Person(params *PersonParams, authInfo runtime.ClientAuthInfoWri
 }
 
 /*
-PersonID person Id API
+  PersonIds Retrieves a list of people based on EUA user IDs.
 */
-func (a *Client) PersonID(params *PersonIDParams, authInfo runtime.ClientAuthInfoWriter) (*PersonIDOK, error) {
+func (a *Client) PersonIds(params *PersonIdsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonIdsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewPersonIDParams()
+		params = NewPersonIdsParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "personId",
+	op := &runtime.ClientOperation{
+		ID:                 "personIds",
 		Method:             "GET",
-		PathPattern:        "/person/{id}",
+		PathPattern:        "/person/{ids}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &PersonIDReader{formats: a.formats},
+		Reader:             &PersonIdsReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*PersonIDOK)
+	success, ok := result.(*PersonIdsOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for personId: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for personIds: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

@@ -45,6 +45,8 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 }
 
 // FetchUserInfo fetches a user's personal details
+// While this does use the /person/{ids} endpoint, which supports querying multiple IDs,
+// this function only supports querying for a _single_ user's info
 func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*models2.UserInfo, error) {
 	if euaID == "" {
 		appcontext.ZLogger(ctx).Error("No EUA ID specified; unable to request user info from CEDAR LDAP")
@@ -53,9 +55,9 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 		}
 	}
 
-	params := operations.NewPersonIDParams()
-	params.ID = euaID
-	resp, err := c.client.Operations.PersonID(params, c.apiAuthHeader)
+	params := operations.NewPersonIdsParams()
+	params.Ids = euaID
+	resp, err := c.client.Operations.PersonIds(params, c.apiAuthHeader)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err), zap.String("euaIDFetched", euaID))
 		return nil, &apperrors.ExternalAPIError{
@@ -75,15 +77,20 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 			Source:    "CEDAR LDAP",
 		}
 	}
-	if resp.Payload.UserName == "" {
+
+	// If there's nobody returned, we should throw an error
+	if len(resp.Payload.Persons) == 0 || resp.Payload.Persons[0].UserName == "" {
 		return nil, &apperrors.InvalidEUAIDError{
 			EUAID: euaID,
 		}
 	}
 
+	// At this point, we know there's an entry in the response, so lets grab it
+	person := resp.Payload.Persons[0]
+
 	return &models2.UserInfo{
-		CommonName: resp.Payload.CommonName,
-		Email:      models2.NewEmailAddress(resp.Payload.Email),
-		EuaUserID:  resp.Payload.UserName,
+		CommonName: person.CommonName,
+		Email:      models2.NewEmailAddress(person.Email),
+		EuaUserID:  person.UserName,
 	}, nil
 }
