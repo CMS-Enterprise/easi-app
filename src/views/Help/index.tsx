@@ -5,18 +5,15 @@ import MainContent from 'components/MainContent';
 import NotFound from 'views/NotFound';
 
 import AllHelp from './All';
+import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
 import Section508 from './Section508';
-
-const Home = () => {
-  return <div className="grid-container" />;
-};
 
 const Help = () => {
   return (
     <MainContent className="grid-container">
       <Switch>
-        <Route path="/help" exact render={() => <Home />} />
+        <Route path="/help" exact render={() => <HelpHome />} />
         <Route path="/help/all" render={() => <AllHelp />} />
         <Route path="/help/it-governance" render={() => <ITGovernance />} />
         <Route path="/help/section-508" render={() => <Section508 />} />
