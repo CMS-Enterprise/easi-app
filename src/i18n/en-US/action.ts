@@ -23,6 +23,7 @@ const action = {
     backLink: 'Change',
     heading: 'Actions on request',
     subheading: 'How to proceed?',
+    lifecycleId: 'Lifecycle ID',
     feedbackLabel: 'This email will be sent to the requester',
     nextStepsLabel: 'Next Steps',
     nextStepsHelpText:

@@ -120,7 +120,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
               {actionName}&nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </div>
-            <div className="tablet:grid-col-9 margin-bottom-7">
+            <div className="margin-bottom-7">
               <Form
                 onSubmit={e => {
                   handleSubmit(e);
@@ -135,7 +135,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                 >
                   <Label
                     htmlFor="SubmitActionForm-Feedback"
-                    className="text-normal"
+                    className="line-height-body-2 text-normal"
                   >
                     {t('action:submitAction.feedbackLabel')}
                   </Label>

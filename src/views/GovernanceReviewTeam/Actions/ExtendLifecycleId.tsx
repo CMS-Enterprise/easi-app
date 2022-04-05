@@ -168,7 +168,7 @@ const ExtendLifecycleId = ({
                 {t('extendLcid.back')}
               </Link>
             </div>
-            <div className="tablet:grid-col-9 margin-bottom-7">
+            <div className="margin-bottom-7">
               <h3 className="margin-top-3 margin-bottom-2">
                 {t('extendLcid.currentLcid')}
               </h3>
@@ -204,7 +204,7 @@ const ExtendLifecycleId = ({
               <h3 className="margin-top-5 margin-bottom-2">
                 {t('extendLcid.newLcid')}
               </h3>
-              <MandatoryFieldsAlert />
+              <MandatoryFieldsAlert textClassName="font-body-md" />
               <Form>
                 <FieldGroup scrollElement="validDate">
                   <fieldset className="usa-fieldset margin-top-4">

@@ -22,6 +22,7 @@ import flattenErrors from 'utils/flattenErrors';
 import { rejectIntakeSchema } from 'validations/actionSchema';
 
 import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+import EmailRecipientsFields from './EmailRecipientsFields';
 
 const RejectIntake = () => {
   const { systemId } = useParams<{ systemId: string }>();
@@ -112,12 +113,12 @@ const RejectIntake = () => {
             <PageHeading data-testid="not-approved">
               {t('rejectIntake.heading')}
             </PageHeading>
-            <h2>{t('rejectIntake.subheading')}</h2>
+            <h3>{t('rejectIntake.subheading')}</h3>
             <p>
               {t('rejectIntake.actionDescription')}{' '}
               <Link to={backLink}>{t('rejectIntake.backLink')}</Link>
             </p>
-            <div className="tablet:grid-col-9 margin-bottom-7">
+            <div className="margin-bottom-7">
               <Form
                 onSubmit={e => {
                   handleSubmit(e);
@@ -125,10 +126,15 @@ const RejectIntake = () => {
                 }}
               >
                 <FieldGroup scrollElement="reason" error={!!flatErrors.reason}>
-                  <Label htmlFor="RejectIntakeForm-Reason">
+                  <Label
+                    htmlFor="RejectIntakeForm-Reason"
+                    className="line-height-body-2"
+                  >
                     {t('rejectIntake.reasonLabel')}
                   </Label>
-                  <HelpText>{t('rejectIntake.reasonHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('rejectIntake.reasonHelpText')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.reason}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -141,11 +147,17 @@ const RejectIntake = () => {
                 <FieldGroup
                   scrollElement="nextSteps"
                   error={!!flatErrors.nextSteps}
+                  className="margin-top-4"
                 >
-                  <Label htmlFor="RejectIntakeForm-NextSteps">
+                  <Label
+                    htmlFor="RejectIntakeForm-NextSteps"
+                    className="line-height-body-2"
+                  >
                     {t('rejectIntake.nextStepsLabel')}
                   </Label>
-                  <HelpText>{t('rejectIntake.nextStepsHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('rejectIntake.nextStepsHelpText')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.nextSteps}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -158,11 +170,19 @@ const RejectIntake = () => {
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
+                  className="margin-top-5"
                 >
-                  <Label htmlFor="RejectIntakeForm-Feedback">
+                  <EmailRecipientsFields />
+                  <Label
+                    htmlFor="RejectIntakeForm-Feedback"
+                    className="margin-top-0 line-height-body-2 text-normal"
+                  >
                     {t('rejectIntake.feedbackLabel')}
                   </Label>
-                  <HelpText id="RejectIntakeForm-SubmitHelp">
+                  <HelpText
+                    id="RejectIntakeForm-SubmitHelp"
+                    className="margin-top-05 line-height-body-5 text-base"
+                  >
                     {t('rejectIntake.submitHelp')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.feedback}</FieldErrorMsg>
@@ -188,7 +208,7 @@ const RejectIntake = () => {
                     {t('rejectIntake.submit')}
                   </Button>
                 </div>
-                <div>
+                <div className="margin-bottom-2">
                   <CompleteWithoutEmailButton
                     onClick={() => {
                       setErrors({});

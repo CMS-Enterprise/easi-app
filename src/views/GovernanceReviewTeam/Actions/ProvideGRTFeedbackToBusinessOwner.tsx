@@ -5,6 +5,7 @@ import { DocumentNode, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -97,15 +98,20 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 data-testid="provide-feedback-biz-case">
+            <PageHeading
+              data-testid="provide-feedback-biz-case"
+              className="margin-top-0 margin-bottom-3"
+            >
               {t('submitAction.heading')}
-            </h1>
-            <h3>{t('submitAction.subheading')}</h3>
+            </PageHeading>
+            <h3 className="margin-top-3 margin-bottom-2">
+              {t('submitAction.subheading')}
+            </h3>
             <p>
               {actionName} &nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
-            <div className="tablet:grid-col-9 margin-bottom-7">
+            <div className="margin-bottom-7">
               <Form
                 onSubmit={e => {
                   handleSubmit(e);
@@ -116,10 +122,13 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                   scrollElement="grtFeedback"
                   error={!!flatErrors.grtFeedback}
                 >
-                  <Label htmlFor="ProvideGRTFeedbackForm-GRTFeedback">
+                  <Label
+                    htmlFor="ProvideGRTFeedbackForm-GRTFeedback"
+                    className="line-height-body-2"
+                  >
                     {t('provideGRTFeedback.grtFeedbackLabel')}
                   </Label>
-                  <HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
                     {t('provideGRTFeedback.grtFeedbackHelpText')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.grtFeedback}</FieldErrorMsg>
@@ -131,14 +140,15 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     name="grtFeedback"
                   />
                 </FieldGroup>
-                <EmailRecipientsFields />
                 <FieldGroup
                   scrollElement="emailBody"
                   error={!!flatErrors.emailBody}
+                  className="margin-top-5"
                 >
+                  <EmailRecipientsFields />
                   <Label
                     htmlFor="ProvideGRTFeedbackForm-EmailBody"
-                    className="text-normal"
+                    className="margin-top-0 line-height-body-2 text-normal"
                   >
                     {t('submitAction.feedbackLabel')}
                   </Label>
