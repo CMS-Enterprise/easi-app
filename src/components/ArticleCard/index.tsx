@@ -16,7 +16,7 @@ import './index.scss';
 
 type ArticleCardProps = {
   className?: string;
-} & ArticleProps;
+};
 
 const ArticleCard = ({
   className,
