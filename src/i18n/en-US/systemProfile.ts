@@ -27,6 +27,10 @@ const systemProfile = {
     pointOfContact: 'Point of contact',
     sendEmail: 'Send an email',
     moreContact: 'More points of contact',
+    description: {
+      more: 'Read more',
+      less: 'Read less'
+    },
     summary: {
       back: 'Back to All Systems',
       expand: 'Expand system summary',

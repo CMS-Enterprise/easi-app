@@ -47,12 +47,12 @@ func generateSchema(object interface{}, version translation.SchemaVersion, filen
 // Note for future devs: the go/types package could be used to extract static type information on each file in that directory,
 // but there's no way to convert a types.Type to the reflect.Type that the jsonschema package could use.
 func main() {
-	generateSchema(intakemodels.EASIAction{}, translation.IntakeInputSchemaEASIActionV01, "easi_action.json")
+	generateSchema(intakemodels.EASIAction{}, translation.IntakeInputSchemaEASIActionVersion, "easi_action.json")
 
 	// includes business solution and lifecycle cost as sub-items
-	generateSchema(intakemodels.EASIBizCase{}, translation.IntakeInputSchemaEASIBizCaseV01, "easi_business_case.json")
+	generateSchema(intakemodels.EASIBizCase{}, translation.IntakeInputSchemaEASIBizCaseVersion, "easi_business_case.json")
 
-	generateSchema(intakemodels.EASIGrtFeedback{}, translation.IntakeInputSchemaEASIGrtFeedbackV01, "easi_grt_feedback.json")
-	generateSchema(intakemodels.EASIIntake{}, translation.IntakeInputSchemaEASIIntakeV01, "easi_system_intake.json")
-	generateSchema(intakemodels.EASINote{}, translation.IntakeInputSchemaEASINoteV01, "easi_note.json")
+	generateSchema(intakemodels.EASIGrtFeedback{}, translation.IntakeInputSchemaEASIGrtFeedbackVersion, "easi_grt_feedback.json")
+	generateSchema(intakemodels.EASIIntake{}, translation.IntakeInputSchemaEASIIntakeVersion, "easi_system_intake.json")
+	generateSchema(intakemodels.EASINote{}, translation.IntakeInputSchemaEASINoteVersion, "easi_note.json")
 }
