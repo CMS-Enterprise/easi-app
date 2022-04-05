@@ -59,12 +59,14 @@ const Home = () => {
               </div>
             )}
             <div className="tablet:grid-col-12">
-              <PageHeading>{t('home:title')}</PageHeading>
-              <p className="line-height-body-5 font-body-lg text-light margin-bottom-6">
+              <PageHeading className="margin-bottom-0">
+                {t('home:title')}
+              </PageHeading>
+              <p className="line-height-body-5 font-body-lg text-light margin-bottom-5 margin-top-1">
                 {t('home:subtitle')}
               </p>
               <hr className="margin-bottom-4" aria-hidden />
-              <h2>{t('home:actions.title')}</h2>
+              <h2 className="margin-bottom-2">{t('home:actions.title')}</h2>
               <div className="display-flex flex-row">
                 <LinkCard
                   link="/system/making-a-request"
