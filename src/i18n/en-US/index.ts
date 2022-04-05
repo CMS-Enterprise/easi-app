@@ -12,6 +12,7 @@ import general from './general';
 import governanceReviewBoard from './governanceReviewBoard';
 import governanceReviewTeam from './governanceReviewTeam';
 import header from './header';
+import help from './help';
 import home from './home';
 import intake from './intake';
 import makingARequest from './makingARequest';
@@ -33,6 +34,7 @@ const enUS = {
   governanceReviewBoard,
   governanceReviewTeam,
   header,
+  help,
   home,
   intake,
   makingARequest,
