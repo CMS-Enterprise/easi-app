@@ -110,7 +110,8 @@ describe('Accessibility Requests', () => {
     cy.localLogin({ name: 'A11Y' });
     cy.visit('/');
     cy.contains('h1', 'Welcome to EASi');
-    cy.contains('h2', 'My governance requests');
+    cy.contains('h2', 'Governance Services');
+    cy.contains('h3', 'My governance requests');
     cy.get('table').within(() => {
       cy.get('thead').within(() => {
         cy.contains('th', 'Request name');
