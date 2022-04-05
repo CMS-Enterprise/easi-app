@@ -6,7 +6,7 @@
     "title" : "LDAP APIs"
   },
   "host" : "webmethods-integration.app-alb.cedar-dev.eadg.cmscloud.local",
-  "basePath" : "/api/ldap",
+  "basePath" : "/gateway/LDAP/1.0",
   "schemes" : [ "https" ],
   "consumes" : [ "application/json" ],
   "produces" : [ "application/json" ],

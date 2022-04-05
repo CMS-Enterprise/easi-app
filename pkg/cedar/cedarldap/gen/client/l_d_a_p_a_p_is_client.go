@@ -21,7 +21,7 @@ const (
 	DefaultHost string = "webmethods-integration.app-alb.cedar-dev.eadg.cmscloud.local"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
-	DefaultBasePath string = "/api/ldap"
+	DefaultBasePath string = "/gateway/LDAP/1.0"
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
