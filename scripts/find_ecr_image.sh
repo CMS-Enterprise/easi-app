@@ -9,7 +9,7 @@ if [[ $# -lt 2 ]]; then
 fi
 
 if [[ "$( aws ecr describe-images --repository-name="$1" --image-ids=imageTag="$2" 2> /dev/null )" ]]; then
-    return 1
+    echo 1 # Image exists
 else
-    return 0
+    echo 0 # Image does not exist
 fi
