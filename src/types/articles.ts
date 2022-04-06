@@ -1,5 +1,7 @@
+export type ArticleTypeProps = 'Section 508' | 'IT Governance';
+
 export type ArticleProps = {
   route: string;
-  type: 'Section 508' | 'IT Governance';
+  type: ArticleTypeProps;
   translation: string;
 };
