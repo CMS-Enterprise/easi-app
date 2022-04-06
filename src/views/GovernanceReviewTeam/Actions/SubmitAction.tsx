@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { DocumentNode, useMutation } from '@apollo/client';
@@ -16,6 +16,9 @@ import { BasicActionInput } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import { actionSchema } from 'validations/actionSchema';
 
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+import EmailRecipientsFields from './EmailRecipientsFields';
+
 type ActionInput = {
   input: BasicActionInput;
 };
@@ -29,6 +32,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('action');
   const history = useHistory();
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const [mutate, mutationResult] = useMutation<ActionInput>(query);
 
@@ -38,7 +42,8 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
       variables: {
         input: {
           intakeId: systemId,
-          feedback
+          feedback,
+          shouldSendEmail
         }
       }
     }).then(response => {
@@ -64,7 +69,13 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ActionForm>) => {
-        const { errors, setErrors, handleSubmit } = formikProps;
+        const {
+          errors,
+          setErrors,
+          handleSubmit,
+          submitForm,
+          setFieldValue
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -93,26 +104,39 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading data-testid="grt-submit-action-view">
+            <PageHeading
+              data-testid="grt-submit-action-view"
+              className="margin-top-0 margin-bottom-3"
+            >
               {t('submitAction.heading')}
             </PageHeading>
-            <h2>{t('submitAction.subheading')}</h2>
-            <p>
+            <h3 className="margin-top-3 margin-bottom-2">
+              {t('submitAction.subheading')}
+            </h3>
+            <div className="margin-bottom-05 text-bold line-height-body-2">
+              {t('extendLcid.selectedAction')}
+            </div>
+            <div>
               {actionName}&nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
-            </p>
-            <div className="tablet:grid-col-9 margin-bottom-7">
+            </div>
+            <div className="margin-bottom-7">
               <Form
                 onSubmit={e => {
                   handleSubmit(e);
                   window.scrollTo(0, 0);
                 }}
               >
+                <EmailRecipientsFields className="margin-top-3" />
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
+                  className="margin-top-2"
                 >
-                  <Label htmlFor="SubmitActionForm-Feedback">
+                  <Label
+                    htmlFor="SubmitActionForm-Feedback"
+                    className="line-height-body-2 text-normal"
+                  >
                     {t('action:submitAction.feedbackLabel')}
                   </Label>
                   <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
@@ -124,14 +148,31 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                     name="feedback"
                   />
                 </FieldGroup>
-                <Button
-                  className="margin-top-2"
-                  type="submit"
-                  onClick={() => setErrors({})}
-                  // disabled={isSubmitting}
-                >
-                  {t('submitAction.submit')}
-                </Button>
+                <div>
+                  <Button
+                    className="margin-top-2"
+                    type="submit"
+                    // disabled={isSubmitting}
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(true);
+                      setFieldValue('skipEmail', false);
+                    }}
+                  >
+                    {t('submitAction.submit')}
+                  </Button>
+                </div>
+                <div>
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(false);
+                      setFieldValue('skipEmail', true);
+                      // todo hack timeout to propagate skipEmail value to the validator before submission
+                      setTimeout(submitForm);
+                    }}
+                  />
+                </div>
               </Form>
             </div>
           </>

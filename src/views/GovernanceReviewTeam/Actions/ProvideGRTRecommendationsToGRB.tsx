@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -21,6 +21,9 @@ import { ProvideGRTFeedbackForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { provideGRTFeedbackSchema } from 'validations/actionSchema';
 
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+import EmailRecipientsFields from './EmailRecipientsFields';
+
 const ProvideGRTRecommendationsToGRB = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
@@ -28,6 +31,7 @@ const ProvideGRTRecommendationsToGRB = () => {
   const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(
     MarkReadyForGRBQuery
   );
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -43,7 +47,8 @@ const ProvideGRTRecommendationsToGRB = () => {
         input: {
           emailBody,
           feedback: grtFeedback,
-          intakeID: systemId
+          intakeID: systemId,
+          shouldSendEmail
         }
       }
     }).then(() => {
@@ -61,7 +66,13 @@ const ProvideGRTRecommendationsToGRB = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ProvideGRTFeedbackForm>) => {
-        const { errors, setErrors, handleSubmit } = formikProps;
+        const {
+          errors,
+          setErrors,
+          handleSubmit,
+          submitForm,
+          setFieldValue
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -82,15 +93,19 @@ const ProvideGRTRecommendationsToGRB = () => {
                 })}
               </ErrorAlert>
             )}
-            <h1 data-testid="ready-for-grb">{t('submitAction.heading')}</h1>
-            <h2>{t('submitAction.subheading')}</h2>
+            <PageHeading
+              data-testid="ready-for-grb"
+              className="margin-top-0 margin-bottom-3"
+            >
+              {t('submitAction.heading')}
+            </PageHeading>
+            <h3 className="margin-top-3 margin-bottom-2">
+              {t('submitAction.subheading')}
+            </h3>
             <p>
               {t('actions.readyForGrb')} &nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
-            <div className="tablet:grid-col-6">
-              <MandatoryFieldsAlert />
-            </div>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form
                 onSubmit={e => {
@@ -102,10 +117,13 @@ const ProvideGRTRecommendationsToGRB = () => {
                   scrollElement="grtFeedback"
                   error={!!flatErrors.grtFeedback}
                 >
-                  <Label htmlFor="ProvideGRTFeedbackForm-GRTFeedback">
+                  <Label
+                    htmlFor="ProvideGRTFeedbackForm-GRTFeedback"
+                    className="line-height-body-2"
+                  >
                     {t('grbRecommendations.recommendationLabel')}
                   </Label>
-                  <HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
                     {t('grbRecommendations.recommendationHelpText')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.grtFeedback}</FieldErrorMsg>
@@ -120,8 +138,13 @@ const ProvideGRTRecommendationsToGRB = () => {
                 <FieldGroup
                   scrollElement="emailBody"
                   error={!!flatErrors.emailBody}
+                  className="margin-top-5"
                 >
-                  <Label htmlFor="ProvideGRTFeedbackForm-EmailBody">
+                  <EmailRecipientsFields />
+                  <Label
+                    htmlFor="ProvideGRTFeedbackForm-EmailBody"
+                    className="margin-top-0 line-height-body-2 text-normal"
+                  >
                     {t('submitAction.feedbackLabel')}
                   </Label>
                   <FieldErrorMsg>{flatErrors.emailBody}</FieldErrorMsg>
@@ -133,13 +156,29 @@ const ProvideGRTRecommendationsToGRB = () => {
                     name="emailBody"
                   />
                 </FieldGroup>
-                <Button
-                  className="margin-top-2"
-                  type="submit"
-                  onClick={() => setErrors({})}
-                >
-                  {t('provideGRTFeedback.submit')}
-                </Button>
+                <div>
+                  <Button
+                    className="margin-top-2"
+                    type="submit"
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(true);
+                      setFieldValue('skipEmail', false);
+                    }}
+                  >
+                    {t('submitAction.submit')}
+                  </Button>
+                </div>
+                <div>
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(false);
+                      setFieldValue('skipEmail', true);
+                      setTimeout(submitForm);
+                    }}
+                  />
+                </div>
               </Form>
             </div>
           </>

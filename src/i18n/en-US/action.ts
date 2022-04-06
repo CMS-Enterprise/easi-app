@@ -23,10 +23,8 @@ const action = {
     backLink: 'Change',
     heading: 'Actions on request',
     subheading: 'How to proceed?',
+    lifecycleId: 'Lifecycle ID',
     feedbackLabel: 'This email will be sent to the requester',
-    submit: 'Email decision and close this request',
-    submitHelp:
-      'The information you add to ‘Scope of Lifecycle ID’ and ‘Next Steps’ will be added to this email and then sent. Do not repeat any of that information in the field below.',
     nextStepsLabel: 'Next Steps',
     nextStepsHelpText:
       'Provide the requester with some recommendations on how to continue their process. For example, “begin your ATO” or “update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID.',
@@ -55,11 +53,14 @@ const action = {
     back: 'Change',
     heading: 'Actions on request',
     subheading: 'How to proceed?',
+    selectedAction: 'Selected action',
     action: 'Extend Lifecycle ID',
-    currentLcid: 'Lifecycle ID',
+    lifecycleId: 'Lifecycle ID',
+    currentLcid: 'Current Lifecycle ID',
     currentLcidExpiration: 'Current expiration date',
+    newLcid: 'New Lifecycle ID',
     expirationDate: {
-      label: 'New expiration date',
+      label: 'Expiration date',
       helpText: 'For example 08 02 1776',
       month: 'Month',
       day: 'Day',
@@ -67,11 +68,16 @@ const action = {
     },
     currentScope: 'Current Scope',
     currentNextSteps: 'Current Next Steps',
-    currentCostBaseline: 'Current Project Cost Baseline (Optional)',
+    currentCostBaseline: 'Current Project Cost Baseline',
     noCostBaseline: 'There is no Cost Baseline associated with this LCID',
+    scopeHelpText:
+      'Tell the Requester what is covered by this Lifecycle ID and what work it limits the project team to. This information will be included in your email to the Requester.',
+    nextStepsHelpText:
+      'Provide the Requester with some recommendations on how to continue their process. For example, “Begin your ATO” or “Update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID. This information will be included in your email to the Requester.',
+    costBaselineHelpText:
+      'Enter the current cost baseline for the project for the first two planned fisical years of the project. This information will be included in your email to the Requester.',
     submissionInfo:
-      'An email will automatically be sent to the Business Owner letting them know of the new expiration date.',
-    submit: 'Extend Lifecycle ID'
+      'The content for this email is automatically generated to notify the Requester of the new expiration date.'
   },
   rejectIntake: {
     backLink: 'Change',
@@ -91,7 +97,6 @@ const action = {
   },
   provideGRTFeedback: {
     grtFeedbackLabel: 'GRT feedback to the business owner',
-    submit: 'Email Decision & Progress to next step',
     grtFeedbackHelpText:
       'This feedback will be added to the bottom of both the Draft Business Case and Final Business Case pages.'
   },
@@ -100,12 +105,20 @@ const action = {
     recommendationHelpText:
       'These are the Governance Review Team recommendations for the Governance Review Board.'
   },
+  emailRecipients: {
+    email: 'Email',
+    optional: '(optional)',
+    emailRequired:
+      'An email to the Requester is required when closing, approving, or denying the request.'
+  },
   submitAction: {
     backLink: 'Change',
     heading: 'Actions on request',
     feedbackLabel: 'This email will be sent to the requester',
     subheading: 'How to proceed?',
-    submit: 'Send email',
+    continue: 'Continue',
+    completeWithoutEmail: 'Complete action without sending an email',
+    submit: 'Complete action and send email',
     otherOptions: 'show other options'
   },
   uploadFile: {
