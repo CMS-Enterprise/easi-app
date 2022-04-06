@@ -75,16 +75,16 @@ const HelpHome = () => {
       </PageHeading>
       <p className="margin-bottom-4">{t('additionalContacts.subheading')}</p>
       <div className="grid-row grid-gap-lg">
-        {contacts.map(({ key, title, copy, email }) => (
+        {Object.keys(contacts).map((key: any) => (
           <div key={key} className="tablet:grid-col-4 padding-bottom-4">
             <PageHeading
               headingLevel="h3"
               className="margin-top-0 margin-bottom-1"
             >
-              {title}
+              {contacts[key].title}
             </PageHeading>
             <p className="margin-top-0 margin-bottom-2 line-height-body-4">
-              {copy}
+              {contacts[key].copy}
             </p>
             <PageHeading
               headingLevel="h4"
@@ -92,8 +92,11 @@ const HelpHome = () => {
             >
               Email addresses
             </PageHeading>
-            <UswdsLink href={`mailto:${email}`} className="margin-top-0">
-              {email}
+            <UswdsLink
+              href={`mailto:${contacts[key].email}`}
+              className="margin-top-0"
+            >
+              {contacts[key].email}
             </UswdsLink>
           </div>
         ))}
