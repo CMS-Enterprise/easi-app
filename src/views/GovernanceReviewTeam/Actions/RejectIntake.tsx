@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -21,10 +21,14 @@ import { RejectIntakeForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { rejectIntakeSchema } from 'validations/actionSchema';
 
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+import EmailRecipientsFields from './EmailRecipientsFields';
+
 const RejectIntake = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const [mutate, mutationResult] = useMutation<
     RejectIntakeType,
@@ -48,7 +52,8 @@ const RejectIntake = () => {
       feedback,
       intakeId: systemId,
       nextSteps,
-      reason
+      reason,
+      shouldSendEmail
     };
 
     mutate({
@@ -70,7 +75,13 @@ const RejectIntake = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<RejectIntakeForm>) => {
-        const { errors, setErrors, handleSubmit } = formikProps;
+        const {
+          errors,
+          setErrors,
+          handleSubmit,
+          submitForm,
+          setFieldValue
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -102,12 +113,12 @@ const RejectIntake = () => {
             <PageHeading data-testid="not-approved">
               {t('rejectIntake.heading')}
             </PageHeading>
-            <h2>{t('rejectIntake.subheading')}</h2>
+            <h3>{t('rejectIntake.subheading')}</h3>
             <p>
               {t('rejectIntake.actionDescription')}{' '}
               <Link to={backLink}>{t('rejectIntake.backLink')}</Link>
             </p>
-            <div className="tablet:grid-col-9 margin-bottom-7">
+            <div className="margin-bottom-7">
               <Form
                 onSubmit={e => {
                   handleSubmit(e);
@@ -115,10 +126,15 @@ const RejectIntake = () => {
                 }}
               >
                 <FieldGroup scrollElement="reason" error={!!flatErrors.reason}>
-                  <Label htmlFor="RejectIntakeForm-Reason">
+                  <Label
+                    htmlFor="RejectIntakeForm-Reason"
+                    className="line-height-body-2"
+                  >
                     {t('rejectIntake.reasonLabel')}
                   </Label>
-                  <HelpText>{t('rejectIntake.reasonHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('rejectIntake.reasonHelpText')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.reason}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -131,11 +147,17 @@ const RejectIntake = () => {
                 <FieldGroup
                   scrollElement="nextSteps"
                   error={!!flatErrors.nextSteps}
+                  className="margin-top-4"
                 >
-                  <Label htmlFor="RejectIntakeForm-NextSteps">
+                  <Label
+                    htmlFor="RejectIntakeForm-NextSteps"
+                    className="line-height-body-2"
+                  >
                     {t('rejectIntake.nextStepsLabel')}
                   </Label>
-                  <HelpText>{t('rejectIntake.nextStepsHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('rejectIntake.nextStepsHelpText')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.nextSteps}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -148,11 +170,19 @@ const RejectIntake = () => {
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
+                  className="margin-top-5"
                 >
-                  <Label htmlFor="RejectIntakeForm-Feedback">
+                  <EmailRecipientsFields />
+                  <Label
+                    htmlFor="RejectIntakeForm-Feedback"
+                    className="margin-top-0 line-height-body-2 text-normal"
+                  >
                     {t('rejectIntake.feedbackLabel')}
                   </Label>
-                  <HelpText id="RejectIntakeForm-SubmitHelp">
+                  <HelpText
+                    id="RejectIntakeForm-SubmitHelp"
+                    className="margin-top-05 line-height-body-5 text-base"
+                  >
                     {t('rejectIntake.submitHelp')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.feedback}</FieldErrorMsg>
@@ -165,13 +195,29 @@ const RejectIntake = () => {
                     aria-describedby="RejectIntakeForm-SubmitHelp"
                   />
                 </FieldGroup>
-                <Button
-                  className="margin-top-2"
-                  type="submit"
-                  onClick={() => setErrors({})}
-                >
-                  {t('rejectIntake.submit')}
-                </Button>
+                <div>
+                  <Button
+                    className="margin-top-2"
+                    type="submit"
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(true);
+                      setFieldValue('skipEmail', false);
+                    }}
+                  >
+                    {t('rejectIntake.submit')}
+                  </Button>
+                </div>
+                <div className="margin-bottom-2">
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      setErrors({});
+                      setShouldSendEmail(false);
+                      setFieldValue('skipEmail', true);
+                      setTimeout(submitForm);
+                    }}
+                  />
+                </div>
               </Form>
               <UswdsLink
                 href="https://www.surveymonkey.com/r/DF3Q9L2"

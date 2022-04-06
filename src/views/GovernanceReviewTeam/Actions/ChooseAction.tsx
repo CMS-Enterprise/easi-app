@@ -251,10 +251,13 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
 
   return (
     <>
-      <PageHeading data-testid="grt-actions-view">
+      <PageHeading
+        data-testid="grt-actions-view"
+        className="margin-top-0 margin-bottom-3"
+      >
         {t('submitAction.heading')}
       </PageHeading>
-      <h2 className="margin-y-3">{t('submitAction.subheading')}</h2>
+      <h3 className="margin-y-3">{t('submitAction.subheading')}</h3>
       <form onSubmit={onSubmit}>
         <ActionContext.Provider
           value={{
@@ -279,7 +282,7 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
           </RadioGroup>
         </ActionContext.Provider>
         <Button className="margin-top-5" type="submit" disabled={!actionRoute}>
-          Continue
+          {t('submitAction.continue')}
         </Button>
       </form>
       <AnythingWrongSurvey />

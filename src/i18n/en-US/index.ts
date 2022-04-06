@@ -1,5 +1,9 @@
 import taskList from 'i18n/en-US/taskList';
 
+import governanceReviewBoard from './articles/governanceReviewBoard';
+import governanceReviewTeam from './articles/governanceReviewTeam';
+import sampleBusinessCase from './articles/sampleBusinessCase';
+import templatesFor508Testing from './articles/templatesFor508Testing';
 import accessibility from './accessibility';
 import accessibilityStatement from './accessibilityStatement';
 import action from './action';
@@ -9,9 +13,8 @@ import cookies from './cookies';
 import error from './error';
 import footer from './footer';
 import general from './general';
-import governanceReviewBoard from './governanceReviewBoard';
-import governanceReviewTeam from './governanceReviewTeam';
 import header from './header';
+import help from './help';
 import home from './home';
 import intake from './intake';
 import makingARequest from './makingARequest';
@@ -28,10 +31,13 @@ const enUS = {
   businessCase,
   cookies,
   error,
+  help,
   footer,
   general,
   governanceReviewBoard,
   governanceReviewTeam,
+  sampleBusinessCase,
+  templatesFor508Testing,
   header,
   home,
   intake,
