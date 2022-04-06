@@ -4740,7 +4740,7 @@ Feedback from the GRT to a business owner or GRB
 """
 type GRTFeedback {
   id: UUID
-  createdAt: Time
+  createdAt: Time!
   feedback: String
   feedbackType: GRTFeedbackType
 }
@@ -11444,11 +11444,14 @@ func (ec *executionContext) _GRTFeedback_createdAt(ctx context.Context, field gr
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GRTFeedback_feedback(ctx context.Context, field graphql.CollectedField, obj *models.GRTFeedback) (ret graphql.Marshaler) {
@@ -24001,6 +24004,9 @@ func (ec *executionContext) _GRTFeedback(ctx context.Context, sel ast.SelectionS
 
 			out.Values[i] = innerFunc(ctx)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "feedback":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._GRTFeedback_feedback(ctx, field, obj)
