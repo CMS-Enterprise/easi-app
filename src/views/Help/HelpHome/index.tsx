@@ -42,9 +42,11 @@ const HelpHome = () => {
 
   return (
     <div className="help-home">
-      <PageHeading>{t('heading')}</PageHeading>
-      <p className="font-body-lg">{t('subheading')}</p>
-      <div className="help-home__articles">
+      <PageHeading className="margin-bottom-1">{t('heading')}</PageHeading>
+      <p className="font-body-lg margin-top-0 margin-bottom-4">
+        {t('subheading')}
+      </p>
+      <div className="help-home__articles margin-bottom-7">
         <CardGroup className="margin-y-2">
           {showTopThreeArticles.map(article => (
             <ArticleCard key={article.route} {...article} />
@@ -69,7 +71,7 @@ const HelpHome = () => {
           })}
         </div>
       </div>
-      <hr className="help-home__hr margin-y-6" />
+      <hr className="help-home__hr margin-bottom-6" />
       <PageHeading headingLevel="h2" className="margin-top-0 margin-bottom-1">
         {t('additionalContacts.heading')}
       </PageHeading>
