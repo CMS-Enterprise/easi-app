@@ -110,7 +110,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-db-migrate
         run: |
-          IMAGE_FOUND="$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})""
+          IMAGE_FOUND="$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})"
           echo "IMAGE FOUND WAS EQUAL TO $(IMAGE_FOUND)"
           if [[ IMAGE_FOUND == 1 ]]; then
             echo "Image found, skipping build"
