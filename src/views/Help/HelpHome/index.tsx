@@ -1,30 +1,74 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { CardGroup, Link as UswdsLink } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
+import ArticleCard from 'components/ArticleCard';
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import itGovernanceArticles from 'views/Help/ITGovernance/articles';
+import section508Articles from 'views/Help/Section508/articles';
 
 import './index.scss';
 
+type ContactProps = {
+  key: string;
+  title: string;
+  copy: string;
+  email: string;
+};
+
+type ArticleLinkProps = {
+  key: number;
+  href: string;
+  copy: string;
+};
+
 const HelpHome = () => {
   const { t } = useTranslation('help');
-
-  type ContactProps = {
-    key: string;
-    title: string;
-    copy: string;
-    email: string;
-  };
 
   const contacts: ContactProps[] = t('additionalContacts.contacts', {
     returnObjects: true
   });
 
+  const articleLinks: ArticleLinkProps[] = t('articleLinks', {
+    returnObjects: true
+  });
+
+  const allArticles = itGovernanceArticles.concat(section508Articles);
+  const totalArticles = allArticles.length;
+
+  const showTopThreeArticles = allArticles.slice(0, 3);
+
   return (
     <div className="help-home">
       <PageHeading>{t('heading')}</PageHeading>
       <p className="font-body-lg">{t('subheading')}</p>
-      Card stuff here
+      <div className="help-home__articles">
+        <CardGroup className="margin-y-2">
+          {showTopThreeArticles.map(article => (
+            <ArticleCard key={article.route} {...article} />
+          ))}
+        </CardGroup>
+        <div className="help-home__articles-links display-flex">
+          <p className="text-base margin-y-0 margin-right-3">
+            3 of {totalArticles} articles
+          </p>
+          {Object.keys(articleLinks).map((key: any) => {
+            return (
+              <UswdsReactLink
+                key={articleLinks[key].href}
+                to={articleLinks[key].href}
+                className={classNames('margin-right-5', {
+                  'help-home__link--all': key === 'allHelp'
+                })}
+              >
+                {articleLinks[key].copy}
+              </UswdsReactLink>
+            );
+          })}
+        </div>
+      </div>
       <hr className="help-home__hr margin-y-6" />
       <PageHeading headingLevel="h2" className="margin-top-0 margin-bottom-1">
         {t('additionalContacts.heading')}

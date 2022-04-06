@@ -2,6 +2,20 @@ const help = {
   heading: "We're here to help.",
   subheading:
     'Get assistance with your governance processes and requests, 508 testing, and system information.',
+  articleLinks: {
+    allHelp: {
+      copy: 'Browse all help articles',
+      href: 'help/all'
+    },
+    itGovernance: {
+      copy: 'View IT Governance articles',
+      href: 'help/it-goverance'
+    },
+    section508: {
+      copy: 'View Section 508 articles',
+      href: 'help/section-508'
+    }
+  },
   additionalContacts: {
     heading: 'Additional contacts',
     subheading:
@@ -33,7 +47,7 @@ const help = {
         title: 'IT Navigator',
         copy:
           'The IT Navigator team can help with questions related to choosing the type of IT Governance request that fits your needs. ',
-        email: 'EnterpriseArchitecture@cms.hhs.gov'
+        email: 'NavigatorInquiries@cms.hhs.gov'
       }
     ]
   },
