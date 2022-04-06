@@ -140,10 +140,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
-      - name: Check for existing image
-        id: check-existing-ecr-image
-        run: |
-          ./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }}
       - name: Build, tag, and push image to Amazon ECR
         if: ${{ failure() }}
         env:
