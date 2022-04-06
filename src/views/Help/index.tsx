@@ -16,7 +16,7 @@ const Help = () => {
       <MainContent className="grid-container">
         <Switch>
           <Route path="/help" exact render={() => <HelpHome />} />
-          <Route path="/help/all" render={() => <AllHelp />} />
+          <Route path="/help//all-articles" render={() => <AllHelp />} />
           <Route path="/help/it-governance" render={() => <ITGovernance />} />
           <Route path="/help/section-508" render={() => <Section508 />} />
           {/* 404 */}

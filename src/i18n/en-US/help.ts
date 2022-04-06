@@ -5,7 +5,7 @@ const help = {
   articleLinks: {
     allHelp: {
       copy: 'Browse all help articles',
-      href: 'help/all'
+      href: 'help/all-articles'
     },
     itGovernance: {
       copy: 'View IT Governance articles',
