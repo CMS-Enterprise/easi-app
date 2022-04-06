@@ -111,7 +111,10 @@ jobs:
           ECR_REPOSITORY: easi-db-migrate
         run: |
           IMAGE_FOUND=$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})
-          [[ IMAGE_FOUND == 1 ]] && echo "Image found, exiting" && exit 0
+          if [[ IMAGE_FOUND == 1 ]]; then
+            echo "Image found"
+            exit 0
+          fi
           docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" --file Dockerfile.db_migrations .
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
       - name: Announce failure
@@ -146,7 +149,10 @@ jobs:
           ECR_REPOSITORY: easi-backend
         run: |
           IMAGE_FOUND=$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})
-          [[ IMAGE_FOUND == 1 ]] && echo "Image found, exiting" && exit 0
+          if [[ IMAGE_FOUND == 1 ]]; then
+            echo "Image found"
+            exit 0
+          fi
           APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
           APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
           docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$GIT_HASH" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" .
