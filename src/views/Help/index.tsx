@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import MainContent from 'components/MainContent';
-import RelatedArticles from 'components/RelatedArticles';
 import NotFound from 'views/NotFound';
 
 import AllHelp from './All';
@@ -26,7 +25,6 @@ const Help = () => {
           <Route path="*" render={() => <NotFound />} />
         </Switch>
       </MainContent>
-      <RelatedArticles type="IT Governance" />
     </>
   );
 };
