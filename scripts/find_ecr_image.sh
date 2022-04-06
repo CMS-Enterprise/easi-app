@@ -9,8 +9,7 @@ if [[ $# -lt 2 ]]; then
 fi
 
 if [[ "$( aws ecr describe-images --repository-name="$1" --image-ids=imageTag="$2" 2> /dev/null )" ]]; then
-    echo "$1:$2 found"
+    return 1
 else
-    echo "$1:$2 not found"
-    exit 1
+    return 0
 fi

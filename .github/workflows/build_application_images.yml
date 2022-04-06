@@ -86,8 +86,6 @@ jobs:
 
   build_db_migrate_image:
     runs-on: ubuntu-latest
-    env:
-      ECR_REPOSITORY: easi-db-migrate
     steps:
       - name: Check out code
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
@@ -107,15 +105,13 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
-      - name: Check for existing image
-        id: check-existing-ecr-image
-        run: |
-          ./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }}
       - name: Build, tag, and push image to Amazon ECR
-        if: steps.check-existing-ecr-image.outcome == 'failure' # Only build image if it wasn't found
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: easi-db-migrate
         run: |
+          IMAGE_FOUND=$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})
+          [[ IMAGE_FOUND ]] && echo "Image found, exiting" && exit 0
           docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" --file Dockerfile.db_migrations .
           docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
       - name: Announce failure
@@ -125,8 +121,6 @@ jobs:
 
   build_server_image:
     runs-on: ubuntu-latest
-    env:
-      ECR_REPOSITORY: easi-backend
     steps:
       - name: Check out code
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
@@ -151,10 +145,13 @@ jobs:
         run: |
           ./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }}
       - name: Build, tag, and push image to Amazon ECR
-        if: steps.check-existing-ecr-image.outcome == 'failure' # Only build image if it wasn't found
+        if: ${{ failure() }}
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: easi-backend
         run: |
+          IMAGE_FOUND=$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})
+          [[ IMAGE_FOUND ]] && echo "Image found, exiting" && exit 0
           APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
           APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
           docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$GIT_HASH" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" .
