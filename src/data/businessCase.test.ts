@@ -21,18 +21,18 @@ describe('The business case data', () => {
       currentSolutionSummary: 'asdf',
       priorityAlignment: 'asdf',
       successIndicators: 'asdf',
-      preferredTitle: '',
-      preferredSummary: '',
-      preferredAcquisitionApproach: '',
+      preferredTitle: 'Preferred title',
+      preferredSummary: 'Preferred summary',
+      preferredAcquisitionApproach: 'Preferred acquisition approach',
       preferredSecurityIsApproved: null,
       preferredSecurityIsBeingReviewed: '',
       preferredHostingType: '',
       preferredHostingLocation: '',
       preferredHostingCloudServiceType: '',
       preferredHasUI: '',
-      preferredPros: '',
-      preferredCons: '',
-      preferredCostSavings: '',
+      preferredPros: 'Preferred pros',
+      preferredCons: 'Preferred cons',
+      preferredCostSavings: 'Preferred cost savings',
       alternativeATitle: '',
       alternativeASummary: '',
       alternativeAAcquisitionApproach: '',
@@ -59,132 +59,12 @@ describe('The business case data', () => {
       alternativeBCostSavings: null,
       lifecycleCostLines: [
         {
-          id: '5e232a8d-8f76-4d6c-b902-158f19fc85cd',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Development',
-          year: '1',
-          cost: 1
-        },
-        {
-          id: '18dab0c5-c48a-43a1-8ade-5348d684c51c',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Operations and Maintenance',
-          year: '1',
-          cost: 2
-        },
-        {
-          id: '64800155-b01f-45f4-bf56-0c407aed4bd5',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Other',
-          year: '1',
-          cost: 3
-        },
-        {
-          id: '65f6f0f8-ce09-41e0-94ed-331aa6e0449a',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Development',
-          year: '2',
-          cost: 4
-        },
-        {
-          id: 'a2c93ac5-1897-4d40-a259-98c3b953e9d5',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Operations and Maintenance',
-          year: '2',
-          cost: null
-        },
-        {
-          id: '7e74157c-4e15-4b63-aa03-7d3d3614f7fa',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Other',
-          year: '2',
-          cost: 5
-        },
-        {
-          id: '99d1dffc-c09f-4d78-a47a-bf9df6c470af',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Development',
-          year: '3',
-          cost: null
-        },
-        {
-          id: '97aa59a3-804c-454a-85e9-266a7ee1a204',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Operations and Maintenance',
-          year: '3',
-          cost: 6
-        },
-        {
-          id: 'd9bfd983-60f0-4cf5-894a-8df6de644e18',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Other',
-          year: '3',
-          cost: 7
-        },
-        {
-          id: 'eba6c59f-4274-4024-a41e-7692cc2bf617',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Development',
-          year: '4',
-          cost: 8
-        },
-        {
-          id: '715fd337-d4bb-4460-bf0f-7d55fd5958c1',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Operations and Maintenance',
-          year: '4',
-          cost: 9
-        },
-        {
-          id: '533528be-f2b5-4b31-acdd-75fe01ef934b',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Other',
-          year: '4',
-          cost: null
-        },
-        {
-          id: '8f4045ee-bb74-446c-9574-43f42c7adebe',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Development',
-          year: '5',
-          cost: 10
-        },
-        {
-          id: 'fb023b7b-bc38-473e-9804-d8741981253b',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Operations and Maintenance',
-          year: '5',
-          cost: 11
-        },
-        {
-          id: '69ab8880-59db-45dc-a959-6551f6714dce',
-          business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
-          solution: 'As Is',
-          phase: 'Other',
-          year: '5',
-          cost: 12
-        },
-        {
           id: '11ac8fc1-18c6-4085-acd3-ca3f96caba8e',
           business_case: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
           solution: 'Preferred',
           phase: 'Development',
           year: '1',
-          cost: null
+          cost: 1
         },
         {
           id: '390ba808-5ee3-4547-b371-6fcff7d4bb42',
@@ -192,7 +72,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Operations and Maintenance',
           year: '1',
-          cost: null
+          cost: 2
         },
         {
           id: '23d4de1f-13a4-4ddf-905e-2cdf601d4bb4',
@@ -200,7 +80,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Other',
           year: '1',
-          cost: null
+          cost: 3
         },
         {
           id: 'baf4314e-f9c3-4c9d-a838-abf53bbba63a',
@@ -208,7 +88,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Development',
           year: '2',
-          cost: null
+          cost: 4
         },
         {
           id: '136b50c2-221d-4f65-a8f0-b64bcda03610',
@@ -224,7 +104,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Other',
           year: '2',
-          cost: null
+          cost: 5
         },
         {
           id: '876bf41d-148b-4ae9-8991-2c13ff07cd41',
@@ -240,7 +120,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Operations and Maintenance',
           year: '3',
-          cost: null
+          cost: 6
         },
         {
           id: '6b0fe308-a83b-4819-aa1a-3ea53ab798d1',
@@ -248,7 +128,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Other',
           year: '3',
-          cost: null
+          cost: 7
         },
         {
           id: '2ba3664c-0f2c-47fd-84fe-06b4f901c1a7',
@@ -256,7 +136,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Development',
           year: '4',
-          cost: null
+          cost: 8
         },
         {
           id: '721086b9-5fe0-4601-8e62-763404460eb7',
@@ -264,7 +144,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Operations and Maintenance',
           year: '4',
-          cost: null
+          cost: 9
         },
         {
           id: 'f0514373-7f38-4a64-ba03-e659b21d52fd',
@@ -280,7 +160,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Development',
           year: '5',
-          cost: null
+          cost: 10
         },
         {
           id: '4f7baf84-3826-4853-8f1f-1bf990bc656c',
@@ -288,7 +168,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Operations and Maintenance',
           year: '5',
-          cost: null
+          cost: 11
         },
         {
           id: '12905fc0-2085-49d9-9e64-0f9dafa21a93',
@@ -296,7 +176,7 @@ describe('The business case data', () => {
           solution: 'Preferred',
           phase: 'Other',
           year: '5',
-          cost: null
+          cost: 12
         },
         {
           id: '67d9f6ce-c22c-4887-b667-bbbe3951e615',
@@ -427,13 +307,24 @@ describe('The business case data', () => {
       lastSubmittedAt: null
     };
 
-    it('transforms as is solution for app', () => {
-      const asisSolution = {
-        title: 'As is title',
-        summary: 'As is summary',
-        pros: 'As is pros',
-        cons: 'As is cons',
-        costSavings: 'As is cost savings',
+    it('transforms preferred solution for app', () => {
+      const preferredSolution = {
+        title: 'Preferred title',
+        summary: 'Preferred summary',
+        acquisitionApproach: 'Preferred acquisition approach',
+        security: {
+          isApproved: null,
+          isBeingReviewed: ''
+        },
+        hosting: {
+          type: '',
+          location: '',
+          cloudServiceType: ''
+        },
+        hasUserInterface: '',
+        pros: 'Preferred pros',
+        cons: 'Preferred cons',
+        costSavings: 'Preferred cost savings',
         estimatedLifecycleCost: {
           year1: {
             development: {
@@ -507,21 +398,31 @@ describe('The business case data', () => {
           }
         }
       };
-      expect(prepareBusinessCaseForApp(testDataFromApi).asIsSolution).toEqual(
-        asisSolution
-      );
+      expect(
+        prepareBusinessCaseForApp(testDataFromApi).preferredSolution
+      ).toEqual(preferredSolution);
     });
   });
 
   describe('prepareBusinessCaseForApi', () => {
     it('does not save estimated lifecycle cost if checkbox is not checked', () => {
-      // ONLY checking As is solution lifecycle lines in this test
+      // ONLY checking Preferred solution lifecycle lines in this test
       // other solutions should behave the same
       const testBusinessCase = {
         ...businessCaseInitialData,
-        asIsSolution: {
+        preferredSolution: {
           title: '',
           summary: '',
+          acquisitionApproach: '',
+          security: {
+            isApproved: '',
+            isBeingReviewed: ''
+          },
+          hosting: {
+            type: '',
+            location: ''
+          },
+          hasUserInterface: '',
           pros: '',
           cons: '',
           estimatedLifecycleCost: {
@@ -600,52 +501,52 @@ describe('The business case data', () => {
         }
       };
 
-      const asIsLifecycleLines = [
-        { solution: 'As Is', phase: 'Development', cost: null, year: '1' },
+      const preferredLifecycleLines = [
+        { solution: 'Preferred', phase: 'Development', cost: null, year: '1' },
         {
-          solution: 'As Is',
+          solution: 'Preferred',
           phase: 'Operations and Maintenance',
           cost: 1000,
           year: '1'
         },
-        { solution: 'As Is', phase: 'Other', cost: null, year: '1' },
-        { solution: 'As Is', phase: 'Development', cost: 500, year: '2' },
+        { solution: 'Preferred', phase: 'Other', cost: null, year: '1' },
+        { solution: 'Preferred', phase: 'Development', cost: 500, year: '2' },
         {
-          solution: 'As Is',
+          solution: 'Preferred',
           phase: 'Operations and Maintenance',
           cost: null,
           year: '2'
         },
-        { solution: 'As Is', phase: 'Other', cost: null, year: '2' },
-        { solution: 'As Is', phase: 'Development', cost: null, year: '3' },
+        { solution: 'Preferred', phase: 'Other', cost: null, year: '2' },
+        { solution: 'Preferred', phase: 'Development', cost: null, year: '3' },
         {
-          solution: 'As Is',
+          solution: 'Preferred',
           phase: 'Operations and Maintenance',
           cost: 1000,
           year: '3'
         },
-        { solution: 'As Is', phase: 'Other', cost: 1500, year: '3' },
-        { solution: 'As Is', phase: 'Development', cost: null, year: '4' },
+        { solution: 'Preferred', phase: 'Other', cost: 1500, year: '3' },
+        { solution: 'Preferred', phase: 'Development', cost: null, year: '4' },
         {
-          solution: 'As Is',
+          solution: 'Preferred',
           phase: 'Operations and Maintenance',
           cost: null,
           year: '4'
         },
-        { solution: 'As Is', phase: 'Other', cost: null, year: '4' },
-        { solution: 'As Is', phase: 'Development', cost: 500, year: '5' },
+        { solution: 'Preferred', phase: 'Other', cost: null, year: '4' },
+        { solution: 'Preferred', phase: 'Development', cost: 500, year: '5' },
         {
-          solution: 'As Is',
+          solution: 'Preferred',
           phase: 'Operations and Maintenance',
           cost: 1000,
           year: '5'
         },
-        { solution: 'As Is', phase: 'Other', cost: 1500, year: '5' }
+        { solution: 'Preferred', phase: 'Other', cost: 1500, year: '5' }
       ];
 
       expect(
         prepareBusinessCaseForApi(testBusinessCase).lifecycleCostLines
-      ).toEqual(expect.arrayContaining(asIsLifecycleLines));
+      ).toEqual(expect.arrayContaining(preferredLifecycleLines));
     });
   });
 });

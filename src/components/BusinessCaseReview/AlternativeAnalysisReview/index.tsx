@@ -17,7 +17,7 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
   const { fiscalYear, preferredSolution, alternativeA, alternativeB } = values;
 
   const [activeSolutionTab, setActiveSolutionTab] = useState(
-    '"Preferred" solution'
+    'Preferred solution'
   );
 
   const getFilledSolutions = () => {

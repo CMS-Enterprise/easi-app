@@ -261,7 +261,7 @@ describe('Business case preferred solution form', () => {
     screen.getByRole('button', { name: /back/i }).click();
 
     await waitFor(() => {
-      expect(screen.getByTestId('as-is-solution')).toBeInTheDocument();
+      expect(screen.getByTestId('request-description')).toBeInTheDocument();
     });
   });
 

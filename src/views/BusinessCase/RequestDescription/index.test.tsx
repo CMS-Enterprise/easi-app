@@ -75,9 +75,9 @@ describe('Business case request description form', () => {
     });
 
     const currentSolutionSummaryField = screen.getByRole('textbox', {
-      name: /current solution summary/i
+      name: /current solution/i
     });
-    userEvent.type(currentSolutionSummaryField, 'Current Solution Summary');
+    userEvent.type(currentSolutionSummaryField, 'Current Solution');
     await waitFor(() => {
       expect(currentSolutionSummaryField).toHaveValue('Current Solution');
     });
@@ -112,7 +112,7 @@ describe('Business case request description form', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole('heading', { name: /"As is" solution/i, level: 2 })
+        screen.getByRole('heading', { name: /Preferred solution/i, level: 2 })
       ).toBeInTheDocument();
     });
   });
@@ -141,7 +141,7 @@ describe('Business case request description form', () => {
     screen.getByRole('button', { name: /next/i }).click();
 
     await waitFor(() => {
-      expect(screen.getByTestId('as-is-solution')).toBeInTheDocument();
+      expect(screen.getByTestId('preferred-solution')).toBeInTheDocument();
     });
   });
 

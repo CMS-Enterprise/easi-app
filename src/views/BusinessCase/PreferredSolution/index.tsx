@@ -669,7 +669,7 @@ const PreferredSolution = ({
               onClick={() => {
                 dispatchSave();
                 setErrors({});
-                const newUrl = 'as-is-solution';
+                const newUrl = 'request-description';
                 history.push(newUrl);
               }}
             >
