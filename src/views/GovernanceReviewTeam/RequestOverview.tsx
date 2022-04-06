@@ -71,6 +71,11 @@ const RequestOverview = () => {
     (state: AppState) => state.businessCase.form
   );
 
+  // const emailsToNotify =
+  //   systemIntake && systemIntake.requester.email !== null
+  //     ? [systemIntake.requester.email]
+  //     : [];
+
   useEffect(() => {
     if (systemIntake?.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -27,12 +27,16 @@ import { SubmitLifecycleIdForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
+import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
+import EmailRecipientsFields from './EmailRecipientsFields';
+
 const RADIX = 10;
 
 const IssueLifecycleId = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const [mutate, mutationResult] = useMutation<IssueLifecycleIdType>(
     IssueLifecycleIdQuery,
@@ -75,7 +79,8 @@ const IssueLifecycleId = () => {
       scope,
       costBaseline,
       lcid: lifecycleId,
-      feedback
+      feedback,
+      shouldSendEmail
     };
 
     mutate({
@@ -97,7 +102,13 @@ const IssueLifecycleId = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitLifecycleIdForm>) => {
-        const { errors, setFieldValue, values, handleSubmit } = formikProps;
+        const {
+          errors,
+          setFieldValue,
+          values,
+          handleSubmit,
+          submitForm
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -126,18 +137,22 @@ const IssueLifecycleId = () => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading data-testid="issue-lcid">
+            <PageHeading
+              data-testid="issue-lcid"
+              className="margin-top-0 margin-bottom-3"
+            >
               {t('issueLCID.heading')}
             </PageHeading>
-            <h2>{t('issueLCID.subheading')}</h2>
+            <h3>{t('issueLCID.subheading')}</h3>
             <p>
               Approve request and issue Lifecycle ID{' '}
               <Link to={backLink}>Change</Link>
             </p>
-            <div className="tablet:grid-col-6">
-              <MandatoryFieldsAlert />
-            </div>
-            <div className="tablet:grid-col-9 margin-bottom-7">
+            <h3 className="margin-top-3 margin-bottom-2">
+              {t('issueLCID.lifecycleId')}
+            </h3>
+            <MandatoryFieldsAlert textClassName="font-body-md" />
+            <div className="margin-bottom-7">
               <Form
                 onSubmit={e => {
                   handleSubmit(e);
@@ -147,12 +162,15 @@ const IssueLifecycleId = () => {
                 <FieldGroup
                   scrollElement="newLifecycleId"
                   error={!!flatErrors.newLifecycleId}
+                  className="margin-top-4"
                 >
-                  <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label margin-bottom-1">
+                  <fieldset className="usa-fieldset">
+                    <legend className="usa-label line-height-body-2 font-heading-sm">
                       {t('issueLCID.lcid.label')}
                     </legend>
-                    <HelpText>{t('issueLCID.lcid.helpText')}</HelpText>
+                    <HelpText className="margin-top-05 line-height-body-5 text-base">
+                      {t('issueLCID.lcid.helpText')}
+                    </HelpText>
                     <FieldErrorMsg>{flatErrors.newLifecycleId}</FieldErrorMsg>
                     <Field
                       as={RadioField}
@@ -178,43 +196,43 @@ const IssueLifecycleId = () => {
                       value={false}
                     />
                     {values.newLifecycleId === false && (
-                      <div className="margin-bottom-1">
-                        <FieldGroup
-                          scrollElement="lifecycleId"
-                          error={!!flatErrors.lifecycleId}
+                      <FieldGroup
+                        scrollElement="lifecycleId"
+                        error={!!flatErrors.lifecycleId}
+                        className="margin-top-4"
+                      >
+                        <Label
+                          htmlFor="IssueLifecycleIdForm-LifecycleId"
+                          className="line-height-body-2"
                         >
-                          <Label
-                            htmlFor="IssueLifecycleIdForm-LifecycleId"
-                            className="margin-bottom-1"
-                          >
-                            {t('issueLCID.lcid.label')}
-                          </Label>
-                          <HelpText id="IssueLifecycleIdForm-LifecycleIdHelp">
-                            For example A123456 or 123456
-                          </HelpText>
-                          <FieldErrorMsg>
-                            {flatErrors.lifecycleId}
-                          </FieldErrorMsg>
-                          <Field
-                            as={TextField}
-                            className="width-card-lg"
-                            error={!!flatErrors.lifecycleId}
-                            id="IssueLifecycleIdForm-LifecycleId"
-                            aria-describedby="IssueLifecycleIdForm-LifecycleIdHelp"
-                            maxLength={7}
-                            name="lifecycleId"
-                          />
-                        </FieldGroup>
-                      </div>
+                          {t('issueLCID.lcid.label')}
+                        </Label>
+                        <HelpText
+                          id="IssueLifecycleIdForm-LifecycleIdHelp"
+                          className="margin-top-05 line-height-body-5 text-base"
+                        >
+                          For example A123456 or 123456
+                        </HelpText>
+                        <FieldErrorMsg>{flatErrors.lifecycleId}</FieldErrorMsg>
+                        <Field
+                          as={TextField}
+                          className="width-card-lg"
+                          error={!!flatErrors.lifecycleId}
+                          id="IssueLifecycleIdForm-LifecycleId"
+                          aria-describedby="IssueLifecycleIdForm-LifecycleIdHelp"
+                          maxLength={7}
+                          name="lifecycleId"
+                        />
+                      </FieldGroup>
                     )}
                   </fieldset>
                 </FieldGroup>
-                <FieldGroup>
-                  <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label margin-bottom-1">
+                <FieldGroup className="margin-top-4">
+                  <fieldset className="usa-fieldset">
+                    <legend className="usa-label line-height-body-2 font-heading-sm">
                       {t('issueLCID.expirationDate.label')}
                     </legend>
-                    <HelpText>
+                    <HelpText className="margin-top-05 line-height-body-5 text-base">
                       {t('issueLCID.expirationDate.helpText')}
                     </HelpText>
                     <FieldErrorMsg>{flatErrors.validDate}</FieldErrorMsg>
@@ -228,8 +246,11 @@ const IssueLifecycleId = () => {
                       {flatErrors.expirationDateYear}
                     </FieldErrorMsg>
                     <div className="usa-memorable-date">
-                      <div className="usa-form-group usa-form-group--month">
-                        <Label htmlFor="IssueLifecycleIdForm-ExpirationDateMonth">
+                      <div className="usa-form-group usa-form-group--month margin-top-105 margin-right-1 width-7">
+                        <Label
+                          htmlFor="IssueLifecycleIdForm-ExpirationDateMonth"
+                          className="line-height-body-3 text-normal"
+                        >
                           {t('issueLCID.expirationDate.month')}
                         </Label>
                         <Field
@@ -240,10 +261,14 @@ const IssueLifecycleId = () => {
                           }
                           id="IssueLifecycleIdForm-ExpirationDateMonth"
                           name="expirationDateMonth"
+                          className="margin-top-1"
                         />
                       </div>
-                      <div className="usa-form-group usa-form-group--day">
-                        <Label htmlFor="IssueLifecycleIdForm-ExpirationDateDay">
+                      <div className="usa-form-group usa-form-group--day margin-top-105 margin-right-1 width-7">
+                        <Label
+                          htmlFor="IssueLifecycleIdForm-ExpirationDateDay"
+                          className="line-height-body-3 text-normal"
+                        >
                           {t('issueLCID.expirationDate.day')}
                         </Label>
                         <Field
@@ -254,10 +279,14 @@ const IssueLifecycleId = () => {
                           }
                           id="IssueLifecycleIdForm-ExpirationDateDay"
                           name="expirationDateDay"
+                          className="margin-top-1"
                         />
                       </div>
-                      <div className="usa-form-group usa-form-group--year">
-                        <Label htmlFor="IssueLifecycleIdForm-ExpirationDateYear">
+                      <div className="usa-form-group usa-form-group--year margin-top-105 margin-right-1 width-10">
+                        <Label
+                          htmlFor="IssueLifecycleIdForm-ExpirationDateYear"
+                          className="line-height-body-3 text-normal"
+                        >
                           {t('issueLCID.expirationDate.year')}
                         </Label>
                         <Field
@@ -265,16 +294,26 @@ const IssueLifecycleId = () => {
                           error={!!flatErrors.expirationDateYear}
                           id="IssueLifecycleIdForm-ExpirationDateYear"
                           name="expirationDateYear"
+                          className="margin-top-1"
                         />
                       </div>
                     </div>
                   </fieldset>
                 </FieldGroup>
-                <FieldGroup scrollElement="scope" error={!!flatErrors.scope}>
-                  <Label htmlFor="IssueLifecycleIdForm-Scope">
+                <FieldGroup
+                  scrollElement="scope"
+                  error={!!flatErrors.scope}
+                  className="margin-top-4"
+                >
+                  <Label
+                    htmlFor="IssueLifecycleIdForm-Scope"
+                    className="line-height-body-2"
+                  >
                     {t('issueLCID.scopeLabel')}
                   </Label>
-                  <HelpText>{t('issueLCID.scopeHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('issueLCID.scopeHelpText')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.scope}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -287,11 +326,17 @@ const IssueLifecycleId = () => {
                 <FieldGroup
                   scrollElement="nextSteps"
                   error={!!flatErrors.nextSteps}
+                  className="margin-top-4"
                 >
-                  <Label htmlFor="IssueLifecycleIdForm-NextSteps">
+                  <Label
+                    htmlFor="IssueLifecycleIdForm-NextSteps"
+                    className="line-height-body-2"
+                  >
                     {t('issueLCID.nextStepsLabel')}
                   </Label>
-                  <HelpText>{t('issueLCID.nextStepsHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('issueLCID.nextStepsHelpText')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.nextSteps}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -301,11 +346,13 @@ const IssueLifecycleId = () => {
                     name="nextSteps"
                   />
                 </FieldGroup>
-                <FieldGroup>
+                <FieldGroup className="margin-top-4">
                   <Label htmlFor="IssueLifecycleIdForm-CostBaseline">
                     {t('issueLCID.costBaselineLabel')}
                   </Label>
-                  <HelpText>{t('issueLCID.costBaselineHelpText')}</HelpText>
+                  <HelpText className="margin-top-05 line-height-body-5 text-base">
+                    {t('issueLCID.costBaselineHelpText')}
+                  </HelpText>
                   <Field
                     as={TextAreaField}
                     id="IssueLifecycleIdForm-CostBaseline"
@@ -316,13 +363,15 @@ const IssueLifecycleId = () => {
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
+                  className="margin-top-5"
                 >
-                  <Label htmlFor="IssueLifecycleIdForm-Feedback">
+                  <EmailRecipientsFields />
+                  <Label
+                    htmlFor="IssueLifecycleIdForm-Feedback"
+                    className="margin-top-0 line-height-body-2 text-normal"
+                  >
                     {t('issueLCID.feedbackLabel')}
                   </Label>
-                  <HelpText id="IssueLifecycleIdForm-SubmitHelp">
-                    {t('issueLCID.submitHelp')}
-                  </HelpText>
                   <FieldErrorMsg>{flatErrors.feedback}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -333,13 +382,28 @@ const IssueLifecycleId = () => {
                     aria-describedby="IssueLifecycleIdForm-SubmitHelp"
                   />
                 </FieldGroup>
-                <Button
-                  className="margin-y-2"
-                  type="submit"
-                  // disabled={isSubmitting}
-                >
-                  {t('issueLCID.submit')}
-                </Button>
+                <div>
+                  <Button
+                    className="margin-top-2"
+                    type="submit"
+                    // disabled={isSubmitting}
+                    onClick={() => {
+                      setShouldSendEmail(true);
+                      setFieldValue('skipEmail', false);
+                    }}
+                  >
+                    {t('submitAction.submit')}
+                  </Button>
+                </div>
+                <div className="margin-bottom-2">
+                  <CompleteWithoutEmailButton
+                    onClick={() => {
+                      setShouldSendEmail(false);
+                      setFieldValue('skipEmail', true);
+                      setTimeout(submitForm);
+                    }}
+                  />
+                </div>
               </Form>
               <UswdsLink
                 href="https://www.surveymonkey.com/r/DF3Q9L2"
