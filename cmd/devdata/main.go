@@ -257,7 +257,7 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 		BusinessNeed:         null.StringFrom("business need"),
 		LifecycleCostLines: []models.EstimatedLifecycleCost{
 			{
-				Solution: models.LifecycleCostSolutionASIS,
+				Solution: models.LifecycleCostSolutionPREFERRED,
 				Year:     models.LifecycleCostYear1,
 				Phase:    &phase,
 				Cost:     &cost,

@@ -115,7 +115,7 @@ func makeTestData() *testData {
 		BusinessNeed:         null.StringFrom("business need"),
 		LifecycleCostLines: []models.EstimatedLifecycleCost{
 			{
-				Solution: models.LifecycleCostSolutionASIS,
+				Solution: models.LifecycleCostSolutionPREFERRED,
 				Year:     models.LifecycleCostYear1,
 				Phase:    &phase,
 				Cost:     &cost,

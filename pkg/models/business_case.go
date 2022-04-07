@@ -33,8 +33,6 @@ const (
 	// LifecycleCostPhaseOTHER captures enum value "Other"
 	LifecycleCostPhaseOTHER LifecycleCostPhase = "Other"
 
-	// LifecycleCostSolutionASIS captures enum value "As Is"
-	LifecycleCostSolutionASIS LifecycleCostSolution = "As Is"
 	// LifecycleCostSolutionPREFERRED captures enum value "Preferred"
 	LifecycleCostSolutionPREFERRED LifecycleCostSolution = "Preferred"
 	// LifecycleCostSolutionA captures enum value "A"
