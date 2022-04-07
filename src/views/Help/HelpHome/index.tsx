@@ -79,7 +79,10 @@ const HelpHome = () => {
         <p className="margin-bottom-4">{t('additionalContacts.subheading')}</p>
         <div className="grid-row grid-gap-lg">
           {Object.keys(contacts).map((key: any) => (
-            <div key={key} className="tablet:grid-col-4">
+            <div
+              key={key}
+              className="help-home__contact desktop:grid-col-4 desktop:margin-bottom-4 margin-bottom-3"
+            >
               <PageHeading
                 headingLevel="h3"
                 className="margin-top-0 margin-bottom-1"

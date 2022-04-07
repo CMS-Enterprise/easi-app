@@ -14,12 +14,11 @@
 
   &__additionalContacts {
     padding-bottom: 56px;
+  }
 
-    .tablet\:grid-col-4 {
-      padding-bottom: 32px;
-      &:last-child {
-        padding-bottom: 0;
-      }
+  &__contact {
+    &:last-child {
+      padding-bottom: 0;
     }
   }
 }
