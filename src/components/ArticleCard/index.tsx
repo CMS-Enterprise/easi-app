@@ -40,7 +40,7 @@ const ArticleCard = ({
     <Card
       containerProps={{ className: 'radius-md shadow-2' }}
       data-testid="article-card"
-      className={classnames('grid-col-4', className, {
+      className={classnames('desktop:grid-col-4', className, {
         'article-card--isLink': isLink
       })}
       onClick={() => clickHandler(`help${route}`)}
