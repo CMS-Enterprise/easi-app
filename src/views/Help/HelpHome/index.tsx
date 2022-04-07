@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CardGroup, Link as UswdsLink } from '@trussworks/react-uswds';
-import classNames from 'classnames';
 
 import ArticleCard from 'components/ArticleCard';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -18,20 +17,10 @@ type ContactProps = {
   email: string;
 };
 
-type ArticleLinkProps = {
-  key: number;
-  href: string;
-  copy: string;
-};
-
 const HelpHome = () => {
   const { t } = useTranslation('help');
 
   const contacts: ContactProps[] = t('additionalContacts.contacts', {
-    returnObjects: true
-  });
-
-  const articleLinks: ArticleLinkProps[] = t('articleLinks', {
     returnObjects: true
   });
 
@@ -52,23 +41,27 @@ const HelpHome = () => {
             <ArticleCard key={article.route} {...article} isLink />
           ))}
         </CardGroup>
-        <div className="help-home__articles-links display-flex">
-          <p className="text-base margin-y-0 margin-right-3">
-            3 of {totalArticles} articles
-          </p>
-          {Object.keys(articleLinks).map((key: any) => {
-            return (
-              <UswdsReactLink
-                key={articleLinks[key].href}
-                to={articleLinks[key].href}
-                className={classNames('margin-right-5', {
-                  'help-home__link--all': key === 'allHelp'
-                })}
-              >
-                {articleLinks[key].copy}
-              </UswdsReactLink>
-            );
-          })}
+        <div className="help-home__articles-links">
+          <div className="help-home__articles-links--first-row">
+            <p className="text-base">3 of {totalArticles} articles</p>
+            <UswdsReactLink
+              to={t('articleLinks.allHelp.href')}
+              className="help-home__link--all"
+            >
+              {t('articleLinks.allHelp.copy')}
+            </UswdsReactLink>
+          </div>
+          <div className="help-home__articles-links--second-row">
+            <UswdsReactLink
+              to={t('articleLinks.itGovernance.href')}
+              className=""
+            >
+              {t('articleLinks.itGovernance.copy')}
+            </UswdsReactLink>
+            <UswdsReactLink to={t('articleLinks.section508.href')} className="">
+              {t('articleLinks.section508.copy')}
+            </UswdsReactLink>
+          </div>
         </div>
       </div>
       <hr className="help-home__hr margin-bottom-6" />
