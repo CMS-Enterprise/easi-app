@@ -51,7 +51,7 @@ const PageContent = () => {
       </p>
       <CardGroup className="padding-top-1 padding-bottom-4">
         {itGovernanceArticles.map(article => {
-          return <ArticleCard key={article.route} {...article} />;
+          return <ArticleCard key={article.route} {...article} tag={false} />;
         })}
       </CardGroup>
       <hr className="margin-0" />

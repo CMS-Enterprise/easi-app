@@ -18,6 +18,7 @@ import './index.scss';
 type ArticleCardProps = {
   className?: string;
   isLink?: boolean;
+  tag?: boolean;
 };
 
 const ArticleCard = ({
@@ -25,7 +26,8 @@ const ArticleCard = ({
   type,
   route,
   translation,
-  isLink = false
+  isLink = false,
+  tag = true
 }: ArticleCardProps & ArticleProps) => {
   const { t } = useTranslation(translation);
   const history = useHistory();
@@ -45,11 +47,13 @@ const ArticleCard = ({
       })}
       onClick={() => clickHandler(`help${route}`)}
     >
-      <CardHeader className="padding-x-3 padding-top-3 padding-bottom-2">
-        <h3 className="line-height-body-4 margin-bottom-1">{t('title')}</h3>
-        <Tag className="system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1">
-          {type}
-        </Tag>
+      <CardHeader className="padding-x-3 padding-top-3 padding-bottom-1">
+        <h3 className="line-height-body-4 margin-bottom-0">{t('title')}</h3>
+        {tag ? (
+          <Tag className="system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1 margin-y-1">
+            {type}
+          </Tag>
+        ) : null}
       </CardHeader>
       <CardBody className="padding-y-0 article__body">
         {t('description')}
