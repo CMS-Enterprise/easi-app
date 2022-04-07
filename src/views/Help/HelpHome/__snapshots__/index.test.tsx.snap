@@ -161,7 +161,7 @@ exports[`HelpHome matches the snapshot 1`] = `
         </p>
         <a
           class="usa-link margin-right-5 help-home__link--all"
-          href="/help/all"
+          href="/help/all-articles"
         >
           Browse all help articles
         </a>
