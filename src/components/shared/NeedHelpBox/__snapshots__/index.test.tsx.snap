@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Need help contact governance team renders without crashing 1`] = `
+<DocumentFragment>
+  <div
+    class="need-help-box bg-accent-cool-lighter border border-accent-cool-light radius-md padding-3"
+  >
+    <div
+      class="font-sans-lg line-height-body-1 text-bold margin-bottom-2"
+    >
+      Need help?
+    </div>
+    <div
+      class="line-height-body-5"
+    >
+      <div
+        class="margin-bottom-05"
+      >
+        Contact the Governance team:
+      </div>
+      <div>
+        <a
+          class="usa-link"
+          href="mailto:IT_Governance@cms.hhs.gov"
+        >
+          IT_Governance@cms.hhs.gov
+        </a>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
