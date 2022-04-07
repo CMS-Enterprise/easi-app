@@ -1,4 +1,7 @@
 const governanceReviewBoard = {
+  title: 'Prepare for the Review Board meeting',
+  description:
+    'Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.',
   prepare: {
     title: 'Prepare for the Review Board meeting',
     breadcrumb: 'Prepare for GRB meeting',

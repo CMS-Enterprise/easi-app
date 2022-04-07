@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RelatedArticle matches the snapshot 1`] = `
+<DocumentFragment>
+  <li
+    class="usa-card grid-col-4"
+    data-testid="article-card"
+  >
+    <div
+      class="usa-card__container radius-md shadow-2"
+    >
+      <header
+        class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+        data-testid="CardHeader"
+      >
+        <h3
+          class="line-height-body-4 margin-bottom-1"
+        >
+          Prepare for the Governance Review Team meeting
+        </h3>
+        <span
+          class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
+          data-testid="tag"
+        >
+          IT Governance
+        </span>
+      </header>
+      <div
+        class="usa-card__body padding-y-0 article__body"
+        data-testid="CardBody"
+      >
+        Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+      </div>
+      <div
+        class="usa-card__footer padding-top-2"
+        data-testid="CardFooter"
+      >
+        <a
+          class="usa-link easi-request__button-link padding-x-2"
+          href="/help/it-governance/prepare-for-grt"
+        >
+          Read
+        </a>
+      </div>
+    </div>
+  </li>
+</DocumentFragment>
+`;

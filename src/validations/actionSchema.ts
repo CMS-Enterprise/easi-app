@@ -1,8 +1,14 @@
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
+const skippableEmail = Yup.string().when('skipEmail', {
+  is: true,
+  then: schema => schema.optional(),
+  otherwise: schema => schema.required('Please fill out email')
+});
+
 export const actionSchema = Yup.object().shape({
-  feedback: Yup.string().required('Please fill out email')
+  feedback: skippableEmail
 });
 
 export const sharedLifecycleIdSchema = Yup.object().shape({
@@ -74,7 +80,7 @@ export const sharedLifecycleIdSchema = Yup.object().shape({
 });
 
 export const lifecycleIdSchema = sharedLifecycleIdSchema.shape({
-  feedback: Yup.string().trim().required('Please fill out email'),
+  feedback: skippableEmail,
   newLifecycleId: Yup.boolean().required(
     'Choose if you need a new Lifecycle ID or if you will use an existing Lifecycle ID'
   ),
@@ -93,12 +99,12 @@ export const lifecycleIdSchema = sharedLifecycleIdSchema.shape({
 export const rejectIntakeSchema = Yup.object().shape({
   nextSteps: Yup.string().trim().required('Please include next steps'),
   reason: Yup.string().trim().required('Please include a reason'),
-  feedback: Yup.string().trim().required('Please fill out email')
+  feedback: skippableEmail
 });
 
 export const provideGRTFeedbackSchema = Yup.object().shape({
   grtFeedback: Yup.string()
     .trim()
     .required('Please include feedback for the business owner'),
-  emailBody: Yup.string().trim().required('Please fill out email')
+  emailBody: skippableEmail
 });

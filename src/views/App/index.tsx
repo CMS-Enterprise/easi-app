@@ -25,6 +25,7 @@ import GovernanceTaskList from 'views/GovernanceTaskList';
 import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
 import LcidInfo from 'views/GovernanceTaskList/LcidInfo';
 import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
+import Help from 'views/Help';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import MakingARequest from 'views/MakingARequest';
@@ -156,6 +157,8 @@ const AppRoutes = () => {
         path="/business/:businessCaseId/:formPage"
         component={BusinessCase}
       />
+
+      {flags.help && <SecureRoute path="/help" component={Help} />}
 
       {/* Static Page Routes  */}
       <Route path="/privacy-policy" exact component={PrivacyPolicy} />

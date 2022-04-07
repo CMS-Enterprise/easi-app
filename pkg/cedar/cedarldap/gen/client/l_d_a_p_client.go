@@ -6,12 +6,10 @@ package client
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client/operations"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
-
-	strfmt "github.com/go-openapi/strfmt"
-
-	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client/operations"
+	"github.com/go-openapi/strfmt"
 )
 
 // Default l d a p HTTP client.
@@ -20,14 +18,14 @@ var Default = NewHTTPClient(nil)
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "webmethods-apigw.cedarimpl.cms.gov"
+	DefaultHost string = "cdrdevapigw1.awscloud.cms.local:5555"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
 	DefaultBasePath string = "/gateway/LDAP/1.0"
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
-var DefaultSchemes = []string{"http"}
+var DefaultSchemes = []string{"https"}
 
 // NewHTTPClient creates a new l d a p HTTP client.
 func NewHTTPClient(formats strfmt.Registry) *LDAP {
@@ -56,9 +54,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *LDAP {
 
 	cli := new(LDAP)
 	cli.Transport = transport
-
 	cli.Operations = operations.New(transport, formats)
-
 	return cli
 }
 
@@ -103,7 +99,7 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // LDAP is a client for l d a p
 type LDAP struct {
-	Operations *operations.Client
+	Operations operations.ClientService
 
 	Transport runtime.ClientTransport
 }
@@ -111,7 +107,5 @@ type LDAP struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *LDAP) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
-
 	c.Operations.SetTransport(transport)
-
 }

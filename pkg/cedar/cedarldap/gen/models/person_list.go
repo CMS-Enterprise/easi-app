@@ -6,27 +6,37 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // PersonList person list
+//
 // swagger:model PersonList
 type PersonList struct {
 
-	// person list
-	PersonList []*Person `json:"Person_List"`
+	// persons
+	Persons []*Person `json:"Persons"`
+
+	// count
+	Count int32 `json:"count,omitempty"`
+
+	// If the number of records found exceeds the server-side limit, this property will return true.
+	MaxResultsExceeded bool `json:"maxResultsExceeded,omitempty"`
+
+	// message
+	Message string `json:"message,omitempty"`
 }
 
 // Validate validates this person list
 func (m *PersonList) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validatePersonList(formats); err != nil {
+	if err := m.validatePersons(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -36,21 +46,56 @@ func (m *PersonList) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *PersonList) validatePersonList(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.PersonList) { // not required
+func (m *PersonList) validatePersons(formats strfmt.Registry) error {
+	if swag.IsZero(m.Persons) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.PersonList); i++ {
-		if swag.IsZero(m.PersonList[i]) { // not required
+	for i := 0; i < len(m.Persons); i++ {
+		if swag.IsZero(m.Persons[i]) { // not required
 			continue
 		}
 
-		if m.PersonList[i] != nil {
-			if err := m.PersonList[i].Validate(formats); err != nil {
+		if m.Persons[i] != nil {
+			if err := m.Persons[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("Person_List" + "." + strconv.Itoa(i))
+					return ve.ValidateName("Persons" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("Persons" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this person list based on the context it is used
+func (m *PersonList) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidatePersons(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *PersonList) contextValidatePersons(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Persons); i++ {
+
+		if m.Persons[i] != nil {
+			if err := m.Persons[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("Persons" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("Persons" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

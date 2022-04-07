@@ -19,7 +19,7 @@ describe('LinkCard', () => {
   });
 
   it('renders heading with link', () => {
-    expect(wrapper.find('h2').children().contains(props.heading)).toEqual(true);
+    expect(wrapper.find('h3').children().contains(props.heading)).toEqual(true);
     expect(wrapper.find('UswdsReactLink').prop('to')).toEqual(props.link);
   });
 });
