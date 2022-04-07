@@ -49,7 +49,7 @@ const PageContent = () => {
       <p className="font-body-lg margin-top-0 margin-bottom-4 line-height-body-5">
         {t('subheading')}
       </p>
-      <CardGroup className="padding-top-1 padding-bottom-5">
+      <CardGroup className="padding-top-1 padding-bottom-4">
         {itGovernanceArticles.map(article => {
           return <ArticleCard key={article.route} {...article} />;
         })}
