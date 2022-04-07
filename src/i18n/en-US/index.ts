@@ -15,6 +15,7 @@ import footer from './footer';
 import general from './general';
 import header from './header';
 import help from './help';
+import helpITGovernance from './helpITGovernance';
 import home from './home';
 import intake from './intake';
 import makingARequest from './makingARequest';
@@ -32,6 +33,7 @@ const enUS = {
   cookies,
   error,
   help,
+  helpITGovernance,
   footer,
   general,
   governanceReviewBoard,
