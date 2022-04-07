@@ -85,7 +85,7 @@ const PageContent = () => {
 
 const ITGovernance = () => {
   return (
-    <div className="grid-container">
+    <>
       <Breadcrumb />
       <Switch>
         <Route
@@ -94,7 +94,7 @@ const ITGovernance = () => {
         />
         <Route path="/help/it-governance" render={() => <PageContent />} />
       </Switch>
-    </div>
+    </>
   );
 };
 
