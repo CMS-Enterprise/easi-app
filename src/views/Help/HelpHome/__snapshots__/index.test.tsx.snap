@@ -25,7 +25,7 @@ exports[`HelpHome matches the snapshot 1`] = `
         data-testid="CardGroup"
       >
         <li
-          class="usa-card grid-col-4 article-card--isLink"
+          class="usa-card desktop:grid-col-4 article-card--isLink"
           data-testid="article-card"
         >
           <div
@@ -67,7 +67,7 @@ exports[`HelpHome matches the snapshot 1`] = `
           </div>
         </li>
         <li
-          class="usa-card grid-col-4 article-card--isLink"
+          class="usa-card desktop:grid-col-4 article-card--isLink"
           data-testid="article-card"
         >
           <div
@@ -109,7 +109,7 @@ exports[`HelpHome matches the snapshot 1`] = `
           </div>
         </li>
         <li
-          class="usa-card grid-col-4 article-card--isLink"
+          class="usa-card desktop:grid-col-4 article-card--isLink"
           data-testid="article-card"
         >
           <div
@@ -152,31 +152,39 @@ exports[`HelpHome matches the snapshot 1`] = `
         </li>
       </ul>
       <div
-        class="help-home__articles-links display-flex"
+        class="help-home__articles-links"
       >
-        <p
-          class="text-base margin-y-0 margin-right-3"
+        <div
+          class="help-home__articles-links--first-row"
         >
-          3 of 5 articles
-        </p>
-        <a
-          class="usa-link margin-right-5 help-home__link--all"
-          href="/help/all-articles"
+          <p
+            class="text-base"
+          >
+            3 of 5 articles
+          </p>
+          <a
+            class="usa-link help-home__link--all"
+            href="/help/all-articles"
+          >
+            Browse all help articles
+          </a>
+        </div>
+        <div
+          class="help-home__articles-links--second-row"
         >
-          Browse all help articles
-        </a>
-        <a
-          class="usa-link margin-right-5"
-          href="/help/it-goverance"
-        >
-          View IT Governance articles
-        </a>
-        <a
-          class="usa-link margin-right-5"
-          href="/help/section-508"
-        >
-          View Section 508 articles
-        </a>
+          <a
+            class="usa-link"
+            href="/help/it-goverance"
+          >
+            View IT Governance articles
+          </a>
+          <a
+            class="usa-link"
+            href="/help/section-508"
+          >
+            View Section 508 articles
+          </a>
+        </div>
       </div>
     </div>
     <hr
@@ -201,7 +209,7 @@ exports[`HelpHome matches the snapshot 1`] = `
         class="grid-row grid-gap-lg"
       >
         <div
-          class="tablet:grid-col-4"
+          class="help-home__contact desktop:grid-col-4 desktop:margin-bottom-4 margin-bottom-3"
         >
           <h3
             aria-live="polite"
@@ -230,7 +238,7 @@ exports[`HelpHome matches the snapshot 1`] = `
           </a>
         </div>
         <div
-          class="tablet:grid-col-4"
+          class="help-home__contact desktop:grid-col-4 desktop:margin-bottom-4 margin-bottom-3"
         >
           <h3
             aria-live="polite"
@@ -259,7 +267,7 @@ exports[`HelpHome matches the snapshot 1`] = `
           </a>
         </div>
         <div
-          class="tablet:grid-col-4"
+          class="help-home__contact desktop:grid-col-4 desktop:margin-bottom-4 margin-bottom-3"
         >
           <h3
             aria-live="polite"
@@ -288,7 +296,7 @@ exports[`HelpHome matches the snapshot 1`] = `
           </a>
         </div>
         <div
-          class="tablet:grid-col-4"
+          class="help-home__contact desktop:grid-col-4 desktop:margin-bottom-4 margin-bottom-3"
         >
           <h3
             aria-live="polite"
