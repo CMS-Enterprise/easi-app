@@ -49,7 +49,7 @@ const HelpHome = () => {
       <div className="help-home__articles margin-bottom-7">
         <CardGroup className="margin-y-2">
           {showTopThreeArticles.map(article => (
-            <ArticleCard key={article.route} {...article} />
+            <ArticleCard key={article.route} {...article} isLink />
           ))}
         </CardGroup>
         <div className="help-home__articles-links display-flex">
@@ -92,7 +92,7 @@ const HelpHome = () => {
               headingLevel="h4"
               className="margin-top-0 margin-bottom-05"
             >
-              Email addresses
+              {t('emailAddresses')}
             </PageHeading>
             <UswdsLink
               href={`mailto:${contacts[key].email}`}

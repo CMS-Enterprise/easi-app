@@ -47,6 +47,7 @@ const help = {
       }
     }
   },
+  emailAddresses: 'Email addresses',
   read: 'Read',
   relatedHelp: 'Related help articles',
   relatedDescription:
