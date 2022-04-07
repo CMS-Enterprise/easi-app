@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import NeedHelpBox from './index';
+import NeedHelpBox from './NeedHelpBox';
 
-describe('Need help contact governance team', () => {
-  it('renders without crashing', () => {
+describe('Help Info Box', () => {
+  it('renders NeedHelpBox without crashing', () => {
     const { asFragment } = render(<NeedHelpBox />);
     expect(asFragment()).toMatchSnapshot();
   });

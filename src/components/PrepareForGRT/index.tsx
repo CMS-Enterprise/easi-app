@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import CollapsableList from 'components/CollapsableList';
 import PageHeading from 'components/PageHeading';
-import NeedHelpBox from 'components/shared/NeedHelpBox';
+import NeedHelpBox from 'views/Help/InfoBox/NeedHelpBox';
 
 import './index.scss';
 

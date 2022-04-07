@@ -1,0 +1,304 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The prepare for GRT info page matches the snapshot 1`] = `
+<main
+  className="easi-main-content easi-prepare-for-grt margin-bottom-5"
+  id="main-content"
+  role="main"
+  tabIndex={-1}
+>
+  <div
+    className="grid-container"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      className="usa-breadcrumb usa-breadcrumb--wrap"
+    >
+      <ol
+        className="usa-breadcrumb__list"
+      >
+        <li
+          className="usa-breadcrumb__list-item"
+        >
+          <a
+            className="usa-breadcrumb__link"
+            href="/"
+            onClick={[Function]}
+          >
+            <span>
+              IT Governance
+            </span>
+          </a>
+        </li>
+        <li
+          className="usa-breadcrumb__list-item"
+        >
+          <a
+            className="usa-breadcrumb__link"
+            href="/governance-task-list/undefined"
+            onClick={[Function]}
+          >
+            <span>
+              Governance Task List
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          className="usa-breadcrumb__list-item usa-current"
+        >
+          Prepare for GRT meeting
+        </li>
+      </ol>
+    </nav>
+    <div
+      className="grid-row flex-justify"
+    >
+      <div
+        className="grid-col-9"
+      >
+        <h1
+          aria-live="polite"
+          className="easi-h1"
+          tabIndex={-1}
+        >
+          Prepare for Governance Review Team meeting
+        </h1>
+        <h2
+          className="font-heading-xl margin-top-6"
+        >
+          What to expect
+        </h2>
+        <ul>
+          <li
+            className="line-height-sans-6"
+          >
+            Subject Matter Experts (SMEs) from various components will help you refine your business case. Their role is to ensure that the Project Team has considered potential alternatives that the Governance Review Board (GRB) may consider viable, including pros, cons, and estimated costs, as well as the technical feasibility and process requirements of implementation for each solution.
+          </li>
+          <li
+            className="line-height-sans-6"
+          >
+            At that meeting, the GRT SMEs will discuss your draft business case and provide feedback both to you and the GRB about the alternative solutions you’re considering to meet your business need.
+          </li>
+        </ul>
+      </div>
+      <div
+        className="grid-col-2"
+      >
+        <div
+          className="sidebar margin-top-4"
+        >
+          <h3
+            className="font-sans-sm"
+          >
+            Need help? Contact the Governance team
+          </h3>
+          <p>
+            <a
+              className="usa-link"
+              href="mailto:IT_Governance@cms.hhs.gov"
+            >
+              IT_Governance@cms.hhs.gov
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="distinct-content margin-top-4"
+  >
+    <div
+      className="grid-container"
+    >
+      <div
+        className="grid-row"
+      >
+        <div
+          className="grid-col-10"
+        >
+          <h2
+            className="font-heading-xl"
+          >
+            How to best prepare
+          </h2>
+          <p
+            className="line-height-sans-6"
+          >
+            The Governance Review Team (GRT) SMEs may ask you a series of questions after you walk them through your business case. The best way to prepare for this conversation is to review and be able to respond to such questions as they pertain to your business case.
+          </p>
+          <div
+            className="margin-top-3"
+          >
+            <div
+              className="easi-collapsable-link"
+            >
+              <button
+                aria-controls="capital-planning-and-investment-control-cpic"
+                aria-expanded={false}
+                className="usa-button usa-button--unstyled"
+                data-testid="collapsable-link"
+                onClick={[Function]}
+                type="button"
+              >
+                <svg
+                  className="usa-icon"
+                  focusable={false}
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
+                Capital Planning and Investment Control (CPIC)
+              </button>
+            </div>
+          </div>
+          <div
+            className="margin-top-3"
+          >
+            <div
+              className="easi-collapsable-link"
+            >
+              <button
+                aria-controls="enterprise-architecture-and-data"
+                aria-expanded={false}
+                className="usa-button usa-button--unstyled"
+                data-testid="collapsable-link"
+                onClick={[Function]}
+                type="button"
+              >
+                <svg
+                  className="usa-icon"
+                  focusable={false}
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
+                Enterprise Architecture and Data
+              </button>
+            </div>
+          </div>
+          <div
+            className="margin-top-3"
+          >
+            <div
+              className="easi-collapsable-link"
+            >
+              <button
+                aria-controls="shared-services-and-data-hosting"
+                aria-expanded={false}
+                className="usa-button usa-button--unstyled"
+                data-testid="collapsable-link"
+                onClick={[Function]}
+                type="button"
+              >
+                <svg
+                  className="usa-icon"
+                  focusable={false}
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
+                Shared Services and Data Hosting
+              </button>
+            </div>
+          </div>
+          <div
+            className="margin-top-3"
+          >
+            <div
+              className="easi-collapsable-link"
+            >
+              <button
+                aria-controls="it-security-privacy"
+                aria-expanded={false}
+                className="usa-button usa-button--unstyled"
+                data-testid="collapsable-link"
+                onClick={[Function]}
+                type="button"
+              >
+                <svg
+                  className="usa-icon"
+                  focusable={false}
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
+                IT Security/Privacy
+              </button>
+            </div>
+          </div>
+          <h3
+            className="font-heading-lg margin-top-6"
+          >
+            What to bring
+          </h3>
+          <ul
+            className="line-height-sans-6"
+          >
+            <li>
+              A copy of your business case
+            </li>
+            <li>
+              Any contracting materials that you might have in place. For example, a statement of work, a performance work statement, etc.
+            </li>
+            <li>
+              Additional materials that you’d like to talk through like a system concept diagram, etc.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="grid-container"
+  >
+    <a
+      className="text-ink"
+      href="/governance-task-list/undefined"
+      onClick={[Function]}
+    >
+      Back
+    </a>
+  </div>
+</main>
+`;
