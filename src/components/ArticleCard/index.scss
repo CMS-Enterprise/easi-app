@@ -5,4 +5,7 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+    &-card--isLink {
+      cursor: pointer;
+    }
 }

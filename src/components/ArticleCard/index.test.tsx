@@ -36,4 +36,16 @@ describe('RelatedArticle', () => {
 
     expect(getByText('Section 508')).toBeInTheDocument();
   });
+
+  it('renders Article Card entirely wrapped as a link', () => {
+    const { container } = render(
+      <MemoryRouter>
+        <ArticleCard {...section508Articles[0]} isLink />
+      </MemoryRouter>
+    );
+
+    expect(
+      container.getElementsByClassName('article-card--isLink').length
+    ).toBe(1);
+  });
 });
