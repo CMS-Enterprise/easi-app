@@ -55,13 +55,16 @@ const PageContent = () => {
         })}
       </CardGroup>
       <hr className="margin-0" />
-      <div className="padding-bottom-7 padding-top-2">
+      <div className="padding-bottom-5 desktop:padding-bottom-7 padding-top-2">
         <h2 className="margin-bottom-1">{t('additionalContacts.heading')}</h2>
         <p className="font-body-md">{t('additionalContacts.subheading')}</p>
         <div className="grid-row grid-gap-lg">
           {Object.keys(contacts).map((key: any) => {
             return (
-              <div key={key} className="grid-col-4">
+              <div
+                key={key}
+                className="desktop:grid-col-4 margin-bottom-2 desktop:margin-bottom-0"
+              >
                 <h3 className="margin-bottom-1 margin-top-2">
                   {contacts[key].title}
                 </h3>
