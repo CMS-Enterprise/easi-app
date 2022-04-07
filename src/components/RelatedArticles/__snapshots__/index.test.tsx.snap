@@ -26,7 +26,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
         data-testid="CardGroup"
       >
         <li
-          class="usa-card grid-col-4"
+          class="usa-card desktop:grid-col-4"
           data-testid="article-card"
         >
           <div
@@ -68,7 +68,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
           </div>
         </li>
         <li
-          class="usa-card grid-col-4"
+          class="usa-card desktop:grid-col-4"
           data-testid="article-card"
         >
           <div
@@ -110,7 +110,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
           </div>
         </li>
         <li
-          class="usa-card grid-col-4"
+          class="usa-card desktop:grid-col-4"
           data-testid="article-card"
         >
           <div
