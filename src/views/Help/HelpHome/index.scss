@@ -11,4 +11,15 @@
       border-right: 1px solid color('disabled-light');
     }
   }
+
+  &__additionalContacts {
+    padding-bottom: 56px;
+
+    .tablet\:grid-col-4 {
+      padding-bottom: 32px;
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+  }
 }

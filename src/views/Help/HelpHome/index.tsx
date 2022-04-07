@@ -72,36 +72,38 @@ const HelpHome = () => {
         </div>
       </div>
       <hr className="help-home__hr margin-bottom-6" />
-      <PageHeading headingLevel="h2" className="margin-top-0 margin-bottom-1">
-        {t('additionalContacts.heading')}
-      </PageHeading>
-      <p className="margin-bottom-4">{t('additionalContacts.subheading')}</p>
-      <div className="grid-row grid-gap-lg">
-        {Object.keys(contacts).map((key: any) => (
-          <div key={key} className="tablet:grid-col-4 padding-bottom-4">
-            <PageHeading
-              headingLevel="h3"
-              className="margin-top-0 margin-bottom-1"
-            >
-              {contacts[key].title}
-            </PageHeading>
-            <p className="margin-top-0 margin-bottom-2 line-height-body-4">
-              {contacts[key].copy}
-            </p>
-            <PageHeading
-              headingLevel="h4"
-              className="margin-top-0 margin-bottom-05"
-            >
-              {t('emailAddresses')}
-            </PageHeading>
-            <UswdsLink
-              href={`mailto:${contacts[key].email}`}
-              className="margin-top-0"
-            >
-              {contacts[key].email}
-            </UswdsLink>
-          </div>
-        ))}
+      <div className="help-home__additionalContacts">
+        <PageHeading headingLevel="h2" className="margin-top-0 margin-bottom-1">
+          {t('additionalContacts.heading')}
+        </PageHeading>
+        <p className="margin-bottom-4">{t('additionalContacts.subheading')}</p>
+        <div className="grid-row grid-gap-lg">
+          {Object.keys(contacts).map((key: any) => (
+            <div key={key} className="tablet:grid-col-4">
+              <PageHeading
+                headingLevel="h3"
+                className="margin-top-0 margin-bottom-1"
+              >
+                {contacts[key].title}
+              </PageHeading>
+              <p className="margin-top-0 margin-bottom-2 line-height-body-4">
+                {contacts[key].copy}
+              </p>
+              <PageHeading
+                headingLevel="h4"
+                className="margin-top-0 margin-bottom-05"
+              >
+                {t('emailAddresses')}
+              </PageHeading>
+              <UswdsLink
+                href={`mailto:${contacts[key].email}`}
+                className="margin-top-0"
+              >
+                {contacts[key].email}
+              </UswdsLink>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
