@@ -61,7 +61,7 @@ const PageContent = () => {
         <div className="grid-row grid-gap-lg">
           {Object.keys(contacts).map((key: any) => {
             return (
-              <div className="grid-col-4">
+              <div key={key} className="grid-col-4">
                 <h3 className="margin-bottom-1 margin-top-2">
                   {contacts[key].title}
                 </h3>
