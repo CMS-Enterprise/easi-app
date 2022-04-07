@@ -1,0 +1,13 @@
+.prepare-for-grt {
+  ul.list-style-none {
+    list-style: none;
+  }
+  ul.bullet-list {
+    padding: 0;
+    list-style-position: inside;
+    span {
+      position: relative;
+      left: -.75rem;
+    }
+  }
+}

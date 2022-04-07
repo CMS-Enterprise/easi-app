@@ -9,17 +9,15 @@ const governanceReviewTeam = {
     whatToExpect: {
       title: 'What to expect',
       items: [
-        'Subject Matter Experts (SMEs) from various components will help you refine your business case. Their role is to ensure that the Project Team has considered potential alternatives that the Governance Review Board (GRB) may consider viable, including pros, cons, and estimated costs, as well as the technical feasibility and process requirements of implementation for each solution.',
-        'At that meeting, the GRT SMEs will discuss your draft business case and provide feedback both to you and the GRB about the alternative solutions you’re considering to meet your business need.'
+        'Subject Matter Experts (SMEs) from various components will help you refine your Business Case. Their role is to ensure that you and your project team have considered and documented information about any potential alternatives that the Governance Review Board (GRB) may consider viable, including pros, cons, and estimated costs, as well as the technical feasibility and implementation process requirements for each solution.',
+        'At the meeting, the Governance Review Team (GRT) SMEs will discuss your draft Business Case and provide feedback both to you and the GRB about the alternative solutions you’re considering to meet your business need.'
       ]
     },
 
     howToBestPrepare: {
-      title: 'How to best prepare',
-      subtitle:
-        'Sample questions and topics that might be asked during the meeting',
+      title: 'Possible questions',
       body:
-        'The Governance Review Team (GRT) SMEs may ask you a series of questions after you walk them through your business case. The best way to prepare for this conversation is to review and be able to respond to such questions as they pertain to your business case.'
+        'The GRT SMEs may ask you a series of questions after you walk them through your Business Case. The best way to prepare for this conversation is to review and be able to respond to example questions as they pertain to your Business Case. Example questions are included in the sections below.'
     },
 
     capitalPlanning: {
@@ -66,10 +64,12 @@ const governanceReviewTeam = {
 
     whatToBring: {
       title: 'What to bring',
+      subtitle:
+        'The following are important items to have with you at the GRT meeting:',
       items: [
-        'A copy of your business case',
-        'Any contracting materials that you might have in place. For example, a statement of work, a performance work statement, etc.',
-        'Additional materials that you’d like to talk through like a system concept diagram, etc.'
+        'a copy of your Business Case',
+        'any contracting materials that you might have in place, for example, a Statement of Work (SOW), a Performance Work Statement (PWS), or other contracting document',
+        'additional materials that you’d like to talk through, such as a concept diagram'
       ]
     }
   },

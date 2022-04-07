@@ -3,94 +3,99 @@ import { useTranslation } from 'react-i18next';
 
 import CollapsableList from 'components/CollapsableList';
 import PageHeading from 'components/PageHeading';
+import NeedHelpBox from 'components/shared/NeedHelpBox';
 
 import './index.scss';
 
 type PrepareForGRTProps = {
-  sidebar?: React.ReactNode;
   helpType?: string;
 };
 
-const PrepareForGRT = ({ sidebar, helpType }: PrepareForGRTProps) => {
+const PrepareForGRT = ({ helpType }: PrepareForGRTProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   return (
-    <>
-      <div className="grid-container">
-        <div className="grid-row flex-justify">
-          <div className="grid-col-9">
-            <PageHeading>{t('prepare.title')}</PageHeading>
-            <h2 className="font-heading-xl margin-top-6">
-              {t('prepare.whatToExpect.title')}
-            </h2>
-            {helpType && <div>{helpType}</div>}
-            <ul>
-              {t<string[]>('prepare.whatToExpect.items', {
-                returnObjects: true
-              }).map(item => (
-                <li className="line-height-sans-6" key={item}>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="grid-col-2">{sidebar}</div>
-        </div>
+    <div className="prepare-for-grt">
+      <div>
+        <PageHeading className="line-height-heading-2">
+          {t('prepare.title')}
+        </PageHeading>
+        {helpType && (
+          <>
+            <div>{helpType}</div>
+            <div>{t('description')}</div>
+          </>
+        )}
+        <h2 className="font-heading-xl line-height-heading-2 margin-top-3 margin-bottom-2">
+          {t('prepare.whatToExpect.title')}
+        </h2>
+        <ul className="list-style-none margin-0 padding-0">
+          {t<string[]>('prepare.whatToExpect.items', {
+            returnObjects: true
+          }).map(item => (
+            <li className="line-height-sans-6" key={item}>
+              {item}
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <div className="distinct-content margin-top-4">
-        <div className="grid-container">
-          <div className="grid-row">
-            <div className="grid-col-10">
-              <h2 className="font-heading-xl">
-                {t('prepare.howToBestPrepare.title')}
-              </h2>
-              <p className="line-height-sans-6">
-                {t('prepare.howToBestPrepare.body')}
-              </p>
-
-              <CollapsableList
-                label={t('prepare.capitalPlanning.title')}
-                items={t<string[]>('prepare.capitalPlanning.items', {
-                  returnObjects: true
-                })}
-              />
-
-              <CollapsableList
-                label={t('prepare.enterpriseArchitecture.title')}
-                items={t<string[]>('prepare.enterpriseArchitecture.items', {
-                  returnObjects: true
-                })}
-              />
-
-              <CollapsableList
-                label={t('prepare.sharedServices.title')}
-                items={t<string[]>('prepare.sharedServices.items', {
-                  returnObjects: true
-                })}
-              />
-
-              <CollapsableList
-                label={t('prepare.itSecurityPrivacy.title')}
-                items={t<string[]>('prepare.itSecurityPrivacy.items', {
-                  returnObjects: true
-                })}
-              />
-
-              <h3 className="font-heading-lg margin-top-6">
-                {t('prepare.whatToBring.title')}
-              </h3>
-              <ul className="line-height-sans-6">
-                {t<string[]>('prepare.whatToBring.items', {
-                  returnObjects: true
-                }).map(item => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+      <div className="margin-top-3 padding-2 bg-base-lightest">
+        <h3 className="margin-top-0 margin-bottom-2 font-heading-lg line-height-heading-2">
+          {t('prepare.howToBestPrepare.title')}
+        </h3>
+        <div className="line-height-sans-6">
+          {t('prepare.howToBestPrepare.body')}
         </div>
+
+        <CollapsableList
+          className="margin-top-2"
+          label={t('prepare.capitalPlanning.title')}
+          items={t<string[]>('prepare.capitalPlanning.items', {
+            returnObjects: true
+          })}
+        />
+
+        <CollapsableList
+          className="margin-top-2"
+          label={t('prepare.enterpriseArchitecture.title')}
+          items={t<string[]>('prepare.enterpriseArchitecture.items', {
+            returnObjects: true
+          })}
+        />
+
+        <CollapsableList
+          className="margin-top-2"
+          label={t('prepare.sharedServices.title')}
+          items={t<string[]>('prepare.sharedServices.items', {
+            returnObjects: true
+          })}
+        />
+
+        <CollapsableList
+          className="margin-top-2"
+          label={t('prepare.itSecurityPrivacy.title')}
+          items={t<string[]>('prepare.itSecurityPrivacy.items', {
+            returnObjects: true
+          })}
+        />
       </div>
-    </>
+      <div>
+        <h3 className="font-heading-lg margin-top-6 margin-bottom-2">
+          {t('prepare.whatToBring.title')}
+        </h3>
+        <div>{t('prepare.whatToBring.subtitle')}</div>
+        <ul className="bullet-list line-height-body-5">
+          {t<string[]>('prepare.whatToBring.items', {
+            returnObjects: true
+          }).map(item => (
+            <li key={item}>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <NeedHelpBox />
+    </div>
   );
 };
 
