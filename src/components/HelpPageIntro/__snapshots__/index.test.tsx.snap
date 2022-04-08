@@ -13,11 +13,11 @@ exports[`HelpPageIntro matches the snapshot 1`] = `
       Page Heading
     </h1>
     <a
-      class="usa-link"
+      class="usa-link display-inline-block margin-y-1"
       href="/help/it-governance"
     >
       <span
-        class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1 margin-y-1"
+        class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
         data-testid="tag"
       >
         IT Governance
