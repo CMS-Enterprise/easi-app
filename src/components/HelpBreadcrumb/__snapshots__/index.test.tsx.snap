@@ -3,7 +3,7 @@
 exports[`HelpBreadcrumb matches the snapshot 1`] = `
 <DocumentFragment>
   <button
-    class="usa-button usa-button--unstyled margin-top-7"
+    class="usa-button usa-button--unstyled margin-top-6"
     data-testid="button"
     type="button"
   >

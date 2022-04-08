@@ -28,7 +28,7 @@ export default function HelpBreadcrumb({
       type="button"
       unstyled
       onClick={() => handleClick()}
-      className={classNames('margin-top-7', className)}
+      className={classNames('margin-top-6', className)}
     >
       {type === 'close' ? (
         <IconClose className="margin-right-05 margin-top-3px text-tbottom" />
