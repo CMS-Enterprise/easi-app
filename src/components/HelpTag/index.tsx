@@ -4,14 +4,9 @@ import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/shared/Tag';
-import { ArticleTypeProps } from 'types/articles';
+import { ArticleRouteProps, ArticleTypeProps } from 'types/articles';
 
-export type ArticleTypes = {
-  type: string;
-  route: string;
-};
-
-const articleTypes: ArticleTypes[] = [
+const articleTypes: ArticleRouteProps[] = [
   {
     type: 'IT Governance',
     route: '/it-governance'

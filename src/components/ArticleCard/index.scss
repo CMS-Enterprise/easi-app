@@ -1,4 +1,8 @@
 .article {
+
+  min-height: 21rem;
+  max-height: 21rem;
+
     &__body {
         display: -webkit-box;
         -webkit-line-clamp: 5;
@@ -7,5 +11,8 @@
     }
     &-card--isLink {
       cursor: pointer;
+    }
+    &__footer {
+      bottom: 0;
     }
 }

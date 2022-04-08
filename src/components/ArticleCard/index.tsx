@@ -18,6 +18,7 @@ import './index.scss';
 type ArticleCardProps = {
   className?: string;
   isLink?: boolean;
+  tag?: boolean;
 };
 
 const ArticleCard = ({
@@ -25,7 +26,8 @@ const ArticleCard = ({
   type,
   route,
   translation,
-  isLink = false
+  isLink = false,
+  tag = true
 }: ArticleCardProps & ArticleProps) => {
   const { t } = useTranslation(translation);
   const history = useHistory();
@@ -40,21 +42,23 @@ const ArticleCard = ({
     <Card
       containerProps={{ className: 'radius-md shadow-2' }}
       data-testid="article-card"
-      className={classnames('desktop:grid-col-4', className, {
+      className={classnames('desktop:grid-col-4', 'article', className, {
         'article-card--isLink': isLink
       })}
       onClick={() => clickHandler(`help${route}`)}
     >
       <CardHeader className="padding-x-3 padding-top-3 padding-bottom-2">
         <h3 className="line-height-body-4 margin-bottom-1">{t('title')}</h3>
-        <Tag className="system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1">
-          {type}
-        </Tag>
+        {tag && (
+          <Tag className="system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1">
+            {type}
+          </Tag>
+        )}
       </CardHeader>
       <CardBody className="padding-y-0 article__body">
         {t('description')}
       </CardBody>
-      <CardFooter className="padding-top-2">
+      <CardFooter className="padding-top-2 article__footer">
         <UswdsReactLink
           to={`help${route}`}
           className="easi-request__button-link padding-x-2"
