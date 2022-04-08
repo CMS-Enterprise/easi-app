@@ -416,8 +416,10 @@ func NewCreateActionExtendLifecycleID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
-) func(context.Context, *models.Action, uuid.UUID, *time.Time, *string, string, *string) (*models.SystemIntake, error) {
+	sendExtendLCIDEmail func(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
+	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
+	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
+) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, shouldSendEmail bool) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
 		action *models.Action,
@@ -426,6 +428,7 @@ func NewCreateActionExtendLifecycleID(
 		nextSteps *string,
 		scope string,
 		costBaseline *string,
+		shouldSendEmail bool,
 	) (*models.SystemIntake, error) {
 		intake, err := fetchSystemIntake(ctx, id)
 		if err != nil {
@@ -460,8 +463,69 @@ func NewCreateActionExtendLifecycleID(
 			return nil, updateErr
 		}
 
-		// don't need to send the notification email from here; the GraphQL resolver sends the email
-		// pkg/graph/schema.resolvers.go, CreateSystemIntakeActionExtendLifecycleID()
+		if !shouldSendEmail {
+			return intake, nil
+		}
+
+		euaID := intake.EUAUserID.ValueOrZero()
+		requesterHasEUAID := euaID != ""
+		requesterHasValidEUAID := requesterHasEUAID
+
+		var requesterInfo *models.UserInfo
+		if requesterHasEUAID {
+			requesterInfo, err = fetchUserInfo(ctx, euaID)
+
+			if err != nil {
+				if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+					appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
+						zap.String("intakeID", intake.ID.String()),
+						zap.String("euaID", euaID))
+					err = sendIntakeInvalidEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), euaID, intake.ID)
+					if err != nil {
+						return nil, err
+					}
+
+					requesterHasValidEUAID = false
+				} else {
+					return nil, err
+				}
+			} else if requesterInfo == nil || requesterInfo.Email == "" {
+				appcontext.ZLogger(ctx).Error(fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when submitting an action"),
+					zap.String("intakeID", intake.ID.String()),
+					zap.String("euaID", euaID))
+				return nil, &apperrors.ExternalAPIError{
+					Err:       errors.New("requester info fetch was not successful when submitting an action"),
+					Model:     intake,
+					ModelID:   intake.ID.String(),
+					Operation: apperrors.Fetch,
+					Source:    "CEDAR LDAP",
+				}
+			}
+		} else {
+			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+				zap.String("intakeID", intake.ID.String()))
+			err = sendIntakeNoEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), intake.ID)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		if requesterHasValidEUAID {
+			err = sendExtendLCIDEmail(
+				ctx,
+				requesterInfo.Email,
+				id,
+				intake.ProjectName.String,
+				expirationDate,
+				scope,
+				intake.DecisionNextSteps.ValueOrZero(),
+				intake.LifecycleCostBaseline.ValueOrZero(),
+			)
+
+			if err != nil {
+				return nil, err
+			}
+		}
 
 		return intake, nil
 	}
