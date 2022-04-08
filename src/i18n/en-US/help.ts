@@ -2,9 +2,6 @@ const help = {
   read: 'Read',
   relatedHelp: 'Related help articles',
   relatedDescription:
-<<<<<<< Updated upstream
-    'Below are some additional help articles that you may find useful.'
-=======
     'Below are some additional help articles that you may find useful.',
   back: 'Back',
   additionalContacts: {
@@ -43,7 +40,6 @@ const help = {
       }
     }
   }
->>>>>>> Stashed changes
 };
 
 export default help;
