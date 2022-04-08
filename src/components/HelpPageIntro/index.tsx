@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import classnames from 'classnames';
 
 import HelpTag from 'components/HelpTag';
 import PageHeading from 'components/PageHeading';
@@ -19,11 +19,11 @@ export default function HelpPageIntro({
   type
 }: HelpPageIntroProps) {
   return (
-    <div className={classNames('help-page-intro margin-bottom-4', className)}>
+    <div className={classnames('help-page-intro margin-bottom-4', className)}>
       <PageHeading className="margin-bottom-0 margin-top-3">
         {heading}
       </PageHeading>
-      {type && <HelpTag type={type} />}
+      {type && <HelpTag type={type} className="margin-y-1" />}
       {subheading && (
         <p className="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5">
           {subheading}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/shared/Tag';
@@ -30,8 +31,11 @@ export default function HelpTag({ type, className }: HelpTagTypes) {
   const { t } = useTranslation();
   const articleType = articleTypes.filter(article => article.type === type)[0];
   return (
-    <UswdsReactLink to={`/help${articleType.route}`} className={className}>
-      <Tag className="system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1 margin-y-1">
+    <UswdsReactLink
+      to={`/help${articleType.route}`}
+      className={classnames('display-inline-block', className)}
+    >
+      <Tag className="system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1">
         {t(articleType.type)}
       </Tag>
     </UswdsReactLink>
