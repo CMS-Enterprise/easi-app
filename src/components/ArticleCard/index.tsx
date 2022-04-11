@@ -9,8 +9,8 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import HelpTag from 'components/HelpTag';
 import UswdsReactLink from 'components/LinkWrapper';
-import Tag from 'components/shared/Tag';
 import { ArticleProps } from 'types/articles';
 
 import './index.scss';
@@ -32,8 +32,9 @@ const ArticleCard = ({
   const { t } = useTranslation(translation);
   const history = useHistory();
 
-  const clickHandler = (url: string) => {
-    if (isLink) {
+  const clickHandler = (e: React.MouseEvent<HTMLElement>, url: string) => {
+    const target = e.target as Element;
+    if (isLink && target.getAttribute('data-testid') !== 'tag') {
       history.push(url);
     }
   };
@@ -47,15 +48,11 @@ const ArticleCard = ({
       className={classnames('desktop:grid-col-4', 'article', className, {
         'article-card--isLink': isLink
       })}
-      onClick={() => clickHandler(`help${route}`)}
+      onClick={e => clickHandler(e, `help${route}`)}
     >
       <CardHeader className="padding-x-3 padding-top-3 padding-bottom-2">
         <h3 className="line-height-body-4 margin-bottom-1">{t('title')}</h3>
-        {tag && (
-          <Tag className="system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1">
-            {type}
-          </Tag>
-        )}
+        {tag && <HelpTag type={type} />}
       </CardHeader>
       <CardBody className="padding-top-0 article__body">
         {t('description')}
