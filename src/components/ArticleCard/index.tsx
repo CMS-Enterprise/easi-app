@@ -40,7 +40,9 @@ const ArticleCard = ({
 
   return (
     <Card
-      containerProps={{ className: 'radius-md shadow-2' }}
+      containerProps={{
+        className: 'radius-md shadow-2 minh-mobile maxh-mobile'
+      }}
       data-testid="article-card"
       className={classnames('desktop:grid-col-4', 'article', className, {
         'article-card--isLink': isLink
@@ -55,7 +57,7 @@ const ArticleCard = ({
           </Tag>
         )}
       </CardHeader>
-      <CardBody className="padding-y-0 article__body">
+      <CardBody className="padding-top-0 article__body">
         {t('description')}
       </CardBody>
       <CardFooter className="padding-top-2 article__footer">

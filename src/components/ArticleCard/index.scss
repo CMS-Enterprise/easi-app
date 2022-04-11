@@ -1,13 +1,11 @@
 .article {
 
-  min-height: 20.75rem;
-  max-height: 20.75rem;
-
     &__body {
         display: -webkit-box;
         -webkit-line-clamp: 5;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        margin-bottom: .75rem;
     }
     &-card--isLink {
       cursor: pointer;
