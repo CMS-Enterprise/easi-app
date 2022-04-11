@@ -42,7 +42,7 @@ const ArticleCard = ({
   return (
     <Card
       containerProps={{
-        className: 'radius-md shadow-2 minh-mobile maxh-mobile'
+        className: 'radius-md shadow-2 minh-mobile'
       }}
       data-testid="article-card"
       className={classnames('desktop:grid-col-4', 'article', className, {
@@ -55,7 +55,7 @@ const ArticleCard = ({
         {tag && <HelpTag type={type} />}
       </CardHeader>
       <CardBody className="padding-top-0 article__body">
-        {t('description')}
+        <p>{t('description')}</p>
       </CardBody>
       <CardFooter className="padding-top-2 article__footer">
         <UswdsReactLink
