@@ -1,4 +1,22 @@
 const help = {
+  heading: "We're here to help.",
+  subheading:
+    'Get assistance with your governance processes and requests, 508 testing, and system information.',
+  threeOfTotalArticles: '3 of <1>{{totalArticles}}</1> articles',
+  articleLinks: {
+    allHelp: {
+      copy: 'Browse all help articles',
+      href: 'help/all-articles'
+    },
+    itGovernance: {
+      copy: 'View IT Governance articles',
+      href: 'help/it-goverance'
+    },
+    section508: {
+      copy: 'View Section 508 articles',
+      href: 'help/section-508'
+    }
+  },
   read: 'Read',
   relatedHelp: 'Related help articles',
   relatedDescription:
@@ -28,6 +46,13 @@ const help = {
           'The Governance Review Admin team can help with questions related to your IT Governance requests.',
         email: 'IT_Governance@cms.hhs.gov'
       },
+      section508: {
+        title: 'Section 508',
+        type: 'Section 508',
+        content:
+          'The Section 508 team can help with questions related to your 508 testing requests, including those about COTS and GOTS products.',
+        email: 'CMS_Section508@cms.hhs.gov'
+      },
       enterprise: {
         title: 'Enterprise Architecture',
         type: 'IT Governance',
@@ -41,13 +66,6 @@ const help = {
         content:
           'The IT Navigator team can help with questions related to choosing the type of IT Governance request that fits your needs.',
         email: 'NavigatorInquiries@cms.hhs.gov'
-      },
-      section508: {
-        title: 'Section 508',
-        type: 'Section 508',
-        content:
-          'The Section 508 team can help with questions related to your 508 testing requests, including those about COTS and GOTS products.',
-        email: 'CMS_Section508@cms.hhs.gov'
       }
     }
   }

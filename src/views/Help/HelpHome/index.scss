@@ -1,0 +1,48 @@
+.help-home {
+  &__articles-links {
+    @media screen and (min-width: $desktop) {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    p, a {
+      margin-top: 0;
+      margin-bottom: 24px;
+      display: block;
+
+      @media screen and (min-width: $mobile) {
+        margin-right: 40px;
+      }
+
+      @media screen and (min-width: $desktop) {
+        margin-bottom: 0;
+      }
+    }
+
+    &--first-row,
+    &--second-row {
+      @media screen and (min-width: $mobile) {
+        display: flex;
+      }
+    }
+  }
+
+  &__link {
+    &--all {
+      @media screen and (min-width: $desktop) {
+        padding-right: 40px;
+        border-right: 1px solid color('disabled-light');
+      }
+    }
+  }
+
+  &__additionalContacts {
+    padding-bottom: 56px;
+  }
+
+  &__contact {
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+}
