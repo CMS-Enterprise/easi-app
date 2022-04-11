@@ -17,6 +17,10 @@
             &:visited {
                 color: $easi-blue;
             }
+            &:hover {
+                color: color('primary-dark');
+                border-color: color('primary-dark');
+            }
         }
     }
     .bookmarkIcon {
