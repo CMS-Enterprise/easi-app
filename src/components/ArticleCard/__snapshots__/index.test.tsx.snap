@@ -18,12 +18,17 @@ exports[`RelatedArticle matches the snapshot 1`] = `
         >
           Prepare for the Governance Review Team meeting
         </h3>
-        <span
-          class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
-          data-testid="tag"
+        <a
+          class="usa-link display-inline-block"
+          href="/help/it-governance"
         >
-          IT Governance
-        </span>
+          <span
+            class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
+            data-testid="tag"
+          >
+            IT Governance
+          </span>
+        </a>
       </header>
       <div
         class="usa-card__body padding-top-0 article__body"
