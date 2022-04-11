@@ -5,18 +5,22 @@ exports[`HelpHome matches the snapshot 1`] = `
   <div
     class="help-home"
   >
-    <h1
-      aria-live="polite"
-      class="easi-h1 margin-bottom-1"
-      tabindex="-1"
+    <div
+      class="help-page-intro margin-bottom-4"
     >
-      We're here to help.
-    </h1>
-    <p
-      class="font-body-lg margin-top-0 margin-bottom-4"
-    >
-      Get assistance with your governance processes and requests, 508 testing, and system information.
-    </p>
+      <h1
+        aria-live="polite"
+        class="easi-h1 margin-bottom-0 margin-top-3"
+        tabindex="-1"
+      >
+        We're here to help.
+      </h1>
+      <p
+        class="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5"
+      >
+        Get assistance with your governance processes and requests, 508 testing, and system information.
+      </p>
+    </div>
     <div
       class="help-home__articles margin-bottom-7"
     >
@@ -25,11 +29,11 @@ exports[`HelpHome matches the snapshot 1`] = `
         data-testid="CardGroup"
       >
         <li
-          class="usa-card desktop:grid-col-4 article-card--isLink"
+          class="usa-card desktop:grid-col-4 article article-card--isLink"
           data-testid="article-card"
         >
           <div
-            class="usa-card__container radius-md shadow-2"
+            class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
           >
             <header
               class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
@@ -48,13 +52,13 @@ exports[`HelpHome matches the snapshot 1`] = `
               </span>
             </header>
             <div
-              class="usa-card__body padding-y-0 article__body"
+              class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
             >
               Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
             </div>
             <div
-              class="usa-card__footer padding-top-2"
+              class="usa-card__footer padding-top-2 article__footer"
               data-testid="CardFooter"
             >
               <a
@@ -67,11 +71,11 @@ exports[`HelpHome matches the snapshot 1`] = `
           </div>
         </li>
         <li
-          class="usa-card desktop:grid-col-4 article-card--isLink"
+          class="usa-card desktop:grid-col-4 article article-card--isLink"
           data-testid="article-card"
         >
           <div
-            class="usa-card__container radius-md shadow-2"
+            class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
           >
             <header
               class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
@@ -90,13 +94,13 @@ exports[`HelpHome matches the snapshot 1`] = `
               </span>
             </header>
             <div
-              class="usa-card__body padding-y-0 article__body"
+              class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
             >
               Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
             </div>
             <div
-              class="usa-card__footer padding-top-2"
+              class="usa-card__footer padding-top-2 article__footer"
               data-testid="CardFooter"
             >
               <a
@@ -109,11 +113,11 @@ exports[`HelpHome matches the snapshot 1`] = `
           </div>
         </li>
         <li
-          class="usa-card desktop:grid-col-4 article-card--isLink"
+          class="usa-card desktop:grid-col-4 article article-card--isLink"
           data-testid="article-card"
         >
           <div
-            class="usa-card__container radius-md shadow-2"
+            class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
           >
             <header
               class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
@@ -132,13 +136,13 @@ exports[`HelpHome matches the snapshot 1`] = `
               </span>
             </header>
             <div
-              class="usa-card__body padding-y-0 article__body"
+              class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
             >
               This sample Business Case can help you as you fill out your own Business Case. The content here is an example of how complete and precise to be when completing your Business Case.
             </div>
             <div
-              class="usa-card__footer padding-top-2"
+              class="usa-card__footer padding-top-2 article__footer"
               data-testid="CardFooter"
             >
               <a
@@ -187,21 +191,19 @@ exports[`HelpHome matches the snapshot 1`] = `
         </div>
       </div>
     </div>
-    <hr
-      class="help-home__hr margin-bottom-6"
+    <div
+      class="easi-divider"
     />
     <div
-      class="help-home__additionalContacts"
+      class="padding-bottom-5 padding-top-2"
     >
       <h2
-        aria-live="polite"
-        class="easi-h1 margin-top-0 margin-bottom-1"
-        tabindex="-1"
+        class="margin-bottom-1"
       >
         Additional contacts
       </h2>
       <p
-        class="margin-bottom-4"
+        class="font-body-md"
       >
         Still need help? Use the contact information below to contact the group you need.
       </p>
@@ -209,116 +211,100 @@ exports[`HelpHome matches the snapshot 1`] = `
         class="grid-row grid-gap-lg"
       >
         <div
-          class="help-home__contact desktop:grid-col-4 desktop:margin-bottom-4 margin-bottom-3"
+          class="desktop:grid-col-4 margin-bottom-2"
         >
           <h3
-            aria-live="polite"
-            class="easi-h1 margin-top-0 margin-bottom-1"
-            tabindex="-1"
+            class="margin-bottom-1 margin-top-2"
           >
             Governance Review Admin
           </h3>
           <p
-            class="margin-top-0 margin-bottom-2 line-height-body-4"
+            class="margin-top-1 line-height-body-4"
           >
             The Governance Review Admin team can help with questions related to your IT Governance requests.
           </p>
           <h4
-            aria-live="polite"
-            class="easi-h1 margin-top-0 margin-bottom-05"
-            tabindex="-1"
+            class="margin-y-1"
           >
             Email addresses
           </h4>
           <a
-            class="usa-link margin-top-0"
+            class="usa-link"
             href="mailto:IT_Governance@cms.hhs.gov"
           >
             IT_Governance@cms.hhs.gov
           </a>
         </div>
         <div
-          class="help-home__contact desktop:grid-col-4 desktop:margin-bottom-4 margin-bottom-3"
+          class="desktop:grid-col-4 margin-bottom-2"
         >
           <h3
-            aria-live="polite"
-            class="easi-h1 margin-top-0 margin-bottom-1"
-            tabindex="-1"
+            class="margin-bottom-1 margin-top-2"
           >
             Section 508
           </h3>
           <p
-            class="margin-top-0 margin-bottom-2 line-height-body-4"
+            class="margin-top-1 line-height-body-4"
           >
             The Section 508 team can help with questions related to your 508 testing requests, including those about COTS and GOTS products.
           </p>
           <h4
-            aria-live="polite"
-            class="easi-h1 margin-top-0 margin-bottom-05"
-            tabindex="-1"
+            class="margin-y-1"
           >
             Email addresses
           </h4>
           <a
-            class="usa-link margin-top-0"
+            class="usa-link"
             href="mailto:CMS_Section508@cms.hhs.gov"
           >
             CMS_Section508@cms.hhs.gov
           </a>
         </div>
         <div
-          class="help-home__contact desktop:grid-col-4 desktop:margin-bottom-4 margin-bottom-3"
+          class="desktop:grid-col-4 margin-bottom-2"
         >
           <h3
-            aria-live="polite"
-            class="easi-h1 margin-top-0 margin-bottom-1"
-            tabindex="-1"
+            class="margin-bottom-1 margin-top-2"
           >
             Enterprise Architecture
           </h3>
           <p
-            class="margin-top-0 margin-bottom-2 line-height-body-4"
+            class="margin-top-1 line-height-body-4"
           >
             The Enterprise Architecture team can help with questions related to your Enterprise Architecture needs.
           </p>
           <h4
-            aria-live="polite"
-            class="easi-h1 margin-top-0 margin-bottom-05"
-            tabindex="-1"
+            class="margin-y-1"
           >
             Email addresses
           </h4>
           <a
-            class="usa-link margin-top-0"
+            class="usa-link"
             href="mailto:EnterpriseArchitecture@cms.hhs.gov"
           >
             EnterpriseArchitecture@cms.hhs.gov
           </a>
         </div>
         <div
-          class="help-home__contact desktop:grid-col-4 desktop:margin-bottom-4 margin-bottom-3"
+          class="desktop:grid-col-4 margin-bottom-2"
         >
           <h3
-            aria-live="polite"
-            class="easi-h1 margin-top-0 margin-bottom-1"
-            tabindex="-1"
+            class="margin-bottom-1 margin-top-2"
           >
             IT Navigator
           </h3>
           <p
-            class="margin-top-0 margin-bottom-2 line-height-body-4"
+            class="margin-top-1 line-height-body-4"
           >
-            The IT Navigator team can help with questions related to choosing the type of IT Governance request that fits your needs. 
+            The IT Navigator team can help with questions related to choosing the type of IT Governance request that fits your needs.
           </p>
           <h4
-            aria-live="polite"
-            class="easi-h1 margin-top-0 margin-bottom-05"
-            tabindex="-1"
+            class="margin-y-1"
           >
             Email addresses
           </h4>
           <a
-            class="usa-link margin-top-0"
+            class="usa-link"
             href="mailto:NavigatorInquiries@cms.hhs.gov"
           >
             NavigatorInquiries@cms.hhs.gov
