@@ -33,16 +33,16 @@ exports[`RelatedArticle matches the snapshot 1`] = `
             class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
           >
             <header
-              class="usa-card__header padding-x-3 padding-top-3 padding-bottom-1"
+              class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
               data-testid="CardHeader"
             >
               <h3
-                class="line-height-body-4 margin-bottom-0"
+                class="line-height-body-4 margin-bottom-1"
               >
                 Prepare for the Governance Review Team meeting
               </h3>
               <span
-                class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1 margin-y-1"
+                class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
                 data-testid="tag"
               >
                 IT Governance
@@ -75,16 +75,16 @@ exports[`RelatedArticle matches the snapshot 1`] = `
             class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
           >
             <header
-              class="usa-card__header padding-x-3 padding-top-3 padding-bottom-1"
+              class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
               data-testid="CardHeader"
             >
               <h3
-                class="line-height-body-4 margin-bottom-0"
+                class="line-height-body-4 margin-bottom-1"
               >
                 Prepare for the Review Board meeting
               </h3>
               <span
-                class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1 margin-y-1"
+                class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
                 data-testid="tag"
               >
                 IT Governance
@@ -117,16 +117,16 @@ exports[`RelatedArticle matches the snapshot 1`] = `
             class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
           >
             <header
-              class="usa-card__header padding-x-3 padding-top-3 padding-bottom-1"
+              class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
               data-testid="CardHeader"
             >
               <h3
-                class="line-height-body-4 margin-bottom-0"
+                class="line-height-body-4 margin-bottom-1"
               >
                 Sample Business Case
               </h3>
               <span
-                class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1 margin-y-1"
+                class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
                 data-testid="tag"
               >
                 IT Governance
