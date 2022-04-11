@@ -6,7 +6,7 @@ exports[`HelpHome matches the snapshot 1`] = `
     class="help-home"
   >
     <div
-      class="help-page-intro margin-bottom-4"
+      class="help-page-intro margin-bottom-4 margin-top-8"
     >
       <h1
         aria-live="polite"
@@ -44,12 +44,17 @@ exports[`HelpHome matches the snapshot 1`] = `
               >
                 Prepare for the Governance Review Team meeting
               </h3>
-              <span
-                class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
-                data-testid="tag"
+              <a
+                class="usa-link display-inline-block"
+                href="/help/it-governance"
               >
-                IT Governance
-              </span>
+                <span
+                  class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
+                  data-testid="tag"
+                >
+                  IT Governance
+                </span>
+              </a>
             </header>
             <div
               class="usa-card__body padding-top-0 article__body"
@@ -86,12 +91,17 @@ exports[`HelpHome matches the snapshot 1`] = `
               >
                 Prepare for the Review Board meeting
               </h3>
-              <span
-                class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
-                data-testid="tag"
+              <a
+                class="usa-link display-inline-block"
+                href="/help/it-governance"
               >
-                IT Governance
-              </span>
+                <span
+                  class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
+                  data-testid="tag"
+                >
+                  IT Governance
+                </span>
+              </a>
             </header>
             <div
               class="usa-card__body padding-top-0 article__body"
@@ -128,12 +138,17 @@ exports[`HelpHome matches the snapshot 1`] = `
               >
                 Sample Business Case
               </h3>
-              <span
-                class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
-                data-testid="tag"
+              <a
+                class="usa-link display-inline-block"
+                href="/help/it-governance"
               >
-                IT Governance
-              </span>
+                <span
+                  class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
+                  data-testid="tag"
+                >
+                  IT Governance
+                </span>
+              </a>
             </header>
             <div
               class="usa-card__body padding-top-0 article__body"
