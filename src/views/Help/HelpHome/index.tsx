@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { CardGroup } from '@trussworks/react-uswds';
 
 import ArticleCard from 'components/ArticleCard';
@@ -22,7 +22,11 @@ const HelpHome = () => {
 
   return (
     <div className="help-home">
-      <HelpPageIntro heading={t('heading')} subheading={t('subheading')} />
+      <HelpPageIntro
+        heading={t('heading')}
+        subheading={t('subheading')}
+        className="margin-top-8"
+      />
       <div className="help-home__articles margin-bottom-7">
         <CardGroup className="margin-y-2">
           {showTopThreeArticles.map(article => (
@@ -31,7 +35,11 @@ const HelpHome = () => {
         </CardGroup>
         <div className="help-home__articles-links">
           <div className="help-home__articles-links--first-row">
-            <p className="text-base">3 of {totalArticles} articles</p>
+            <p className="text-base">
+              <Trans i18nKey="help:threeOfTotalArticles">
+                indexZero {{ totalArticles }} indexOne
+              </Trans>
+            </p>
             <UswdsReactLink
               to={t('articleLinks.allHelp.href')}
               className="help-home__link--all"

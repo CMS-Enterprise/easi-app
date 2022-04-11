@@ -2,6 +2,7 @@ const help = {
   heading: "We're here to help.",
   subheading:
     'Get assistance with your governance processes and requests, 508 testing, and system information.',
+  threeOfTotalArticles: '3 of <1>{{totalArticles}}</1> articles',
   articleLinks: {
     allHelp: {
       copy: 'Browse all help articles',
