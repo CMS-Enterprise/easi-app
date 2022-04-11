@@ -5,6 +5,7 @@ import { CardGroup, Link as UswdsLink } from '@trussworks/react-uswds';
 import ArticleCard from 'components/ArticleCard';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Divider from 'components/shared/Divider';
 import itGovernanceArticles from 'views/Help/ITGovernance/articles';
 import section508Articles from 'views/Help/Section508/articles';
 
@@ -64,7 +65,7 @@ const HelpHome = () => {
           </div>
         </div>
       </div>
-      <hr className="help-home__hr margin-bottom-6" />
+      <Divider className="margin-bottom-6" />
       <div className="help-home__additionalContacts">
         <PageHeading headingLevel="h2" className="margin-top-0 margin-bottom-1">
           {t('additionalContacts.heading')}
