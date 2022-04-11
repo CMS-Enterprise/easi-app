@@ -47,7 +47,7 @@ exports[`IT Governance Help matches the snapshot 1`] = `
     data-testid="CardGroup"
   >
     <li
-      class="usa-card desktop:grid-col-4 article"
+      class="usa-card desktop:grid-col-4 article article-card--isLink"
       data-testid="article-card"
     >
       <div
@@ -83,7 +83,7 @@ exports[`IT Governance Help matches the snapshot 1`] = `
       </div>
     </li>
     <li
-      class="usa-card desktop:grid-col-4 article"
+      class="usa-card desktop:grid-col-4 article article-card--isLink"
       data-testid="article-card"
     >
       <div
@@ -119,7 +119,7 @@ exports[`IT Governance Help matches the snapshot 1`] = `
       </div>
     </li>
     <li
-      class="usa-card desktop:grid-col-4 article"
+      class="usa-card desktop:grid-col-4 article article-card--isLink"
       data-testid="article-card"
     >
       <div
