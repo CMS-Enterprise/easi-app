@@ -7,7 +7,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
     data-testid="article-card"
   >
     <div
-      class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
+      class="usa-card__container radius-md shadow-2 minh-mobile"
     >
       <header
         class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
@@ -34,7 +34,9 @@ exports[`RelatedArticle matches the snapshot 1`] = `
         class="usa-card__body padding-top-0 article__body"
         data-testid="CardBody"
       >
-        Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+        <p>
+          Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+        </p>
       </div>
       <div
         class="usa-card__footer padding-top-2 article__footer"
