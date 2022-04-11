@@ -9,6 +9,12 @@ const help = {
     subheading:
       'Get assistance with your governance processes and requests, such as adding a new system or service or completing a Business Case.'
   },
+  section508: {
+    heading: 'Section 508',
+    subheading:
+      'Get assistance with Section 508 processes and requirements, such as 508 testing. To learn more about Section 508, please visit ',
+    website: 'www.section508.gov'
+  },
   additionalContacts: {
     heading: 'Additional contacts',
     subheading:

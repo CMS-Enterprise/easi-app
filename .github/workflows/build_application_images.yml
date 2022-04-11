@@ -29,7 +29,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Set up node
-        uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a
+        uses: actions/setup-node@5b52f097d36d4b0b2f94ed6de710023fbb8b2236
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Set up go
@@ -37,6 +37,7 @@ jobs:
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
       - name: Configure go cache
+        id: go-cache
         uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
         with:
           path: |
@@ -58,8 +59,10 @@ jobs:
           restore-keys: |
             v1-yarn-
       - name: Install yarn dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
       - name: Install go modules
+        if: steps.go-cache.outputs.cache-hit != 'true'
         run: go mod download
       - name: Announce failure
         if: ${{ failure() }}
@@ -110,8 +113,13 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-db-migrate
         run: |
-          docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" --file Dockerfile.db_migrations .
-          docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
+          IMAGE_FOUND=$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})
+          if [[ $IMAGE_FOUND == 1 ]]; then
+            echo "Image found, skipping build"
+          else
+            docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" --file Dockerfile.db_migrations .
+            docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
+          fi
       - name: Announce failure
         if: ${{ failure() }}
         run: |
@@ -143,10 +151,15 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-backend
         run: |
-          APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
-          APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
-          docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$GIT_HASH" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" .
-          docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
+          IMAGE_FOUND=$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})
+          if [[ $IMAGE_FOUND == 1 ]]; then
+            echo "Image found, skipping build"
+          else
+            APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
+            APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
+            docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$GIT_HASH" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" .
+            docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
+          fi
       - name: Check for vulnerability scan findings
         run: |
           ./scripts/check_ecr_findings "easi-backend" "$GIT_HASH" "7"
