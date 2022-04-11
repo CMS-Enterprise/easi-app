@@ -4123,7 +4123,6 @@ The type of a lifecycle cost solution, part of a business case
 """
 enum LifecycleCostSolution {
   A
-  AS_IS
   B
   PREFERRED
 }
