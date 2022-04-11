@@ -78,7 +78,7 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
         >
           <a
             class="usa-link easi-request__button-link padding-x-2"
-            href="/help/section-508/steps-involved"
+            href="/help/help/section-508/steps-involved"
           >
             Read
           </a>
@@ -114,7 +114,7 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
         >
           <a
             class="usa-link easi-request__button-link padding-x-2"
-            href="/help/section-508/template-508"
+            href="/help/help/section-508/template-508"
           >
             Read
           </a>

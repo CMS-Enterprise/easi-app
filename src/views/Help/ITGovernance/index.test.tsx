@@ -8,9 +8,7 @@ describe('IT Governance Help', () => {
   it('matches the snapshot', () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={['/help/it-governance']}>
-        <Route path="/help/it-governance">
-          <ITGovernance />
-        </Route>
+        <ITGovernance />
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();

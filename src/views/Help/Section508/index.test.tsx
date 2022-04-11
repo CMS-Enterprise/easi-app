@@ -7,7 +7,7 @@ import Section508 from './index';
 describe('Setion 508 Help Center', () => {
   it('matches the snapshot', () => {
     const { asFragment } = render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/help/section-508']}>
         <Section508 />
       </MemoryRouter>
     );
