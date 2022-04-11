@@ -126,53 +126,45 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
     class="easi-divider"
   />
   <div
-    class="padding-bottom-5 desktop:padding-bottom-7"
+    class="padding-bottom-5 padding-top-2"
   >
+    <h2
+      class="margin-bottom-1"
+    >
+      Additional contacts
+    </h2>
+    <p
+      class="font-body-md"
+    >
+      Still need help? Use the contact information below to contact the group you need.
+    </p>
     <div
       class="grid-row grid-gap-lg"
     >
       <div
-        class="padding-bottom-5 padding-top-2"
+        class="desktop:grid-col-4 margin-bottom-2"
       >
-        <h2
-          class="margin-bottom-1"
+        <h3
+          class="margin-bottom-1 margin-top-2"
         >
-          Additional contacts
-        </h2>
+          Section 508
+        </h3>
         <p
-          class="font-body-md"
+          class="margin-top-1 line-height-body-4"
         >
-          Still need help? Use the contact information below to contact the group you need.
+          The Section 508 team can help with questions related to your 508 testing requests, including those about COTS and GOTS products.
         </p>
-        <div
-          class="grid-row grid-gap-lg"
+        <h4
+          class="margin-y-1"
         >
-          <div
-            class="desktop:grid-col-4 margin-bottom-2"
-          >
-            <h3
-              class="margin-bottom-1 margin-top-2"
-            >
-              Section 508
-            </h3>
-            <p
-              class="margin-top-1 line-height-body-4"
-            >
-              The Section 508 team can help with questions related to your 508 testing requests, including those about COTS and GOTS products.
-            </p>
-            <h4
-              class="margin-y-1"
-            >
-              Email addresses
-            </h4>
-            <a
-              class="usa-link"
-              href="mailto:CMS_Section508@cms.hhs.gov"
-            >
-              CMS_Section508@cms.hhs.gov
-            </a>
-          </div>
-        </div>
+          Email addresses
+        </h4>
+        <a
+          class="usa-link"
+          href="mailto:CMS_Section508@cms.hhs.gov"
+        >
+          CMS_Section508@cms.hhs.gov
+        </a>
       </div>
     </div>
   </div>
