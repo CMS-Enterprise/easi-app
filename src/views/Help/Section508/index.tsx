@@ -55,7 +55,7 @@ const Section508 = () => {
           path="/help/section-508/steps-involved"
           render={() => <StepsInvolved />}
         />
-        <Route path="/help/section-508" render={() => <PageContent />} />
+        <PageContent />
       </Switch>
     </>
   );

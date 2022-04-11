@@ -40,7 +40,7 @@ const ITGovernance = () => {
           path="/help/it-governance/prepare-for-grt"
           render={() => <PrepareForGRT />}
         />
-        <Route path="/help/it-governance" render={() => <PageContent />} />
+        <PageContent />
       </Switch>
     </>
   );
