@@ -31,7 +31,9 @@ const PageContent = () => {
       </p>
       <CardGroup className="padding-top-1 padding-bottom-4">
         {section508Articles.map(article => {
-          return <ArticleCard key={article.route} {...article} tag={false} />;
+          return (
+            <ArticleCard key={article.route} {...article} tag={false} isLink />
+          );
         })}
       </CardGroup>
       <Divider />
