@@ -32,14 +32,21 @@ const ArticleCard = ({
   const { t } = useTranslation(translation);
   const history = useHistory();
 
-  const clickHandler = (e: React.MouseEvent<HTMLElement>, url: string) => {
+  const clickHandler = (
+    e: React.MouseEvent<HTMLElement>,
+    cardRoute: string
+  ) => {
     const target = e.target as Element;
     if (target.getAttribute('data-testid') === 'tag') {
-      // TODO: history.push to url specified in tag
+      if (type === 'Section 508') {
+        history.push('/help/section-508');
+      } else {
+        history.push('/help/it-goverance');
+      }
       return;
     }
     if (isLink) {
-      history.push(url);
+      history.push(cardRoute);
     }
   };
 
