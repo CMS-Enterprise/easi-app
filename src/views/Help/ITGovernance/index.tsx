@@ -1,24 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import {
-  Button,
-  CardGroup,
-  IconArrowBack,
-  Link as UswdsLink
-} from '@trussworks/react-uswds';
+import { Button, CardGroup, IconArrowBack } from '@trussworks/react-uswds';
 
 import ArticleCard from 'components/ArticleCard';
-import PageHeading from 'components/PageHeading';
+import HelpContacts from 'components/HelpContacts';
+import HelpPageIntro from 'components/HelpPageIntro';
+import Divider from 'components/shared/Divider';
 
 import itGovernanceArticles from './articles';
 import PrepareForGRT from './PrepareForGRT';
-
-type ContactProps = {
-  title: string;
-  content: string;
-  email: string;
-};
 
 const Breadcrumb = () => {
   const history = useHistory();
@@ -37,51 +28,20 @@ const Breadcrumb = () => {
 };
 
 const PageContent = () => {
-  const { t } = useTranslation('helpITGovernance');
-  const contacts: ContactProps[] = t('additionalContacts.contacts', {
-    returnObjects: true
-  });
+  const { t } = useTranslation('help');
   return (
     <>
-      <PageHeading className="margin-bottom-1 margin-top-3">
-        {t('heading')}
-      </PageHeading>
-      <p className="font-body-lg margin-top-0 margin-bottom-4 line-height-body-5">
-        {t('subheading')}
-      </p>
+      <HelpPageIntro
+        heading={t('itGovernance.heading')}
+        subheading={t('itGovernance.subheading')}
+      />
       <CardGroup className="padding-top-1 padding-bottom-4">
         {itGovernanceArticles.map(article => {
           return <ArticleCard key={article.route} {...article} tag={false} />;
         })}
       </CardGroup>
-      <hr className="margin-0" />
-      <div className="padding-bottom-5 desktop:padding-bottom-7 padding-top-2">
-        <h2 className="margin-bottom-1">{t('additionalContacts.heading')}</h2>
-        <p className="font-body-md">{t('additionalContacts.subheading')}</p>
-        <div className="grid-row grid-gap-lg">
-          {Object.keys(contacts).map((key: any) => {
-            return (
-              <div
-                key={key}
-                className="desktop:grid-col-4 margin-bottom-2 desktop:margin-bottom-0"
-              >
-                <h3 className="margin-bottom-1 margin-top-2">
-                  {contacts[key].title}
-                </h3>
-                <p className="margin-top-1 line-height-body-4">
-                  {contacts[key].content}
-                </p>
-                <h4 className="margin-bottom-1">
-                  {t('additionalContacts.emailHeading')}
-                </h4>
-                <UswdsLink href={`mailto:${contacts[key].email}`}>
-                  {contacts[key].email}
-                </UswdsLink>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <Divider />
+      <HelpContacts type="IT Governance" />
     </>
   );
 };
