@@ -37,11 +37,7 @@ const PageContent = () => {
         })}
       </CardGroup>
       <Divider />
-      <div className="padding-bottom-5 desktop:padding-bottom-7">
-        <div className="grid-row grid-gap-lg">
-          <HelpContacts type="Section 508" />
-        </div>
-      </div>
+      <HelpContacts type="Section 508" />
     </>
   );
 };
