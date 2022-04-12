@@ -3,90 +3,33 @@
 exports[`Help Info Box renders NeedHelpBox without crashing 1`] = `
 <DocumentFragment>
   <div
-    class="desktop:grid-col-6 bg-accent-cool-lighter border border-accent-cool-light radius-md padding-3"
+    class="usa-summary-box"
+    data-testid="summary-box"
   >
     <div
-      class="font-sans-lg line-height-body-1 text-bold margin-bottom-2"
+      class="usa-summary-box__body"
     >
-      Need help?
-    </div>
-    <div
-      class="line-height-body-5"
-    >
-      <div
-        class="margin-bottom-05"
+      <h3
+        class="usa-summary-box__heading"
       >
-        Contact the Governance team:
-      </div>
-      <div>
-        <a
-          class="usa-link"
-          href="mailto:IT_Governance@cms.hhs.gov"
-        >
-          IT_Governance@cms.hhs.gov
-        </a>
-      </div>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`Help Info Box renders without crashing 1`] = `
-<DocumentFragment>
-  <div
-    class="desktop:grid-col-6 bg-accent-cool-lighter border border-accent-cool-light radius-md padding-3"
-  >
-    <div
-      class="font-sans-lg line-height-body-1 text-bold margin-bottom-2"
-    >
-      Need help?
-    </div>
-    <div
-      class="line-height-body-5"
-    >
+        Need help?
+      </h3>
       <div
-        class="margin-bottom-05"
+        class="usa-summary-box__text"
       >
-        Contact the Governance team:
-      </div>
-      <div>
-        <a
-          class="usa-link"
-          href="mailto:IT_Governance@cms.hhs.gov"
+        <div
+          class="margin-top-2 margin-bottom-05"
         >
-          IT_Governance@cms.hhs.gov
-        </a>
-      </div>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`Need help contact governance team renders without crashing 1`] = `
-<DocumentFragment>
-  <div
-    class="desktop:grid-col-6 bg-accent-cool-lighter border border-accent-cool-light radius-md padding-3"
-  >
-    <div
-      class="font-sans-lg line-height-body-1 text-bold margin-bottom-2"
-    >
-      Need help?
-    </div>
-    <div
-      class="line-height-body-5"
-    >
-      <div
-        class="margin-bottom-05"
-      >
-        Contact the Governance team:
-      </div>
-      <div>
-        <a
-          class="usa-link"
-          href="mailto:IT_Governance@cms.hhs.gov"
-        >
-          IT_Governance@cms.hhs.gov
-        </a>
+          Contact the Governance team:
+        </div>
+        <div>
+          <a
+            class="usa-link"
+            href="mailto:IT_Governance@cms.hhs.gov"
+          >
+            IT_Governance@cms.hhs.gov
+          </a>
+        </div>
       </div>
     </div>
   </div>

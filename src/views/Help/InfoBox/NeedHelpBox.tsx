@@ -1,19 +1,19 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as USWDSLink } from '@trussworks/react-uswds';
+import { Link as USWDSLink, SummaryBox } from '@trussworks/react-uswds';
 
-import InfoBox from '.';
-
-export default () => {
+export default ({ className }: { className?: string }) => {
   const { t } = useTranslation('help');
   return (
-    <InfoBox heading={t('needHelp')}>
-      <div className="margin-bottom-05">{t('contactGovernanceTeam')}</div>
+    <SummaryBox heading={t('needHelp.heading')} className={className}>
+      <div className="margin-top-2 margin-bottom-05">
+        {t('needHelp.content')}
+      </div>
       <div>
-        <USWDSLink href="mailto:IT_Governance@cms.hhs.gov">
-          IT_Governance@cms.hhs.gov
+        <USWDSLink href={`mailto:${t('needHelp.email')}`}>
+          {t('needHelp.email')}
         </USWDSLink>
       </div>
-    </InfoBox>
+    </SummaryBox>
   );
 };
