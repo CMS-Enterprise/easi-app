@@ -199,7 +199,7 @@ exports[`HelpHome matches the snapshot 1`] = `
         >
           <a
             class="usa-link"
-            href="/help/it-goverance"
+            href="/help/it-governance"
           >
             View IT Governance articles
           </a>

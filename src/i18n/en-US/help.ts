@@ -10,7 +10,7 @@ const help = {
     },
     itGovernance: {
       copy: 'View IT Governance articles',
-      href: 'help/it-goverance'
+      href: 'help/it-governance'
     },
     section508: {
       copy: 'View Section 508 articles',
@@ -22,6 +22,11 @@ const help = {
   relatedDescription:
     'Below are some additional help articles that you may find useful.',
   back: 'Back',
+  itGovernance: {
+    heading: 'IT Governance',
+    subheading:
+      'Get assistance with your governance processes and requests, such as adding a new system or service or completing a Business Case.'
+  },
   section508: {
     heading: 'Section 508',
     subheading:
