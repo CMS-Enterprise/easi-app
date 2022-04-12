@@ -26,25 +26,31 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
     </svg>
     Back
   </button>
-  <h1
-    aria-live="polite"
-    class="easi-h1 margin-bottom-1 margin-top-3"
-    tabindex="-1"
+  <div
+    class="help-page-intro margin-bottom-4"
   >
-    Section 508
-  </h1>
-  <p
-    class="font-body-lg margin-top-0 margin-bottom-4 line-height-body-5"
-  >
-    Get assistance with Section 508 processes and requirements, such as 508 testing. To learn more about Section 508, please visit 
-    <a
-      class="usa-link usa-link--external"
-      href="https://www.section508.gov"
-      target="_blank"
+    <h1
+      aria-live="polite"
+      class="easi-h1 margin-bottom-0 margin-top-3"
+      tabindex="-1"
     >
-      www.section508.gov
-    </a>
-  </p>
+      Section 508
+    </h1>
+    <div
+      class="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5"
+    >
+      <p>
+        Get assistance with Section 508 processes and requirements, such as 508 testing. To learn more about Section 508, please visit 
+        <a
+          class="usa-link usa-link--external"
+          href="https://www.section508.gov"
+          target="_blank"
+        >
+          www.section508.gov
+        </a>
+      </p>
+    </div>
+  </div>
   <ul
     class="usa-card-group padding-top-1 padding-bottom-4"
     data-testid="CardGroup"
@@ -54,7 +60,7 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
       data-testid="article-card"
     >
       <div
-        class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
+        class="usa-card__container radius-md shadow-2 minh-mobile"
       >
         <header
           class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
@@ -70,7 +76,9 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
           class="usa-card__body padding-top-0 article__body"
           data-testid="CardBody"
         >
-          This is an overview of the process for completing 508 testing for your system.
+          <p>
+            This is an overview of the process for completing 508 testing for your system.
+          </p>
         </div>
         <div
           class="usa-card__footer padding-top-2 article__footer"
@@ -78,7 +86,7 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
         >
           <a
             class="usa-link easi-request__button-link padding-x-2"
-            href="/help/help/section-508/steps-involved"
+            href="/help/section-508"
           >
             Read
           </a>
@@ -90,7 +98,7 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
       data-testid="article-card"
     >
       <div
-        class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
+        class="usa-card__container radius-md shadow-2 minh-mobile"
       >
         <header
           class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
@@ -106,7 +114,9 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
           class="usa-card__body padding-top-0 article__body"
           data-testid="CardBody"
         >
-          Download and fill out these templates as needed to complete 508 testing for your system
+          <p>
+            Download and fill out these templates as needed to complete 508 testing for your system
+          </p>
         </div>
         <div
           class="usa-card__footer padding-top-2 article__footer"
@@ -114,7 +124,7 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
         >
           <a
             class="usa-link easi-request__button-link padding-x-2"
-            href="/help/help/section-508/template-508"
+            href="/help/section-508"
           >
             Read
           </a>

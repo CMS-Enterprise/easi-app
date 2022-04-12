@@ -30,7 +30,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
           data-testid="article-card"
         >
           <div
-            class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
+            class="usa-card__container radius-md shadow-2 minh-mobile"
           >
             <header
               class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
@@ -57,7 +57,9 @@ exports[`RelatedArticle matches the snapshot 1`] = `
               class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
             >
-              Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+              <p>
+                Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+              </p>
             </div>
             <div
               class="usa-card__footer padding-top-2 article__footer"
@@ -65,7 +67,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
             >
               <a
                 class="usa-link easi-request__button-link padding-x-2"
-                href="/help/it-governance/prepare-for-grt"
+                href="/"
               >
                 Read
               </a>
@@ -77,7 +79,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
           data-testid="article-card"
         >
           <div
-            class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
+            class="usa-card__container radius-md shadow-2 minh-mobile"
           >
             <header
               class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
@@ -104,7 +106,9 @@ exports[`RelatedArticle matches the snapshot 1`] = `
               class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
             >
-              Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+              <p>
+                Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+              </p>
             </div>
             <div
               class="usa-card__footer padding-top-2 article__footer"
@@ -112,7 +116,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
             >
               <a
                 class="usa-link easi-request__button-link padding-x-2"
-                href="/help/it-governance/prepare-for-grb"
+                href="/"
               >
                 Read
               </a>
@@ -124,7 +128,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
           data-testid="article-card"
         >
           <div
-            class="usa-card__container radius-md shadow-2 minh-mobile maxh-mobile"
+            class="usa-card__container radius-md shadow-2 minh-mobile"
           >
             <header
               class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
@@ -151,7 +155,9 @@ exports[`RelatedArticle matches the snapshot 1`] = `
               class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
             >
-              This sample Business Case can help you as you fill out your own Business Case. The content here is an example of how complete and precise to be when completing your Business Case.
+              <p>
+                This sample Business Case can help you as you fill out your own Business Case. The content here is an example of how complete and precise to be when completing your Business Case.
+              </p>
             </div>
             <div
               class="usa-card__footer padding-top-2 article__footer"
@@ -159,7 +165,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
             >
               <a
                 class="usa-link easi-request__button-link padding-x-2"
-                href="/help/it-governance/sample-business-case"
+                href="/"
               >
                 Read
               </a>
