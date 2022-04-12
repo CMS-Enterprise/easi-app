@@ -48,7 +48,7 @@ const ArticleCard = ({
       className={classnames('desktop:grid-col-4', 'article', className, {
         'article-card--isLink': isLink
       })}
-      onClick={e => clickHandler(e, `help${route}`)}
+      onClick={e => clickHandler(e, `/help${route}`)}
     >
       <CardHeader className="padding-x-3 padding-top-3 padding-bottom-2">
         <h3 className="line-height-body-4 margin-bottom-1">{t('title')}</h3>
@@ -59,7 +59,7 @@ const ArticleCard = ({
       </CardBody>
       <CardFooter className="padding-top-2 article__footer">
         <UswdsReactLink
-          to={`help${route}`}
+          to="#"
           className="easi-request__button-link padding-x-2"
         >
           {useTranslation('help').t('read')}

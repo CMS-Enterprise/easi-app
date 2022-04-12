@@ -44,7 +44,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
       >
         <a
           class="usa-link easi-request__button-link padding-x-2"
-          href="/help/it-governance/prepare-for-grt"
+          href="/"
         >
           Read
         </a>
