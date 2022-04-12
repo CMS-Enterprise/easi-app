@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -30,12 +29,11 @@ const ArticleCard = ({
   tag = true
 }: ArticleCardProps & ArticleProps) => {
   const { t } = useTranslation(translation);
-  const history = useHistory();
 
   const clickHandler = (e: React.MouseEvent<HTMLElement>, url: string) => {
     const target = e.target as Element;
     if (isLink && target.getAttribute('data-testid') !== 'tag') {
-      history.push(url);
+      window.open(url, '_blank');
     }
   };
 
