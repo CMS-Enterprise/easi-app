@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Route, Switch } from 'react-router-dom';
 import { CardGroup } from '@trussworks/react-uswds';
 
 import ArticleCard from 'components/ArticleCard';
@@ -10,9 +9,8 @@ import HelpPageIntro from 'components/HelpPageIntro';
 import Divider from 'components/shared/Divider';
 
 import itGovernanceArticles from './articles';
-import PrepareForGRT from './PrepareForGRT';
 
-const PageContent = () => {
+const ITGovernance = () => {
   const { t } = useTranslation('help');
   return (
     <>
@@ -30,20 +28,6 @@ const PageContent = () => {
       </CardGroup>
       <Divider />
       <HelpContacts type="IT Governance" />
-    </>
-  );
-};
-
-const ITGovernance = () => {
-  return (
-    <>
-      <Switch>
-        <Route
-          path="/help/it-governance/prepare-for-grt"
-          render={() => <PrepareForGRT />}
-        />
-        <PageContent />
-      </Switch>
     </>
   );
 };

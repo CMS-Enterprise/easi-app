@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import MainContent from 'components/MainContent';
 import NotFound from 'views/NotFound';
 
+import PrepareForGRT from './ITGovernance/PrepareForGRT';
 import StepsInvolved from './Section508/StepsInvolved';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
@@ -26,6 +27,10 @@ const Help = () => {
             path="/help/it-governance"
             exact
             render={() => <ITGovernance />}
+          />
+          <Route
+            path="/help/it-governance/prepare-for-grt"
+            render={() => <PrepareForGRT />}
           />
 
           {/* Section 508 Help Routes */}
