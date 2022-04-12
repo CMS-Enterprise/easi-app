@@ -4,25 +4,11 @@ import { Link, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
-  BreadcrumbLink,
-  Link as USWDSLink
+  BreadcrumbLink
 } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
-import SharedPrepareForGRT from 'components/PrepareForGRT';
-
-import './index.scss';
-
-const sidebar = (
-  <div className="sidebar margin-top-4">
-    <h3 className="font-sans-sm">Need help? Contact the Governance team</h3>
-    <p>
-      <USWDSLink href="mailto:IT_Governance@cms.hhs.gov">
-        IT_Governance@cms.hhs.gov
-      </USWDSLink>
-    </p>
-  </div>
-);
+import PrepareForGRTBase from 'components/PrepareForGRT';
 
 const PrepareForGRT = () => {
   const { systemId } = useParams<{ systemId: string }>();
@@ -46,12 +32,12 @@ const PrepareForGRT = () => {
           </Breadcrumb>
           <Breadcrumb current>{t('prepare.breadcrumb')}</Breadcrumb>
         </BreadcrumbBar>
-      </div>
-      <SharedPrepareForGRT sidebar={sidebar} />
-      <div className="grid-container">
-        <Link to={`/governance-task-list/${systemId}`} className="text-ink">
-          Back
-        </Link>
+        <PrepareForGRTBase />
+        <div className="margin-top-4">
+          <Link to={`/governance-task-list/${systemId}`} className="text-ink">
+            Back
+          </Link>
+        </div>
       </div>
     </MainContent>
   );

@@ -1,29 +1,29 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
 
 import CollapsableList from 'components/CollapsableList';
+import HelpPageIntro from 'components/HelpPageIntro';
 import PageHeading from 'components/PageHeading';
 import NeedHelpBox from 'views/Help/InfoBox/NeedHelpBox';
 
 import './index.scss';
 
-type PrepareForGRTProps = {
-  helpType?: string;
-};
-
-const PrepareForGRT = ({ helpType }: PrepareForGRTProps) => {
+export default ({ helpMode }: { helpMode?: boolean }) => {
   const { t } = useTranslation('governanceReviewTeam');
   return (
     <div className="prepare-for-grt">
       <div>
-        <PageHeading className="line-height-heading-2">
-          {t('prepare.title')}
-        </PageHeading>
-        {helpType && (
-          <>
-            <div>{helpType}</div>
-            <div>{t('description')}</div>
-          </>
+        {!helpMode ? (
+          <PageHeading className="line-height-heading-2">
+            {t('prepare.title')}
+          </PageHeading>
+        ) : (
+          <HelpPageIntro
+            type="IT Governance"
+            heading={t('prepare.title')}
+            subheading={t('description')}
+          />
         )}
         <h2 className="font-heading-xl line-height-heading-2 margin-top-3 margin-bottom-2">
           {t('prepare.whatToExpect.title')}
@@ -31,14 +31,18 @@ const PrepareForGRT = ({ helpType }: PrepareForGRTProps) => {
         <ul className="list-style-none margin-0 padding-0">
           {t<string[]>('prepare.whatToExpect.items', {
             returnObjects: true
-          }).map(item => (
-            <li className="line-height-sans-6" key={item}>
+          }).map((item, idx) => (
+            <li
+              className={classNames('line-height-sans-6', {
+                'margin-top-1': idx
+              })}
+              key={item}
+            >
               {item}
             </li>
           ))}
         </ul>
       </div>
-
       <div className="margin-top-3 padding-2 bg-base-lightest">
         <h3 className="margin-top-0 margin-bottom-2 font-heading-lg line-height-heading-2">
           {t('prepare.howToBestPrepare.title')}
@@ -46,7 +50,6 @@ const PrepareForGRT = ({ helpType }: PrepareForGRTProps) => {
         <div className="line-height-sans-6">
           {t('prepare.howToBestPrepare.body')}
         </div>
-
         <CollapsableList
           className="margin-top-2"
           label={t('prepare.capitalPlanning.title')}
@@ -54,7 +57,6 @@ const PrepareForGRT = ({ helpType }: PrepareForGRTProps) => {
             returnObjects: true
           })}
         />
-
         <CollapsableList
           className="margin-top-2"
           label={t('prepare.enterpriseArchitecture.title')}
@@ -62,7 +64,6 @@ const PrepareForGRT = ({ helpType }: PrepareForGRTProps) => {
             returnObjects: true
           })}
         />
-
         <CollapsableList
           className="margin-top-2"
           label={t('prepare.sharedServices.title')}
@@ -70,7 +71,6 @@ const PrepareForGRT = ({ helpType }: PrepareForGRTProps) => {
             returnObjects: true
           })}
         />
-
         <CollapsableList
           className="margin-top-2"
           label={t('prepare.itSecurityPrivacy.title')}
@@ -84,19 +84,15 @@ const PrepareForGRT = ({ helpType }: PrepareForGRTProps) => {
           {t('prepare.whatToBring.title')}
         </h3>
         <div>{t('prepare.whatToBring.subtitle')}</div>
-        <ul className="bullet-list line-height-body-5">
+        <ul className="list-style-none bullet-list line-height-body-5 padding-0">
           {t<string[]>('prepare.whatToBring.items', {
             returnObjects: true
           }).map(item => (
-            <li key={item}>
-              <span>{item}</span>
-            </li>
+            <li key={item}>{item}</li>
           ))}
         </ul>
       </div>
-      <NeedHelpBox />
+      <NeedHelpBox className="desktop:grid-col-6 margin-top-5" />
     </div>
   );
 };
-
-export default PrepareForGRT;

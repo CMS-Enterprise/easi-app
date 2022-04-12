@@ -1,14 +1,18 @@
 import React from 'react';
 
-import SharedPrepareForGRT from 'components/PrepareForGRT';
+import HelpBreadcrumb from 'components/HelpBreadcrumb';
+import PrepareForGRTBase from 'components/PrepareForGRT';
+import RelatedArticles from 'components/RelatedArticles';
 
 const PrepareForGRT = () => {
   return (
-    <div className="grid-container">
-      {/* close tab */}
-      <SharedPrepareForGRT helpType="IT Governance" />
-      {/* need help */}
-    </div>
+    <>
+      <HelpBreadcrumb type="Close" />
+      <PrepareForGRTBase helpMode />
+      <div className="margin-top-7">
+        <RelatedArticles type="IT Governance" />
+      </div>
+    </>
   );
 };
 
