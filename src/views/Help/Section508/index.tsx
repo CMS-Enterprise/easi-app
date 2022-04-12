@@ -39,7 +39,7 @@ const Section508 = () => {
         })}
       </CardGroup>
       <Divider />
-      <HelpContacts type="IT Governance" />
+      <HelpContacts type="Section 508" />
     </>
   );
 };
