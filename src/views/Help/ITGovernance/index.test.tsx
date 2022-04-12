@@ -2,13 +2,13 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 
-import Section508 from './index';
+import ITGovernance from './index';
 
-describe('Setion 508 Help Center', () => {
+describe('IT Governance Help', () => {
   it('matches the snapshot', () => {
     const { asFragment } = render(
-      <MemoryRouter initialEntries={['/help/section-508']}>
-        <Section508 />
+      <MemoryRouter initialEntries={['/help/it-governance']}>
+        <ITGovernance />
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();

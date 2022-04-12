@@ -7,8 +7,8 @@ import { ArticleTypeProps } from 'types/articles';
 
 type HelpPageIntroProps = {
   className?: string;
-  heading: string;
-  subheading?: string;
+  heading: string | React.ReactNode;
+  subheading?: string | React.ReactNode;
   type?: ArticleTypeProps;
 };
 
@@ -25,9 +25,9 @@ export default function HelpPageIntro({
       </PageHeading>
       {type && <HelpTag type={type} className="margin-y-1" />}
       {subheading && (
-        <p className="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5">
+        <div className="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5">
           {subheading}
-        </p>
+        </div>
       )}
     </div>
   );
