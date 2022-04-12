@@ -3,6 +3,7 @@ import taskList from 'i18n/en-US/taskList';
 import governanceReviewBoard from './articles/governanceReviewBoard';
 import governanceReviewTeam from './articles/governanceReviewTeam';
 import sampleBusinessCase from './articles/sampleBusinessCase';
+import stepsInvolved508 from './articles/stepsInvolved508';
 import templatesFor508Testing from './articles/templatesFor508Testing';
 import accessibility from './accessibility';
 import accessibilityStatement from './accessibilityStatement';
@@ -31,14 +32,15 @@ const enUS = {
   businessCase,
   cookies,
   error,
-  help,
   footer,
   general,
   governanceReviewBoard,
   governanceReviewTeam,
   sampleBusinessCase,
+  stepsInvolved508,
   templatesFor508Testing,
   header,
+  help,
   home,
   intake,
   makingARequest,

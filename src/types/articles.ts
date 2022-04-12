@@ -5,3 +5,8 @@ export type ArticleProps = {
   type: ArticleTypeProps;
   translation: string;
 };
+
+export type ArticleRouteProps = {
+  type: string;
+  route: string;
+};

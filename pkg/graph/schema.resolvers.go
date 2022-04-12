@@ -936,12 +936,6 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 }
 
 func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.CreateSystemIntakeActionExtendLifecycleIDInput) (*model.CreateSystemIntakeActionExtendLifecycleIDPayload, error) {
-	requesterEUAID := appcontext.Principal(ctx).ID()
-	requesterInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
-	if err != nil {
-		return nil, err
-	}
-
 	if input.ExpirationDate == nil {
 		return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
 			UserErrors: []*model.UserError{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}},
@@ -955,31 +949,21 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 	}
 
 	intake, err := r.service.CreateActionExtendLifecycleID(
-		ctx, &models.Action{
+		ctx,
+		&models.Action{
 			IntakeID:   &input.ID,
 			ActionType: models.ActionTypeEXTENDLCID,
-		}, input.ID, input.ExpirationDate, input.NextSteps, input.Scope, input.CostBaseline,
+		},
+		input.ID,
+		input.ExpirationDate,
+		input.NextSteps,
+		input.Scope,
+		input.CostBaseline,
+		input.ShouldSendEmail,
 	)
 
 	if err != nil {
 		return nil, err
-	}
-
-	if input.ShouldSendEmail {
-		err = r.emailClient.SendExtendLCIDEmail(
-			ctx,
-			requesterInfo.Email,
-			input.ID,
-			intake.ProjectName.String,
-			input.ExpirationDate,
-			input.Scope,
-			*input.NextSteps,
-			*input.CostBaseline,
-		)
-
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	return &model.CreateSystemIntakeActionExtendLifecycleIDPayload{
