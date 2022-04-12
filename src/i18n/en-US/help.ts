@@ -10,7 +10,7 @@ const help = {
     },
     itGovernance: {
       copy: 'View IT Governance articles',
-      href: 'help/it-goverance'
+      href: 'help/it-governance'
     },
     section508: {
       copy: 'View Section 508 articles',
