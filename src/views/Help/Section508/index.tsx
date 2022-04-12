@@ -46,13 +46,12 @@ const Section508 = () => {
   return (
     <>
       <HelpBreadcrumb type="Back" />
-      <PageContent />
       <Switch>
         <Route
-          path="/help/it-governance/prepare-for-grt"
+          path="/help/section-508/steps-involved"
           render={() => <StepsInvolved />}
         />
-        <Route path="/help/it-governance" render={() => <PageContent />} />
+        <PageContent />
       </Switch>
     </>
   );
