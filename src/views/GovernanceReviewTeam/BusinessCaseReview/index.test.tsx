@@ -29,11 +29,12 @@ describe('The GRT business case review', () => {
     currentSolutionSummary: 'Mock current solution summary',
     priorityAlignment: 'Mock priority alignment',
     successIndicators: 'Mock success indicators',
-    asIsSolution: {
-      title: 'Mock As is Solution',
-      summary: 'Mock As is solution summary',
-      pros: 'Mock As is solution  pros',
-      cons: 'Mock As is solution cons',
+    preferredSolution: {
+      title: 'Mock Preferred solution',
+      summary: 'Mock Preferred solution summary',
+      acquisitionApproach: 'Mock acquisition approach',
+      pros: 'Mock Preferred solution pros',
+      cons: 'Mock Preferred solution cons',
       estimatedLifecycleCost: {
         year1: {
           development: {
@@ -106,7 +107,17 @@ describe('The GRT business case review', () => {
           }
         }
       },
-      costSavings: ''
+      costSavings: 'Mock cost savings',
+      security: {
+        isApproved: false,
+        isBeingReviewed: 'YES'
+      },
+      hosting: {
+        type: 'Cloud',
+        location: 'Mock location',
+        cloudServiceType: 'Mock cloud service'
+      },
+      hasUserInterface: 'YES'
     }
   };
 
