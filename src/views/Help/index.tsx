@@ -4,6 +4,8 @@ import { Route, Switch } from 'react-router-dom';
 import MainContent from 'components/MainContent';
 import NotFound from 'views/NotFound';
 
+import PrepareForGRT from './ITGovernance/PrepareForGRT';
+import StepsInvolved from './Section508/StepsInvolved';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
@@ -14,10 +16,30 @@ const Help = () => {
     <>
       <MainContent className="grid-container">
         <Switch>
+          {/* Home */}
           <Route path="/help" exact render={() => <HelpHome />} />
+
+          {/* All Articles Search */}
           <Route path="/help/all-articles" render={() => <AllHelp />} />
-          <Route path="/help/it-governance" render={() => <ITGovernance />} />
-          <Route path="/help/section-508" render={() => <Section508 />} />
+
+          {/* IT Governance Help Routes */}
+          <Route
+            path="/help/it-governance"
+            exact
+            render={() => <ITGovernance />}
+          />
+          <Route
+            path="/help/it-governance/prepare-for-grt"
+            render={() => <PrepareForGRT />}
+          />
+
+          {/* Section 508 Help Routes */}
+          <Route path="/help/section-508" exact render={() => <Section508 />} />
+          <Route
+            path="/help/section-508/steps-involved"
+            render={() => <StepsInvolved />}
+          />
+
           {/* 404 */}
           <Route path="*" render={() => <NotFound />} />
         </Switch>

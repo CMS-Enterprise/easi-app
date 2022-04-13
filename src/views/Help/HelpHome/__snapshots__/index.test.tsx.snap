@@ -15,11 +15,11 @@ exports[`HelpHome matches the snapshot 1`] = `
       >
         We're here to help.
       </h1>
-      <p
+      <div
         class="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5"
       >
         Get assistance with your governance processes and requests, 508 testing, and system information.
-      </p>
+      </div>
     </div>
     <div
       class="help-home__articles margin-bottom-7"
@@ -70,7 +70,7 @@ exports[`HelpHome matches the snapshot 1`] = `
             >
               <a
                 class="usa-link easi-request__button-link padding-x-2"
-                href="/help/it-governance/prepare-for-grt"
+                href="/"
               >
                 Read
               </a>
@@ -119,7 +119,7 @@ exports[`HelpHome matches the snapshot 1`] = `
             >
               <a
                 class="usa-link easi-request__button-link padding-x-2"
-                href="/help/it-governance/prepare-for-grb"
+                href="/"
               >
                 Read
               </a>
@@ -168,7 +168,7 @@ exports[`HelpHome matches the snapshot 1`] = `
             >
               <a
                 class="usa-link easi-request__button-link padding-x-2"
-                href="/help/it-governance/sample-business-case"
+                href="/"
               >
                 Read
               </a>
@@ -199,7 +199,7 @@ exports[`HelpHome matches the snapshot 1`] = `
         >
           <a
             class="usa-link"
-            href="/help/it-goverance"
+            href="/help/it-governance"
           >
             View IT Governance articles
           </a>

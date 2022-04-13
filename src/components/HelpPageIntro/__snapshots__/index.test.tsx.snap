@@ -23,11 +23,11 @@ exports[`HelpPageIntro matches the snapshot 1`] = `
         IT Governance
       </span>
     </a>
-    <p
+    <div
       class="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5"
     >
       This is the intro content that describes the page
-    </p>
+    </div>
   </div>
 </DocumentFragment>
 `;
