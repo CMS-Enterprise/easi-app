@@ -4,15 +4,11 @@ import { Link, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
-  BreadcrumbLink,
-  Link as USWDSLink
+  BreadcrumbLink
 } from '@trussworks/react-uswds';
 
-import CollapsableList from 'components/CollapsableList';
 import MainContent from 'components/MainContent';
-import PageHeading from 'components/PageHeading';
-
-import './index.scss';
+import PrepareForGRTBase from 'components/PrepareForGRT';
 
 const PrepareForGRT = () => {
   const { systemId } = useParams<{ systemId: string }>();
@@ -36,93 +32,12 @@ const PrepareForGRT = () => {
           </Breadcrumb>
           <Breadcrumb current>{t('prepare.breadcrumb')}</Breadcrumb>
         </BreadcrumbBar>
-        <div className="grid-row flex-justify">
-          <div className="grid-col-9">
-            <PageHeading>{t('prepare.title')}</PageHeading>
-            <h2 className="font-heading-xl margin-top-6">
-              {t('prepare.whatToExpect.title')}
-            </h2>
-            <ul>
-              {t<string[]>('prepare.whatToExpect.items', {
-                returnObjects: true
-              }).map(item => (
-                <li className="line-height-sans-6" key={item}>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="grid-col-2">
-            <div className="sidebar margin-top-4">
-              <h3 className="font-sans-sm">
-                Need help? Contact the Governance team
-              </h3>
-              <p>
-                <USWDSLink href="mailto:IT_Governance@cms.hhs.gov">
-                  IT_Governance@cms.hhs.gov
-                </USWDSLink>
-              </p>
-            </div>
-          </div>
+        <PrepareForGRTBase />
+        <div className="margin-top-4">
+          <Link to={`/governance-task-list/${systemId}`} className="text-ink">
+            Back
+          </Link>
         </div>
-      </div>
-      <div className="distinct-content margin-top-4">
-        <div className="grid-container">
-          <div className="grid-row">
-            <div className="grid-col-10">
-              <h2 className="font-heading-xl">
-                {t('prepare.howToBestPrepare.title')}
-              </h2>
-              <p className="line-height-sans-6">
-                {t('prepare.howToBestPrepare.body')}
-              </p>
-
-              <CollapsableList
-                label={t('prepare.capitalPlanning.title')}
-                items={t<string[]>('prepare.capitalPlanning.items', {
-                  returnObjects: true
-                })}
-              />
-
-              <CollapsableList
-                label={t('prepare.enterpriseArchitecture.title')}
-                items={t<string[]>('prepare.enterpriseArchitecture.items', {
-                  returnObjects: true
-                })}
-              />
-
-              <CollapsableList
-                label={t('prepare.sharedServices.title')}
-                items={t<string[]>('prepare.sharedServices.items', {
-                  returnObjects: true
-                })}
-              />
-
-              <CollapsableList
-                label={t('prepare.itSecurityPrivacy.title')}
-                items={t<string[]>('prepare.itSecurityPrivacy.items', {
-                  returnObjects: true
-                })}
-              />
-
-              <h3 className="font-heading-lg margin-top-6">
-                {t('prepare.whatToBring.title')}
-              </h3>
-              <ul className="line-height-sans-6">
-                {t<string[]>('prepare.whatToBring.items', {
-                  returnObjects: true
-                }).map(item => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="grid-container">
-        <Link to={`/governance-task-list/${systemId}`} className="text-ink">
-          Back
-        </Link>
       </div>
     </MainContent>
   );
