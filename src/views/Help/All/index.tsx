@@ -15,7 +15,7 @@ const AllHelp = () => {
   const allArticles = itGovernanceArticles.concat(section508Articles);
 
   return (
-    <MainContent className="margin-bottom-10">
+    <MainContent className="grid-container margin-bottom-10">
       <HelpBreadcrumb type="Back" />
       <HelpPageIntro heading={t('allHelpArticles')} />
       <CardGroup className="margin-y-2">
