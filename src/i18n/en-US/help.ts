@@ -22,6 +22,7 @@ const help = {
   relatedDescription:
     'Below are some additional help articles that you may find useful.',
   back: 'Back',
+  allHelpArticles: 'All help articles',
   itGovernance: {
     heading: 'IT Governance',
     subheading:
