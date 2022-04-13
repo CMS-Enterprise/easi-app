@@ -186,6 +186,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	resolverService.IssueLifecycleID = issueLifecycleID
 	resolverService.SubmitIntake = submitIntake
 	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
+	resolverService.QueryPersons = cedarLdapClient.QueryPersons
 	resolverService.CreateActionExtendLifecycleID = services.NewCreateActionExtendLifecycleID(
 		serviceConfig,
 		saveAction,

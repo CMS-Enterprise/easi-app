@@ -40,6 +40,7 @@ type ResolverService struct {
 	IssueLifecycleID              func(context.Context, *models.SystemIntake, *models.Action, bool) (*models.SystemIntake, error)
 	RejectIntake                  func(context.Context, *models.SystemIntake, *models.Action, bool) (*models.SystemIntake, error)
 	FetchUserInfo                 func(context.Context, string) (*models.UserInfo, error)
+	QueryPersons                  func(context.Context, string) ([]*models.UserInfo, error)
 	SubmitIntake                  func(context.Context, *models.SystemIntake, *models.Action) error
 }
 

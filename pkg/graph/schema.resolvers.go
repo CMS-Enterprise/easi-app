@@ -1479,6 +1479,15 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 	return &currentUser, nil
 }
 
+func (r *queryResolver) CedarPersons(ctx context.Context, queryString string) ([]*models.UserInfo, error) {
+	response, err := r.service.QueryPersons(ctx, queryString)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 func (r *queryResolver) CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error) {
 	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, id)
 	if err != nil {
@@ -1904,6 +1913,10 @@ func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.Sy
 	return obj.CedarSystemID.Ptr(), nil
 }
 
+func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
+	return string(obj.Email), nil
+}
+
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
 func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
 	return &accessibilityRequestResolver{r}
@@ -1944,6 +1957,9 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
+// UserInfo returns generated.UserInfoResolver implementation.
+func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
+
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type accessibilityRequestNoteResolver struct{ *Resolver }
@@ -1954,3 +1970,4 @@ type cedarRoleResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+type userInfoResolver struct{ *Resolver }

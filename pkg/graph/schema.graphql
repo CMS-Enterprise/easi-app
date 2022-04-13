@@ -52,6 +52,7 @@ type CedarSystem {
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
 }
+
 """
 This is the Representation of Cedar system with additional related information
 """
@@ -67,6 +68,15 @@ Represents a user's bookmark of a cedar system
 type CedarSystemBookmark {
   euaUserId: String!
   cedarSystemId: String!
+}
+
+"""
+Represents a person response from CEDAR LDAP
+"""
+type UserInfo {
+  commonName: String!
+  email: String!
+  euaUserId: String!
 }
 
 """
@@ -1335,6 +1345,7 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
+  cedarPersons(queryString: String!): [UserInfo!]!
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
