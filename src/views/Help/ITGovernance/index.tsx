@@ -13,7 +13,7 @@ import itGovernanceArticles from './articles';
 const ITGovernance = () => {
   const { t } = useTranslation('help');
   return (
-    <>
+    <div className="grid-container">
       <HelpBreadcrumb type="Back" />
       <HelpPageIntro
         heading={t('itGovernance.heading')}
@@ -28,7 +28,7 @@ const ITGovernance = () => {
       </CardGroup>
       <Divider />
       <HelpContacts type="IT Governance" />
-    </>
+    </div>
   );
 };
 

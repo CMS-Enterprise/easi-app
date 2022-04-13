@@ -14,7 +14,7 @@ const Section508 = () => {
   const { t } = useTranslation('help');
 
   return (
-    <>
+    <div className="grid-container">
       <HelpBreadcrumb type="Back" />
       <HelpPageIntro
         heading={t('section508.heading')}
@@ -40,7 +40,7 @@ const Section508 = () => {
       </CardGroup>
       <Divider />
       <HelpContacts type="Section 508" />
-    </>
+    </div>
   );
 };
 
