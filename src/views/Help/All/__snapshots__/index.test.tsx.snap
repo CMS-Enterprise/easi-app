@@ -3,7 +3,7 @@
 exports[`All help articles matches the snapshot 1`] = `
 <DocumentFragment>
   <main
-    class="easi-main-content margin-bottom-10"
+    class="easi-main-content grid-container margin-bottom-10"
     id="main-content"
     role="main"
     tabindex="-1"
