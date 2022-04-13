@@ -21,7 +21,13 @@ const help = {
   relatedHelp: 'Related help articles',
   relatedDescription:
     'Below are some additional help articles that you may find useful.',
+  needHelp: {
+    heading: 'Need help?',
+    content: 'Contact the Governance team:',
+    email: 'IT_Governance@cms.hhs.gov'
+  },
   back: 'Back',
+  allHelpArticles: 'All help articles',
   itGovernance: {
     heading: 'IT Governance',
     subheading:
