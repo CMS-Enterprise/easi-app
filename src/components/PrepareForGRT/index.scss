@@ -1,0 +1,10 @@
+.prepare-for-grt {
+  ul.list-style-none {
+    list-style: none;
+  }
+  ul.bullet-list {
+    li::before {
+      content: '• ';
+    }
+  }
+}
