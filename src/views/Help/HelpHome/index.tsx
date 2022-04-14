@@ -21,7 +21,7 @@ const HelpHome = () => {
   const showTopThreeArticles = allArticles.slice(0, 3);
 
   return (
-    <div className="help-home">
+    <div className="help-home grid-container">
       <HelpPageIntro
         heading={t('heading')}
         subheading={t('subheading')}
