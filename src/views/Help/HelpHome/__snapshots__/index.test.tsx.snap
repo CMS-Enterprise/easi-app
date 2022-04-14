@@ -3,7 +3,7 @@
 exports[`HelpHome matches the snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="help-home"
+    class="help-home grid-container"
   >
     <div
       class="help-page-intro margin-bottom-4 margin-top-8"
@@ -36,7 +36,7 @@ exports[`HelpHome matches the snapshot 1`] = `
             class="usa-card__container radius-md shadow-2 minh-mobile"
           >
             <header
-              class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+              class="usa-card__header padding-x-3 padding-top-3"
               data-testid="CardHeader"
             >
               <h3
@@ -45,7 +45,7 @@ exports[`HelpHome matches the snapshot 1`] = `
                 Prepare for the Governance Review Team meeting
               </h3>
               <a
-                class="usa-link display-inline-block"
+                class="usa-link display-inline-block margin-bottom-1"
                 href="/help/it-governance"
               >
                 <span
@@ -85,7 +85,7 @@ exports[`HelpHome matches the snapshot 1`] = `
             class="usa-card__container radius-md shadow-2 minh-mobile"
           >
             <header
-              class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+              class="usa-card__header padding-x-3 padding-top-3"
               data-testid="CardHeader"
             >
               <h3
@@ -94,7 +94,7 @@ exports[`HelpHome matches the snapshot 1`] = `
                 Prepare for the Review Board meeting
               </h3>
               <a
-                class="usa-link display-inline-block"
+                class="usa-link display-inline-block margin-bottom-1"
                 href="/help/it-governance"
               >
                 <span
@@ -134,7 +134,7 @@ exports[`HelpHome matches the snapshot 1`] = `
             class="usa-card__container radius-md shadow-2 minh-mobile"
           >
             <header
-              class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+              class="usa-card__header padding-x-3 padding-top-3"
               data-testid="CardHeader"
             >
               <h3
@@ -143,7 +143,7 @@ exports[`HelpHome matches the snapshot 1`] = `
                 Sample Business Case
               </h3>
               <a
-                class="usa-link display-inline-block"
+                class="usa-link display-inline-block margin-bottom-1"
                 href="/help/it-governance"
               >
                 <span
@@ -185,7 +185,7 @@ exports[`HelpHome matches the snapshot 1`] = `
           <p
             class="text-base"
           >
-            3 of 5 articles
+            3 of 6 articles
           </p>
           <a
             class="usa-link help-home__link--all"
