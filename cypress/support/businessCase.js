@@ -24,6 +24,10 @@ cy.businessCase = {
         .type('The quick brown fox jumps over the lazy dog.')
         .should('have.value', 'The quick brown fox jumps over the lazy dog.');
 
+      cy.get('#BusinessCase-CurrentSolutionSummary')
+        .type('The quick brown fox jumps over the lazy dog.')
+        .should('have.value', 'The quick brown fox jumps over the lazy dog.');
+
       cy.get('#BusinessCase-CmsBenefit')
         .type('The quick brown fox jumps over the lazy dog.')
         .should('have.value', 'The quick brown fox jumps over the lazy dog.');
@@ -35,106 +39,6 @@ cy.businessCase = {
       cy.get('#BusinessCase-SuccessIndicators')
         .type('The quick brown fox jumps over the lazy dog.')
         .should('have.value', 'The quick brown fox jumps over the lazy dog.');
-    }
-  },
-  asIsSolution: {
-    fillNonBranchingFields: () => {
-      cy.get('#BusinessCase-AsIsSolutionTitle')
-        .type('Test As is Solution')
-        .should('have.value', 'Test As is Solution');
-
-      cy.get('#BusinessCase-AsIsSolutionSummary')
-        .type('As is Solution Summary')
-        .should('have.value', 'As is Solution Summary');
-
-      cy.get('#BusinessCase-AsIsSolutionPros')
-        .type('As is Solution Pros')
-        .should('have.value', 'As is Solution Pros');
-
-      cy.get('#BusinessCase-AsIsSolutionCons')
-        .type('As is Solution Cons')
-        .should('have.value', 'As is Solution Cons');
-
-      // Estimated Lifecycle Costs Years 1
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year1\\.development\\.isPresent`
-      )
-        .check({ force: true })
-        .should('be.checked');
-
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year1\\.development\\.cost`
-      )
-        .type('1')
-        .should('have.value', '1');
-
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year1\\.operationsMaintenance\\.isPresent`
-      )
-        .check({ force: true })
-        .should('be.checked');
-
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year1\\.operationsMaintenance\\.cost`
-      )
-        .type('5')
-        .should('have.value', '5');
-
-      // Estimated Lifecycle Costs Years 2
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year2\\.operationsMaintenance\\.isPresent`
-      )
-        .check({ force: true })
-        .should('be.checked');
-
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year2\\.operationsMaintenance\\.cost`
-      )
-        .type('5')
-        .should('have.value', '5');
-
-      // Estimated Lifecycle Costs Years 3
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year3\\.other\\.isPresent`
-      )
-        .check({ force: true })
-        .should('be.checked');
-
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year3\\.other\\.cost`
-      )
-        .type('10')
-        .should('have.value', '10');
-
-      // Estimated Lifecycle Costs Years 4
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year4\\.development\\.isPresent`
-      )
-        .check({ force: true })
-        .should('be.checked');
-
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year4\\.development\\.cost`
-      )
-        .type('15')
-        .should('have.value', '15');
-
-      // Estimated Lifecycle Costs Years 5
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year5\\.other\\.isPresent`
-      )
-        .check({ force: true })
-        .should('be.checked');
-
-      cy.get(
-        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year5\\.other\\.cost`
-      )
-        .type('15')
-        .should('have.value', '15');
-
-      cy.get('#BusinessCase-AsIsSolutionCostSavings')
-        .type('As is Solution Cost Savings')
-        .should('have.value', 'As is Solution Cost Savings');
     }
   },
   preferredSolution: {

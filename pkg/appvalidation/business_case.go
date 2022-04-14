@@ -122,7 +122,6 @@ func validateRequiredCost(lines solutionCostLines) string {
 
 func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCase) map[string]string {
 	validations := map[string]string{}
-	asIsCosts := solutionCostLines{}
 	preferredCosts := solutionCostLines{}
 	aCosts := solutionCostLines{}
 	bCosts := solutionCostLines{}
@@ -146,8 +145,6 @@ func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCase) map[st
 				string(*cost.Phase): *cost.Cost,
 			}
 			switch cost.Solution {
-			case models.LifecycleCostSolutionASIS:
-				asIsCosts[string(cost.Year)] = value
 			case models.LifecycleCostSolutionPREFERRED:
 				preferredCosts[string(cost.Year)] = value
 			case models.LifecycleCostSolutionA:
@@ -156,9 +153,6 @@ func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCase) map[st
 				bCosts[string(cost.Year)] = value
 			}
 		}
-	}
-	if v := validateRequiredCost(asIsCosts); v != "" {
-		validations["asIsSolution"] = v
 	}
 	if v := validateRequiredCost(preferredCosts); v != "" {
 		validations["preferredSolution"] = v
@@ -215,6 +209,9 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase) error {
 	if validate.RequireNullString(businessCase.BusinessNeed) {
 		expectedErr.WithValidation("BusinessNeed", "is required")
 	}
+	if validate.RequireNullString(businessCase.CurrentSolutionSummary) {
+		expectedErr.WithValidation("CurrentSolutionSummary", "is required")
+	}
 	if validate.RequireNullString(businessCase.CMSBenefit) {
 		expectedErr.WithValidation("CMSBenefit", "is required")
 	}
@@ -223,21 +220,6 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase) error {
 	}
 	if validate.RequireNullString(businessCase.SuccessIndicators) {
 		expectedErr.WithValidation("SuccessIndicators", "is required")
-	}
-	if validate.RequireNullString(businessCase.AsIsTitle) {
-		expectedErr.WithValidation("AsIsTitle", "is required")
-	}
-	if validate.RequireNullString(businessCase.AsIsSummary) {
-		expectedErr.WithValidation("AsIsSummary", "is required")
-	}
-	if validate.RequireNullString(businessCase.AsIsPros) {
-		expectedErr.WithValidation("AsIsPros", "is required")
-	}
-	if validate.RequireNullString(businessCase.AsIsCons) {
-		expectedErr.WithValidation("AsIsCons", "is required")
-	}
-	if validate.RequireNullString(businessCase.AsIsCostSavings) {
-		expectedErr.WithValidation("AsIsCostSavings", "is required")
 	}
 	if validate.RequireNullString(businessCase.PreferredTitle) {
 		expectedErr.WithValidation("PreferredTitle", "is required")
