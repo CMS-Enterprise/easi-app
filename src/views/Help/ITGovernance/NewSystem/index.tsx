@@ -13,8 +13,8 @@ const NewSystem = () => {
       <div className="grid-container">
         <HelpBreadcrumb type="Close" />
         <HelpPageIntro
-          heading={t('newSystem:heading')}
-          subheading={t('newSystem:subheading')}
+          heading={t('newSystem:title')}
+          subheading={t('newSystem:description')}
           type="IT Governance"
         />
         <GovernanceOverviewContent helpArticle className="padding-bottom-3" />
