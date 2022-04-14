@@ -20,8 +20,11 @@ const GovernanceOverview = () => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
-  const Breadcrumbs = () => {
-    return (
+  return (
+    <MainContent
+      className="easi-governance-overview grid-container margin-bottom-2"
+      data-testid="governance-overview"
+    >
       <BreadcrumbBar variant="wrap">
         <Breadcrumb>
           <BreadcrumbLink asCustom={Link} to="/">
@@ -30,14 +33,6 @@ const GovernanceOverview = () => {
         </Breadcrumb>
         <Breadcrumb current>{t('intake:navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
-    );
-  };
-  return (
-    <MainContent
-      className="easi-governance-overview grid-container margin-bottom-2"
-      data-testid="governance-overview"
-    >
-      <Breadcrumbs />
       <PageHeading className="margin-bottom-2">{t('heading')}</PageHeading>
       <Link
         to="/system/request-type"
