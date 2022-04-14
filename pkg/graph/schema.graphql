@@ -1103,7 +1103,7 @@ The most recent note added by an admin to a system request
 """
 type LastAdminNote {
   content: String
-  createdAt: Time
+  createdAt: Time!
 }
 
 """
