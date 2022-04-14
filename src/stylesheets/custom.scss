@@ -1,11 +1,11 @@
 // Custom USWDS Button
 .easi-button {
   &__save {
-    background-color: #f3966d;
-    color: #171717;
+    background-color: color('error-light');
+    color: $black;
     &:hover {
-      background-color: #f3966d;
-      color: #171717;
+      background-color: color('error-light');
+      color: $black;
     }
   }
 }
@@ -37,13 +37,13 @@
 }
 
 .usa-alert.easi-inline-alert {
-  background-color: white;
+  background-color: $white;
   background-size: 1.6rem;
   background-position: 0.5rem 0.5rem;
   padding: 0;
   &::before {
     width: 0.2rem;
-    background: #585c62;
+    background: color('base-dark');
   }
   .usa-alert__body {
     padding-left: 2.8rem;

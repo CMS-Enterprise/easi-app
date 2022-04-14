@@ -2,7 +2,7 @@
   &--error.usa-select {
     padding-top: 3px;
     border-width: 0.25rem;
-    border-color: #b50909;
+    border-color: color('error-dark');
     border-style: solid;
   }
   &--disabled.usa-select {

@@ -1,16 +1,16 @@
 .easi-governance-decision {
   &__info {
     padding: 2rem 1rem;
-    background-color: #00703c;
-    color: #fff;
+    background-color: color('success-darker');
+    color: $white;
     line-height: 1.5;
   }
 
   &__accordion {
     .usa-button--unstyled {
-      color: #fff;
+      color: $white;
       &:hover {
-        color: #fff;
+        color: $white;
       }
     }
   }
