@@ -48,9 +48,9 @@ const ArticleCard = ({
       })}
       onClick={e => clickHandler(e, `/help${route}`)}
     >
-      <CardHeader className="padding-x-3 padding-top-3 padding-bottom-2">
+      <CardHeader className="padding-x-3 padding-top-3">
         <h3 className="line-height-body-4 margin-bottom-1">{t('title')}</h3>
-        {tag && <HelpTag type={type} />}
+        {tag && <HelpTag type={type} className="margin-bottom-1" />}
       </CardHeader>
       <CardBody className="padding-top-0 article__body">
         <p>{t('description')}</p>
