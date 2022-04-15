@@ -11,7 +11,7 @@ const NewSystem = () => {
   return (
     <>
       <div className="grid-container">
-        <HelpBreadcrumb type="Close Tab" />
+        <HelpBreadcrumb type="Close tab" />
         <HelpPageIntro
           heading={t('newSystem:title')}
           subheading={t('newSystem:description')}
