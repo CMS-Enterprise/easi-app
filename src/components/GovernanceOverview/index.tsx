@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import Divider from 'components/shared/Divider';
+import { ArticleComponentProps } from 'types/articles';
 
 type processStepProps = {
   heading: string;
@@ -42,10 +43,7 @@ const GovProcessCollapse = ({ className }: { className?: string }) => {
 const GovernanceOverviewContent = ({
   helpArticle,
   className
-}: {
-  helpArticle?: boolean;
-  className?: string;
-}) => {
+}: ArticleComponentProps) => {
   const { t } = useTranslation('governanceOverview');
   const processSteps: processStepProps[] = t('steps', {
     returnObjects: true

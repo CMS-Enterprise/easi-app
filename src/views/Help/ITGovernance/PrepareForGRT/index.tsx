@@ -8,11 +8,9 @@ import RelatedArticles from 'components/RelatedArticles';
 const PrepareForGRT = () => {
   return (
     <>
-      <MainContent>
-        <div className="grid-container">
-          <HelpBreadcrumb type="Close Tab" />
-          <PrepareForGRTBase helpMode />
-        </div>
+      <MainContent className="grid-container">
+        <HelpBreadcrumb type="Close Tab" />
+        <PrepareForGRTBase helpArticle />
       </MainContent>
       <div className="margin-top-7">
         <RelatedArticles type="IT Governance" />

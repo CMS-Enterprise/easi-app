@@ -10,3 +10,8 @@ export type ArticleRouteProps = {
   type: string;
   route: string;
 };
+
+export type ArticleComponentProps = {
+  helpArticle?: boolean;
+  className?: string;
+};
