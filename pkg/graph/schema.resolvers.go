@@ -1479,8 +1479,8 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 	return &currentUser, nil
 }
 
-func (r *queryResolver) CedarPersons(ctx context.Context, queryString string) ([]*models.UserInfo, error) {
-	response, err := r.service.QueryPersons(ctx, queryString)
+func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
+	response, err := r.service.SearchCommonNameContains(ctx, commonName)
 	if err != nil {
 		return nil, err
 	}

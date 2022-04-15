@@ -28,7 +28,7 @@ type TranslatedClient struct {
 // Client is an interface for helping test dependencies
 type Client interface {
 	FetchUserInfo(context.Context, string) (*models2.UserInfo, error)
-	QueryPersons(context.Context, string) ([]*models2.UserInfo, error)
+	SearchCommonNameContains(context.Context, string) ([]*models2.UserInfo, error)
 }
 
 // NewTranslatedClient returns an API client for CEDAR LDAP using EASi language
@@ -96,15 +96,19 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 	}, nil
 }
 
-// QueryPersons fetches a user's personal details by their common name
-func (c TranslatedClient) QueryPersons(ctx context.Context, commonName string) ([]*models2.UserInfo, error) {
+// SearchCommonNameContains fetches a user's personal details by their common name, automatically wrapping the
+// `commonName` parameter in * to make the search match any person whose name contains the commonName param
+func (c TranslatedClient) SearchCommonNameContains(ctx context.Context, commonName string) ([]*models2.UserInfo, error) {
 	if commonName == "" {
 		appcontext.ZLogger(ctx).Error("No commonName specified; skipping request to CEDAR LDAP")
 		return nil, nil
 	}
 
+	// Wrap the `commonName` parameter in * to make it a "contains" search, rather than an exact one
 	params := operations.NewPersonParams()
-	params.CommonName = &commonName
+	commonNameWithAsterisks := "*" + commonName + "*"
+	params.CommonName = &commonNameWithAsterisks
+
 	resp, err := c.client.Operations.Person(params, c.apiAuthHeader)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err))

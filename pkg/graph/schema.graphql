@@ -1345,7 +1345,7 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
-  cedarPersons(queryString: String!): [UserInfo!]!
+  cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!

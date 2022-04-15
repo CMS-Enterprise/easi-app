@@ -386,20 +386,20 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		AccessibilityRequest    func(childComplexity int, id uuid.UUID) int
-		AccessibilityRequests   func(childComplexity int, after *string, first int) int
-		CedarPersons            func(childComplexity int, queryString string) int
-		CedarSystem             func(childComplexity int, id string) int
-		CedarSystemBookmarks    func(childComplexity int) int
-		CedarSystems            func(childComplexity int) int
-		CurrentUser             func(childComplexity int) int
-		Deployments             func(childComplexity int, systemID string, deploymentType *string, state *string, status *string) int
-		DetailedCedarSystemInfo func(childComplexity int, id string) int
-		Requests                func(childComplexity int, after *string, first int) int
-		Roles                   func(childComplexity int, systemID string, roleTypeID *string) int
-		SystemIntake            func(childComplexity int, id uuid.UUID) int
-		SystemIntakeContacts    func(childComplexity int, id uuid.UUID) int
-		Systems                 func(childComplexity int, after *string, first int) int
+		AccessibilityRequest     func(childComplexity int, id uuid.UUID) int
+		AccessibilityRequests    func(childComplexity int, after *string, first int) int
+		CedarPersonsByCommonName func(childComplexity int, commonName string) int
+		CedarSystem              func(childComplexity int, id string) int
+		CedarSystemBookmarks     func(childComplexity int) int
+		CedarSystems             func(childComplexity int) int
+		CurrentUser              func(childComplexity int) int
+		Deployments              func(childComplexity int, systemID string, deploymentType *string, state *string, status *string) int
+		DetailedCedarSystemInfo  func(childComplexity int, id string) int
+		Requests                 func(childComplexity int, after *string, first int) int
+		Roles                    func(childComplexity int, systemID string, roleTypeID *string) int
+		SystemIntake             func(childComplexity int, id uuid.UUID) int
+		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
+		Systems                  func(childComplexity int, after *string, first int) int
 	}
 
 	Request struct {
@@ -755,7 +755,7 @@ type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
-	CedarPersons(ctx context.Context, queryString string) ([]*models.UserInfo, error)
+	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
 	CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
 	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
@@ -2540,17 +2540,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AccessibilityRequests(childComplexity, args["after"].(*string), args["first"].(int)), true
 
-	case "Query.cedarPersons":
-		if e.complexity.Query.CedarPersons == nil {
+	case "Query.cedarPersonsByCommonName":
+		if e.complexity.Query.CedarPersonsByCommonName == nil {
 			break
 		}
 
-		args, err := ec.field_Query_cedarPersons_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_cedarPersonsByCommonName_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarPersons(childComplexity, args["queryString"].(string)), true
+		return e.complexity.Query.CedarPersonsByCommonName(childComplexity, args["commonName"].(string)), true
 
 	case "Query.cedarSystem":
 		if e.complexity.Query.CedarSystem == nil {
@@ -5011,7 +5011,7 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
-  cedarPersons(queryString: String!): [UserInfo!]!
+  cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
@@ -5709,18 +5709,18 @@ func (ec *executionContext) field_Query_accessibilityRequests_args(ctx context.C
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_cedarPersons_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_cedarPersonsByCommonName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["queryString"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("queryString"))
+	if tmp, ok := rawArgs["commonName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonName"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["queryString"] = arg0
+	args["commonName"] = arg0
 	return args, nil
 }
 
@@ -14069,7 +14069,7 @@ func (ec *executionContext) _Query_currentUser(ctx context.Context, field graphq
 	return ec.marshalOCurrentUser2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCurrentUser(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_cedarPersons(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -14086,7 +14086,7 @@ func (ec *executionContext) _Query_cedarPersons(ctx context.Context, field graph
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_cedarPersons_args(ctx, rawArgs)
+	args, err := ec.field_Query_cedarPersonsByCommonName_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -14094,7 +14094,7 @@ func (ec *executionContext) _Query_cedarPersons(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CedarPersons(rctx, args["queryString"].(string))
+		return ec.resolvers.Query().CedarPersonsByCommonName(rctx, args["commonName"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24790,7 +24790,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "cedarPersons":
+		case "cedarPersonsByCommonName":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -24799,7 +24799,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_cedarPersons(ctx, field)
+				res = ec._Query_cedarPersonsByCommonName(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
