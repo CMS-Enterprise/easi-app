@@ -192,7 +192,9 @@ func TestGraphQLTestSuite(t *testing.T) {
 		cedarLdapClient.FetchUserInfo,
 		store.FetchSystemIntakeByID,
 		store.UpdateSystemIntake,
-		emailClient.SendSystemIntakeReviewEmail,
+		emailClient.SendExtendLCIDEmail,
+		emailClient.SendIntakeInvalidEUAIDEmail,
+		emailClient.SendIntakeNoEUAIDEmail,
 	)
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)

@@ -231,7 +231,9 @@ func (s *Server) routes(
 				cedarLDAPClient.FetchUserInfo,
 				store.FetchSystemIntakeByID,
 				store.UpdateSystemIntake,
-				emailClient.SendSystemIntakeReviewEmail,
+				emailClient.SendExtendLCIDEmail,
+				emailClient.SendIntakeInvalidEUAIDEmail,
+				emailClient.SendIntakeNoEUAIDEmail,
 			),
 			IssueLifecycleID: services.NewUpdateLifecycleFields(
 				serviceConfig,

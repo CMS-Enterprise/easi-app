@@ -40,6 +40,15 @@ describe('The Business Case Form', () => {
       'Business Need: The quick brown fox jumps over the lazy dog.'
     );
 
+    cy.get('#BusinessCase-CurrentSolutionSummary')
+      .type(
+        'Current Solution Summary: The quick brown fox jumps over the lazy dog.'
+      )
+      .should(
+        'have.value',
+        'Current Solution Summary: The quick brown fox jumps over the lazy dog.'
+      );
+
     cy.get('#BusinessCase-CmsBenefit')
       .type('CMS Benefit: The quick brown fox jumps over the lazy dog.')
       .should(
@@ -60,10 +69,6 @@ describe('The Business Case Form', () => {
         'have.value',
         'Success Indicators: The quick brown fox jumps over the lazy dog.'
       );
-
-    cy.contains('button', 'Next').click();
-
-    cy.businessCase.asIsSolution.fillNonBranchingFields();
 
     cy.contains('button', 'Next').click();
 
@@ -92,90 +97,13 @@ describe('The Business Case Form', () => {
         },
         businessNeed:
           'Business Need: The quick brown fox jumps over the lazy dog.',
+        currentSolutionSummary:
+          'Current Solution Summary: The quick brown fox jumps over the lazy dog.',
         cmsBenefit: 'CMS Benefit: The quick brown fox jumps over the lazy dog.',
         priorityAlignment:
           'Priority Alignment: The quick brown fox jumps over the lazy dog.',
         successIndicators:
           'Success Indicators: The quick brown fox jumps over the lazy dog.',
-        asIsSolution: {
-          title: 'Test As is Solution',
-          summary: 'As is Solution Summary',
-          pros: 'As is Solution Pros',
-          cons: 'As is Solution Cons',
-          estimatedLifecycleCost: {
-            year1: {
-              development: {
-                isPresent: true,
-                cost: '1'
-              },
-              operationsMaintenance: {
-                isPresent: true,
-                cost: '5'
-              },
-              other: {
-                isPresent: false,
-                cost: ''
-              }
-            },
-            year2: {
-              development: {
-                isPresent: false,
-                cost: ''
-              },
-              operationsMaintenance: {
-                isPresent: true,
-                cost: '5'
-              },
-              other: {
-                isPresent: false,
-                cost: ''
-              }
-            },
-            year3: {
-              development: {
-                isPresent: false,
-                cost: ''
-              },
-              operationsMaintenance: {
-                isPresent: false,
-                cost: ''
-              },
-              other: {
-                isPresent: true,
-                cost: '10'
-              }
-            },
-            year4: {
-              development: {
-                isPresent: true,
-                cost: '15'
-              },
-              operationsMaintenance: {
-                isPresent: false,
-                cost: ''
-              },
-              other: {
-                isPresent: false,
-                cost: ''
-              }
-            },
-            year5: {
-              development: {
-                isPresent: false,
-                cost: ''
-              },
-              operationsMaintenance: {
-                isPresent: false,
-                cost: ''
-              },
-              other: {
-                isPresent: true,
-                cost: '15'
-              }
-            }
-          },
-          costSavings: 'As is Solution Cost Savings'
-        },
         preferredSolution: {
           title: 'Preferred Solution Title',
           summary: 'Preferred Solution Summary',
