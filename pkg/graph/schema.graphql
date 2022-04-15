@@ -603,7 +603,6 @@ type BusinessCase {
   requester: String
   requesterPhoneNumber: String
   status: BusinessCaseStatus!
-  submittedAt: Time
   successIndicators: String
   systemIntake: SystemIntake!
   updatedAt: Time!

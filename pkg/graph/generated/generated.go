@@ -134,7 +134,6 @@ type ComplexityRoot struct {
 		Requester              func(childComplexity int) int
 		RequesterPhoneNumber   func(childComplexity int) int
 		Status                 func(childComplexity int) int
-		SubmittedAt            func(childComplexity int) int
 		SuccessIndicators      func(childComplexity int) int
 		SystemIntake           func(childComplexity int) int
 		UpdatedAt              func(childComplexity int) int
@@ -1179,13 +1178,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BusinessCase.Status(childComplexity), true
-
-	case "BusinessCase.submittedAt":
-		if e.complexity.BusinessCase.SubmittedAt == nil {
-			break
-		}
-
-		return e.complexity.BusinessCase.SubmittedAt(childComplexity), true
 
 	case "BusinessCase.successIndicators":
 		if e.complexity.BusinessCase.SuccessIndicators == nil {
@@ -4182,7 +4174,6 @@ type BusinessCase {
   requester: String
   requesterPhoneNumber: String
   status: BusinessCaseStatus!
-  submittedAt: Time
   successIndicators: String
   systemIntake: SystemIntake!
   updatedAt: Time!
@@ -7645,38 +7636,6 @@ func (ec *executionContext) _BusinessCase_status(ctx context.Context, field grap
 	res := resTmp.(models.BusinessCaseStatus)
 	fc.Result = res
 	return ec.marshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BusinessCase_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCase",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SubmittedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCase_successIndicators(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
@@ -21990,13 +21949,6 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "submittedAt":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BusinessCase_submittedAt(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
 		case "successIndicators":
 			field := field
 

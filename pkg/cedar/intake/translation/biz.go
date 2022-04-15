@@ -38,7 +38,6 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		PriorityAlignment:      bc.PriorityAlignment.Ptr(),
 		SuccessIndicators:      bc.SuccessIndicators.Ptr(),
 
-		SubmittedAt:        pStr(strDateTime(bc.SubmittedAt)),
 		ArchivedAt:         pStr(strDateTime(bc.ArchivedAt)),
 		InitialSubmittedAt: pStr(strDateTime(bc.InitialSubmittedAt)),
 		LastSubmittedAt:    pStr(strDateTime(bc.LastSubmittedAt)),

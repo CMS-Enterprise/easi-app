@@ -109,13 +109,6 @@
             "4431234567"
           ]
         },
-        "submittedAt": {
-          "type": "string",
-          "description": "Timestamp of when request was submitted",
-          "examples": [
-            "2022-02-10T19:34:43Z"
-          ]
-        },
         "successIndicators": {
           "type": "string",
           "description": "How this effort will be determined as successful",
