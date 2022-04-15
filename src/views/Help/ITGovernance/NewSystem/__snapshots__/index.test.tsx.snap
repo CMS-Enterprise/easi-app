@@ -198,7 +198,7 @@ exports[`New System matches the snapshot 1`] = `
             </p>
             <a
               class="usa-link"
-              href="/"
+              href="/help/it-governance/prepare-for-grt"
               target="_blank"
             >
               Prepare for the GRT meeting (opens in new tab)
@@ -250,7 +250,7 @@ exports[`New System matches the snapshot 1`] = `
             </p>
             <a
               class="usa-link"
-              href="/"
+              href="/help/it-governance/prepare-for-grb"
               target="_blank"
             >
               Prepare for the GRB meeting (opens in new tab)

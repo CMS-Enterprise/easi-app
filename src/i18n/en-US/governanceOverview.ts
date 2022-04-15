@@ -36,7 +36,7 @@ const governanceOverview = {
         'Discuss your draft Business Case with the Governance Review Team (GRT). They will give you feedback and help you refine your Business Case before you present to the Governance Review Board (GRB).',
       link: {
         text: 'Prepare for the GRT meeting (opens in new tab)',
-        path: '/'
+        path: '/help/it-governance/prepare-for-grt'
       }
     },
     {
@@ -55,7 +55,7 @@ const governanceOverview = {
         'Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.',
       link: {
         text: 'Prepare for the GRB meeting (opens in new tab)',
-        path: '/'
+        path: '/help/it-governance/prepare-for-grb'
       }
     },
     {
