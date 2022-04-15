@@ -13,7 +13,7 @@ describe('Prepare for GRT', () => {
   it('renders help mode without crashing', () => {
     const { asFragment } = render(
       <MemoryRouter>
-        <PrepareForGRT helpMode />
+        <PrepareForGRT helpArticle />
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();

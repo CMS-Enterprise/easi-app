@@ -2,8 +2,11 @@
 
 exports[`HelpHome matches the snapshot 1`] = `
 <DocumentFragment>
-  <div
-    class="help-home grid-container"
+  <main
+    class="easi-main-content grid-container"
+    id="main-content"
+    role="main"
+    tabindex="-1"
   >
     <div
       class="help-home"
@@ -35,12 +38,11 @@ exports[`HelpHome matches the snapshot 1`] = `
             class="usa-card desktop:grid-col-4 article article-card--isLink"
             data-testid="article-card"
           >
-            <header
-              class="usa-card__header padding-x-3 padding-top-3"
-              data-testid="CardHeader"
+            <div
+              class="usa-card__container radius-md shadow-2 minh-mobile"
             >
               <header
-                class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+                class="usa-card__header padding-x-3 padding-top-3"
                 data-testid="CardHeader"
               >
                 <h3
@@ -49,7 +51,7 @@ exports[`HelpHome matches the snapshot 1`] = `
                   Prepare for the Governance Review Team meeting
                 </h3>
                 <a
-                  class="usa-link display-inline-block"
+                  class="usa-link display-inline-block margin-bottom-1"
                   href="/help/it-governance"
                 >
                   <span
@@ -64,11 +66,13 @@ exports[`HelpHome matches the snapshot 1`] = `
                 class="usa-card__body padding-top-0 article__body"
                 data-testid="CardBody"
               >
-                Prepare for the Governance Review Team meeting
-              </h3>
-              <a
-                class="usa-link display-inline-block margin-bottom-1"
-                href="/help/it-governance"
+                <p>
+                  Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+                </p>
+              </div>
+              <div
+                class="usa-card__footer padding-top-2 article__footer"
+                data-testid="CardFooter"
               >
                 <a
                   class="usa-link easi-request__button-link padding-x-2"
@@ -87,33 +91,37 @@ exports[`HelpHome matches the snapshot 1`] = `
               class="usa-card__container radius-md shadow-2 minh-mobile"
             >
               <header
-                class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+                class="usa-card__header padding-x-3 padding-top-3"
                 data-testid="CardHeader"
               >
-                Read
-              </a>
-            </div>
-          </div>
-        </li>
-        <li
-          class="usa-card desktop:grid-col-4 article article-card--isLink"
-          data-testid="article-card"
-        >
-          <div
-            class="usa-card__container radius-md shadow-2 minh-mobile"
-          >
-            <header
-              class="usa-card__header padding-x-3 padding-top-3"
-              data-testid="CardHeader"
-            >
-              <h3
-                class="line-height-body-4 margin-bottom-1"
+                <h3
+                  class="line-height-body-4 margin-bottom-1"
+                >
+                  Prepare for the Review Board meeting
+                </h3>
+                <a
+                  class="usa-link display-inline-block margin-bottom-1"
+                  href="/help/it-governance"
+                >
+                  <span
+                    class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
+                    data-testid="tag"
+                  >
+                    IT Governance
+                  </span>
+                </a>
+              </header>
+              <div
+                class="usa-card__body padding-top-0 article__body"
+                data-testid="CardBody"
               >
-                Prepare for the Review Board meeting
-              </h3>
-              <a
-                class="usa-link display-inline-block margin-bottom-1"
-                href="/help/it-governance"
+                <p>
+                  Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+                </p>
+              </div>
+              <div
+                class="usa-card__footer padding-top-2 article__footer"
+                data-testid="CardFooter"
               >
                 <a
                   class="usa-link easi-request__button-link padding-x-2"
@@ -132,33 +140,37 @@ exports[`HelpHome matches the snapshot 1`] = `
               class="usa-card__container radius-md shadow-2 minh-mobile"
             >
               <header
-                class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+                class="usa-card__header padding-x-3 padding-top-3"
                 data-testid="CardHeader"
               >
-                Read
-              </a>
-            </div>
-          </div>
-        </li>
-        <li
-          class="usa-card desktop:grid-col-4 article article-card--isLink"
-          data-testid="article-card"
-        >
-          <div
-            class="usa-card__container radius-md shadow-2 minh-mobile"
-          >
-            <header
-              class="usa-card__header padding-x-3 padding-top-3"
-              data-testid="CardHeader"
-            >
-              <h3
-                class="line-height-body-4 margin-bottom-1"
+                <h3
+                  class="line-height-body-4 margin-bottom-1"
+                >
+                  Sample Business Case
+                </h3>
+                <a
+                  class="usa-link display-inline-block margin-bottom-1"
+                  href="/help/it-governance"
+                >
+                  <span
+                    class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
+                    data-testid="tag"
+                  >
+                    IT Governance
+                  </span>
+                </a>
+              </header>
+              <div
+                class="usa-card__body padding-top-0 article__body"
+                data-testid="CardBody"
               >
-                Sample Business Case
-              </h3>
-              <a
-                class="usa-link display-inline-block margin-bottom-1"
-                href="/help/it-governance"
+                <p>
+                  This sample Business Case can help you as you fill out your own Business Case. The content here is an example of how complete and precise to be when completing your Business Case.
+                </p>
+              </div>
+              <div
+                class="usa-card__footer padding-top-2 article__footer"
+                data-testid="CardFooter"
               >
                 <a
                   class="usa-link easi-request__button-link padding-x-2"
@@ -173,29 +185,13 @@ exports[`HelpHome matches the snapshot 1`] = `
         <div
           class="help-home__articles-links"
         >
-          <p
-            class="text-base"
-          >
-            3 of 6 articles
-          </p>
-          <a
-            class="usa-link help-home__link--all"
-            href="/help/all-articles"
-          >
-            Browse all help articles
-          </a>
-        </div>
-        <div
-          class="help-home__articles-links--second-row"
-        >
-          <a
-            class="usa-link"
-            href="/help/it-governance"
+          <div
+            class="help-home__articles-links--first-row"
           >
             <p
               class="text-base"
             >
-              3 of 5 articles
+              3 of 6 articles
             </p>
             <a
               class="usa-link help-home__link--all"
