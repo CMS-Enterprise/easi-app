@@ -1912,7 +1912,7 @@ func (r *systemIntakeResolver) GrtReviewEmailBody(ctx context.Context, obj *mode
 func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error) {
 	return &model.LastAdminNote{
 		Content:   obj.LastAdminNoteContent.Ptr(),
-		CreatedAt: *obj.LastAdminNoteCreatedAt,
+		CreatedAt: obj.LastAdminNoteCreatedAt,
 	}, nil
 }
 

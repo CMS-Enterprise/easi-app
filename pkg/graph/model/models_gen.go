@@ -280,8 +280,8 @@ type IssueLifecycleIDInput struct {
 
 // The most recent note added by an admin to a system request
 type LastAdminNote struct {
-	Content   *string   `json:"content"`
-	CreatedAt time.Time `json:"createdAt"`
+	Content   *string    `json:"content"`
+	CreatedAt *time.Time `json:"createdAt"`
 }
 
 // The current user's Launch Darkly key

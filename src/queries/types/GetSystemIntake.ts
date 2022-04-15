@@ -95,7 +95,7 @@ export interface GetSystemIntake_systemIntake_requester {
 export interface GetSystemIntake_systemIntake_lastAdminNote {
   __typename: "LastAdminNote";
   content: string | null;
-  createdAt: Time;
+  createdAt: Time | null;
 }
 
 export interface GetSystemIntake_systemIntake {
