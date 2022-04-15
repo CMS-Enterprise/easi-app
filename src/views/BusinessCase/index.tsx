@@ -32,7 +32,6 @@ import {
   AlternativeSolutionA,
   AlternativeSolutionB
 } from './AlternativeSolution';
-import AsIsSolution from './AsIsSolution';
 import Confirmation from './Confirmation';
 import GeneralRequestInfo from './GeneralRequestInfo';
 import PreferredSolution from './PreferredSolution';
@@ -147,16 +146,6 @@ export const BusinessCase = () => {
             path="/business/:businessCaseId/request-description"
             render={() => (
               <RequestDescription
-                formikRef={formikRef}
-                dispatchSave={dispatchSave}
-                businessCase={businessCase}
-              />
-            )}
-          />
-          <Route
-            path="/business/:businessCaseId/as-is-solution"
-            render={() => (
-              <AsIsSolution
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}

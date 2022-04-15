@@ -49,16 +49,6 @@ type BasicActionInput struct {
 	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
-// An IT governance requester's explanation of alternative solutions
-// to their system, which involve leaving the system "as-is"
-type BusinessCaseAsIsSolution struct {
-	Cons        *string `json:"cons"`
-	CostSavings *string `json:"costSavings"`
-	Pros        *string `json:"pros"`
-	Summary     *string `json:"summary"`
-	Title       *string `json:"title"`
-}
-
 // A solution proposal within a business case
 type BusinessCaseSolution struct {
 	AcquisitionApproach     *string `json:"acquisitionApproach"`

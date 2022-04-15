@@ -6,6 +6,7 @@ import ArticleCard from 'components/ArticleCard';
 import HelpBreadcrumb from 'components/HelpBreadcrumb';
 import HelpContacts from 'components/HelpContacts';
 import HelpPageIntro from 'components/HelpPageIntro';
+import MainContent from 'components/MainContent';
 import Divider from 'components/shared/Divider';
 
 import itGovernanceArticles from './articles';
@@ -13,7 +14,7 @@ import itGovernanceArticles from './articles';
 const ITGovernance = () => {
   const { t } = useTranslation('help');
   return (
-    <>
+    <MainContent className="grid-container">
       <HelpBreadcrumb type="Back" />
       <HelpPageIntro
         heading={t('itGovernance.heading')}
@@ -28,7 +29,7 @@ const ITGovernance = () => {
       </CardGroup>
       <Divider />
       <HelpContacts type="IT Governance" />
-    </>
+    </MainContent>
   );
 };
 

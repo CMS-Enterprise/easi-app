@@ -184,16 +184,6 @@ func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *mo
 	}, nil
 }
 
-func (r *businessCaseResolver) AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseAsIsSolution, error) {
-	return &model.BusinessCaseAsIsSolution{
-		Cons:        obj.AsIsCons.Ptr(),
-		CostSavings: obj.AsIsCostSavings.Ptr(),
-		Pros:        obj.AsIsPros.Ptr(),
-		Summary:     obj.AsIsSummary.Ptr(),
-		Title:       obj.AsIsTitle.Ptr(),
-	}, nil
-}
-
 func (r *businessCaseResolver) BusinessNeed(ctx context.Context, obj *models.BusinessCase) (*string, error) {
 	return obj.BusinessNeed.Ptr(), nil
 }
@@ -204,6 +194,10 @@ func (r *businessCaseResolver) BusinessOwner(ctx context.Context, obj *models.Bu
 
 func (r *businessCaseResolver) CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error) {
 	return obj.CMSBenefit.Ptr(), nil
+}
+
+func (r *businessCaseResolver) CurrentSolutionSummary(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	return obj.CurrentSolutionSummary.Ptr(), nil
 }
 
 func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error) {
