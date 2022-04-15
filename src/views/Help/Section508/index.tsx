@@ -6,6 +6,7 @@ import ArticleCard from 'components/ArticleCard';
 import HelpBreadcrumb from 'components/HelpBreadcrumb';
 import HelpContacts from 'components/HelpContacts';
 import HelpPageIntro from 'components/HelpPageIntro';
+import MainContent from 'components/MainContent';
 import Divider from 'components/shared/Divider';
 
 import section508Articles from './articles';
@@ -14,7 +15,7 @@ const Section508 = () => {
   const { t } = useTranslation('help');
 
   return (
-    <div className="grid-container">
+    <MainContent className="grid-container">
       <HelpBreadcrumb type="Back" />
       <HelpPageIntro
         heading={t('section508.heading')}
@@ -40,7 +41,7 @@ const Section508 = () => {
       </CardGroup>
       <Divider />
       <HelpContacts type="Section 508" />
-    </div>
+    </MainContent>
   );
 };
 

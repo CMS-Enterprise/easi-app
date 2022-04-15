@@ -3,36 +3,25 @@ import React, { useState } from 'react';
 import PrintableTabContent from 'components/PrintableTabContent';
 import ResponsiveTabs from 'components/shared/ResponsiveTabs';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
-import {
-  BusinessCaseSolution,
-  ProposedBusinessCaseSolution
-} from 'types/businessCase';
-import AsIsSolutionReview from 'views/BusinessCase/Review/AsIsSolutionReview';
+import { ProposedBusinessCaseSolution } from 'types/businessCase';
 import ProposedBusinessCaseSolutionReview from 'views/BusinessCase/Review/ProposedBusinessCaseSolutionReview';
 
 type AlternativeAnalysisReviewProps = {
   fiscalYear: number;
-  asIsSolution: BusinessCaseSolution;
   preferredSolution: ProposedBusinessCaseSolution;
   alternativeA: ProposedBusinessCaseSolution;
   alternativeB?: ProposedBusinessCaseSolution;
 };
 
 const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
-  const {
-    fiscalYear,
-    asIsSolution,
-    preferredSolution,
-    alternativeA,
-    alternativeB
-  } = values;
+  const { fiscalYear, preferredSolution, alternativeA, alternativeB } = values;
 
   const [activeSolutionTab, setActiveSolutionTab] = useState(
-    '"As is" solution'
+    'Preferred solution'
   );
 
   const getFilledSolutions = () => {
-    const solutions = ['"As is" solution', 'Preferred solution'];
+    const solutions = ['Preferred solution'];
 
     if (alternativeA && alternativeSolutionHasFilledFields(alternativeA)) {
       solutions.push('Alternative A');
@@ -54,10 +43,6 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
         className="bg-white easi-business-case__review-solutions-wrapper"
         style={{ overflow: 'auto' }}
       >
-        <PrintableTabContent visible={activeSolutionTab === '"As is" solution'}>
-          <AsIsSolutionReview fiscalYear={fiscalYear} solution={asIsSolution} />
-        </PrintableTabContent>
-
         <PrintableTabContent
           visible={activeSolutionTab === 'Preferred solution'}
         >

@@ -51,13 +51,10 @@ export type GeneralRequestInfoForm = {
 
 export type RequestDescriptionForm = {
   businessNeed: string;
+  currentSolutionSummary: string;
   cmsBenefit: string;
   priorityAlignment: string;
   successIndicators: string;
-};
-
-export type AsIsSolutionForm = {
-  asIsSolution: BusinessCaseSolution;
 };
 
 export type PreferredSolutionForm = {
@@ -75,7 +72,6 @@ export type AlternativeBSolutionForm = {
 // Business Case Form Model
 export type BusinessCaseModel = GeneralRequestInfoForm &
   RequestDescriptionForm &
-  AsIsSolutionForm &
   PreferredSolutionForm &
   AlternativeASolutionForm &
   AlternativeBSolutionForm & {

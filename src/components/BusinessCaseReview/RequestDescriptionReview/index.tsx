@@ -37,6 +37,15 @@ const RequestDescriptionReview = ({
       </ReviewRow>
       <ReviewRow>
         <div className="margin-bottom-205 line-height-body-3">
+          <DescriptionTerm term="Summary of Current Solution" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={values.currentSolutionSummary}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <div className="margin-bottom-205 line-height-body-3">
           <DescriptionTerm term="How does this effort align with organizational priorities?" />
           <DescriptionDefinition
             className="text-pre-wrap"

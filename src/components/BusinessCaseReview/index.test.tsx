@@ -27,87 +27,9 @@ describe('The Business Case Review Component', () => {
     },
     businessNeed: 'Test business need',
     cmsBenefit: 'Test CMS benefit',
+    currentSolutionSummary: 'Test current solution summary',
     priorityAlignment: 'Test priority alignment',
     successIndicators: 'Test success indicators',
-    asIsSolution: {
-      title: 'Test as is solution',
-      summary: 'Test summary',
-      pros: 'Test pros',
-      cons: 'Test cons',
-      estimatedLifecycleCost: {
-        year1: {
-          development: {
-            isPresent: false,
-            cost: '0'
-          },
-          operationsMaintenance: {
-            isPresent: false,
-            cost: '0'
-          },
-          other: {
-            isPresent: false,
-            cost: '0'
-          }
-        },
-        year2: {
-          development: {
-            isPresent: false,
-            cost: '0'
-          },
-          operationsMaintenance: {
-            isPresent: false,
-            cost: '0'
-          },
-          other: {
-            isPresent: false,
-            cost: '0'
-          }
-        },
-        year3: {
-          development: {
-            isPresent: false,
-            cost: '0'
-          },
-          operationsMaintenance: {
-            isPresent: false,
-            cost: '0'
-          },
-          other: {
-            isPresent: false,
-            cost: '0'
-          }
-        },
-        year4: {
-          development: {
-            isPresent: false,
-            cost: '0'
-          },
-          operationsMaintenance: {
-            isPresent: false,
-            cost: '0'
-          },
-          other: {
-            isPresent: false,
-            cost: '0'
-          }
-        },
-        year5: {
-          development: {
-            isPresent: false,
-            cost: '0'
-          },
-          operationsMaintenance: {
-            isPresent: false,
-            cost: '0'
-          },
-          other: {
-            isPresent: false,
-            cost: '0'
-          }
-        }
-      },
-      costSavings: 'Test cost savings'
-    },
     preferredSolution: {
       title: 'Test preferred solution',
       summary: 'Test summary',

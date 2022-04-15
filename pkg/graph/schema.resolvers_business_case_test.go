@@ -180,27 +180,21 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery
 	cost := 1234
 	lifecycleCostLines := models.EstimatedLifecycleCosts{
 		models.EstimatedLifecycleCost{
-			Solution: models.LifecycleCostSolutionASIS,
-			Phase:    &dev,
-			Year:     models.LifecycleCostYear1,
-			Cost:     &cost,
-		},
-		models.EstimatedLifecycleCost{
 			Solution: models.LifecycleCostSolutionPREFERRED,
 			Phase:    &oam,
-			Year:     models.LifecycleCostYear2,
+			Year:     models.LifecycleCostYear1,
 			Cost:     &cost,
 		},
 		models.EstimatedLifecycleCost{
 			Solution: models.LifecycleCostSolutionA,
 			Phase:    &other,
-			Year:     models.LifecycleCostYear3,
+			Year:     models.LifecycleCostYear2,
 			Cost:     &cost,
 		},
 		models.EstimatedLifecycleCost{
 			Solution: models.LifecycleCostSolutionB,
 			Phase:    &dev,
-			Year:     models.LifecycleCostYear4,
+			Year:     models.LifecycleCostYear3,
 			Cost:     &cost,
 		},
 	}
@@ -253,29 +247,23 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery
 	s.Equal(businessCase.ID.String(), respBusinessCase.ID)
 
 	respLifeCycleCostLines := respBusinessCase.LifecycleCostLines
-	s.Len(respLifeCycleCostLines, 4)
+	s.Len(respLifeCycleCostLines, 3)
 
 	costLine1 := respLifeCycleCostLines[0]
 	s.Equal(costLine1.Cost, 1234)
-	s.Equal(costLine1.Phase, "Development")
-	s.Equal(costLine1.Solution, "As Is")
+	s.Equal(costLine1.Phase, "Operations and Maintenance")
+	s.Equal(costLine1.Solution, "Preferred")
 	s.Equal(costLine1.Year, "1")
 
 	costLine2 := respLifeCycleCostLines[1]
 	s.Equal(costLine2.Cost, 1234)
-	s.Equal(costLine2.Phase, "Operations and Maintenance")
-	s.Equal(costLine2.Solution, "Preferred")
+	s.Equal(costLine2.Phase, "Other")
+	s.Equal(costLine2.Solution, "A")
 	s.Equal(costLine2.Year, "2")
 
 	costLine3 := respLifeCycleCostLines[2]
 	s.Equal(costLine3.Cost, 1234)
-	s.Equal(costLine3.Phase, "Other")
-	s.Equal(costLine3.Solution, "A")
+	s.Equal(costLine3.Phase, "Development")
+	s.Equal(costLine3.Solution, "B")
 	s.Equal(costLine3.Year, "3")
-
-	costLine4 := respLifeCycleCostLines[3]
-	s.Equal(costLine4.Cost, 1234)
-	s.Equal(costLine4.Phase, "Development")
-	s.Equal(costLine4.Solution, "B")
-	s.Equal(costLine4.Year, "4")
 }

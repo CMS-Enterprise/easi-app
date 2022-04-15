@@ -49,6 +49,7 @@ const BusinessCaseReview = ({
           <RequestDescriptionReview
             values={{
               businessNeed: values.businessNeed,
+              currentSolutionSummary: values.currentSolutionSummary,
               cmsBenefit: values.cmsBenefit,
               priorityAlignment: values.priorityAlignment,
               successIndicators: values.successIndicators
@@ -65,7 +66,6 @@ const BusinessCaseReview = ({
           <div className="grid-container">
             <AlternativeAnalysisReview
               fiscalYear={getFiscalYear(DateTime.fromISO(values.createdAt))}
-              asIsSolution={values.asIsSolution}
               preferredSolution={values.preferredSolution}
               alternativeA={values.alternativeA}
               alternativeB={values.alternativeB}

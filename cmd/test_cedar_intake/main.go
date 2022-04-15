@@ -115,7 +115,7 @@ func makeTestData() *testData {
 		BusinessNeed:         null.StringFrom("business need"),
 		LifecycleCostLines: []models.EstimatedLifecycleCost{
 			{
-				Solution: models.LifecycleCostSolutionASIS,
+				Solution: models.LifecycleCostSolutionPREFERRED,
 				Year:     models.LifecycleCostYear1,
 				Phase:    &phase,
 				Cost:     &cost,
@@ -130,16 +130,11 @@ func makeTestData() *testData {
 				Cost:     &noCost,
 			},
 		},
-		CMSBenefit:        null.StringFrom(""),
-		PriorityAlignment: null.StringFrom(""),
-		SuccessIndicators: null.StringFrom(""),
-		ArchivedAt:        &now,
-
-		AsIsTitle:       null.StringFrom(""),
-		AsIsSummary:     null.StringFrom(""),
-		AsIsPros:        null.StringFrom(""),
-		AsIsCons:        null.StringFrom(""),
-		AsIsCostSavings: null.StringFrom(""),
+		CurrentSolutionSummary: null.StringFrom(""),
+		CMSBenefit:             null.StringFrom(""),
+		PriorityAlignment:      null.StringFrom(""),
+		SuccessIndicators:      null.StringFrom(""),
+		ArchivedAt:             &now,
 
 		AlternativeATitle:       null.StringFrom(""),
 		AlternativeASummary:     null.StringFrom(""),
