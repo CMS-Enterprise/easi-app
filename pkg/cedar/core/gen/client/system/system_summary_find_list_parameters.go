@@ -78,6 +78,22 @@ type SystemSummaryFindListParams struct {
 	*/
 	IncludeInSurvey *bool
 
+	/* Limit.
+
+	   Limits the number of systems returned. If no value is provided, the default is 1000
+
+	   Format: int32
+	*/
+	Limit *int32
+
+	/* Offset.
+
+	   Defines the starting position of the first record returned. If no value is provided, the default is 0
+
+	   Format: int32
+	*/
+	Offset *int32
+
 	/* State.
 
 	   System state.
@@ -182,6 +198,28 @@ func (o *SystemSummaryFindListParams) SetIncludeInSurvey(includeInSurvey *bool) 
 	o.IncludeInSurvey = includeInSurvey
 }
 
+// WithLimit adds the limit to the system summary find list params
+func (o *SystemSummaryFindListParams) WithLimit(limit *int32) *SystemSummaryFindListParams {
+	o.SetLimit(limit)
+	return o
+}
+
+// SetLimit adds the limit to the system summary find list params
+func (o *SystemSummaryFindListParams) SetLimit(limit *int32) {
+	o.Limit = limit
+}
+
+// WithOffset adds the offset to the system summary find list params
+func (o *SystemSummaryFindListParams) WithOffset(offset *int32) *SystemSummaryFindListParams {
+	o.SetOffset(offset)
+	return o
+}
+
+// SetOffset adds the offset to the system summary find list params
+func (o *SystemSummaryFindListParams) SetOffset(offset *int32) {
+	o.Offset = offset
+}
+
 // WithState adds the state to the system summary find list params
 func (o *SystemSummaryFindListParams) WithState(state *string) *SystemSummaryFindListParams {
 	o.SetState(state)
@@ -269,6 +307,40 @@ func (o *SystemSummaryFindListParams) WriteToRequest(r runtime.ClientRequest, re
 		if qIncludeInSurvey != "" {
 
 			if err := r.SetQueryParam("includeInSurvey", qIncludeInSurvey); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Limit != nil {
+
+		// query param limit
+		var qrLimit int32
+
+		if o.Limit != nil {
+			qrLimit = *o.Limit
+		}
+		qLimit := swag.FormatInt32(qrLimit)
+		if qLimit != "" {
+
+			if err := r.SetQueryParam("limit", qLimit); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Offset != nil {
+
+		// query param offset
+		var qrOffset int32
+
+		if o.Offset != nil {
+			qrOffset = *o.Offset
+		}
+		qOffset := swag.FormatInt32(qrOffset)
+		if qOffset != "" {
+
+			if err := r.SetQueryParam("offset", qOffset); err != nil {
 				return err
 			}
 		}

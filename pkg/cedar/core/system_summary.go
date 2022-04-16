@@ -52,11 +52,10 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 
 	// Convert the auto-generated struct to our own pkg/models struct
 	retVal := []*models.CedarSystem{}
-
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
-		retVal = append(retVal, &models.CedarSystem{
-			ID:                      *sys.ID,
+		cedarSys := &models.CedarSystem{
+			ID:                      *sys.IctObjectID,
 			Name:                    *sys.Name,
 			Description:             sys.Description,
 			Acronym:                 sys.Acronym,
@@ -65,7 +64,11 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 			BusinessOwnerOrgComp:    sys.BusinessOwnerOrgComp,
 			SystemMaintainerOrg:     sys.SystemMaintainerOrg,
 			SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
-		})
+			VersionID:               *sys.ID,
+			NextVersionID:           &sys.NextVersionID,
+			PreviousVersionID:       &sys.PreviousVersionID,
+		}
+		retVal = append(retVal, cedarSys)
 	}
 
 	return retVal, nil
