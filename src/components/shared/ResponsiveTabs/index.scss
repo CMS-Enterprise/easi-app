@@ -24,7 +24,7 @@
     flex-shrink: 0;
 
     &--selected {
-      background-color: $white;
+      background-color: color('white');
 
       .easi-responsive-tabs__tab-btn {
         font-weight: bold;

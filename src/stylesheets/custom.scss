@@ -2,10 +2,10 @@
 .easi-button {
   &__save {
     background-color: color('error-light');
-    color: $black;
+    color: color('black');
     &:hover {
       background-color: color('error-light');
-      color: $black;
+      color: color('black');
     }
   }
 }
@@ -37,7 +37,7 @@
 }
 
 .usa-alert.easi-inline-alert {
-  background-color: $white;
+  background-color: color('white');
   background-size: 1.6rem;
   background-position: 0.5rem 0.5rem;
   padding: 0;

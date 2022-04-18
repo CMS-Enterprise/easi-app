@@ -31,7 +31,7 @@
   }
 
   &__item + &__item {
-    border-top: 1px solid $black;
+    border-top: 1px solid color('black');
     padding-top: 2em;
   }
 
@@ -61,7 +61,7 @@
 
     &--completed {
       background-color: color('success-dark');
-      color: $white;
+      color: color('white');
     }
   }
 
@@ -72,7 +72,7 @@
 
   &__meeting-date {
     padding-left: 0.5rem;
-    border-left: 3px solid $black;
+    border-left: 3px solid color('black');
     font-weight: bold;
   }
 }

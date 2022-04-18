@@ -10,13 +10,13 @@
     &--linked {
       margin-left: 6px;
       &:not(:last-of-type) {
-        border-left: 1px solid $black;
+        border-left: 1px solid color('black');
       }
 
       &:before {
         flex: none;
         content: '';
-        background-color: $black;
+        background-color: color('black');
         height: 12px;
         width: 12px;
         margin-left: -6px;

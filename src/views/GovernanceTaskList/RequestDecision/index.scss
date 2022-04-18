@@ -2,15 +2,15 @@
   &__info {
     padding: 2rem 1rem;
     background-color: color('success-darker');
-    color: $white;
+    color: color('white');
     line-height: 1.5;
   }
 
   &__accordion {
     .usa-button--unstyled {
-      color: $white;
+      color: color('white');
       &:hover {
-        color: $white;
+        color: color('white');
       }
     }
   }
