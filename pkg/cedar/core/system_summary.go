@@ -54,22 +54,27 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 	// Convert the auto-generated struct to our own pkg/models struct
 	retVal := []*models.CedarSystem{}
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
-	for _, sys := range resp.Payload.SystemSummary {
-		cedarSys := &models.CedarSystem{
-			ID:                      *sys.IctObjectID,
-			Name:                    *sys.Name,
-			Description:             sys.Description,
-			Acronym:                 sys.Acronym,
-			Status:                  sys.Status,
-			BusinessOwnerOrg:        sys.BusinessOwnerOrg,
-			BusinessOwnerOrgComp:    sys.BusinessOwnerOrgComp,
-			SystemMaintainerOrg:     sys.SystemMaintainerOrg,
-			SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
-			VersionID:               *sys.ID,
-			NextVersionID:           zero.StringFrom(sys.NextVersionID).Ptr(),
-			PreviousVersionID:       zero.StringFrom(sys.PreviousVersionID).Ptr(),
+	for i, sys := range resp.Payload.SystemSummary {
+		if sys.IctObjectID == nil {
+			fmt.Println("i:", i, "*sys.IctObjectID is nil, ID:", *sys.ID)
+		} else {
+			fmt.Println("i:", i, "IctObjectID:", *sys.IctObjectID, "PreviousVersionID:", sys.PreviousVersionID, "NextVersionID:", sys.NextVersionID)
+			cedarSys := &models.CedarSystem{
+				ID:                      *sys.IctObjectID,
+				Name:                    *sys.Name,
+				Description:             sys.Description,
+				Acronym:                 sys.Acronym,
+				Status:                  sys.Status,
+				BusinessOwnerOrg:        sys.BusinessOwnerOrg,
+				BusinessOwnerOrgComp:    sys.BusinessOwnerOrgComp,
+				SystemMaintainerOrg:     sys.SystemMaintainerOrg,
+				SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
+				VersionID:               *sys.ID,
+				NextVersionID:           zero.StringFrom(sys.NextVersionID).Ptr(),
+				PreviousVersionID:       zero.StringFrom(sys.PreviousVersionID).Ptr(),
+			}
+			retVal = append(retVal, cedarSys)
 		}
-		retVal = append(retVal, cedarSys)
 	}
 
 	return retVal, nil
