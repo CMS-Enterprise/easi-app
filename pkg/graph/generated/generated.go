@@ -49,6 +49,7 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
+	UserInfo() UserInfoResolver
 }
 
 type DirectiveRoot struct {
@@ -376,19 +377,20 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		AccessibilityRequest    func(childComplexity int, id uuid.UUID) int
-		AccessibilityRequests   func(childComplexity int, after *string, first int) int
-		CedarSystem             func(childComplexity int, id string) int
-		CedarSystemBookmarks    func(childComplexity int) int
-		CedarSystems            func(childComplexity int) int
-		CurrentUser             func(childComplexity int) int
-		Deployments             func(childComplexity int, systemID string, deploymentType *string, state *string, status *string) int
-		DetailedCedarSystemInfo func(childComplexity int, id string) int
-		Requests                func(childComplexity int, after *string, first int) int
-		Roles                   func(childComplexity int, systemID string, roleTypeID *string) int
-		SystemIntake            func(childComplexity int, id uuid.UUID) int
-		SystemIntakeContacts    func(childComplexity int, id uuid.UUID) int
-		Systems                 func(childComplexity int, after *string, first int) int
+		AccessibilityRequest     func(childComplexity int, id uuid.UUID) int
+		AccessibilityRequests    func(childComplexity int, after *string, first int) int
+		CedarPersonsByCommonName func(childComplexity int, commonName string) int
+		CedarSystem              func(childComplexity int, id string) int
+		CedarSystemBookmarks     func(childComplexity int) int
+		CedarSystems             func(childComplexity int) int
+		CurrentUser              func(childComplexity int) int
+		Deployments              func(childComplexity int, systemID string, deploymentType *string, state *string, status *string) int
+		DetailedCedarSystemInfo  func(childComplexity int, id string) int
+		Requests                 func(childComplexity int, after *string, first int) int
+		Roles                    func(childComplexity int, systemID string, roleTypeID *string) int
+		SystemIntake             func(childComplexity int, id uuid.UUID) int
+		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
+		Systems                  func(childComplexity int, after *string, first int) int
 	}
 
 	Request struct {
@@ -604,6 +606,12 @@ type ComplexityRoot struct {
 		Message func(childComplexity int) int
 		Path    func(childComplexity int) int
 	}
+
+	UserInfo struct {
+		CommonName func(childComplexity int) int
+		Email      func(childComplexity int) int
+		EuaUserID  func(childComplexity int) int
+	}
 }
 
 type AccessibilityRequestResolver interface {
@@ -739,6 +747,7 @@ type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
+	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
 	CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
 	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
@@ -791,6 +800,9 @@ type SystemIntakeResolver interface {
 
 	LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error)
 	CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error)
+}
+type UserInfoResolver interface {
+	Email(ctx context.Context, obj *models.UserInfo) (string, error)
 }
 
 type executableSchema struct {
@@ -2478,6 +2490,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AccessibilityRequests(childComplexity, args["after"].(*string), args["first"].(int)), true
 
+	case "Query.cedarPersonsByCommonName":
+		if e.complexity.Query.CedarPersonsByCommonName == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cedarPersonsByCommonName_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarPersonsByCommonName(childComplexity, args["commonName"].(string)), true
+
 	case "Query.cedarSystem":
 		if e.complexity.Query.CedarSystem == nil {
 			break
@@ -3505,6 +3529,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UserError.Path(childComplexity), true
 
+	case "UserInfo.commonName":
+		if e.complexity.UserInfo.CommonName == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.CommonName(childComplexity), true
+
+	case "UserInfo.email":
+		if e.complexity.UserInfo.Email == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.Email(childComplexity), true
+
+	case "UserInfo.euaUserId":
+		if e.complexity.UserInfo.EuaUserID == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.EuaUserID(childComplexity), true
+
 	}
 	return 0, false
 }
@@ -3623,6 +3668,7 @@ type CedarSystem {
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
 }
+
 """
 This is the Representation of Cedar system with additional related information
 """
@@ -3638,6 +3684,15 @@ Represents a user's bookmark of a cedar system
 type CedarSystemBookmark {
   euaUserId: String!
   cedarSystemId: String!
+}
+
+"""
+Represents a person response from CEDAR LDAP
+"""
+type UserInfo {
+  commonName: String!
+  email: String!
+  euaUserId: String!
 }
 
 """
@@ -4892,6 +4947,7 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
+  cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(id: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
@@ -5586,6 +5642,21 @@ func (ec *executionContext) field_Query_accessibilityRequests_args(ctx context.C
 		}
 	}
 	args["first"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarPersonsByCommonName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["commonName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonName"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["commonName"] = arg0
 	return args, nil
 }
 
@@ -13745,6 +13816,48 @@ func (ec *executionContext) _Query_currentUser(ctx context.Context, field graphq
 	return ec.marshalOCurrentUser2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCurrentUser(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_cedarPersonsByCommonName_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CedarPersonsByCommonName(rctx, args["commonName"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.UserInfo)
+	fc.Result = res
+	return ec.marshalNUserInfo2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfoᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_cedarSystem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -18434,6 +18547,111 @@ func (ec *executionContext) _UserError_path(ctx context.Context, field graphql.C
 	res := resTmp.([]string)
 	fc.Result = res
 	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserInfo_commonName(ctx context.Context, field graphql.CollectedField, obj *models.UserInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CommonName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserInfo_email(ctx context.Context, field graphql.CollectedField, obj *models.UserInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.UserInfo().Email(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserInfo_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.UserInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EuaUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -24259,6 +24477,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "cedarPersonsByCommonName":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cedarPersonsByCommonName(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "cedarSystem":
 			field := field
 
@@ -26463,6 +26704,67 @@ func (ec *executionContext) _UserError(ctx context.Context, sel ast.SelectionSet
 	return out
 }
 
+var userInfoImplementors = []string{"UserInfo"}
+
+func (ec *executionContext) _UserInfo(ctx context.Context, sel ast.SelectionSet, obj *models.UserInfo) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userInfoImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UserInfo")
+		case "commonName":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UserInfo_commonName(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "email":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._UserInfo_email(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "euaUserId":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UserInfo_euaUserId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var __DirectiveImplementors = []string{"__Directive"}
 
 func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionSet, obj *introspection.Directive) graphql.Marshaler {
@@ -28289,6 +28591,60 @@ func (ec *executionContext) marshalNUserError2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑ
 		return graphql.Null
 	}
 	return ec._UserError(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNUserInfo2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfoᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.UserInfo) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx context.Context, sel ast.SelectionSet, v *models.UserInfo) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._UserInfo(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {
