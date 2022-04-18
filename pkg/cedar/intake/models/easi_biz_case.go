@@ -2,7 +2,6 @@ package models
 
 // NOTE: these types are used to create a schema used by the CEDAR Intake API
 // When changing any of these types, add a new version for BizCase in pkg/cedar/intake/translation/constants.go
-// and update the associated version in cmd/gen_intake_schema/main.go
 
 // NOTE: Optional fields are marked with omitempty JSON tag
 // All fields are optional for draft business cases (all are required in final business case) and we are not making

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIBizCase",
-  "title": "EASIBizCaseV02",
+  "title": "EASIBizCaseV03",
   "definitions": {
     "EASIBizCase": {
       "required": [
