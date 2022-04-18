@@ -24,6 +24,7 @@ export interface GetCedarSystemsAndBookmarks_cedarSystems {
   businessOwnerOrgComp: string | null;
   systemMaintainerOrg: string | null;
   systemMaintainerOrgComp: string | null;
+  versionId: string | null;
 }
 
 export interface GetCedarSystemsAndBookmarks {

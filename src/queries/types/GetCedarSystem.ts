@@ -18,6 +18,7 @@ export interface GetCedarSystem_cedarSystem {
   businessOwnerOrgComp: string | null;
   systemMaintainerOrg: string | null;
   systemMaintainerOrgComp: string | null;
+  versionId: string | null;
 }
 
 export interface GetCedarSystem {
@@ -25,5 +26,5 @@ export interface GetCedarSystem {
 }
 
 export interface GetCedarSystemVariables {
-  id: string;
+  versionId: string;
 }

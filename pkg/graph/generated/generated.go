@@ -226,6 +226,7 @@ type ComplexityRoot struct {
 		Status                  func(childComplexity int) int
 		SystemMaintainerOrg     func(childComplexity int) int
 		SystemMaintainerOrgComp func(childComplexity int) int
+		VersionID               func(childComplexity int) int
 	}
 
 	CedarSystemBookmark struct {
@@ -379,14 +380,14 @@ type ComplexityRoot struct {
 	Query struct {
 		AccessibilityRequest    func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests   func(childComplexity int, after *string, first int) int
-		CedarSystem             func(childComplexity int, id string) int
+		CedarSystem             func(childComplexity int, versionID string) int
 		CedarSystemBookmarks    func(childComplexity int) int
 		CedarSystems            func(childComplexity int) int
 		CurrentUser             func(childComplexity int) int
-		Deployments             func(childComplexity int, systemID string, deploymentType *string, state *string, status *string) int
-		DetailedCedarSystemInfo func(childComplexity int, id string) int
+		Deployments             func(childComplexity int, systemVersionID string, deploymentType *string, state *string, status *string) int
+		DetailedCedarSystemInfo func(childComplexity int, versionID string) int
 		Requests                func(childComplexity int, after *string, first int) int
-		Roles                   func(childComplexity int, systemID string, roleTypeID *string) int
+		Roles                   func(childComplexity int, systemVersionID string, roleTypeID *string) int
 		SystemIntake            func(childComplexity int, id uuid.UUID) int
 		SystemIntakeContacts    func(childComplexity int, id uuid.UUID) int
 		Systems                 func(childComplexity int, after *string, first int) int
@@ -740,12 +741,12 @@ type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
-	CedarSystem(ctx context.Context, id string) (*models.CedarSystem, error)
+	CedarSystem(ctx context.Context, versionID string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
 	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
-	Deployments(ctx context.Context, systemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
-	Roles(ctx context.Context, systemID string, roleTypeID *string) ([]*models.CedarRole, error)
-	DetailedCedarSystemInfo(ctx context.Context, id string) (*model.DetailedCedarSystem, error)
+	Deployments(ctx context.Context, systemVersionID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
+	Roles(ctx context.Context, systemVersionID string, roleTypeID *string) ([]*models.CedarRole, error)
+	DetailedCedarSystemInfo(ctx context.Context, versionID string) (*model.DetailedCedarSystem, error)
 	SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error)
 }
 type SystemIntakeResolver interface {
@@ -1698,6 +1699,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CedarSystem.SystemMaintainerOrgComp(childComplexity), true
 
+	case "CedarSystem.versionId":
+		if e.complexity.CedarSystem.VersionID == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.VersionID(childComplexity), true
+
 	case "CedarSystemBookmark.cedarSystemId":
 		if e.complexity.CedarSystemBookmark.CedarSystemID == nil {
 			break
@@ -2496,7 +2504,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarSystem(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.CedarSystem(childComplexity, args["versionId"].(string)), true
 
 	case "Query.cedarSystemBookmarks":
 		if e.complexity.Query.CedarSystemBookmarks == nil {
@@ -2529,7 +2537,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Deployments(childComplexity, args["systemId"].(string), args["deploymentType"].(*string), args["state"].(*string), args["status"].(*string)), true
+		return e.complexity.Query.Deployments(childComplexity, args["systemVersionId"].(string), args["deploymentType"].(*string), args["state"].(*string), args["status"].(*string)), true
 
 	case "Query.detailedCedarSystemInfo":
 		if e.complexity.Query.DetailedCedarSystemInfo == nil {
@@ -2541,7 +2549,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.DetailedCedarSystemInfo(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.DetailedCedarSystemInfo(childComplexity, args["versionId"].(string)), true
 
 	case "Query.requests":
 		if e.complexity.Query.Requests == nil {
@@ -2565,7 +2573,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Roles(childComplexity, args["systemId"].(string), args["roleTypeID"].(*string)), true
+		return e.complexity.Query.Roles(childComplexity, args["systemVersionId"].(string), args["roleTypeID"].(*string)), true
 
 	case "Query.systemIntake":
 		if e.complexity.Query.SystemIntake == nil {
@@ -3630,6 +3638,7 @@ type CedarSystem {
 	businessOwnerOrgComp: String
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
+  versionId: String
 }
 """
 This is the Representation of Cedar system with additional related information
@@ -4901,12 +4910,12 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
-  cedarSystem(id: String!): CedarSystem
+  cedarSystem(versionId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
-  roles(systemId: String!, roleTypeID: String): [CedarRole!]!
-  detailedCedarSystemInfo(id: String!): DetailedCedarSystem
+  deployments(systemVersionId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
+  roles(systemVersionId: String!, roleTypeID: String): [CedarRole!]!
+  detailedCedarSystemInfo(versionId: String!): DetailedCedarSystem
   systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
 }
 
@@ -5602,14 +5611,14 @@ func (ec *executionContext) field_Query_cedarSystem_args(ctx context.Context, ra
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["versionId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("versionId"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["id"] = arg0
+	args["versionId"] = arg0
 	return args, nil
 }
 
@@ -5617,14 +5626,14 @@ func (ec *executionContext) field_Query_deployments_args(ctx context.Context, ra
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["systemId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemId"))
+	if tmp, ok := rawArgs["systemVersionId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemVersionId"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["systemId"] = arg0
+	args["systemVersionId"] = arg0
 	var arg1 *string
 	if tmp, ok := rawArgs["deploymentType"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("deploymentType"))
@@ -5659,14 +5668,14 @@ func (ec *executionContext) field_Query_detailedCedarSystemInfo_args(ctx context
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["versionId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("versionId"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["id"] = arg0
+	args["versionId"] = arg0
 	return args, nil
 }
 
@@ -5698,14 +5707,14 @@ func (ec *executionContext) field_Query_roles_args(ctx context.Context, rawArgs 
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["systemId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemId"))
+	if tmp, ok := rawArgs["systemVersionId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemVersionId"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["systemId"] = arg0
+	args["systemVersionId"] = arg0
 	var arg1 *string
 	if tmp, ok := rawArgs["roleTypeID"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("roleTypeID"))
@@ -10054,6 +10063,38 @@ func (ec *executionContext) _CedarSystem_systemMaintainerOrgComp(ctx context.Con
 	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CedarSystem_versionId(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VersionID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CedarSystemBookmark_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemBookmark) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -13808,7 +13849,7 @@ func (ec *executionContext) _Query_cedarSystem(ctx context.Context, field graphq
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CedarSystem(rctx, args["id"].(string))
+		return ec.resolvers.Query().CedarSystem(rctx, args["versionId"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13914,7 +13955,7 @@ func (ec *executionContext) _Query_deployments(ctx context.Context, field graphq
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Deployments(rctx, args["systemId"].(string), args["deploymentType"].(*string), args["state"].(*string), args["status"].(*string))
+		return ec.resolvers.Query().Deployments(rctx, args["systemVersionId"].(string), args["deploymentType"].(*string), args["state"].(*string), args["status"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13956,7 +13997,7 @@ func (ec *executionContext) _Query_roles(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Roles(rctx, args["systemId"].(string), args["roleTypeID"].(*string))
+		return ec.resolvers.Query().Roles(rctx, args["systemVersionId"].(string), args["roleTypeID"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13998,7 +14039,7 @@ func (ec *executionContext) _Query_detailedCedarSystemInfo(ctx context.Context, 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().DetailedCedarSystemInfo(rctx, args["id"].(string))
+		return ec.resolvers.Query().DetailedCedarSystemInfo(rctx, args["versionId"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -23066,6 +23107,13 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 		case "systemMaintainerOrgComp":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CedarSystem_systemMaintainerOrgComp(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "versionId":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CedarSystem_versionId(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

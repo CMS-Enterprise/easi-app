@@ -60,7 +60,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 		} else {
 			fmt.Println("i:", i, "IctObjectID:", *sys.IctObjectID, "PreviousVersionID:", sys.PreviousVersionID, "NextVersionID:", sys.NextVersionID)
 			cedarSys := &models.CedarSystem{
-				ID:                      *sys.IctObjectID,
+				VersionID:               *sys.ID,
 				Name:                    *sys.Name,
 				Description:             sys.Description,
 				Acronym:                 sys.Acronym,
@@ -69,7 +69,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 				BusinessOwnerOrgComp:    sys.BusinessOwnerOrgComp,
 				SystemMaintainerOrg:     sys.SystemMaintainerOrg,
 				SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
-				VersionID:               *sys.ID,
+				ID:                      *sys.IctObjectID,
 				NextVersionID:           zero.StringFrom(sys.NextVersionID).Ptr(),
 				PreviousVersionID:       zero.StringFrom(sys.PreviousVersionID).Ptr(),
 			}
@@ -107,7 +107,7 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 }
 
 // GetSystem makes a GET call to the /system/summary/{id} endpoint
-func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem, error) {
+func (c *Client) GetSystem(ctx context.Context, versionID string) (*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return &models.CedarSystem{}, nil
@@ -115,7 +115,7 @@ func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem,
 
 	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindByIDParams()
-	params.SetID(id)
+	params.SetID(versionID)
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -136,7 +136,7 @@ func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem,
 
 	// Convert the auto-generated struct to our own pkg/models struct
 	return &models.CedarSystem{
-		ID:                      *responseArray[0].ID,
+		ID:                      *responseArray[0].IctObjectID,
 		Name:                    *responseArray[0].Name,
 		Description:             responseArray[0].Description,
 		Acronym:                 responseArray[0].Acronym,
@@ -145,5 +145,8 @@ func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem,
 		BusinessOwnerOrgComp:    responseArray[0].BusinessOwnerOrgComp,
 		SystemMaintainerOrg:     responseArray[0].SystemMaintainerOrg,
 		SystemMaintainerOrgComp: responseArray[0].SystemMaintainerOrgComp,
+		VersionID:               *responseArray[0].ID,
+		NextVersionID:           zero.StringFrom(responseArray[0].NextVersionID).Ptr(),
+		PreviousVersionID:       zero.StringFrom(responseArray[0].PreviousVersionID).Ptr(),
 	}, nil
 }
