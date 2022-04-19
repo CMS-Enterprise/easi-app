@@ -28,6 +28,7 @@ type TranslatedClient struct {
 // Client is an interface for helping test dependencies
 type Client interface {
 	FetchUserInfo(context.Context, string) (*models2.UserInfo, error)
+	SearchCommonNameContains(context.Context, string) ([]*models2.UserInfo, error)
 }
 
 // NewTranslatedClient returns an API client for CEDAR LDAP using EASi language
@@ -93,4 +94,50 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 		Email:      models2.NewEmailAddress(person.Email),
 		EuaUserID:  person.UserName,
 	}, nil
+}
+
+// SearchCommonNameContains fetches a user's personal details by their common name, automatically wrapping the
+// `commonName` parameter in * to make the search match any person whose name contains the commonName param
+func (c TranslatedClient) SearchCommonNameContains(ctx context.Context, commonName string) ([]*models2.UserInfo, error) {
+	if commonName == "" {
+		appcontext.ZLogger(ctx).Error("No commonName specified; skipping request to CEDAR LDAP")
+		return nil, nil
+	}
+
+	// Wrap the `commonName` parameter in * to make it a "contains" search, rather than an exact one
+	params := operations.NewPersonParams()
+	commonNameWithAsterisks := "*" + commonName + "*"
+	params.CommonName = &commonNameWithAsterisks
+
+	resp, err := c.client.Operations.Person(params, c.apiAuthHeader)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err))
+		return nil, &apperrors.ExternalAPIError{
+			Err:       err,
+			Model:     models.Person{},
+			Operation: apperrors.Fetch,
+			Source:    "CEDAR LDAP",
+		}
+	}
+	if resp.Payload == nil {
+		return nil, &apperrors.ExternalAPIError{
+			Err:       errors.New("failed to return person from CEDAR LDAP"),
+			Model:     models.Person{},
+			Operation: apperrors.Fetch,
+			Source:    "CEDAR LDAP",
+		}
+	}
+
+	// Make a slice of UserInfo objects that's sized to the response
+	userInfoList := make([]*models2.UserInfo, len(resp.Payload.Persons))
+
+	for idx, person := range resp.Payload.Persons {
+		userInfoList[idx] = &models2.UserInfo{
+			CommonName: person.CommonName,
+			Email:      models2.NewEmailAddress(person.Email),
+			EuaUserID:  person.UserName,
+		}
+	}
+
+	return userInfoList, nil
 }

@@ -38,3 +38,20 @@ func (c CedarLdapClient) FetchUserInfo(_ context.Context, euaID string) (*models
 		EuaUserID:  euaID,
 	}, nil
 }
+
+// SearchCommonNameContains fetches a user's personal details by their common name
+func (c CedarLdapClient) SearchCommonNameContains(_ context.Context, commonName string) ([]*models.UserInfo, error) {
+	c.logger.Info("Mock SearchCommonNameContains from LDAP")
+	return []*models.UserInfo{
+		{
+			CommonName: "Jerry Seinfeld",
+			Email:      models.NewEmailAddress("jerry@local.fake"),
+			EuaUserID:  "SF13",
+		},
+		{
+			CommonName: "Cosmo Kramer",
+			Email:      models.NewEmailAddress("kramer@local.fake"),
+			EuaUserID:  "KR14",
+		},
+	}, nil
+}

@@ -26,7 +26,7 @@
 
       a {
         display: flex;
-        color: $white;
+        color: color('white');
         text-decoration: none;
         position: relative;
 
@@ -35,7 +35,7 @@
           font-weight: bold;
 
           &::after {
-            background-color: $white;
+            background-color: color('white');
             border-radius: 99rem;
             content: "";
             display: block;
