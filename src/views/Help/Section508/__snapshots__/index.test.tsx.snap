@@ -69,7 +69,7 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
           <header
-            class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+            class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
             <h3
@@ -107,7 +107,7 @@ exports[`Setion 508 Help Center matches the snapshot 1`] = `
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
           <header
-            class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+            class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
             <h3

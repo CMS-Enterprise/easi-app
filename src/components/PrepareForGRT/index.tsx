@@ -5,16 +5,17 @@ import classNames from 'classnames';
 import CollapsableList from 'components/CollapsableList';
 import HelpPageIntro from 'components/HelpPageIntro';
 import PageHeading from 'components/PageHeading';
+import { ArticleComponentProps } from 'types/articles';
 import NeedHelpBox from 'views/Help/InfoBox/NeedHelpBox';
 
 import './index.scss';
 
-export default ({ helpMode }: { helpMode?: boolean }) => {
+export default ({ helpArticle, className }: ArticleComponentProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   return (
-    <div className="prepare-for-grt">
+    <div className={classNames('prepare-for-grt', className)}>
       <div>
-        {!helpMode ? (
+        {!helpArticle ? (
           <PageHeading className="line-height-heading-2">
             {t('prepare.title')}
           </PageHeading>

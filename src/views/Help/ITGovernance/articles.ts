@@ -16,6 +16,11 @@ const itGovernanceArticles: ArticleProps[] = [
     route: '/it-governance/sample-business-case',
     type: 'IT Governance',
     translation: 'sampleBusinessCase'
+  },
+  {
+    route: '/it-governance/steps-overview/new-system',
+    type: 'IT Governance',
+    translation: 'newSystem'
   }
 ];
 

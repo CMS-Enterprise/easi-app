@@ -60,7 +60,7 @@ exports[`IT Governance Help matches the snapshot 1`] = `
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
           <header
-            class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+            class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
             <h3
@@ -98,7 +98,7 @@ exports[`IT Governance Help matches the snapshot 1`] = `
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
           <header
-            class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+            class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
             <h3
@@ -136,7 +136,7 @@ exports[`IT Governance Help matches the snapshot 1`] = `
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
           <header
-            class="usa-card__header padding-x-3 padding-top-3 padding-bottom-2"
+            class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
             <h3
@@ -151,6 +151,44 @@ exports[`IT Governance Help matches the snapshot 1`] = `
           >
             <p>
               This sample Business Case can help you as you fill out your own Business Case. The content here is an example of how complete and precise to be when completing your Business Case.
+            </p>
+          </div>
+          <div
+            class="usa-card__footer padding-top-2 article__footer"
+            data-testid="CardFooter"
+          >
+            <a
+              class="usa-link easi-request__button-link padding-x-2"
+              href="/help/it-governance"
+            >
+              Read
+            </a>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card desktop:grid-col-4 article article-card--isLink"
+        data-testid="article-card"
+      >
+        <div
+          class="usa-card__container radius-md shadow-2 minh-mobile"
+        >
+          <header
+            class="usa-card__header padding-x-3 padding-top-3"
+            data-testid="CardHeader"
+          >
+            <h3
+              class="line-height-body-4 margin-bottom-1"
+            >
+              Steps involved in adding a new system or service
+            </h3>
+          </header>
+          <div
+            class="usa-card__body padding-top-0 article__body"
+            data-testid="CardBody"
+          >
+            <p>
+              To add a new system or service and receive a CMS Lifecycle ID, you need to go through a set of steps and get approved by the Governance Review Board (GRB). This article will provide an overview of the steps involved.
             </p>
           </div>
           <div
