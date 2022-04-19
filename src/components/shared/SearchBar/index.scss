@@ -4,7 +4,7 @@
 
   &__input {
     padding: 10px 15px;
-    border: 1px solid #565c65;
+    border: 1px solid color('base-dark');
 
     &.usa-input[type='search'] {
       height: auto;
@@ -15,8 +15,8 @@
     position: absolute;
     width: 100%;
     padding: 10px;
-    background-color: #fff;
-    border: 1px solid #565c65;
+    background-color: color('white');
+    border: 1px solid color('base-dark');
   }
 
   &__autocomplete-input[type='search'] {
@@ -45,16 +45,16 @@
       top: 0;
       list-style-type: none;
       padding: 0;
-      background-color: #fff;
-      border: 1px solid #565c65;
+      background-color: color('white');
+      border: 1px solid color('base-dark');
       z-index: 1;
     }
 
     &__suggestion {
       padding-left: 10px;
       &--highlighted {
-        background-color: #005ea2;
-        color: #fff;
+        background-color: color('primary');
+        color: color('white');
       }
     }
   }

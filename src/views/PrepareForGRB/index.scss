@@ -1,11 +1,11 @@
 .distinct-content {
-  background-color: #faf9f9;
+  background-color: color('base-lightest');
   padding: 1rem 0 2rem;
   margin-bottom: 3rem;
 }
 
 .sidebar {
-  border-top: solid 4px #009bc3;
+  border-top: solid 4px $turquoise;
   h4 {
     margin-bottom: 0;
   }

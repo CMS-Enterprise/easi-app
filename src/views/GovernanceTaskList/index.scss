@@ -21,7 +21,7 @@
     display: flex;
 
     &--na {
-      color: #585c62;
+      color: color('base-dark');
     }
 
     &:before {
@@ -31,7 +31,7 @@
   }
 
   &__item + &__item {
-    border-top: 1px solid #000;
+    border-top: 1px solid color('black');
     padding-top: 2em;
   }
 
@@ -55,13 +55,13 @@
     line-height: 1.625em;
     font-weight: bold;
     &--na {
-      border: 2px solid #626a6e;
-      color: #626a6e;
+      border: 2px solid color('base');
+      color: color('base');
     }
 
     &--completed {
-      background-color: #1d8461;
-      color: #fff;
+      background-color: color('success-dark');
+      color: color('white');
     }
   }
 
@@ -72,7 +72,7 @@
 
   &__meeting-date {
     padding-left: 0.5rem;
-    border-left: 3px solid #000;
+    border-left: 3px solid color('black');
     font-weight: bold;
   }
 }

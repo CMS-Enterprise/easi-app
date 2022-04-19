@@ -10,7 +10,7 @@
   }
 
   &__user {
-    color: #71767A;
+    color: color('base');
   }
 
   &__username {
@@ -21,8 +21,8 @@
   }
 
   &__close {
-    -webkit-text-stroke: 5px white;
-    color: #565C65;
+    -webkit-text-stroke: 5px color('white');
+    color: color('base-dark');
   }
 
   &__wrapper {
@@ -46,7 +46,7 @@
     position: relative;
 
     &:after {
-      background-color: #005ea2;
+      background-color: color('primary');
       border-radius: 0;
       content: '';
       display: block;
@@ -62,7 +62,7 @@
     display: block;
     padding: 1rem;
     border: none;
-    color: #565c65;
+    color: color('base-dark');
     line-height: 0.9;
     font-weight: bold;
     text-decoration: none;
@@ -120,7 +120,7 @@
     .navbar--divider {
       width: 100%;
       height: 1px;
-      background-color: #DFE1E2;
+      background-color: color('base-lighter');
       display: flex;
     }    
     

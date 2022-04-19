@@ -1,12 +1,12 @@
 .easi-grt {
   &__request-summary {
     background-color: $easi-bright-blue;
-    color: #fff;
+    color: color('white');
 
     // Overriding USWDS to change the Breadcrumb caret to white
     // The BG color is blue so by default, there's not enough color contrast
     .usa-breadcrumb__list-item:not(:last-child)::after {
-      background-color: #fff;
+      background-color: color('white');
     }
   }
 
@@ -43,7 +43,7 @@
   }
 
   &__nav-link {
-    color: $black;
+    color: color('black');
     text-decoration: none;
 
     &--active {
@@ -52,14 +52,14 @@
     }
 
     &--border {
-      border-bottom: 1px solid #e6e6e6;
+      border-bottom: 1px solid color('disabled-light');
       padding-bottom: 0.75rem;
     }
   }
 
   &__status {
     &--open {
-      background-color: #faf3d1;
+      background-color: color('warning-lighter');
     }
   }
 
@@ -93,13 +93,13 @@
   &__history-item {
     display: flex;
     &:not(:last-of-type) {
-      border-left: 1px solid #000;
+      border-left: 1px solid color('black');
     }
 
     &:before {
       flex: none;
       content: '';
-      background-color: #000;
+      background-color: color('black');
       height: 12px;
       width: 12px;
       margin-left: -6px;
@@ -114,6 +114,6 @@
     margin-bottom: 2em;
     margin-left: 1em;
     padding-bottom: 2em;
-    border-bottom: 1px solid #979797;
+    border-bottom: 1px solid color('disabled-dark');
   }
 }
