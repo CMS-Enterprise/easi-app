@@ -25,7 +25,7 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
-import { fetchBusinessCase } from 'types/routines';
+import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedbackToBusinessOwner';
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
 import NotFound from 'views/NotFound';
@@ -71,14 +71,11 @@ const RequestOverview = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  // const emailsToNotify =
-  //   systemIntake && systemIntake.requester.email !== null
-  //     ? [systemIntake.requester.email]
-  //     : [];
-
   useEffect(() => {
     if (systemIntake?.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
+    } else {
+      dispatch(clearBusinessCase());
     }
   }, [dispatch, systemIntake?.businessCaseId]);
 

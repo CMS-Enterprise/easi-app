@@ -7,15 +7,15 @@ import RelatedArticles from 'components/RelatedArticles';
 
 const PrepareForGRT = () => {
   return (
-    <MainContent>
-      <div className="grid-container">
-        <HelpBreadcrumb type="Close" />
-        <PrepareForGRTBase helpMode />
-      </div>
+    <>
+      <MainContent className="grid-container">
+        <HelpBreadcrumb type="Close tab" />
+        <PrepareForGRTBase helpArticle />
+      </MainContent>
       <div className="margin-top-7">
         <RelatedArticles type="IT Governance" />
       </div>
-    </MainContent>
+    </>
   );
 };
 

@@ -11,11 +11,11 @@
         }
 
         &__user {
-            color: #71767A;
+            color: color('base');
         }
 
         &__link {
-            color: #565C65;
+            color: color('base-dark');
             padding: 1em;            
         }
 
@@ -32,7 +32,7 @@
 
         a {   
             &:visited {
-                color: #565C65
+                color: color('base-dark')
             }             
         }
 
@@ -47,5 +47,5 @@
 }
 
 .border-top-light {
-    border-top: 1px solid #DFE1E2;
+    border-top: 1px solid color('base-lighter');
 }

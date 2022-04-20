@@ -5,11 +5,11 @@
     .link,
     h2,
     h3 {
-      color: #595959;
+      color: color('base-dark');
     }
   }
 
   #okta-sign-in.auth-container.main-container {
-    color: #595959;
+    color: color('base-dark');
   }
 }

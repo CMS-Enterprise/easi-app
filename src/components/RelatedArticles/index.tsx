@@ -29,7 +29,7 @@ const RelatedArticles = ({ className, type }: RelatedArticlesProps) => {
         <dt className="margin-bottom-4">{t('relatedDescription')}</dt>
         <CardGroup className={classnames('margin-y-2', className)}>
           {selectedArticles.map(article => (
-            <ArticleCard key={article.route} {...article} />
+            <ArticleCard key={article.route} {...article} isLink />
           ))}
         </CardGroup>
       </MainContent>
