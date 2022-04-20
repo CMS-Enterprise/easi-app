@@ -3,7 +3,7 @@
 exports[`Prepare for GRT renders help mode without crashing 1`] = `
 <DocumentFragment>
   <div
-    class="prepare-for-grt"
+    class="prepare-for-grb"
   >
     <div>
       <div
@@ -14,7 +14,7 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
           class="easi-h1 margin-bottom-0 margin-top-3"
           tabindex="-1"
         >
-          Prepare for Governance Review Team meeting
+          Prepare for the Governance Review Board meeting
         </h1>
         <a
           class="usa-link display-inline-block margin-y-1"
@@ -36,184 +36,71 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
       <h2
         class="font-heading-xl line-height-heading-2 margin-top-3 margin-bottom-2"
       >
-        What to expect
+        What is the Governance Review Board?
       </h2>
-      <ul
-        class="list-style-none margin-0 padding-0"
+      <p
+        class="line-height-sans-5"
       >
-        <li
-          class="line-height-sans-6"
-        >
-          Subject Matter Experts (SMEs) from various components will help you refine your Business Case. Their role is to ensure that you and your project team have considered and documented information about any potential alternatives that the Governance Review Board (GRB) may consider viable, including pros, cons, and estimated costs, as well as the technical feasibility and implementation process requirements for each solution.
-        </li>
-        <li
-          class="line-height-sans-6 margin-top-1"
-        >
-          At the meeting, the Governance Review Team (GRT) SMEs will discuss your draft Business Case and provide feedback both to you and the GRB about the alternative solutions you’re considering to meet your business need.
-        </li>
-      </ul>
-    </div>
-    <div
-      class="margin-top-3 padding-2 bg-base-lightest"
-    >
-      <h3
-        class="margin-top-0 margin-bottom-2 font-heading-lg line-height-heading-2"
-      >
-        Possible questions
+        The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.
+      </p>
+      <h3>
+        What to expect at the meeting
       </h3>
-      <div
-        class="line-height-sans-6"
+      <p
+        class="line-height-sans-5"
       >
-        The GRT SMEs may ask you a series of questions after you walk them through your Business Case. The best way to prepare for this conversation is to review and be able to respond to example questions as they pertain to your Business Case. Example questions are included in the sections below.
-      </div>
+        During the session, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS programs. You’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. Next, the GRB will review your proposed alternatives and their pros and cons.
+      </p>
       <div
-        class="margin-top-2"
+        class="usa-alert usa-alert--info usa-alert--slim"
+        data-testid="alert"
       >
         <div
-          class="easi-collapsable-link"
+          class="usa-alert__body"
         >
-          <button
-            aria-controls="capital-planning-and-investment-control-cpic"
-            aria-expanded="false"
-            class="usa-button usa-button--unstyled"
-            data-testid="collapsable-link"
-            type="button"
+          <p
+            class="usa-alert__text"
           >
-            <svg
-              class="usa-icon"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-              />
-            </svg>
-            Capital Planning and Investment Control (CPIC)
-          </button>
+            You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.
+          </p>
         </div>
       </div>
       <div
-        class="margin-top-2"
+        class="margin-top-3 padding-2 bg-base-lightest"
       >
-        <div
-          class="easi-collapsable-link"
+        <h3
+          class="margin-top-0 margin-bottom-1"
         >
-          <button
-            aria-controls="enterprise-architecture-and-data"
-            aria-expanded="false"
-            class="usa-button usa-button--unstyled"
-            data-testid="collapsable-link"
-            type="button"
-          >
-            <svg
-              class="usa-icon"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-              />
-            </svg>
-            Enterprise Architecture and Data
-          </button>
-        </div>
-      </div>
-      <div
-        class="margin-top-2"
-      >
-        <div
-          class="easi-collapsable-link"
+          Tips for the meeting
+        </h3>
+        <ul
+          class="list-style-none bullet-list line-height-body-5 padding-y-0 padding-left-2"
         >
-          <button
-            aria-controls="shared-services-and-data-hosting"
-            aria-expanded="false"
-            class="usa-button usa-button--unstyled"
-            data-testid="collapsable-link"
-            type="button"
-          >
-            <svg
-              class="usa-icon"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-              />
-            </svg>
-            Shared Services and Data Hosting
-          </button>
-        </div>
-      </div>
-      <div
-        class="margin-top-2"
-      >
-        <div
-          class="easi-collapsable-link"
-        >
-          <button
-            aria-controls="it-security-privacy"
-            aria-expanded="false"
-            class="usa-button usa-button--unstyled"
-            data-testid="collapsable-link"
-            type="button"
-          >
-            <svg
-              class="usa-icon"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-              />
-            </svg>
-            IT Security/Privacy
-          </button>
-        </div>
+          <li>
+            When walking through your Business Case, highlight how this project would benefit CMS and further their current priorities.
+          </li>
+          <li>
+            Thoroughly review the costs included in your Business Case and identify the assumptions you made when you calculated them.
+          </li>
+          <li>
+            If you have been discussing your request with Subject Matter Expert (SME) groups, highlight it during the meeting. This helps the Review Board understand more about the project team’s circumstances and offers them additional reassurances.
+          </li>
+        </ul>
       </div>
     </div>
     <div>
-      <h3
-        class="font-heading-lg margin-top-6 margin-bottom-2"
+      <h2
+        class="margin-top-6 margin-bottom-2"
       >
         What to bring
-      </h3>
-      <div>
-        The following are important items to have with you at the GRT meeting:
-      </div>
+      </h2>
+      <p
+        class="margin-y-0"
+      >
+        The following are important items to have with you at the GRB meeting:
+      </p>
       <ul
-        class="list-style-none bullet-list line-height-body-5 padding-0"
+        class="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2"
       >
         <li>
           a copy of your Business Case
@@ -223,6 +110,28 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
         </li>
         <li>
           additional materials that you’d like to talk through, such as a concept diagram
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h2
+        class="margin-top-6 margin-bottom-2"
+      >
+        Possible outcomes
+      </h2>
+      <p
+        class="margin-y-0"
+      >
+        After this discussion, the Governance Review Board will decide whether to approve your request at this time.
+      </p>
+      <ul
+        class="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2"
+      >
+        <li>
+          If the request is approved, the Board will issue you a Lifecycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.
+        </li>
+        <li>
+          If two or more Board members voice concerns about the project, a Lifceycle ID won’t be issued. The request will not be approved until all concerns are addressed or withdrawn. 
         </li>
       </ul>
     </div>
@@ -264,7 +173,7 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
 exports[`Prepare for GRT renders without crashing 1`] = `
 <DocumentFragment>
   <div
-    class="prepare-for-grt"
+    class="prepare-for-grb"
   >
     <div>
       <h1
@@ -272,189 +181,76 @@ exports[`Prepare for GRT renders without crashing 1`] = `
         class="easi-h1 line-height-heading-2"
         tabindex="-1"
       >
-        Prepare for Governance Review Team meeting
+        Prepare for the Governance Review Board meeting
       </h1>
       <h2
         class="font-heading-xl line-height-heading-2 margin-top-3 margin-bottom-2"
       >
-        What to expect
+        What is the Governance Review Board?
       </h2>
-      <ul
-        class="list-style-none margin-0 padding-0"
+      <p
+        class="line-height-sans-5"
       >
-        <li
-          class="line-height-sans-6"
-        >
-          Subject Matter Experts (SMEs) from various components will help you refine your Business Case. Their role is to ensure that you and your project team have considered and documented information about any potential alternatives that the Governance Review Board (GRB) may consider viable, including pros, cons, and estimated costs, as well as the technical feasibility and implementation process requirements for each solution.
-        </li>
-        <li
-          class="line-height-sans-6 margin-top-1"
-        >
-          At the meeting, the Governance Review Team (GRT) SMEs will discuss your draft Business Case and provide feedback both to you and the GRB about the alternative solutions you’re considering to meet your business need.
-        </li>
-      </ul>
-    </div>
-    <div
-      class="margin-top-3 padding-2 bg-base-lightest"
-    >
-      <h3
-        class="margin-top-0 margin-bottom-2 font-heading-lg line-height-heading-2"
-      >
-        Possible questions
+        The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.
+      </p>
+      <h3>
+        What to expect at the meeting
       </h3>
-      <div
-        class="line-height-sans-6"
+      <p
+        class="line-height-sans-5"
       >
-        The GRT SMEs may ask you a series of questions after you walk them through your Business Case. The best way to prepare for this conversation is to review and be able to respond to example questions as they pertain to your Business Case. Example questions are included in the sections below.
-      </div>
+        During the session, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS programs. You’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. Next, the GRB will review your proposed alternatives and their pros and cons.
+      </p>
       <div
-        class="margin-top-2"
+        class="usa-alert usa-alert--info usa-alert--slim"
+        data-testid="alert"
       >
         <div
-          class="easi-collapsable-link"
+          class="usa-alert__body"
         >
-          <button
-            aria-controls="capital-planning-and-investment-control-cpic"
-            aria-expanded="false"
-            class="usa-button usa-button--unstyled"
-            data-testid="collapsable-link"
-            type="button"
+          <p
+            class="usa-alert__text"
           >
-            <svg
-              class="usa-icon"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-              />
-            </svg>
-            Capital Planning and Investment Control (CPIC)
-          </button>
+            You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.
+          </p>
         </div>
       </div>
       <div
-        class="margin-top-2"
+        class="margin-top-3 padding-2 bg-base-lightest"
       >
-        <div
-          class="easi-collapsable-link"
+        <h3
+          class="margin-top-0 margin-bottom-1"
         >
-          <button
-            aria-controls="enterprise-architecture-and-data"
-            aria-expanded="false"
-            class="usa-button usa-button--unstyled"
-            data-testid="collapsable-link"
-            type="button"
-          >
-            <svg
-              class="usa-icon"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-              />
-            </svg>
-            Enterprise Architecture and Data
-          </button>
-        </div>
-      </div>
-      <div
-        class="margin-top-2"
-      >
-        <div
-          class="easi-collapsable-link"
+          Tips for the meeting
+        </h3>
+        <ul
+          class="list-style-none bullet-list line-height-body-5 padding-y-0 padding-left-2"
         >
-          <button
-            aria-controls="shared-services-and-data-hosting"
-            aria-expanded="false"
-            class="usa-button usa-button--unstyled"
-            data-testid="collapsable-link"
-            type="button"
-          >
-            <svg
-              class="usa-icon"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-              />
-            </svg>
-            Shared Services and Data Hosting
-          </button>
-        </div>
-      </div>
-      <div
-        class="margin-top-2"
-      >
-        <div
-          class="easi-collapsable-link"
-        >
-          <button
-            aria-controls="it-security-privacy"
-            aria-expanded="false"
-            class="usa-button usa-button--unstyled"
-            data-testid="collapsable-link"
-            type="button"
-          >
-            <svg
-              class="usa-icon"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-              />
-            </svg>
-            IT Security/Privacy
-          </button>
-        </div>
+          <li>
+            When walking through your Business Case, highlight how this project would benefit CMS and further their current priorities.
+          </li>
+          <li>
+            Thoroughly review the costs included in your Business Case and identify the assumptions you made when you calculated them.
+          </li>
+          <li>
+            If you have been discussing your request with Subject Matter Expert (SME) groups, highlight it during the meeting. This helps the Review Board understand more about the project team’s circumstances and offers them additional reassurances.
+          </li>
+        </ul>
       </div>
     </div>
     <div>
-      <h3
-        class="font-heading-lg margin-top-6 margin-bottom-2"
+      <h2
+        class="margin-top-6 margin-bottom-2"
       >
         What to bring
-      </h3>
-      <div>
-        The following are important items to have with you at the GRT meeting:
-      </div>
+      </h2>
+      <p
+        class="margin-y-0"
+      >
+        The following are important items to have with you at the GRB meeting:
+      </p>
       <ul
-        class="list-style-none bullet-list line-height-body-5 padding-0"
+        class="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2"
       >
         <li>
           a copy of your Business Case
@@ -464,6 +260,28 @@ exports[`Prepare for GRT renders without crashing 1`] = `
         </li>
         <li>
           additional materials that you’d like to talk through, such as a concept diagram
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h2
+        class="margin-top-6 margin-bottom-2"
+      >
+        Possible outcomes
+      </h2>
+      <p
+        class="margin-y-0"
+      >
+        After this discussion, the Governance Review Board will decide whether to approve your request at this time.
+      </p>
+      <ul
+        class="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2"
+      >
+        <li>
+          If the request is approved, the Board will issue you a Lifecycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.
+        </li>
+        <li>
+          If two or more Board members voice concerns about the project, a Lifceycle ID won’t be issued. The request will not be approved until all concerns are addressed or withdrawn. 
         </li>
       </ul>
     </div>
