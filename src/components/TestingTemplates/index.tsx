@@ -206,6 +206,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
             {t('testingTemplates.testPlanSection.download.link')}
           </UswdsReactLink>
         </SummaryBox>
+        {!helpArticle && <Divider className="margin-bottom-4" />}
       </div>
     </div>
   );
