@@ -98,7 +98,10 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         </p>
         <ul className="usa-list usa-list--unstyled desktop:grid-col-8">
           {vpatConformanceLevels.map(level => (
-            <li key={level.name} className="maxw-none margin-bottom-1">
+            <li
+              key={level.name}
+              className="maxw-none margin-bottom-1  padding-left-2"
+            >
               <span className="text-bold display-inline">{level.name}</span>{' '}
               {level.description}
             </li>
@@ -158,7 +161,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <p className="margin-bottom-2 line-height-sans-5 desktop:grid-col-9">
           {t('testingTemplates.testPlanSection.description')}
         </p>
-        <ul className="usa-list usa-list--unstyled desktop:grid-col-8">
+        <ul className="usa-list desktop:grid-col-8">
           {testPlanList.map(item => (
             <li key={item} className="maxw-none margin-bottom-1">
               {item}
@@ -182,7 +185,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <p className="margin-bottom-2 line-height-sans-5 desktop:grid-col-9">
           {t('testingTemplates.remediationPlanSection.description')}
         </p>
-        <ul className="usa-list usa-list--unstyled desktop:grid-col-8">
+        <ul className="usa-list desktop:grid-col-8">
           {remediationPlanList.map(item => (
             <li key={item} className="maxw-none margin-bottom-1">
               {item}
