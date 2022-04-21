@@ -1,6 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IconError, SummaryBox } from '@trussworks/react-uswds';
+import {
+  IconArrowForward,
+  IconError,
+  Link as UswdsLink,
+  SummaryBox
+} from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import RemediationPlanDoc from 'assets/files/CMS508RemediationPlanTemplate.pdf';
@@ -50,9 +55,26 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         />
       )}
       <div className="margin-bottom-6 padding-2 bg-base-lightest">
-        <h3>Page Contents</h3>
-        <ul>
-          <li>TEmportat</li>
+        <h3>{t('templatesFor508Testing:pageContents')}</h3>
+        <ul className="usa-list usa-list--unstyled">
+          <li className="margin-bottom-1">
+            <UswdsLink href="#vpat">
+              {t('testingTemplates.vpatSection.heading')}
+              <IconArrowForward />
+            </UswdsLink>
+          </li>
+          <li className="margin-bottom-1">
+            <UswdsLink href="#test-plan">
+              {t('testingTemplates.testPlanSection.heading')}
+              <IconArrowForward />
+            </UswdsLink>
+          </li>
+          <li>
+            <UswdsLink href="#remediation-plan">
+              {t('testingTemplates.remediationPlanSection.heading')}
+              <IconArrowForward />
+            </UswdsLink>
+          </li>
         </ul>
       </div>
       <div className="templates-for-508-testing__section">
@@ -68,7 +90,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <p className="margin-bottom-1">
           {t('testingTemplates.vpatSection.subSection.item1.text')}
         </p>
-        <ul className="usa-list usa-list--unstyle desktop:grid-col-8">
+        <ul className="usa-list usa-list--unstyled desktop:grid-col-8">
           {vpatConformanceLevels.map(level => (
             <li key={level.name} className="maxw-none margin-bottom-1">
               <span className="text-bold display-inline">{level.name}</span>{' '}
@@ -130,7 +152,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <p className="margin-bottom-2 line-height-sans-5 desktop:grid-col-9">
           {t('testingTemplates.testPlanSection.description')}
         </p>
-        <ul className="usa-list usa-list--unstyle desktop:grid-col-8">
+        <ul className="usa-list usa-list--unstyled desktop:grid-col-8">
           {testPlanList.map(item => (
             <li key={item} className="maxw-none margin-bottom-1">
               {item}
@@ -154,7 +176,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <p className="margin-bottom-2 line-height-sans-5 desktop:grid-col-9">
           {t('testingTemplates.remediationPlanSection.description')}
         </p>
-        <ul className="usa-list usa-list--unstyle desktop:grid-col-8">
+        <ul className="usa-list usa-list--unstyled desktop:grid-col-8">
           {remediationPlanList.map(item => (
             <li key={item} className="maxw-none margin-bottom-1">
               {item}
