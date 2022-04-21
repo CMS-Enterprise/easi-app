@@ -121,7 +121,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
             </UswdsReactLink>
           </p>
         </SummaryBox>
-        <Divider />
+        <Divider className="margin-bottom-4" />
       </div>
       <div className="templates-for-508-testing__section">
         <h2 id="test-plan" className="margin-bottom-2">
@@ -145,7 +145,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
             {t('testingTemplates.testPlanSection.download.link')}
           </UswdsReactLink>
         </SummaryBox>
-        <Divider />
+        <Divider className="margin-bottom-4" />
       </div>
       <div className="templates-for-508-testing__section">
         <h2 id="remediation-plan" className="margin-bottom-2">
