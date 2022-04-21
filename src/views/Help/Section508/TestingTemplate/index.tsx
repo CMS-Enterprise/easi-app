@@ -5,7 +5,7 @@ import MainContent from 'components/MainContent';
 import RelatedArticles from 'components/RelatedArticles';
 import TestingTemplatesBase from 'components/TestingTemplates';
 
-const PrepareForGRT = () => {
+const TestingTemplates = () => {
   return (
     <>
       <MainContent className="grid-container">
@@ -19,4 +19,4 @@ const PrepareForGRT = () => {
   );
 };
 
-export default PrepareForGRT;
+export default TestingTemplates;
