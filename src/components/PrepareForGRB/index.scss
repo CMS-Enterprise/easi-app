@@ -1,8 +1,5 @@
-.prepare-for-grt {
-  ul.list-style-none {
-    list-style: none;
-  }
-  ul.bullet-list {
+.prepare-for-grb {
+  ul.usa-list {
     li::before {
       content: '• ';
     }

@@ -39,7 +39,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           <h3 className="margin-top-0 margin-bottom-1">
             {t('help.tips.title')}
           </h3>
-          <ul className="list-style-none bullet-list line-height-body-5 padding-y-0 padding-left-2">
+          <ul className="usa-list usa-list--unstyled line-height-body-5 padding-y-0">
             {t<string[]>('help.tips.items', {
               returnObjects: true
             }).map(item => (
@@ -53,7 +53,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           {t('help.whatToBring.title')}
         </h2>
         <p className="margin-y-0">{t('help.whatToBring.copy')}</p>
-        <ul className="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2">
+        <ul className="usa-list usa-list--unstyled line-height-body-5 margin-top-1 padding-y-0">
           {t<string[]>('help.whatToBring.items', {
             returnObjects: true
           }).map(item => (
@@ -66,7 +66,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           {t('prepare.possibleOutcomes.title')}
         </h2>
         <p className="margin-y-0">{t('prepare.possibleOutcomes.body')}</p>
-        <ul className="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2">
+        <ul className="usa-list usa-list--unstyled list-style-none line-height-body-5 margin-top-1 padding-y-0">
           {t<string[]>('prepare.possibleOutcomes.items', {
             returnObjects: true
           }).map(item => (
