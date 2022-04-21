@@ -6,6 +6,7 @@ import NotFound from 'views/NotFound';
 import NewSystem from './ITGovernance/NewSystem';
 import PrepareForGRT from './ITGovernance/PrepareForGRT';
 import StepsInvolved from './Section508/StepsInvolved';
+import TestingTemplates from './Section508/TestingTemplate';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
@@ -41,6 +42,10 @@ const Help = () => {
         <Route
           path="/help/section-508/steps-involved"
           render={() => <StepsInvolved />}
+        />
+        <Route
+          path="/help/section-508/templates-for-508-testing"
+          render={() => <TestingTemplates />}
         />
 
         {/* 404 */}
