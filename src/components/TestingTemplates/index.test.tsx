@@ -2,18 +2,18 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 
-import PrepareForGRT from '.';
+import TestingTemplates from '.';
 
-describe('Prepare for GRT', () => {
+describe('Template for 508 Testing', () => {
   it('renders without crashing', () => {
-    const { asFragment } = render(<PrepareForGRT />);
+    const { asFragment } = render(<TestingTemplates />);
     expect(asFragment()).toMatchSnapshot();
   });
 
   it('renders help mode without crashing', () => {
     const { asFragment } = render(
       <MemoryRouter>
-        <PrepareForGRT helpArticle />
+        <TestingTemplates helpArticle />
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();
