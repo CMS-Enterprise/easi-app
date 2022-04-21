@@ -6,7 +6,11 @@ import TestingTemplates from '.';
 
 describe('Template for 508 Testing', () => {
   it('renders without crashing', () => {
-    const { asFragment } = render(<TestingTemplates />);
+    const { asFragment } = render(
+      <MemoryRouter>
+        <TestingTemplates />
+      </MemoryRouter>
+    );
     expect(asFragment()).toMatchSnapshot();
   });
 
