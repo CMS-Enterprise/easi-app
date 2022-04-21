@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Prepare for GRT renders help mode without crashing 1`] = `
+exports[`Prepare for GRB renders help mode without crashing 1`] = `
 <DocumentFragment>
   <div
     class="prepare-for-grb"
@@ -74,7 +74,7 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
           Tips for the meeting
         </h3>
         <ul
-          class="list-style-none bullet-list line-height-body-5 padding-y-0 padding-left-2"
+          class="usa-list usa-list--unstyled line-height-body-5 padding-y-0"
         >
           <li>
             When walking through your Business Case, highlight how this project would benefit CMS and further their current priorities.
@@ -100,7 +100,7 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
         The following are important items to have with you at the GRB meeting:
       </p>
       <ul
-        class="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2"
+        class="usa-list usa-list--unstyled line-height-body-5 margin-top-1 padding-y-0"
       >
         <li>
           a copy of your Business Case
@@ -125,7 +125,7 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
         After this discussion, the Governance Review Board will decide whether to approve your request at this time.
       </p>
       <ul
-        class="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2"
+        class="usa-list usa-list--unstyled list-style-none line-height-body-5 margin-top-1 padding-y-0"
       >
         <li>
           If the request is approved, the Board will issue you a Lifecycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.
@@ -170,7 +170,7 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Prepare for GRT renders without crashing 1`] = `
+exports[`Prepare for GRB renders without crashing 1`] = `
 <DocumentFragment>
   <div
     class="prepare-for-grb"
@@ -224,7 +224,7 @@ exports[`Prepare for GRT renders without crashing 1`] = `
           Tips for the meeting
         </h3>
         <ul
-          class="list-style-none bullet-list line-height-body-5 padding-y-0 padding-left-2"
+          class="usa-list usa-list--unstyled line-height-body-5 padding-y-0"
         >
           <li>
             When walking through your Business Case, highlight how this project would benefit CMS and further their current priorities.
@@ -250,7 +250,7 @@ exports[`Prepare for GRT renders without crashing 1`] = `
         The following are important items to have with you at the GRB meeting:
       </p>
       <ul
-        class="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2"
+        class="usa-list usa-list--unstyled line-height-body-5 margin-top-1 padding-y-0"
       >
         <li>
           a copy of your Business Case
@@ -275,7 +275,7 @@ exports[`Prepare for GRT renders without crashing 1`] = `
         After this discussion, the Governance Review Board will decide whether to approve your request at this time.
       </p>
       <ul
-        class="list-style-none bullet-list line-height-body-5 margin-top-1 padding-y-0 padding-left-2"
+        class="usa-list usa-list--unstyled list-style-none line-height-body-5 margin-top-1 padding-y-0"
       >
         <li>
           If the request is approved, the Board will issue you a Lifecycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.
