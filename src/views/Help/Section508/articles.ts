@@ -8,7 +8,7 @@ const section508Articles: ArticleProps[] = [
     translation: 'stepsInvolved508' // Should reference the translation used to index the title and description for cards
   },
   {
-    route: '/section-508/template-508', // route for hitting rendered article component
+    route: '/section-508/templates-for-508-testing', // route for hitting rendered article component
     type: 'Section 508', // Used for tagging of article
     translation: 'templatesFor508Testing' // Should reference the translation used to index the title and description for cards
   }
