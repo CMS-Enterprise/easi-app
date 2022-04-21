@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 
 import PrepareForGRB from '.';
 
-describe('Prepare for GRT', () => {
+describe('Prepare for GRB', () => {
   it('renders without crashing', () => {
     const { asFragment } = render(<PrepareForGRB />);
     expect(asFragment()).toMatchSnapshot();
