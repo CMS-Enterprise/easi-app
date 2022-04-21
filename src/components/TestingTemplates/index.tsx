@@ -59,20 +59,26 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <ul className="usa-list usa-list--unstyled">
           <li className="margin-bottom-1">
             <UswdsLink href="#vpat">
-              {t('testingTemplates.vpatSection.heading')}
-              <IconArrowForward />
+              <span className="display-flex flex-align-center">
+                {t('testingTemplates.vpatSection.heading')}
+                <IconArrowForward className="margin-left-1" />
+              </span>
             </UswdsLink>
           </li>
           <li className="margin-bottom-1">
             <UswdsLink href="#test-plan">
-              {t('testingTemplates.testPlanSection.heading')}
-              <IconArrowForward />
+              <span className="display-flex flex-align-center">
+                {t('testingTemplates.testPlanSection.heading')}
+                <IconArrowForward className="margin-left-1" />
+              </span>
             </UswdsLink>
           </li>
-          <li>
+          <li className="">
             <UswdsLink href="#remediation-plan">
-              {t('testingTemplates.remediationPlanSection.heading')}
-              <IconArrowForward />
+              <span className="display-flex flex-align-center">
+                {t('testingTemplates.remediationPlanSection.heading')}
+                <IconArrowForward className="margin-left-1" />
+              </span>
             </UswdsLink>
           </li>
         </ul>
