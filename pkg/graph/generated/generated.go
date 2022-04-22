@@ -126,8 +126,6 @@ type ComplexityRoot struct {
 		CurrentSolutionSummary func(childComplexity int) int
 		EUAUserID              func(childComplexity int) int
 		ID                     func(childComplexity int) int
-		InitialSubmittedAt     func(childComplexity int) int
-		LastSubmittedAt        func(childComplexity int) int
 		LifecycleCostLines     func(childComplexity int) int
 		PreferredSolution      func(childComplexity int) int
 		PriorityAlignment      func(childComplexity int) int
@@ -1127,20 +1125,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BusinessCase.ID(childComplexity), true
-
-	case "BusinessCase.initialSubmittedAt":
-		if e.complexity.BusinessCase.InitialSubmittedAt == nil {
-			break
-		}
-
-		return e.complexity.BusinessCase.InitialSubmittedAt(childComplexity), true
-
-	case "BusinessCase.lastSubmittedAt":
-		if e.complexity.BusinessCase.LastSubmittedAt == nil {
-			break
-		}
-
-		return e.complexity.BusinessCase.LastSubmittedAt(childComplexity), true
 
 	case "BusinessCase.lifecycleCostLines":
 		if e.complexity.BusinessCase.LifecycleCostLines == nil {
@@ -4220,8 +4204,6 @@ type BusinessCase {
   currentSolutionSummary: String
   euaUserId: String!
   id: UUID!
-  initialSubmittedAt: Time
-  lastSubmittedAt: Time
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
@@ -7416,70 +7398,6 @@ func (ec *executionContext) _BusinessCase_id(ctx context.Context, field graphql.
 	res := resTmp.(uuid.UUID)
 	fc.Result = res
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BusinessCase_initialSubmittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCase",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.InitialSubmittedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BusinessCase_lastSubmittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCase",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.LastSubmittedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCase_lifecycleCostLines(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
@@ -22041,20 +21959,6 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "initialSubmittedAt":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BusinessCase_initialSubmittedAt(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "lastSubmittedAt":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BusinessCase_lastSubmittedAt(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
 		case "lifecycleCostLines":
 			field := field
 

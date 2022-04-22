@@ -604,8 +604,6 @@ type BusinessCase {
   currentSolutionSummary: String
   euaUserId: String!
   id: UUID!
-  initialSubmittedAt: Time
-  lastSubmittedAt: Time
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String

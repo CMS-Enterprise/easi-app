@@ -80,8 +80,6 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
     status: BusinessCaseStatus;
     systemIntakeId: string;
     systemIntakeStatus: SystemIntakeStatus;
-    initialSubmittedAt?: string;
-    lastSubmittedAt?: string;
     createdAt: string;
   };
 
