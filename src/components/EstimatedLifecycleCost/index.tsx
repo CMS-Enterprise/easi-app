@@ -1,5 +1,11 @@
 import React from 'react';
-import { Checkbox, Label, TextInput } from '@trussworks/react-uswds';
+import { useTranslation } from 'react-i18next';
+import {
+  Checkbox,
+  Label,
+  SummaryBox,
+  TextInput
+} from '@trussworks/react-uswds';
 import { Field, FieldArray } from 'formik';
 import { DateTime } from 'luxon';
 
@@ -33,6 +39,7 @@ const Phase = ({
   setFieldValue,
   errors = {}
 }: PhaseProps) => {
+  const { t } = useTranslation('businessCase');
   return (
     <FieldArray name={`${formikKey}.year${year}`}>
       {() => (
@@ -50,7 +57,7 @@ const Phase = ({
                 {typeof errors === 'string' ? errors : ''}
               </FieldErrorMsg>
               <legend className="usa-label">
-                {`Fiscal year ${fiscalYear} phase costs`}
+                {t('lifecycleCost.fiscalYear', { year: fiscalYear })}
               </legend>
 
               <Field
@@ -58,7 +65,7 @@ const Phase = ({
                 checked={values.development.isPresent}
                 id={`BusinessCase-${formikKey}.Year${year}.development.isPresent`}
                 name={`${formikKey}.year${year}.development.isPresent`}
-                label="Development"
+                label={t('lifecycleCost.development')}
                 value="Development"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setFieldValue(
@@ -76,7 +83,7 @@ const Phase = ({
                     htmlFor={`BusinessCase-${formikKey}.Year${year}.development.cost`}
                     aria-label={`Enter year ${fiscalYear} development cost`}
                   >
-                    Development costs
+                    {t('lifecycleCost.development')}
                   </Label>
                   <FieldErrorMsg>{errors?.development?.cost}</FieldErrorMsg>
                   <Field
@@ -97,7 +104,7 @@ const Phase = ({
                 checked={values.operationsMaintenance.isPresent}
                 id={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.isPresent`}
                 name={`${formikKey}.year${year}.operationsMaintenance.isPresent`}
-                label="Operations and Maintenance"
+                label={t('lifecycleCost.operationsMaintenance')}
                 value="Operations and Maintenance"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setFieldValue(
@@ -115,7 +122,7 @@ const Phase = ({
                     htmlFor={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.cost`}
                     aria-label={`Enter year ${fiscalYear} operations and maintenance cost`}
                   >
-                    Operations and Maintenance costs
+                    {t('lifecycleCost.operationsMaintenance')}
                   </Label>
                   <FieldErrorMsg>
                     {errors?.operationsMaintenance?.cost}
@@ -138,7 +145,7 @@ const Phase = ({
                 checked={values.other.isPresent}
                 id={`BusinessCase-${formikKey}.Year${year}.other.isPresent`}
                 name={`${formikKey}.year${year}.other.isPresent`}
-                label="Other"
+                label={t('lifecycleCost.other')}
                 value="Other"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setFieldValue(
@@ -156,7 +163,7 @@ const Phase = ({
                     htmlFor={`BusinessCase-${formikKey}.Year${year}.other.cost`}
                     aria-label={`Enter year ${fiscalYear} other cost`}
                   >
-                    Other costs
+                    {t('lifecycleCost.other')}
                   </Label>
                   <FieldErrorMsg>{errors?.other?.cost}</FieldErrorMsg>
                   <Field
@@ -199,6 +206,7 @@ const EstimatedLifecycleCost = ({
   errors = {},
   businessCaseCreatedAt = ''
 }: EstimatedLifecycleCostProps) => {
+  const { t } = useTranslation('businessCase');
   const sumCostinYear = (phases: LifecycleCosts) => {
     const { development, operationsMaintenance, other } = phases;
     return (
@@ -218,41 +226,39 @@ const EstimatedLifecycleCost = ({
   const fiscalYear = getFiscalYear(DateTime.fromISO(businessCaseCreatedAt));
 
   return (
-    <div className="est-lifecycle-cost grid-row">
-      <div className="tablet:grid-col-5">
-        <div className="est-lifecycle-cost__help-box">
-          <h3 className="est-lifecycle-cost__help-title text-bold">
-            What do phases mean?
-          </h3>
-          <dl className="margin-bottom-105">
-            <dt className="margin-bottom-1 text-bold">Development</dt>
-            <dd
-              id="DevelopmentCostsDefinition"
-              className="margin-bottom-2 margin-left-0 line-height-body-3"
-            >
-              These are costs related to current development that is
-              pre-production.
-            </dd>
-            <dt className="margin-bottom-1 text-bold">
-              Operations and Maintenance
-            </dt>
-            <dd
-              id="OperationsMaintenanceCostsDefinition"
-              className="margin-bottom-2 margin-left-0 line-height-body-3"
-            >
-              These are costs related to running and upkeep post-production.
-            </dd>
-            <dt className="margin-bottom-1 text-bold">Other</dt>
-            <dd
-              id="OtherCostsDefinition"
-              className="margin-bottom-2 margin-left-0 line-height-body-3"
-            >
-              This can be Non-IT costs like education, licenses etc.
-            </dd>
-          </dl>
-        </div>
-      </div>
-      <div className="tablet:grid-col-7">
+    <div className="est-lifecycle-cost">
+      <SummaryBox heading={t('businessCase:lifecycleCost.calloutHeading')}>
+        <dl className="margin-bottom-105">
+          <dt className="margin-bottom-1 text-bold">
+            {t('businessCase:lifecycleCost.development')}
+          </dt>
+          <dd
+            id="DevelopmentCostsDefinition"
+            className="margin-bottom-2 margin-left-0 line-height-body-3"
+          >
+            {t('businessCase:lifecycleCost.developmentDef')}
+          </dd>
+          <dt className="margin-bottom-1 text-bold">
+            {t('businessCase:lifecycleCost.operationsMaintenance')}
+          </dt>
+          <dd
+            id="OperationsMaintenanceCostsDefinition"
+            className="margin-bottom-2 margin-left-0 line-height-body-3"
+          >
+            {t('businessCase:lifecycleCost.operationsMaintenanceDef')}
+          </dd>
+          <dt className="margin-bottom-1 text-bold">
+            {t('businessCase:lifecycleCost.additionalCategory')}
+          </dt>
+          <dd
+            id="AdditionalCategoryDefinition"
+            className="margin-left-0 line-height-body-3"
+          >
+            {t('businessCase:lifecycleCost.additionalCategoryDef')}
+          </dd>
+        </dl>
+      </SummaryBox>
+      <div>
         <Phase
           formikKey={formikKey}
           year={1}
