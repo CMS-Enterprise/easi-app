@@ -14,6 +14,7 @@ import {
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import {
@@ -38,6 +39,7 @@ const SystemHome = ({ system }: SystemHomeProps) => {
   const [toggleTags, setToggleTags] = useState(false);
   const [toggleSystemData, setToggleSystemData] = useState(false);
   const [toggleSubSystems, setToggleSubSystems] = useState(false);
+  const flags = useFlags();
 
   return (
     <div id="system-detail">
@@ -49,64 +51,66 @@ const SystemHome = ({ system }: SystemHomeProps) => {
               className="padding-bottom-4 margin-bottom-4"
             >
               <CardGroup className="margin-0">
-                <Card className="grid-col-12">
-                  <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        <dt>Production Environment</dt>
-                        {/* TODO: Get from CEDAR */}
+                {flags.systemProfileHiddenFields && (
+                  <Card className="grid-col-12">
+                    <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+                      <Grid row>
+                        <Grid desktop={{ col: 12 }} className="padding-0">
+                          <dt>Production Environment</dt>
+                          {/* TODO: Get from CEDAR */}
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </CardHeader>
+                    </CardHeader>
 
-                  <CardBody className="padding-x-2 padding-y-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        <h3 className="link-header margin-top-0 margin-bottom-2">
-                          <UswdsReactLink
-                            className="link-header"
-                            variant="external"
-                            to="/"
-                          >
-                            {/* TODO: Get from CEDAR */}
-                            ham.cms.gov
-                          </UswdsReactLink>
-                        </h3>
-                        {system?.locations ? (
-                          <div className="margin-bottom-2">
+                    <CardBody className="padding-x-2 padding-y-0">
+                      <Grid row>
+                        <Grid desktop={{ col: 12 }} className="padding-0">
+                          <h3 className="link-header margin-top-0 margin-bottom-2">
                             <UswdsReactLink
                               className="link-header"
-                              to={`/systems/${system.id}/details`}
+                              variant="external"
+                              to="/"
                             >
                               {/* TODO: Get from CEDAR */}
-                              {t('singleSystem.systemDetails.view')}{' '}
-                              {system.locations.length}{' '}
-                              {t('singleSystem.systemDetails.moreURLs')}
-                              <span aria-hidden>&nbsp;</span>
-                              <span aria-hidden>&rarr; </span>
+                              ham.cms.gov
                             </UswdsReactLink>
-                          </div>
-                        ) : (
-                          ''
-                        )}
+                          </h3>
+                          {system?.locations ? (
+                            <div className="margin-bottom-2">
+                              <UswdsReactLink
+                                className="link-header"
+                                to={`/systems/${system.id}/details`}
+                              >
+                                {/* TODO: Get from CEDAR */}
+                                {t('singleSystem.systemDetails.view')}{' '}
+                                {system.locations.length}{' '}
+                                {t('singleSystem.systemDetails.moreURLs')}
+                                <span aria-hidden>&nbsp;</span>
+                                <span aria-hidden>&rarr; </span>
+                              </UswdsReactLink>
+                            </div>
+                          ) : (
+                            ''
+                          )}
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <Divider />
-                  </CardBody>
-                  <CardFooter className="padding-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 6 }} className="padding-2">
-                        <DescriptionTerm
-                          term={t('singleSystem.systemDetails.location')}
-                        />
-                        <DescriptionDefinition
-                          className="line-height-body-3"
-                          definition="AWS East" // TODO: Get from CEDAR
-                        />
+                      <Divider />
+                    </CardBody>
+                    <CardFooter className="padding-0">
+                      <Grid row>
+                        <Grid desktop={{ col: 6 }} className="padding-2">
+                          <DescriptionTerm
+                            term={t('singleSystem.systemDetails.location')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3"
+                            definition="AWS East" // TODO: Get from CEDAR
+                          />
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </CardFooter>
-                </Card>
+                    </CardFooter>
+                  </Card>
+                )}
                 <Card className="grid-col-12">
                   <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
                     <dt>{t('singleSystem.ato.atoExpiration')}</dt>
@@ -161,228 +165,244 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                     </Grid>
                   </CardFooter>
                 </Card>
-                <Card className="grid-col-12">
-                  <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        <dt>{t('singleSystem.systemData.apiStatus')}</dt>
+                {flags.systemProfileHiddenFields && (
+                  <Card className="grid-col-12">
+                    <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+                      <Grid row>
+                        <Grid desktop={{ col: 12 }} className="padding-0">
+                          <dt>{t('singleSystem.systemData.apiStatus')}</dt>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </CardHeader>
+                    </CardHeader>
 
-                  <CardBody className="padding-x-2 padding-y-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        <h3 className="link-header margin-top-0 margin-bottom-2">
-                          API developed and launched{' '}
-                          {/* TODO: Get from CEDAR */}
-                        </h3>
-                        <div className="margin-bottom-2">
-                          <UswdsReactLink
-                            className="link-header"
-                            to={`/systems/${system.id}/system-data`}
-                          >
+                    <CardBody className="padding-x-2 padding-y-0">
+                      <Grid row>
+                        <Grid desktop={{ col: 12 }} className="padding-0">
+                          <h3 className="link-header margin-top-0 margin-bottom-2">
+                            API developed and launched{' '}
                             {/* TODO: Get from CEDAR */}
-                            {t('singleSystem.systemData.viewAPIInfo')}
-                            <span aria-hidden>&nbsp;</span>
-                            <span aria-hidden>&rarr; </span>
-                          </UswdsReactLink>
-                        </div>
-                      </Grid>
-                    </Grid>
-                    <Divider />
-                  </CardBody>
-                  <CardFooter className="padding-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-2">
-                        <DescriptionTerm
-                          term={t('singleSystem.systemData.dataCategories')}
-                        />
-                        {system?.developmentTags?.map(
-                          (tag: string, index: number) =>
-                            (index < 2 || toggleTags) && (
-                              <Tag
-                                key={tag}
-                                className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-                              >
-                                {tag}{' '}
-                                {/* TODO: Map defined CEDAR variable once availabe */}
-                              </Tag>
-                            )
-                        )}
-                        {system?.developmentTags &&
-                          system.developmentTags.length > 2 && (
-                            <Tag
-                              key="expand-tags"
-                              className="system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
-                              onClick={() => setToggleTags(!toggleTags)}
+                          </h3>
+                          <div className="margin-bottom-2">
+                            <UswdsReactLink
+                              className="link-header"
+                              to={`/systems/${system.id}/system-data`}
                             >
-                              {toggleTags ? '-' : '+'}
-                              {system.developmentTags.length - 2}
-                            </Tag>
-                          )}
-                      </Grid>
-                    </Grid>
-                  </CardFooter>
-                </Card>
-                <Card className="grid-col-12">
-                  <CardBody className="padding-2">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        <dt>
-                          {t('singleSystem.fundingAndBudget.systemFiscalYear')}
-                        </dt>
-                        <h3 className="link-header margin-top-0 margin-bottom-2">
-                          $4,500,000 {/* TODO: Get from CEDAR */}
-                        </h3>
-                        <UswdsReactLink
-                          className="link-header"
-                          to={`/systems/${system.id}/funding-and-budget`}
-                        >
-                          {/* TODO: Get from CEDAR */}
-                          {t('singleSystem.fundingAndBudget.viewMoreFunding')}
-                          <span aria-hidden>&nbsp;</span>
-                          <span aria-hidden>&rarr; </span>
-                        </UswdsReactLink>
-                      </Grid>
-                    </Grid>
-                  </CardBody>
-                </Card>
-                <Card className="grid-col-12">
-                  <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        <dt>{t('singleSystem.systemData.dataExchanges')}</dt>
-                      </Grid>
-                    </Grid>
-                  </CardHeader>
-
-                  <CardBody className="padding-x-2 padding-y-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        {system?.systemData?.map(
-                          (data, index) =>
-                            (index < 2 || toggleSystemData) && (
-                              <div
-                                className="margin-bottom-1 text-bold"
-                                key={data.id}
-                              >
-                                <IconCheckCircleOutline className="text-success" />{' '}
-                                <span className="text-tbottom line-height-body-3">
-                                  {data.title}{' '}
-                                </span>
-                                <IconFileDownload className="text-base" />
-                              </div>
-                            )
-                        )}
-
-                        {system?.systemData && system.systemData.length > 2 && (
-                          <div
-                            role="button"
-                            tabIndex={0}
-                            className="text-underline link-header text-primary pointer"
-                            onClick={() =>
-                              setToggleSystemData(!toggleSystemData)
-                            }
-                            onKeyDown={() =>
-                              setToggleSystemData(!toggleSystemData)
-                            }
-                          >
-                            {toggleSystemData ? '- ' : '+ '}
-                            {system.systemData.length - 2}{' '}
-                            {t('singleSystem.systemData.more')}
+                              {/* TODO: Get from CEDAR */}
+                              {t('singleSystem.systemData.viewAPIInfo')}
+                              <span aria-hidden>&nbsp;</span>
+                              <span aria-hidden>&rarr; </span>
+                            </UswdsReactLink>
                           </div>
-                        )}
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <Divider className="margin-top-2" />
-                  </CardBody>
-                  <CardFooter className="padding-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-2">
-                        <UswdsReactLink
-                          className="link-header"
-                          to={`/systems/${system.id}/system-data`}
-                        >
-                          {/* TODO: Get from CEDAR */}
-                          {t('singleSystem.systemData.viewDataExchange')}
-                          <span aria-hidden>&nbsp;</span>
-                          <span aria-hidden>&rarr; </span>
-                        </UswdsReactLink>
-                      </Grid>
-                    </Grid>
-                  </CardFooter>
-                </Card>
-                <Card className="grid-col-12">
-                  <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        <dt>{t('singleSystem.subSystems.header')}</dt>
-                      </Grid>
-                    </Grid>
-                  </CardHeader>
-
-                  <CardBody className="padding-x-2 padding-y-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        {system?.subSystems?.map(
-                          (subSystem, index) =>
-                            (index < 2 || toggleSubSystems) && (
-                              <div
-                                className="margin-bottom-1"
-                                key={subSystem.id}
-                              >
-                                <IconBookmark className="text-base-lighter margin-right-1" />
-                                <UswdsReactLink
-                                  className="link-header margin-bottom-1 text-bold"
-                                  to={`/systems/${system.id}/sub-systems`}
-                                  key={subSystem.id}
+                      <Divider />
+                    </CardBody>
+                    <CardFooter className="padding-0">
+                      <Grid row>
+                        <Grid desktop={{ col: 12 }} className="padding-2">
+                          <DescriptionTerm
+                            term={t('singleSystem.systemData.dataCategories')}
+                          />
+                          {system?.developmentTags?.map(
+                            (tag: string, index: number) =>
+                              (index < 2 || toggleTags) && (
+                                <Tag
+                                  key={tag}
+                                  className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
                                 >
-                                  <span className="text-tbottom line-height-body-3">
-                                    {subSystem.name}{' '}
-                                  </span>
-                                </UswdsReactLink>
-                              </div>
-                            )
-                        )}
+                                  {tag}{' '}
+                                  {/* TODO: Map defined CEDAR variable once availabe */}
+                                </Tag>
+                              )
+                          )}
+                          {system?.developmentTags &&
+                            system.developmentTags.length > 2 && (
+                              <Tag
+                                key="expand-tags"
+                                className="system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
+                                onClick={() => setToggleTags(!toggleTags)}
+                              >
+                                {toggleTags ? '-' : '+'}
+                                {system.developmentTags.length - 2}
+                              </Tag>
+                            )}
+                        </Grid>
+                      </Grid>
+                    </CardFooter>
+                  </Card>
+                )}
+                {/* 508 request name todo? */}
 
-                        {system?.subSystems && system.subSystems.length > 2 && (
-                          <div
-                            role="button"
-                            tabIndex={0}
-                            className="text-underline link-header text-primary pointer margin-top-2"
-                            onClick={() =>
-                              setToggleSubSystems(!toggleSubSystems)
-                            }
-                            onKeyDown={() =>
-                              setToggleSubSystems(!toggleSubSystems)
-                            }
-                          >
-                            {toggleSubSystems ? '- ' : '+ '}
-                            {system.subSystems.length - 2}{' '}
-                            {t('singleSystem.systemData.more')}
-                          </div>
-                        )}
-                      </Grid>
-                    </Grid>
-                    <Divider className="margin-top-2" />
-                  </CardBody>
-                  <CardFooter className="padding-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-2">
-                        <UswdsReactLink
-                          className="link-header"
-                          to={`/systems/${system.id}/sub-systems`}
-                        >
-                          {/* TODO: Get from CEDAR */}
-                          {t('singleSystem.subSystems.viewInfo')}
-                          <span aria-hidden>&nbsp;</span>
-                          <span aria-hidden>&rarr; </span>
-                        </UswdsReactLink>
-                      </Grid>
-                    </Grid>
-                  </CardFooter>
-                </Card>
+                {flags.systemProfileHiddenFields && (
+                  <>
+                    <Card className="grid-col-12">
+                      <CardBody className="padding-2">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-0">
+                            <dt>
+                              {t(
+                                'singleSystem.fundingAndBudget.systemFiscalYear'
+                              )}
+                            </dt>
+                            <h3 className="link-header margin-top-0 margin-bottom-2">
+                              $4,500,000 {/* TODO: Get from CEDAR */}
+                            </h3>
+                            <UswdsReactLink
+                              className="link-header"
+                              to={`/systems/${system.id}/funding-and-budget`}
+                            >
+                              {/* TODO: Get from CEDAR */}
+                              {t(
+                                'singleSystem.fundingAndBudget.viewMoreFunding'
+                              )}
+                              <span aria-hidden>&nbsp;</span>
+                              <span aria-hidden>&rarr; </span>
+                            </UswdsReactLink>
+                          </Grid>
+                        </Grid>
+                      </CardBody>
+                    </Card>
+                    <Card className="grid-col-12">
+                      <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-0">
+                            <dt>
+                              {t('singleSystem.systemData.dataExchanges')}
+                            </dt>
+                          </Grid>
+                        </Grid>
+                      </CardHeader>
+
+                      <CardBody className="padding-x-2 padding-y-0">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-0">
+                            {system?.systemData?.map(
+                              (data, index) =>
+                                (index < 2 || toggleSystemData) && (
+                                  <div
+                                    className="margin-bottom-1 text-bold"
+                                    key={data.id}
+                                  >
+                                    <IconCheckCircleOutline className="text-success" />{' '}
+                                    <span className="text-tbottom line-height-body-3">
+                                      {data.title}{' '}
+                                    </span>
+                                    <IconFileDownload className="text-base" />
+                                  </div>
+                                )
+                            )}
+
+                            {system?.systemData &&
+                              system.systemData.length > 2 && (
+                                <div
+                                  role="button"
+                                  tabIndex={0}
+                                  className="text-underline link-header text-primary pointer"
+                                  onClick={() =>
+                                    setToggleSystemData(!toggleSystemData)
+                                  }
+                                  onKeyDown={() =>
+                                    setToggleSystemData(!toggleSystemData)
+                                  }
+                                >
+                                  {toggleSystemData ? '- ' : '+ '}
+                                  {system.systemData.length - 2}{' '}
+                                  {t('singleSystem.systemData.more')}
+                                </div>
+                              )}
+                          </Grid>
+                        </Grid>
+                        <Divider className="margin-top-2" />
+                      </CardBody>
+                      <CardFooter className="padding-0">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-2">
+                            <UswdsReactLink
+                              className="link-header"
+                              to={`/systems/${system.id}/system-data`}
+                            >
+                              {/* TODO: Get from CEDAR */}
+                              {t('singleSystem.systemData.viewDataExchange')}
+                              <span aria-hidden>&nbsp;</span>
+                              <span aria-hidden>&rarr; </span>
+                            </UswdsReactLink>
+                          </Grid>
+                        </Grid>
+                      </CardFooter>
+                    </Card>
+                    <Card className="grid-col-12">
+                      <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-0">
+                            <dt>{t('singleSystem.subSystems.header')}</dt>
+                          </Grid>
+                        </Grid>
+                      </CardHeader>
+
+                      <CardBody className="padding-x-2 padding-y-0">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-0">
+                            {system?.subSystems?.map(
+                              (subSystem, index) =>
+                                (index < 2 || toggleSubSystems) && (
+                                  <div
+                                    className="margin-bottom-1"
+                                    key={subSystem.id}
+                                  >
+                                    <IconBookmark className="text-base-lighter margin-right-1" />
+                                    <UswdsReactLink
+                                      className="link-header margin-bottom-1 text-bold"
+                                      to={`/systems/${system.id}/sub-systems`}
+                                      key={subSystem.id}
+                                    >
+                                      <span className="text-tbottom line-height-body-3">
+                                        {subSystem.name}{' '}
+                                      </span>
+                                    </UswdsReactLink>
+                                  </div>
+                                )
+                            )}
+
+                            {system?.subSystems &&
+                              system.subSystems.length > 2 && (
+                                <div
+                                  role="button"
+                                  tabIndex={0}
+                                  className="text-underline link-header text-primary pointer margin-top-2"
+                                  onClick={() =>
+                                    setToggleSubSystems(!toggleSubSystems)
+                                  }
+                                  onKeyDown={() =>
+                                    setToggleSubSystems(!toggleSubSystems)
+                                  }
+                                >
+                                  {toggleSubSystems ? '- ' : '+ '}
+                                  {system.subSystems.length - 2}{' '}
+                                  {t('singleSystem.systemData.more')}
+                                </div>
+                              )}
+                          </Grid>
+                        </Grid>
+                        <Divider className="margin-top-2" />
+                      </CardBody>
+                      <CardFooter className="padding-0">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-2">
+                            <UswdsReactLink
+                              className="link-header"
+                              to={`/systems/${system.id}/sub-systems`}
+                            >
+                              {/* TODO: Get from CEDAR */}
+                              {t('singleSystem.subSystems.viewInfo')}
+                              <span aria-hidden>&nbsp;</span>
+                              <span aria-hidden>&rarr; </span>
+                            </UswdsReactLink>
+                          </Grid>
+                        </Grid>
+                      </CardFooter>
+                    </Card>
+                  </>
+                )}
                 <Card className="grid-col-12">
                   <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
                     <Grid row>

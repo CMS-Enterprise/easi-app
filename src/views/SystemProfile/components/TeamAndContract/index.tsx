@@ -10,6 +10,7 @@ import {
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import {
@@ -88,6 +89,7 @@ const SystemTeamAndContract = ({
 }: TeamAndContractProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
+  const flags = useFlags();
   return (
     <div id="system-team-and-contract">
       <GridContainer className="padding-left-0 padding-right-0">
@@ -124,104 +126,110 @@ const SystemTeamAndContract = ({
                 </Grid>
               </GridContainer>
             </SectionWrapper>
-            <SectionWrapper borderBottom className="padding-bottom-5">
-              <h2 className="margin-top-5 margin-top-4">
-                {t('singleSystem.teamAndContract.header.contractInformation')}
-              </h2>
-              <CardGroup className="margin-0">
-                {vendorsData.map(vendor => {
-                  return (
-                    <Card className="grid-col-12 margin-bottom-2">
-                      <CardHeader className="padding-2 padding-bottom-0">
-                        <h5 className="margin-y-0 font-sans-2xs text-normal">
-                          {t('singleSystem.teamAndContract.vendors')}
-                        </h5>
-                        <h3 className="margin-y-0 line-height-body-3">
-                          {vendor.vendors.map(name => (
-                            <div>{name}</div>
-                          ))}
-                        </h3>
-                        <DescriptionTerm
-                          className="padding-top-2"
-                          term={t(
-                            'singleSystem.teamAndContract.contractAwardDate'
-                          )}
-                        />
-                        <DescriptionDefinition
-                          className="font-body-md line-height-body-3"
-                          definition={vendor.contractAwardDate}
-                        />
-                        <Divider className="margin-y-2" />
-                      </CardHeader>
-                      <CardBody className="padding-2 padding-top-0">
-                        <h5 className="margin-top-2 margin-bottom-1 font-sans-2xs text-normal">
-                          {t(
-                            'singleSystem.teamAndContract.periodOfPerformance'
-                          )}
-                        </h5>
-                        <GridContainer className="padding-x-0">
-                          <Grid row>
-                            <Grid col>
-                              <DescriptionTerm
-                                term={t(
-                                  'singleSystem.teamAndContract.startDate'
-                                )}
-                              />
-                              <DescriptionDefinition
-                                className="font-body-md line-height-body-3"
-                                definition={vendor.popStartDate}
-                              />
+            {flags.systemProfileHiddenFields && (
+              <SectionWrapper borderBottom className="padding-bottom-5">
+                <h2 className="margin-top-5 margin-top-4">
+                  {t('singleSystem.teamAndContract.header.contractInformation')}
+                </h2>
+                <CardGroup className="margin-0">
+                  {vendorsData.map(vendor => {
+                    return (
+                      <Card className="grid-col-12 margin-bottom-2">
+                        <CardHeader className="padding-2 padding-bottom-0">
+                          <h5 className="margin-y-0 font-sans-2xs text-normal">
+                            {t('singleSystem.teamAndContract.vendors')}
+                          </h5>
+                          <h3 className="margin-y-0 line-height-body-3">
+                            {vendor.vendors.map(name => (
+                              <div>{name}</div>
+                            ))}
+                          </h3>
+                          <DescriptionTerm
+                            className="padding-top-2"
+                            term={t(
+                              'singleSystem.teamAndContract.contractAwardDate'
+                            )}
+                          />
+                          <DescriptionDefinition
+                            className="font-body-md line-height-body-3"
+                            definition={vendor.contractAwardDate}
+                          />
+                          <Divider className="margin-y-2" />
+                        </CardHeader>
+                        <CardBody className="padding-2 padding-top-0">
+                          <h5 className="margin-top-2 margin-bottom-1 font-sans-2xs text-normal">
+                            {t(
+                              'singleSystem.teamAndContract.periodOfPerformance'
+                            )}
+                          </h5>
+                          <GridContainer className="padding-x-0">
+                            <Grid row>
+                              <Grid col>
+                                <DescriptionTerm
+                                  term={t(
+                                    'singleSystem.teamAndContract.startDate'
+                                  )}
+                                />
+                                <DescriptionDefinition
+                                  className="font-body-md line-height-body-3"
+                                  definition={vendor.popStartDate}
+                                />
+                              </Grid>
+                              <Grid col>
+                                <DescriptionTerm
+                                  term={t(
+                                    'singleSystem.teamAndContract.endDate'
+                                  )}
+                                />
+                                <DescriptionDefinition
+                                  className="font-body-md line-height-body-3"
+                                  definition={vendor.popEndDate}
+                                />
+                              </Grid>
                             </Grid>
-                            <Grid col>
-                              <DescriptionTerm
-                                term={t('singleSystem.teamAndContract.endDate')}
-                              />
-                              <DescriptionDefinition
-                                className="font-body-md line-height-body-3"
-                                definition={vendor.popEndDate}
-                              />
-                            </Grid>
-                          </Grid>
-                        </GridContainer>
-                        <Divider className="margin-y-2" />
-                        <h5 className="margin-y-0 font-sans-2xs text-normal">
-                          {t('singleSystem.teamAndContract.contractNumber')}
-                        </h5>
-                        <h3 className="margin-y-0">{vendor.contractNumber}</h3>
-                        <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
-                          {t(
-                            'singleSystem.teamAndContract.technologyFunctions'
-                          )}
-                        </h5>
-                        <div>
-                          {vendor.technologyFunctions.map(name => (
-                            <Tag
-                              key={name}
-                              className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-                            >
-                              {name}
-                            </Tag>
-                          ))}
-                        </div>
-                        <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
-                          {t('singleSystem.teamAndContract.assetsOrServices')}
-                        </h5>
-                        <div>
-                          {vendor.assetsOrServices.map(name => (
-                            <Tag
-                              key={name}
-                              className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-                            >
-                              {name}
-                            </Tag>
-                          ))}
-                        </div>
-                      </CardBody>
-                    </Card>
-                  );
-                })}
-              </CardGroup>
-            </SectionWrapper>
+                          </GridContainer>
+                          <Divider className="margin-y-2" />
+                          <h5 className="margin-y-0 font-sans-2xs text-normal">
+                            {t('singleSystem.teamAndContract.contractNumber')}
+                          </h5>
+                          <h3 className="margin-y-0">
+                            {vendor.contractNumber}
+                          </h3>
+                          <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
+                            {t(
+                              'singleSystem.teamAndContract.technologyFunctions'
+                            )}
+                          </h5>
+                          <div>
+                            {vendor.technologyFunctions.map(name => (
+                              <Tag
+                                key={name}
+                                className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                              >
+                                {name}
+                              </Tag>
+                            ))}
+                          </div>
+                          <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
+                            {t('singleSystem.teamAndContract.assetsOrServices')}
+                          </h5>
+                          <div>
+                            {vendor.assetsOrServices.map(name => (
+                              <Tag
+                                key={name}
+                                className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                              >
+                                {name}
+                              </Tag>
+                            ))}
+                          </div>
+                        </CardBody>
+                      </Card>
+                    );
+                  })}
+                </CardGroup>
+              </SectionWrapper>
+            )}
             <h2 className="margin-top-5 margin-bottom-4">
               {t('singleSystem.teamAndContract.header.pointsOfContact')}
             </h2>

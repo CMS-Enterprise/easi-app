@@ -16,6 +16,7 @@ import {
   ProcessListItem
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import {
   DescriptionDefinition,
@@ -40,6 +41,7 @@ type ATOProps = {
 const ATO = ({ system }: ATOProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
+  const flags = useFlags();
   return (
     <div id="ato">
       <GridContainer className="padding-left-0 padding-right-0">
@@ -134,67 +136,73 @@ const ATO = ({ system }: ATOProps) => {
                 </Grid>
               )}
 
-              {system.atoStatus === 'In Progress' && (
-                // @ts-expect-error
-                <ProcessList>
-                  {system?.activities?.map((act: tempATOProp) => (
-                    <ProcessListItem key={act.id}>
-                      <ProcessListHeading
-                        type="h4"
-                        className="easi-header__basic flex-align-start"
-                      >
-                        <div className="margin-0 font-body-lg">
-                          Start a process
-                        </div>
-                        <div className="text-right margin-bottom-0">
-                          <Tag
-                            className={classnames(
-                              'font-body-md',
-                              'margin-bottom-1',
-                              {
-                                'bg-success-dark text-white':
-                                  act.status === 'Completed',
-                                'bg-warning': act.status === 'In progress',
-                                'bg-white text-base border-base border-2px':
-                                  act.status === 'Not started'
-                              }
-                            )}
-                          >
-                            {act.status}
-                          </Tag>
-                          <h5 className="text-normal margin-y-0 text-base-dark">
-                            {act.status === 'Completed'
-                              ? t('singleSystem.ato.completed')
-                              : t('singleSystem.ato.due')}
-                            {act.dueDate}
-                          </h5>
-                        </div>
-                      </ProcessListHeading>
-                      <DescriptionTerm
-                        term={t('singleSystem.ato.activityOwner')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3 font-body-md margin-bottom-0"
-                        definition={act.activityOwner}
-                      />
-                    </ProcessListItem>
-                  ))}
-                </ProcessList>
-              )}
+              {flags.systemProfileHiddenFields &&
+                system.atoStatus === 'In Progress' && (
+                  // @ts-expect-error
+                  <ProcessList>
+                    {system?.activities?.map((act: tempATOProp) => (
+                      <ProcessListItem key={act.id}>
+                        <ProcessListHeading
+                          type="h4"
+                          className="easi-header__basic flex-align-start"
+                        >
+                          <div className="margin-0 font-body-lg">
+                            Start a process
+                          </div>
+                          <div className="text-right margin-bottom-0">
+                            <Tag
+                              className={classnames(
+                                'font-body-md',
+                                'margin-bottom-1',
+                                {
+                                  'bg-success-dark text-white':
+                                    act.status === 'Completed',
+                                  'bg-warning': act.status === 'In progress',
+                                  'bg-white text-base border-base border-2px':
+                                    act.status === 'Not started'
+                                }
+                              )}
+                            >
+                              {act.status}
+                            </Tag>
+                            <h5 className="text-normal margin-y-0 text-base-dark">
+                              {act.status === 'Completed'
+                                ? t('singleSystem.ato.completed')
+                                : t('singleSystem.ato.due')}
+                              {act.dueDate}
+                            </h5>
+                          </div>
+                        </ProcessListHeading>
+                        <DescriptionTerm
+                          term={t('singleSystem.ato.activityOwner')}
+                        />
+                        <DescriptionDefinition
+                          className="line-height-body-3 font-body-md margin-bottom-0"
+                          definition={act.activityOwner}
+                        />
+                      </ProcessListItem>
+                    ))}
+                  </ProcessList>
+                )}
 
               {/* TODO: Map and populate tags with CEDAR */}
-              <h3 className="margin-top-2 margin-bottom-1">
-                {t('singleSystem.ato.methodologies')}
-              </h3>
-              {system?.developmentTags?.map((tag: string) => (
-                <Tag
-                  key={tag}
-                  className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
-                >
-                  <IconCheckCircle className="text-primary-dark margin-right-1" />
-                  {tag} {/* TODO: Map defined CEDAR variable once availabe */}
-                </Tag>
-              ))}
+              {flags.systemProfileHiddenFields && (
+                <>
+                  <h3 className="margin-top-2 margin-bottom-1">
+                    {t('singleSystem.ato.methodologies')}
+                  </h3>
+                  {system?.developmentTags?.map((tag: string) => (
+                    <Tag
+                      key={tag}
+                      className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
+                    >
+                      <IconCheckCircle className="text-primary-dark margin-right-1" />
+                      {tag}{' '}
+                      {/* TODO: Map defined CEDAR variable once availabe */}
+                    </Tag>
+                  ))}
+                </>
+              )}
             </SectionWrapper>
             <SectionWrapper
               borderBottom
@@ -221,13 +229,17 @@ const ATO = ({ system }: ATOProps) => {
                         definition="12"
                       />
                     </Grid>
-                    <Grid tablet={{ col: 6 }} className="padding-right-2">
-                      <DescriptionTerm term={t('singleSystem.ato.highPOAM')} />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="4"
-                      />
-                    </Grid>
+                    {flags.systemProfileHiddenFields && (
+                      <Grid tablet={{ col: 6 }} className="padding-right-2">
+                        <DescriptionTerm
+                          term={t('singleSystem.ato.highPOAM')}
+                        />
+                        <DescriptionDefinition
+                          className="line-height-body-3 margin-bottom-4"
+                          definition="4"
+                        />
+                      </Grid>
+                    )}
                   </Grid>
 
                   <Grid row gap className="margin-top-2 margin-bottom-2">
@@ -240,11 +252,13 @@ const ATO = ({ system }: ATOProps) => {
                 </div>
               )}
               {/* TODO: Fill external CFACT link */}
-              <Link href="/" target="_blank">
-                <Button type="button" outline>
-                  {t('singleSystem.ato.viewPOAMs')}
-                </Button>
-              </Link>
+              {flags.systemProfileHiddenFields && (
+                <Link href="/" target="_blank">
+                  <Button type="button" outline>
+                    {t('singleSystem.ato.viewPOAMs')}
+                  </Button>
+                </Link>
+              )}
             </SectionWrapper>
 
             <SectionWrapper
@@ -299,11 +313,13 @@ const ATO = ({ system }: ATOProps) => {
                 </Grid>
               )}
               {/* TODO: Fill external CFACT link */}
-              <Link href="/" target="_blank">
-                <Button type="button" outline>
-                  {t('singleSystem.ato.viewFindings')}
-                </Button>
-              </Link>
+              {flags.systemProfileHiddenFields && (
+                <Link href="/" target="_blank">
+                  <Button type="button" outline>
+                    {t('singleSystem.ato.viewFindings')}
+                  </Button>
+                </Link>
+              )}
             </SectionWrapper>
 
             <SectionWrapper
@@ -327,93 +343,113 @@ const ATO = ({ system }: ATOProps) => {
               {/* TODO: Map and populate tags with CEDAR */}
               {system.atoStatus !== 'No ATO' && (
                 <div>
-                  <Grid row gap>
-                    <Grid tablet={{ col: 6 }}>
-                      <DescriptionTerm term={t('singleSystem.ato.lastTest')} />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="Oct 12, 2021"
-                      />
+                  {flags.systemProfileHiddenFields ? (
+                    <>
+                      <Grid row gap>
+                        <Grid tablet={{ col: 6 }}>
+                          <DescriptionTerm
+                            term={t('singleSystem.ato.lastTest')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3 margin-bottom-4"
+                            definition="Oct 12, 2021"
+                          />
+                        </Grid>
+                        <Grid tablet={{ col: 6 }}>
+                          <DescriptionTerm
+                            term={t('singleSystem.ato.lastAssessment')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3 margin-bottom-4"
+                            definition="September 24, 2021"
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid row gap>
+                        <Grid tablet={{ col: 6 }}>
+                          <DescriptionTerm
+                            term={t('singleSystem.ato.contingencyCompletion')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3 margin-bottom-4"
+                            definition="March 18, 2022"
+                          />
+                        </Grid>
+                        <Grid tablet={{ col: 6 }}>
+                          <DescriptionTerm
+                            term={t('singleSystem.ato.contingencyTest')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3 margin-bottom-4"
+                            definition="January 7, 2022"
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid row gap>
+                        <Grid tablet={{ col: 6 }}>
+                          <DescriptionTerm
+                            term={t('singleSystem.ato.securityReview')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3 margin-bottom-4"
+                            definition="Dec 2, 2021"
+                          />
+                        </Grid>
+                        <Grid tablet={{ col: 6 }}>
+                          <DescriptionTerm
+                            term={t('singleSystem.ato.authorizationExpiration')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3 margin-bottom-4"
+                            definition="April 14, 2022"
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid row gap>
+                        <Grid tablet={{ col: 6 }}>
+                          <DescriptionTerm
+                            term={t('singleSystem.ato.piaCompletion')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3 margin-bottom-4"
+                            definition="Oct 14, 2021"
+                          />
+                        </Grid>
+                        <Grid tablet={{ col: 6 }}>
+                          <DescriptionTerm
+                            term={t('singleSystem.ato.sornCompletion')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3 margin-bottom-4"
+                            definition="September 2, 2021"
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid row gap>
+                        <Grid tablet={{ col: 6 }}>
+                          <DescriptionTerm
+                            term={t('singleSystem.ato.lastSCA')}
+                          />
+                          <DescriptionDefinition
+                            className="line-height-body-3 margin-bottom-4"
+                            definition="September 2, 2021"
+                          />
+                        </Grid>
+                      </Grid>
+                    </>
+                  ) : (
+                    <Grid row gap>
+                      <Grid tablet={{ col: 6 }}>
+                        <DescriptionTerm
+                          term={t('singleSystem.ato.lastAssessment')}
+                        />
+                        <DescriptionDefinition
+                          className="line-height-body-3 margin-bottom-4"
+                          definition="September 24, 2021"
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid tablet={{ col: 6 }}>
-                      <DescriptionTerm
-                        term={t('singleSystem.ato.lastAssessment')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="September 24, 2021"
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid row gap>
-                    <Grid tablet={{ col: 6 }}>
-                      <DescriptionTerm
-                        term={t('singleSystem.ato.contingencyCompletion')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="March 18, 2022"
-                      />
-                    </Grid>
-                    <Grid tablet={{ col: 6 }}>
-                      <DescriptionTerm
-                        term={t('singleSystem.ato.contingencyTest')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="January 7, 2022"
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid row gap>
-                    <Grid tablet={{ col: 6 }}>
-                      <DescriptionTerm
-                        term={t('singleSystem.ato.securityReview')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="Dec 2, 2021"
-                      />
-                    </Grid>
-                    <Grid tablet={{ col: 6 }}>
-                      <DescriptionTerm
-                        term={t('singleSystem.ato.authorizationExpiration')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="April 14, 2022"
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid row gap>
-                    <Grid tablet={{ col: 6 }}>
-                      <DescriptionTerm
-                        term={t('singleSystem.ato.piaCompletion')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="Oct 14, 2021"
-                      />
-                    </Grid>
-                    <Grid tablet={{ col: 6 }}>
-                      <DescriptionTerm
-                        term={t('singleSystem.ato.sornCompletion')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="September 2, 2021"
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid row gap>
-                    <Grid tablet={{ col: 6 }}>
-                      <DescriptionTerm term={t('singleSystem.ato.lastSCA')} />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition="September 2, 2021"
-                      />
-                    </Grid>
-                  </Grid>
+                  )}
                 </div>
               )}
             </SectionWrapper>

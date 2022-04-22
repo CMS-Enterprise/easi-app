@@ -160,7 +160,8 @@ export const developmentTags: string[] = [
   'Health Insurance Program'
 ];
 
-export const locationsInfo: tempLocationProp[] = [
+const systemProfileHiddenFields = false;
+const locationsInfo: tempLocationProp[] = [
   {
     id: '1',
     environment: 'Production environment',
@@ -178,8 +179,10 @@ export const locationsInfo: tempLocationProp[] = [
     location: 'AWS East',
     cloudProvider: 'Amazon Web Services',
     firewall: true
-  },
-  {
+  }
+];
+if (systemProfileHiddenFields) {
+  locationsInfo.push({
     id: '3',
     environment: 'Code Repository',
     url: 'github.com/ham',
@@ -187,8 +190,9 @@ export const locationsInfo: tempLocationProp[] = [
     location: 'AWS East',
     cloudProvider: 'Amazon Web Services',
     firewall: true
-  }
-];
+  });
+}
+export { locationsInfo };
 
 export const mockSystemInfo: CedarSystemProps[] = [
   {

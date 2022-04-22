@@ -15,6 +15,7 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -54,6 +55,7 @@ import './index.scss';
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
+  const flags = useFlags();
 
   const { systemId, subinfo, top } = useParams<{
     subinfo: string;
@@ -238,24 +240,36 @@ const SystemProfile = () => {
                           term="Geraldine Hobbs"
                         />
                       </Grid>
-                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                        <DescriptionDefinition
-                          definition={t('singleSystem.summary.subheader3')}
-                        />
-                        <DescriptionTerm
-                          className="font-body-md"
-                          term="July 27, 2015"
-                        />
-                      </Grid>
-                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                        <DescriptionDefinition
-                          definition={t('singleSystem.summary.subheader4')}
-                        />
-                        <DescriptionTerm
-                          className="font-body-md"
-                          term="December 4, 2021"
-                        />
-                      </Grid>
+                      {flags.systemProfileHiddenFields && (
+                        <>
+                          {/* Go live date */}
+                          <Grid
+                            desktop={{ col: 6 }}
+                            className="margin-bottom-2"
+                          >
+                            <DescriptionDefinition
+                              definition={t('singleSystem.summary.subheader3')}
+                            />
+                            <DescriptionTerm
+                              className="font-body-md"
+                              term="July 27, 2015"
+                            />
+                          </Grid>
+                          {/* Most recent major change */}
+                          <Grid
+                            desktop={{ col: 6 }}
+                            className="margin-bottom-2"
+                          >
+                            <DescriptionDefinition
+                              definition={t('singleSystem.summary.subheader4')}
+                            />
+                            <DescriptionTerm
+                              className="font-body-md"
+                              term="December 4, 2021"
+                            />
+                          </Grid>
+                        </>
+                      )}
                     </Grid>
                   </CollapsableLink>
                 </div>
