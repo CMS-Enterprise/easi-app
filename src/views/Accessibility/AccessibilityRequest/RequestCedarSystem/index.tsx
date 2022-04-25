@@ -246,10 +246,6 @@ const RequestFormWrapper = ({
                           cedarSystem => cedarSystem?.id === cedarId
                         );
                         if (system) {
-                          // eslint-disable-next-line no-console
-                          console.log(
-                            `cedarSystemId: ${system.id}, name: ${system.name}`
-                          );
                           setFieldValue('cedarId', system.id);
                           setFieldValue('requestName', system.name);
                           setCedarSystemId(system.id);

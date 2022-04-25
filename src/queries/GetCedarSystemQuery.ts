@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query GetCedarSystem($cedarSystemId: String!) {
-    cedarSystem(cedarSystemId: $cedarSystemId) {
+  query GetCedarSystem($id: String!) {
+    cedarSystem(cedarSystemId: $id) {
       id
       name
       description
