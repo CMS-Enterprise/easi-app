@@ -43,6 +43,8 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 			business_cases.id = $1
 		GROUP BY estimated_lifecycle_costs.business_case, business_cases.id, system_intakes.id`
 
+	// Unsafe() is used to avoid errors from the initial_submitted_at and last_submitted_at columns that are in the database, but not in the Go model
+	// see https://jiraent.cms.gov/browse/EASI-1693
 	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -70,6 +72,9 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 		WHERE
 			business_cases.system_intake = $1 AND business_cases.status = 'OPEN'
 		GROUP BY estimated_lifecycle_costs.business_case, business_cases.id`
+
+	// Unsafe() is used to avoid errors from the initial_submitted_at and last_submitted_at columns that are in the database, but not in the Go model
+	// see https://jiraent.cms.gov/browse/EASI-1693
 	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, intakeID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
