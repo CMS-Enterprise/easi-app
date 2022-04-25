@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Label, SummaryBox, TextInput } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -62,7 +62,14 @@ type PhaseProps = {
   values: LifecycleCosts;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   errors: any;
-  yearsArray: number[];
+  years: {
+    year1: LifecycleCosts;
+    year2: LifecycleCosts;
+    year3: LifecycleCosts;
+    year4: LifecycleCosts;
+    year5: LifecycleCosts;
+  };
+  total: number;
 };
 
 const Phase = ({
@@ -72,9 +79,11 @@ const Phase = ({
   values,
   setFieldValue,
   errors = {},
-  yearsArray
+  years,
+  total
 }: PhaseProps) => {
   const { t } = useTranslation('businessCase');
+
   return (
     <FieldArray name={`${formikKey}.`}>
       {() => (
@@ -95,21 +104,17 @@ const Phase = ({
                 <legend className="cost-table-col usa-label">
                   {t(`lifecycleCost.${category}`)}
                 </legend>
-                {yearsArray.map((year, i) => {
+                {Object.keys(years).map((year, i) => {
                   return (
                     <FieldGroup
                       key={year}
                       className="margin-0"
-                      scrollElement={`${formikKey}.year${
-                        i + 1
-                      }.${category}.cost`}
+                      scrollElement={`${formikKey}.${year}.${category}.cost`}
                     >
                       <Label
                         className="tablet:display-none"
-                        htmlFor={`BusinessCase-${formikKey}.Year${
-                          i + 1
-                        }.${category}.cost`}
-                        aria-label={`Enter year ${year} ${t(
+                        htmlFor={`BusinessCase-${formikKey}.${year}.${category}.cost`}
+                        aria-label={`Enter year ${fiscalYear + i} ${t(
                           `lifecycleCost.${category}`
                         )} cost`}
                       >
@@ -120,17 +125,19 @@ const Phase = ({
                         as={TextInput}
                         className="desktop:margin-y-0"
                         error={!!errors?.development?.cost}
-                        id={`BusinessCase-${formikKey}.Year${
-                          i + 1
-                        }.${category}.cost`}
-                        name={`${formikKey}.year${i + 1}.${category}.cost`}
+                        id={`BusinessCase-${formikKey}.${year}.${category}.cost`}
+                        name={`${formikKey}.${year}.${category}.cost`}
                         maxLength={10}
                         match={/^[0-9\b]+$/}
                         aria-describedby={`${category}CostsDefinition`}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           setFieldValue(
-                            `${formikKey}.year${i + 1}.${category}.cost`,
+                            `${formikKey}.${year}.${category}.cost`,
                             e.target.value
+                          );
+                          setFieldValue(
+                            `${formikKey}.${year}.${category}.isPresent`,
+                            true
                           );
                         }}
                       />
@@ -138,7 +145,7 @@ const Phase = ({
                   );
                 })}
                 <div>
-                  <span className="cost-table-col">$0</span>
+                  <span className="cost-table-col">{formatDollars(total)}</span>
                 </div>
               </div>
             </fieldset>
@@ -169,31 +176,31 @@ const EstimatedLifecycleCost = ({
   errors = {},
   businessCaseCreatedAt = ''
 }: EstimatedLifecycleCostProps) => {
-  // const sumCostinYear = (phases: LifecycleCosts) => {
-  //   const { development, operationsMaintenance, other } = phases;
-  //   return (
-  //     (development.isPresent ? parseFloat(development.cost || '0') : 0) +
-  //     (operationsMaintenance.isPresent
-  //       ? parseFloat(operationsMaintenance.cost || '0')
-  //       : 0) +
-  //     (other.isPresent ? parseFloat(other.cost || '0') : 0)
-  //   );
-  // };
-  // const year1Cost = sumCostinYear(years.year1);
-  // const year2Cost = sumCostinYear(years.year2);
-  // const year3Cost = sumCostinYear(years.year3);
-  // const year4Cost = sumCostinYear(years.year4);
-  // const year5Cost = sumCostinYear(years.year5);
+  const sumCostinYear = (phases: LifecycleCosts) => {
+    const { development, operationsMaintenance, other } = phases;
+    return (
+      (development.isPresent ? parseFloat(development.cost || '0') : 0) +
+      (operationsMaintenance.isPresent
+        ? parseFloat(operationsMaintenance.cost || '0')
+        : 0) +
+      (other.isPresent ? parseFloat(other.cost || '0') : 0)
+    );
+  };
+  const year1Cost = sumCostinYear(years.year1);
+  const year2Cost = sumCostinYear(years.year2);
+  const year3Cost = sumCostinYear(years.year3);
+  const year4Cost = sumCostinYear(years.year4);
+  const year5Cost = sumCostinYear(years.year5);
+
+  const calculateCategoryCost = (
+    category: 'development' | 'operationsMaintenance' | 'other'
+  ) => {
+    return Object.keys(years).reduce((total, year) => {
+      return total + parseFloat(years[year][category].cost || 0);
+    }, 0);
+  };
 
   const fiscalYear = getFiscalYear(DateTime.fromISO(businessCaseCreatedAt));
-
-  const yearsArray = [
-    fiscalYear,
-    fiscalYear + 1,
-    fiscalYear + 2,
-    fiscalYear + 3,
-    fiscalYear + 4
-  ];
 
   return (
     <div className="est-lifecycle-cost">
@@ -201,10 +208,10 @@ const EstimatedLifecycleCost = ({
 
       <div className="cost-table margin-y-4">
         <div className="cost-table-row cost-table-row__headings grid-row">
-          {yearsArray.map(year => {
+          {Object.keys(years).map((year, i) => {
             return (
               <h4 key={year} className="cost-table-col margin-0">
-                FY {year}
+                FY {fiscalYear + i}
               </h4>
             );
           })}
@@ -217,7 +224,8 @@ const EstimatedLifecycleCost = ({
           values={years.year1}
           setFieldValue={setFieldValue}
           errors={errors.year1}
-          yearsArray={yearsArray}
+          years={years}
+          total={calculateCategoryCost('development')}
         />
         <Phase
           category="operationsMaintenance"
@@ -226,9 +234,10 @@ const EstimatedLifecycleCost = ({
           values={years.year1}
           setFieldValue={setFieldValue}
           errors={errors.year1}
-          yearsArray={yearsArray}
+          years={years}
+          total={calculateCategoryCost('operationsMaintenance')}
         />
-        {/* <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto margin-top-3 padding-x-2">
+        <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto margin-top-3 padding-x-2">
           <DescriptionList title="System total cost">
             <DescriptionTerm term="System total cost" />
             <DescriptionDefinition
@@ -237,7 +246,7 @@ const EstimatedLifecycleCost = ({
               )}
             />
           </DescriptionList>
-        </div> */}
+        </div>
       </div>
     </div>
   );
