@@ -17,6 +17,15 @@ const (
 	systemSummaryCacheKey = "system-summary-all"
 )
 
+func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.CedarSystem {
+	cachedStruct, found := c.cache.Get(systemSummaryCacheKey)
+	if found {
+		cachedSystemMap := cachedStruct.(map[string]*models.CedarSystem)
+		return cachedSystemMap
+	}
+	return nil
+}
+
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If tryCache is true, it will try and retrieve the data from the cache first and make an API call if the cache is empty
 func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models.CedarSystem, error) {
@@ -27,9 +36,15 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 
 	// Check and use cache before making API call
 	if tryCache {
-		cachedSystems, found := c.cache.Get(systemSummaryCacheKey)
-		if found {
-			return cachedSystems.([]*models.CedarSystem), nil
+		cachedSystemMap := c.getCachedSystemMap(ctx)
+		if cachedSystemMap != nil {
+			cachedSystems := make([]*models.CedarSystem, 0, len(cachedSystemMap))
+
+			for _, sys := range cachedSystemMap {
+				cachedSystems = append(cachedSystems, sys)
+			}
+
+			return cachedSystems, nil
 		}
 	}
 
@@ -95,16 +110,65 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 		return err
 	}
 
-	appcontext.ZLogger(ctx).Info("Refreshed System Summary cache")
+	systemSummaryMap := make(map[string]*models.CedarSystem)
+	for _, sys := range systemSummary {
+		if sys != nil {
+			systemSummaryMap[sys.ID] = sys
+		}
+	}
 
 	// Set in cache
-	c.cache.SetDefault(systemSummaryCacheKey, systemSummary)
+	c.cache.SetDefault(systemSummaryCacheKey, systemSummaryMap)
+
+	appcontext.ZLogger(ctx).Info("Refreshed System Summary cache")
 
 	return nil
 }
 
-// GetSystem makes a GET call to the /system/summary/{id} endpoint
-func (c *Client) GetSystem(ctx context.Context, versionID string) (*models.CedarSystem, error) {
+func (c *Client) getSystemFromCache(ctx context.Context, systemID string) *models.CedarSystem {
+	// Check if the system ID is cached in the map
+	cachedSystemMap := c.getCachedSystemMap(ctx)
+	if cachedSystemMap != nil {
+		if sys, found := cachedSystemMap[systemID]; found {
+			if found && sys != nil {
+				return sys
+			}
+		}
+	}
+	return nil
+}
+
+// GetSystem retrieves a CEDAR system by ID (IctObjectID), by first checking the cache, then
+// if it is not found, repopulating the cache and checking one more time.
+func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return &models.CedarSystem{}, nil
+	}
+
+	// Try the cache first
+	cachedSystem := c.getSystemFromCache(ctx, systemID)
+	if cachedSystem != nil {
+		return cachedSystem, nil
+	}
+
+	// If it's not cached, populate the cache, and try the cache again
+	err := c.populateSystemSummaryCache(ctx)
+
+	// Try the cache again now that we know it is fresh
+	if err != nil {
+		cachedSystem = c.getSystemFromCache(ctx, systemID)
+		if cachedSystem != nil {
+			return cachedSystem, nil
+		}
+	}
+
+	// If we still haven't found it after repopulating the cache, then it doesn't exist in CEDAR
+	return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
+}
+
+// GetSystemByVersionID makes a GET call to the /system/summary/{versionID} endpoint
+func (c *Client) GetSystemByVersionID(ctx context.Context, versionID string) (*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return &models.CedarSystem{}, nil

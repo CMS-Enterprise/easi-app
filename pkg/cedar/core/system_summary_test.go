@@ -48,7 +48,7 @@ func (s SystemSummaryTestSuite) TestGetSystem() {
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
 		c := NewClient(ctx, "fake", "fake", ldClient)
-		resp, err := c.GetSystem(ctx, "fake")
+		resp, err := c.GetSystemByVersionID(ctx, "fake")
 		s.NoError(err)
 
 		blankSummary := models.CedarSystem{}

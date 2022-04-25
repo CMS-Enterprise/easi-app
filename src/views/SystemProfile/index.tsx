@@ -72,7 +72,7 @@ const SystemProfile = () => {
     GetCedarSystemQuery,
     {
       variables: {
-        versionId: systemId
+        cedarSystemId: systemId
       }
     }
   );

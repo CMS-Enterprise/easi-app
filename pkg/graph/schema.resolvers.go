@@ -1482,8 +1482,8 @@ func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName
 	return response, nil
 }
 
-func (r *queryResolver) CedarSystem(ctx context.Context, versionID string) (*models.CedarSystem, error) {
-	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, versionID)
+func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error) {
+	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
 	}
@@ -1506,7 +1506,12 @@ func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.Ced
 	return cedarSystemBookmarks, nil
 }
 
-func (r *queryResolver) Deployments(ctx context.Context, systemVersionID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error) {
+func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error) {
+	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
 	var optionalParams *cedarcore.GetDeploymentsOptionalParams
 	if deploymentType != nil || state != nil || status != nil {
 		optionalParams = &cedarcore.GetDeploymentsOptionalParams{}
@@ -1524,7 +1529,7 @@ func (r *queryResolver) Deployments(ctx context.Context, systemVersionID string,
 		}
 	}
 
-	cedarDeployments, err := r.cedarCoreClient.GetDeployments(ctx, systemVersionID, optionalParams)
+	cedarDeployments, err := r.cedarCoreClient.GetDeployments(ctx, cedarSystem.VersionID, optionalParams)
 	if err != nil {
 		return nil, err
 	}
@@ -1536,8 +1541,13 @@ func (r *queryResolver) Deployments(ctx context.Context, systemVersionID string,
 	return cedarDeployments, nil
 }
 
-func (r *queryResolver) Roles(ctx context.Context, systemVersionID string, roleTypeID *string) ([]*models.CedarRole, error) {
-	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, systemVersionID, null.StringFromPtr(roleTypeID))
+func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
+	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystem.VersionID, null.StringFromPtr(roleTypeID))
 	if err != nil {
 		return nil, err
 	}
@@ -1549,19 +1559,19 @@ func (r *queryResolver) Roles(ctx context.Context, systemVersionID string, roleT
 	return cedarRoles, nil
 }
 
-func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, versionID string) (*model.DetailedCedarSystem, error) {
+func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystemID string) (*model.DetailedCedarSystem, error) {
 	g := new(errgroup.Group)
 	var cedarSystem *models.CedarSystem
 	var errS error
 	g.Go(func() error {
-		cedarSystem, errS = r.cedarCoreClient.GetSystem(ctx, versionID)
+		cedarSystem, errS = r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
 		return errS
 	})
 
 	var cedarRoles []*models.CedarRole
 	var errR error
 	g.Go(func() error {
-		cedarRoles, errS = r.cedarCoreClient.GetRolesBySystem(ctx, versionID, null.String{})
+		cedarRoles, errS = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystem.VersionID, null.String{})
 		return errR
 	})
 
@@ -1569,7 +1579,7 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, versionID s
 	var errD error
 
 	g.Go(func() error {
-		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, versionID, nil)
+		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, cedarSystem.VersionID, nil)
 		return errD
 	})
 	if err := g.Wait(); err != nil {

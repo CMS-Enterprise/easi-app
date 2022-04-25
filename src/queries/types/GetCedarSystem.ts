@@ -26,5 +26,5 @@ export interface GetCedarSystem {
 }
 
 export interface GetCedarSystemVariables {
-  versionId: string;
+  cedarSystemId: string;
 }
