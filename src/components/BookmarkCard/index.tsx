@@ -24,7 +24,6 @@ const BookmarkCard = ({
   className,
   type,
   id,
-  versionId,
   name,
   description,
   acronym,

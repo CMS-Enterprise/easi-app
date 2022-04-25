@@ -16,7 +16,6 @@ export default gql`
       businessOwnerOrgComp
       systemMaintainerOrg
       systemMaintainerOrgComp
-      versionId
     }
   }
 `;
