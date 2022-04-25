@@ -24,6 +24,7 @@ const BookmarkCard = ({
   className,
   type,
   id,
+  versionId,
   name,
   description,
   acronym,
@@ -54,7 +55,7 @@ const BookmarkCard = ({
       <div className="grid-col-12">
         <div className="bookmark__header easi-header__basic">
           <h2 className="bookmark__title margin-top-0 margin-bottom-1">
-            <UswdsReactLink to={`/systems/${id}/home/top`}>
+            <UswdsReactLink to={`/systems/${versionId}/home/top`}>
               {name}
             </UswdsReactLink>
           </h2>

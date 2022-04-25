@@ -194,6 +194,7 @@ export const mockSystemInfo: CedarSystemProps[] = [
   {
     __typename: 'CedarSystem',
     id: '1',
+    versionId: '1',
     acronym: 'HAM',
     status: 'Approved',
     name: 'Happiness Achievement Module',
@@ -212,6 +213,7 @@ export const mockSystemInfo: CedarSystemProps[] = [
   {
     __typename: 'CedarSystem',
     id: '326-1-0',
+    versionId: '326-1-0',
     acronym: 'ASD',
     status: null,
     name: 'Systems',
@@ -230,6 +232,7 @@ export const mockSystemInfo: CedarSystemProps[] = [
   {
     __typename: 'CedarSystem',
     id: '3',
+    versionId: '3',
     acronym: 'ZXC',
     status: 'Draft',
     name: 'Government',
@@ -248,6 +251,7 @@ export const mockSystemInfo: CedarSystemProps[] = [
   {
     __typename: 'CedarSystem',
     id: '326-9-0',
+    versionId: '326-9-0',
     acronym: 'BBC',
     status: 'Approved',
     name: 'Medicare Beneficiary Contact Center',
