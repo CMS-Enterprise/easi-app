@@ -43,7 +43,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 			business_cases.id = $1
 		GROUP BY estimated_lifecycle_costs.business_case, business_cases.id, system_intakes.id`
 
-	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, id)
+	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case %s", err),
@@ -70,7 +70,7 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 		WHERE
 			business_cases.system_intake = $1 AND business_cases.status = 'OPEN'
 		GROUP BY estimated_lifecycle_costs.business_case, business_cases.id`
-	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, intakeID)
+	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, intakeID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case %s", err),
@@ -344,9 +344,7 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 			alternative_b_cost_savings = :alternative_b_cost_savings,
 			updated_at = :updated_at,
 		  archived_at = :archived_at,
-		  status = :status,
-			initial_submitted_at = :initial_submitted_at,
-		  last_submitted_at = :last_submitted_at
+		  status = :status
 		WHERE business_cases.id = :id
 	`
 	const deleteLifecycleCostsSQL = `
