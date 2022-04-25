@@ -156,6 +156,38 @@ const Phase = ({
   );
 };
 
+const OtherCosts = () => {
+  const [active, setActive] = useState(false);
+  const { t } = useTranslation('businessCase');
+  const options = t('lifecycleCost.categories', { returnObjects: true });
+  return (
+    <div>
+      {!active && (
+        <button type="button" onClick={() => setActive(true)}>
+          Add new cost category
+        </button>
+      )}
+      {active && (
+        <form>
+          <label htmlFor="newCostCategorySelect">
+            What is your new cost category?
+          </label>
+          <select id="newCostCategorySelect">
+            <option>-Select-</option>
+            {Object.keys(options).map(key => {
+              return <option>{options[key]}</option>;
+            })}
+          </select>
+          <button type="submit">Save</button>
+          <button type="button" onClick={() => setActive(false)}>
+            Cancel
+          </button>
+        </form>
+      )}
+    </div>
+  );
+};
+
 type EstimatedLifecycleCostProps = {
   formikKey: string;
   years: {
@@ -237,6 +269,7 @@ const EstimatedLifecycleCost = ({
           years={years}
           total={calculateCategoryCost('operationsMaintenance')}
         />
+        <OtherCosts />
         <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto margin-top-3 padding-x-2">
           <DescriptionList title="System total cost">
             <DescriptionTerm term="System total cost" />
