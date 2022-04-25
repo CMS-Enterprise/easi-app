@@ -54,11 +54,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 	// Convert the auto-generated struct to our own pkg/models struct
 	retVal := []*models.CedarSystem{}
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
-	for i, sys := range resp.Payload.SystemSummary {
-		if sys.IctObjectID == nil {
-			fmt.Println("i:", i, "*sys.IctObjectID is nil, ID:", *sys.ID)
-		} else {
-			fmt.Println("i:", i, "IctObjectID:", *sys.IctObjectID, "PreviousVersionID:", sys.PreviousVersionID, "NextVersionID:", sys.NextVersionID)
+	for _, sys := range resp.Payload.SystemSummary {
+		if sys.IctObjectID != nil {
 			cedarSys := &models.CedarSystem{
 				VersionID:               *sys.ID,
 				Name:                    *sys.Name,
