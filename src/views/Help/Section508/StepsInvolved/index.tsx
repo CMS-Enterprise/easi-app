@@ -23,7 +23,7 @@ const StepsInvolved = () => {
         </h2>
         <AccessibilityTestingSteps helpArticle />
       </MainContent>
-      <RelatedArticles type="IT Governance" />
+      <RelatedArticles type="Section 508" />
     </>
   );
 };
