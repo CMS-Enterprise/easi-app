@@ -35,8 +35,10 @@ exports[`Template for 508 Testing renders help mode without crashing 1`] = `
     <div
       class="margin-bottom-6 padding-2 bg-base-lightest"
     >
-      <h3>
-        Page Contents
+      <h3
+        class="margin-top-0 margin-bottom-2"
+      >
+        Page contents
       </h3>
       <ul
         class="usa-list usa-list--unstyled"
@@ -267,16 +269,14 @@ exports[`Template for 508 Testing renders help mode without crashing 1`] = `
               </svg>
                Do not skip any row in the document. This will result in delays.
             </p>
-            <p>
-              <a
-                class="usa-link usa-link--external"
-                href="/https://www.youtube.com/watch?v=kAkSV9xiJ1A"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Watch tutorial on how to fill out a VPAT (opens in a new tab)
-              </a>
-            </p>
+            <a
+              class="usa-link usa-link--external"
+              href="/https://www.youtube.com/watch?v=kAkSV9xiJ1A"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Watch tutorial on how to fill out a VPAT (opens in a new tab)
+            </a>
           </div>
         </div>
       </div>
@@ -299,7 +299,7 @@ exports[`Template for 508 Testing renders help mode without crashing 1`] = `
         The Test Plan is a document that helps the Section 508 team understand your system and know what areas of your system to test before it goes live. In this document you will provide:
       </p>
       <ul
-        class="usa-list desktop:grid-col-8"
+        class="usa-list desktop:grid-col-8 margin-bottom-4"
       >
         <li
           class="maxw-none margin-bottom-1"
@@ -366,7 +366,7 @@ exports[`Template for 508 Testing renders help mode without crashing 1`] = `
         The Remediation Plan is a document that helps the Section 508 team understand how you plan to fix the issues that were identified from the 508 test. In this document you will provide:
       </p>
       <ul
-        class="usa-list desktop:grid-col-8"
+        class="usa-list desktop:grid-col-8 margin-bottom-4"
       >
         <li
           class="maxw-none margin-bottom-1"
@@ -380,7 +380,7 @@ exports[`Template for 508 Testing renders help mode without crashing 1`] = `
         </li>
       </ul>
       <div
-        class="usa-summary-box desktop:grid-col-6 margin-bottom-6"
+        class="usa-summary-box desktop:grid-col-6"
         data-testid="summary-box"
       >
         <div
@@ -424,8 +424,10 @@ exports[`Template for 508 Testing renders without crashing 1`] = `
     <div
       class="margin-bottom-6 padding-2 bg-base-lightest"
     >
-      <h3>
-        Page Contents
+      <h3
+        class="margin-top-0 margin-bottom-2"
+      >
+        Page contents
       </h3>
       <ul
         class="usa-list usa-list--unstyled"
@@ -656,16 +658,14 @@ exports[`Template for 508 Testing renders without crashing 1`] = `
               </svg>
                Do not skip any row in the document. This will result in delays.
             </p>
-            <p>
-              <a
-                class="usa-link usa-link--external"
-                href="/https://www.youtube.com/watch?v=kAkSV9xiJ1A"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Watch tutorial on how to fill out a VPAT (opens in a new tab)
-              </a>
-            </p>
+            <a
+              class="usa-link usa-link--external"
+              href="/https://www.youtube.com/watch?v=kAkSV9xiJ1A"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Watch tutorial on how to fill out a VPAT (opens in a new tab)
+            </a>
           </div>
         </div>
       </div>
@@ -688,7 +688,7 @@ exports[`Template for 508 Testing renders without crashing 1`] = `
         The Test Plan is a document that helps the Section 508 team understand your system and know what areas of your system to test before it goes live. In this document you will provide:
       </p>
       <ul
-        class="usa-list desktop:grid-col-8"
+        class="usa-list desktop:grid-col-8 margin-bottom-4"
       >
         <li
           class="maxw-none margin-bottom-1"
@@ -755,7 +755,7 @@ exports[`Template for 508 Testing renders without crashing 1`] = `
         The Remediation Plan is a document that helps the Section 508 team understand how you plan to fix the issues that were identified from the 508 test. In this document you will provide:
       </p>
       <ul
-        class="usa-list desktop:grid-col-8"
+        class="usa-list desktop:grid-col-8 margin-bottom-4"
       >
         <li
           class="maxw-none margin-bottom-1"
@@ -769,7 +769,7 @@ exports[`Template for 508 Testing renders without crashing 1`] = `
         </li>
       </ul>
       <div
-        class="usa-summary-box desktop:grid-col-6 margin-bottom-6"
+        class="usa-summary-box desktop:grid-col-6"
         data-testid="summary-box"
       >
         <div
