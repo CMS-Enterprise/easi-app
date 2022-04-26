@@ -225,11 +225,6 @@ const EstimatedLifecycleCost = ({
       (other.isPresent ? parseFloat(other.cost || '0') : 0)
     );
   };
-  const year1Cost = sumCostinYear(years.year1);
-  const year2Cost = sumCostinYear(years.year2);
-  const year3Cost = sumCostinYear(years.year3);
-  const year4Cost = sumCostinYear(years.year4);
-  const year5Cost = sumCostinYear(years.year5);
 
   const calculateCategoryCost = (
     category: 'development' | 'operationsMaintenance' | 'other'
@@ -277,13 +272,19 @@ const EstimatedLifecycleCost = ({
           total={calculateCategoryCost('operationsMaintenance')}
         />
         <OtherCosts />
-
+        <div className="cost-table-row cost-table-row__totals border-bottom-0">
+          {Object.keys(years).map(key => {
+            return <span>{formatDollars(sumCostinYear(years[key]))}</span>;
+          })}
+        </div>
         <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto margin-top-3 padding-x-2">
           <DescriptionList title="System total cost">
             <DescriptionTerm term="System total cost" />
             <DescriptionDefinition
               definition={formatDollars(
-                year1Cost + year2Cost + year3Cost + year4Cost + year5Cost
+                Object.keys(years).reduce((total, year) => {
+                  return total + sumCostinYear(years[year]);
+                }, 0)
               )}
             />
           </DescriptionList>
