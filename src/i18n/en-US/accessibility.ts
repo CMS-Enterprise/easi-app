@@ -342,7 +342,7 @@ const accessibility = {
           },
           line3: {
             linkText:
-              'Watch tutorial on how to fill out a VPAT (opens in a new tab).'
+              'Watch tutorial on how to fill out a VPAT (opens in a new tab)'
           }
         }
       }
