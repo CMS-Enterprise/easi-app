@@ -55,7 +55,9 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         />
       )}
       <div className="margin-bottom-6 padding-2 bg-base-lightest">
-        <h3>{t('templatesFor508Testing:pageContents')}</h3>
+        <h3 className="margin-top-0 margin-bottom-2">
+          {t('templatesFor508Testing:pageContents')}
+        </h3>
         <ul className="usa-list usa-list--unstyled">
           <li className="margin-bottom-1">
             <UswdsLink href="#vpat">
@@ -139,18 +141,16 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
               'testingTemplates.vpatSection.subSection.downloadVPAT.line2.text'
             )}
           </p>
-          <p>
-            <UswdsReactLink
-              to="https://www.youtube.com/watch?v=kAkSV9xiJ1A"
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="external"
-            >
-              {t(
-                'testingTemplates.vpatSection.subSection.downloadVPAT.line3.linkText'
-              )}
-            </UswdsReactLink>
-          </p>
+          <UswdsReactLink
+            to="https://www.youtube.com/watch?v=kAkSV9xiJ1A"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="external"
+          >
+            {t(
+              'testingTemplates.vpatSection.subSection.downloadVPAT.line3.linkText'
+            )}
+          </UswdsReactLink>
         </SummaryBox>
         <Divider className="margin-bottom-4" />
       </div>
@@ -161,7 +161,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <p className="margin-bottom-2 line-height-sans-5 desktop:grid-col-9">
           {t('testingTemplates.testPlanSection.description')}
         </p>
-        <ul className="usa-list desktop:grid-col-8">
+        <ul className="usa-list desktop:grid-col-8 margin-bottom-4">
           {testPlanList.map(item => (
             <li key={item} className="maxw-none margin-bottom-1">
               {item}
@@ -185,7 +185,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <p className="margin-bottom-2 line-height-sans-5 desktop:grid-col-9">
           {t('testingTemplates.remediationPlanSection.description')}
         </p>
-        <ul className="usa-list desktop:grid-col-8">
+        <ul className="usa-list desktop:grid-col-8 margin-bottom-4">
           {remediationPlanList.map(item => (
             <li key={item} className="maxw-none margin-bottom-1">
               {item}
@@ -196,7 +196,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           heading={t(
             'testingTemplates.remediationPlanSection.download.heading'
           )}
-          className="desktop:grid-col-6 margin-bottom-6"
+          className="desktop:grid-col-6"
         >
           <UswdsReactLink
             to={RemediationPlanDoc}

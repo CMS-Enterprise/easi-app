@@ -8,13 +8,11 @@ import TestingTemplatesBase from 'components/TestingTemplates';
 const TestingTemplates = () => {
   return (
     <>
-      <MainContent className="grid-container">
+      <MainContent className="grid-container margin-bottom-7">
         <HelpBreadcrumb type="Close tab" />
         <TestingTemplatesBase helpArticle />
       </MainContent>
-      <div className="margin-top-7">
-        <RelatedArticles type="Section 508" />
-      </div>
+      <RelatedArticles type="Section 508" />
     </>
   );
 };
