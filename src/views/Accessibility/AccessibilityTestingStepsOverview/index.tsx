@@ -1,20 +1,15 @@
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
-  BreadcrumbLink,
-  Link as UswdsLink,
-  ProcessList,
-  ProcessListHeading,
-  ProcessListItem
+  BreadcrumbLink
 } from '@trussworks/react-uswds';
 
 import AccessibilityTestingSteps from 'components/AccessibilityTestingSteps';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-import CollapsableLink from 'components/shared/CollapsableLink';
 
 import './index.scss';
 
@@ -39,7 +34,7 @@ const AccessibilityTestingStepsOverview = () => {
           {t('testingStepsOverview.description')}
         </p>
       </div>
-      <AccessibilityTestingSteps />
+      <AccessibilityTestingSteps className="margin-top-6 tablet:grid-col-6" />
       {params.get('continue') === 'true' && (
         <UswdsReactLink
           className="usa-button margin-top-8"
