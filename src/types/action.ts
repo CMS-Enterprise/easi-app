@@ -64,7 +64,7 @@ export type SubmitLifecycleIdForm = {
   scope?: string;
   nextSteps?: string;
   costBaseline?: string;
-  feedback?: string;
+  feedback: string;
 };
 
 // TODO: look into combining the submit and extend LCID?
@@ -75,7 +75,7 @@ export type ExtendLifecycleIdForm = {
   scope?: string;
   nextSteps?: string;
   costBaseline?: string;
-  // TODO: add feedback here?
+  feedback: string;
 };
 
 export type RejectIntakeForm = {
