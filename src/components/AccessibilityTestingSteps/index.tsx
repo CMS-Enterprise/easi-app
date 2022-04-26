@@ -63,13 +63,21 @@ const AccessibilityTestingSteps = ({
     <div className={classNames('508-steps-involved', className)}>
       {helpArticle && <ExceptionLink className="margin-bottom-4" />}
       <ProcessList>
-        <ProcessListItem>
+        <ProcessListItem
+          className={
+            helpArticle ? 'grid-col-8 position-static maxw-desktop' : ''
+          }
+        >
           <ProcessListHeading type="h3">
             {t('testingStepsOverview.fillForm.heading')}
           </ProcessListHeading>
           <p>{t('testingStepsOverview.fillForm.description')}</p>
         </ProcessListItem>
-        <ProcessListItem>
+        <ProcessListItem
+          className={
+            helpArticle ? 'grid-col-8 position-static maxw-desktop' : ''
+          }
+        >
           <ProcessListHeading type="h3">
             {t('testingStepsOverview.prepareVPAT.heading')}
           </ProcessListHeading>
@@ -91,13 +99,21 @@ const AccessibilityTestingSteps = ({
             {t('testingStepsOverview.prepareVPAT.changesVPAT')}
           </p>
         </ProcessListItem>
-        <ProcessListItem>
+        <ProcessListItem
+          className={
+            helpArticle ? 'grid-col-8 position-static maxw-desktop' : ''
+          }
+        >
           <ProcessListHeading type="h3">
             {t('testingStepsOverview.testingSession.heading')}
           </ProcessListHeading>
           <p>{t('testingStepsOverview.testingSession.description')}</p>
         </ProcessListItem>
-        <ProcessListItem>
+        <ProcessListItem
+          className={
+            helpArticle ? 'grid-col-8 position-static maxw-desktop' : ''
+          }
+        >
           <ProcessListHeading type="h3">
             {t('testingStepsOverview.results.heading')}
           </ProcessListHeading>
@@ -116,6 +132,15 @@ const AccessibilityTestingSteps = ({
             </dt>
             <dd className="margin-left-4 margin-bottom-2">
               {t('testingStepsOverview.results.score.interval75.description')}
+              {helpArticle && (
+                <Trans i18nKey="accessibility:testingStepsOverview.results.score.interval75.link">
+                  indexZero
+                  <UswdsLink href="/508/templates" target="_blank">
+                    link
+                  </UswdsLink>
+                  indexTwo
+                </Trans>
+              )}
             </dd>
             <dt className="text-bold display-flex flex-align-center">
               <IconHighlightOff className="height-3 width-3 margin-right-1 text-error" />

@@ -209,13 +209,13 @@ const accessibility = {
       'This is an overview of the process for completing 508 testing for your system.',
     subheading: 'Steps in the testing process',
     fillForm: {
-      heading: 'Fill the request form in EASi',
-      description: 'Tell the 508 team which application you plan to test.'
+      heading: 'Fill out the request form in EASi',
+      description: 'Tell the 508 team which system you plan to test.'
     },
     prepareVPAT: {
       heading: 'Prepare and upload the VPAT and Test plan',
       fillOutVPAT:
-        'Download and fill the VPAT and Test plan from the <1>templates page (opens in a new tab)</1>. These documents will help the 508 team prepare for testing. Uploaded your completed documents to EASi for the 508 team to review.',
+        'Download and fill the VPAT and Test plan from the <1>templates page (opens in a new tab)</1>. These documents will help the 508 team prepare for testing. Upload your completed documents to EASi for the 508 team to review.',
       changesVPAT:
         'The 508 team will get back to you via email about any changes needed prior to testing.'
     },
@@ -236,7 +236,9 @@ const accessibility = {
         interval75: {
           heading: 'Between 99% and 75%',
           description:
-            'You can release your application but you will need fix the issues and retest within a year. You need to submit a remediation plan as a part of retesting.'
+            'You can release your application but you will need fix the issues and retest within a year. You need to submit a remediation plan as a part of retesting.',
+          link:
+            ' You can download the Remediation Plan from the <1>templates page (opens in a new tab)</1>.'
         },
         below75: {
           heading: '75% and below',
