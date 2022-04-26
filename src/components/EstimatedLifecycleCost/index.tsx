@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Label, SummaryBox, TextInput } from '@trussworks/react-uswds';
-import classNames from 'classnames';
+import { Button, IconAdd, Label, SummaryBox } from '@trussworks/react-uswds';
 import { Field, FieldArray } from 'formik';
 import { DateTime } from 'luxon';
 
@@ -122,13 +121,12 @@ const Phase = ({
                       </Label>
                       <FieldErrorMsg>{errors?.development?.cost}</FieldErrorMsg>
                       <Field
-                        as={TextInput}
-                        className="desktop:margin-y-0"
+                        type="number"
+                        className="desktop:margin-y-0 usa-input"
                         error={!!errors?.development?.cost}
                         id={`BusinessCase-${formikKey}.${year}.${category}.cost`}
                         name={`${formikKey}.${year}.${category}.cost`}
                         maxLength={10}
-                        match={/^[0-9\b]+$/}
                         aria-describedby={`${category}CostsDefinition`}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           setFieldValue(
@@ -161,27 +159,36 @@ const OtherCosts = () => {
   const { t } = useTranslation('businessCase');
   const options = t('lifecycleCost.categories', { returnObjects: true });
   return (
-    <div>
+    <div className="cost-table-row cost-table-row__other">
       {!active && (
-        <button type="button" onClick={() => setActive(true)}>
+        <Button
+          type="button"
+          unstyled
+          onClick={() => setActive(true)}
+          className="display-flex flex-align-center"
+        >
+          <IconAdd className="margin-right-1" />
           Add new cost category
-        </button>
+        </Button>
       )}
       {active && (
-        <form>
-          <label htmlFor="newCostCategorySelect">
+        <form className="display-flex flex-align-center">
+          <Label htmlFor="newCostCategorySelect">
             What is your new cost category?
-          </label>
-          <select id="newCostCategorySelect">
+          </Label>
+          <select
+            className="margin-top-0 desktop:margin-x-2 usa-select"
+            id="newCostCategorySelect"
+          >
             <option>-Select-</option>
             {Object.keys(options).map(key => {
               return <option>{options[key]}</option>;
             })}
           </select>
-          <button type="submit">Save</button>
-          <button type="button" onClick={() => setActive(false)}>
+          <Button type="submit">Save</Button>
+          <Button type="button" outline onClick={() => setActive(false)}>
             Cancel
-          </button>
+          </Button>
         </form>
       )}
     </div>
@@ -239,7 +246,7 @@ const EstimatedLifecycleCost = ({
       <CostSummary />
 
       <div className="cost-table margin-y-4">
-        <div className="cost-table-row cost-table-row__headings grid-row">
+        <div className="cost-table-row cost-table-row__headings minh-0">
           {Object.keys(years).map((year, i) => {
             return (
               <h4 key={year} className="cost-table-col margin-0">
@@ -270,6 +277,7 @@ const EstimatedLifecycleCost = ({
           total={calculateCategoryCost('operationsMaintenance')}
         />
         <OtherCosts />
+
         <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto margin-top-3 padding-x-2">
           <DescriptionList title="System total cost">
             <DescriptionTerm term="System total cost" />

@@ -7,12 +7,17 @@
     display: grid;
     grid-template-columns: 125px repeat(6, 1fr);
     grid-gap: .5rem;
+    min-height: 65px;
     align-items: center;
     border-bottom: 1px solid color('base-light');
     padding: .75rem 0;
 
     &__headings h4:first-child {
       grid-column-start: 2;
+    }
+
+    &__other {
+      grid-template-columns: 1fr;
     }
   }
 

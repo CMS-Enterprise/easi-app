@@ -594,7 +594,7 @@ const PreferredSolution = ({
                   />
                 </FieldGroup>
               </div>
-              <div className="tablet:grid-col-9 margin-top-2">
+              <div className="margin-top-2">
                 <h2 className="margin-0">Estimated lifecycle cost</h2>
                 <HelpText id="BusinessCase-EstimatedLifecycleCostHelp">
                   <p className="margin-y-2">
