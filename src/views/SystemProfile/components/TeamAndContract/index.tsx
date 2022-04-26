@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@apollo/client';
 import {
   Card,
   CardBody,
@@ -13,6 +14,7 @@ import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import PageLoading from 'components/PageLoading';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -21,7 +23,11 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import GetSystemProfileTeamQuery from 'queries/GetSystemProfileTeamQuery';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
+import { GetSystemProfileTeam } from 'queries/types/GetSystemProfileTeam';
+// import { CedarAssigneeType } from 'types/graphql-global-types';
+import NotFound from 'views/NotFound';
 
 import './index.scss';
 
@@ -59,23 +65,6 @@ const vendorsData = [
   }
 ];
 
-const contactListData = [
-  {
-    id: '1',
-    role: 'Business Owner',
-    name: 'Geraldine Hobbs',
-    email: 'geraldine.hobbs@cms.hhs.gov',
-    org: 'Web and Emerging Technologies Group (WETG)'
-  },
-  {
-    id: '2',
-    role: 'System Owner',
-    name: 'Bryce Greenwood',
-    email: 'bryce.greenwood@cms.hhs.gov',
-    org: 'Web and Emerging Technologies Group (WETG)'
-  }
-];
-
 const pointOfContactData = {
   name: 'Greta May Jones',
   role: 'Contracting Officer’s Representative (COR)',
@@ -90,6 +79,20 @@ const SystemTeamAndContract = ({
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
+  const { loading, error, data } = useQuery<GetSystemProfileTeam>(
+    GetSystemProfileTeamQuery,
+    {
+      variables: {
+        systemId: system.id
+      }
+    }
+  );
+  if (loading) {
+    return <PageLoading />;
+  }
+  if (error) {
+    return <NotFound />;
+  }
   return (
     <div id="system-team-and-contract">
       <GridContainer className="padding-left-0 padding-right-0">
@@ -234,28 +237,44 @@ const SystemTeamAndContract = ({
               {t('singleSystem.teamAndContract.header.pointsOfContact')}
             </h2>
             <CardGroup className="margin-0">
-              {contactListData.map(contact => (
-                <Card key={contact.id} className="grid-col-12 margin-bottom-2">
-                  <CardHeader className="padding-2 padding-bottom-0">
-                    <h5 className="margin-y-0 font-sans-2xs text-normal">
-                      {contact.role}
-                    </h5>
-                    <h3 className="margin-y-0">{contact.name}</h3>
-                    <div>
-                      <UswdsReactLink
-                        className="line-height-body-5"
-                        to={contact.email}
-                        variant="external"
-                        target="_blank"
-                      >
-                        {contact.email}
-                      </UswdsReactLink>
-                    </div>
-                    <Divider className="margin-y-2" />
-                  </CardHeader>
-                  <CardBody className="padding-2">{contact.org}</CardBody>
-                </Card>
-              ))}
+              {data!.roles
+                // .filter(role => role.assigneeType === CedarAssigneeType.PERSON)
+                .filter(role => role.assigneeType === 'person')
+                .map(contact => (
+                  <Card
+                    key={contact.objectID}
+                    className="grid-col-12 margin-bottom-2"
+                  >
+                    <CardHeader className="padding-2 padding-bottom-0">
+                      <h5 className="margin-y-0 font-sans-2xs text-normal">
+                        {contact.roleTypeName}
+                      </h5>
+                      <h3 className="margin-y-0">
+                        {contact.assigneeFirstName} {contact.assigneeLastName}
+                      </h3>
+                      {contact.assigneeEmail !== null && (
+                        <div>
+                          <UswdsReactLink
+                            className="line-height-body-5"
+                            to={`mailto:${contact.assigneeEmail}`}
+                            variant="external"
+                            target="_blank"
+                          >
+                            {contact.assigneeEmail}
+                          </UswdsReactLink>
+                        </div>
+                      )}
+                    </CardHeader>
+                    <CardBody className="padding-x-2 padding-top-0">
+                      {contact.assigneeOrgName !== null && (
+                        <>
+                          <Divider className="margin-y-2" />
+                          {contact.assigneeOrgName}
+                        </>
+                      )}
+                    </CardBody>
+                  </Card>
+                ))}
             </CardGroup>
           </Grid>
           <Grid
