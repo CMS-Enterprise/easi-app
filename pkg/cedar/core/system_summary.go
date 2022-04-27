@@ -38,10 +38,12 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 	if tryCache {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
-			cachedSystems := make([]*models.CedarSystem, 0, len(cachedSystemMap))
+			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
 
+			i := 0
 			for _, sys := range cachedSystemMap {
-				cachedSystems = append(cachedSystems, sys)
+				cachedSystems[i] = sys
+				i++
 			}
 
 			return cachedSystems, nil
@@ -165,49 +167,4 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 
 	// If we still haven't found it after repopulating the cache, then it doesn't exist in CEDAR
 	return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
-}
-
-// GetSystemByVersionID makes a GET call to the /system/summary/{versionID} endpoint
-func (c *Client) GetSystemByVersionID(ctx context.Context, versionID string) (*models.CedarSystem, error) {
-	if !c.cedarCoreEnabled(ctx) {
-		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return &models.CedarSystem{}, nil
-	}
-
-	// Construct the parameters
-	params := apisystems.NewSystemSummaryFindByIDParams()
-	params.SetID(versionID)
-	params.HTTPClient = c.hc
-
-	// Make the API call
-	resp, err := c.sdk.System.SystemSummaryFindByID(params, c.auth)
-	if err != nil {
-		return &models.CedarSystem{}, err
-	}
-
-	if resp.Payload == nil {
-		return &models.CedarSystem{}, fmt.Errorf("no body received")
-	}
-
-	responseArray := resp.Payload.SystemSummary
-
-	if len(responseArray) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
-	}
-
-	// Convert the auto-generated struct to our own pkg/models struct
-	return &models.CedarSystem{
-		ID:                      *responseArray[0].IctObjectID,
-		Name:                    *responseArray[0].Name,
-		Description:             responseArray[0].Description,
-		Acronym:                 responseArray[0].Acronym,
-		Status:                  responseArray[0].Status,
-		BusinessOwnerOrg:        responseArray[0].BusinessOwnerOrg,
-		BusinessOwnerOrgComp:    responseArray[0].BusinessOwnerOrgComp,
-		SystemMaintainerOrg:     responseArray[0].SystemMaintainerOrg,
-		SystemMaintainerOrgComp: responseArray[0].SystemMaintainerOrgComp,
-		VersionID:               *responseArray[0].ID,
-		NextVersionID:           zero.StringFrom(responseArray[0].NextVersionID).Ptr(),
-		PreviousVersionID:       zero.StringFrom(responseArray[0].PreviousVersionID).Ptr(),
-	}, nil
 }

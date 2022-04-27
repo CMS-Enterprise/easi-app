@@ -1507,11 +1507,6 @@ func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.Ced
 }
 
 func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error) {
-	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-
 	var optionalParams *cedarcore.GetDeploymentsOptionalParams
 	if deploymentType != nil || state != nil || status != nil {
 		optionalParams = &cedarcore.GetDeploymentsOptionalParams{}
@@ -1529,7 +1524,7 @@ func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, d
 		}
 	}
 
-	cedarDeployments, err := r.cedarCoreClient.GetDeployments(ctx, cedarSystem.VersionID, optionalParams)
+	cedarDeployments, err := r.cedarCoreClient.GetDeployments(ctx, cedarSystemID, optionalParams)
 	if err != nil {
 		return nil, err
 	}
@@ -1542,12 +1537,7 @@ func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, d
 }
 
 func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
-	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-
-	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystem.VersionID, null.StringFromPtr(roleTypeID))
+	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.StringFromPtr(roleTypeID))
 	if err != nil {
 		return nil, err
 	}
