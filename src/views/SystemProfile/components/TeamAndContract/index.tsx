@@ -8,12 +8,12 @@ import {
   CardHeader,
   Grid,
   GridContainer,
+  IconMailOutline,
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import {
   DescriptionDefinition,
@@ -253,14 +253,14 @@ const SystemTeamAndContract = ({
                       </h3>
                       {contact.assigneeEmail !== null && (
                         <div>
-                          <UswdsReactLink
+                          <Link
                             className="line-height-body-5"
-                            to={`mailto:${contact.assigneeEmail}`}
-                            variant="external"
+                            href={`mailto:${contact.assigneeEmail}`}
                             target="_blank"
                           >
                             {contact.assigneeEmail}
-                          </UswdsReactLink>
+                            <IconMailOutline className="margin-left-05 margin-bottom-2px text-tbottom" />
+                          </Link>
                         </div>
                       )}
                     </CardHeader>
