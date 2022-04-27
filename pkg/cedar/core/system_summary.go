@@ -130,12 +130,8 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 func (c *Client) getSystemFromCache(ctx context.Context, systemID string) *models.CedarSystem {
 	// Check if the system ID is cached in the map
 	cachedSystemMap := c.getCachedSystemMap(ctx)
-	if cachedSystemMap != nil {
-		if sys, found := cachedSystemMap[systemID]; found {
-			if found && sys != nil {
-				return sys
-			}
-		}
+	if sys, found := cachedSystemMap[systemID]; found && sys != nil {
+		return sys
 	}
 	return nil
 }
