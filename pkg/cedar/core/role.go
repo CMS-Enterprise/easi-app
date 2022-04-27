@@ -15,12 +15,18 @@ import (
 
 const (
 	cedarRoleApplication = "alfabet" // used for queries to GET /role endpoint
+
+	// these need to be separate constants from the CedarAssigneeType enums defined in pkg/models/cedar_role.go;
+	// these values correspond to what's returned from CEDAR
+	// the enums in pkg/models/cedar_role.go represent what's returned by our GraphQL API to our frontend
+	cedarPersonAssignee       = "person"
+	cedarOrganizationAssignee = "organization"
 )
 
 func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool) {
-	if rawAssigneeType == string(models.PersonAssignee) {
+	if rawAssigneeType == cedarPersonAssignee {
 		return models.PersonAssignee, true
-	} else if rawAssigneeType == string(models.OrganizationAssignee) {
+	} else if rawAssigneeType == cedarOrganizationAssignee {
 		return models.OrganizationAssignee, true
 	} else if rawAssigneeType == "" {
 		return "", true
