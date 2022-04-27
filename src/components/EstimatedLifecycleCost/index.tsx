@@ -172,7 +172,7 @@ const OtherCosts = () => {
         </Button>
       )}
       {active && (
-        <form className="display-flex flex-align-center">
+        <div className="display-flex flex-align-center">
           <Label htmlFor="newCostCategorySelect">
             What is your new cost category?
           </Label>
@@ -182,14 +182,14 @@ const OtherCosts = () => {
           >
             <option>-Select-</option>
             {Object.keys(options).map(key => {
-              return <option>{options[key]}</option>;
+              return <option key={key}>{options[key]}</option>;
             })}
           </select>
           <Button type="submit">Save</Button>
           <Button type="button" outline onClick={() => setActive(false)}>
             Cancel
           </Button>
-        </form>
+        </div>
       )}
     </div>
   );
@@ -274,7 +274,9 @@ const EstimatedLifecycleCost = ({
         <OtherCosts />
         <div className="cost-table-row cost-table-row__totals border-bottom-0">
           {Object.keys(years).map(key => {
-            return <span>{formatDollars(sumCostinYear(years[key]))}</span>;
+            return (
+              <span key={key}>{formatDollars(sumCostinYear(years[key]))}</span>
+            );
           })}
         </div>
         <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto margin-top-3 padding-x-2">
