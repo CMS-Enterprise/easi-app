@@ -37,16 +37,21 @@ func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool)
 
 // GetRolesBySystem makes a GET call to the /role endpoint using a system ID and an optional role type ID
 // we don't currently have a use case for querying /role by role ID, so that's not implemented
-func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleTypeID null.String) ([]*models.CedarRole, error) {
+func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID null.String) ([]*models.CedarRole, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarRole{}, nil
 	}
 
+	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
 	// Construct the parameters
 	params := apiroles.NewRoleFindByIDParams()
 	params.SetApplication(cedarRoleApplication)
-	params.SetObjectID(&systemID)
+	params.SetObjectID(&cedarSystem.VersionID)
 	params.HTTPClient = c.hc
 
 	if roleTypeID.Ptr() != nil {
@@ -68,23 +73,23 @@ func (c *Client) GetRolesBySystem(ctx context.Context, systemID string, roleType
 
 	for _, role := range resp.Payload.Roles {
 		if role.Application == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role Application was null", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role Application was null", zap.String("systemID", cedarSystemID))
 			continue
 		}
 
 		if role.ObjectID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role ObjectID was null", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role ObjectID was null", zap.String("systemID", cedarSystemID))
 			continue
 		}
 
 		if role.RoleTypeID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role type ID was null", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role type ID was null", zap.String("systemID", cedarSystemID))
 			continue
 		}
 
 		assigneeType, validAssigneeType := decodeAssigneeType(role.AssigneeType)
 		if !validAssigneeType {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role assignee type didn't match possible values from Swagger", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role assignee type didn't match possible values from Swagger", zap.String("systemID", cedarSystemID))
 			continue
 		}
 

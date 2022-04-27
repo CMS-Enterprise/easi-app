@@ -20,11 +20,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/domain_model"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/enumeration"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/exchange"
+	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/organization"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/person"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/stakeholder"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/support_contact"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
+	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/threat"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/user"
 )
 
@@ -34,14 +36,14 @@ var Default = NewHTTPClient(nil)
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "cdrprdapigw1.awscloud.cms.local:5555"
+	DefaultHost string = "cdrdevapigw02.awscloud.cms.local:5555"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
 	DefaultBasePath string = "/gateway/CEDAR Core API/1.0.0"
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
-var DefaultSchemes = []string{"https"}
+var DefaultSchemes = []string{"http"}
 
 // NewHTTPClient creates a new c e d a r core API HTTP client.
 func NewHTTPClient(formats strfmt.Registry) *CEDARCoreAPI {
@@ -80,11 +82,13 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CEDARCoreA
 	cli.DomainModel = domain_model.New(transport, formats)
 	cli.Enumeration = enumeration.New(transport, formats)
 	cli.Exchange = exchange.New(transport, formats)
+	cli.Organization = organization.New(transport, formats)
 	cli.Person = person.New(transport, formats)
 	cli.Role = role.New(transport, formats)
 	cli.Stakeholder = stakeholder.New(transport, formats)
 	cli.SupportContact = support_contact.New(transport, formats)
 	cli.System = system.New(transport, formats)
+	cli.Threat = threat.New(transport, formats)
 	cli.User = user.New(transport, formats)
 	return cli
 }
@@ -150,6 +154,8 @@ type CEDARCoreAPI struct {
 
 	Exchange exchange.ClientService
 
+	Organization organization.ClientService
+
 	Person person.ClientService
 
 	Role role.ClientService
@@ -159,6 +165,8 @@ type CEDARCoreAPI struct {
 	SupportContact support_contact.ClientService
 
 	System system.ClientService
+
+	Threat threat.ClientService
 
 	User user.ClientService
 
@@ -178,10 +186,12 @@ func (c *CEDARCoreAPI) SetTransport(transport runtime.ClientTransport) {
 	c.DomainModel.SetTransport(transport)
 	c.Enumeration.SetTransport(transport)
 	c.Exchange.SetTransport(transport)
+	c.Organization.SetTransport(transport)
 	c.Person.SetTransport(transport)
 	c.Role.SetTransport(transport)
 	c.Stakeholder.SetTransport(transport)
 	c.SupportContact.SetTransport(transport)
 	c.System.SetTransport(transport)
+	c.Threat.SetTransport(transport)
 	c.User.SetTransport(transport)
 }

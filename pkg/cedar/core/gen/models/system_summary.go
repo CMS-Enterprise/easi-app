@@ -23,6 +23,10 @@ type SystemSummary struct {
 	// Example: CMSS
 	Acronym string `json:"acronym,omitempty"`
 
+	// belongs to
+	// Example: 326-10-0
+	BelongsTo string `json:"belongsTo,omitempty"`
+
 	// business owner org
 	// Example: Center for Medicare Management
 	BusinessOwnerOrg string `json:"businessOwnerOrg,omitempty"`
@@ -34,6 +38,11 @@ type SystemSummary struct {
 	// description
 	// Example: This is a CMS System decription
 	Description string `json:"description,omitempty"`
+
+	// ict object Id
+	// Example: 326-3-0
+	// Required: true
+	IctObjectID *string `json:"ictObjectId"`
 
 	// id
 	// Example: 326-2-0
@@ -69,14 +78,23 @@ type SystemSummary struct {
 	// Example: Enterprise Architecture and Data Group
 	SystemMaintainerOrgComp string `json:"systemMaintainerOrgComp,omitempty"`
 
+	// uuid
+	// Example: 12FFF52E-195B-4E48-9A38-669A8BD71234
+	UUID string `json:"uuid,omitempty"`
+
 	// version
 	// Example: 1.0
-	Version string `json:"version,omitempty"`
+	// Required: true
+	Version *string `json:"version"`
 }
 
 // Validate validates this system summary
 func (m *SystemSummary) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateIctObjectID(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateID(formats); err != nil {
 		res = append(res, err)
@@ -86,9 +104,22 @@ func (m *SystemSummary) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateVersion(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *SystemSummary) validateIctObjectID(formats strfmt.Registry) error {
+
+	if err := validate.Required("ictObjectId", "body", m.IctObjectID); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -104,6 +135,15 @@ func (m *SystemSummary) validateID(formats strfmt.Registry) error {
 func (m *SystemSummary) validateName(formats strfmt.Registry) error {
 
 	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SystemSummary) validateVersion(formats strfmt.Registry) error {
+
+	if err := validate.Required("version", "body", m.Version); err != nil {
 		return err
 	}
 

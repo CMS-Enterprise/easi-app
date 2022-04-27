@@ -11,4 +11,5 @@ type CedarSystem struct {
 	BusinessOwnerOrgComp    string `json:"businessOwnerOrgComp"`
 	SystemMaintainerOrg     string `json:"systemMaintainerOrg"`
 	SystemMaintainerOrgComp string `json:"systemMaintainerOrgComp"`
+	VersionID               string `json:"versionId"`
 }

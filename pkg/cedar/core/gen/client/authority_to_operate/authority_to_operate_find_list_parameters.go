@@ -94,6 +94,12 @@ type AuthorityToOperateFindListParams struct {
 	*/
 	IsProtectedHealthInformation *bool
 
+	/* SystemID.
+
+	   ID of the System the ATO was issued for. If provided, all other query parameters are ignored.
+	*/
+	SystemID *string
+
 	/* TlcPhase.
 
 	   A system's lifecycle phase.
@@ -102,7 +108,7 @@ type AuthorityToOperateFindListParams struct {
 
 	/* UUID.
 
-	   UUID of the ATO
+	   UUID of the ATO and Corresponding System
 	*/
 	UUID *string
 
@@ -212,6 +218,17 @@ func (o *AuthorityToOperateFindListParams) WithIsProtectedHealthInformation(isPr
 // SetIsProtectedHealthInformation adds the isProtectedHealthInformation to the authority to operate find list params
 func (o *AuthorityToOperateFindListParams) SetIsProtectedHealthInformation(isProtectedHealthInformation *bool) {
 	o.IsProtectedHealthInformation = isProtectedHealthInformation
+}
+
+// WithSystemID adds the systemID to the authority to operate find list params
+func (o *AuthorityToOperateFindListParams) WithSystemID(systemID *string) *AuthorityToOperateFindListParams {
+	o.SetSystemID(systemID)
+	return o
+}
+
+// SetSystemID adds the systemId to the authority to operate find list params
+func (o *AuthorityToOperateFindListParams) SetSystemID(systemID *string) {
+	o.SystemID = systemID
 }
 
 // WithTlcPhase adds the tlcPhase to the authority to operate find list params
@@ -324,6 +341,23 @@ func (o *AuthorityToOperateFindListParams) WriteToRequest(r runtime.ClientReques
 		if qIsProtectedHealthInformation != "" {
 
 			if err := r.SetQueryParam("isProtectedHealthInformation", qIsProtectedHealthInformation); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.SystemID != nil {
+
+		// query param systemId
+		var qrSystemID string
+
+		if o.SystemID != nil {
+			qrSystemID = *o.SystemID
+		}
+		qSystemID := qrSystemID
+		if qSystemID != "" {
+
+			if err := r.SetQueryParam("systemId", qSystemID); err != nil {
 				return err
 			}
 		}
