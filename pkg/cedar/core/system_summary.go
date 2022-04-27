@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/guregu/null"
-	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -84,8 +83,6 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 				SystemMaintainerOrg:     sys.SystemMaintainerOrg,
 				SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
 				ID:                      *sys.IctObjectID,
-				NextVersionID:           zero.StringFrom(sys.NextVersionID).Ptr(),
-				PreviousVersionID:       zero.StringFrom(sys.PreviousVersionID).Ptr(),
 			}
 			retVal = append(retVal, cedarSys)
 		}
