@@ -35,18 +35,14 @@ An EUA ID is needed for some endpoints such as creating system intakes; this can
 The GraphQL playground can also be used in the deployed dev/impl/prod environments. Access it with the same `/api/graph/playground` path, with the appropriate domain, i.e. `https://dev.easi.cms.gov/api/graph/playground`. You'll still need to enter `/api/graph/query` in the playground UI. To authenticate, you'll need to log in to the environment, then get the Bearer token returned by Okta. The easiest way to do this is by opening the browser dev tools, then running the following command:
 
 ```
-JSON.parse(localStorage.getItem('okta-token-storage')).accessToken.value
+`{"Authorization":"Bearer ${JSON.parse(localStorage.getItem('okta-token-storage')).accessToken.accessToken}"}`
 ```
 
-This will return a long base64-encoded string:
+This will return a string with the authorization header you need, containing a Bearer token in the form of a long base64-encoded string:
 
 ![Browser dev tools console, showing the result of the above command](./images/graphql_playground/browser_console.png)
 
 
-Copy the string (_without_ the surrounding quotes). In the GraphQL playground, in HTTP Headers, enter 
-```
-{"Authorization":"Bearer <insert token here>"}
-```
-to authenticate your requests.
+Copy the string (_without_ the surrounding quotes). In the GraphQL playground, paste the string in the HTTP Headers section to authenticate your requests.
 
 ![GraphQL Playground, HTTP Headers section, showing the Authorization header with the token added](./images/graphql_playground/graphql_playground_header.png)
