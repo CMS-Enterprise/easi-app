@@ -26,7 +26,7 @@ import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileTeamQuery from 'queries/GetSystemProfileTeamQuery';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import { GetSystemProfileTeam } from 'queries/types/GetSystemProfileTeam';
-// import { CedarAssigneeType } from 'types/graphql-global-types';
+import { CedarAssigneeType } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
 
 import './index.scss';
@@ -238,8 +238,7 @@ const SystemTeamAndContract = ({
             </h2>
             <CardGroup className="margin-0">
               {data!.roles
-                // .filter(role => role.assigneeType === CedarAssigneeType.PERSON)
-                .filter(role => role.assigneeType === 'person')
+                .filter(role => role.assigneeType === CedarAssigneeType.PERSON)
                 .map(contact => (
                   <Card
                     key={contact.objectID}
