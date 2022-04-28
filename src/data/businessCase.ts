@@ -16,6 +16,26 @@ const emptyPhaseValues = {
     isPresent: false,
     cost: ''
   },
+  helpDesk: {
+    isPresent: false,
+    cost: ''
+  },
+  software: {
+    isPresent: false,
+    cost: ''
+  },
+  planning: {
+    isPresent: false,
+    cost: ''
+  },
+  infrastructure: {
+    isPresent: false,
+    cost: ''
+  },
+  oit: {
+    isPresent: false,
+    cost: ''
+  },
   other: {
     isPresent: false,
     cost: ''
@@ -108,6 +128,11 @@ export const alternativeSolutionHasFilledFields = (
     if (
       phase.development.isPresent ||
       phase.operationsMaintenance.isPresent ||
+      phase.helpDesk.isPresent ||
+      phase.software.isPresent ||
+      phase.planning.isPresent ||
+      phase.infrastructure.isPresent ||
+      phase.oit.isPresent ||
       phase.other.isPresent
     ) {
       hasLineItem = true;
@@ -137,6 +162,11 @@ export const prepareBusinessCaseForApp = (
   const phaseTypeMap: any = {
     Development: 'development',
     'Operations and Maintenance': 'operationsMaintenance',
+    'Help desk/call center': 'helpDesk',
+    'Software licenses': 'software',
+    'Planning, support, and professional services': 'planning',
+    Infrastructure: 'infrastructure',
+    'OIT services, tools, and pilots': 'oit',
     Other: 'other'
   };
 
@@ -149,8 +179,15 @@ export const prepareBusinessCaseForApp = (
   let doesAltBHaveLifecycleCostLines = false;
 
   businessCase.lifecycleCostLines.forEach((line: any) => {
-    const phaseType: 'development' | 'operationsMaintenance' | 'other' =
-      phaseTypeMap[`${line.phase}`];
+    const phaseType:
+      | 'development'
+      | 'operationsMaintenance'
+      | 'helpDesk'
+      | 'software'
+      | 'planning'
+      | 'infrastructure'
+      | 'oit'
+      | 'other' = phaseTypeMap[`${line.phase}`];
 
     if (line.solution === 'B') {
       doesAltBHaveLifecycleCostLines = true;
@@ -297,7 +334,16 @@ export const prepareBusinessCaseForApi = (
     .map(({ solutionLifecycleCostLines, solutionApiName }) => {
       return yearMap(solutionLifecycleCostLines)
         .map(({ phases, year }) => {
-          const { development, operationsMaintenance, other } = phases;
+          const {
+            development,
+            operationsMaintenance,
+            helpDesk,
+            software,
+            planning,
+            infrastructure,
+            oit,
+            other
+          } = phases;
           const developmentCost = {
             solution: solutionApiName,
             phase: 'Development',
@@ -312,13 +358,54 @@ export const prepareBusinessCaseForApi = (
               : null,
             year
           };
+          const helpCost = {
+            solution: solutionApiName,
+            phase: 'Help desk/call center',
+            cost: helpDesk.isPresent ? parseFloat(phases.helpDesk.cost) : null,
+            year
+          };
+          const softwareCost = {
+            solution: solutionApiName,
+            phase: 'Software licenses',
+            cost: software.isPresent ? parseFloat(phases.software.cost) : null,
+            year
+          };
+          const planningCost = {
+            solution: solutionApiName,
+            phase: 'Planning, support, and professional services',
+            cost: planning.isPresent ? parseFloat(phases.planning.cost) : null,
+            year
+          };
+          const infrastructureCost = {
+            solution: solutionApiName,
+            phase: 'Infrastructure',
+            cost: infrastructure.isPresent
+              ? parseFloat(phases.infrastructure.cost)
+              : null,
+            year
+          };
+          const oitCost = {
+            solution: solutionApiName,
+            phase: 'OIT services, tools, and pilots',
+            cost: oit.isPresent ? parseFloat(phases.oit.cost) : null,
+            year
+          };
           const otherCost = {
             solution: solutionApiName,
             phase: 'Other',
             cost: other.isPresent ? parseFloat(phases.other.cost) : null,
             year
           };
-          return [developmentCost, omCost, otherCost];
+          return [
+            developmentCost,
+            omCost,
+            helpCost,
+            softwareCost,
+            planningCost,
+            infrastructureCost,
+            oitCost,
+            otherCost
+          ];
         })
         .flat();
     })
