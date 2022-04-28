@@ -51,6 +51,7 @@ type CedarSystem {
 	businessOwnerOrgComp: String
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
+  versionId: String
 }
 
 """
@@ -1333,12 +1334,12 @@ type Query {
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
-  cedarSystem(id: String!): CedarSystem
+  cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
-  roles(systemId: String!, roleTypeID: String): [CedarRole!]!
-  detailedCedarSystemInfo(id: String!): DetailedCedarSystem
+  deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
+  roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
+  detailedCedarSystemInfo(cedarSystemId: String!): DetailedCedarSystem
   systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
 }
 
