@@ -1590,6 +1590,31 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 	if err != nil {
 		return nil, err
 	}
+
+	euaIDs := make([]string, len(contacts))
+	for i, contact := range contacts {
+		euaIDs[i] = contact.EUAUserID
+	}
+
+	userInfos, err := r.service.FetchUserInfos(ctx, euaIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	userInfoMap := make(map[string]*models.UserInfo)
+	for _, userInfo := range userInfos {
+		if userInfo != nil {
+			userInfoMap[userInfo.EuaUserID] = userInfo
+		}
+	}
+
+	for _, contact := range contacts {
+		if userInfo, found := userInfoMap[contact.EUAUserID]; found {
+			contact.CommonName = userInfo.CommonName
+			contact.Email = userInfo.Email
+		}
+	}
+
 	return contacts, nil
 }
 
