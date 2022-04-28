@@ -40,7 +40,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure go cache
-        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
+        uses: actions/cache@48af2dc4a9e8278b89d7fa154b955c30c6aaab09
         with:
           path: |
             ~/go/pkg/mod
@@ -101,7 +101,7 @@ jobs:
           ./scripts/testsuite
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
       - name: Upload backend test artifacts
-        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2
+        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
         with:
           name: backend-tests
           path: results
@@ -126,7 +126,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Configure yarn cache
-        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
+        uses: actions/cache@48af2dc4a9e8278b89d7fa154b955c30c6aaab09
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -173,14 +173,14 @@ jobs:
           ./scripts/run-cypress-test-docker
       - name: Upload cypress videos
         if: ${{ always() }}
-        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2
+        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
         with:
           name: cypress-videos
           path: cypress/videos
           retention-days: 14
       - name: Upload cypress screenshots
         if: ${{ always() }}
-        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2
+        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
         with:
           name: cypress-screenshots
           path: cypress/screenshots
@@ -211,7 +211,7 @@ jobs:
         with:
           python-version: "3.9"
       - name: Configure go cache
-        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
+        uses: actions/cache@48af2dc4a9e8278b89d7fa154b955c30c6aaab09
         with:
           path: |
             ~/go/pkg/mod
@@ -222,7 +222,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Configure yarn cache
-        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
+        uses: actions/cache@48af2dc4a9e8278b89d7fa154b955c30c6aaab09
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -265,7 +265,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Configure yarn cache
-        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
+        uses: actions/cache@48af2dc4a9e8278b89d7fa154b955c30c6aaab09
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -295,7 +295,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Configure yarn cache
-        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0 # v2.1.6
+        uses: actions/cache@48af2dc4a9e8278b89d7fa154b955c30c6aaab09 # v2.1.6
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
