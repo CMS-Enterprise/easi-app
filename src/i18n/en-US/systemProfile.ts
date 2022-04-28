@@ -178,6 +178,31 @@ const systemProfile = {
       header: 'Sub-systems',
       retirementDate: 'Retirement date',
       viewInfo: 'View sub-system information'
+    },
+    section508: {
+      openRequests: 'Open 508 testing requests',
+      closedRequests: 'Closed testing requests',
+      testingDocuments: '508 testing documents',
+      requestName: 'Request name',
+      currentStatus: 'Current status',
+      statusChanged: 'Request status changed',
+      test: 'test',
+      initialTest: 'Initial Test:',
+      score: 'Score:',
+      businessOwner: 'Business owner',
+      submissionDate: 'Submission date',
+      uploadedDocuments: 'uploaded documents',
+      viewUploadedDocuments: 'View uploaded documents',
+      startNewRequest: 'Start a new 508 testing request',
+      viewMostRecent: 'View most recent',
+      uploaded: 'Uploaded',
+      additional: 'Additional',
+      table: {
+        document: 'Document',
+        uploadDate: 'Upload Date',
+        actions: 'Actions',
+        view: 'View'
+      }
     }
   },
   systemTable: {

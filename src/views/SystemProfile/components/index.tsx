@@ -4,6 +4,7 @@ import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/
 
 import ATO from './ATO';
 import FundingAndBudget from './FundingAndBudget';
+import Section508 from './Section508';
 import SubSystems from './SubSystems';
 import SystemData from './SystemData';
 import SystemDetails from './SystemDetails';
@@ -56,7 +57,7 @@ const sideNavItems = (system: CedarSystemProps): sideNavProps => ({
   },
   'section-508': {
     groupEnd: true,
-    component: <SystemHome system={system} />,
+    component: <Section508 system={system} />,
     route: `/systems/${system.id}/section-508`
   },
   'sub-systems': {

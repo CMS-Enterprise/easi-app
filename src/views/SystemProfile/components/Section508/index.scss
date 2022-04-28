@@ -1,0 +1,19 @@
+#system-section-508 {
+  .usa-table {
+    > caption {
+      margin-bottom: .5rem;
+    }
+    /* Icon spacing for the table's document column */
+    th:first-child {
+      padding-left: 2.5rem;
+    }
+    td:first-child {
+      padding-left: .5rem;
+    }
+    /* No border or space for the last row */
+    > tbody > tr:last-child > td {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+}
