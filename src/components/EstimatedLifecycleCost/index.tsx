@@ -41,13 +41,13 @@ const CostSummary = () => {
           {t('businessCase:lifecycleCost.operationsMaintenanceDef')}
         </dd>
         <dt className="margin-bottom-1 text-bold">
-          {t('businessCase:lifecycleCost.additionalCategory')}
+          {t('businessCase:lifecycleCost.relatedCost')}
         </dt>
         <dd
-          id="AdditionalCategoryDefinition"
+          id="relatedCostDefinition"
           className="margin-left-0 line-height-body-3"
         >
-          {t('businessCase:lifecycleCost.additionalCategoryDef')}
+          {t('businessCase:lifecycleCost.relatedCostDef')}
         </dd>
       </dl>
     </SummaryBox>
@@ -157,7 +157,9 @@ const Phase = ({
 const OtherCosts = () => {
   const [active, setActive] = useState(false);
   const { t } = useTranslation('businessCase');
-  const options = t('lifecycleCost.categories', { returnObjects: true });
+  const options = t('lifecycleCost.relatedCostOptions', {
+    returnObjects: true
+  });
   return (
     <div className="cost-table-row cost-table-row__other">
       {!active && (
@@ -168,26 +170,30 @@ const OtherCosts = () => {
           className="display-flex flex-align-center"
         >
           <IconAdd className="margin-right-1" />
-          Add new cost category
+          {t('lifecycleCost.addRelatedCost')}
         </Button>
       )}
       {active && (
         <div className="display-flex flex-align-center">
-          <Label htmlFor="newCostCategorySelect">
-            What is your new cost category?
+          <Label htmlFor="newRelatedCostSelect">
+            {t('lifecycleCost.newRelatedCost')}
           </Label>
           <select
             className="margin-top-0 desktop:margin-x-2 usa-select"
-            id="newCostCategorySelect"
+            id="newRelatedCostSelect"
           >
-            <option>-Select-</option>
+            <option>-{t('Select')}-</option>
             {Object.keys(options).map(key => {
-              return <option key={key}>{options[key]}</option>;
+              return (
+                <option key={key} value={key}>
+                  {options[key]}
+                </option>
+              );
             })}
           </select>
-          <Button type="submit">Save</Button>
+          <Button type="submit">{t('save')}</Button>
           <Button type="button" outline onClick={() => setActive(false)}>
-            Cancel
+            {t('cancel')}
           </Button>
         </div>
       )}
@@ -225,7 +231,7 @@ const EstimatedLifecycleCost = ({
       (other.isPresent ? parseFloat(other.cost || '0') : 0)
     );
   };
-
+  // console.log(years);
   const calculateCategoryCost = (
     category: 'development' | 'operationsMaintenance' | 'other'
   ) => {

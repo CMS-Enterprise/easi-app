@@ -25,23 +25,32 @@ const businessCase = {
     operationsMaintenance: 'Operations and Maintenance',
     operationsMaintenanceDef:
       'These are costs related to running and upkeep post-production.',
-    other: 'Other',
-    additionalCategory: 'When should I add an additional cost category?',
-    additionalCategoryDef:
-      'Add an additional cost category if you have costs that do not fall under the Development or Operations and Maintenance categories, such as non-IT costs like education, licenses, etc. or other costs such as cloud hosting.',
+    relatedCost: 'When should I add a related cost?',
+    relatedCostDef:
+      'Related costs are any impacts on other services or contracts outside your immediate contract. This could include component or enterprise services, tools, pilots, etc. that are paid for separately by your component, OIT, or others to help meet your business need.',
+    availableRelatedCosts: 'What related costs are available?',
+    availableRelatedCostsDef: [
+      'Help desk/call center',
+      'Software licenses',
+      'Planning, support, and professional services (includes IT training and marketing costs)',
+      'Infrastructure (Includes Data Center and Application/Cloud Hosting Costs)',
+      'Other OIT services, tools, pilots (provided by OIT)',
+      'Other services, tools, pilots (provided by your/other components)'
+    ],
     tableHeading: 'Phase per year cost breakdown',
     tableDescription:
       'If you do not anticipate costs for any given fiscal year (FY) or category, input $0.',
     fiscalYear: 'FY {{year}}',
-    newCategory: 'What is your new category?',
-    categories: [
-      'Help desk/call center',
-      'Software licenses',
-      'Planning, Support, and Professional Services (Includes IT Training and Marketing Costs)',
-      'Infrastructure (Includes Data Center and Application/Cloud Hosting Costs)',
-      'Other OIT services, tools, pilots provided by OIT',
-      'Other services, tools, pilots provided by your/other components'
-    ]
+    addRelatedCost: 'Add a related cost',
+    newRelatedCost: 'What is your related cost?',
+    relatedCostOptions: {
+      helpDesk: 'Help desk/call center',
+      software: 'Software licenses',
+      planning: 'Planning, support, and professional services',
+      infrastructure: 'Infrastructure',
+      oit: 'OIT services, tools, and pilots',
+      other: 'Other services, tools, and pilots'
+    }
   }
 };
 
