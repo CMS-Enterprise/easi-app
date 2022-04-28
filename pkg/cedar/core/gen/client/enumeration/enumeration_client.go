@@ -51,7 +51,7 @@ func (a *Client) EnumerationFindList(params *EnumerationFindListParams, authInfo
 		PathPattern:        "/enumeration",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &EnumerationFindListReader{formats: a.formats},
 		AuthInfo:           authInfo,
