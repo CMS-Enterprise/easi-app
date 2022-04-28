@@ -49,6 +49,7 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
+	SystemIntakeContact() SystemIntakeContactResolver
 	UserInfo() UserInfoResolver
 }
 
@@ -507,7 +508,9 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeContact struct {
+		CommonName     func(childComplexity int) int
 		EUAUserID      func(childComplexity int) int
+		Email          func(childComplexity int) int
 		SystemIntakeID func(childComplexity int) int
 	}
 
@@ -802,6 +805,9 @@ type SystemIntakeResolver interface {
 
 	LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error)
 	CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error)
+}
+type SystemIntakeContactResolver interface {
+	Email(ctx context.Context, obj *models.SystemIntakeContact) (*string, error)
 }
 type UserInfoResolver interface {
 	Email(ctx context.Context, obj *models.UserInfo) (string, error)
@@ -3181,12 +3187,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeCollaborator.Name(childComplexity), true
 
+	case "SystemIntakeContact.commonName":
+		if e.complexity.SystemIntakeContact.CommonName == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContact.CommonName(childComplexity), true
+
 	case "SystemIntakeContact.euaUserId":
 		if e.complexity.SystemIntakeContact.EUAUserID == nil {
 			break
 		}
 
 		return e.complexity.SystemIntakeContact.EUAUserID(childComplexity), true
+
+	case "SystemIntakeContact.email":
+		if e.complexity.SystemIntakeContact.Email == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContact.Email(childComplexity), true
 
 	case "SystemIntakeContact.systemIntakeId":
 		if e.complexity.SystemIntakeContact.SystemIntakeID == nil {
@@ -4817,6 +4837,8 @@ Represents a contact associated with a system intake
 type SystemIntakeContact {
   euaUserId: String!
   systemIntakeId: UUID!
+  commonName: String
+  email: String
 }
 
 """
@@ -16965,6 +16987,70 @@ func (ec *executionContext) _SystemIntakeContact_systemIntakeId(ctx context.Cont
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntakeContact_commonName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContact) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContact",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CommonName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeContact_email(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContact) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContact",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeContact().Email(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SystemIntakeContract_contractor(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -26022,7 +26108,7 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "systemIntakeId":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -26032,8 +26118,32 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "commonName":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SystemIntakeContact_commonName(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "email":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeContact_email(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

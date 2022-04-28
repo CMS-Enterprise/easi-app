@@ -1932,6 +1932,10 @@ func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.Sy
 	return obj.CedarSystemID.Ptr(), nil
 }
 
+func (r *systemIntakeContactResolver) Email(ctx context.Context, obj *models.SystemIntakeContact) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return string(obj.Email), nil
 }
@@ -1976,6 +1980,11 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
+// SystemIntakeContact returns generated.SystemIntakeContactResolver implementation.
+func (r *Resolver) SystemIntakeContact() generated.SystemIntakeContactResolver {
+	return &systemIntakeContactResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -1989,4 +1998,5 @@ type cedarRoleResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+type systemIntakeContactResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
