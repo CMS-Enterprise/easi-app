@@ -2,7 +2,6 @@ package models
 
 // NOTE: this type is used to create a schema used by the CEDAR Intake API
 // When changing this type, add a new version for it in pkg/cedar/intake/translation/constants.go
-// and update the associated version in cmd/gen_intake_schema/main.go
 
 // EASIAction represents an action taken by an EASi user on a system intake
 type EASIAction struct {

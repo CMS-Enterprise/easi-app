@@ -1,3 +1,5 @@
+import { BusinessCaseModel } from 'types/businessCase';
+
 import {
   businessCaseInitialData,
   prepareBusinessCaseForApi,
@@ -408,7 +410,7 @@ describe('The business case data', () => {
     it('does not save estimated lifecycle cost if checkbox is not checked', () => {
       // ONLY checking Preferred solution lifecycle lines in this test
       // other solutions should behave the same
-      const testBusinessCase = {
+      const testBusinessCase: BusinessCaseModel = {
         ...businessCaseInitialData,
         preferredSolution: {
           title: '',
