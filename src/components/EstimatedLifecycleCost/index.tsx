@@ -17,6 +17,16 @@ import formatDollars from 'utils/formatDollars';
 
 import './index.scss';
 
+type categoryKeys =
+  | 'development'
+  | 'operationsMaintenance'
+  | 'helpDesk'
+  | 'software'
+  | 'planning'
+  | 'infrastructure'
+  | 'oit'
+  | 'other';
+
 const CostSummary = () => {
   const { t } = useTranslation('businessCase');
   return (
@@ -55,9 +65,10 @@ const CostSummary = () => {
 };
 
 type PhaseProps = {
-  category: 'development' | 'operationsMaintenance' | 'other';
+  category: categoryKeys;
   formikKey: string;
   fiscalYear: number;
+  title: string;
   values: LifecycleCosts;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   errors: any;
@@ -75,6 +86,7 @@ const Phase = ({
   category,
   formikKey,
   fiscalYear,
+  title,
   values,
   setFieldValue,
   errors = {},
@@ -88,7 +100,7 @@ const Phase = ({
       {() => (
         <FieldGroup
           className="est-lifecycle-cost__phase-costs margin-0"
-          error={Object.keys(errors).length > 0}
+          // error={Object.keys(errors).length > 0}
           // scrollElement={`${formikKey}.year${year}`}
         >
           <div className="est-lifecycle-cost__phase-fieldset">
@@ -100,9 +112,7 @@ const Phase = ({
                 {typeof errors === 'string' ? errors : ''}
               </FieldErrorMsg>
               <div className="cost-table-row">
-                <legend className="cost-table-col usa-label">
-                  {t(`lifecycleCost.${category}`)}
-                </legend>
+                <legend className="cost-table-col usa-label">{t(title)}</legend>
                 {Object.keys(years).map((year, i) => {
                   return (
                     <FieldGroup
@@ -123,7 +133,7 @@ const Phase = ({
                       <Field
                         type="number"
                         className="desktop:margin-y-0 usa-input"
-                        error={!!errors?.development?.cost}
+                        // error={!!errors?.development?.cost}
                         id={`BusinessCase-${formikKey}.${year}.${category}.cost`}
                         name={`${formikKey}.${year}.${category}.cost`}
                         maxLength={10}
@@ -154,10 +164,25 @@ const Phase = ({
   );
 };
 
-const OtherCosts = () => {
+const OtherCosts = ({
+  formikKey,
+  setFieldValue,
+  years
+}: {
+  formikKey: string;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  years: {
+    year1: LifecycleCosts;
+    year2: LifecycleCosts;
+    year3: LifecycleCosts;
+    year4: LifecycleCosts;
+    year5: LifecycleCosts;
+  };
+}) => {
   const [active, setActive] = useState(false);
+  const [relatedCost, setRelatedCost] = useState('');
   const { t } = useTranslation('businessCase');
-  const options = t('lifecycleCost.relatedCostOptions', {
+  const relatedCosts = t('lifecycleCost.relatedCostOptions', {
     returnObjects: true
   });
   return (
@@ -181,17 +206,32 @@ const OtherCosts = () => {
           <select
             className="margin-top-0 desktop:margin-x-2 usa-select"
             id="newRelatedCostSelect"
+            onBlur={e => setRelatedCost(e.target.value)}
           >
             <option>-{t('Select')}-</option>
-            {Object.keys(options).map(key => {
+            {Object.keys(relatedCosts).map(key => {
               return (
                 <option key={key} value={key}>
-                  {options[key]}
+                  {relatedCosts[key]}
                 </option>
               );
             })}
           </select>
-          <Button type="submit">{t('save')}</Button>
+          <Button
+            type="submit"
+            onClick={() => {
+              Object.keys(years).forEach(year => {
+                setFieldValue(
+                  `${formikKey}.${year}.${relatedCost}.isPresent`,
+                  true
+                );
+                setRelatedCost('');
+                setActive(false);
+              });
+            }}
+          >
+            {t('save')}
+          </Button>
           <Button type="button" outline onClick={() => setActive(false)}>
             {t('cancel')}
           </Button>
@@ -221,20 +261,17 @@ const EstimatedLifecycleCost = ({
   errors = {},
   businessCaseCreatedAt = ''
 }: EstimatedLifecycleCostProps) => {
+  const { t } = useTranslation('businessCase');
+  const relatedCosts = t('lifecycleCost.relatedCostOptions', {
+    returnObjects: true
+  });
   const sumCostinYear = (phases: LifecycleCosts) => {
-    const { development, operationsMaintenance, other } = phases;
-    return (
-      (development.isPresent ? parseFloat(development.cost || '0') : 0) +
-      (operationsMaintenance.isPresent
-        ? parseFloat(operationsMaintenance.cost || '0')
-        : 0) +
-      (other.isPresent ? parseFloat(other.cost || '0') : 0)
-    );
+    return Object.keys(phases).reduce((total, phase) => {
+      return total + parseFloat(phases[phase].cost || 0);
+    }, 0);
   };
   // console.log(years);
-  const calculateCategoryCost = (
-    category: 'development' | 'operationsMaintenance' | 'other'
-  ) => {
+  const calculateCategoryCost = (category: categoryKeys) => {
     return Object.keys(years).reduce((total, year) => {
       return total + parseFloat(years[year][category].cost || 0);
     }, 0);
@@ -261,9 +298,10 @@ const EstimatedLifecycleCost = ({
           category="development"
           formikKey={formikKey}
           fiscalYear={fiscalYear}
+          title="Development"
           values={years.year1}
           setFieldValue={setFieldValue}
-          errors={errors.year1}
+          // errors={errors.year1}
           years={years}
           total={calculateCategoryCost('development')}
         />
@@ -271,13 +309,35 @@ const EstimatedLifecycleCost = ({
           category="operationsMaintenance"
           formikKey={formikKey}
           fiscalYear={fiscalYear}
+          title="Operations and Maintenance"
           values={years.year1}
           setFieldValue={setFieldValue}
-          errors={errors.year1}
+          // errors={errors.year1}
           years={years}
           total={calculateCategoryCost('operationsMaintenance')}
         />
-        <OtherCosts />
+        {Object.keys(relatedCosts).map(key => {
+          if (!years.year1[key].isPresent) return null;
+          return (
+            <Phase
+              key={key}
+              category={key}
+              formikKey={formikKey}
+              fiscalYear={fiscalYear}
+              title={relatedCosts[key]}
+              values={years.year1}
+              setFieldValue={setFieldValue}
+              // errors={errors.year1}
+              years={years}
+              total={calculateCategoryCost(key)}
+            />
+          );
+        })}
+        <OtherCosts
+          formikKey={formikKey}
+          setFieldValue={setFieldValue}
+          years={years}
+        />
         <div className="cost-table-row cost-table-row__totals border-bottom-0">
           {Object.keys(years).map(key => {
             return (
