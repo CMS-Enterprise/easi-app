@@ -32,18 +32,18 @@ const (
 type SchemaVersion string
 
 const (
-	// IntakeInputSchemaEASIActionVersion captures enum value "EASIActionV01"
+	// IntakeInputSchemaEASIActionVersion captures the current schema version for Actions
 	IntakeInputSchemaEASIActionVersion SchemaVersion = "EASIActionV01"
 
-	// IntakeInputSchemaEASIBizCaseVersion captures enum value "EASIBizCaseV02"
-	IntakeInputSchemaEASIBizCaseVersion SchemaVersion = "EASIBizCaseV02"
+	// IntakeInputSchemaEASIBizCaseVersion captures the current schema version for Business Cases
+	IntakeInputSchemaEASIBizCaseVersion SchemaVersion = "EASIBizCaseV03"
 
-	// IntakeInputSchemaEASIGrtFeedbackVersion captures enum value "EASIGrtFeedbackV01"
+	// IntakeInputSchemaEASIGrtFeedbackVersion captures the current schema version for GRT Feedback
 	IntakeInputSchemaEASIGrtFeedbackVersion SchemaVersion = "EASIGrtFeedbackV01"
 
-	// IntakeInputSchemaEASIIntakeVersion captures enum value "EASIIntakeV02"
+	// IntakeInputSchemaEASIIntakeVersion captures the current schema version for System Intakes
 	IntakeInputSchemaEASIIntakeVersion SchemaVersion = "EASIIntakeV02"
 
-	// IntakeInputSchemaEASINoteVersion captures enum value "EASINoteV01"
+	// IntakeInputSchemaEASINoteVersion captures the current schema version for Notes
 	IntakeInputSchemaEASINoteVersion SchemaVersion = "EASINoteV01"
 )

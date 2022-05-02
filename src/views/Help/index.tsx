@@ -4,8 +4,10 @@ import { Route, Switch } from 'react-router-dom';
 import NotFound from 'views/NotFound';
 
 import NewSystem from './ITGovernance/NewSystem';
+import PrepareForGRB from './ITGovernance/PrepareForGRB';
 import PrepareForGRT from './ITGovernance/PrepareForGRT';
 import StepsInvolved from './Section508/StepsInvolved';
+import TestingTemplates from './Section508/TestingTemplate';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
@@ -32,6 +34,10 @@ const Help = () => {
           render={() => <PrepareForGRT />}
         />
         <Route
+          path="/help/it-governance/prepare-for-grb"
+          render={() => <PrepareForGRB />}
+        />
+        <Route
           path="/help/it-governance/steps-overview/new-system"
           render={() => <NewSystem />}
         />
@@ -41,6 +47,10 @@ const Help = () => {
         <Route
           path="/help/section-508/steps-involved"
           render={() => <StepsInvolved />}
+        />
+        <Route
+          path="/help/section-508/templates-for-508-testing"
+          render={() => <TestingTemplates />}
         />
 
         {/* 404 */}

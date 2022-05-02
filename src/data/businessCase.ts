@@ -281,9 +281,7 @@ export const prepareBusinessCaseForApp = (
       },
       hasUserInterface: businessCase.alternativeBHasUI || ''
     },
-    createdAt: businessCase.createdAt,
-    initialSubmittedAt: businessCase.initialSubmittedAt,
-    lastSubmittedAt: businessCase.lastSubmittedAt
+    createdAt: businessCase.createdAt
   };
 };
 

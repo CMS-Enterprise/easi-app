@@ -2,7 +2,6 @@ package appvalidation
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -240,8 +239,6 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.Status = models.BusinessCaseStatusOPEN
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
-		submittedTime := time.Now()
-		businessCase.LastSubmittedAt = &submittedTime
 		err := BusinessCaseForSubmit(&businessCase)
 		s.NoError(err)
 	})
@@ -301,8 +298,6 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.Status = models.BusinessCaseStatusOPEN
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
-		submittedAt := time.Now()
-		businessCase.LastSubmittedAt = &submittedAt
 		businessCase.AlternativeBTitle = null.NewString("B Title", true)
 		businessCase.AlternativeBSummary = null.NewString("", false)
 		businessCase.AlternativeBHostingType = null.NewString("", false)

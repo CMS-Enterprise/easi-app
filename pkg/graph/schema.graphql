@@ -51,6 +51,7 @@ type CedarSystem {
 	businessOwnerOrgComp: String
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
+  versionId: String
 }
 
 """
@@ -604,8 +605,6 @@ type BusinessCase {
   currentSolutionSummary: String
   euaUserId: String!
   id: UUID!
-  initialSubmittedAt: Time
-  lastSubmittedAt: Time
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
@@ -613,7 +612,6 @@ type BusinessCase {
   requester: String
   requesterPhoneNumber: String
   status: BusinessCaseStatus!
-  submittedAt: Time
   successIndicators: String
   systemIntake: SystemIntake!
   updatedAt: Time!
@@ -1116,7 +1114,7 @@ Feedback from the GRT to a business owner or GRB
 """
 type GRTFeedback {
   id: UUID
-  createdAt: Time
+  createdAt: Time!
   feedback: String
   feedbackType: GRTFeedbackType
 }
@@ -1333,12 +1331,12 @@ type Query {
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
-  cedarSystem(id: String!): CedarSystem
+  cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
-  roles(systemId: String!, roleTypeID: String): [CedarRole!]!
-  detailedCedarSystemInfo(id: String!): DetailedCedarSystem
+  deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
+  roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
+  detailedCedarSystemInfo(cedarSystemId: String!): DetailedCedarSystem
   systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
 }
 

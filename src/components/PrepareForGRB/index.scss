@@ -1,0 +1,7 @@
+.prepare-for-grb {
+  ul.usa-list {
+    li::before {
+      content: '• ';
+    }
+  }
+}

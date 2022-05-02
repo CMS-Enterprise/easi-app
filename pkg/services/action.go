@@ -192,10 +192,6 @@ func NewSubmitBusinessCase(
 		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
-		if businessCase.InitialSubmittedAt == nil {
-			businessCase.InitialSubmittedAt = &updatedAt
-		}
-		businessCase.LastSubmittedAt = &updatedAt
 		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED {
 			err = validateForSubmit(businessCase)
 			if err != nil {
