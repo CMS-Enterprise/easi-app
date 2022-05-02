@@ -1185,6 +1185,11 @@ Represents a contact associated with a system intake
 type SystemIntakeContact {
   euaUserId: String!
   systemIntakeId: UUID!
+}
+
+type AugmentedSystemIntakeContact {
+  euaUserId: String!
+  systemIntakeId: UUID!
   commonName: String
   email: String
 }
@@ -1342,7 +1347,7 @@ type Query {
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   detailedCedarSystemInfo(cedarSystemId: String!): DetailedCedarSystem
-  systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
+  systemIntakeContacts(id: UUID!): [AugmentedSystemIntakeContact!]!
 }
 
 """

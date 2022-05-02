@@ -150,6 +150,10 @@ func (r *accessibilityRequestNoteResolver) AuthorName(ctx context.Context, obj *
 	return user.CommonName, nil
 }
 
+func (r *augmentedSystemIntakeContactResolver) Email(ctx context.Context, obj *models.AugmentedSystemIntakeContact) (*string, error) {
+	return (*string)(&obj.Email), nil
+}
+
 func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
 	return &model.BusinessCaseSolution{
 		AcquisitionApproach:     obj.AlternativeAAcquisitionApproach.Ptr(),
@@ -1585,7 +1589,7 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystem
 	return &dCedarSys, nil
 }
 
-func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error) {
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.AugmentedSystemIntakeContact, error) {
 	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -1608,14 +1612,18 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 		}
 	}
 
-	for _, contact := range contacts {
+	augmentedContacts := make([]*models.AugmentedSystemIntakeContact, len(contacts))
+	for i, contact := range contacts {
 		if userInfo, found := userInfoMap[contact.EUAUserID]; found {
-			contact.CommonName = userInfo.CommonName
-			contact.Email = userInfo.Email
+			augmentedContacts[i] = &models.AugmentedSystemIntakeContact{
+				SystemIntakeContact: *contact,
+				CommonName:          userInfo.CommonName,
+				Email:               userInfo.Email,
+			}
 		}
 	}
 
-	return contacts, nil
+	return augmentedContacts, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
@@ -1932,10 +1940,6 @@ func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.Sy
 	return obj.CedarSystemID.Ptr(), nil
 }
 
-func (r *systemIntakeContactResolver) Email(ctx context.Context, obj *models.SystemIntakeContact) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return string(obj.Email), nil
 }
@@ -1953,6 +1957,11 @@ func (r *Resolver) AccessibilityRequestDocument() generated.AccessibilityRequest
 // AccessibilityRequestNote returns generated.AccessibilityRequestNoteResolver implementation.
 func (r *Resolver) AccessibilityRequestNote() generated.AccessibilityRequestNoteResolver {
 	return &accessibilityRequestNoteResolver{r}
+}
+
+// AugmentedSystemIntakeContact returns generated.AugmentedSystemIntakeContactResolver implementation.
+func (r *Resolver) AugmentedSystemIntakeContact() generated.AugmentedSystemIntakeContactResolver {
+	return &augmentedSystemIntakeContactResolver{r}
 }
 
 // BusinessCase returns generated.BusinessCaseResolver implementation.
@@ -1980,17 +1989,13 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
-// SystemIntakeContact returns generated.SystemIntakeContactResolver implementation.
-func (r *Resolver) SystemIntakeContact() generated.SystemIntakeContactResolver {
-	return &systemIntakeContactResolver{r}
-}
-
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type accessibilityRequestNoteResolver struct{ *Resolver }
+type augmentedSystemIntakeContactResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
 type cedarDataCenterResolver struct{ *Resolver }
 type cedarDeploymentResolver struct{ *Resolver }
@@ -1998,5 +2003,4 @@ type cedarRoleResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
-type systemIntakeContactResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
