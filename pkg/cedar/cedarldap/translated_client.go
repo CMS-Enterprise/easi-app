@@ -29,6 +29,7 @@ type TranslatedClient struct {
 // Client is an interface for helping test dependencies
 type Client interface {
 	FetchUserInfo(context.Context, string) (*models2.UserInfo, error)
+	FetchUserInfos(context.Context, []string) ([]*models2.UserInfo, error)
 	SearchCommonNameContains(context.Context, string) ([]*models2.UserInfo, error)
 }
 
