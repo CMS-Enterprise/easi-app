@@ -24,6 +24,7 @@ import TextField from 'components/shared/TextField';
 import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
 import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 import { SubmitLifecycleIdForm } from 'types/action';
+import { IssueLifecycleIdInput } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
@@ -73,15 +74,20 @@ const IssueLifecycleId = () => {
       parseInt(expirationDateMonth, RADIX),
       parseInt(expirationDateDay, RADIX)
     );
-    const input = {
+    const input: IssueLifecycleIdInput = {
       intakeId: systemId,
       expiresAt: expiresAt.toISO(),
       nextSteps,
-      scope,
+      scope: scope ?? '',
       costBaseline,
       lcid: lifecycleId,
       feedback,
-      shouldSendEmail
+      shouldSendEmail,
+      notificationRecipients: {
+        regularRecipientEmails: ['abcd@local.fake', 'efgh@local.fake'],
+        shouldNotifyITGovernance: false,
+        shouldNotifyITInvestment: false
+      }
     };
 
     mutate({

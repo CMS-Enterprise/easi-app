@@ -3863,6 +3863,7 @@ input CreateAccessibilityRequestNoteInput {
   requestID: UUID!
   note: String!
   shouldSendEmail: Boolean!
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -4576,6 +4577,7 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -4656,6 +4658,7 @@ input AddGRTFeedbackInput {
   feedback: String!
   intakeID: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -4679,6 +4682,7 @@ input IssueLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -4690,6 +4694,7 @@ input RejectIntakeInput {
   nextSteps: String
   reason: String!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -4760,6 +4765,7 @@ input BasicActionInput {
   feedback: String!
   intakeId: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -4820,6 +4826,12 @@ The payload when deleting a system intake contact
 """
 type DeleteSystemIntakeContactPayload {
   systemIntakeContact: SystemIntakeContact
+}
+
+input EmailNotificationRecipients {
+  regularRecipientEmails: [String!]!
+  shouldNotifyITGovernance: Boolean!
+  shouldNotifyITInvestment: Boolean!
 }
 
 """
@@ -19787,6 +19799,14 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 			if err != nil {
 				return it, err
 			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -19827,6 +19847,14 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
 			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEmailNotificationRecipients(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19979,6 +20007,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestNoteInput(ct
 			if err != nil {
 				return it, err
 			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -20066,6 +20102,14 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
 			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEmailNotificationRecipients(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -20331,6 +20375,45 @@ func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputEmailNotificationRecipients(ctx context.Context, obj interface{}) (model.EmailNotificationRecipients, error) {
+	var it model.EmailNotificationRecipients
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "regularRecipientEmails":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("regularRecipientEmails"))
+			it.RegularRecipientEmails, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldNotifyITGovernance":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldNotifyITGovernance"))
+			it.ShouldNotifyITGovernance, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldNotifyITInvestment":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldNotifyITInvestment"))
+			it.ShouldNotifyITInvestment, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	var it model.GeneratePresignedUploadURLInput
 	asMap := map[string]interface{}{}
@@ -20447,6 +20530,14 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			if err != nil {
 				return it, err
 			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -20503,6 +20594,14 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
 			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEmailNotificationRecipients(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -29095,6 +29194,14 @@ func (ec *executionContext) marshalODetailedCedarSystem2ᚖgithubᚗcomᚋcmsgov
 		return graphql.Null
 	}
 	return ec._DetailedCedarSystem(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEmailNotificationRecipients(ctx context.Context, v interface{}) (*model.EmailNotificationRecipients, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputEmailNotificationRecipients(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {

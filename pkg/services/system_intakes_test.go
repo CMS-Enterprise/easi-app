@@ -364,9 +364,13 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 	reviewEmailSent := false
 	feedbackForEmailText := ""
-	fnSendLCIDEmail := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
+	fnSendLCIDEmail := func(_ context.Context, recipients []models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
-		reviewEmailSent = true
+
+		if len(recipients) > 0 {
+			reviewEmailSent = true
+		}
+
 		return nil
 	}
 	fnSendIntakeInvalidEUAIDEmail := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
@@ -382,7 +386,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	s.Run("happy path provided lcid", func() {
 		reviewEmailSent = false // clear before running test
 
-		intake, err := happy(context.Background(), input, action, true)
+		intake, err := happy(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -395,7 +399,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	s.Run("happy path provided lcid without sending email", func() {
 		reviewEmailSent = false // clear before running test
 
-		intake, err := happy(context.Background(), input, action, false)
+		intake, err := happy(context.Background(), input, action, []models.EmailAddress{})
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -408,7 +412,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	input.LifecycleID = null.StringFrom("")
 
 	s.Run("happy path generates lcid", func() {
-		intake, err := happy(context.Background(), input, action, true)
+		intake, err := happy(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
 		s.NoError(err)
 		s.NotEqual(intake.LifecycleID, "")
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -443,7 +447,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 			fnSendIntakeNoEUAIDEmail,
 			fnGenerate,
 		)
-		_, err := updateLifecycleFields(context.Background(), input, action, true)
+		_, err := updateLifecycleFields(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
 		s.NoError(err)
 		s.True(emailSentForInvalidEUAID)
 	})
@@ -473,7 +477,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 			fnSendIntakeNoEUAIDEmail,
 			fnGenerate,
 		)
-		_, err := updateLifecycleFields(context.Background(), input, action, false)
+		_, err := updateLifecycleFields(context.Background(), input, action, []models.EmailAddress{})
 		s.NoError(err)
 		s.False(emailSentForInvalidEUAID)
 	})
@@ -503,7 +507,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 			sendIntakeForNoEUAIDEmailMock,
 			fnGenerate,
 		)
-		_, err := updateLifecycleFields(context.Background(), input, action, true)
+		_, err := updateLifecycleFields(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
 		s.NoError(err)
 		s.True(emailSentForNoEUAID)
 	})
@@ -533,7 +537,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 			sendIntakeForNoEUAIDEmailMock,
 			fnGenerate,
 		)
-		_, err := updateLifecycleFields(context.Background(), input, action, false)
+		_, err := updateLifecycleFields(context.Background(), input, action, []models.EmailAddress{})
 		s.NoError(err)
 		s.False(emailSentForNoEUAID)
 	})
@@ -566,7 +570,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendLCIDEmailErr := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
+	fnSendLCIDEmailErr := func(_ context.Context, _ []models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
 		return errors.New("send email error")
 	}
 	fnSendIntakeInvalidEUAIDEmailErr := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
@@ -579,7 +583,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake, *models.Action, bool) (*models.SystemIntake, error)
+		fn func(context.Context, *models.SystemIntake, *models.Action, []models.EmailAddress) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
 			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
@@ -615,7 +619,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input, action, true)
+			_, err := tc.fn(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
 			s.Error(err)
 		})
 	}

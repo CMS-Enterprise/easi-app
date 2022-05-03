@@ -6,12 +6,15 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+
+	"github.com/hashicorp/go-multierror"
 )
 
 func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
 	recipient := models.NewEmailAddress("fake@fake.com")
+	recipients := []models.EmailAddress{recipient}
 	lcid := "123456"
 	expiresAt, _ := time.Parse("2006-01-02", "2021-12-25")
 	scope := "scope"
@@ -28,7 +31,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">lifecycleCostBaseline</pre></p>\n" +
 			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">nextSteps</pre></p>\n" +
 			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipients, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
@@ -43,7 +46,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">scope</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">lifecycleCostBaseline</pre></p>\n\n" +
 			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipients, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
@@ -56,7 +59,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipients, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -70,7 +73,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates.issueLCIDTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipients, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -85,11 +88,15 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
-
+		err = client.SendIssueLCIDEmail(ctx, recipients, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 		s.Error(err)
-		s.IsType(err, &apperrors.NotificationError{})
-		e := err.(*apperrors.NotificationError)
+		multiErr := err.(*multierror.Error)
+		s.Error(multiErr)
+		unwrappedErr := multiErr.Unwrap()
+
+		s.Error(unwrappedErr)
+		s.IsType(unwrappedErr, &apperrors.NotificationError{})
+		e := unwrappedErr.(*apperrors.NotificationError)
 		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
 		s.Equal("sender had an error", e.Err.Error())
 	})

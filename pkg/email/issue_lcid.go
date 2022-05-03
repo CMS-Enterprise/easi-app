@@ -8,6 +8,8 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+
+	"github.com/hashicorp/go-multierror"
 )
 
 type issueLCID struct {
@@ -40,21 +42,28 @@ func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, l
 }
 
 // SendIssueLCIDEmail sends an email for issuing an LCID
-func (c Client) SendIssueLCIDEmail(ctx context.Context, recipient models.EmailAddress, lcid string, expirationDate *time.Time, scope string, lifecycleCostBaseline string, nextSteps string, feedback string) error {
+func (c Client) SendIssueLCIDEmail(ctx context.Context, recipients []models.EmailAddress, lcid string, expirationDate *time.Time, scope string, lifecycleCostBaseline string, nextSteps string, feedback string) error {
 	subject := "Your request has been approved"
 	body, err := c.issueLCIDBody(lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
-	err = c.sender.Send(
-		ctx,
-		recipient,
-		&c.config.GRTEmail,
-		subject,
-		body,
-	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+
+	var errors *multierror.Error
+
+	for _, recipient := range recipients {
+		err = c.sender.Send(
+			ctx,
+			recipient,
+			&c.config.GRTEmail,
+			subject,
+			body,
+		)
+		if err != nil {
+			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+			errors = multierror.Append(errors, notificationErr)
+		}
 	}
-	return nil
+
+	return errors.ErrorOrNil()
 }

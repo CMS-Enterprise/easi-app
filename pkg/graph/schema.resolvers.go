@@ -1047,6 +1047,16 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 }
 
 func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.IssueLifecycleIDInput) (*model.UpdateSystemIntakePayload, error) {
+	notificationRecipients := []models.EmailAddress{}
+
+	if input.NotificationRecipients != nil {
+		for _, recipient := range input.NotificationRecipients.RegularRecipientEmails {
+			notificationRecipients = append(notificationRecipients, models.EmailAddress(recipient))
+		}
+	}
+
+	// TODO - add mailbox emails?
+
 	intake, err := r.service.IssueLifecycleID(
 		ctx,
 		&models.SystemIntake{
@@ -1061,7 +1071,7 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
 		},
-		input.ShouldSendEmail,
+		notificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
