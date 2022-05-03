@@ -1933,7 +1933,7 @@ func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.Sy
 }
 
 func (r *systemIntakeContactResolver) Email(ctx context.Context, obj *models.SystemIntakeContact) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return (*string)(&obj.Email), nil
 }
 
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
