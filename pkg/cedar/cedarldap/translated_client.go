@@ -132,7 +132,7 @@ func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) (
 	}
 
 	// If there's nobody returned, we should throw an error
-	if len(resp.Payload.Persons) == 0 || resp.Payload.Persons[0].UserName == "" {
+	if len(resp.Payload.Persons) == 0 {
 		return nil, &apperrors.InvalidEUAIDError{
 			EUAID: idsStr,
 		}
