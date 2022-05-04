@@ -96,14 +96,17 @@ const SystemProfile = () => {
 
   // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(
-    sideNavItems(systemInfo)
+    sideNavItems(systemInfo, flags.systemProfileHiddenFields)
   ).map((key: string) => (
     <NavLink
-      to={sideNavItems(systemInfo)[key].route}
+      to={sideNavItems(systemInfo, flags.systemProfileHiddenFields)[key].route}
       key={key}
       activeClassName="usa-current"
       className={classnames({
-        'nav-group-border': sideNavItems(systemInfo)[key].groupEnd
+        'nav-group-border': sideNavItems(
+          systemInfo,
+          flags.systemProfileHiddenFields
+        )[key].groupEnd
       })}
     >
       {t(`navigation.${key}`)}
@@ -133,7 +136,12 @@ const SystemProfile = () => {
   }
 
   // TODO: Handle errors and loading
-  if (error || !systemInfo || (subinfo && !sideNavItems(systemInfo)[subinfo])) {
+  if (
+    error ||
+    !systemInfo ||
+    (subinfo &&
+      !sideNavItems(systemInfo, flags.systemProfileHiddenFields)[subinfo])
+  ) {
     return <NotFound />;
   }
 
@@ -293,7 +301,11 @@ const SystemProfile = () => {
 
               <Grid desktop={{ col: 9 }}>
                 {/* This renders the selected sidenav central component */}
-                {sideNavItems(systemInfo)[subinfo || 'home'].component}
+                {
+                  sideNavItems(systemInfo, flags.systemProfileHiddenFields)[
+                    subinfo || 'home'
+                  ].component
+                }
               </Grid>
             </Grid>
           </GridContainer>
