@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RequestStatusTag renders request status tag {"status":"Closed","className":"border-2px"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag border-2px display-inline-block"
+    data-testid="tag"
+  >
+    Closed
+  </span>
+</DocumentFragment>
+`;
+
+exports[`RequestStatusTag renders request status tag {"status":"Open","className":"bg-mint"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-mint display-inline-block"
+    data-testid="tag"
+  >
+    Open
+  </span>
+</DocumentFragment>
+`;

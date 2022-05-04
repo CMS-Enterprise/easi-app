@@ -1,4 +1,4 @@
-import React, { createElement, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSortBy, useTable } from 'react-table';
 import {
@@ -11,7 +11,6 @@ import {
   GridContainer,
   IconArrowForward,
   IconCheckCircleOutline,
-  IconErrorOutline,
   IconFilePresent,
   IconHighlightOff,
   Link,
@@ -26,54 +25,13 @@ import {
 } from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
+import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
+import RequestStatusTag from 'views/SystemProfile/RequestStatusTag';
 
 import './index.scss';
-
-const statusTagClassName: { [key: string]: string } = {
-  Open: 'bg-mint',
-  Closed: 'border-2px'
-};
-
-const RequestCardTestScore = ({
-  scorePct,
-  date
-}: {
-  scorePct: number;
-  date: string;
-}) => {
-  const { t } = useTranslation('systemProfile');
-
-  let colorClass;
-  let iconComponent;
-  if (scorePct === 100) {
-    colorClass = 'text-mint';
-    iconComponent = IconCheckCircleOutline;
-  } else {
-    colorClass = 'text-orange';
-    iconComponent = IconErrorOutline;
-  }
-
-  return (
-    <div>
-      {createElement(iconComponent, {
-        size: 3,
-        className: `${colorClass} margin-right-1 text-middle`
-      })}
-      <span className="text-middle">
-        <span className="margin-right-1 text-base">
-          {t('singleSystem.section508.initialTest')} {date}
-        </span>
-        <span>
-          {t('singleSystem.section508.score')} {scorePct}%
-        </span>
-      </span>
-    </div>
-  );
-};
 
 const RequestCard = ({
   name,
@@ -114,9 +72,7 @@ const RequestCard = ({
             </span>
           )}
         </h5>
-        <Tag className={`${statusTagClassName[status]} display-inline-block`}>
-          {status}
-        </Tag>
+        <RequestStatusTag status={status} />
         {numTests !== undefined &&
           scorePct !== undefined &&
           initialTestDate !== undefined && (

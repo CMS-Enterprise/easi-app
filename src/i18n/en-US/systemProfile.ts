@@ -180,6 +180,8 @@ const systemProfile = {
       viewInfo: 'View sub-system information'
     },
     section508: {
+      section508RequestName: '508 request name',
+      viewMoreRequestInformation: 'View more 508 request information',
       openRequests: 'Open 508 testing requests',
       closedRequests: 'Closed testing requests',
       testingDocuments: '508 testing documents',
@@ -187,6 +189,7 @@ const systemProfile = {
       currentStatus: 'Current status',
       statusChanged: 'Request status changed',
       test: 'test',
+      latestTest: 'Latest test',
       initialTest: 'Initial Test:',
       score: 'Score:',
       businessOwner: 'Business owner',

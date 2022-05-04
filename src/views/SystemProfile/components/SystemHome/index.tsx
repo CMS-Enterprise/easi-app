@@ -26,6 +26,8 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
+import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
+import RequestStatusTag from 'views/SystemProfile/RequestStatusTag';
 
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
@@ -165,6 +167,54 @@ const SystemHome = ({ system }: SystemHomeProps) => {
                     </Grid>
                   </CardFooter>
                 </Card>
+                <Card className="grid-col-12">
+                  <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+                    <dt>
+                      {t('singleSystem.section508.section508RequestName')}
+                    </dt>
+                    <div className="text-right margin-bottom-0">
+                      <RequestStatusTag
+                        status="Open"
+                        className="margin-right-0"
+                      />
+                    </div>
+                  </CardHeader>
+                  <CardBody className="padding-x-2 padding-y-0">
+                    <Grid row>
+                      <Grid desktop={{ col: 12 }} className="padding-0">
+                        <h3 className="link-header margin-top-0 margin-bottom-2">
+                          My Test for HAM
+                        </h3>
+                        <div className="margin-bottom-2">
+                          <UswdsReactLink
+                            className="link-header"
+                            to={`/systems/${system.id}/section-508`}
+                          >
+                            {t(
+                              'singleSystem.section508.viewMoreRequestInformation'
+                            )}
+                            <span aria-hidden>&nbsp;</span>
+                            <span aria-hidden>&rarr; </span>
+                          </UswdsReactLink>
+                        </div>
+                      </Grid>
+                    </Grid>
+                    <Divider />
+                  </CardBody>
+                  <CardFooter className="padding-0">
+                    <Grid row>
+                      <Grid className="padding-2">
+                        <div className="margin-bottom-1">
+                          <strong>
+                            {t('singleSystem.section508.latestTest')}
+                          </strong>
+                        </div>
+                        <RequestCardTestScore scorePct={98} date="mm/dd/yyyy" />
+                      </Grid>
+                    </Grid>
+                  </CardFooter>
+                </Card>
+
                 {flags.systemProfileHiddenFields && (
                   <Card className="grid-col-12">
                     <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
