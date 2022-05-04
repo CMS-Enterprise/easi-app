@@ -243,6 +243,7 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendIssueLCIDEmail,
+				emailClient.SendIssueLCIDEmailToMultipleRecipients,
 				emailClient.SendIntakeInvalidEUAIDEmail,
 				emailClient.SendIntakeNoEUAIDEmail,
 				store.GenerateLifecycleID,

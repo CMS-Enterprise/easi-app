@@ -7,11 +7,13 @@ import (
 	"time"
 
 	"github.com/guregu/null"
+	"gopkg.in/launchdarkly/go-server-sdk.v5/testhelpers/ldtestdata"
 
 	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authentication"
@@ -362,15 +364,20 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 			EuaUserID:  euaID,
 		}, nil
 	}
-	reviewEmailSent := false
+
 	feedbackForEmailText := ""
-	fnSendLCIDEmail := func(_ context.Context, recipients []models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
+
+	singleReviewEmailSent := false
+	fnSendLCIDEmail := func(_ context.Context, recipients models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
+		singleReviewEmailSent = true
+		return nil
+	}
 
-		if len(recipients) > 0 {
-			reviewEmailSent = true
-		}
-
+	multipleReviewEmailsSent := false
+	fnSendLCIDEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ *time.Time, _ string, _ string, _ string, emailText string) error {
+		feedbackForEmailText = emailText
+		multipleReviewEmailsSent = true
 		return nil
 	}
 	fnSendIntakeInvalidEUAIDEmail := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
@@ -380,39 +387,73 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		return nil
 	}
 	fnGenerate := func(context.Context) (string, error) { return "123456", nil }
-	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate)
 
-	s.Run("happy path provided lcid", func() {
-		reviewEmailSent = false // clear before running test
+	testDataSource := ldtestdata.DataSource()
+	cfg := newTestServicesConfig(testDataSource)
 
-		intake, err := happy(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
+	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate)
+
+	recipients := models.EmailNotificationRecipients{} // just needs to be non-nil for testing
+
+	s.Run("happy path provided lcid, notifying single recipient", func() {
+		singleReviewEmailSent = false // clear before running test
+		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
+
+		intake, err := happy(context.Background(), input, action, true, nil)
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.LifecycleScope, scope)
-		s.True(reviewEmailSent)
+		s.True(singleReviewEmailSent)
 		s.Equal("Feedback", feedbackForEmailText)
 	})
 
-	s.Run("happy path provided lcid without sending email", func() {
-		reviewEmailSent = false // clear before running test
+	s.Run("happy path provided lcid, notifying multiple recipients", func() {
+		multipleReviewEmailsSent = false // clear before running test
+		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, true)
 
-		intake, err := happy(context.Background(), input, action, []models.EmailAddress{})
+		intake, err := happy(context.Background(), input, action, false, &recipients)
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.LifecycleScope, scope)
-		s.False(reviewEmailSent)
+		s.True(multipleReviewEmailsSent)
+		s.Equal("Feedback", feedbackForEmailText)
+	})
+
+	s.Run("happy path provided lcid without sending email (to single recipient)", func() {
+		singleReviewEmailSent = false // clear before running test
+		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
+
+		intake, err := happy(context.Background(), input, action, false, &recipients)
+		s.NoError(err)
+		s.Equal(intake.LifecycleID, lifecycleID)
+		s.Equal(intake.LifecycleExpiresAt, expiresAt)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.LifecycleScope, scope)
+		s.False(singleReviewEmailSent)
+	})
+
+	s.Run("happy path provided lcid without sending email (to multiple recipients)", func() {
+		multipleReviewEmailsSent = false // clear before running test
+		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, true)
+
+		intake, err := happy(context.Background(), input, action, false, nil)
+		s.NoError(err)
+		s.Equal(intake.LifecycleID, lifecycleID)
+		s.Equal(intake.LifecycleExpiresAt, expiresAt)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.LifecycleScope, scope)
+		s.False(multipleReviewEmailsSent)
 	})
 
 	// from here on out, we always expect the LCID to get generated
 	input.LifecycleID = null.StringFrom("")
 
 	s.Run("happy path generates lcid", func() {
-		intake, err := happy(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
+		intake, err := happy(context.Background(), input, action, true, &recipients)
 		s.NoError(err)
 		s.NotEqual(intake.LifecycleID, "")
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -420,126 +461,132 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		s.Equal(intake.LifecycleScope, scope)
 	})
 
-	// test cases for invalid or missing EUA ID
+	s.Run("test cases for single recipient having invalid or missing EUA ID", func() {
+		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
 
-	s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP", func() {
-		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
-			return nil, &apperrors.InvalidEUAIDError{
-				EUAID: euaID,
+		s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP", func() {
+			fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+				return nil, &apperrors.InvalidEUAIDError{
+					EUAID: euaID,
+				}
 			}
-		}
 
-		emailSentForInvalidEUAID := false
-		sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
-			emailSentForInvalidEUAID = true
-			return nil
-		}
-
-		updateLifecycleFields := NewUpdateLifecycleFields(
-			cfg,
-			fnAuthorize,
-			fnFetch,
-			fnUpdate,
-			fnSaveAction,
-			fetchEmptyUserInfo,
-			fnSendLCIDEmail,
-			sendIntakeInvalidEUAIDEmailMock,
-			fnSendIntakeNoEUAIDEmail,
-			fnGenerate,
-		)
-		_, err := updateLifecycleFields(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
-		s.NoError(err)
-		s.True(emailSentForInvalidEUAID)
-	})
-
-	s.Run("should *not* send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP, but shouldSendEmail is set to false", func() {
-		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
-			return nil, &apperrors.InvalidEUAIDError{
-				EUAID: euaID,
+			emailSentForInvalidEUAID := false
+			sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+				emailSentForInvalidEUAID = true
+				return nil
 			}
-		}
 
-		emailSentForInvalidEUAID := false
-		sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
-			emailSentForInvalidEUAID = true
-			return nil
-		}
+			updateLifecycleFields := NewUpdateLifecycleFields(
+				cfg,
+				fnAuthorize,
+				fnFetch,
+				fnUpdate,
+				fnSaveAction,
+				fetchEmptyUserInfo,
+				fnSendLCIDEmail,
+				fnSendLCIDEmailToMultipleRecipients,
+				sendIntakeInvalidEUAIDEmailMock,
+				fnSendIntakeNoEUAIDEmail,
+				fnGenerate,
+			)
+			_, err := updateLifecycleFields(context.Background(), input, action, true, nil)
+			s.NoError(err)
+			s.True(emailSentForInvalidEUAID)
+		})
 
-		updateLifecycleFields := NewUpdateLifecycleFields(
-			cfg,
-			fnAuthorize,
-			fnFetch,
-			fnUpdate,
-			fnSaveAction,
-			fetchEmptyUserInfo,
-			fnSendLCIDEmail,
-			sendIntakeInvalidEUAIDEmailMock,
-			fnSendIntakeNoEUAIDEmail,
-			fnGenerate,
-		)
-		_, err := updateLifecycleFields(context.Background(), input, action, []models.EmailAddress{})
-		s.NoError(err)
-		s.False(emailSentForInvalidEUAID)
-	})
+		s.Run("should *not* send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP, but shouldSendEmail is set to false", func() {
+			fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+				return nil, &apperrors.InvalidEUAIDError{
+					EUAID: euaID,
+				}
+			}
 
-	s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
-		fetchIntakeWithNoEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-			return &models.SystemIntake{
-				ID: id,
-			}, nil
-		}
+			emailSentForInvalidEUAID := false
+			sendIntakeInvalidEUAIDEmailMock := func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
+				emailSentForInvalidEUAID = true
+				return nil
+			}
 
-		emailSentForNoEUAID := false
-		sendIntakeForNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
-			emailSentForNoEUAID = true
-			return nil
-		}
+			updateLifecycleFields := NewUpdateLifecycleFields(
+				cfg,
+				fnAuthorize,
+				fnFetch,
+				fnUpdate,
+				fnSaveAction,
+				fetchEmptyUserInfo,
+				fnSendLCIDEmail,
+				fnSendLCIDEmailToMultipleRecipients,
+				sendIntakeInvalidEUAIDEmailMock,
+				fnSendIntakeNoEUAIDEmail,
+				fnGenerate,
+			)
+			_, err := updateLifecycleFields(context.Background(), input, action, false, nil)
+			s.NoError(err)
+			s.False(emailSentForInvalidEUAID)
+		})
 
-		updateLifecycleFields := NewUpdateLifecycleFields(
-			cfg,
-			fnAuthorize,
-			fetchIntakeWithNoEUAID,
-			fnUpdate,
-			fnSaveAction,
-			fnFetchUserInfo,
-			fnSendLCIDEmail,
-			fnSendIntakeInvalidEUAIDEmail,
-			sendIntakeForNoEUAIDEmailMock,
-			fnGenerate,
-		)
-		_, err := updateLifecycleFields(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
-		s.NoError(err)
-		s.True(emailSentForNoEUAID)
-	})
+		s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
+			fetchIntakeWithNoEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+				return &models.SystemIntake{
+					ID: id,
+				}, nil
+			}
 
-	s.Run("should *not* send notification of empty EUA ID when intake has no associated EUA ID, but shouldSendEmail is set to false", func() {
-		fetchIntakeWithNoEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-			return &models.SystemIntake{
-				ID: id,
-			}, nil
-		}
+			emailSentForNoEUAID := false
+			sendIntakeForNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+				emailSentForNoEUAID = true
+				return nil
+			}
 
-		emailSentForNoEUAID := false
-		sendIntakeForNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
-			emailSentForNoEUAID = true
-			return nil
-		}
+			updateLifecycleFields := NewUpdateLifecycleFields(
+				cfg,
+				fnAuthorize,
+				fetchIntakeWithNoEUAID,
+				fnUpdate,
+				fnSaveAction,
+				fnFetchUserInfo,
+				fnSendLCIDEmail,
+				fnSendLCIDEmailToMultipleRecipients,
+				fnSendIntakeInvalidEUAIDEmail,
+				sendIntakeForNoEUAIDEmailMock,
+				fnGenerate,
+			)
+			_, err := updateLifecycleFields(context.Background(), input, action, true, nil)
+			s.NoError(err)
+			s.True(emailSentForNoEUAID)
+		})
 
-		updateLifecycleFields := NewUpdateLifecycleFields(
-			cfg,
-			fnAuthorize,
-			fetchIntakeWithNoEUAID,
-			fnUpdate,
-			fnSaveAction,
-			fnFetchUserInfo,
-			fnSendLCIDEmail,
-			fnSendIntakeInvalidEUAIDEmail,
-			sendIntakeForNoEUAIDEmailMock,
-			fnGenerate,
-		)
-		_, err := updateLifecycleFields(context.Background(), input, action, []models.EmailAddress{})
-		s.NoError(err)
-		s.False(emailSentForNoEUAID)
+		s.Run("should *not* send notification of empty EUA ID when intake has no associated EUA ID, but shouldSendEmail is set to false", func() {
+			fetchIntakeWithNoEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+				return &models.SystemIntake{
+					ID: id,
+				}, nil
+			}
+
+			emailSentForNoEUAID := false
+			sendIntakeForNoEUAIDEmailMock := func(ctx context.Context, projectName string, intakeID uuid.UUID) error {
+				emailSentForNoEUAID = true
+				return nil
+			}
+
+			updateLifecycleFields := NewUpdateLifecycleFields(
+				cfg,
+				fnAuthorize,
+				fetchIntakeWithNoEUAID,
+				fnUpdate,
+				fnSaveAction,
+				fnFetchUserInfo,
+				fnSendLCIDEmail,
+				fnSendLCIDEmailToMultipleRecipients,
+				fnSendIntakeInvalidEUAIDEmail,
+				sendIntakeForNoEUAIDEmailMock,
+				fnGenerate,
+			)
+			_, err := updateLifecycleFields(context.Background(), input, action, false, nil)
+			s.NoError(err)
+			s.False(emailSentForNoEUAID)
+		})
 	})
 
 	// build the error-generating pieces
@@ -570,8 +617,11 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendLCIDEmailErr := func(_ context.Context, _ []models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
+	fnSendLCIDEmailErr := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
 		return errors.New("send email error")
+	}
+	fnSendLCIDEmailToMultipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
+		return errors.New("error sending to multiple recipients")
 	}
 	fnSendIntakeInvalidEUAIDEmailErr := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
 		return errors.New("send intake invalid EUA ID email error")
@@ -582,44 +632,79 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
 
 	// build the table-driven test of error cases for unhappy path
-	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake, *models.Action, []models.EmailAddress) (*models.SystemIntake, error)
+	regularTestCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path auth": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path auth fail": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path generate": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerateErr),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerateErr),
 		},
 		"error path save action": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path fetch user info": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
-		},
-		"error path send email": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
-		},
-		"error path send invalid EUA ID email": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoReturnsInvalidEUAID, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmailErr, fnSendIntakeNoEUAIDEmail, fnGenerate),
-		},
-		"error path send no EUA ID email": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchReturnsNoEUAID, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmailErr, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 		"error path update": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
 		},
 	}
 
-	for expectedErr, tc := range testCases {
+	// recipients = models.EmailNotificationRecipients{
+	// 	RegularRecipientEmails:   []models.EmailAddress{"abcd@local.fake"},
+	// 	ShouldNotifyITGovernance: true,
+	// 	ShouldNotifyITInvestment: false,
+	// }
+
+	for expectedErr, tc := range regularTestCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input, action, []models.EmailAddress{"abcd@local.fake"})
+			_, err := tc.fn(context.Background(), input, action, true, &recipients)
+			s.Error(err)
+		})
+	}
+
+	singleRecipientTestCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
+	}{
+		"error path send email to single recipient": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
+		},
+		"error path send invalid EUA ID email": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoReturnsInvalidEUAID, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmailErr, fnSendIntakeNoEUAIDEmail, fnGenerate),
+		},
+		"error path send no EUA ID email": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchReturnsNoEUAID, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmailErr, fnGenerate),
+		},
+	}
+
+	for expectedErr, tc := range singleRecipientTestCases {
+		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
+		s.Run(expectedErr, func() {
+			_, err := tc.fn(context.Background(), input, action, true, nil)
+			s.Error(err)
+		})
+	}
+
+	multipleRecipientTestCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
+	}{
+		"error path sending email to multiple recipients": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnSendLCIDEmailToMultipleRecipientsErr, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail, fnGenerate),
+		},
+	}
+
+	for expectedErr, tc := range multipleRecipientTestCases {
+		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, true)
+		s.Run(expectedErr, func() {
+			_, err := tc.fn(context.Background(), input, action, false, &recipients)
 			s.Error(err)
 		})
 	}

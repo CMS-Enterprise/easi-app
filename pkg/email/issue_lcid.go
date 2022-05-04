@@ -41,8 +41,48 @@ func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, l
 	return b.String(), nil
 }
 
-// SendIssueLCIDEmail sends an email for issuing an LCID
-func (c Client) SendIssueLCIDEmail(ctx context.Context, recipients []models.EmailAddress, lcid string, expirationDate *time.Time, scope string, lifecycleCostBaseline string, nextSteps string, feedback string) error {
+// SendIssueLCIDEmail sends an email to a single recipient (CC'ing the GRT) for issuing an LCID
+func (c Client) SendIssueLCIDEmail(
+	ctx context.Context,
+	recipient models.EmailAddress,
+	lcid string,
+	expirationDate *time.Time,
+	scope string,
+	lifecycleCostBaseline string,
+	nextSteps string,
+	feedback string,
+) error {
+	subject := "Your request has been approved"
+	body, err := c.issueLCIDBody(lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
+	err = c.sender.Send(
+		ctx,
+		recipient,
+		&c.config.GRTEmail,
+		subject,
+		body,
+	)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
+	return nil
+}
+
+// SendIssueLCIDEmailToMultipleRecipients sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for issuing an LCID
+func (c Client) SendIssueLCIDEmailToMultipleRecipients(
+	ctx context.Context,
+	recipients models.EmailNotificationRecipients,
+	lcid string,
+	expirationDate *time.Time,
+	scope string,
+	lifecycleCostBaseline string,
+	nextSteps string,
+	feedback string,
+) error {
 	subject := "Your request has been approved"
 	body, err := c.issueLCIDBody(lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
@@ -51,11 +91,39 @@ func (c Client) SendIssueLCIDEmail(ctx context.Context, recipients []models.Emai
 
 	var errors *multierror.Error
 
-	for _, recipient := range recipients {
+	for _, recipient := range recipients.RegularRecipientEmails {
 		err = c.sender.Send(
 			ctx,
 			recipient,
-			&c.config.GRTEmail,
+			nil,
+			subject,
+			body,
+		)
+		if err != nil {
+			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+			errors = multierror.Append(errors, notificationErr)
+		}
+	}
+
+	if recipients.ShouldNotifyITGovernance {
+		err = c.sender.Send(
+			ctx,
+			c.config.GRTEmail,
+			nil,
+			subject,
+			body,
+		)
+		if err != nil {
+			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+			errors = multierror.Append(errors, notificationErr)
+		}
+	}
+
+	if recipients.ShouldNotifyITInvestment {
+		err = c.sender.Send(
+			ctx,
+			"", // TODO - get IT investment mailbox address
+			nil,
 			subject,
 			body,
 		)
@@ -66,4 +134,5 @@ func (c Client) SendIssueLCIDEmail(ctx context.Context, recipients []models.Emai
 	}
 
 	return errors.ErrorOrNil()
+
 }

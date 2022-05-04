@@ -10,6 +10,7 @@ import (
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -232,12 +233,13 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendIssueLCIDEmail func(context.Context, []models.EmailAddress, string, *time.Time, string, string, string, string) error,
+	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string, string) error,
+	sendIssueLCIDEmailToMultipleRecipients func(context.Context, models.EmailNotificationRecipients, string, *time.Time, string, string, string, string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	generateLCID func(context.Context) (string, error),
-) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients []models.EmailAddress) (*models.SystemIntake, error) {
-	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients []models.EmailAddress) (*models.SystemIntake, error) {
+) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
 			return nil, &apperrors.QueryError{
@@ -264,11 +266,11 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		// requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+		notifyMultipleRecipients := config.checkBoolFeatureFlag(ctx, appconfig.NotifyMultipleRecipientsFlagName, appconfig.NotifyMultipleRecipientsFlagDefault)
 
-		/*
-			var requesterHasValidEUAID bool
-			var requesterInfo *models.UserInfo
+		var requesterHasValidEUAID bool
+		var requesterInfo *models.UserInfo
+		if !notifyMultipleRecipients {
 			if shouldSendEmail {
 				euaID := existing.EUAUserID.ValueOrZero()
 				requesterHasEUAID := euaID != ""
@@ -313,7 +315,7 @@ func NewUpdateLifecycleFields(
 					}
 				}
 			}
-		*/
+		}
 
 		// we only want to bring over the fields specifically
 		// dealing with lifecycleID information
@@ -350,7 +352,21 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		/*
+		if notifyMultipleRecipients && recipients != nil {
+			err = sendIssueLCIDEmailToMultipleRecipients(
+				ctx,
+				*recipients,
+				updated.LifecycleID.String,
+				updated.LifecycleExpiresAt,
+				updated.LifecycleScope.String,
+				updated.LifecycleCostBaseline.String,
+				updated.DecisionNextSteps.String,
+				action.Feedback.String,
+			)
+			if err != nil {
+				return nil, err
+			}
+		} else {
 			if shouldSendEmail && requesterHasValidEUAID {
 				err = sendIssueLCIDEmail(
 					ctx,
@@ -365,20 +381,6 @@ func NewUpdateLifecycleFields(
 					return nil, err
 				}
 			}
-		*/
-		err = sendIssueLCIDEmail(
-			ctx,
-			recipients,
-			updated.LifecycleID.String,
-			updated.LifecycleExpiresAt,
-			updated.LifecycleScope.String,
-			updated.LifecycleCostBaseline.String,
-			updated.DecisionNextSteps.String,
-			action.Feedback.String,
-		)
-
-		if err != nil {
-			return nil, err
 		}
 
 		return updated, nil

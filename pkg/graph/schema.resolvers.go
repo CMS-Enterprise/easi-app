@@ -16,6 +16,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"golang.org/x/sync/errgroup"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
@@ -1047,15 +1048,30 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 }
 
 func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.IssueLifecycleIDInput) (*model.UpdateSystemIntakePayload, error) {
-	notificationRecipients := []models.EmailAddress{}
+	notifyMultipleRecipients := r.checkBoolFeatureFlag(ctx, appconfig.NotifyMultipleRecipientsFlagName, appconfig.NotifyMultipleRecipientsFlagDefault)
 
-	if input.NotificationRecipients != nil {
-		for _, recipient := range input.NotificationRecipients.RegularRecipientEmails {
-			notificationRecipients = append(notificationRecipients, models.EmailAddress(recipient))
-		}
+	if notifyMultipleRecipients {
+		intake, err := r.service.IssueLifecycleID(
+			ctx,
+			&models.SystemIntake{
+				ID:                    input.IntakeID,
+				LifecycleExpiresAt:    &input.ExpiresAt,
+				LifecycleScope:        null.StringFrom(input.Scope),
+				DecisionNextSteps:     null.StringFrom(*input.NextSteps),
+				LifecycleID:           null.StringFrom(*input.Lcid),
+				LifecycleCostBaseline: null.StringFromPtr(input.CostBaseline),
+			},
+			&models.Action{
+				IntakeID: &input.IntakeID,
+				Feedback: null.StringFrom(input.Feedback),
+			},
+			true, // parameter should be ignored by service
+			input.NotificationRecipients,
+		)
+		return &model.UpdateSystemIntakePayload{
+			SystemIntake: intake,
+		}, err
 	}
-
-	// TODO - add mailbox emails?
 
 	intake, err := r.service.IssueLifecycleID(
 		ctx,
@@ -1071,7 +1087,8 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
 		},
-		notificationRecipients,
+		input.ShouldSendEmail,
+		nil,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,

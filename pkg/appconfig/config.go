@@ -196,3 +196,12 @@ const (
 	// FlagSourceLaunchDarkly is LAUNCH_DARKLY
 	FlagSourceLaunchDarkly FlagSourceOption = "LAUNCH_DARKLY"
 )
+
+// feature flag info that needs to be referenced from multiple packages
+const (
+	// NotifyMultipleRecipientsFlagName is the LaunchDarkly flag key for enabling sending notifications to multiple recipients (EASI-1804 work)
+	NotifyMultipleRecipientsFlagName = "notifyMultipleRecipients"
+
+	// NotifyMultipleRecipientsFlagDefault is the default value for sending notifications to multiple recipients (EASI-1804 work)
+	NotifyMultipleRecipientsFlagDefault = false
+)

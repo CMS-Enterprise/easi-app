@@ -85,7 +85,7 @@ const IssueLifecycleId = () => {
       shouldSendEmail,
       notificationRecipients: {
         regularRecipientEmails: ['abcd@local.fake', 'efgh@local.fake'],
-        shouldNotifyITGovernance: false,
+        shouldNotifyITGovernance: true,
         shouldNotifyITInvestment: false
       }
     };
