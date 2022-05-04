@@ -8,7 +8,7 @@ const systemProfile = {
   navigation: {
     home: 'System Home',
     details: 'System Details',
-    'team-and-contract': 'Team and Contract',
+    'team-and-contract': 'Team',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
