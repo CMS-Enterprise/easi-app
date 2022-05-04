@@ -241,7 +241,7 @@ const SystemTeamAndContract = ({
                 .filter(role => role.assigneeType === CedarAssigneeType.PERSON)
                 .map(contact => (
                   <Card
-                    key={contact.objectID}
+                    key={contact.roleID}
                     className="grid-col-12 margin-bottom-2"
                   >
                     <CardHeader className="padding-2 padding-bottom-0">
