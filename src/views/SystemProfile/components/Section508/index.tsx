@@ -1,6 +1,6 @@
 import React, { createElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column, useSortBy, useTable } from 'react-table';
+import { useSortBy, useTable } from 'react-table';
 import {
   Button,
   Card,
@@ -19,7 +19,7 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
-import UswdsReactLink from 'components/LinkWrapper';
+// import UswdsReactLink from 'components/LinkWrapper';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -167,15 +167,10 @@ const RequestCard = ({
               <span className="text-bold">{numUploadedDocuments}</span>{' '}
               {t('singleSystem.section508.uploadedDocuments')}
             </div>
-            <UswdsReactLink
-              className="margin-top-1 margin-bottom-2"
-              target="_blank"
-              rel="noopener noreferrer"
-              to="todo"
-            >
+            <Button type="button" unstyled className="margin-top-1">
               {t('singleSystem.section508.viewUploadedDocuments')}
               <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
-            </UswdsReactLink>
+            </Button>
           </>
         )}
         <div />
@@ -185,15 +180,58 @@ const RequestCard = ({
 };
 
 const DocumentTable = ({
-  columns,
   data,
   documentName
 }: {
-  columns: any[];
   data: any[];
   documentName?: string;
 }) => {
   const { t } = useTranslation('systemProfile');
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: t<string>('singleSystem.section508.table.document'),
+        accessor: 'document',
+        Cell: ({
+          cell: {
+            value: { name, href }
+          }
+        }: {
+          cell: {
+            value: {
+              name: string;
+              href: string;
+            };
+          };
+        }) => {
+          return (
+            <div className="display-flex">
+              <span className="width-4" style={{ flexShrink: 0 }}>
+                <IconFilePresent size={3} />
+              </span>
+              <Link variant="external" href={href}>
+                <span>{name}</span>
+              </Link>
+            </div>
+          );
+        }
+      },
+      {
+        Header: t<string>('singleSystem.section508.table.uploadDate'),
+        accessor: 'uploadDate'
+      },
+      {
+        Header: t<string>('singleSystem.section508.table.actions'),
+        accessor: 'actions',
+        Cell: ({ cell: { value } }: { cell: { value: string } }) => {
+          return <Link href={value}>View</Link>;
+        }
+      }
+    ],
+    [t]
+  );
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -228,14 +266,19 @@ const DocumentTable = ({
                 scope="col"
                 className="border-bottom-2px"
               >
-                <button
-                  className="usa-button usa-button--unstyled"
+                <Button
                   type="button"
+                  unstyled
+                  className="width-full display-flex"
                   {...column.getSortByToggleProps()}
                 >
-                  {column.render('Header')}
-                  {getHeaderSortIcon(column)}
-                </button>
+                  <div className="flex-fill text-no-wrap">
+                    {column.render('Header')}
+                  </div>
+                  <div className="position-relative width-205 margin-left-05">
+                    {getHeaderSortIcon(column)}
+                  </div>
+                </Button>
               </th>
             ))}
           </tr>
@@ -246,9 +289,9 @@ const DocumentTable = ({
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
-              {row.cells.map((cell, index) => (
-                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-              ))}
+              {row.cells.map((cell, index) => {
+                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+              })}
             </tr>
           );
         })}
@@ -259,14 +302,12 @@ const DocumentTable = ({
 
 const DocumentCardTable = ({
   title,
-  columns,
   data,
   documentName,
   mostRecentDocumentLink,
   uploaded
 }: {
   title: string;
-  columns?: any[];
   data?: any[];
   documentName?: string;
   mostRecentDocumentLink?: string;
@@ -310,7 +351,7 @@ const DocumentCardTable = ({
               <Divider className="margin-y-2" />
             </>
           )}
-          {!columns && !data ? (
+          {!data ? (
             <div className="margin-top-2">
               <span className="display-inline-block width-4">
                 <IconHighlightOff
@@ -321,11 +362,7 @@ const DocumentCardTable = ({
               <span className="text-middle">No {title}s available</span>
             </div>
           ) : (
-            <DocumentTable
-              columns={columns!}
-              data={data!}
-              documentName={documentName}
-            />
+            <DocumentTable data={data!} documentName={documentName} />
           )}
         </CardBody>
       </Card>
@@ -336,56 +373,26 @@ const DocumentCardTable = ({
 export default ({ system }: { system: tempCedarSystemProps }) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
-  const tableColumns = useMemo<Column<any>[]>(
+
+  const tableData = useMemo(
     () => [
       {
-        Header: t<string>('singleSystem.section508.table.document'),
-        accessor: 'document'
-      },
-      {
-        Header: t<string>('singleSystem.section508.table.uploadDate'),
-        accessor: 'uploadDate'
-      },
-      {
-        Header: t<string>('singleSystem.section508.table.actions'),
-        accessor: 'actions'
-      }
-    ],
-    [t]
-  );
-  const tableData = React.useMemo(
-    () => [
-      {
-        document: (
-          <div className="display-flex">
-            <span className="width-4" style={{ flexShrink: 0 }}>
-              <IconFilePresent size={3} />
-            </span>
-            <Link variant="external">
-              <span>Awarded VPAT</span>
-            </Link>
-          </div>
-        ),
+        document: { name: 'Awarded VPAT', href: '/' },
         uploadDate: 'mm/dd/yyyy',
-        actions: <Link href="#">View</Link>
+        actions: '/'
       },
       {
-        document: (
-          <div className="display-flex">
-            <span className="width-4" style={{ flexShrink: 0 }}>
-              <IconFilePresent size={3} />
-            </span>
-            <Link variant="external">
-              <span>Testing testing testing testing multiline VPAT</span>
-            </Link>
-          </div>
-        ),
+        document: {
+          name: 'Testing testing testing testing multiline VPAT',
+          href: '/'
+        },
         uploadDate: 'mm/dd/yyyy',
-        actions: <Link href="#">View</Link>
+        actions: '/'
       }
     ],
     []
   );
+
   return (
     <div id="system-section-508">
       <GridContainer className="padding-left-0 padding-right-0">
@@ -440,15 +447,10 @@ export default ({ system }: { system: tempCedarSystemProps }) => {
                 documentName="VPAT"
                 mostRecentDocumentLink=""
                 uploaded="September 12, 2021"
-                columns={tableColumns}
                 data={tableData}
               />
               <DocumentCardTable title="Remediation Plan" />
-              <DocumentCardTable
-                title="Other documents"
-                columns={tableColumns}
-                data={tableData}
-              />
+              <DocumentCardTable title="Other documents" data={tableData} />
             </SectionWrapper>
           </Grid>
           {/* Point of contact/ miscellaneous info */}
