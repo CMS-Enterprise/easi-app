@@ -29,6 +29,7 @@ type TranslatedClient struct {
 // Client is an interface for helping test dependencies
 type Client interface {
 	FetchUserInfo(context.Context, string) (*models2.UserInfo, error)
+	FetchUserInfos(context.Context, []string) ([]*models2.UserInfo, error)
 	SearchCommonNameContains(context.Context, string) ([]*models2.UserInfo, error)
 }
 
@@ -111,7 +112,7 @@ func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) (
 	params.Ids = idsStr
 	resp, err := c.client.Operations.PersonIds(params, c.apiAuthHeader)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err), zap.String("euaIDFetched", idsStr))
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch people from CEDAR LDAP with error: %v", err), zap.Strings("euaIDsFetched", euaIDs))
 		return nil, &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     models.Person{},
@@ -140,12 +141,12 @@ func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) (
 	// Convert the response to our UserInfo model
 	userInfos := []*models2.UserInfo{}
 	for _, person := range resp.Payload.Persons {
-		cedarSys := &models2.UserInfo{
+		userInfo := &models2.UserInfo{
 			CommonName: person.CommonName,
 			Email:      models2.NewEmailAddress(person.Email),
 			EuaUserID:  person.UserName,
 		}
-		userInfos = append(userInfos, cedarSys)
+		userInfos = append(userInfos, userInfo)
 	}
 
 	return userInfos, nil
