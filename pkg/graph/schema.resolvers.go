@@ -1048,6 +1048,7 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 }
 
 func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.IssueLifecycleIDInput) (*model.UpdateSystemIntakePayload, error) {
+	// TODO - EASI-2021 - don't need this check
 	notifyMultipleRecipients := r.checkBoolFeatureFlag(ctx, appconfig.NotifyMultipleRecipientsFlagName, appconfig.NotifyMultipleRecipientsFlagDefault)
 
 	if notifyMultipleRecipients {
@@ -1073,6 +1074,7 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 		}, err
 	}
 
+	// TODO - EASI-2021 - remove this call
 	intake, err := r.service.IssueLifecycleID(
 		ctx,
 		&models.SystemIntake{

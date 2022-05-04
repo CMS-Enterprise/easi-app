@@ -395,6 +395,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	recipients := models.EmailNotificationRecipients{} // just needs to be non-nil for testing
 
+	//  TODO - EASI-2021 - remove
 	s.Run("happy path provided lcid, notifying single recipient", func() {
 		singleReviewEmailSent = false // clear before running test
 		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
@@ -423,6 +424,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		s.Equal("Feedback", feedbackForEmailText)
 	})
 
+	//  TODO - EASI-2021 - remove
 	s.Run("happy path provided lcid without sending email (to single recipient)", func() {
 		singleReviewEmailSent = false // clear before running test
 		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
@@ -461,6 +463,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		s.Equal(intake.LifecycleScope, scope)
 	})
 
+	//  TODO - EASI-2021 - remove this whole sub-suite
 	s.Run("test cases for single recipient having invalid or missing EUA ID", func() {
 		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
 
@@ -658,12 +661,6 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		},
 	}
 
-	// recipients = models.EmailNotificationRecipients{
-	// 	RegularRecipientEmails:   []models.EmailAddress{"abcd@local.fake"},
-	// 	ShouldNotifyITGovernance: true,
-	// 	ShouldNotifyITInvestment: false,
-	// }
-
 	for expectedErr, tc := range regularTestCases {
 		s.Run(expectedErr, func() {
 			_, err := tc.fn(context.Background(), input, action, true, &recipients)
@@ -671,6 +668,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		})
 	}
 
+	// TODO - EASI-2021 - remove these test cases
 	singleRecipientTestCases := map[string]struct {
 		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	}{
@@ -693,6 +691,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		})
 	}
 
+	//  TODO - EASI-2021 - add to regularTestCases
 	multipleRecipientTestCases := map[string]struct {
 		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	}{
@@ -702,6 +701,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 
 	for expectedErr, tc := range multipleRecipientTestCases {
+		// TODO - EASI-2021 - don't need to set this flag
 		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, true)
 		s.Run(expectedErr, func() {
 			_, err := tc.fn(context.Background(), input, action, false, &recipients)

@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
+// TODO - EASI-2021 - remove this suite
 func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	sender := mockSender{}
 	ctx := context.Background()

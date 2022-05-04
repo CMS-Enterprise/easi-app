@@ -42,6 +42,7 @@ func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, l
 }
 
 // SendIssueLCIDEmail sends an email to a single recipient (CC'ing the GRT) for issuing an LCID
+// TODO - EASI-2021 - remove
 func (c Client) SendIssueLCIDEmail(
 	ctx context.Context,
 	recipient models.EmailAddress,
@@ -73,6 +74,7 @@ func (c Client) SendIssueLCIDEmail(
 }
 
 // SendIssueLCIDEmailToMultipleRecipients sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for issuing an LCID
+//  TODO - EASI-2021 - rename to SendIssueLCIDEmails
 func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,

@@ -83,6 +83,7 @@ const IssueLifecycleId = () => {
       lcid: lifecycleId,
       feedback,
       shouldSendEmail,
+      // TODO - remove before merging EASI-1955 work
       notificationRecipients: {
         regularRecipientEmails: ['abcd@local.fake', 'efgh@local.fake'],
         shouldNotifyITGovernance: true,

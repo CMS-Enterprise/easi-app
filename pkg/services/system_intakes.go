@@ -226,6 +226,8 @@ func NewFetchSystemIntakeByID(
 
 // NewUpdateLifecycleFields provides a way to update several of the fields
 // associated with assigning a LifecycleID
+// TODO - EASI-2021 - remove fetchUserInfo sendIssueLCIDEmail, sendIntakeInvalidEUAIDEmail, sendIntakeNoEUAIDEmail parameters
+// TODO - EASI-2021 - rename sendIssueLCIDEmailToMultipleRecipients parameter to sendIssueLCIDEmails
 func NewUpdateLifecycleFields(
 	config Config,
 	authorize func(context.Context) (bool, error),
@@ -266,8 +268,10 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
+		// TODO - EASI-2021 - don't need this check with feature flag removed
 		notifyMultipleRecipients := config.checkBoolFeatureFlag(ctx, appconfig.NotifyMultipleRecipientsFlagName, appconfig.NotifyMultipleRecipientsFlagDefault)
 
+		// TODO - EASI-2021 - remove all this code about fetching requesterInfo, sending fallback emails
 		var requesterHasValidEUAID bool
 		var requesterInfo *models.UserInfo
 		if !notifyMultipleRecipients {
@@ -352,6 +356,7 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
+		// TODO - EASI-2021 - remove notifyMultipleRecipients check (but *not* recipients != nil check)
 		if notifyMultipleRecipients && recipients != nil {
 			err = sendIssueLCIDEmailToMultipleRecipients(
 				ctx,
@@ -367,6 +372,7 @@ func NewUpdateLifecycleFields(
 				return nil, err
 			}
 		} else {
+			// TODO - EASI-2021 - remove this block
 			if shouldSendEmail && requesterHasValidEUAID {
 				err = sendIssueLCIDEmail(
 					ctx,
