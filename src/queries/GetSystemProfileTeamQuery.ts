@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export default gql`
   query GetSystemProfileTeam($systemId: String!) {
-    roles(systemId: $systemId) {
+    roles(cedarSystemId: $systemId) {
       application
       objectID
       roleTypeID
