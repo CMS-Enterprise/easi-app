@@ -255,7 +255,7 @@ export interface DeleteTestDateInput {
 }
 
 export interface EmailNotificationRecipients {
-  regularRecipientEmails: string[];
+  regularRecipientEmails: EmailAddress[];
   shouldNotifyITGovernance: boolean;
   shouldNotifyITInvestment: boolean;
 }

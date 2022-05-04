@@ -30,11 +30,11 @@ type AccessibilityRequestsConnection struct {
 // Feedback intended for a business owner before they proceed to writing a
 // business case for a system request
 type AddGRTFeedbackInput struct {
-	EmailBody              string                       `json:"emailBody"`
-	Feedback               string                       `json:"feedback"`
-	IntakeID               uuid.UUID                    `json:"intakeID"`
-	ShouldSendEmail        bool                         `json:"shouldSendEmail"`
-	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients"`
+	EmailBody              string                              `json:"emailBody"`
+	Feedback               string                              `json:"feedback"`
+	IntakeID               uuid.UUID                           `json:"intakeID"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // Payload for adding GRT feedback to a system request (contains the system
@@ -45,10 +45,10 @@ type AddGRTFeedbackPayload struct {
 
 // Input to add feedback to a system request
 type BasicActionInput struct {
-	Feedback               string                       `json:"feedback"`
-	IntakeID               uuid.UUID                    `json:"intakeId"`
-	ShouldSendEmail        bool                         `json:"shouldSendEmail"`
-	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients"`
+	Feedback               string                              `json:"feedback"`
+	IntakeID               uuid.UUID                           `json:"intakeId"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // A solution proposal within a business case
@@ -101,10 +101,10 @@ type CreateAccessibilityRequestInput struct {
 
 // The data used when adding a note to a 508/accessibility request
 type CreateAccessibilityRequestNoteInput struct {
-	RequestID              uuid.UUID                    `json:"requestID"`
-	Note                   string                       `json:"note"`
-	ShouldSendEmail        bool                         `json:"shouldSendEmail"`
-	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients"`
+	RequestID              uuid.UUID                           `json:"requestID"`
+	Note                   string                              `json:"note"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // The payload for adding a note to a 508/accessibility request
@@ -131,13 +131,13 @@ type CreateCedarSystemBookmarkPayload struct {
 
 // Input data for extending a system request's lifecycle ID
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
-	ID                     uuid.UUID                    `json:"id"`
-	ExpirationDate         *time.Time                   `json:"expirationDate"`
-	NextSteps              *string                      `json:"nextSteps"`
-	Scope                  string                       `json:"scope"`
-	CostBaseline           *string                      `json:"costBaseline"`
-	ShouldSendEmail        bool                         `json:"shouldSendEmail"`
-	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients"`
+	ID                     uuid.UUID                           `json:"id"`
+	ExpirationDate         *time.Time                          `json:"expirationDate"`
+	NextSteps              *string                             `json:"nextSteps"`
+	Scope                  string                              `json:"scope"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // Payload data for extending a system request's lifecycle ID
@@ -246,12 +246,6 @@ type DetailedCedarSystem struct {
 	Deployments []*models.CedarDeployment `json:"deployments"`
 }
 
-type EmailNotificationRecipients struct {
-	RegularRecipientEmails   []string `json:"regularRecipientEmails"`
-	ShouldNotifyITGovernance bool     `json:"shouldNotifyITGovernance"`
-	ShouldNotifyITInvestment bool     `json:"shouldNotifyITInvestment"`
-}
-
 // Input associated with a document to be uploaded to a 508/accessibility request
 type GeneratePresignedUploadURLInput struct {
 	FileName string `json:"fileName"`
@@ -268,15 +262,15 @@ type GeneratePresignedUploadURLPayload struct {
 // The input data required to issue a lifecycle ID for a system's IT governance
 // request
 type IssueLifecycleIDInput struct {
-	ExpiresAt              time.Time                    `json:"expiresAt"`
-	Feedback               string                       `json:"feedback"`
-	IntakeID               uuid.UUID                    `json:"intakeId"`
-	Lcid                   *string                      `json:"lcid"`
-	NextSteps              *string                      `json:"nextSteps"`
-	Scope                  string                       `json:"scope"`
-	CostBaseline           *string                      `json:"costBaseline"`
-	ShouldSendEmail        bool                         `json:"shouldSendEmail"`
-	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients"`
+	ExpiresAt              time.Time                           `json:"expiresAt"`
+	Feedback               string                              `json:"feedback"`
+	IntakeID               uuid.UUID                           `json:"intakeId"`
+	Lcid                   *string                             `json:"lcid"`
+	NextSteps              *string                             `json:"nextSteps"`
+	Scope                  string                              `json:"scope"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // The most recent note added by an admin to a system request
@@ -293,12 +287,12 @@ type LaunchDarklySettings struct {
 
 // Input data for rejection of a system's IT governance request
 type RejectIntakeInput struct {
-	Feedback               string                       `json:"feedback"`
-	IntakeID               uuid.UUID                    `json:"intakeId"`
-	NextSteps              *string                      `json:"nextSteps"`
-	Reason                 string                       `json:"reason"`
-	ShouldSendEmail        bool                         `json:"shouldSendEmail"`
-	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients"`
+	Feedback               string                              `json:"feedback"`
+	IntakeID               uuid.UUID                           `json:"intakeId"`
+	NextSteps              *string                             `json:"nextSteps"`
+	Reason                 string                              `json:"reason"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // Represents a request being made with the EASi system

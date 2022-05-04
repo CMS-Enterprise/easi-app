@@ -1221,7 +1221,7 @@ type DeleteSystemIntakeContactPayload {
 }
 
 input EmailNotificationRecipients {
-  regularRecipientEmails: [String!]!
+  regularRecipientEmails: [EmailAddress!]!
   shouldNotifyITGovernance: Boolean!
   shouldNotifyITInvestment: Boolean!
 }
@@ -1361,6 +1361,11 @@ scalar UUID
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
 """
 scalar Time
+
+"""
+Email addresses are represented as strings
+"""
+scalar EmailAddress
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
 
