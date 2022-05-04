@@ -126,8 +126,6 @@ type ComplexityRoot struct {
 		CurrentSolutionSummary func(childComplexity int) int
 		EUAUserID              func(childComplexity int) int
 		ID                     func(childComplexity int) int
-		InitialSubmittedAt     func(childComplexity int) int
-		LastSubmittedAt        func(childComplexity int) int
 		LifecycleCostLines     func(childComplexity int) int
 		PreferredSolution      func(childComplexity int) int
 		PriorityAlignment      func(childComplexity int) int
@@ -135,7 +133,6 @@ type ComplexityRoot struct {
 		Requester              func(childComplexity int) int
 		RequesterPhoneNumber   func(childComplexity int) int
 		Status                 func(childComplexity int) int
-		SubmittedAt            func(childComplexity int) int
 		SuccessIndicators      func(childComplexity int) int
 		SystemIntake           func(childComplexity int) int
 		UpdatedAt              func(childComplexity int) int
@@ -1130,20 +1127,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BusinessCase.ID(childComplexity), true
 
-	case "BusinessCase.initialSubmittedAt":
-		if e.complexity.BusinessCase.InitialSubmittedAt == nil {
-			break
-		}
-
-		return e.complexity.BusinessCase.InitialSubmittedAt(childComplexity), true
-
-	case "BusinessCase.lastSubmittedAt":
-		if e.complexity.BusinessCase.LastSubmittedAt == nil {
-			break
-		}
-
-		return e.complexity.BusinessCase.LastSubmittedAt(childComplexity), true
-
 	case "BusinessCase.lifecycleCostLines":
 		if e.complexity.BusinessCase.LifecycleCostLines == nil {
 			break
@@ -1192,13 +1175,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BusinessCase.Status(childComplexity), true
-
-	case "BusinessCase.submittedAt":
-		if e.complexity.BusinessCase.SubmittedAt == nil {
-			break
-		}
-
-		return e.complexity.BusinessCase.SubmittedAt(childComplexity), true
 
 	case "BusinessCase.successIndicators":
 		if e.complexity.BusinessCase.SuccessIndicators == nil {
@@ -4237,8 +4213,6 @@ type BusinessCase {
   currentSolutionSummary: String
   euaUserId: String!
   id: UUID!
-  initialSubmittedAt: Time
-  lastSubmittedAt: Time
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
@@ -4246,7 +4220,6 @@ type BusinessCase {
   requester: String
   requesterPhoneNumber: String
   status: BusinessCaseStatus!
-  submittedAt: Time
   successIndicators: String
   systemIntake: SystemIntake!
   updatedAt: Time!
@@ -4749,7 +4722,7 @@ Feedback from the GRT to a business owner or GRB
 """
 type GRTFeedback {
   id: UUID
-  createdAt: Time
+  createdAt: Time!
   feedback: String
   feedbackType: GRTFeedbackType
 }
@@ -7436,70 +7409,6 @@ func (ec *executionContext) _BusinessCase_id(ctx context.Context, field graphql.
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BusinessCase_initialSubmittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCase",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.InitialSubmittedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BusinessCase_lastSubmittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCase",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.LastSubmittedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _BusinessCase_lifecycleCostLines(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7725,38 +7634,6 @@ func (ec *executionContext) _BusinessCase_status(ctx context.Context, field grap
 	res := resTmp.(models.BusinessCaseStatus)
 	fc.Result = res
 	return ec.marshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BusinessCase_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCase",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SubmittedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCase_successIndicators(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
@@ -11341,11 +11218,14 @@ func (ec *executionContext) _GRTFeedback_createdAt(ctx context.Context, field gr
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GRTFeedback_feedback(ctx context.Context, field graphql.CollectedField, obj *models.GRTFeedback) (ret graphql.Marshaler) {
@@ -22120,20 +22000,6 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "initialSubmittedAt":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BusinessCase_initialSubmittedAt(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "lastSubmittedAt":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BusinessCase_lastSubmittedAt(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
 		case "lifecycleCostLines":
 			field := field
 
@@ -22246,13 +22112,6 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "submittedAt":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BusinessCase_submittedAt(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
 		case "successIndicators":
 			field := field
 
@@ -23996,6 +23855,9 @@ func (ec *executionContext) _GRTFeedback(ctx context.Context, sel ast.SelectionS
 
 			out.Values[i] = innerFunc(ctx)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "feedback":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._GRTFeedback_feedback(ctx, field, obj)
