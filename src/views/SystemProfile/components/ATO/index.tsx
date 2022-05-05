@@ -204,10 +204,7 @@ const ATO = ({ system }: ATOProps) => {
                 </>
               )}
             </SectionWrapper>
-            <SectionWrapper
-              borderBottom
-              className="margin-bottom-4 padding-bottom-5"
-            >
+            <SectionWrapper borderBottom className="margin-bottom-4">
               <h2 className="margin-top-0">{t('singleSystem.ato.POAM')}</h2>
 
               {system.atoStatus === 'No ATO' && (
@@ -242,13 +239,15 @@ const ATO = ({ system }: ATOProps) => {
                     )}
                   </Grid>
 
-                  <Grid row gap className="margin-top-2 margin-bottom-2">
-                    <Grid tablet={{ col: 12 }}>
-                      <Alert type="info">
-                        {t('singleSystem.ato.cfactsInfo')}
-                      </Alert>
+                  {flags.systemProfileHiddenFields && (
+                    <Grid row gap className="margin-top-2 margin-bottom-2">
+                      <Grid tablet={{ col: 12 }}>
+                        <Alert type="info">
+                          {t('singleSystem.ato.cfactsInfo')}
+                        </Alert>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                  )}
                 </div>
               )}
               {/* TODO: Fill external CFACT link */}

@@ -75,7 +75,7 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
             </ul>
           </div>
           <div
-            class="easi-section easi-section__border-bottom margin-bottom-4 padding-bottom-5"
+            class="easi-section easi-section__border-bottom margin-bottom-4"
             data-testid="section-wrapper"
           >
             <h2
@@ -102,30 +102,6 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
                   >
                     12
                   </dd>
-                </div>
-              </div>
-              <div
-                class="grid-row grid-gap margin-top-2 margin-bottom-2"
-                data-testid="grid"
-              >
-                <div
-                  class="tablet:grid-col-12"
-                  data-testid="grid"
-                >
-                  <div
-                    class="usa-alert usa-alert--info"
-                    data-testid="alert"
-                  >
-                    <div
-                      class="usa-alert__body"
-                    >
-                      <p
-                        class="usa-alert__text"
-                      >
-                        CFACTS is the CMS system that stores and manages security information for systems. If you have access to CFACTS, you can view additional information about POAMs and security findings for you system.
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
