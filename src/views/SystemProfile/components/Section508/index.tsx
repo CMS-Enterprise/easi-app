@@ -301,7 +301,7 @@ const DocumentCardTable = ({
                   <span className="display-inline-block width-4">
                     <IconCheckCircleOutline
                       size={3}
-                      className="text-mint text-middle"
+                      className="text-success text-middle"
                     />
                   </span>
                   <span className="text-middle">
