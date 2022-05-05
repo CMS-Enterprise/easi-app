@@ -68,7 +68,6 @@ type PhaseProps = {
   category: categoryKeys;
   formikKey: string;
   fiscalYear: number;
-  title: string;
   values: LifecycleCosts;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   errors: any;
@@ -86,8 +85,6 @@ const Phase = ({
   category,
   formikKey,
   fiscalYear,
-  title,
-  values,
   setFieldValue,
   errors = {},
   years,
@@ -112,7 +109,9 @@ const Phase = ({
                 {typeof errors === 'string' ? errors : ''}
               </FieldErrorMsg>
               <div className="cost-table-row">
-                <legend className="cost-table-col usa-label">{t(title)}</legend>
+                <legend className="cost-table-col usa-label">
+                  {t(years.year1[category].phase)}
+                </legend>
                 {Object.keys(years).map((year, i) => {
                   return (
                     <FieldGroup
@@ -298,8 +297,6 @@ const EstimatedLifecycleCost = ({
           category="development"
           formikKey={formikKey}
           fiscalYear={fiscalYear}
-          title="Development"
-          values={years.year1}
           setFieldValue={setFieldValue}
           // errors={errors.year1}
           years={years}
@@ -309,8 +306,6 @@ const EstimatedLifecycleCost = ({
           category="operationsMaintenance"
           formikKey={formikKey}
           fiscalYear={fiscalYear}
-          title="Operations and Maintenance"
-          values={years.year1}
           setFieldValue={setFieldValue}
           // errors={errors.year1}
           years={years}
@@ -324,8 +319,6 @@ const EstimatedLifecycleCost = ({
               category={key}
               formikKey={formikKey}
               fiscalYear={fiscalYear}
-              title={relatedCosts[key]}
-              values={years.year1}
               setFieldValue={setFieldValue}
               // errors={errors.year1}
               years={years}

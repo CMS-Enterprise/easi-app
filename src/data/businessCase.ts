@@ -9,36 +9,44 @@ import { LifecycleCosts } from 'types/estimatedLifecycle';
 
 const emptyPhaseValues = {
   development: {
+    phase: 'Development',
     isPresent: false,
     cost: ''
   },
   operationsMaintenance: {
+    phase: 'Operations and Maintenance',
     isPresent: false,
     cost: ''
   },
   helpDesk: {
+    phase: 'Help desk/call center',
     isPresent: false,
     cost: ''
   },
   software: {
+    phase: 'Software licenses',
     isPresent: false,
     cost: ''
   },
   planning: {
+    phase: 'Planning, support, and professional services',
     isPresent: false,
     cost: ''
   },
   infrastructure: {
+    phase: 'Infrastructure',
     isPresent: false,
     cost: ''
   },
   oit: {
+    phase: '',
     isPresent: false,
-    cost: ''
+    cost: 'OIT services, tools, and pilots'
   },
   other: {
+    phase: '',
     isPresent: false,
-    cost: ''
+    cost: 'Other services, tools, and pilots'
   }
 };
 
@@ -196,6 +204,7 @@ export const prepareBusinessCaseForApp = (
     lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
       `year${line.year}` as keyof EstimatedLifecycleCostLines
     ][phaseType] = {
+      phase: line.phase,
       isPresent: !!line.cost,
       cost: line.cost ? line.cost.toString() : ''
     };
