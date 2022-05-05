@@ -5,7 +5,7 @@ import {
   EstimatedLifecycleCostLines,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import { LifecycleCosts } from 'types/estimatedLifecycle';
+import { CostData, LifecycleCosts } from 'types/estimatedLifecycle';
 
 const emptyPhaseValues = {
   development: {
@@ -131,20 +131,8 @@ export const alternativeSolutionHasFilledFields = (
     estimatedLifecycleCost
   } = alternativeSolution;
 
-  let hasLineItem;
-  Object.values(estimatedLifecycleCost).forEach(phase => {
-    if (
-      phase.development.isPresent ||
-      phase.operationsMaintenance.isPresent ||
-      phase.helpDesk.isPresent ||
-      phase.software.isPresent ||
-      phase.planning.isPresent ||
-      phase.infrastructure.isPresent ||
-      phase.oit.isPresent ||
-      phase.other.isPresent
-    ) {
-      hasLineItem = true;
-    }
+  const hasLineItem = !!Object.values(estimatedLifecycleCost).find(year => {
+    return Object.values(year).find(phase => phase.isPresent);
   });
 
   return (
@@ -325,96 +313,20 @@ export const prepareBusinessCaseForApi = (
       : [])
   ];
 
-  const yearMap = (
-    lifecycleCostLines: EstimatedLifecycleCostLines
-  ): { phases: LifecycleCosts; year: string }[] => {
-    return [
-      { phases: lifecycleCostLines.year1, year: '1' },
-      { phases: lifecycleCostLines.year2, year: '2' },
-      { phases: lifecycleCostLines.year3, year: '3' },
-      { phases: lifecycleCostLines.year4, year: '4' },
-      { phases: lifecycleCostLines.year5, year: '5' }
-    ];
-  };
-
   const lifecycleCostLines = solutionNameMap
     .map(({ solutionLifecycleCostLines, solutionApiName }) => {
-      return yearMap(solutionLifecycleCostLines)
-        .map(({ phases, year }) => {
-          const {
-            development,
-            operationsMaintenance,
-            helpDesk,
-            software,
-            planning,
-            infrastructure,
-            oit,
-            other
-          } = phases;
-          const developmentCost = {
+      let yearCount = 1;
+      return Object.values(solutionLifecycleCostLines).reduce((acc, year) => {
+        const phases = Object.values(year).map(phase => {
+          return {
+            year: yearCount.toString(),
             solution: solutionApiName,
-            phase: 'Development',
-            cost: development.isPresent ? parseFloat(development.cost) : null,
-            year
+            ...phase
           };
-          const omCost = {
-            solution: solutionApiName,
-            phase: 'Operations and Maintenance',
-            cost: operationsMaintenance.isPresent
-              ? parseFloat(phases.operationsMaintenance.cost)
-              : null,
-            year
-          };
-          const helpCost = {
-            solution: solutionApiName,
-            phase: 'Help desk/call center',
-            cost: helpDesk.isPresent ? parseFloat(phases.helpDesk.cost) : null,
-            year
-          };
-          const softwareCost = {
-            solution: solutionApiName,
-            phase: 'Software licenses',
-            cost: software.isPresent ? parseFloat(phases.software.cost) : null,
-            year
-          };
-          const planningCost = {
-            solution: solutionApiName,
-            phase: 'Planning, support, and professional services',
-            cost: planning.isPresent ? parseFloat(phases.planning.cost) : null,
-            year
-          };
-          const infrastructureCost = {
-            solution: solutionApiName,
-            phase: 'Infrastructure',
-            cost: infrastructure.isPresent
-              ? parseFloat(phases.infrastructure.cost)
-              : null,
-            year
-          };
-          const oitCost = {
-            solution: solutionApiName,
-            phase: 'OIT services, tools, and pilots',
-            cost: oit.isPresent ? parseFloat(phases.oit.cost) : null,
-            year
-          };
-          const otherCost = {
-            solution: solutionApiName,
-            phase: 'Other',
-            cost: other.isPresent ? parseFloat(phases.other.cost) : null,
-            year
-          };
-          return [
-            developmentCost,
-            omCost,
-            helpCost,
-            softwareCost,
-            planningCost,
-            infrastructureCost,
-            oitCost,
-            otherCost
-          ];
-        })
-        .flat();
+        });
+        yearCount += 1;
+        return [...acc, ...phases];
+      }, [] as CostData[] & { year: string; solution: string }[]);
     })
     .flat();
 

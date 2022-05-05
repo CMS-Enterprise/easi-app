@@ -8,7 +8,7 @@ export type LifecyclePhases =
   | 'OIT services, tools, and pilots'
   | 'Other services, tools, and pilots';
 
-type CostData = {
+export type CostData = {
   phase: LifecyclePhases;
   isPresent: boolean;
   cost: string;
