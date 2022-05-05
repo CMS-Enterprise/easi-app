@@ -153,14 +153,10 @@ export const budgetsInfo: tempBudgetProp[] = [
   }
 ];
 
-export const developmentTags: string[] = [
-  'Agile Methodology',
-  'AI Technologies',
-  'Healthcare Quality',
-  'Health Insurance Program'
-];
-
 const systemProfileHiddenFields = false;
+
+export const developmentTags: string[] = ['Agile Methodology'];
+
 const locationsInfo: tempLocationProp[] = [
   {
     id: '1',
@@ -191,6 +187,12 @@ if (systemProfileHiddenFields) {
     cloudProvider: 'Amazon Web Services',
     firewall: true
   });
+
+  developmentTags.push(
+    'AI Technologies',
+    'Healthcare Quality',
+    'Health Insurance Program'
+  );
 }
 export { locationsInfo };
 
