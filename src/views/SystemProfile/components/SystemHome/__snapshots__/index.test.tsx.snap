@@ -138,7 +138,7 @@ exports[`The making a request page matches snapshot 1`] = `
                       class="text-right margin-bottom-0"
                     >
                       <span
-                        class="easi-tag bg-mint display-inline-block margin-right-0"
+                        class="easi-tag bg-accent-cool display-inline-block margin-right-0"
                         data-testid="tag"
                       >
                         Open

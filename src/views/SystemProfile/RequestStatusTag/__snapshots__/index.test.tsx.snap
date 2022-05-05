@@ -11,10 +11,10 @@ exports[`RequestStatusTag renders request status tag {"status":"Closed","classNa
 </DocumentFragment>
 `;
 
-exports[`RequestStatusTag renders request status tag {"status":"Open","className":"bg-mint"} 1`] = `
+exports[`RequestStatusTag renders request status tag {"status":"Open","className":"bg-accent-cool"} 1`] = `
 <DocumentFragment>
   <span
-    class="easi-tag bg-mint display-inline-block"
+    class="easi-tag bg-accent-cool display-inline-block"
     data-testid="tag"
   >
     Open

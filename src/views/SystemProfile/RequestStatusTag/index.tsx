@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import Tag from 'components/shared/Tag';
 
 export const requestStatusTagClassName: { [key: string]: string } = {
-  Open: 'bg-mint',
+  Open: 'bg-accent-cool',
   Closed: 'border-2px'
 };
 
