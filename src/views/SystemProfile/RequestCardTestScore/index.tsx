@@ -11,10 +11,10 @@ export default ({ scorePct, date }: { scorePct: number; date: string }) => {
   let colorClass;
   let iconComponent;
   if (scorePct === 100) {
-    colorClass = 'text-mint';
+    colorClass = 'text-success';
     iconComponent = IconCheckCircleOutline;
   } else {
-    colorClass = 'text-orange';
+    colorClass = 'text-warning-dark';
     iconComponent = IconErrorOutline;
   }
 

@@ -114,7 +114,7 @@ exports[`The making a request page matches snapshot 1`] = `
                         </div>
                         <div>
                           <svg
-                            class="usa-icon usa-icon--size-3 text-orange margin-right-1 text-middle"
+                            class="usa-icon usa-icon--size-3 text-warning-dark margin-right-1 text-middle"
                             focusable="false"
                             height="1em"
                             role="img"

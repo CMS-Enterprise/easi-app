@@ -4,7 +4,7 @@ exports[`RequestCardTestScore renders score 100% 1`] = `
 <DocumentFragment>
   <div>
     <svg
-      class="usa-icon usa-icon--size-3 text-mint margin-right-1 text-middle"
+      class="usa-icon usa-icon--size-3 text-success margin-right-1 text-middle"
       focusable="false"
       height="1em"
       role="img"
