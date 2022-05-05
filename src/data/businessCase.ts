@@ -39,14 +39,14 @@ const emptyPhaseValues = {
     cost: ''
   },
   oit: {
-    phase: '',
+    phase: 'OIT services, tools, and pilots',
     isPresent: false,
-    cost: 'OIT services, tools, and pilots'
+    cost: ''
   },
   other: {
-    phase: '',
+    phase: 'Other services, tools, and pilots',
     isPresent: false,
-    cost: 'Other services, tools, and pilots'
+    cost: ''
   }
 };
 
@@ -321,12 +321,13 @@ export const prepareBusinessCaseForApi = (
           return {
             year: yearCount.toString(),
             solution: solutionApiName,
-            ...phase
+            ...phase,
+            cost: phase.cost ? parseFloat(phase.cost) : 0
           };
         });
         yearCount += 1;
         return [...acc, ...phases];
-      }, [] as CostData[] & { year: string; solution: string }[]);
+      }, [] as { year: string; solution: string; phase: string; isPresent: boolean; cost: number }[]);
     })
     .flat();
 
