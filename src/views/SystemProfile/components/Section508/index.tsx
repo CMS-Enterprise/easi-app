@@ -13,6 +13,7 @@ import {
   IconCheckCircleOutline,
   IconFilePresent,
   IconHighlightOff,
+  IconLaunch,
   Link,
   Table as UswdsTable
 } from '@trussworks/react-uswds';
@@ -163,11 +164,15 @@ const DocumentTable = ({
         }) => {
           return (
             <div className="display-flex">
-              <span className="width-4" style={{ flexShrink: 0 }}>
+              <span
+                className="width-4"
+                style={{ flexShrink: 0, lineHeight: 0 }}
+              >
                 <IconFilePresent size={3} />
               </span>
-              <Link variant="external" href={href}>
+              <Link href={href}>
                 <span>{name}</span>
+                <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
               </Link>
             </div>
           );

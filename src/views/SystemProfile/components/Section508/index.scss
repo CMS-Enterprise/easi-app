@@ -3,6 +3,13 @@
     > caption {
       margin-bottom: .5rem;
     }
+    > thead > tr > th,
+    > tbody > tr > td {
+      padding: 1rem .5rem;
+    }
+    > tbody > tr > td {
+      vertical-align: top;
+    }
     /* Icon spacing for the table's document column */
     th:first-child {
       padding-left: 2.5rem;
