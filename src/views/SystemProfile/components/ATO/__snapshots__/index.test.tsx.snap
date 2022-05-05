@@ -107,7 +107,7 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
             </div>
           </div>
           <div
-            class="easi-section easi-section__border-bottom margin-bottom-4 padding-bottom-5"
+            class="easi-section easi-section__border-bottom margin-bottom-4"
             data-testid="section-wrapper"
           >
             <h2

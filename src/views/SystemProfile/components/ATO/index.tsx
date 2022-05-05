@@ -260,10 +260,7 @@ const ATO = ({ system }: ATOProps) => {
               )}
             </SectionWrapper>
 
-            <SectionWrapper
-              borderBottom
-              className="margin-bottom-4 padding-bottom-5"
-            >
+            <SectionWrapper borderBottom className="margin-bottom-4">
               <h2 className="margin-top-0">
                 {t('singleSystem.ato.securityFindings')}
               </h2>
