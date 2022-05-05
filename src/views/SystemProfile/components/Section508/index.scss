@@ -3,7 +3,9 @@
     > caption {
       margin-bottom: .5rem;
     }
-    > thead > tr > th,
+    > thead > tr > th {
+      padding: 1rem 0 .5rem .5rem;
+    }
     > tbody > tr > td {
       padding: 1rem .5rem;
     }
