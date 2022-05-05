@@ -54,119 +54,121 @@ const SystemHome = ({ system }: SystemHomeProps) => {
             >
               <CardGroup className="margin-0">
                 {flags.systemProfileHiddenFields && (
-                  <Card className="grid-col-12">
-                    <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                      <Grid row>
-                        <Grid desktop={{ col: 12 }} className="padding-0">
-                          <dt>Production Environment</dt>
-                          {/* TODO: Get from CEDAR */}
+                  <>
+                    <Card className="grid-col-12">
+                      <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-0">
+                            <dt>Production Environment</dt>
+                            {/* TODO: Get from CEDAR */}
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </CardHeader>
+                      </CardHeader>
 
-                    <CardBody className="padding-x-2 padding-y-0">
-                      <Grid row>
-                        <Grid desktop={{ col: 12 }} className="padding-0">
-                          <h3 className="link-header margin-top-0 margin-bottom-2">
-                            <UswdsReactLink
-                              className="link-header"
-                              variant="external"
-                              to="/"
-                            >
-                              {/* TODO: Get from CEDAR */}
-                              ham.cms.gov
-                            </UswdsReactLink>
-                          </h3>
-                          {system?.locations ? (
+                      <CardBody className="padding-x-2 padding-y-0">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-0">
+                            <h3 className="link-header margin-top-0 margin-bottom-2">
+                              <UswdsReactLink
+                                className="link-header"
+                                variant="external"
+                                to="/"
+                              >
+                                {/* TODO: Get from CEDAR */}
+                                ham.cms.gov
+                              </UswdsReactLink>
+                            </h3>
+                            {system?.locations ? (
+                              <div className="margin-bottom-2">
+                                <UswdsReactLink
+                                  className="link-header"
+                                  to={`/systems/${system.id}/details`}
+                                >
+                                  {/* TODO: Get from CEDAR */}
+                                  {t('singleSystem.systemDetails.view')}{' '}
+                                  {system.locations.length}{' '}
+                                  {t('singleSystem.systemDetails.moreURLs')}
+                                  <span aria-hidden>&nbsp;</span>
+                                  <span aria-hidden>&rarr; </span>
+                                </UswdsReactLink>
+                              </div>
+                            ) : (
+                              ''
+                            )}
+                          </Grid>
+                        </Grid>
+                        <Divider />
+                      </CardBody>
+                      <CardFooter className="padding-0">
+                        <Grid row>
+                          <Grid desktop={{ col: 6 }} className="padding-2">
+                            <DescriptionTerm
+                              term={t('singleSystem.systemDetails.location')}
+                            />
+                            <DescriptionDefinition
+                              className="line-height-body-3"
+                              definition="AWS East" // TODO: Get from CEDAR
+                            />
+                          </Grid>
+                        </Grid>
+                      </CardFooter>
+                    </Card>
+                    <Card className="grid-col-12">
+                      <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+                        <dt>{t('singleSystem.ato.atoExpiration')}</dt>
+                        <div className="text-right margin-bottom-0">
+                          <Tag
+                            className={classnames('grid-col-12', {
+                              'bg-success-dark': system.atoStatus === 'Active',
+                              'bg-warning':
+                                system.atoStatus === 'Due Soon' ||
+                                system.atoStatus === 'In Progress',
+                              'bg-error-dark': system.atoStatus === 'Expired',
+                              'bg-base-lighter': system.atoStatus === 'No ATO'
+                            })}
+                          >
+                            {system.atoStatus}
+                          </Tag>
+                        </div>
+                      </CardHeader>
+
+                      <CardBody className="padding-x-2 padding-y-0">
+                        <Grid row>
+                          <Grid desktop={{ col: 12 }} className="padding-0">
+                            <h3 className="link-header margin-top-0 margin-bottom-2">
+                              March 2, 2022 {/* TODO: Get from CEDAR */}
+                            </h3>
                             <div className="margin-bottom-2">
                               <UswdsReactLink
                                 className="link-header"
-                                to={`/systems/${system.id}/details`}
+                                to={`/systems/${system.id}/ato`}
                               >
                                 {/* TODO: Get from CEDAR */}
-                                {t('singleSystem.systemDetails.view')}{' '}
-                                {system.locations.length}{' '}
-                                {t('singleSystem.systemDetails.moreURLs')}
+                                {t('singleSystem.ato.viewATOInfo')}
                                 <span aria-hidden>&nbsp;</span>
                                 <span aria-hidden>&rarr; </span>
                               </UswdsReactLink>
                             </div>
-                          ) : (
-                            ''
-                          )}
+                          </Grid>
                         </Grid>
-                      </Grid>
-                      <Divider />
-                    </CardBody>
-                    <CardFooter className="padding-0">
-                      <Grid row>
-                        <Grid desktop={{ col: 6 }} className="padding-2">
-                          <DescriptionTerm
-                            term={t('singleSystem.systemDetails.location')}
-                          />
-                          <DescriptionDefinition
-                            className="line-height-body-3"
-                            definition="AWS East" // TODO: Get from CEDAR
-                          />
+                        <Divider />
+                      </CardBody>
+                      <CardFooter className="padding-0">
+                        <Grid row>
+                          <Grid desktop={{ col: 6 }} className="padding-2">
+                            <DescriptionTerm
+                              term={t('singleSystem.ato.currentActivity')}
+                            />
+                            <DescriptionDefinition
+                              className="line-height-body-3"
+                              definition="ATO Activity 4" // TODO: Get from CEDAR
+                            />
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </CardFooter>
-                  </Card>
+                      </CardFooter>
+                    </Card>
+                  </>
                 )}
-                <Card className="grid-col-12">
-                  <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                    <dt>{t('singleSystem.ato.atoExpiration')}</dt>
-                    <div className="text-right margin-bottom-0">
-                      <Tag
-                        className={classnames('grid-col-12', {
-                          'bg-success-dark': system.atoStatus === 'Active',
-                          'bg-warning':
-                            system.atoStatus === 'Due Soon' ||
-                            system.atoStatus === 'In Progress',
-                          'bg-error-dark': system.atoStatus === 'Expired',
-                          'bg-base-lighter': system.atoStatus === 'No ATO'
-                        })}
-                      >
-                        {system.atoStatus}
-                      </Tag>
-                    </div>
-                  </CardHeader>
-
-                  <CardBody className="padding-x-2 padding-y-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 12 }} className="padding-0">
-                        <h3 className="link-header margin-top-0 margin-bottom-2">
-                          March 2, 2022 {/* TODO: Get from CEDAR */}
-                        </h3>
-                        <div className="margin-bottom-2">
-                          <UswdsReactLink
-                            className="link-header"
-                            to={`/systems/${system.id}/ato`}
-                          >
-                            {/* TODO: Get from CEDAR */}
-                            {t('singleSystem.ato.viewATOInfo')}
-                            <span aria-hidden>&nbsp;</span>
-                            <span aria-hidden>&rarr; </span>
-                          </UswdsReactLink>
-                        </div>
-                      </Grid>
-                    </Grid>
-                    <Divider />
-                  </CardBody>
-                  <CardFooter className="padding-0">
-                    <Grid row>
-                      <Grid desktop={{ col: 6 }} className="padding-2">
-                        <DescriptionTerm
-                          term={t('singleSystem.ato.currentActivity')}
-                        />
-                        <DescriptionDefinition
-                          className="line-height-body-3"
-                          definition="ATO Activity 4" // TODO: Get from CEDAR
-                        />
-                      </Grid>
-                    </Grid>
-                  </CardFooter>
-                </Card>
                 <Card className="grid-col-12">
                   <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
                     <dt>
