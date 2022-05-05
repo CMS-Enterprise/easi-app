@@ -11,13 +11,15 @@ describe('RequestCardTestScore', () => {
     );
     expect(asFragment()).toMatchSnapshot();
     expect(getByText(/100%/i)).toBeVisible();
-    expect(container.getElementsByClassName('text-mint').length).toBe(1);
+    expect(container.getElementsByClassName('text-success').length).toBe(1);
   });
   it('renders score < 100%', () => {
     const { getByText, container } = render(
       <RequestCardTestScore scorePct={98} date={date} />
     );
     expect(getByText(/98%/i)).toBeVisible();
-    expect(container.getElementsByClassName('text-orange').length).toBe(1);
+    expect(container.getElementsByClassName('text-warning-dark').length).toBe(
+      1
+    );
   });
 });
