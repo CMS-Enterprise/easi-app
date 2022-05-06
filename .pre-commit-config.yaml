@@ -29,7 +29,7 @@ repos:
     rev: c3086eea8af86847dbdff2e46b85a5fe3c9d9656
     hooks:
       - id: go-fmt-import
-        args: ['-local', 'github.com/cmsgov/mint-app']
+        args: ['-local', 'github.com/cmsgov/easi-app']
         exclude: >
           (?x)^(
             .*gen/.*|
