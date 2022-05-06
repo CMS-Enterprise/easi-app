@@ -36,6 +36,173 @@ exports[`The making a request page matches snapshot 1`] = `
                     class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
                     data-testid="CardHeader"
                   >
+                    <div
+                      class="grid-row"
+                      data-testid="grid"
+                    >
+                      <div
+                        class="desktop:grid-col-12 padding-0"
+                        data-testid="grid"
+                      >
+                        <dt>
+                          Production Environment
+                        </dt>
+                      </div>
+                    </div>
+                  </header>
+                  <div
+                    class="usa-card__body padding-x-2 padding-y-0"
+                    data-testid="CardBody"
+                  >
+                    <div
+                      class="grid-row"
+                      data-testid="grid"
+                    >
+                      <div
+                        class="desktop:grid-col-12 padding-0"
+                        data-testid="grid"
+                      >
+                        <h3
+                          class="link-header margin-top-0 margin-bottom-2"
+                        >
+                          <a
+                            class="usa-link usa-link--external link-header"
+                            href="/"
+                          >
+                            ham.cms.gov
+                          </a>
+                        </h3>
+                        <div
+                          class="margin-bottom-2"
+                        >
+                          <a
+                            class="usa-link link-header"
+                            href="/systems/326-9-0/details"
+                          >
+                            View 2 more URLs
+                            <span
+                              aria-hidden="true"
+                            >
+                               
+                            </span>
+                            <span
+                              aria-hidden="true"
+                            >
+                              → 
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="easi-divider"
+                    />
+                  </div>
+                  <div
+                    class="usa-card__footer padding-0"
+                    data-testid="CardFooter"
+                  >
+                    <div
+                      class="grid-row"
+                      data-testid="grid"
+                    >
+                      <div
+                        class="desktop:grid-col-6 padding-2"
+                        data-testid="grid"
+                      >
+                        <dt
+                          class="text-bold margin-bottom-05"
+                        >
+                          Location
+                        </dt>
+                        <dd
+                          class="description-definition margin-0 line-height-body-3"
+                        >
+                          AWS East
+                        </dd>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="usa-card grid-col-12"
+                data-testid="Card"
+              >
+                <div
+                  class="usa-card__container"
+                >
+                  <header
+                    class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+                    data-testid="CardHeader"
+                  >
+                    <dt>
+                      ATO Expiration
+                    </dt>
+                    <div
+                      class="text-right margin-bottom-0"
+                    >
+                      <span
+                        class="easi-tag grid-col-12 bg-warning"
+                        data-testid="tag"
+                      >
+                        In Progress
+                      </span>
+                    </div>
+                  </header>
+                  <div
+                    class="usa-card__body padding-x-2 padding-y-0"
+                    data-testid="CardBody"
+                  >
+                    <div
+                      class="grid-row"
+                      data-testid="grid"
+                    >
+                      <div
+                        class="desktop:grid-col-12 padding-0"
+                        data-testid="grid"
+                      >
+                        <h3
+                          class="link-header margin-top-0 margin-bottom-2"
+                        >
+                          March 2, 2022 
+                        </h3>
+                        <div
+                          class="margin-bottom-2"
+                        >
+                          <a
+                            class="usa-link link-header"
+                            href="/systems/326-9-0/ato"
+                          >
+                            View ATO information
+                            <span
+                              aria-hidden="true"
+                            >
+                               
+                            </span>
+                            <span
+                              aria-hidden="true"
+                            >
+                              → 
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="usa-card grid-col-12"
+                data-testid="Card"
+              >
+                <div
+                  class="usa-card__container"
+                >
+                  <header
+                    class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+                    data-testid="CardHeader"
+                  >
                     <dt>
                       508 request name
                     </dt>
