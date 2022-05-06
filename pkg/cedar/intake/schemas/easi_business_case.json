@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIBizCase",
-  "title": "EASIBizCaseV02",
+  "title": "EASIBizCaseV03",
   "definitions": {
     "EASIBizCase": {
       "required": [
@@ -59,25 +59,11 @@
             "Managed through spreadsheets and email"
           ]
         },
-        "initialSubmittedAt": {
-          "type": "string",
-          "description": "Timestamp of when request was initially submitted",
-          "examples": [
-            "2022-02-17T07:34:43Z"
-          ]
-        },
         "intakeId": {
           "type": "string",
           "description": "Unique ID of the intake associated with this business case",
           "examples": [
             "36b85781-169a-4539-aa66-916663d8118c"
-          ]
-        },
-        "lastSubmittedAt": {
-          "type": "string",
-          "description": "Timestamp of when request was last submitted",
-          "examples": [
-            "2022-02-11T16:34:43Z"
           ]
         },
         "priorityAlignment": {
@@ -107,13 +93,6 @@
           "examples": [
             "410-123-4567",
             "4431234567"
-          ]
-        },
-        "submittedAt": {
-          "type": "string",
-          "description": "Timestamp of when request was submitted",
-          "examples": [
-            "2022-02-10T19:34:43Z"
           ]
         },
         "successIndicators": {

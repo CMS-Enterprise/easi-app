@@ -40,6 +40,8 @@ type ClientService interface {
 
 	SystemSummaryFindList(params *SystemSummaryFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemSummaryFindListOK, error)
 
+	SystemVersionFindByID(params *SystemVersionFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemVersionFindByIDOK, error)
+
 	SetTransport(transport runtime.ClientTransport)
 }
 
@@ -245,6 +247,47 @@ func (a *Client) SystemSummaryFindList(params *SystemSummaryFindListParams, auth
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for systemSummaryFindList: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  SystemVersionFindByID retrieves all versions of a system based on the i c t object ID
+
+  Retrieve all versions of a system based on the ICT Object ID.
+*/
+func (a *Client) SystemVersionFindByID(params *SystemVersionFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemVersionFindByIDOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewSystemVersionFindByIDParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "systemVersionFindById",
+		Method:             "GET",
+		PathPattern:        "/system/version",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &SystemVersionFindByIDReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*SystemVersionFindByIDOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for systemVersionFindById: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

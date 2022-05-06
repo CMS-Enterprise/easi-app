@@ -26,24 +26,30 @@ type AuthorityToOperate struct {
 
 	// cedar Id
 	// Example: 157-3632-0
-	CedarID string `json:"cedarId,omitempty"`
+	// Required: true
+	CedarID *string `json:"cedarId"`
 
 	// contains personally identifiable information
 	ContainsPersonallyIdentifiableInformation bool `json:"containsPersonallyIdentifiableInformation,omitempty"`
 
-	// contingency plan completion date
-	// Example: 2021-10-13T00:00:00.000Z
-	// Format: date
-	ContingencyPlanCompletionDate strfmt.Date `json:"contingencyPlanCompletionDate,omitempty"`
-
-	// contingency plan documentation
-	ContingencyPlanDocumentation []string `json:"contingencyPlanDocumentation"`
+	// count of open poams
+	CountOfOpenPoams int32 `json:"countOfOpenPoams,omitempty"`
 
 	// count of total non privileged user population
 	CountOfTotalNonPrivilegedUserPopulation int32 `json:"countOfTotalNonPrivilegedUserPopulation,omitempty"`
 
 	// count of total privileged user population
 	CountOfTotalPrivilegedUserPopulation int32 `json:"countOfTotalPrivilegedUserPopulation,omitempty"`
+
+	// date authorization memo expires
+	// Example: 2021-10-13T00:00:00.000Z
+	// Format: date
+	DateAuthorizationMemoExpires strfmt.Date `json:"dateAuthorizationMemoExpires,omitempty"`
+
+	// date authorization memo signed
+	// Example: 2021-10-13T00:00:00.000Z
+	// Format: date
+	DateAuthorizationMemoSigned strfmt.Date `json:"dateAuthorizationMemoSigned,omitempty"`
 
 	// e authentication level
 	// Example: 3
@@ -69,16 +75,44 @@ type AuthorityToOperate struct {
 	// is protected health information
 	IsProtectedHealthInformation bool `json:"isProtectedHealthInformation,omitempty"`
 
+	// last act sca date
+	// Example: 2021-10-13T00:00:00.000Z
+	// Format: date
+	LastActScaDate strfmt.Date `json:"lastActScaDate,omitempty"`
+
+	// last assessment date
+	// Example: 2021-10-13T00:00:00.000Z
+	// Format: date
+	LastAssessmentDate strfmt.Date `json:"lastAssessmentDate,omitempty"`
+
+	// last contingency plan completion date
+	// Example: 2021-10-13T00:00:00.000Z
+	// Format: date
+	LastContingencyPlanCompletionDate strfmt.Date `json:"lastContingencyPlanCompletionDate,omitempty"`
+
+	// last pen test date
+	// Example: 2021-10-13T00:00:00.000Z
+	// Format: date
+	LastPenTestDate strfmt.Date `json:"lastPenTestDate,omitempty"`
+
 	// pia completion date
 	// Example: 2021-10-13T00:00:00.000Z
 	// Format: date
 	PiaCompletionDate strfmt.Date `json:"piaCompletionDate,omitempty"`
 
+	// primary cyber risk advisor
+	// Example: ABCD
+	PrimaryCyberRiskAdvisor string `json:"primaryCyberRiskAdvisor,omitempty"`
+
+	// privacy subject matter expert
+	// Example: ABCD
+	PrivacySubjectMatterExpert string `json:"privacySubjectMatterExpert,omitempty"`
+
 	// recovery point objective
-	RecoveryPointObjective int32 `json:"recoveryPointObjective,omitempty"`
+	RecoveryPointObjective float32 `json:"recoveryPointObjective,omitempty"`
 
 	// recovery time objective
-	RecoveryTimeObjective int32 `json:"recoveryTimeObjective,omitempty"`
+	RecoveryTimeObjective float32 `json:"recoveryTimeObjective,omitempty"`
 
 	// system of records notice
 	SystemOfRecordsNotice []string `json:"systemOfRecordsNotice"`
@@ -89,7 +123,12 @@ type AuthorityToOperate struct {
 
 	// uuid
 	// Example: 806F9F07-C3A5-4EE6-9C6A-C8D50585B7EA
-	UUID string `json:"uuid,omitempty"`
+	// Required: true
+	UUID *string `json:"uuid"`
+
+	// xlc phase
+	// Example: Operate
+	XlcPhase string `json:"xlcPhase,omitempty"`
 }
 
 // Validate validates this authority to operate
@@ -100,11 +139,39 @@ func (m *AuthorityToOperate) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateContingencyPlanCompletionDate(formats); err != nil {
+	if err := m.validateCedarID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDateAuthorizationMemoExpires(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDateAuthorizationMemoSigned(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLastActScaDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLastAssessmentDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLastContingencyPlanCompletionDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLastPenTestDate(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validatePiaCompletionDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateUUID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -126,12 +193,81 @@ func (m *AuthorityToOperate) validateActualDispositionDate(formats strfmt.Regist
 	return nil
 }
 
-func (m *AuthorityToOperate) validateContingencyPlanCompletionDate(formats strfmt.Registry) error {
-	if swag.IsZero(m.ContingencyPlanCompletionDate) { // not required
+func (m *AuthorityToOperate) validateCedarID(formats strfmt.Registry) error {
+
+	if err := validate.Required("cedarId", "body", m.CedarID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *AuthorityToOperate) validateDateAuthorizationMemoExpires(formats strfmt.Registry) error {
+	if swag.IsZero(m.DateAuthorizationMemoExpires) { // not required
 		return nil
 	}
 
-	if err := validate.FormatOf("contingencyPlanCompletionDate", "body", "date", m.ContingencyPlanCompletionDate.String(), formats); err != nil {
+	if err := validate.FormatOf("dateAuthorizationMemoExpires", "body", "date", m.DateAuthorizationMemoExpires.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *AuthorityToOperate) validateDateAuthorizationMemoSigned(formats strfmt.Registry) error {
+	if swag.IsZero(m.DateAuthorizationMemoSigned) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("dateAuthorizationMemoSigned", "body", "date", m.DateAuthorizationMemoSigned.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *AuthorityToOperate) validateLastActScaDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.LastActScaDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("lastActScaDate", "body", "date", m.LastActScaDate.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *AuthorityToOperate) validateLastAssessmentDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.LastAssessmentDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("lastAssessmentDate", "body", "date", m.LastAssessmentDate.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *AuthorityToOperate) validateLastContingencyPlanCompletionDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.LastContingencyPlanCompletionDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("lastContingencyPlanCompletionDate", "body", "date", m.LastContingencyPlanCompletionDate.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *AuthorityToOperate) validateLastPenTestDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.LastPenTestDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("lastPenTestDate", "body", "date", m.LastPenTestDate.String(), formats); err != nil {
 		return err
 	}
 
@@ -144,6 +280,15 @@ func (m *AuthorityToOperate) validatePiaCompletionDate(formats strfmt.Registry) 
 	}
 
 	if err := validate.FormatOf("piaCompletionDate", "body", "date", m.PiaCompletionDate.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *AuthorityToOperate) validateUUID(formats strfmt.Registry) error {
+
+	if err := validate.Required("uuid", "body", m.UUID); err != nil {
 		return err
 	}
 

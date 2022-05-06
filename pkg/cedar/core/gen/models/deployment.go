@@ -43,7 +43,7 @@ type Deployment struct {
 	EndDate strfmt.Date `json:"endDate,omitempty"`
 
 	// has production data
-	// Example: true
+	// Example: yes
 	HasProductionData string `json:"hasProductionData,omitempty"`
 
 	// id
@@ -52,7 +52,7 @@ type Deployment struct {
 	ID *string `json:"id"`
 
 	// is hot site
-	// Example: true
+	// Example: yes
 	IsHotSite string `json:"isHotSite,omitempty"`
 
 	// name

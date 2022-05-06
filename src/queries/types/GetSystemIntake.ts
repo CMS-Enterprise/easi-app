@@ -48,7 +48,7 @@ export interface GetSystemIntake_systemIntake_grtFeedbacks {
   __typename: "GRTFeedback";
   feedback: string | null;
   feedbackType: GRTFeedbackType | null;
-  createdAt: Time | null;
+  createdAt: Time;
 }
 
 export interface GetSystemIntake_systemIntake_governanceTeams_teams {

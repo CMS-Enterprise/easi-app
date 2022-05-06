@@ -43,6 +43,7 @@ type ExtendLCIDForm = {
   newCostBaseline: string;
   nextSteps: string;
   scope: string;
+  feedback: string;
 };
 
 type ExtendLifecycleIdProps = {
@@ -77,7 +78,8 @@ const ExtendLifecycleId = ({
     currentNextSteps: lcidNextSteps,
     nextSteps: '',
     currentCostBaseline: lcidCostBaseline,
-    newCostBaseline: ''
+    newCostBaseline: '',
+    feedback: ''
   };
 
   const [extendLifecycleID, extendLifecycleIDStatus] = useMutation<

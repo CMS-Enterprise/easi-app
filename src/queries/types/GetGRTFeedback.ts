@@ -14,7 +14,7 @@ export interface GetGRTFeedback_systemIntake_grtFeedbacks {
   id: UUID | null;
   feedbackType: GRTFeedbackType | null;
   feedback: string | null;
-  createdAt: Time | null;
+  createdAt: Time;
 }
 
 export interface GetGRTFeedback_systemIntake {
