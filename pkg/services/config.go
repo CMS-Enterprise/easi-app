@@ -11,6 +11,12 @@ import (
 	"github.com/cmsgov/easi-app/pkg/flags"
 )
 
+// TODO - EASI-2021 - remove info for this feature flag
+const (
+	notifyMultipleRecipientsFlagName    = "notifyMultipleRecipients"
+	notifyMultipleRecipientsFlagDefault = false
+)
+
 // NewConfig returns a Config for services
 func NewConfig(logger *zap.Logger, ldc *ld.LDClient) Config {
 	return Config{

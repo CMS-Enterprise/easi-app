@@ -5,13 +5,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 	ldclient "gopkg.in/launchdarkly/go-server-sdk.v5"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -31,21 +28,6 @@ type Resolver struct {
 	emailClient     *email.Client
 	ldClient        *ldclient.LDClient
 	cedarCoreClient *cedarcore.Client
-}
-
-func (r *Resolver) checkBoolFeatureFlag(ctx context.Context, flagName string, flagDefault bool) bool {
-	lduser := flags.Principal(ctx)
-	result, err := r.ldClient.BoolVariation(flagName, lduser, flagDefault)
-	if err != nil {
-		appcontext.ZLogger(ctx).Info(
-			"problem evaluating feature flag",
-			zap.Error(err),
-			zap.String("flagName", flagName),
-			zap.Bool("flagDefault", flagDefault),
-			zap.Bool("flagResult", result),
-		)
-	}
-	return result
 }
 
 // ResolverService holds service methods for use in resolvers

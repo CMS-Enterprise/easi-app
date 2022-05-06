@@ -10,7 +10,6 @@ import (
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -269,7 +268,7 @@ func NewUpdateLifecycleFields(
 		}
 
 		// TODO - EASI-2021 - don't need this check with feature flag removed
-		notifyMultipleRecipients := config.checkBoolFeatureFlag(ctx, appconfig.NotifyMultipleRecipientsFlagName, appconfig.NotifyMultipleRecipientsFlagDefault)
+		notifyMultipleRecipients := config.checkBoolFeatureFlag(ctx, notifyMultipleRecipientsFlagName, notifyMultipleRecipientsFlagDefault)
 
 		// TODO - EASI-2021 - remove all this code about fetching requesterInfo, sending fallback emails
 		var requesterHasValidEUAID bool

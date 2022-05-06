@@ -13,7 +13,6 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authentication"
@@ -398,7 +397,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	//  TODO - EASI-2021 - remove
 	s.Run("happy path provided lcid, notifying single recipient", func() {
 		singleReviewEmailSent = false // clear before running test
-		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
 
 		intake, err := happy(context.Background(), input, action, true, nil)
 		s.NoError(err)
@@ -412,7 +411,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	s.Run("happy path provided lcid, notifying multiple recipients", func() {
 		multipleReviewEmailsSent = false // clear before running test
-		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, true)
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, true)
 
 		intake, err := happy(context.Background(), input, action, false, &recipients)
 		s.NoError(err)
@@ -427,7 +426,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	//  TODO - EASI-2021 - remove
 	s.Run("happy path provided lcid without sending email (to single recipient)", func() {
 		singleReviewEmailSent = false // clear before running test
-		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
 
 		intake, err := happy(context.Background(), input, action, false, &recipients)
 		s.NoError(err)
@@ -440,7 +439,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	s.Run("happy path provided lcid without sending email (to multiple recipients)", func() {
 		multipleReviewEmailsSent = false // clear before running test
-		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, true)
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, true)
 
 		intake, err := happy(context.Background(), input, action, false, nil)
 		s.NoError(err)
@@ -465,7 +464,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	//  TODO - EASI-2021 - remove this whole sub-suite
 	s.Run("test cases for single recipient having invalid or missing EUA ID", func() {
-		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
 
 		s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP", func() {
 			fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
@@ -684,7 +683,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 
 	for expectedErr, tc := range singleRecipientTestCases {
-		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, false)
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
 		s.Run(expectedErr, func() {
 			_, err := tc.fn(context.Background(), input, action, true, nil)
 			s.Error(err)
@@ -702,7 +701,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	for expectedErr, tc := range multipleRecipientTestCases {
 		// TODO - EASI-2021 - don't need to set this flag
-		setBoolFeatureFlag(testDataSource, appconfig.NotifyMultipleRecipientsFlagName, true)
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, true)
 		s.Run(expectedErr, func() {
 			_, err := tc.fn(context.Background(), input, action, false, &recipients)
 			s.Error(err)
