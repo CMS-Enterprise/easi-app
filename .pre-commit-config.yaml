@@ -29,6 +29,13 @@ repos:
     rev: c3086eea8af86847dbdff2e46b85a5fe3c9d9656
     hooks:
       - id: go-fmt-import
+        args: ['-local', 'github.com/cmsgov/mint-app']
+        exclude: >
+          (?x)^(
+            .*gen/.*|
+            .*generated/.*|
+            .*models_gen.go|
+          )$
 
   - repo: https://github.com/golangci/golangci-lint
     rev: v1.41.1
