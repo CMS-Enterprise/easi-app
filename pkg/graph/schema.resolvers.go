@@ -1590,7 +1590,7 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystem
 	var cedarRoles []*models.CedarRole
 	var errR error
 	g.Go(func() error {
-		cedarRoles, errS = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystem.VersionID, null.String{})
+		cedarRoles, errS = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.String{})
 		return errR
 	})
 
@@ -1598,7 +1598,7 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystem
 	var errD error
 
 	g.Go(func() error {
-		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, cedarSystem.VersionID, nil)
+		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, cedarSystemID, nil)
 		return errD
 	})
 	if err := g.Wait(); err != nil {
