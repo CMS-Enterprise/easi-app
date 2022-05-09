@@ -30,7 +30,9 @@ import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
 import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
-import RequestStatusTag from 'views/SystemProfile/RequestStatusTag';
+import RequestStatusTag, {
+  RequestStatus
+} from 'views/SystemProfile/RequestStatusTag';
 
 import './index.scss';
 
@@ -73,7 +75,7 @@ const RequestCard = ({
             </span>
           )}
         </h5>
-        <RequestStatusTag status={status} />
+        <RequestStatusTag status={status as RequestStatus} />
         {numTests !== undefined &&
           scorePct !== undefined &&
           initialTestDate !== undefined && (

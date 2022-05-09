@@ -3,12 +3,14 @@ import classnames from 'classnames';
 
 import Tag from 'components/shared/Tag';
 
-export type RequestStatus = {
+export type RequestStatusTagClassName = {
   Open: string;
   Closed: string;
 };
 
-export const requestStatusTagClassName: RequestStatus = {
+export type RequestStatus = keyof RequestStatusTagClassName;
+
+export const requestStatusTagClassName: RequestStatusTagClassName = {
   Open: 'bg-accent-cool',
   Closed: 'border-2px'
 };
@@ -17,13 +19,13 @@ export default ({
   status,
   className
 }: {
-  status: string;
+  status: RequestStatus;
   className?: string;
 }) => {
   return (
     <Tag
       className={classnames(
-        requestStatusTagClassName[status as keyof RequestStatus],
+        requestStatusTagClassName[status],
         'display-inline-block',
         className
       )}

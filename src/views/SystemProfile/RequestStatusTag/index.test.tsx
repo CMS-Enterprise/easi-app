@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import RequestStatusTag, { requestStatusTagClassName } from '.';
+import RequestStatusTag, { RequestStatus, requestStatusTagClassName } from '.';
 
 describe('RequestStatusTag', () => {
   test.each(
@@ -11,7 +11,7 @@ describe('RequestStatusTag', () => {
     }))
   )('renders request status tag %j', ({ status, className }) => {
     const { asFragment, getByText, container } = render(
-      <RequestStatusTag status={status} />
+      <RequestStatusTag status={status as RequestStatus} />
     );
     expect(asFragment()).toMatchSnapshot();
     expect(getByText(status)).toBeVisible();
