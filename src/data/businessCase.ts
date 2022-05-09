@@ -2,61 +2,49 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import {
   BusinessCaseModel,
-  EstimatedLifecycleCostLines,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import { CostData, LifecycleCosts } from 'types/estimatedLifecycle';
+import {
+  CostData,
+  LifecycleCosts,
+  LifecyclePhases,
+  LifecycleYears
+} from 'types/estimatedLifecycle';
 
-const emptyPhaseValues = {
-  development: {
-    phase: 'Development',
-    isPresent: false,
-    cost: ''
-  },
-  operationsMaintenance: {
-    phase: 'Operations and Maintenance',
-    isPresent: false,
-    cost: ''
-  },
-  helpDesk: {
-    phase: 'Help desk/call center',
-    isPresent: false,
-    cost: ''
-  },
-  software: {
-    phase: 'Software licenses',
-    isPresent: false,
-    cost: ''
-  },
-  planning: {
-    phase: 'Planning, support, and professional services',
-    isPresent: false,
-    cost: ''
-  },
-  infrastructure: {
-    phase: 'Infrastructure',
-    isPresent: false,
-    cost: ''
-  },
-  oit: {
-    phase: 'OIT services, tools, and pilots',
-    isPresent: false,
-    cost: ''
-  },
-  other: {
-    phase: 'Other services, tools, and pilots',
-    isPresent: false,
-    cost: ''
-  }
+const lifecycleCostsMap = {
+  development: 'Development',
+  operationsMaintenance: 'Operations and Maintenance',
+  helpDesk: 'Help desk/call center',
+  software: 'Software licenses',
+  planning: 'Planning, support, and professional services',
+  infrastructure: 'Infrastructure',
+  oit: 'OIT services, tools, and pilots',
+  other: 'Other services, tools, and pilots'
 };
 
-export const defaultEstimatedLifecycle = {
-  year1: cloneDeep(emptyPhaseValues),
-  year2: cloneDeep(emptyPhaseValues),
-  year3: cloneDeep(emptyPhaseValues),
-  year4: cloneDeep(emptyPhaseValues),
-  year5: cloneDeep(emptyPhaseValues)
-};
+export const defaultEstimatedLifecycle = Object.keys(lifecycleCostsMap).reduce(
+  (acc, cost) => {
+    return {
+      ...acc,
+      [cost]: {
+        phase: lifecycleCostsMap[cost as keyof LifecycleCosts],
+        isPresent: false,
+        type:
+          cost === 'development' || cost === 'operationsMaintenance'
+            ? 'primary'
+            : 'related',
+        years: {
+          year1: null,
+          year2: null,
+          year3: null,
+          year4: null,
+          year5: null
+        }
+      }
+    };
+  },
+  {}
+);
 
 export const defaultProposedSolution = {
   title: '',
@@ -102,9 +90,9 @@ export const businessCaseInitialData: BusinessCaseModel = {
 };
 
 type lifecycleCostLinesType = {
-  Preferred: EstimatedLifecycleCostLines;
-  A: EstimatedLifecycleCostLines;
-  B: EstimatedLifecycleCostLines;
+  Preferred: LifecycleCosts;
+  A: LifecycleCosts;
+  B: LifecycleCosts;
 };
 
 /**
@@ -131,9 +119,9 @@ export const alternativeSolutionHasFilledFields = (
     estimatedLifecycleCost
   } = alternativeSolution;
 
-  const hasLineItem = !!Object.values(estimatedLifecycleCost).find(year => {
-    return Object.values(year).find(phase => phase.isPresent);
-  });
+  const hasLineItem = !!Object.values(estimatedLifecycleCost).find(
+    cost => cost.isPresent
+  );
 
   return (
     title ||
@@ -174,29 +162,29 @@ export const prepareBusinessCaseForApp = (
 
   let doesAltBHaveLifecycleCostLines = false;
 
-  businessCase.lifecycleCostLines.forEach((line: any) => {
-    const phaseType:
-      | 'development'
-      | 'operationsMaintenance'
-      | 'helpDesk'
-      | 'software'
-      | 'planning'
-      | 'infrastructure'
-      | 'oit'
-      | 'other' = phaseTypeMap[`${line.phase}`];
+  businessCase.lifecycleCostLines
+    .filter((line: any) => !!line.cost)
+    .forEach((line: any) => {
+      const phaseType:
+        | 'development'
+        | 'operationsMaintenance'
+        | 'helpDesk'
+        | 'software'
+        | 'planning'
+        | 'infrastructure'
+        | 'oit'
+        | 'other' = phaseTypeMap[`${line.phase}`];
 
-    if (line.solution === 'B') {
-      doesAltBHaveLifecycleCostLines = true;
-    }
-
-    lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
-      `year${line.year}` as keyof EstimatedLifecycleCostLines
-    ][phaseType] = {
-      phase: line.phase,
-      isPresent: !!line.cost,
-      cost: line.cost ? line.cost.toString() : ''
-    };
-  });
+      if (line.solution === 'B') {
+        doesAltBHaveLifecycleCostLines = true;
+      }
+      const phase =
+        lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
+          phaseType
+        ];
+      phase.isPresent = !!line.cost;
+      phase.years[`year${line.year}` as keyof LifecycleYears] = line.cost;
+    });
 
   if (!doesAltBHaveLifecycleCostLines) {
     lifecycleCostLines.B = cloneDeep(defaultEstimatedLifecycle);
@@ -222,23 +210,23 @@ export const prepareBusinessCaseForApp = (
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
     preferredSolution: {
-      title: businessCase.preferredTitle,
-      summary: businessCase.preferredSummary,
-      acquisitionApproach: businessCase.preferredAcquisitionApproach,
-      pros: businessCase.preferredPros,
-      cons: businessCase.preferredCons,
-      costSavings: businessCase.preferredCostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.Preferred,
+      title: businessCase.preferredTitle || '',
+      summary: businessCase.preferredSummary || '',
+      acquisitionApproach: businessCase.preferredAcquisitionApproach || '',
+      pros: businessCase.preferredPros || '',
+      cons: businessCase.preferredCons || '',
+      costSavings: businessCase.preferredCostSavings || '',
+      estimatedLifecycleCost: lifecycleCostLines.Preferred || '',
       security: {
-        isApproved: businessCase.preferredSecurityIsApproved,
-        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
+        isApproved: businessCase.preferredSecurityIsApproved || '',
+        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed || ''
       },
       hosting: {
-        type: businessCase.preferredHostingType,
-        location: businessCase.preferredHostingLocation,
-        cloudServiceType: businessCase.preferredHostingCloudServiceType
+        type: businessCase.preferredHostingType || '',
+        location: businessCase.preferredHostingLocation || '',
+        cloudServiceType: businessCase.preferredHostingCloudServiceType || ''
       },
-      hasUserInterface: businessCase.preferredHasUI
+      hasUserInterface: businessCase.preferredHasUI || ''
     },
     alternativeA: {
       title: businessCase.alternativeATitle,
@@ -289,7 +277,7 @@ export const prepareBusinessCaseForApi = (
     businessCase.alternativeB
   );
   const solutionNameMap: {
-    solutionLifecycleCostLines: EstimatedLifecycleCostLines;
+    solutionLifecycleCostLines: LifecycleCosts;
     solutionApiName: string;
   }[] = [
     {
@@ -315,19 +303,28 @@ export const prepareBusinessCaseForApi = (
 
   const lifecycleCostLines = solutionNameMap
     .map(({ solutionLifecycleCostLines, solutionApiName }) => {
-      let yearCount = 1;
-      return Object.values(solutionLifecycleCostLines).reduce((acc, year) => {
-        const phases = Object.values(year).map(phase => {
-          return {
-            year: yearCount.toString(),
-            solution: solutionApiName,
-            ...phase,
-            cost: phase.cost ? parseFloat(phase.cost) : 0
-          };
-        });
-        yearCount += 1;
-        return [...acc, ...phases];
-      }, [] as { year: string; solution: string; phase: string; isPresent: boolean; cost: number }[]);
+      return Object.values(solutionLifecycleCostLines).reduce(
+        (
+          acc: {
+            solution: string;
+            phase: LifecyclePhases;
+            cost: number | null;
+            year: string;
+          }[],
+          phase: CostData
+        ) => {
+          const phaseObject = Object.keys(phase.years).map((year: string) => {
+            return {
+              solution: solutionApiName,
+              phase: phase.phase,
+              cost: phase.years[year as keyof LifecycleYears],
+              year: year.slice(-1)
+            };
+          });
+          return [...acc, ...phaseObject];
+        },
+        []
+      );
     })
     .flat();
 

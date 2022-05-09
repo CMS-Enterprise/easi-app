@@ -8,10 +8,18 @@ export type LifecyclePhases =
   | 'OIT services, tools, and pilots'
   | 'Other services, tools, and pilots';
 
+export type LifecycleYears = {
+  year1: number | null;
+  year2: number | null;
+  year3: number | null;
+  year4: number | null;
+  year5: number | null;
+};
+
 export type CostData = {
   phase: LifecyclePhases;
   isPresent: boolean;
-  cost: string;
+  years: LifecycleYears;
 };
 
 export type LifecycleCosts = {
