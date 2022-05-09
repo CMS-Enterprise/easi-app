@@ -15,6 +15,7 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -54,6 +55,7 @@ import './index.scss';
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
+  const flags = useFlags();
 
   const { systemId, subinfo, top } = useParams<{
     subinfo: string;
@@ -94,14 +96,17 @@ const SystemProfile = () => {
 
   // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(
-    sideNavItems(systemInfo)
+    sideNavItems(systemInfo, flags.systemProfileHiddenFields)
   ).map((key: string) => (
     <NavLink
-      to={sideNavItems(systemInfo)[key].route}
+      to={sideNavItems(systemInfo, flags.systemProfileHiddenFields)[key].route}
       key={key}
       activeClassName="usa-current"
       className={classnames({
-        'nav-group-border': sideNavItems(systemInfo)[key].groupEnd
+        'nav-group-border': sideNavItems(
+          systemInfo,
+          flags.systemProfileHiddenFields
+        )[key].groupEnd
       })}
     >
       {t(`navigation.${key}`)}
@@ -131,7 +136,12 @@ const SystemProfile = () => {
   }
 
   // TODO: Handle errors and loading
-  if (error || !systemInfo || (subinfo && !sideNavItems(systemInfo)[subinfo])) {
+  if (
+    error ||
+    !systemInfo ||
+    (subinfo &&
+      !sideNavItems(systemInfo, flags.systemProfileHiddenFields)[subinfo])
+  ) {
     return <NotFound />;
   }
 
@@ -238,24 +248,36 @@ const SystemProfile = () => {
                           term="Geraldine Hobbs"
                         />
                       </Grid>
-                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                        <DescriptionDefinition
-                          definition={t('singleSystem.summary.subheader3')}
-                        />
-                        <DescriptionTerm
-                          className="font-body-md"
-                          term="July 27, 2015"
-                        />
-                      </Grid>
-                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                        <DescriptionDefinition
-                          definition={t('singleSystem.summary.subheader4')}
-                        />
-                        <DescriptionTerm
-                          className="font-body-md"
-                          term="December 4, 2021"
-                        />
-                      </Grid>
+                      {flags.systemProfileHiddenFields && (
+                        <>
+                          {/* Go live date */}
+                          <Grid
+                            desktop={{ col: 6 }}
+                            className="margin-bottom-2"
+                          >
+                            <DescriptionDefinition
+                              definition={t('singleSystem.summary.subheader3')}
+                            />
+                            <DescriptionTerm
+                              className="font-body-md"
+                              term="July 27, 2015"
+                            />
+                          </Grid>
+                          {/* Most recent major change */}
+                          <Grid
+                            desktop={{ col: 6 }}
+                            className="margin-bottom-2"
+                          >
+                            <DescriptionDefinition
+                              definition={t('singleSystem.summary.subheader4')}
+                            />
+                            <DescriptionTerm
+                              className="font-body-md"
+                              term="December 4, 2021"
+                            />
+                          </Grid>
+                        </>
+                      )}
                     </Grid>
                   </CollapsableLink>
                 </div>
@@ -279,7 +301,11 @@ const SystemProfile = () => {
 
               <Grid desktop={{ col: 9 }}>
                 {/* This renders the selected sidenav central component */}
-                {sideNavItems(systemInfo)[subinfo || 'home'].component}
+                {
+                  sideNavItems(systemInfo, flags.systemProfileHiddenFields)[
+                    subinfo || 'home'
+                  ].component
+                }
               </Grid>
             </Grid>
           </GridContainer>

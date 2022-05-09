@@ -13,6 +13,7 @@ import {
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { ReactComponent as VerifiedUserIcon } from 'uswds/src/img/usa-icons/verified_user.svg';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -44,6 +45,7 @@ const checkURLsExist = (locations: tempLocationProp[]): boolean => {
 const SystemDetails = ({ system }: SystemDetailsProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
+  const flags = useFlags();
 
   return (
     <div id="system-detail">
@@ -84,39 +86,45 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                     definition="Both public and internal access"
                   />
                 </Grid>
-                <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.fismaID')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3"
-                    definition="123-456-789-0"
-                  />
-                </Grid>
+                {flags.systemProfileHiddenFields && (
+                  <Grid tablet={{ col: 6 }} className="margin-bottom-5">
+                    <DescriptionTerm
+                      term={t('singleSystem.systemDetails.fismaID')}
+                    />
+                    <DescriptionDefinition
+                      className="line-height-body-3"
+                      definition="123-456-789-0"
+                    />
+                  </Grid>
+                )}
               </Grid>
 
               {/* TODO: Map and populate tags with CEDAR */}
-              <h3 className="margin-top-0 margin-bottom-1">
-                {t('singleSystem.systemDetails.tagHeader1')}
-              </h3>
-              <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-                Fee for Service (FFS)
-              </Tag>
-              <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-                Million Hearts
-              </Tag>
-              <h3 className="margin-top-3 margin-bottom-1">
-                {t('singleSystem.systemDetails.tagHeader2')}
-              </h3>
-              <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-                Next Generation ACO Model
-              </Tag>
-              <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-                Comprehensive Primary Care Plus
-              </Tag>
-              <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
-                Independence at Home Demonstration
-              </Tag>
+              {flags.systemProfileHiddenFields && (
+                <>
+                  <h3 className="margin-top-0 margin-bottom-1">
+                    {t('singleSystem.systemDetails.tagHeader1')}
+                  </h3>
+                  <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+                    Fee for Service (FFS)
+                  </Tag>
+                  <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+                    Million Hearts
+                  </Tag>
+                  <h3 className="margin-top-3 margin-bottom-1">
+                    {t('singleSystem.systemDetails.tagHeader2')}
+                  </h3>
+                  <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+                    Next Generation ACO Model
+                  </Tag>
+                  <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+                    Comprehensive Primary Care Plus
+                  </Tag>
+                  <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1">
+                    Independence at Home Demonstration
+                  </Tag>
+                </>
+              )}
             </SectionWrapper>
 
             <SectionWrapper
@@ -231,8 +239,12 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
             </SectionWrapper>
 
             <SectionWrapper
-              borderBottom
-              className="padding-bottom-5 margin-bottom-4"
+              borderBottom={flags.systemProfileHiddenFields || isMobile}
+              className={
+                flags.systemProfileHiddenFields
+                  ? 'padding-bottom-5 margin-bottom-4'
+                  : 'margin-bottom-5'
+              }
             >
               <h2 className="margin-top-4 margin-bottom-1">
                 {t('singleSystem.systemDetails.development')}
@@ -251,13 +263,17 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
               {/* TODO: Map and populate tags with CEDAR */}
               <Grid row className="margin-top-3">
                 <Grid desktop={{ col: 6 }}>
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.customDevelopment')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition="85%"
-                  />
+                  {flags.systemProfileHiddenFields && (
+                    <>
+                      <DescriptionTerm
+                        term={t('singleSystem.systemDetails.customDevelopment')}
+                      />
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition="85%"
+                      />
+                    </>
+                  )}
                   <DescriptionTerm
                     term={t('singleSystem.systemDetails.workCompleted')}
                   />
@@ -274,13 +290,17 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                     className="line-height-body-3 margin-bottom-4"
                     definition="92%"
                   />
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.retirement')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition="No planned retirement or replacement"
-                  />
+                  {flags.systemProfileHiddenFields && (
+                    <>
+                      <DescriptionTerm
+                        term={t('singleSystem.systemDetails.retirement')}
+                      />
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition="No planned retirement or replacement"
+                      />
+                    </>
+                  )}
                 </Grid>
                 <Grid desktop={{ col: 12 }}>
                   <DescriptionTerm
@@ -293,86 +313,95 @@ const SystemDetails = ({ system }: SystemDetailsProps) => {
                     definition="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat elementum nibh feugiat donec. Ultricies at libero nullam egestas ipsum, sed."
                   />
                 </Grid>
-                <Grid desktop={{ col: 12 }}>
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.aiTechStatus')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition={system.status}
-                  />
-                </Grid>
-                <Grid desktop={{ col: 12 }}>
-                  <h3 className="margin-top-0 margin-bottom-1">
-                    {t('singleSystem.systemDetails.technologyTypes')}
-                  </h3>
-                  {/* TODO: Map and populate tags with CEDAR */}
-                  <Tag className="system-profile__tag text-base-darker bg-base-lighter">
-                    Natural Language Processing
-                  </Tag>
-                  <Tag className="system-profile__tag text-base-darker bg-base-lighter">
-                    Chat Bots
-                  </Tag>
-                </Grid>
+                {flags.systemProfileHiddenFields && (
+                  <>
+                    <Grid desktop={{ col: 12 }}>
+                      <DescriptionTerm
+                        term={t('singleSystem.systemDetails.aiTechStatus')}
+                      />
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={system.status}
+                      />
+                    </Grid>
+                    <Grid desktop={{ col: 12 }}>
+                      <h3 className="margin-top-0 margin-bottom-1">
+                        {t('singleSystem.systemDetails.technologyTypes')}
+                      </h3>
+                      {/* TODO: Map and populate tags with CEDAR */}
+                      <Tag className="system-profile__tag text-base-darker bg-base-lighter">
+                        Natural Language Processing
+                      </Tag>
+                      <Tag className="system-profile__tag text-base-darker bg-base-lighter">
+                        Chat Bots
+                      </Tag>
+                    </Grid>
+                  </>
+                )}
               </Grid>
             </SectionWrapper>
 
-            <SectionWrapper borderBottom={isMobile} className="margin-bottom-5">
-              <h2 className="margin-top-3 margin-bottom-1">
-                {t('singleSystem.systemDetails.ipInfo')}
-              </h2>
+            {flags.systemProfileHiddenFields && (
+              <SectionWrapper
+                borderBottom={isMobile}
+                className="margin-bottom-5"
+              >
+                <h2 className="margin-top-3 margin-bottom-1">
+                  {t('singleSystem.systemDetails.ipInfo')}
+                </h2>
 
-              {/* TODO: Map defined CEDAR variable once availabe */}
-              <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
-                <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
-                E-CAP Initiative
-              </Tag>
+                {/* TODO: Map defined CEDAR variable once availabe */}
+                <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
+                  <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
+                  E-CAP Initiative
+                </Tag>
 
-              {/* TODO: Map and populate tags with CEDAR */}
-              <Grid row className="margin-top-2">
-                <Grid desktop={{ col: 6 }} className="padding-right-2">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.currentIP')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition="IPv4 only"
-                  />
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.ipAssets')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition="This system will be transitioned to IPv6"
-                  />
+                {/* TODO: Map and populate tags with CEDAR */}
+                <Grid row className="margin-top-2">
+                  <Grid desktop={{ col: 6 }} className="padding-right-2">
+                    <DescriptionTerm
+                      term={t('singleSystem.systemDetails.currentIP')}
+                    />
+                    <DescriptionDefinition
+                      className="line-height-body-3 margin-bottom-4"
+                      definition="IPv4 only"
+                    />
+                    <DescriptionTerm
+                      term={t('singleSystem.systemDetails.ipAssets')}
+                    />
+                    <DescriptionDefinition
+                      className="line-height-body-3 margin-bottom-4"
+                      definition="This system will be transitioned to IPv6"
+                    />
+                  </Grid>
+                  <Grid desktop={{ col: 6 }} className="padding-right-2">
+                    <DescriptionTerm
+                      term={t('singleSystem.systemDetails.ipv6Transition')}
+                    />
+                    <DescriptionDefinition
+                      className="line-height-body-3 margin-bottom-4"
+                      definition="21"
+                    />
+                    <DescriptionTerm
+                      term={t('singleSystem.systemDetails.percentTransitioned')}
+                    />
+                    <DescriptionDefinition
+                      className="line-height-body-3 margin-bottom-4"
+                      definition="25%"
+                    />
+                  </Grid>
+                  <Grid desktop={{ col: 6 }} className="padding-right-2">
+                    <DescriptionTerm
+                      term={t('singleSystem.systemDetails.hardCodedIP')}
+                    />
+                    <DescriptionDefinition
+                      className="line-height-body-3 margin-bottom-4"
+                      definition="This system has hard-coded IP addresses"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid desktop={{ col: 6 }} className="padding-right-2">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.ipv6Transition')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition="21"
-                  />
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.percentTransitioned')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition="25%"
-                  />
-                </Grid>
-                <Grid desktop={{ col: 6 }} className="padding-right-2">
-                  <DescriptionTerm
-                    term={t('singleSystem.systemDetails.hardCodedIP')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition="This system has hard-coded IP addresses"
-                  />
-                </Grid>
-              </Grid>
-            </SectionWrapper>
+              </SectionWrapper>
+            )}
           </Grid>
           {/* Point of contact/ miscellaneous info */}
           <Grid

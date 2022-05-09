@@ -4,6 +4,7 @@ export type Flags = {
   downgrade508User: boolean;
   downgrade508Tester: boolean;
   systemProfile: boolean;
+  systemProfileHiddenFields: boolean;
   help: boolean;
   cedar508Requests: boolean;
 };
