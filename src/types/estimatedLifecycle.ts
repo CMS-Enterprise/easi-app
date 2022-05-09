@@ -19,6 +19,7 @@ export type LifecycleYears = {
 export type CostData = {
   phase: LifecyclePhases;
   isPresent: boolean;
+  type: 'primary' | 'related';
   years: LifecycleYears;
 };
 
