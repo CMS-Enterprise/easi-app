@@ -1589,7 +1589,7 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystem
 	return &dCedarSys, nil
 }
 
-func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.AugmentedSystemIntakeContact, error) {
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*model.SystemIntakeContactsPayload, error) {
 	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -1612,18 +1612,24 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 		}
 	}
 
-	augmentedContacts := make([]*models.AugmentedSystemIntakeContact, len(contacts))
-	for i, contact := range contacts {
+	augmentedContacts := make([]*models.AugmentedSystemIntakeContact, 0, len(contacts))
+	invalidEUAIDs := make([]string, 0, len(contacts))
+	for _, contact := range contacts {
 		if userInfo, found := userInfoMap[contact.EUAUserID]; found {
-			augmentedContacts[i] = &models.AugmentedSystemIntakeContact{
+			augmentedContacts = append(augmentedContacts, &models.AugmentedSystemIntakeContact{
 				SystemIntakeContact: *contact,
 				CommonName:          userInfo.CommonName,
 				Email:               userInfo.Email,
-			}
+			})
+		} else {
+			invalidEUAIDs = append(invalidEUAIDs, contact.EUAUserID)
 		}
 	}
 
-	return augmentedContacts, nil
+	return &model.SystemIntakeContactsPayload{
+		SystemIntakeContacts: augmentedContacts,
+		InvalidEUAIDs:        invalidEUAIDs,
+	}, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {

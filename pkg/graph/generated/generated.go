@@ -519,6 +519,11 @@ type ComplexityRoot struct {
 		SystemIntakeID func(childComplexity int) int
 	}
 
+	SystemIntakeContactsPayload struct {
+		InvalidEUAIDs        func(childComplexity int) int
+		SystemIntakeContacts func(childComplexity int) int
+	}
+
 	SystemIntakeContract struct {
 		Contractor  func(childComplexity int) int
 		EndDate     func(childComplexity int) int
@@ -767,7 +772,7 @@ type QueryResolver interface {
 	Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
 	Roles(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error)
 	DetailedCedarSystemInfo(ctx context.Context, cedarSystemID string) (*model.DetailedCedarSystem, error)
-	SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.AugmentedSystemIntakeContact, error)
+	SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*model.SystemIntakeContactsPayload, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error)
@@ -3234,6 +3239,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeContact.SystemIntakeID(childComplexity), true
 
+	case "SystemIntakeContactsPayload.invalidEUAIDs":
+		if e.complexity.SystemIntakeContactsPayload.InvalidEUAIDs == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContactsPayload.InvalidEUAIDs(childComplexity), true
+
+	case "SystemIntakeContactsPayload.systemIntakeContacts":
+		if e.complexity.SystemIntakeContactsPayload.SystemIntakeContacts == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContactsPayload.SystemIntakeContacts(childComplexity), true
+
 	case "SystemIntakeContract.contractor":
 		if e.complexity.SystemIntakeContract.Contractor == nil {
 			break
@@ -4858,6 +4877,9 @@ type SystemIntakeContact {
   systemIntakeId: UUID!
 }
 
+"""
+Represents a contact associated with a system intake, including additional fields from CEDAR
+"""
 type AugmentedSystemIntakeContact {
   euaUserId: String!
   systemIntakeId: UUID!
@@ -4894,6 +4916,15 @@ The payload when deleting a system intake contact
 type DeleteSystemIntakeContactPayload {
   systemIntakeContact: SystemIntakeContact
 }
+
+"""
+The payload when retrieving system intake contacts
+"""
+type SystemIntakeContactsPayload {
+  systemIntakeContacts: [AugmentedSystemIntakeContact!]!
+  invalidEUAIDs: [String!]!
+}
+
 
 """
 Defines the mutations for the schema
@@ -5018,7 +5049,7 @@ type Query {
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   detailedCedarSystemInfo(cedarSystemId: String!): DetailedCedarSystem
-  systemIntakeContacts(id: UUID!): [AugmentedSystemIntakeContact!]!
+  systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
 }
 
 """
@@ -14383,9 +14414,9 @@ func (ec *executionContext) _Query_systemIntakeContacts(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.AugmentedSystemIntakeContact)
+	res := resTmp.(*model.SystemIntakeContactsPayload)
 	fc.Result = res
-	return ec.marshalNAugmentedSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAugmentedSystemIntakeContactᚄ(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeContactsPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContactsPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -17143,6 +17174,76 @@ func (ec *executionContext) _SystemIntakeContact_systemIntakeId(ctx context.Cont
 	res := resTmp.(uuid.UUID)
 	fc.Result = res
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeContactsPayload_systemIntakeContacts(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContactsPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContactsPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemIntakeContacts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.AugmentedSystemIntakeContact)
+	fc.Result = res
+	return ec.marshalNAugmentedSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAugmentedSystemIntakeContactᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeContactsPayload_invalidEUAIDs(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContactsPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContactsPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.InvalidEUAIDs, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeContract_contractor(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
@@ -26290,6 +26391,47 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 	return out
 }
 
+var systemIntakeContactsPayloadImplementors = []string{"SystemIntakeContactsPayload"}
+
+func (ec *executionContext) _SystemIntakeContactsPayload(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeContactsPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeContactsPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeContactsPayload")
+		case "systemIntakeContacts":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SystemIntakeContactsPayload_systemIntakeContacts(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "invalidEUAIDs":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SystemIntakeContactsPayload_invalidEUAIDs(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var systemIntakeContractImplementors = []string{"SystemIntakeContract"}
 
 func (ec *executionContext) _SystemIntakeContract(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeContract) graphql.Marshaler {
@@ -28546,6 +28688,20 @@ func (ec *executionContext) marshalNSystemIntakeCollaborator2ᚖgithubᚗcomᚋc
 		return graphql.Null
 	}
 	return ec._SystemIntakeCollaborator(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeContactsPayload2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContactsPayload(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeContactsPayload) graphql.Marshaler {
+	return ec._SystemIntakeContactsPayload(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeContactsPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContactsPayload(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeContactsPayload) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeContactsPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSystemIntakeContract2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeContract) graphql.Marshaler {
