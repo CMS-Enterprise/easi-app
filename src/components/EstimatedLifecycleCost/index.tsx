@@ -162,32 +162,34 @@ const Phase = ({
 const OtherCosts = ({
   formikKey,
   setFieldValue,
-  lifecycleCosts
+  lifecycleCosts,
+  relatedCosts,
+  setRelatedCosts
 }: {
   formikKey: string;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   lifecycleCosts: LifecycleCosts;
+  relatedCosts: any;
+  setRelatedCosts: (relatedCost: any) => void;
 }) => {
-  const [active, setActive] = useState(false);
-  const [relatedCost, setRelatedCost] = useState('');
+  const [activeRelatedCost, setActiveRelatedCost] = useState(null);
   const { t } = useTranslation('businessCase');
-  const relatedCosts = t('lifecycleCost.relatedCostOptions', {
-    returnObjects: true
-  });
+
+  if (Object.keys(relatedCosts).length > 2) return null;
   return (
     <div className="cost-table-row cost-table-row__other">
-      {!active && (
+      {!activeRelatedCost && (
         <Button
           type="button"
           unstyled
-          onClick={() => setActive(true)}
+          onClick={() => setActiveRelatedCost(true)}
           className="display-flex flex-align-center"
         >
           <IconAdd className="margin-right-1" />
           {t('lifecycleCost.addRelatedCost')}
         </Button>
       )}
-      {active && (
+      {activeRelatedCost && (
         <div className="display-flex flex-align-center">
           <Label htmlFor="newRelatedCostSelect">
             {t('lifecycleCost.newRelatedCost')}
@@ -195,33 +197,42 @@ const OtherCosts = ({
           <select
             className="margin-top-0 desktop:margin-x-2 usa-select"
             id="newRelatedCostSelect"
-            onBlur={e => setRelatedCost(e.target.value)}
+            onBlur={e => setActiveRelatedCost(e.target.value)}
           >
-            <option>-{t('Select')}-</option>
-            {Object.keys(relatedCosts).map(key => {
-              return (
-                <option key={key} value={key}>
-                  {relatedCosts[key]}
-                </option>
-              );
-            })}
+            <option>-{t('select')}-</option>
+            {Object.keys(lifecycleCosts)
+              .filter(cost => {
+                return (
+                  lifecycleCosts[cost].type === 'related' && !relatedCosts[cost]
+                );
+              })
+              .map(cost => {
+                return (
+                  <option key={cost} value={cost}>
+                    {lifecycleCosts[cost].label}
+                  </option>
+                );
+              })}
           </select>
           <Button
             type="submit"
             onClick={() => {
-              Object.keys(lifecycleCosts).forEach(cost => {
-                setFieldValue(
-                  `${formikKey}.${cost}.${relatedCost}.isPresent`,
-                  true
-                );
-                setRelatedCost('');
-                setActive(false);
-              });
+              if (lifecycleCosts[activeRelatedCost]) {
+                setRelatedCosts({
+                  ...relatedCosts,
+                  [activeRelatedCost]: lifecycleCosts[activeRelatedCost]
+                });
+              }
+              setActiveRelatedCost(null);
             }}
           >
             {t('save')}
           </Button>
-          <Button type="button" outline onClick={() => setActive(false)}>
+          <Button
+            type="button"
+            outline
+            onClick={() => setActiveRelatedCost(null)}
+          >
             {t('cancel')}
           </Button>
         </div>
@@ -244,6 +255,7 @@ const EstimatedLifecycleCost = ({
   errors = {},
   businessCaseCreatedAt = ''
 }: EstimatedLifecycleCostProps) => {
+  const [relatedCosts, setRelatedCosts] = useState({});
   const { t } = useTranslation('businessCase');
   const sumCostinYear = (year: string) => {
     return Object.values(lifecycleCosts).reduce((total, current) => {
@@ -259,8 +271,6 @@ const EstimatedLifecycleCost = ({
       0
     );
   };
-
-  // console.log(lifecycleCosts);
 
   const fiscalYear = getFiscalYear(DateTime.fromISO(businessCaseCreatedAt));
 
@@ -297,28 +307,27 @@ const EstimatedLifecycleCost = ({
           lifecycleCosts={lifecycleCosts}
           total={calculateCategoryCost('operationsMaintenance')}
         />
-        {Object.keys(lifecycleCosts)
-          .filter(cost => lifecycleCosts[cost].type === 'related')
-          .map(cost => {
-            if (!lifecycleCosts[cost].isPresent) return null;
-            return (
-              <Phase
-                key={cost}
-                category={cost}
-                formikKey={formikKey}
-                fiscalYear={fiscalYear}
-                setFieldValue={setFieldValue}
-                // errors={errors.year1}
-                lifecycleCosts={lifecycleCosts}
-                total={calculateCategoryCost(cost)}
-              />
-            );
-          })}
-        {/* <OtherCosts
+        {Object.keys(relatedCosts).map(cost => {
+          return (
+            <Phase
+              key={cost}
+              category={cost}
+              formikKey={formikKey}
+              fiscalYear={fiscalYear}
+              setFieldValue={setFieldValue}
+              // errors={errors.year1}
+              lifecycleCosts={lifecycleCosts}
+              total={calculateCategoryCost(cost)}
+            />
+          );
+        })}
+        <OtherCosts
           formikKey={formikKey}
           setFieldValue={setFieldValue}
           lifecycleCosts={lifecycleCosts}
-        /> */}
+          relatedCosts={relatedCosts}
+          setRelatedCosts={setRelatedCosts}
+        />
         <div className="cost-table-row cost-table-row__totals border-bottom-0">
           {Object.keys(lifecycleCosts.development.years).map(year => {
             return <span key={year}>{formatDollars(sumCostinYear(year))}</span>;
