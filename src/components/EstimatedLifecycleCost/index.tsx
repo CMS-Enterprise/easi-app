@@ -245,15 +245,16 @@ const EstimatedLifecycleCost = ({
   businessCaseCreatedAt = ''
 }: EstimatedLifecycleCostProps) => {
   const { t } = useTranslation('businessCase');
-  const sumCostinYear = (year: keyof LifecycleYears) => {
-    return Object.values(lifecycleCosts).reduce((total, cost) => {
-      return total + (cost.years[year] ? parseFloat(cost.years[year]) : 0);
+  const sumCostinYear = (year: string) => {
+    return Object.values(lifecycleCosts).reduce((total, current) => {
+      const cost = current.years[year as keyof LifecycleYears];
+      return total + (cost ? parseFloat(cost) : 0);
     }, 0);
   };
   const calculateCategoryCost = (category: categoryKeys) => {
     return Object.values(lifecycleCosts[category].years).reduce(
-      (total, cost) => {
-        return total + (cost ? parseFloat(cost) : 0);
+      (total, current) => {
+        return total + (current ? parseFloat(current) : 0);
       },
       0
     );
@@ -318,13 +319,11 @@ const EstimatedLifecycleCost = ({
           setFieldValue={setFieldValue}
           lifecycleCosts={lifecycleCosts}
         /> */}
-        {/* <div className="cost-table-row cost-table-row__totals border-bottom-0">
-          {Object.keys(lifecycleCosts).map(key => {
-            return (
-              <span key={key}>{formatDollars(sumCostinYear(lifecycleCosts[key]))}</span>
-            );
+        <div className="cost-table-row cost-table-row__totals border-bottom-0">
+          {Object.keys(lifecycleCosts.development.years).map(year => {
+            return <span key={year}>{formatDollars(sumCostinYear(year))}</span>;
           })}
-        </div> */}
+        </div>
         <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto margin-top-3 padding-x-2">
           <DescriptionList title="System total cost">
             <DescriptionTerm term="System total cost" />
