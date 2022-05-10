@@ -616,7 +616,9 @@ const PreferredSolution = ({
                 </HelpText>
                 <EstimatedLifecycleCost
                   formikKey="preferredSolution.estimatedLifecycleCost"
-                  years={values.preferredSolution.estimatedLifecycleCost}
+                  lifecycleCosts={
+                    values.preferredSolution.estimatedLifecycleCost
+                  }
                   businessCaseCreatedAt={businessCase.createdAt}
                   errors={
                     errors.preferredSolution &&

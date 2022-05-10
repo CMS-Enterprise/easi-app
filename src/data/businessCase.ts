@@ -27,18 +27,18 @@ export const defaultEstimatedLifecycle = Object.keys(lifecycleCostsMap).reduce(
     return {
       ...acc,
       [cost]: {
-        phase: lifecycleCostsMap[cost as keyof LifecycleCosts],
+        label: lifecycleCostsMap[cost as keyof LifecycleCosts],
         isPresent: false,
         type:
           cost === 'development' || cost === 'operationsMaintenance'
             ? 'primary'
             : 'related',
         years: {
-          year1: null,
-          year2: null,
-          year3: null,
-          year4: null,
-          year5: null
+          year1: '',
+          year2: '',
+          year3: '',
+          year4: '',
+          year5: ''
         }
       }
     };
@@ -120,7 +120,7 @@ export const alternativeSolutionHasFilledFields = (
   } = alternativeSolution;
 
   const hasLineItem = !!Object.values(estimatedLifecycleCost).find(
-    cost => cost.isPresent
+    phase => phase.isPresent
   );
 
   return (
@@ -182,8 +182,10 @@ export const prepareBusinessCaseForApp = (
         lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
           phaseType
         ];
-      phase.isPresent = !!line.cost;
-      phase.years[`year${line.year}` as keyof LifecycleYears] = line.cost;
+      phase.isPresent = true;
+      phase.years[`year${line.year}` as keyof LifecycleYears] = line.cost
+        ? line.cost.toString()
+        : '';
     });
 
   if (!doesAltBHaveLifecycleCostLines) {
@@ -304,20 +306,15 @@ export const prepareBusinessCaseForApi = (
   const lifecycleCostLines = solutionNameMap
     .map(({ solutionLifecycleCostLines, solutionApiName }) => {
       return Object.values(solutionLifecycleCostLines).reduce(
-        (
-          acc: {
-            solution: string;
-            phase: LifecyclePhases;
-            cost: number | null;
-            year: string;
-          }[],
-          phase: CostData
-        ) => {
-          const phaseObject = Object.keys(phase.years).map((year: string) => {
+        (acc: any, phase) => {
+          const { label, years } = phase;
+          const phaseObject = Object.keys(years).map((year: string) => {
+            const cost = years[year as keyof LifecycleYears];
             return {
               solution: solutionApiName,
-              phase: phase.phase,
-              cost: phase.years[year as keyof LifecycleYears],
+              phase:
+                label === 'Other services, tools, and pilots' ? 'Other' : label,
+              cost: cost ? parseFloat(cost) : null,
               year: year.slice(-1)
             };
           });

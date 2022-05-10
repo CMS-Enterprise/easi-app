@@ -440,7 +440,7 @@ const AlternativeSolutionFields = ({
         </HelpText>
         <EstimatedLifecycleCost
           formikKey={`${altId}.estimatedLifecycleCost`}
-          years={values[`${altId}`].estimatedLifecycleCost}
+          lifecycleCosts={values[`${altId}`].estimatedLifecycleCost}
           businessCaseCreatedAt={businessCaseCreatedAt}
           errors={
             errors &&

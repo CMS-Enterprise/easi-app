@@ -9,15 +9,15 @@ export type LifecyclePhases =
   | 'Other services, tools, and pilots';
 
 export type LifecycleYears = {
-  year1: number | null;
-  year2: number | null;
-  year3: number | null;
-  year4: number | null;
-  year5: number | null;
+  year1: string;
+  year2: string;
+  year3: string;
+  year4: string;
+  year5: string;
 };
 
 export type CostData = {
-  phase: LifecyclePhases;
+  label: LifecyclePhases;
   isPresent: boolean;
   type: 'primary' | 'related';
   years: LifecycleYears;
