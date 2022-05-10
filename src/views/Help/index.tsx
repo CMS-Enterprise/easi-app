@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import NotFound from 'views/NotFound';
 
@@ -9,11 +10,13 @@ import PrepareForGRT from './ITGovernance/PrepareForGRT';
 import StepsInvolved from './Section508/StepsInvolved';
 import TestingTemplates from './Section508/TestingTemplate';
 import AllHelp from './All';
+import Footer from './Footer';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
 import Section508 from './Section508';
 
 const Help = () => {
+  const flags = useFlags();
   return (
     <>
       <Switch>
@@ -56,6 +59,8 @@ const Help = () => {
         {/* 404 */}
         <Route path="*" render={() => <NotFound />} />
       </Switch>
+
+      {flags.helpFooter && <Footer />}
     </>
   );
 };
