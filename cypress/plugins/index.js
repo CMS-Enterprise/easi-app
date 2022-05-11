@@ -21,28 +21,35 @@ const issueLCIDQuery = require('../../src/queries/IssueLifecycleIdQuery')
   .default;
 
 const cache = new apollo.InMemoryCache();
-const apolloClient = new apollo.ApolloClient({
-  cache,
-  link: new apollo.HttpLink({
-    uri: 'http://localhost:8080/api/graph/query', // TODO make this generalizable?
-    fetch,
-    headers: {
-      // TODO make the EUA ID generalizable
-      // need job code to be able to issue LCID
-      Authorization:
-        'Local {"euaId":"SWKJ", "favorLocalAuth":true, "jobCodes":["EASI_D_GOVTEAM"]}'
-    }
-  })
-});
 
-function issueLCID({ intakeId, recipientEmails }) {
+function createApolloClient(euaId) {
+  return new apollo.ApolloClient({
+    cache,
+    link: new apollo.HttpLink({
+      uri: 'http://localhost:8080/api/graph/query', // TODO make this generalizable?
+      fetch,
+      headers: {
+        // need job code to be able to issue LCID
+        Authorization: `Local {"euaId":"${euaId}", "favorLocalAuth":true, "jobCodes":["EASI_D_GOVTEAM"]}`
+      }
+    })
+  });
+}
+function issueLCID({
+  euaId,
+  intakeId,
+  shouldSendEmail,
+  recipientEmails,
+  scope
+}) {
+  const apolloClient = createApolloClient(euaId);
   return new Promise(resolve => {
     const input = {
       intakeId,
       expiresAt: luxon.DateTime.utc(4567, 12, 1).toISO(),
       feedback: 'feedback',
-      scope: 'scope',
-      shouldSendEmail: true,
+      scope,
+      shouldSendEmail,
       notificationRecipients: {
         regularRecipientEmails: recipientEmails,
         shouldNotifyITGovernance: false,

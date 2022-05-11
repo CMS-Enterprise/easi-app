@@ -1,11 +1,14 @@
 /// <reference types="cypress" />
 import { v4 as uuidv4 } from 'uuid';
 
+const euaIDFeatureFlagSet = 'CYPT';
+const euaIDFeatureFlagUnset = 'CYPF';
+
 describe('Email notifications', () => {
   describe('Issuing lifecycle IDs', () => {
     beforeEach(() => {
       // create system intake through UI
-      cy.localLogin({ name: 'SWKJ' });
+      cy.localLogin({ name: 'ABCD' });
 
       cy.intercept('POST', '/api/graph/query', req => {
         if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
@@ -53,8 +56,10 @@ describe('Email notifications', () => {
       const guidRegex = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
       cy.location().then(location => {
         const match = guidRegex.exec(location.pathname);
+
         // eslint-disable-next-line no-unused-expressions
         expect(match).to.not.be.null;
+
         const intakeId = match[0];
         cy.wrap(intakeId).as('intakeId');
       });
@@ -69,8 +74,11 @@ describe('Email notifications', () => {
         // issue LCID through GQL
         cy.get('@intakeId').then(intakeId => {
           cy.task('issueLCID', {
+            euaId: euaIDFeatureFlagSet,
             intakeId,
-            recipientEmails: [recipient1, recipient2]
+            shouldSendEmail: true,
+            recipientEmails: [recipient1, recipient2],
+            scope: 'scope'
           });
         });
 
@@ -107,6 +115,54 @@ describe('Email notifications', () => {
               notification2.recipients.length,
               `notification for recipient2 sent to other recipients`
             ).to.equal(1);
+          }
+        );
+      });
+    });
+
+    describe('Without feature flag for multiple notifications set', () => {
+      it("Notifies requester and CC's GRT", () => {
+        // set scope message based on UUID so we can uniquely identify message
+        const scope = `scope-${uuidv4()}`;
+
+        // issue LCID through GQL
+        cy.get('@intakeId').then(intakeId => {
+          cy.task('issueLCID', {
+            euaId: euaIDFeatureFlagUnset,
+            intakeId,
+            shouldSendEmail: true,
+            recipientEmails: [],
+            scope
+          });
+        });
+
+        // check mailcatcher API for what emails have been sent
+        cy.request('http://localhost:1080/messages').then(
+          mailcatcherResponse => {
+            expect(mailcatcherResponse.status).to.eq(200);
+
+            const emailsSentToMultipleRecipients = mailcatcherResponse.body.filter(
+              email => email.recipients.length === 2
+            );
+            expect(emailsSentToMultipleRecipients.length).to.be.greaterThan(0);
+
+            // make sure a notification was sent for issuing *this specific LCID*
+
+            // eslint-disable-next-line no-restricted-syntax
+            for (const email of emailsSentToMultipleRecipients) {
+              cy.request(
+                `http://localhost:1080/messages/${email.id}.html`
+              ).then(emailBodyResponse => {
+                expect(emailBodyResponse.status).to.eq(200);
+                if (emailBodyResponse.body.includes(scope)) {
+                  cy.wrap(email.id).as('specificEmailId');
+                }
+              });
+            }
+            cy.get('@specificEmailId').then(specificEmailId => {
+              // eslint-disable-next-line no-unused-expressions
+              expect(specificEmailId).not.to.be.undefined;
+            });
           }
         );
       });
