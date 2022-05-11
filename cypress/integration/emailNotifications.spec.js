@@ -4,74 +4,69 @@ import { v4 as uuidv4 } from 'uuid';
 const euaIDFeatureFlagSet = 'CYPT';
 const euaIDFeatureFlagUnset = 'CYPF';
 
+// create system intake through UI
+const createIntake = () => {
+  cy.localLogin({ name: 'ABCD' });
+
+  cy.intercept('POST', '/api/graph/query', req => {
+    if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
+      req.alias = 'updateContactDetails';
+    }
+
+    if (req.body.operationName === 'SubmitIntake') {
+      req.alias = 'submitIntake';
+    }
+  });
+
+  cy.visit('/system/request-type');
+  cy.get('#RequestType-NewSystem').check({ force: true });
+  cy.contains('button', 'Continue').click();
+  cy.contains('a', 'Get started').click();
+  cy.wait(1000);
+  cy.contains('a', 'Start').click();
+
+  // copied from systemIntake.spec.js smoke test
+  cy.systemIntake.contactDetails.fillNonBranchingFields();
+  cy.get('#IntakeForm-HasIssoNo').check({ force: true });
+  cy.get('#IntakeForm-NoGovernanceTeam').check({ force: true });
+  cy.contains('button', 'Next').click();
+  cy.wait('@updateContactDetails');
+  cy.systemIntake.requestDetails.fillNonBranchingFields();
+  cy.get('#IntakeForm-CurrentStage').select('Just an idea');
+  cy.contains('button', 'Next').click();
+  cy.get('#IntakeForm-HasFundingSourceNo').check({ force: true });
+  cy.get('#IntakeForm-CostsExpectingIncreaseNo').check({ force: true });
+  cy.get('#IntakeForm-ContractNotNeeded').check({ force: true });
+  cy.contains('button', 'Next').click();
+  cy.contains('h1', 'Check your answers before sending');
+  cy.contains('button', 'Send my intake request').click();
+  cy.wait('@submitIntake');
+
+  // get intake ID
+  const guidRegex = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
+  cy.location().then(location => {
+    const match = guidRegex.exec(location.pathname);
+
+    // eslint-disable-next-line no-unused-expressions
+    expect(match).to.not.be.null;
+
+    const intakeId = match[0];
+    cy.wrap(intakeId).as('intakeId');
+  });
+};
+
 describe('Email notifications', () => {
   describe('Issuing lifecycle IDs', () => {
-    beforeEach(() => {
-      // create system intake through UI
-      cy.localLogin({ name: 'ABCD' });
-
-      cy.intercept('POST', '/api/graph/query', req => {
-        if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
-          req.alias = 'updateRequestDetails';
-        }
-
-        if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
-          req.alias = 'updateContactDetails';
-        }
-
-        if (req.body.operationName === 'UpdateSystemIntakeContractDetails') {
-          req.alias = 'updateContractDetails';
-        }
-
-        if (req.body.operationName === 'SubmitIntake') {
-          req.alias = 'submitIntake';
-        }
-      });
-
-      cy.visit('/system/request-type');
-      cy.get('#RequestType-NewSystem').check({ force: true });
-      cy.contains('button', 'Continue').click();
-      cy.contains('a', 'Get started').click();
-      cy.wait(1000);
-      cy.contains('a', 'Start').click();
-
-      // copied from systemIntake.spec.js smoke test
-      cy.systemIntake.contactDetails.fillNonBranchingFields();
-      cy.get('#IntakeForm-HasIssoNo').check({ force: true });
-      cy.get('#IntakeForm-NoGovernanceTeam').check({ force: true });
-      cy.contains('button', 'Next').click();
-      cy.wait('@updateContactDetails');
-      cy.systemIntake.requestDetails.fillNonBranchingFields();
-      cy.get('#IntakeForm-CurrentStage').select('Just an idea');
-      cy.contains('button', 'Next').click();
-      cy.get('#IntakeForm-HasFundingSourceNo').check({ force: true });
-      cy.get('#IntakeForm-CostsExpectingIncreaseNo').check({ force: true });
-      cy.get('#IntakeForm-ContractNotNeeded').check({ force: true });
-      cy.contains('button', 'Next').click();
-      cy.contains('h1', 'Check your answers before sending');
-      cy.contains('button', 'Send my intake request').click();
-      cy.wait('@submitIntake');
-
-      // get intake ID
-      const guidRegex = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
-      cy.location().then(location => {
-        const match = guidRegex.exec(location.pathname);
-
-        // eslint-disable-next-line no-unused-expressions
-        expect(match).to.not.be.null;
-
-        const intakeId = match[0];
-        cy.wrap(intakeId).as('intakeId');
-      });
-    });
-
     describe('With feature flag set to allow multiple notifications', () => {
       it("Sends multiple emails to multiple recipients, without CC'ing GRT team", () => {
+        createIntake();
+
         // include UUIDs in recipient emails so they can be uniquely identified later
         const recipient1 = `abcd${uuidv4()}@local.fake`;
         const recipient2 = `efgh${uuidv4()}@local.fake`;
 
         // issue LCID through GQL
+        // TODO - EASI-2019 - go through UI instead of making GQL calls
         cy.get('@intakeId').then(intakeId => {
           cy.task('issueLCID', {
             euaId: euaIDFeatureFlagSet,
@@ -120,8 +115,11 @@ describe('Email notifications', () => {
       });
     });
 
+    // TODO - EASI-2021 - should no longer be needed
     describe('Without feature flag for multiple notifications set', () => {
       it("Notifies requester and CC's GRT", () => {
+        createIntake();
+
         // set scope message based on UUID so we can uniquely identify message
         const scope = `scope-${uuidv4()}`;
 

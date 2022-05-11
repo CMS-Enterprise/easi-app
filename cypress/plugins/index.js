@@ -22,6 +22,7 @@ const issueLCIDQuery = require('../../src/queries/IssueLifecycleIdQuery')
 
 const cache = new apollo.InMemoryCache();
 
+// TODO - EASI-2021 - should no longer be needed
 function createApolloClient(euaId) {
   return new apollo.ApolloClient({
     cache,
@@ -35,6 +36,8 @@ function createApolloClient(euaId) {
     })
   });
 }
+
+// TODO - EASI-2021 - should no longer be needed
 function issueLCID({
   euaId,
   intakeId,
