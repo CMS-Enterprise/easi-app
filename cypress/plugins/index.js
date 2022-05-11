@@ -13,12 +13,61 @@
 const cypressOTP = require('cypress-otp');
 const cypressCodeCovTask = require('@cypress/code-coverage/task');
 const wp = require('@cypress/webpack-preprocessor');
+const apollo = require('@apollo/client');
+const luxon = require('luxon');
+const fetch = require('cross-fetch'); // needed to allow apollo-client to make queries from Node environment
+
+const issueLCIDQuery = require('../../src/queries/IssueLifecycleIdQuery')
+  .default;
+
+const cache = new apollo.InMemoryCache();
+const apolloClient = new apollo.ApolloClient({
+  cache,
+  link: new apollo.HttpLink({
+    uri: 'http://localhost:8080/api/graph/query', // TODO make this generalizable?
+    fetch,
+    headers: {
+      // TODO make the EUA ID generalizable
+      // need job code to be able to issue LCID
+      Authorization:
+        'Local {"euaId":"SWKJ", "favorLocalAuth":true, "jobCodes":["EASI_D_GOVTEAM"]}'
+    }
+  })
+});
+
+function issueLCID({ intakeId, recipientEmails }) {
+  return new Promise(resolve => {
+    const input = {
+      intakeId,
+      expiresAt: luxon.DateTime.utc(4567, 12, 1).toISO(),
+      feedback: 'feedback',
+      scope: 'scope',
+      shouldSendEmail: true,
+      notificationRecipients: {
+        regularRecipientEmails: recipientEmails,
+        shouldNotifyITGovernance: false,
+        shouldNotifyITInvestment: false
+      }
+    };
+    apolloClient
+      .mutate({
+        mutation: issueLCIDQuery,
+        variables: {
+          input
+        }
+      })
+      .then(result => {
+        resolve(result);
+      });
+  });
+}
 
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
   on('task', {
-    generateOTP: cypressOTP
+    generateOTP: cypressOTP,
+    issueLCID
   });
   cypressCodeCovTask(on, config);
 

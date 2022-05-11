@@ -1,6 +1,6 @@
 describe('The Business Case Form', () => {
   beforeEach(() => {
-    cy.localLogin({name: 'TEST'});
+    cy.localLogin({ name: 'TEST' });
   });
 
   it('fills out all business case fields', () => {
