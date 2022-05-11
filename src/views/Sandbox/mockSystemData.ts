@@ -153,14 +153,11 @@ export const budgetsInfo: tempBudgetProp[] = [
   }
 ];
 
-export const developmentTags: string[] = [
-  'Agile Methodology',
-  'AI Technologies',
-  'Healthcare Quality',
-  'Health Insurance Program'
-];
+const systemProfileHiddenFields = false;
 
-export const locationsInfo: tempLocationProp[] = [
+export const developmentTags: string[] = ['Agile Methodology'];
+
+const locationsInfo: tempLocationProp[] = [
   {
     id: '1',
     environment: 'Production environment',
@@ -178,8 +175,10 @@ export const locationsInfo: tempLocationProp[] = [
     location: 'AWS East',
     cloudProvider: 'Amazon Web Services',
     firewall: true
-  },
-  {
+  }
+];
+if (systemProfileHiddenFields) {
+  locationsInfo.push({
     id: '3',
     environment: 'Code Repository',
     url: 'github.com/ham',
@@ -187,8 +186,15 @@ export const locationsInfo: tempLocationProp[] = [
     location: 'AWS East',
     cloudProvider: 'Amazon Web Services',
     firewall: true
-  }
-];
+  });
+
+  developmentTags.push(
+    'AI Technologies',
+    'Healthcare Quality',
+    'Health Insurance Program'
+  );
+}
+export { locationsInfo };
 
 export const mockSystemInfo: CedarSystemProps[] = [
   {

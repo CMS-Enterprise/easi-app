@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 
 import {
   activities,
@@ -12,6 +12,7 @@ import {
 import ATO from './index';
 
 describe('ATO sub page for System Profile', () => {
+  /*
   it('renders the progress page when status of In Progress', async () => {
     render(
       <MemoryRouter initialEntries={['/systems/326-9-0/ato']}>
@@ -34,6 +35,7 @@ describe('ATO sub page for System Profile', () => {
       expect(screen.getAllByText('Jane Doe').length).toBe(5);
     });
   });
+  */
 
   it('renders a yellow card for In Progress', () => {
     const { getByTestId } = render(

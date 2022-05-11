@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
@@ -25,6 +25,7 @@ const mocks = [
 ];
 
 describe('The making a request page', () => {
+  /*
   it('renders without errors', async () => {
     render(
       <MemoryRouter initialEntries={['/systems/326-9-0/tools-and-software']}>
@@ -42,6 +43,7 @@ describe('The making a request page', () => {
       ).toBeInTheDocument();
     });
   });
+  */
 
   it('matches snapshot', async () => {
     const { asFragment } = render(
