@@ -1219,6 +1219,16 @@ type SystemIntakeContact {
 }
 
 """
+Represents a contact associated with a system intake, including additional fields from CEDAR
+"""
+type AugmentedSystemIntakeContact {
+  euaUserId: String!
+  systemIntakeId: UUID!
+  commonName: String
+  email: String
+}
+
+"""
 The data needed to associate a contact with a system intake
 """
 input CreateSystemIntakeContactInput {
@@ -1247,6 +1257,15 @@ The payload when deleting a system intake contact
 type DeleteSystemIntakeContactPayload {
   systemIntakeContact: SystemIntakeContact
 }
+
+"""
+The payload when retrieving system intake contacts
+"""
+type SystemIntakeContactsPayload {
+  systemIntakeContacts: [AugmentedSystemIntakeContact!]!
+  invalidEUAIDs: [String!]!
+}
+
 
 """
 Defines the mutations for the schema
@@ -1381,7 +1400,7 @@ type Query {
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   detailedCedarSystemInfo(cedarSystemId: String!): DetailedCedarSystem
-  systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
+  systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
 }
 
 """

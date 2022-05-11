@@ -150,6 +150,10 @@ func (r *accessibilityRequestNoteResolver) AuthorName(ctx context.Context, obj *
 	return user.CommonName, nil
 }
 
+func (r *augmentedSystemIntakeContactResolver) Email(ctx context.Context, obj *models.AugmentedSystemIntakeContact) (*string, error) {
+	return (*string)(&obj.Email), nil
+}
+
 func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
 	return &model.BusinessCaseSolution{
 		AcquisitionApproach:     obj.AlternativeAAcquisitionApproach.Ptr(),
@@ -1675,12 +1679,47 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystem
 	return &dCedarSys, nil
 }
 
-func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error) {
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*model.SystemIntakeContactsPayload, error) {
 	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	return contacts, nil
+
+	euaIDs := make([]string, len(contacts))
+	for i, contact := range contacts {
+		euaIDs[i] = contact.EUAUserID
+	}
+
+	userInfos, err := r.service.FetchUserInfos(ctx, euaIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	userInfoMap := make(map[string]*models.UserInfo)
+	for _, userInfo := range userInfos {
+		if userInfo != nil {
+			userInfoMap[userInfo.EuaUserID] = userInfo
+		}
+	}
+
+	augmentedContacts := make([]*models.AugmentedSystemIntakeContact, 0, len(contacts))
+	invalidEUAIDs := make([]string, 0, len(contacts))
+	for _, contact := range contacts {
+		if userInfo, found := userInfoMap[contact.EUAUserID]; found {
+			augmentedContacts = append(augmentedContacts, &models.AugmentedSystemIntakeContact{
+				SystemIntakeContact: *contact,
+				CommonName:          userInfo.CommonName,
+				Email:               userInfo.Email,
+			})
+		} else {
+			invalidEUAIDs = append(invalidEUAIDs, contact.EUAUserID)
+		}
+	}
+
+	return &model.SystemIntakeContactsPayload{
+		SystemIntakeContacts: augmentedContacts,
+		InvalidEUAIDs:        invalidEUAIDs,
+	}, nil
 }
 
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
@@ -2016,6 +2055,11 @@ func (r *Resolver) AccessibilityRequestNote() generated.AccessibilityRequestNote
 	return &accessibilityRequestNoteResolver{r}
 }
 
+// AugmentedSystemIntakeContact returns generated.AugmentedSystemIntakeContactResolver implementation.
+func (r *Resolver) AugmentedSystemIntakeContact() generated.AugmentedSystemIntakeContactResolver {
+	return &augmentedSystemIntakeContactResolver{r}
+}
+
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
@@ -2052,6 +2096,7 @@ func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResol
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type accessibilityRequestNoteResolver struct{ *Resolver }
+type augmentedSystemIntakeContactResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
 type cedarAuthorityToOperateResolver struct{ *Resolver }
 type cedarDataCenterResolver struct{ *Resolver }
