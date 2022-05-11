@@ -106,6 +106,7 @@ const Phase = ({
                   {t(lifecycleCosts[category].label)}
                 </legend>
                 {Object.keys(lifecycleCosts[category].years).map((year, i) => {
+                  const currentYear = fiscalYear + i;
                   return (
                     <FieldGroup
                       key={`${category}-${year}`}
@@ -113,18 +114,18 @@ const Phase = ({
                       scrollElement={`${formikKey}.${category}.years.${year}`}
                     >
                       <Label
-                        className="tablet:display-none"
+                        className="desktop:display-none maxw-none"
                         htmlFor={`BusinessCase-${formikKey}.${category}.years.${year}`}
-                        aria-label={`Enter year ${fiscalYear + i} ${t(
+                        aria-label={`Enter year ${currentYear} ${t(
                           `lifecycleCost.${category}`
                         )} cost`}
                       >
-                        {t('lifecycleCost.fiscalYear', { year })}
+                        {t('lifecycleCost.fiscalYear', { currentYear })}
                       </Label>
                       <FieldErrorMsg>{errors?.development?.cost}</FieldErrorMsg>
                       <Field
                         type="text"
-                        className="desktop:margin-y-0 usa-input"
+                        className="desktop:margin-y-0 maxw-none usa-input"
                         error={errors?.development?.years?.year}
                         id={`BusinessCase-${formikKey}.${category}.years.${year}`}
                         name={`${formikKey}.${category}.years.${year}`}
@@ -144,9 +145,9 @@ const Phase = ({
                     </FieldGroup>
                   );
                 })}
-                <div>
-                  <span className="cost-table-col">{formatDollars(total)}</span>
-                </div>
+                <span className="cost-table-col display-none desktop:display-block">
+                  {formatDollars(total)}
+                </span>
               </div>
             </fieldset>
           </div>
@@ -187,16 +188,16 @@ const OtherCosts = ({
         </Button>
       )}
       {activeRelatedCost && (
-        <div className="display-flex flex-align-center">
+        <div className="desktop:display-flex flex-align-center">
           <Label htmlFor="newRelatedCostSelect">
             {t('lifecycleCost.newRelatedCost')}
           </Label>
           <select
-            className="margin-top-0 desktop:margin-x-2 usa-select"
+            className="margin-y-2 desktop:margin-y-0 desktop:margin-x-2 usa-select"
             id="newRelatedCostSelect"
             onBlur={e => setActiveRelatedCost(e.target.value)}
           >
-            <option>-{t('select')}-</option>
+            <option>-{t('Select')}-</option>
             {Object.keys(lifecycleCosts)
               .filter(cost => {
                 return (
@@ -213,6 +214,7 @@ const OtherCosts = ({
               })}
           </select>
           <Button
+            className="width-auto"
             type="submit"
             onClick={() => {
               if (lifecycleCosts[activeRelatedCost as keyof LifecycleCosts]) {
@@ -228,6 +230,7 @@ const OtherCosts = ({
             {t('save')}
           </Button>
           <Button
+            className="width-auto"
             type="button"
             outline
             onClick={() => setActiveRelatedCost(null)}
