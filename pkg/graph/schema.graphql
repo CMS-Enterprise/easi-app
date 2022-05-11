@@ -64,8 +64,8 @@ type CedarAuthorityToOperate {
   piaCompletionDate: Time
   primaryCyberRiskAdvisor: String
   privacySubjectMatterExpert: String
-  recoveryPointObjective: Int
-  recoveryTimeObjective: Int
+  recoveryPointObjective: Float
+  recoveryTimeObjective: Float
   systemOfRecordsNotice: [String!]!
   tlcPhase: String
   xlcPhase: String
@@ -1365,7 +1365,7 @@ type Query {
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
   cedarAuthorityToOperate(
-    cedarSystemID: String,
+    cedarSystemID: String!,
     containsPersonallyIdentifiableInformation: Boolean,
     dispositionDateAfter: Time,
     dispositionDateBefore: Time,
@@ -1373,7 +1373,7 @@ type Query {
     isProtectedHealthInformation: Boolean,
     tlcPhase: String,
     uuid: String
-  ): [CedarAuthorityToOperate!]
+  ): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]

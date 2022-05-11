@@ -29,14 +29,20 @@ type GetAuthorityToOperateOptionalParams struct {
 }
 
 // GetAuthorityToOperate makes a GET call to the /authority_to_operate endpoint
-func (c *Client) GetAuthorityToOperate(ctx context.Context, optionalParams *GetAuthorityToOperateOptionalParams) ([]*models.CedarAuthorityToOperate, error) {
+func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string, optionalParams *GetAuthorityToOperateOptionalParams) ([]*models.CedarAuthorityToOperate, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarAuthorityToOperate{}, nil
 	}
 
+	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
 	// Construct the parameters
 	params := apiauthority.NewAuthorityToOperateFindListParams()
+	params.SetSystemID(&cedarSystem.VersionID)
 	params.HTTPClient = c.hc
 
 	if optionalParams != nil {
@@ -64,10 +70,6 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, optionalParams *GetA
 
 		if optionalParams.TlcPhase.Ptr() != nil {
 			params.SetTlcPhase(optionalParams.TlcPhase.Ptr())
-		}
-
-		if optionalParams.SystemID.Ptr() != nil {
-			params.SetSystemID(optionalParams.SystemID.Ptr())
 		}
 
 		if optionalParams.UUID.Ptr() != nil {
@@ -116,8 +118,8 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, optionalParams *GetA
 			RecoveryPointObjective:                    ato.RecoveryPointObjective,
 			RecoveryTimeObjective:                     ato.RecoveryTimeObjective,
 			SystemOfRecordsNotice:                     ato.SystemOfRecordsNotice,
-			TlcPhase:                                  ato.TlcPhase,
-			XlcPhase:                                  ato.XlcPhase,
+			TLCPhase:                                  ato.TlcPhase,
+			XLCPhase:                                  ato.XlcPhase,
 			UUID:                                      *ato.UUID,
 		})
 	}

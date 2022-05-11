@@ -296,12 +296,16 @@ func (r *cedarAuthorityToOperateResolver) PiaCompletionDate(ctx context.Context,
 	return obj.PiaCompletionDate.Ptr(), nil
 }
 
-func (r *cedarAuthorityToOperateResolver) RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *cedarAuthorityToOperateResolver) RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
+	// convert float32 to float64
+	var rpo64Conv float64 = float64(obj.RecoveryPointObjective)
+	return &rpo64Conv, nil
 }
 
-func (r *cedarAuthorityToOperateResolver) RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *cedarAuthorityToOperateResolver) RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
+	// convert float32 to float64
+	var rto64Conv float64 = float64(obj.RecoveryTimeObjective)
+	return &rto64Conv, nil
 }
 
 func (r *cedarDataCenterResolver) ID(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
@@ -1513,14 +1517,10 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 	return &currentUser, nil
 }
 
-func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystemID *string, containsPersonallyIdentifiableInformation *bool, dispositionDateAfter *time.Time, dispositionDateBefore *time.Time, fismaSystemAcronym *string, isProtectedHealthInformation *bool, tlcPhase *string, uuid *string) ([]*models.CedarAuthorityToOperate, error) {
+func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystemID string, containsPersonallyIdentifiableInformation *bool, dispositionDateAfter *time.Time, dispositionDateBefore *time.Time, fismaSystemAcronym *string, isProtectedHealthInformation *bool, tlcPhase *string, uuid *string) ([]*models.CedarAuthorityToOperate, error) {
 	var optionalParams *cedarcore.GetAuthorityToOperateOptionalParams
-	if containsPersonallyIdentifiableInformation != nil || dispositionDateAfter != nil || dispositionDateBefore != nil || fismaSystemAcronym != nil || isProtectedHealthInformation != nil || cedarSystemID != nil || tlcPhase != nil || uuid != nil {
+	if containsPersonallyIdentifiableInformation != nil || dispositionDateAfter != nil || dispositionDateBefore != nil || fismaSystemAcronym != nil || isProtectedHealthInformation != nil || tlcPhase != nil || uuid != nil {
 		optionalParams = &cedarcore.GetAuthorityToOperateOptionalParams{}
-
-		if cedarSystemID != nil {
-			optionalParams.CedarSystemID = null.StringFromPtr(cedarSystemID)
-		}
 
 		if containsPersonallyIdentifiableInformation != nil {
 			optionalParams.ContainsPersonallyIdentifiableInformation = null.BoolFromPtr(containsPersonallyIdentifiableInformation)
@@ -1551,7 +1551,7 @@ func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystem
 		}
 	}
 
-	cedarATO, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, optionalParams)
+	cedarATO, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, cedarSystemID, optionalParams)
 	if err != nil {
 		return nil, err
 	}

@@ -185,9 +185,9 @@ type ComplexityRoot struct {
 		RecoveryPointObjective                    func(childComplexity int) int
 		RecoveryTimeObjective                     func(childComplexity int) int
 		SystemOfRecordsNotice                     func(childComplexity int) int
-		TlcPhase                                  func(childComplexity int) int
+		TLCPhase                                  func(childComplexity int) int
 		UUID                                      func(childComplexity int) int
-		XlcPhase                                  func(childComplexity int) int
+		XLCPhase                                  func(childComplexity int) int
 	}
 
 	CedarDataCenter struct {
@@ -410,7 +410,7 @@ type ComplexityRoot struct {
 	Query struct {
 		AccessibilityRequest     func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests    func(childComplexity int, after *string, first int) int
-		CedarAuthorityToOperate  func(childComplexity int, cedarSystemID *string, containsPersonallyIdentifiableInformation *bool, dispositionDateAfter *time.Time, dispositionDateBefore *time.Time, fismaSystemAcronym *string, isProtectedHealthInformation *bool, tlcPhase *string, uuid *string) int
+		CedarAuthorityToOperate  func(childComplexity int, cedarSystemID string, containsPersonallyIdentifiableInformation *bool, dispositionDateAfter *time.Time, dispositionDateBefore *time.Time, fismaSystemAcronym *string, isProtectedHealthInformation *bool, tlcPhase *string, uuid *string) int
 		CedarPersonsByCommonName func(childComplexity int, commonName string) int
 		CedarSystem              func(childComplexity int, cedarSystemID string) int
 		CedarSystemBookmarks     func(childComplexity int) int
@@ -699,8 +699,8 @@ type CedarAuthorityToOperateResolver interface {
 	LastPenTestDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	PiaCompletionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 
-	RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
-	RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
+	RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error)
+	RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error)
 }
 type CedarDataCenterResolver interface {
 	ID(ctx context.Context, obj *models.CedarDataCenter) (*string, error)
@@ -794,7 +794,7 @@ type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
-	CedarAuthorityToOperate(ctx context.Context, cedarSystemID *string, containsPersonallyIdentifiableInformation *bool, dispositionDateAfter *time.Time, dispositionDateBefore *time.Time, fismaSystemAcronym *string, isProtectedHealthInformation *bool, tlcPhase *string, uuid *string) ([]*models.CedarAuthorityToOperate, error)
+	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string, containsPersonallyIdentifiableInformation *bool, dispositionDateAfter *time.Time, dispositionDateBefore *time.Time, fismaSystemAcronym *string, isProtectedHealthInformation *bool, tlcPhase *string, uuid *string) ([]*models.CedarAuthorityToOperate, error)
 	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
 	CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
@@ -1520,11 +1520,11 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		return e.complexity.CedarAuthorityToOperate.SystemOfRecordsNotice(childComplexity), true
 
 	case "CedarAuthorityToOperate.tlcPhase":
-		if e.complexity.CedarAuthorityToOperate.TlcPhase == nil {
+		if e.complexity.CedarAuthorityToOperate.TLCPhase == nil {
 			break
 		}
 
-		return e.complexity.CedarAuthorityToOperate.TlcPhase(childComplexity), true
+		return e.complexity.CedarAuthorityToOperate.TLCPhase(childComplexity), true
 
 	case "CedarAuthorityToOperate.uuid":
 		if e.complexity.CedarAuthorityToOperate.UUID == nil {
@@ -1534,11 +1534,11 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		return e.complexity.CedarAuthorityToOperate.UUID(childComplexity), true
 
 	case "CedarAuthorityToOperate.xlcPhase":
-		if e.complexity.CedarAuthorityToOperate.XlcPhase == nil {
+		if e.complexity.CedarAuthorityToOperate.XLCPhase == nil {
 			break
 		}
 
-		return e.complexity.CedarAuthorityToOperate.XlcPhase(childComplexity), true
+		return e.complexity.CedarAuthorityToOperate.XLCPhase(childComplexity), true
 
 	case "CedarDataCenter.address1":
 		if e.complexity.CedarDataCenter.Address1 == nil {
@@ -2737,7 +2737,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarAuthorityToOperate(childComplexity, args["cedarSystemID"].(*string), args["containsPersonallyIdentifiableInformation"].(*bool), args["dispositionDateAfter"].(*time.Time), args["dispositionDateBefore"].(*time.Time), args["fismaSystemAcronym"].(*string), args["isProtectedHealthInformation"].(*bool), args["tlcPhase"].(*string), args["uuid"].(*string)), true
+		return e.complexity.Query.CedarAuthorityToOperate(childComplexity, args["cedarSystemID"].(string), args["containsPersonallyIdentifiableInformation"].(*bool), args["dispositionDateAfter"].(*time.Time), args["dispositionDateBefore"].(*time.Time), args["fismaSystemAcronym"].(*string), args["isProtectedHealthInformation"].(*bool), args["tlcPhase"].(*string), args["uuid"].(*string)), true
 
 	case "Query.cedarPersonsByCommonName":
 		if e.complexity.Query.CedarPersonsByCommonName == nil {
@@ -3929,8 +3929,8 @@ type CedarAuthorityToOperate {
   piaCompletionDate: Time
   primaryCyberRiskAdvisor: String
   privacySubjectMatterExpert: String
-  recoveryPointObjective: Int
-  recoveryTimeObjective: Int
+  recoveryPointObjective: Float
+  recoveryTimeObjective: Float
   systemOfRecordsNotice: [String!]!
   tlcPhase: String
   xlcPhase: String
@@ -5230,7 +5230,7 @@ type Query {
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
   cedarAuthorityToOperate(
-    cedarSystemID: String,
+    cedarSystemID: String!,
     containsPersonallyIdentifiableInformation: Boolean,
     dispositionDateAfter: Time,
     dispositionDateBefore: Time,
@@ -5238,7 +5238,7 @@ type Query {
     isProtectedHealthInformation: Boolean,
     tlcPhase: String,
     uuid: String
-  ): [CedarAuthorityToOperate!]
+  ): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
@@ -5940,10 +5940,10 @@ func (ec *executionContext) field_Query_accessibilityRequests_args(ctx context.C
 func (ec *executionContext) field_Query_cedarAuthorityToOperate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *string
+	var arg0 string
 	if tmp, ok := rawArgs["cedarSystemID"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemID"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -9340,9 +9340,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryPointObjective(ctx 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(*float64)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_recoveryTimeObjective(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9372,9 +9372,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryTimeObjective(ctx c
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(*float64)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_systemOfRecordsNotice(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9430,7 +9430,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_tlcPhase(ctx context.Contex
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.TlcPhase, nil
+		return obj.TLCPhase, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9462,7 +9462,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_xlcPhase(ctx context.Contex
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.XlcPhase, nil
+		return obj.XLCPhase, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -15084,18 +15084,21 @@ func (ec *executionContext) _Query_cedarAuthorityToOperate(ctx context.Context, 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CedarAuthorityToOperate(rctx, args["cedarSystemID"].(*string), args["containsPersonallyIdentifiableInformation"].(*bool), args["dispositionDateAfter"].(*time.Time), args["dispositionDateBefore"].(*time.Time), args["fismaSystemAcronym"].(*string), args["isProtectedHealthInformation"].(*bool), args["tlcPhase"].(*string), args["uuid"].(*string))
+		return ec.resolvers.Query().CedarAuthorityToOperate(rctx, args["cedarSystemID"].(string), args["containsPersonallyIdentifiableInformation"].(*bool), args["dispositionDateAfter"].(*time.Time), args["dispositionDateBefore"].(*time.Time), args["fismaSystemAcronym"].(*string), args["isProtectedHealthInformation"].(*bool), args["tlcPhase"].(*string), args["uuid"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]*models.CedarAuthorityToOperate)
 	fc.Result = res
-	return ec.marshalOCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx, field.Selections, res)
+	return ec.marshalNCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -26088,6 +26091,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cedarAuthorityToOperate(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -29098,6 +29104,50 @@ func (ec *executionContext) marshalNBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeas
 	return ec._BusinessOwner(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarAuthorityToOperate) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarAuthorityToOperate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperate(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperate(ctx context.Context, sel ast.SelectionSet, v *models.CedarAuthorityToOperate) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -30616,53 +30666,6 @@ func (ec *executionContext) marshalOCedarAssigneeType2ᚖgithubᚗcomᚋcmsgov�
 	return res
 }
 
-func (ec *executionContext) marshalOCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarAuthorityToOperate) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarAuthorityToOperate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperate(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
 func (ec *executionContext) marshalOCedarDataCenter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDataCenter(ctx context.Context, sel ast.SelectionSet, v *models.CedarDataCenter) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -30868,6 +30871,22 @@ func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋ
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalFloatContext(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel ast.SelectionSet, v *float64) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalFloatContext(*v)
+	return graphql.WrapContextMarshaler(ctx, res)
 }
 
 func (ec *executionContext) unmarshalOGRTFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedbackType(ctx context.Context, v interface{}) (models.GRTFeedbackType, error) {

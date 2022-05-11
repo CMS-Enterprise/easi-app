@@ -31,7 +31,7 @@ type CedarAuthorityToOperate struct {
 	RecoveryPointObjective                    float32   `json:"recoveryPointObjective"`
 	RecoveryTimeObjective                     float32   `json:"recoveryTimeObjective"`
 	SystemOfRecordsNotice                     []string  `json:"systemOfRecordsNotice"`
-	TlcPhase                                  string    `json:"tlcPhase"`
-	XlcPhase                                  string    `json:"xlcPhase"`
+	TLCPhase                                  string    `json:"tlcPhase"`
+	XLCPhase                                  string    `json:"xlcPhase"`
 	UUID                                      string    `json:"uuid"` // required
 }
