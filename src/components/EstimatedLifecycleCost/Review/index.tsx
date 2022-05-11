@@ -170,7 +170,7 @@ const EstimatedLifecycleCostReview = ({
                 <p className="est-lifecycle-cost__review-table-caption">
                   Phase per year breakdown
                 </p>
-                {Object.keys(data).map((year: any) => {
+                {Object.keys(totalCosts).map((year: any) => {
                   return (
                     <table
                       key={year}
@@ -191,49 +191,25 @@ const EstimatedLifecycleCostReview = ({
                             )}
                           </td>
                         </tr>
-                        {data.development.years[year] > 0 && (
-                          <tr>
-                            <th
-                              className="padding-y-2 text-right text-normal"
-                              aria-label={`Fiscal year ${yearMapping[year]} development costs`}
-                            >
-                              Development
-                            </th>
-                            <td className="padding-y-2 text-right text-normal">
-                              {formatDollarsOrDash(
-                                data.development.years[year]
-                              )}
-                            </td>
-                          </tr>
-                        )}
-                        {data.operationsMaintenance.years[year] > 0 && (
-                          <tr>
-                            <th
-                              className="padding-y-2 text-right text-normal"
-                              aria-label={`Fiscal year ${yearMapping[year]} operations and maintenance costs`}
-                            >
-                              Operations and Maintenance
-                            </th>
-                            <td className="padding-y-2 text-right text-normal">
-                              {formatDollarsOrDash(
-                                data.operationsMaintenance.years[year]
-                              )}
-                            </td>
-                          </tr>
-                        )}
-                        {data.other.years[year] > 0 && (
-                          <tr>
-                            <th className="padding-y-2 text-right text-normal">
-                              Other
-                            </th>
-                            <td
-                              className="padding-y-2 text-right text-normal"
-                              aria-label={`Fiscal year ${yearMapping[year]} other costs`}
-                            >
-                              {formatDollarsOrDash(data.other.years[year])}
-                            </td>
-                          </tr>
-                        )}
+                        {Object.keys(data)
+                          .filter(
+                            cost =>
+                              data[cost].type === 'primary' ||
+                              data[cost].isPresent
+                          )
+                          .map(cost => (
+                            <tr>
+                              <th
+                                className="padding-y-2 text-right text-normal"
+                                aria-label={`Fiscal year ${yearMapping[year]} ${data[cost].label} costs`}
+                              >
+                                {data[cost].label}
+                              </th>
+                              <td className="padding-y-2 text-right text-normal">
+                                {formatDollarsOrDash(data[cost].years[year])}
+                              </td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
                   );
@@ -266,55 +242,32 @@ const EstimatedLifecycleCostReview = ({
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <TableHead scope="row">Development</TableHead>
-                      {Object.keys(yearMapping).map(year => (
-                        <td
-                          key={`${year}-development-costs`}
-                          className="padding-y-3 text-right"
-                        >
-                          {formatDollarsOrDash(data.development.years[year])}
-                        </td>
+                    {Object.keys(data)
+                      .filter(
+                        cost =>
+                          data[cost].type === 'primary' || data[cost].isPresent
+                      )
+                      .map(cost => (
+                        <tr key={cost}>
+                          <TableHead scope="row">{data[cost].label}</TableHead>
+                          {Object.keys(yearMapping).map(year => (
+                            <td
+                              key={`${year}-development-costs`}
+                              className="padding-y-3 text-right"
+                            >
+                              {formatDollarsOrDash(data[cost].years[year])}
+                            </td>
+                          ))}
+                          <td
+                            data-testid="total-development-costs"
+                            className="padding-y-3 text-right"
+                          >
+                            {formatDollarsOrDash(
+                              sum(Object.values(data[cost].years))
+                            )}
+                          </td>
+                        </tr>
                       ))}
-                      <td
-                        data-testid="total-development-costs"
-                        className="padding-y-3 text-right"
-                      >
-                        {formatDollarsOrDash(totalDevelopmentCosts)}
-                      </td>
-                    </tr>
-                    <tr>
-                      <TableHead scope="row">
-                        Operations and Maintenance
-                      </TableHead>
-                      {Object.keys(yearMapping).map(year => (
-                        <td
-                          key={`${year}-om-costs`}
-                          className="padding-y-3 text-right"
-                        >
-                          {formatDollarsOrDash(
-                            data.operationsMaintenance.years[year]
-                          )}
-                        </td>
-                      ))}
-                      <td className="padding-y-3 text-right">
-                        {formatDollarsOrDash(totalOperationsMaintenanceCosts)}
-                      </td>
-                    </tr>
-                    <tr className="est-lifecycle-cost__border">
-                      <TableHead scope="row">Other</TableHead>
-                      {Object.keys(yearMapping).map(year => (
-                        <td
-                          key={`${year}-other-costs`}
-                          className="padding-y-3 text-right"
-                        >
-                          {formatDollarsOrDash(data.other.years[year])}
-                        </td>
-                      ))}
-                      <td className="padding-y-3 text-right">
-                        {formatDollarsOrDash(totalOtherCosts)}
-                      </td>
-                    </tr>
                     <tr>
                       <td />
                       {Object.keys(yearMapping).map(year => (
