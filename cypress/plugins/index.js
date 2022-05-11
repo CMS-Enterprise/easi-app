@@ -43,7 +43,8 @@ function issueLCID({
   intakeId,
   shouldSendEmail,
   recipientEmails,
-  scope
+  scope,
+  lcid
 }) {
   const apolloClient = createApolloClient(euaId);
   return new Promise(resolve => {
@@ -57,7 +58,9 @@ function issueLCID({
         regularRecipientEmails: recipientEmails,
         shouldNotifyITGovernance: false,
         shouldNotifyITInvestment: false
-      }
+      },
+      lcid: lcid || '',
+      nextSteps: 'steps'
     };
     apolloClient
       .mutate({

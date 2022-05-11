@@ -4,6 +4,14 @@ import { v4 as uuidv4 } from 'uuid';
 const euaIDFeatureFlagSet = 'CYPT';
 const euaIDFeatureFlagUnset = 'CYPF';
 
+// generate our own LCIDs to avoid issues if >9 LCIDs are generated on the same day (see EASI-2037)
+let nextLCID = 0;
+const generateNewLCID = () => {
+  const lcid = nextLCID;
+  nextLCID += 1;
+  return lcid.toString().padStart(6, '0');
+};
+
 // create system intake through UI
 const createIntake = () => {
   cy.localLogin({ name: 'ABCD' });
@@ -73,7 +81,8 @@ describe('Email notifications', () => {
             intakeId,
             shouldSendEmail: true,
             recipientEmails: [recipient1, recipient2],
-            scope: 'scope'
+            scope: 'scope',
+            lcid: generateNewLCID()
           });
         });
 
@@ -113,11 +122,53 @@ describe('Email notifications', () => {
           }
         );
       });
+
+      it("Doesn't send emails when none are specified", () => {
+        createIntake();
+
+        // use for uniquely identifying any emails for issuing this LCID
+        const scope = `scope-${uuidv4()}`;
+
+        // issue LCID through GQL
+        // TODO - EASI-2019 - go through UI instead of making GQL calls
+        cy.get('@intakeId').then(intakeId => {
+          cy.task('issueLCID', {
+            euaId: euaIDFeatureFlagSet,
+            intakeId,
+            shouldSendEmail: true,
+            recipientEmails: [],
+            scope,
+            lcid: generateNewLCID()
+          });
+        });
+
+        // check mailcatcher API for what emails have been sent
+        cy.request('http://localhost:1080/messages').then(
+          mailcatcherResponse => {
+            expect(mailcatcherResponse.status).to.eq(200);
+
+            const lcidIssuingEmails = mailcatcherResponse.body.filter(
+              email => email.subject === 'Your request has been approved'
+            );
+
+            // make sure of all the notifications sent for issuing LCIDs, none were sent for *this specific LCID* (indicated by scope)
+            // eslint-disable-next-line no-restricted-syntax
+            for (const email of lcidIssuingEmails) {
+              cy.request(
+                `http://localhost:1080/messages/${email.id}.html`
+              ).then(emailBodyResponse => {
+                expect(emailBodyResponse.status).to.eq(200);
+                expect(emailBodyResponse.body).not.to.include(scope);
+              });
+            }
+          }
+        );
+      });
     });
 
     // TODO - EASI-2021 - should no longer be needed
     describe('Without feature flag for multiple notifications set', () => {
-      it("Notifies requester and CC's GRT", () => {
+      it("Notifies requester and CC's GRT when shouldSendEmail is selected", () => {
         createIntake();
 
         // set scope message based on UUID so we can uniquely identify message
@@ -130,7 +181,8 @@ describe('Email notifications', () => {
             intakeId,
             shouldSendEmail: true,
             recipientEmails: [],
-            scope
+            scope,
+            lcid: generateNewLCID()
           });
         });
 
@@ -161,6 +213,48 @@ describe('Email notifications', () => {
               // eslint-disable-next-line no-unused-expressions
               expect(specificEmailId).not.to.be.undefined;
             });
+          }
+        );
+      });
+
+      it("Doesn't send emails when shouldSendEmail isn't selected", () => {
+        createIntake();
+
+        // set scope message based on UUID so we can uniquely identify message
+        const scope = `scope-${uuidv4()}`;
+
+        // issue LCID through GQL
+        cy.get('@intakeId').then(intakeId => {
+          cy.task('issueLCID', {
+            euaId: euaIDFeatureFlagUnset,
+            intakeId,
+            shouldSendEmail: false,
+            recipientEmails: [],
+            scope,
+            lcid: generateNewLCID()
+          });
+        });
+
+        // check mailcatcher API for what emails have been sent
+        cy.request('http://localhost:1080/messages').then(
+          mailcatcherResponse => {
+            expect(mailcatcherResponse.status).to.eq(200);
+
+            const lcidIssuingEmails = mailcatcherResponse.body.filter(
+              email => email.subject === 'Your request has been approved'
+            );
+
+            // make sure of all the notifications sent for issuing LCIDs, none were sent for *this specific LCID* (indicated by scope)
+
+            // eslint-disable-next-line no-restricted-syntax
+            for (const email of lcidIssuingEmails) {
+              cy.request(
+                `http://localhost:1080/messages/${email.id}.html`
+              ).then(emailBodyResponse => {
+                expect(emailBodyResponse.status).to.eq(200);
+                expect(emailBodyResponse.body).not.to.include(scope);
+              });
+            }
           }
         );
       });

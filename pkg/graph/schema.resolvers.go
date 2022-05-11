@@ -1053,8 +1053,8 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 			ID:                    input.IntakeID,
 			LifecycleExpiresAt:    &input.ExpiresAt,
 			LifecycleScope:        null.StringFrom(input.Scope),
-			DecisionNextSteps:     null.StringFromPtr(input.NextSteps),
-			LifecycleID:           null.StringFromPtr(input.Lcid),
+			DecisionNextSteps:     null.StringFrom(*input.NextSteps),
+			LifecycleID:           null.StringFrom(*input.Lcid),
 			LifecycleCostBaseline: null.StringFromPtr(input.CostBaseline),
 		},
 		&models.Action{
