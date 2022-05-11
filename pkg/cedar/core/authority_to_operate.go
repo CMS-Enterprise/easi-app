@@ -17,13 +17,11 @@ import (
 
 // GetAuthorityToOperateOptionalParams represents the optional parameters that can be used to filter ATO information when searching through the CEDAR API
 type GetAuthorityToOperateOptionalParams struct {
-	CedarSystemID                             null.String
 	ContainsPersonallyIdentifiableInformation null.Bool
 	DispositionDateAfter                      *time.Time
 	DispositionDateBefore                     *time.Time
 	FismaSystemAcronym                        null.String
 	IsProtectedHealthInformation              null.Bool
-	SystemID                                  null.String
 	TlcPhase                                  null.String
 	UUID                                      null.String
 }
