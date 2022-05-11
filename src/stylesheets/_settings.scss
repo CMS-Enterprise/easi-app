@@ -1,3 +1,5 @@
+@use "sass:map";
+
 // USWDS Settings
 $theme-font-path: '~uswds/src/fonts';
 $theme-image-path: '~uswds/src/img';
@@ -21,5 +23,5 @@ $utilities-use-important: 'true';
 $theme-font-role-heading: 'sans';
 
 // Flex responsive classes
-$align-items-settings: ( responsive: 'true');
-$flex-settings: ( responsive: 'true');
+$align-items-settings: map.set($align-items-settings, "responsive", "true");
+$flex-settings: map.set($flex-settings, "responsive", "true");
