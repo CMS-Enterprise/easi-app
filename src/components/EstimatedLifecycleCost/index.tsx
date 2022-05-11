@@ -90,8 +90,8 @@ const Phase = ({
       {() => (
         <FieldGroup
           className="est-lifecycle-cost__phase-costs margin-0"
-          // error={Object.keys(errors).length > 0}
-          // scrollElement={`${formikKey}.year${year}`}
+          error={Object.keys(errors).length > 0}
+          scrollElement={`${formikKey}.${category}`}
         >
           <div className="est-lifecycle-cost__phase-fieldset">
             <fieldset
@@ -125,18 +125,15 @@ const Phase = ({
                       <Field
                         type="text"
                         className="desktop:margin-y-0 usa-input"
-                        // error={!!errors?.development?.cost}
+                        error={errors?.development?.years?.year}
                         id={`BusinessCase-${formikKey}.${category}.years.${year}`}
                         name={`${formikKey}.${category}.years.${year}`}
                         maxLength={10}
                         aria-describedby={`${category}CostsDefinition`}
-                        // value={
-                        //   lifecycleCosts[category].years[year as keyof LifecycleYears]
-                        // }
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           setFieldValue(
                             `${formikKey}.${category}.years.${year}`,
-                            e.target.value
+                            e.target.value.replace(/\D/g, '')
                           );
                           setFieldValue(
                             `${formikKey}.${category}.isPresent`,
@@ -172,7 +169,7 @@ const OtherCosts = ({
   relatedCosts: any;
   setRelatedCosts: (relatedCost: any) => void;
 }) => {
-  const [activeRelatedCost, setActiveRelatedCost] = useState(null);
+  const [activeRelatedCost, setActiveRelatedCost] = useState<any>(null);
   const { t } = useTranslation('businessCase');
 
   if (Object.keys(relatedCosts).length > 2) return null;
@@ -203,13 +200,14 @@ const OtherCosts = ({
             {Object.keys(lifecycleCosts)
               .filter(cost => {
                 return (
-                  lifecycleCosts[cost].type === 'related' && !relatedCosts[cost]
+                  lifecycleCosts[cost as keyof LifecycleCosts].type ===
+                    'related' && !relatedCosts[cost]
                 );
               })
               .map(cost => {
                 return (
                   <option key={cost} value={cost}>
-                    {lifecycleCosts[cost].label}
+                    {lifecycleCosts[cost as keyof LifecycleCosts].label}
                   </option>
                 );
               })}
@@ -217,10 +215,11 @@ const OtherCosts = ({
           <Button
             type="submit"
             onClick={() => {
-              if (lifecycleCosts[activeRelatedCost]) {
+              if (lifecycleCosts[activeRelatedCost as keyof LifecycleCosts]) {
                 setRelatedCosts({
                   ...relatedCosts,
-                  [activeRelatedCost]: lifecycleCosts[activeRelatedCost]
+                  [activeRelatedCost]:
+                    lifecycleCosts[activeRelatedCost as keyof LifecycleCosts]
                 });
               }
               setActiveRelatedCost(null);
@@ -256,7 +255,6 @@ const EstimatedLifecycleCost = ({
   businessCaseCreatedAt = ''
 }: EstimatedLifecycleCostProps) => {
   const [relatedCosts, setRelatedCosts] = useState({});
-  const { t } = useTranslation('businessCase');
   const sumCostinYear = (year: string) => {
     return Object.values(lifecycleCosts).reduce((total, current) => {
       const cost = current.years[year as keyof LifecycleYears];
@@ -294,7 +292,7 @@ const EstimatedLifecycleCost = ({
           formikKey={formikKey}
           fiscalYear={fiscalYear}
           setFieldValue={setFieldValue}
-          // errors={errors.year1}
+          errors={errors}
           lifecycleCosts={lifecycleCosts}
           total={calculateCategoryCost('development')}
         />
@@ -303,11 +301,11 @@ const EstimatedLifecycleCost = ({
           formikKey={formikKey}
           fiscalYear={fiscalYear}
           setFieldValue={setFieldValue}
-          // errors={errors.year1}
+          errors={errors}
           lifecycleCosts={lifecycleCosts}
           total={calculateCategoryCost('operationsMaintenance')}
         />
-        {Object.keys(relatedCosts).map(cost => {
+        {Object.keys(relatedCosts).map((cost: any) => {
           return (
             <Phase
               key={cost}
@@ -315,7 +313,7 @@ const EstimatedLifecycleCost = ({
               formikKey={formikKey}
               fiscalYear={fiscalYear}
               setFieldValue={setFieldValue}
-              // errors={errors.year1}
+              errors={errors}
               lifecycleCosts={lifecycleCosts}
               total={calculateCategoryCost(cost)}
             />

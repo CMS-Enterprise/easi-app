@@ -4,12 +4,7 @@ import {
   BusinessCaseModel,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import {
-  CostData,
-  LifecycleCosts,
-  LifecyclePhases,
-  LifecycleYears
-} from 'types/estimatedLifecycle';
+import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
 
 const lifecycleCostsMap = {
   development: 'Development',
