@@ -272,6 +272,7 @@ func (s *Server) routes(
 				emailClient.SendSystemIntakeSubmissionEmail,
 			),
 			FetchUserInfo:            cedarLDAPClient.FetchUserInfo,
+			FetchUserInfos:           cedarLDAPClient.FetchUserInfos,
 			SearchCommonNameContains: cedarLDAPClient.SearchCommonNameContains,
 		},
 		&s3Client,
