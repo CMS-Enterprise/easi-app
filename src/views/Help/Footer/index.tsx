@@ -6,6 +6,8 @@ import {
   Link
 } from '@trussworks/react-uswds';
 
+import { SLACK_OIT_DEV_FEEDBACK } from 'constants/externalUrls';
+
 const NewWindowLink = ({
   href,
   children
@@ -46,7 +48,7 @@ export default () => {
               </NewWindowLink>
             </div>
             <div>
-              <NewWindowLink href="https://cmsgov.slack.com/archives/C038D4UJ6KC">
+              <NewWindowLink href={SLACK_OIT_DEV_FEEDBACK}>
                 {t('footer.chatOnSlack')}
               </NewWindowLink>
             </div>
