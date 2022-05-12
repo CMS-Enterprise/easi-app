@@ -6,6 +6,7 @@ export type Flags = {
   systemProfile: boolean;
   systemProfileHiddenFields: boolean;
   help: boolean;
+  helpFooter: boolean;
   cedar508Requests: boolean;
 };
 
