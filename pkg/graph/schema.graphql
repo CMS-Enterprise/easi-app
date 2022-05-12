@@ -1383,16 +1383,7 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
-  cedarAuthorityToOperate(
-    cedarSystemID: String!,
-    containsPersonallyIdentifiableInformation: Boolean,
-    dispositionDateAfter: Time,
-    dispositionDateBefore: Time,
-    fismaSystemAcronym: String,
-    isProtectedHealthInformation: Boolean,
-    tlcPhase: String,
-    uuid: String
-  ): [CedarAuthorityToOperate!]!
+  cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]

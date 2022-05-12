@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-openapi/strfmt"
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -15,19 +13,13 @@ import (
 	apiauthority "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/authority_to_operate"
 )
 
-// GetAuthorityToOperateOptionalParams represents the optional parameters that can be used to filter ATO information when searching through the CEDAR API
-type GetAuthorityToOperateOptionalParams struct {
-	ContainsPersonallyIdentifiableInformation null.Bool
-	DispositionDateAfter                      *time.Time
-	DispositionDateBefore                     *time.Time
-	FismaSystemAcronym                        null.String
-	IsProtectedHealthInformation              null.Bool
-	TlcPhase                                  null.String
-	UUID                                      null.String
-}
+// NOTE: This CEDAR endpoint in webMethods is called with a set of optional parameters (including a system ID) with the caveat that if
+//   a system ID is provided then all other provided parameters are ignored. This poses an interesting scenario for EASi b/c we will
+//   always be provide a system ID with our queries which effectively turns the system ID into a required parameter and nullifies/invalidates
+//   the other optional parameters. For this reason we are not going to include the optional parameters in the client methods for EASi.
 
 // GetAuthorityToOperate makes a GET call to the /authority_to_operate endpoint
-func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string, optionalParams *GetAuthorityToOperateOptionalParams) ([]*models.CedarAuthorityToOperate, error) {
+func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarAuthorityToOperate{}, nil
@@ -42,38 +34,6 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 	params := apiauthority.NewAuthorityToOperateFindListParams()
 	params.SetSystemID(&cedarSystem.VersionID)
 	params.HTTPClient = c.hc
-
-	if optionalParams != nil {
-		if optionalParams.ContainsPersonallyIdentifiableInformation.Ptr() != nil {
-			params.SetContainsPersonallyIdentifiableInformation(optionalParams.ContainsPersonallyIdentifiableInformation.Ptr())
-		}
-
-		if optionalParams.DispositionDateAfter != nil {
-			strfmtDateAfter := strfmt.Date(*optionalParams.DispositionDateAfter)
-			params.SetDispositionDateAfter(&strfmtDateAfter)
-		}
-
-		if optionalParams.DispositionDateBefore != nil {
-			strfmtDateBefore := strfmt.Date(*optionalParams.DispositionDateBefore)
-			params.SetDispositionDateBefore(&strfmtDateBefore)
-		}
-
-		if optionalParams.FismaSystemAcronym.Ptr() != nil {
-			params.SetFismaSystemAcronym(optionalParams.FismaSystemAcronym.Ptr())
-		}
-
-		if optionalParams.IsProtectedHealthInformation.Ptr() != nil {
-			params.SetIsProtectedHealthInformation(optionalParams.IsProtectedHealthInformation.Ptr())
-		}
-
-		if optionalParams.TlcPhase.Ptr() != nil {
-			params.SetTlcPhase(optionalParams.TlcPhase.Ptr())
-		}
-
-		if optionalParams.UUID.Ptr() != nil {
-			params.SetUUID(optionalParams.UUID.Ptr())
-		}
-	}
 
 	// Make the API call
 	resp, err := c.sdk.AuthorityToOperate.AuthorityToOperateFindList(params, c.auth)

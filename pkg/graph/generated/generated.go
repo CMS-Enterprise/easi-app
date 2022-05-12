@@ -418,7 +418,7 @@ type ComplexityRoot struct {
 	Query struct {
 		AccessibilityRequest     func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests    func(childComplexity int, after *string, first int) int
-		CedarAuthorityToOperate  func(childComplexity int, cedarSystemID string, containsPersonallyIdentifiableInformation *bool, dispositionDateAfter *time.Time, dispositionDateBefore *time.Time, fismaSystemAcronym *string, isProtectedHealthInformation *bool, tlcPhase *string, uuid *string) int
+		CedarAuthorityToOperate  func(childComplexity int, cedarSystemID string) int
 		CedarPersonsByCommonName func(childComplexity int, commonName string) int
 		CedarSystem              func(childComplexity int, cedarSystemID string) int
 		CedarSystemBookmarks     func(childComplexity int) int
@@ -810,7 +810,7 @@ type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
-	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string, containsPersonallyIdentifiableInformation *bool, dispositionDateAfter *time.Time, dispositionDateBefore *time.Time, fismaSystemAcronym *string, isProtectedHealthInformation *bool, tlcPhase *string, uuid *string) ([]*models.CedarAuthorityToOperate, error)
+	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
 	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
 	CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
@@ -2781,7 +2781,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarAuthorityToOperate(childComplexity, args["cedarSystemID"].(string), args["containsPersonallyIdentifiableInformation"].(*bool), args["dispositionDateAfter"].(*time.Time), args["dispositionDateBefore"].(*time.Time), args["fismaSystemAcronym"].(*string), args["isProtectedHealthInformation"].(*bool), args["tlcPhase"].(*string), args["uuid"].(*string)), true
+		return e.complexity.Query.CedarAuthorityToOperate(childComplexity, args["cedarSystemID"].(string)), true
 
 	case "Query.cedarPersonsByCommonName":
 		if e.complexity.Query.CedarPersonsByCommonName == nil {
@@ -5306,16 +5306,7 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
-  cedarAuthorityToOperate(
-    cedarSystemID: String!,
-    containsPersonallyIdentifiableInformation: Boolean,
-    dispositionDateAfter: Time,
-    dispositionDateBefore: Time,
-    fismaSystemAcronym: String,
-    isProtectedHealthInformation: Boolean,
-    tlcPhase: String,
-    uuid: String
-  ): [CedarAuthorityToOperate!]!
+  cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
@@ -6026,69 +6017,6 @@ func (ec *executionContext) field_Query_cedarAuthorityToOperate_args(ctx context
 		}
 	}
 	args["cedarSystemID"] = arg0
-	var arg1 *bool
-	if tmp, ok := rawArgs["containsPersonallyIdentifiableInformation"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("containsPersonallyIdentifiableInformation"))
-		arg1, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["containsPersonallyIdentifiableInformation"] = arg1
-	var arg2 *time.Time
-	if tmp, ok := rawArgs["dispositionDateAfter"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dispositionDateAfter"))
-		arg2, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["dispositionDateAfter"] = arg2
-	var arg3 *time.Time
-	if tmp, ok := rawArgs["dispositionDateBefore"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dispositionDateBefore"))
-		arg3, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["dispositionDateBefore"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["fismaSystemAcronym"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fismaSystemAcronym"))
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["fismaSystemAcronym"] = arg4
-	var arg5 *bool
-	if tmp, ok := rawArgs["isProtectedHealthInformation"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isProtectedHealthInformation"))
-		arg5, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["isProtectedHealthInformation"] = arg5
-	var arg6 *string
-	if tmp, ok := rawArgs["tlcPhase"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tlcPhase"))
-		arg6, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["tlcPhase"] = arg6
-	var arg7 *string
-	if tmp, ok := rawArgs["uuid"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("uuid"))
-		arg7, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["uuid"] = arg7
 	return args, nil
 }
 
@@ -15295,7 +15223,7 @@ func (ec *executionContext) _Query_cedarAuthorityToOperate(ctx context.Context, 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CedarAuthorityToOperate(rctx, args["cedarSystemID"].(string), args["containsPersonallyIdentifiableInformation"].(*bool), args["dispositionDateAfter"].(*time.Time), args["dispositionDateBefore"].(*time.Time), args["fismaSystemAcronym"].(*string), args["isProtectedHealthInformation"].(*bool), args["tlcPhase"].(*string), args["uuid"].(*string))
+		return ec.resolvers.Query().CedarAuthorityToOperate(rctx, args["cedarSystemID"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

@@ -1521,41 +1521,8 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 	return &currentUser, nil
 }
 
-func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystemID string, containsPersonallyIdentifiableInformation *bool, dispositionDateAfter *time.Time, dispositionDateBefore *time.Time, fismaSystemAcronym *string, isProtectedHealthInformation *bool, tlcPhase *string, uuid *string) ([]*models.CedarAuthorityToOperate, error) {
-	var optionalParams *cedarcore.GetAuthorityToOperateOptionalParams
-	if containsPersonallyIdentifiableInformation != nil || dispositionDateAfter != nil || dispositionDateBefore != nil || fismaSystemAcronym != nil || isProtectedHealthInformation != nil || tlcPhase != nil || uuid != nil {
-		optionalParams = &cedarcore.GetAuthorityToOperateOptionalParams{}
-
-		if containsPersonallyIdentifiableInformation != nil {
-			optionalParams.ContainsPersonallyIdentifiableInformation = null.BoolFromPtr(containsPersonallyIdentifiableInformation)
-		}
-
-		if dispositionDateAfter != nil {
-			optionalParams.DispositionDateAfter = dispositionDateAfter
-		}
-
-		if dispositionDateBefore != nil {
-			optionalParams.DispositionDateBefore = dispositionDateBefore
-		}
-
-		if fismaSystemAcronym != nil {
-			optionalParams.FismaSystemAcronym = null.StringFromPtr(fismaSystemAcronym)
-		}
-
-		if isProtectedHealthInformation != nil {
-			optionalParams.IsProtectedHealthInformation = null.BoolFromPtr(isProtectedHealthInformation)
-		}
-
-		if tlcPhase != nil {
-			optionalParams.TlcPhase = null.StringFromPtr(tlcPhase)
-		}
-
-		if uuid != nil {
-			optionalParams.UUID = null.StringFromPtr(uuid)
-		}
-	}
-
-	cedarATO, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, cedarSystemID, optionalParams)
+func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
+	cedarATO, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
 	}
