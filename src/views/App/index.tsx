@@ -158,7 +158,7 @@ const AppRoutes = () => {
         component={BusinessCase}
       />
 
-      {flags.help && <SecureRoute path="/help" component={Help} />}
+      <SecureRoute path="/help" component={Help} />
 
       {/* Static Page Routes  */}
       <Route path="/privacy-policy" exact component={PrivacyPolicy} />

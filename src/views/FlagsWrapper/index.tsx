@@ -35,7 +35,6 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             downgradeGovTeam: false,
             downgrade508User: false,
             downgrade508Tester: false,
-            help: true,
             helpFooter: false,
             systemProfile: true,
             systemProfileHiddenFields: false,
