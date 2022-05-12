@@ -6,7 +6,7 @@ exports[`Help Footer renders 1`] = `
     class="display-flex padding-y-2 bg-primary-dark text-white"
   >
     <div
-      class="grid-container display-flex flex-fill desktop:flex-align-center"
+      class="grid-container display-flex flex-fill desktop:flex-align-center line-height-body-2"
       data-testid="gridContainer"
     >
       <div

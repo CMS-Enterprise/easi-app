@@ -29,7 +29,7 @@ export default () => {
   const { t } = useTranslation('help');
   return (
     <div className="display-flex padding-y-2 bg-primary-dark text-white">
-      <GridContainer className="display-flex flex-fill desktop:flex-align-center">
+      <GridContainer className="display-flex flex-fill desktop:flex-align-center line-height-body-2">
         <div className="desktop:display-flex flex-fill">
           <div className="width-full desktop:width-auto margin-right-8">
             <h4 className="margin-0 line-height-heading-2">
