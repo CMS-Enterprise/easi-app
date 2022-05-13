@@ -19,6 +19,8 @@ const fetch = require('cross-fetch'); // needed to allow apollo-client to make q
 
 const issueLCIDQuery = require('../../src/queries/IssueLifecycleIdQuery')
   .default;
+const extendLCIDQuery = require('../../src/queries/CreateSystemIntakeActionExtendLifecycleIdQuery')
+  .default;
 
 const cache = new apollo.InMemoryCache();
 
@@ -71,12 +73,43 @@ function issueLCID({
   });
 }
 
+function extendLCID({
+  euaId,
+  intakeId,
+  shouldSendEmail,
+  recipientEmails,
+  scope
+}) {
+  const apolloClient = createApolloClient(euaId);
+  const input = {
+    id: intakeId,
+    expirationDate: luxon.DateTime.utc(5678, 12, 1).toISO(),
+    scope,
+    shouldSendEmail,
+    notificationRecipients: {
+      regularRecipientEmails: recipientEmails,
+      shouldNotifyITGovernance: false,
+      shouldNotifyITInvestment: false
+    },
+    nextSteps: 'steps'
+  };
+  // need to return this Promise to indicate to Cypress that the task was handled
+  // https://docs.cypress.io/api/commands/task#Usage - "The command will fail if undefined is returned or if the promise is resolved with undefined."
+  return apolloClient.mutate({
+    mutation: extendLCIDQuery,
+    variables: {
+      input
+    }
+  });
+}
+
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
   on('task', {
     generateOTP: cypressOTP,
-    issueLCID
+    issueLCID,
+    extendLCID
   });
   cypressCodeCovTask(on, config);
 

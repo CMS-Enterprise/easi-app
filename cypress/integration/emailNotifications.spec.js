@@ -123,7 +123,7 @@ describe('Email notifications', () => {
         );
       });
 
-      it("Doesn't send emails when none are specified", () => {
+      it("Doesn't send emails when no recipients are specified", () => {
         createIntake();
 
         // use for uniquely identifying any emails for issuing this LCID
@@ -258,6 +258,87 @@ describe('Email notifications', () => {
           }
         );
       });
+    });
+  });
+
+  describe('Extending lifecycle IDs', () => {
+    describe('With feature flag set to allow multiple notifications', () => {
+      it("Sends multiple emails to multiple recipients, without CC'ing GRT team", () => {
+        createIntake();
+
+        // issue LCID through GQL
+        // TODO - EASI-2019 - go through UI instead of making GQL calls
+        cy.get('@intakeId').then(intakeId => {
+          cy.task('issueLCID', {
+            euaId: euaIDFeatureFlagSet,
+            intakeId,
+            shouldSendEmail: false,
+            recipientEmails: [],
+            scope: 'scope',
+            lcid: generateNewLCID()
+          });
+        });
+
+        // include UUIDs in recipient emails so they can be uniquely identified later
+        const recipient1 = `abcd${uuidv4()}@local.fake`;
+        const recipient2 = `efgh${uuidv4()}@local.fake`;
+
+        // extend LCID through GQL
+        // TODO - EASI-2019 - go through UI instead of making GQL calls
+        cy.get('@intakeId').then(intakeId => {
+          cy.task('extendLCID', {
+            euaId: euaIDFeatureFlagSet,
+            intakeId,
+            shouldSendEmail: false,
+            recipientEmails: [recipient1, recipient2],
+            scope: 'scope'
+          });
+        });
+
+        // check mailcatcher API for what emails have been sent
+        cy.request('http://localhost:1080/messages').then(
+          mailcatcherResponse => {
+            expect(mailcatcherResponse.status).to.eq(200);
+
+            // mailcatcher API returns email addresses surrounded by angle brackets, i.e. <abcd@local.fake>
+            const recipient1WithBrackets = `<${recipient1}>`;
+            const recipient2WithBrackets = `<${recipient2}>`;
+
+            const notification1 = mailcatcherResponse.body.find(email =>
+              email.recipients.includes(recipient1WithBrackets)
+            );
+            const notification2 = mailcatcherResponse.body.find(email =>
+              email.recipients.includes(recipient2WithBrackets)
+            );
+
+            // eslint-disable-next-line no-unused-expressions
+            expect(notification1, `mail not sent to recipient1: ${recipient1}`)
+              .not.to.be.undefined;
+
+            // eslint-disable-next-line no-unused-expressions
+            expect(notification2, `mail not sent to recipient2: ${recipient2}`)
+              .not.to.be.undefined;
+
+            // check that notifications were *not* sent to GRT team
+            expect(
+              notification1.recipients.length,
+              `notification for recipient1 sent to other recipients`
+            ).to.equal(1);
+            expect(
+              notification2.recipients.length,
+              `notification for recipient2 sent to other recipients`
+            ).to.equal(1);
+          }
+        );
+      });
+
+      it("Doesn't send emails when no recipients are specified", () => {});
+    });
+
+    describe('Without feature flag for multiple notifications set', () => {
+      it("Notifies requester and CC's GRT when shouldSendEmail is selected", () => {});
+
+      it("Doesn't send emails when shouldSendEmail isn't selected", () => {});
     });
   });
 });
