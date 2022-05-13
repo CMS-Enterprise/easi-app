@@ -207,23 +207,23 @@ export const prepareBusinessCaseForApp = (
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
     preferredSolution: {
-      title: businessCase.preferredTitle || '',
-      summary: businessCase.preferredSummary || '',
-      acquisitionApproach: businessCase.preferredAcquisitionApproach || '',
-      pros: businessCase.preferredPros || '',
-      cons: businessCase.preferredCons || '',
-      costSavings: businessCase.preferredCostSavings || '',
-      estimatedLifecycleCost: lifecycleCostLines.Preferred || '',
+      title: businessCase.preferredTitle,
+      summary: businessCase.preferredSummary,
+      acquisitionApproach: businessCase.preferredAcquisitionApproach,
+      pros: businessCase.preferredPros,
+      cons: businessCase.preferredCons,
+      costSavings: businessCase.preferredCostSavings,
+      estimatedLifecycleCost: lifecycleCostLines.Preferred,
       security: {
         isApproved: businessCase.preferredSecurityIsApproved,
         isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
       },
       hosting: {
-        type: businessCase.preferredHostingType || '',
-        location: businessCase.preferredHostingLocation || '',
-        cloudServiceType: businessCase.preferredHostingCloudServiceType || ''
+        type: businessCase.preferredHostingType,
+        location: businessCase.preferredHostingLocation,
+        cloudServiceType: businessCase.preferredHostingCloudServiceType
       },
-      hasUserInterface: businessCase.preferredHasUI || ''
+      hasUserInterface: businessCase.preferredHasUI
     },
     alternativeA: {
       title: businessCase.alternativeATitle,

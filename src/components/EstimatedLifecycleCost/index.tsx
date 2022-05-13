@@ -188,14 +188,10 @@ const Phase = ({
 };
 
 const OtherCosts = ({
-  formikKey,
-  setFieldValue,
   lifecycleCosts,
   relatedCosts,
   setRelatedCosts
 }: {
-  formikKey: string;
-  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   lifecycleCosts: LifecycleCosts;
   relatedCosts: any;
   setRelatedCosts: (relatedCost: any) => void;
@@ -398,8 +394,6 @@ const EstimatedLifecycleCost = ({
           );
         })}
         <OtherCosts
-          formikKey={formikKey}
-          setFieldValue={setFieldValue}
           lifecycleCosts={lifecycleCosts}
           relatedCosts={relatedCosts}
           setRelatedCosts={setRelatedCosts}
