@@ -11,11 +11,7 @@ import {
 } from 'components/shared/DescriptionGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
-import {
-  CostData,
-  LifecycleCosts,
-  LifecycleYears
-} from 'types/estimatedLifecycle';
+import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
 import { getFiscalYear } from 'utils/date';
 import formatDollars from 'utils/formatDollars';
 
@@ -318,28 +314,6 @@ const EstimatedLifecycleCost = ({
           })}
           <h4 className="cost-table-col margin-0">Total</h4>
         </div>
-        {/* {Object.keys(lifecycleCosts)
-          .filter((cost: any) => {
-            return (
-              (lifecycleCosts[cost as CategoryKeys].isPresent &&
-                !relatedCosts[cost as CategoryKeys]) ||
-              lifecycleCosts[cost as CategoryKeys].type === 'primary'
-            );
-          })
-          .map((cost: any) => {
-            return (
-              <Phase
-                category={cost}
-                formikKey={formikKey}
-                fiscalYear={fiscalYear}
-                setFieldValue={setFieldValue}
-                errors={errors}
-                lifecycleCosts={lifecycleCosts}
-                removeCategory={removeCategory}
-                total={calculateCategoryCost(cost)}
-              />
-            );
-          })} */}
         <Phase
           category="development"
           formikKey={formikKey}

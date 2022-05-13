@@ -7,7 +7,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import { LifecycleCosts } from 'types/estimatedLifecycle';
+import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
 import formatDollars from 'utils/formatDollars';
 
 type EstimatedLifecycleCostReviewProps = {
@@ -40,87 +40,6 @@ const EstimatedLifecycleCostReview = ({
       return total + (currentValue || 0);
     }, 0);
   };
-
-  // Can be float or NaN
-  // const data.development.years: { [key: string]: number } = {
-  //   year1: data.year1.development.isPresent
-  //     ? parseFloat(data.year1.development.cost)
-  //     : NaN,
-  //   year2: data.year2.development.isPresent
-  //     ? parseFloat(data.year2.development.cost)
-  //     : NaN,
-  //   year3: data.year3.development.isPresent
-  //     ? parseFloat(data.year3.development.cost)
-  //     : NaN,
-  //   year4: data.year4.development.isPresent
-  //     ? parseFloat(data.year4.development.cost)
-  //     : NaN,
-  //   year5: data.year5.development.isPresent
-  //     ? parseFloat(data.year5.development.cost)
-  //     : NaN
-  // };
-
-  // Can be float or NaN
-  // const data.operationsMaintenance.years: { [key: string]: number } = {
-  //   year1: data.year1.operationsMaintenance.isPresent
-  //     ? parseFloat(data.year1.operationsMaintenance.cost)
-  //     : NaN,
-  //   year2: data.year2.operationsMaintenance.isPresent
-  //     ? parseFloat(data.year2.operationsMaintenance.cost)
-  //     : NaN,
-  //   year3: data.year3.operationsMaintenance.isPresent
-  //     ? parseFloat(data.year3.operationsMaintenance.cost)
-  //     : NaN,
-  //   year4: data.year4.operationsMaintenance.isPresent
-  //     ? parseFloat(data.year4.operationsMaintenance.cost)
-  //     : NaN,
-  //   year5: data.year5.operationsMaintenance.isPresent
-  //     ? parseFloat(data.year5.operationsMaintenance.cost)
-  //     : NaN
-  // };
-
-  // Can be float or NaN
-  // const data.other.years: { [key: string]: number } = {
-  //   year1: data.year1.other.isPresent ? parseFloat(data.year1.other.cost) : NaN,
-  //   year2: data.year2.other.isPresent ? parseFloat(data.year2.other.cost) : NaN,
-  //   year3: data.year3.other.isPresent ? parseFloat(data.year3.other.cost) : NaN,
-  //   year4: data.year4.other.isPresent ? parseFloat(data.year4.other.cost) : NaN,
-  //   year5: data.year5.other.isPresent ? parseFloat(data.year5.other.cost) : NaN
-  // };
-
-  // const totalCosts: {
-  //   [key: string]: {
-  //     development: number;
-  //     operationsMaintenance: number;
-  //     other: number;
-  //   };
-  // } = {
-  //   year1: {
-  //     development: data.development.years.year1 || 0,
-  //     operationsMaintenance: data.operationsMaintenance.years.year1 || 0,
-  //     other: data.other.years.year1 || 0
-  //   },
-  //   year2: {
-  //     development: data.development.years.year2 || 0,
-  //     operationsMaintenance: data.operationsMaintenance.years.year2 || 0,
-  //     other: data.other.years.year2 || 0
-  //   },
-  //   year3: {
-  //     development: data.development.years.year3 || 0,
-  //     operationsMaintenance: data.operationsMaintenance.years.year3 || 0,
-  //     other: data.other.years.year3 || 0
-  //   },
-  //   year4: {
-  //     development: data.development.years.year4 || 0,
-  //     operationsMaintenance: data.operationsMaintenance.years.year4 || 0,
-  //     other: data.other.years.year4 || 0
-  //   },
-  //   year5: {
-  //     development: data.development.years.year5 || 0,
-  //     operationsMaintenance: data.operationsMaintenance.years.year5 || 0,
-  //     other: data.other.years.year5 || 0
-  //   }
-  // };
 
   const totalCosts = Object.keys(data).reduce(
     (acc, cost) => {
@@ -187,26 +106,39 @@ const EstimatedLifecycleCostReview = ({
                           </th>
                           <td className="padding-y-2 text-right text-bold">
                             {formatDollarsOrDash(
-                              sum(Object.values(totalCosts[year]))
+                              sum(
+                                Object.values(
+                                  totalCosts[year as keyof LifecycleYears]
+                                )
+                              )
                             )}
                           </td>
                         </tr>
                         {Object.keys(data)
                           .filter(
                             cost =>
-                              data[cost].type === 'primary' ||
-                              data[cost].isPresent
+                              data[cost as keyof LifecycleCosts].type ===
+                                'primary' ||
+                              data[cost as keyof LifecycleCosts].isPresent
                           )
                           .map(cost => (
                             <tr>
                               <th
                                 className="padding-y-2 text-right text-normal"
-                                aria-label={`Fiscal year ${yearMapping[year]} ${data[cost].label} costs`}
+                                aria-label={`Fiscal year ${yearMapping[year]} ${
+                                  data[cost as keyof LifecycleCosts].label
+                                } costs`}
                               >
-                                {data[cost].label}
+                                {data[cost as keyof LifecycleCosts].label}
                               </th>
                               <td className="padding-y-2 text-right text-normal">
-                                {formatDollarsOrDash(data[cost].years[year])}
+                                {formatDollarsOrDash(
+                                  parseFloat(
+                                    data[cost as keyof LifecycleCosts].years[
+                                      year as keyof LifecycleYears
+                                    ]
+                                  )
+                                )}
                               </td>
                             </tr>
                           ))}
@@ -245,17 +177,27 @@ const EstimatedLifecycleCostReview = ({
                     {Object.keys(data)
                       .filter(
                         cost =>
-                          data[cost].type === 'primary' || data[cost].isPresent
+                          data[cost as keyof LifecycleCosts].type ===
+                            'primary' ||
+                          data[cost as keyof LifecycleCosts].isPresent
                       )
                       .map(cost => (
                         <tr key={cost}>
-                          <TableHead scope="row">{data[cost].label}</TableHead>
+                          <TableHead scope="row">
+                            {data[cost as keyof LifecycleCosts].label}
+                          </TableHead>
                           {Object.keys(yearMapping).map(year => (
                             <td
                               key={`${year}-development-costs`}
                               className="padding-y-3 text-right"
                             >
-                              {formatDollarsOrDash(data[cost].years[year])}
+                              {formatDollarsOrDash(
+                                parseFloat(
+                                  data[cost as keyof LifecycleCosts].years[
+                                    year as keyof LifecycleYears
+                                  ]
+                                )
+                              )}
                             </td>
                           ))}
                           <td
@@ -263,7 +205,11 @@ const EstimatedLifecycleCostReview = ({
                             className="padding-y-3 text-right"
                           >
                             {formatDollarsOrDash(
-                              sum(Object.values(data[cost].years))
+                              sum(
+                                Object.values(
+                                  data[cost as keyof LifecycleCosts].years
+                                )
+                              )
                             )}
                           </td>
                         </tr>
@@ -276,7 +222,11 @@ const EstimatedLifecycleCostReview = ({
                           className="padding-y-3 text-right"
                         >
                           {formatDollarsOrDash(
-                            sum(Object.values(totalCosts[year]))
+                            sum(
+                              Object.values(
+                                totalCosts[year as keyof LifecycleYears]
+                              )
+                            )
                           )}
                         </td>
                       ))}
