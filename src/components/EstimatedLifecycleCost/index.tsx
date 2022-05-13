@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button, IconAdd, Label, SummaryBox } from '@trussworks/react-uswds';
+import { Trans, useTranslation } from 'react-i18next';
+import {
+  Button,
+  IconAdd,
+  Label,
+  Link as UswdsLink,
+  SummaryBox
+} from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import { Field, FieldArray } from 'formik';
 import { DateTime } from 'luxon';
 
+import CollapsableList from 'components/CollapsableList';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -11,6 +19,7 @@ import {
 } from 'components/shared/DescriptionGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
 import { getFiscalYear } from 'utils/date';
 import formatDollars from 'utils/formatDollars';
@@ -60,6 +69,13 @@ const CostSummary = () => {
           {t('businessCase:lifecycleCost.relatedCostDef')}
         </dd>
       </dl>
+      <CollapsableList
+        className="margin-top-2"
+        label={t('lifecycleCost.availableRelatedCosts')}
+        items={t('lifecycleCost.availableRelatedCostsDef', {
+          returnObjects: true
+        })}
+      />
     </SummaryBox>
   );
 };
@@ -259,13 +275,15 @@ type EstimatedLifecycleCostProps = {
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   errors: any;
   businessCaseCreatedAt?: string;
+  className: string;
 };
 const EstimatedLifecycleCost = ({
   formikKey,
   lifecycleCosts,
   setFieldValue,
   errors = {},
-  businessCaseCreatedAt = ''
+  businessCaseCreatedAt = '',
+  className
 }: EstimatedLifecycleCostProps) => {
   const [relatedCosts, setRelatedCosts] = useState([
     ...Object.keys(lifecycleCosts).filter(cost => {
@@ -297,13 +315,41 @@ const EstimatedLifecycleCost = ({
     }
   };
 
+  const { t } = useTranslation('businessCase');
   const fiscalYear = getFiscalYear(DateTime.fromISO(businessCaseCreatedAt));
 
   return (
-    <div className="est-lifecycle-cost">
+    <div className={classNames('est-lifecycle-cost', className)}>
+      <h2 className="margin-0">{t('lifecycleCost.heading')}</h2>
+      <HelpText
+        className="margin-bottom-2"
+        id="BusinessCase-EstimatedLifecycleCostHelp"
+      >
+        <p className="margin-y-2">{t('lifecycleCost.intro')}</p>
+        <Trans i18nKey="businessCase:lifecycleCost.considerations">
+          indexOne
+          <ul className="padding-left-3 margin-top-1">
+            <li>indexTwo</li>
+            <li>indexTwo</li>
+            <li>indexTwo</li>
+            <li>indexTwo</li>
+          </ul>
+        </Trans>
+        <Trans i18nKey="businessCase:lifecycleCost.questions">
+          indexOne
+          <UswdsLink href="mailto:IT_Governance@cms.hhs.gov">
+            indexTwo
+          </UswdsLink>
+          indexThree
+        </Trans>
+      </HelpText>
       <CostSummary />
 
       <div className="cost-table margin-y-4">
+        <h4 className="margin-0">{t('lifecycleCost.tableHeading')}</h4>
+        <p className="margin-top-1 text-base">
+          {t('lifecycleCost.tableDescription')}
+        </p>
         <div className="cost-table-row cost-table-row__headings minh-0">
           {Object.keys(lifecycleCosts.development.years).map((year, i) => {
             return (

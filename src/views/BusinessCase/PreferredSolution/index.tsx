@@ -594,39 +594,17 @@ const PreferredSolution = ({
                   />
                 </FieldGroup>
               </div>
-              <div className="margin-top-2">
-                <h2 className="margin-0">Estimated lifecycle cost</h2>
-                <HelpText id="BusinessCase-EstimatedLifecycleCostHelp">
-                  <p className="margin-y-2">
-                    You can add speculative costs if exact ones are not known or
-                    if a contract is not yet in place.
-                  </p>
-                  <span>
-                    These things should be considered when estimating costs:
-                  </span>
-                  <ul className="padding-left-205">
-                    <li>Hosting</li>
-                    <li>
-                      Software subscription and licenses (Commercial
-                      off-the-shelf and Government off-the-shelf products)
-                    </li>
-                    <li>Contractor rates and salaries</li>
-                    <li>Inflation</li>
-                  </ul>
-                </HelpText>
-                <EstimatedLifecycleCost
-                  formikKey="preferredSolution.estimatedLifecycleCost"
-                  lifecycleCosts={
-                    values.preferredSolution.estimatedLifecycleCost
-                  }
-                  businessCaseCreatedAt={businessCase.createdAt}
-                  errors={
-                    errors.preferredSolution &&
-                    errors.preferredSolution.estimatedLifecycleCost
-                  }
-                  setFieldValue={setFieldValue}
-                />
-              </div>
+              <EstimatedLifecycleCost
+                className="margin-top-2"
+                formikKey="preferredSolution.estimatedLifecycleCost"
+                lifecycleCosts={values.preferredSolution.estimatedLifecycleCost}
+                businessCaseCreatedAt={businessCase.createdAt}
+                errors={
+                  errors.preferredSolution &&
+                  errors.preferredSolution.estimatedLifecycleCost
+                }
+                setFieldValue={setFieldValue}
+              />
               <div className="tablet:grid-col-9 margin-bottom-7">
                 <FieldGroup
                   scrollElement="preferredSolution.costSavings"

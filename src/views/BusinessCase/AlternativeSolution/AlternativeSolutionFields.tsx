@@ -28,7 +28,7 @@ const AlternativeSolutionFields = ({
 
   return (
     <>
-      <div data-testid="alternative-solution-fields">
+      <div data-testid="alternative-solution-fields tablet:grid-col-9">
         <FieldGroup
           scrollElement={`${altId}.title`}
           error={!!flatErrors[`${altId}.title`]}
@@ -420,38 +420,20 @@ const AlternativeSolutionFields = ({
           />
         </FieldGroup>
       </div>
-      <div className="margin-top-2">
-        <h2 className="margin-0">Estimated lifecycle cost</h2>
-        <HelpText id="BusinessCase-EstimatedLifecycleCostHelp">
-          <p className="margin-y-2">
-            You can add speculative costs if exact ones are not known or if a
-            contract is not yet in place.
-          </p>
-          <span>These things should be considered when estimating costs:</span>
-          <ul className="padding-left-205">
-            <li>Hosting</li>
-            <li>
-              Software subscription and licenses (Commercial off-the-shelf and
-              Government off-the-shelf products)
-            </li>
-            <li>Contractor rates and salaries</li>
-            <li>Inflation</li>
-          </ul>
-        </HelpText>
-        <EstimatedLifecycleCost
-          formikKey={`${altId}.estimatedLifecycleCost`}
-          lifecycleCosts={values[`${altId}`].estimatedLifecycleCost}
-          businessCaseCreatedAt={businessCaseCreatedAt}
-          errors={
-            errors &&
-            errors[`${altId}`] &&
-            // @ts-ignore
-            errors[`${altId}`].estimatedLifecycleCost
-          }
-          setFieldValue={setFieldValue}
-        />
-      </div>
-      <div className="margin-top-2 margin-bottom-7">
+      <EstimatedLifecycleCost
+        className="margin-top-2"
+        formikKey={`${altId}.estimatedLifecycleCost`}
+        lifecycleCosts={values[`${altId}`].estimatedLifecycleCost}
+        businessCaseCreatedAt={businessCaseCreatedAt}
+        errors={
+          errors &&
+          errors[`${altId}`] &&
+          // @ts-ignore
+          errors[`${altId}`].estimatedLifecycleCost
+        }
+        setFieldValue={setFieldValue}
+      />
+      <div className="margin-top-2 margin-bottom-7 tablet:grid-col-9">
         <FieldGroup
           scrollElement={`${altId}.costSavings`}
           error={!!flatErrors[`${altId}.costSavings`]}
