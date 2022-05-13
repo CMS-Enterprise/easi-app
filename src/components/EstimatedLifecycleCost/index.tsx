@@ -150,7 +150,7 @@ const Phase = ({
                           `lifecycleCost.${category}`
                         )} cost`}
                       >
-                        {t('lifecycleCost.fiscalYear', { currentYear })}
+                        {t('lifecycleCost.fiscalYear', { year: currentYear })}
                       </Label>
                       <FieldErrorMsg>{errors?.development?.cost}</FieldErrorMsg>
                       <Field
@@ -316,7 +316,9 @@ const EstimatedLifecycleCost = ({
   };
 
   const { t } = useTranslation('businessCase');
-  const fiscalYear = getFiscalYear(DateTime.fromISO(businessCaseCreatedAt));
+  const fiscalYear = businessCaseCreatedAt
+    ? getFiscalYear(DateTime.fromISO(businessCaseCreatedAt))
+    : new Date().getFullYear();
 
   return (
     <div className={classNames('est-lifecycle-cost', className)}>
