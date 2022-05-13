@@ -11,13 +11,17 @@ import {
 } from 'components/shared/DescriptionGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
-import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
+import {
+  CostData,
+  LifecycleCosts,
+  LifecycleYears
+} from 'types/estimatedLifecycle';
 import { getFiscalYear } from 'utils/date';
 import formatDollars from 'utils/formatDollars';
 
 import './index.scss';
 
-type categoryKeys =
+type CategoryKeys =
   | 'development'
   | 'operationsMaintenance'
   | 'helpDesk'
@@ -65,12 +69,13 @@ const CostSummary = () => {
 };
 
 type PhaseProps = {
-  category: categoryKeys;
+  category: CategoryKeys;
   formikKey: string;
   fiscalYear: number;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   errors: any;
   lifecycleCosts: LifecycleCosts;
+  removeCategory: (category: CategoryKeys) => void;
   total: number;
 };
 
@@ -81,6 +86,7 @@ const Phase = ({
   setFieldValue,
   errors = {},
   lifecycleCosts,
+  removeCategory,
   total
 }: PhaseProps) => {
   const { t } = useTranslation('businessCase');
@@ -102,9 +108,21 @@ const Phase = ({
                 {typeof errors === 'string' ? errors : ''}
               </FieldErrorMsg>
               <div className="cost-table-row">
-                <legend className="cost-table-col usa-label">
-                  {t(lifecycleCosts[category].label)}
-                </legend>
+                <div className="cost-table-col">
+                  <legend className="usa-label">
+                    {t(lifecycleCosts[category].label)}
+                  </legend>
+                  {lifecycleCosts[category].type === 'related' && (
+                    <Button
+                      unstyled
+                      type="button"
+                      className="text-error"
+                      onClick={() => removeCategory(category)}
+                    >
+                      Remove category
+                    </Button>
+                  )}
+                </div>
                 {Object.keys(lifecycleCosts[category].years).map((year, i) => {
                   const currentYear = fiscalYear + i;
                   return (
@@ -173,21 +191,21 @@ const OtherCosts = ({
   const [activeRelatedCost, setActiveRelatedCost] = useState<any>(null);
   const { t } = useTranslation('businessCase');
 
-  if (Object.keys(relatedCosts).length > 2) return null;
+  if (relatedCosts.length > 2) return null;
   return (
     <div className="cost-table-row cost-table-row__other">
-      {!activeRelatedCost && (
+      {activeRelatedCost === null && (
         <Button
           type="button"
           unstyled
-          onClick={() => setActiveRelatedCost(true)}
+          onClick={() => setActiveRelatedCost('')}
           className="display-flex flex-align-center"
         >
           <IconAdd className="margin-right-1" />
           {t('lifecycleCost.addRelatedCost')}
         </Button>
       )}
-      {activeRelatedCost && (
+      {activeRelatedCost !== null && (
         <div className="desktop:display-flex flex-align-center">
           <Label htmlFor="newRelatedCostSelect">
             {t('lifecycleCost.newRelatedCost')}
@@ -201,14 +219,14 @@ const OtherCosts = ({
             {Object.keys(lifecycleCosts)
               .filter(cost => {
                 return (
-                  lifecycleCosts[cost as keyof LifecycleCosts].type ===
-                    'related' && !relatedCosts[cost]
+                  lifecycleCosts[cost as CategoryKeys].type === 'related' &&
+                  !relatedCosts.includes(cost)
                 );
               })
               .map(cost => {
                 return (
                   <option key={cost} value={cost}>
-                    {lifecycleCosts[cost as keyof LifecycleCosts].label}
+                    {lifecycleCosts[cost as CategoryKeys].label}
                   </option>
                 );
               })}
@@ -217,12 +235,8 @@ const OtherCosts = ({
             className="width-auto"
             type="submit"
             onClick={() => {
-              if (lifecycleCosts[activeRelatedCost as keyof LifecycleCosts]) {
-                setRelatedCosts({
-                  ...relatedCosts,
-                  [activeRelatedCost]:
-                    lifecycleCosts[activeRelatedCost as keyof LifecycleCosts]
-                });
+              if (lifecycleCosts[activeRelatedCost as CategoryKeys]) {
+                setRelatedCosts([...relatedCosts, activeRelatedCost]);
               }
               setActiveRelatedCost(null);
             }}
@@ -257,20 +271,34 @@ const EstimatedLifecycleCost = ({
   errors = {},
   businessCaseCreatedAt = ''
 }: EstimatedLifecycleCostProps) => {
-  const [relatedCosts, setRelatedCosts] = useState({});
+  const [relatedCosts, setRelatedCosts] = useState([
+    ...Object.keys(lifecycleCosts).filter(cost => {
+      const { type, isPresent } = lifecycleCosts[cost as CategoryKeys];
+      return isPresent && type === 'related';
+    })
+  ]);
   const sumCostinYear = (year: string) => {
     return Object.values(lifecycleCosts).reduce((total, current) => {
       const cost = current.years[year as keyof LifecycleYears];
       return total + (cost ? parseFloat(cost) : 0);
     }, 0);
   };
-  const calculateCategoryCost = (category: categoryKeys) => {
+  const calculateCategoryCost = (category: CategoryKeys) => {
     return Object.values(lifecycleCosts[category].years).reduce(
       (total, current) => {
         return total + (current ? parseFloat(current) : 0);
       },
       0
     );
+  };
+  const removeCategory = (category: CategoryKeys) => {
+    setRelatedCosts(relatedCosts.filter(cost => cost !== category));
+    if (lifecycleCosts[category].isPresent) {
+      setFieldValue(`${formikKey}.${category}.isPresent`, false);
+      Object.keys(lifecycleCosts[category].years).forEach(year => {
+        setFieldValue(`${formikKey}.${category}.years.${year}`, '');
+      });
+    }
   };
 
   const fiscalYear = getFiscalYear(DateTime.fromISO(businessCaseCreatedAt));
@@ -290,6 +318,28 @@ const EstimatedLifecycleCost = ({
           })}
           <h4 className="cost-table-col margin-0">Total</h4>
         </div>
+        {/* {Object.keys(lifecycleCosts)
+          .filter((cost: any) => {
+            return (
+              (lifecycleCosts[cost as CategoryKeys].isPresent &&
+                !relatedCosts[cost as CategoryKeys]) ||
+              lifecycleCosts[cost as CategoryKeys].type === 'primary'
+            );
+          })
+          .map((cost: any) => {
+            return (
+              <Phase
+                category={cost}
+                formikKey={formikKey}
+                fiscalYear={fiscalYear}
+                setFieldValue={setFieldValue}
+                errors={errors}
+                lifecycleCosts={lifecycleCosts}
+                removeCategory={removeCategory}
+                total={calculateCategoryCost(cost)}
+              />
+            );
+          })} */}
         <Phase
           category="development"
           formikKey={formikKey}
@@ -297,6 +347,7 @@ const EstimatedLifecycleCost = ({
           setFieldValue={setFieldValue}
           errors={errors}
           lifecycleCosts={lifecycleCosts}
+          removeCategory={removeCategory}
           total={calculateCategoryCost('development')}
         />
         <Phase
@@ -306,9 +357,10 @@ const EstimatedLifecycleCost = ({
           setFieldValue={setFieldValue}
           errors={errors}
           lifecycleCosts={lifecycleCosts}
+          removeCategory={removeCategory}
           total={calculateCategoryCost('operationsMaintenance')}
         />
-        {Object.keys(relatedCosts).map((cost: any) => {
+        {relatedCosts.map((cost: any) => {
           return (
             <Phase
               key={cost}
@@ -318,6 +370,7 @@ const EstimatedLifecycleCost = ({
               setFieldValue={setFieldValue}
               errors={errors}
               lifecycleCosts={lifecycleCosts}
+              removeCategory={removeCategory}
               total={calculateCategoryCost(cost)}
             />
           );
