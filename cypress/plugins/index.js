@@ -47,31 +47,27 @@ function issueLCID({
   lcid
 }) {
   const apolloClient = createApolloClient(euaId);
-  return new Promise(resolve => {
-    const input = {
-      intakeId,
-      expiresAt: luxon.DateTime.utc(4567, 12, 1).toISO(),
-      feedback: 'feedback',
-      scope,
-      shouldSendEmail,
-      notificationRecipients: {
-        regularRecipientEmails: recipientEmails,
-        shouldNotifyITGovernance: false,
-        shouldNotifyITInvestment: false
-      },
-      lcid: lcid || '',
-      nextSteps: 'steps'
-    };
-    apolloClient
-      .mutate({
-        mutation: issueLCIDQuery,
-        variables: {
-          input
-        }
-      })
-      .then(result => {
-        resolve(result);
-      });
+  const input = {
+    intakeId,
+    expiresAt: luxon.DateTime.utc(4567, 12, 1).toISO(),
+    feedback: 'feedback',
+    scope,
+    shouldSendEmail,
+    notificationRecipients: {
+      regularRecipientEmails: recipientEmails,
+      shouldNotifyITGovernance: false,
+      shouldNotifyITInvestment: false
+    },
+    lcid: lcid || '',
+    nextSteps: 'steps'
+  };
+  // need to return this Promise to indicate to Cypress that the task was handled
+  // https://docs.cypress.io/api/commands/task#Usage - "The command will fail if undefined is returned or if the promise is resolved with undefined."
+  return apolloClient.mutate({
+    mutation: issueLCIDQuery,
+    variables: {
+      input
+    }
   });
 }
 
