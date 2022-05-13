@@ -215,8 +215,8 @@ export const prepareBusinessCaseForApp = (
       costSavings: businessCase.preferredCostSavings || '',
       estimatedLifecycleCost: lifecycleCostLines.Preferred || '',
       security: {
-        isApproved: businessCase.preferredSecurityIsApproved || '',
-        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed || ''
+        isApproved: businessCase.preferredSecurityIsApproved,
+        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
       },
       hosting: {
         type: businessCase.preferredHostingType || '',
