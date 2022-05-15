@@ -116,9 +116,6 @@ const Phase = ({
               className="usa-fieldset"
               aria-describedby="BusinessCase-EstimatedLifecycleCostHelp"
             >
-              <FieldErrorMsg>
-                {typeof errors === 'string' ? errors : ''}
-              </FieldErrorMsg>
               <div className="cost-table-row">
                 <div className="cost-table-col">
                   <legend className="usa-label">
@@ -348,6 +345,9 @@ const EstimatedLifecycleCost = ({
         <p className="margin-top-1 text-base">
           {t('lifecycleCost.tableDescription')}
         </p>
+        <FieldErrorMsg>
+          {typeof errors === 'string' ? errors : ''}
+        </FieldErrorMsg>
         <div className="cost-table-row cost-table-row__headings minh-0">
           {Object.keys(lifecycleCosts.development.years).map((year, i) => {
             return (

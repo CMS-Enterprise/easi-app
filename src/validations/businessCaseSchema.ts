@@ -2,165 +2,25 @@ import * as Yup from 'yup';
 
 const phoneNumberRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 
-const estimatedLifecycleCostSchema = Yup.object().shape({
-  year1: Yup.object()
-    .test(
-      'requiredPhase',
-      'Select at least one of: Phase, Operations and Maintenance, or Other',
-      (value: any) => {
-        if (
-          value.development.isPresent ||
-          value.operationsMaintenance.isPresent ||
-          value.other.isPresent
-        ) {
-          return true;
-        }
-        return false;
-      }
-    )
-    .shape({
-      development: Yup.object().shape({
-        cost: Yup.string().when('isPresent', {
-          is: true,
-          then: Yup.string().required('Enter the development cost for Year 1')
-        })
-      }),
-      operationsMaintenance: Yup.object().shape({
-        cost: Yup.string().when('isPresent', {
-          is: true,
-          then: Yup.string().required(
-            'Enter the operations and maintenance cost for Year 1'
-          )
-        })
-      }),
-      other: Yup.object().shape({
-        cost: Yup.string().when('isPresent', {
-          is: true,
-          then: Yup.string().required('Enter the other cost for Year 1')
-        })
-      })
-    }),
-  year2: Yup.object()
-    .test(
-      'requiredPhase',
-      'Select at least one of: Phase, Operations and Maintenance, or Other',
-      (value: any) => {
-        if (
-          value.development.isPresent ||
-          value.operationsMaintenance.isPresent ||
-          value.other.isPresent
-        ) {
-          return true;
-        }
-        return false;
-      }
-    )
-    .shape({
-      development: Yup.object().shape({
-        cost: Yup.string().when('isPresent', {
-          is: true,
-          then: Yup.string().required('Enter the development cost for Year 2')
-        })
-      }),
-      operationsMaintenance: Yup.object().shape({
-        cost: Yup.string().when('isPresent', {
-          is: true,
-          then: Yup.string().required(
-            'Enter the operations and maintenance cost for Year 2'
-          )
-        })
-      }),
-      other: Yup.object().shape({
-        cost: Yup.string().when('isPresent', {
-          is: true,
-          then: Yup.string().required('Enter the other cost for Year 2')
-        })
-      })
-    }),
-  year3: Yup.object()
-    .test(
-      'requiredPhase',
-      'Select at least one of: Phase, Operations and Maintenance, or Other',
-      (value: any) => {
-        if (
-          value.development.isPresent ||
-          value.operationsMaintenance.isPresent ||
-          value.other.isPresent
-        ) {
-          return true;
-        }
-        return false;
-      }
-    )
-    .shape({
-      development: Yup.object().shape({
-        cost: Yup.string().when('isPresent', {
-          is: true,
-          then: Yup.string().required('Enter the development cost for Year 3')
-        })
-      }),
-      operationsMaintenance: Yup.object().shape({
-        cost: Yup.string().when('isPresent', {
-          is: true,
-          then: Yup.string().required(
-            'Enter the operations and maintenance cost for Year 3'
-          )
-        })
-      }),
-      other: Yup.object().shape({
-        cost: Yup.string().when('isPresent', {
-          is: true,
-          then: Yup.string().required('Enter the other cost for Year 3')
-        })
-      })
-    }),
-  // Year 4 is not required
-  year4: Yup.object().shape({
-    development: Yup.object().shape({
-      cost: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().required('Enter the development cost for Year 4')
-      })
-    }),
-    operationsMaintenance: Yup.object().shape({
-      cost: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().required(
-          'Enter the operations and maintenance cost for Year 4'
-        )
-      })
-    }),
-    other: Yup.object().shape({
-      cost: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().required('Enter the other cost for Year 4')
-      })
-    })
-  }),
-  // Year 5 is not required
-  year5: Yup.object().shape({
-    development: Yup.object().shape({
-      cost: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().required('Enter the development cost for Year 5')
-      })
-    }),
-    operationsMaintenance: Yup.object().shape({
-      cost: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().required(
-          'Enter the operations and maintenance cost for Year 5'
-        )
-      })
-    }),
-    other: Yup.object().shape({
-      cost: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().required('Enter the other cost for Year 5')
-      })
-    })
-  })
-});
+const estimatedLifecycleCostSchema = Yup.object().test(
+  'requiredPhase',
+  'Please enter at least one estimated lifecycle cost.',
+  (value: any) => {
+    if (
+      value.development.isPresent ||
+      value.operationsMaintenance.isPresent ||
+      value.helpDesk.isPresent ||
+      value.software.isPresent ||
+      value.planning.isPresent ||
+      value.infrastructure.isPresent ||
+      value.oit.isPresent ||
+      value.other.isPresent
+    ) {
+      return true;
+    }
+    return false;
+  }
+);
 
 export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
@@ -413,17 +273,18 @@ export const BusinessCaseFinalValidationSchema = {
 
 // We don't validate much when a business case is in draft
 // This mostly empty validation makes it easier to switch validations in the form code
-export const BusinessCaseDraftValidationSchema = {
-  generalRequestInfo: Yup.object().shape({
-    requester: Yup.object().shape({
-      phoneNumber: Yup.string().matches(
-        phoneNumberRegex,
-        'Enter the requester’s phone number like 1234567890 or 123-456-7890'
-      )
-    })
-  }),
-  requestDescription: Yup.object().shape({}),
-  preferredSolution: Yup.object().shape({}),
-  alternativeA: Yup.object().shape({}),
-  alternativeB: Yup.object().shape({})
-};
+export const BusinessCaseDraftValidationSchema = BusinessCaseFinalValidationSchema;
+// export const BusinessCaseDraftValidationSchema = {
+//   generalRequestInfo: Yup.object().shape({
+//     requester: Yup.object().shape({
+//       phoneNumber: Yup.string().matches(
+//         phoneNumberRegex,
+//         'Enter the requester’s phone number like 1234567890 or 123-456-7890'
+//       )
+//     })
+//   }),
+//   requestDescription: Yup.object().shape({}),
+//   preferredSolution: Yup.object().shape({}),
+//   alternativeA: Yup.object().shape({}),
+//   alternativeB: Yup.object().shape({})
+// };
