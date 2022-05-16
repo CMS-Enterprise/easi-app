@@ -61,16 +61,17 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		RejectionReason:             si.RejectionReason.Ptr(),
 		AdminLead:                   si.AdminLead.Ptr(),
 
-		ExistingFunding:    si.ExistingFunding.Ptr(),
-		EaSupportRequest:   si.EASupportRequest.Ptr(),
-		ContractStartDate:  pStr(strDate(si.ContractStartDate)),
-		ContractEndDate:    pStr(strDate(si.ContractEndDate)),
-		SubmittedAt:        strDateTime(si.SubmittedAt),
-		DecidedAt:          pStr(strDateTime(si.DecidedAt)),
-		ArchivedAt:         pStr(strDateTime(si.ArchivedAt)),
-		GrbDate:            pStr(strDate(si.GRBDate)),
-		GrtDate:            pStr(strDate(si.GRTDate)),
-		LifecycleExpiresAt: pStr(strDate(si.LifecycleExpiresAt)),
+		ExistingFunding:       si.ExistingFunding.Ptr(),
+		EaSupportRequest:      si.EASupportRequest.Ptr(),
+		ContractStartDate:     pStr(strDate(si.ContractStartDate)),
+		ContractEndDate:       pStr(strDate(si.ContractEndDate)),
+		SubmittedAt:           strDateTime(si.SubmittedAt),
+		DecidedAt:             pStr(strDateTime(si.DecidedAt)),
+		ArchivedAt:            pStr(strDateTime(si.ArchivedAt)),
+		GrbDate:               pStr(strDate(si.GRBDate)),
+		GrtDate:               pStr(strDate(si.GRTDate)),
+		LifecycleExpiresAt:    pStr(strDate(si.LifecycleExpiresAt)),
+		LifecycleCostBaseline: si.LifecycleCostBaseline.Ptr(),
 	}
 
 	blob, err := json.Marshal(&obj)
