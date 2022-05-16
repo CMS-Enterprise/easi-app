@@ -273,18 +273,17 @@ export const BusinessCaseFinalValidationSchema = {
 
 // We don't validate much when a business case is in draft
 // This mostly empty validation makes it easier to switch validations in the form code
-export const BusinessCaseDraftValidationSchema = BusinessCaseFinalValidationSchema;
-// export const BusinessCaseDraftValidationSchema = {
-//   generalRequestInfo: Yup.object().shape({
-//     requester: Yup.object().shape({
-//       phoneNumber: Yup.string().matches(
-//         phoneNumberRegex,
-//         'Enter the requester’s phone number like 1234567890 or 123-456-7890'
-//       )
-//     })
-//   }),
-//   requestDescription: Yup.object().shape({}),
-//   preferredSolution: Yup.object().shape({}),
-//   alternativeA: Yup.object().shape({}),
-//   alternativeB: Yup.object().shape({})
-// };
+export const BusinessCaseDraftValidationSchema = {
+  generalRequestInfo: Yup.object().shape({
+    requester: Yup.object().shape({
+      phoneNumber: Yup.string().matches(
+        phoneNumberRegex,
+        'Enter the requester’s phone number like 1234567890 or 123-456-7890'
+      )
+    })
+  }),
+  requestDescription: Yup.object().shape({}),
+  preferredSolution: Yup.object().shape({}),
+  alternativeA: Yup.object().shape({}),
+  alternativeB: Yup.object().shape({})
+};

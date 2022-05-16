@@ -28,7 +28,10 @@ const AlternativeSolutionFields = ({
 
   return (
     <>
-      <div data-testid="alternative-solution-fields tablet:grid-col-9">
+      <div
+        data-testid="alternative-solution-fields"
+        className="tablet:grid-col-9"
+      >
         <FieldGroup
           scrollElement={`${altId}.title`}
           error={!!flatErrors[`${altId}.title`]}

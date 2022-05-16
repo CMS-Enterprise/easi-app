@@ -480,11 +480,6 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               className="easi-review-row"
             >
               <div>
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Requester indicated there is no associated cost with this solution
-                </dt>
                 <div
                   className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
                 >
@@ -499,7 +494,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
                     <dd
                       className="description-definition margin-0"
                     >
-                      $0
+                      $1,000
                     </dd>
                   </dl>
                 </div>

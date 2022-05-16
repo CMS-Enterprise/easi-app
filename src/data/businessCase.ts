@@ -6,40 +6,64 @@ import {
 } from 'types/businessCase';
 import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
 
-const lifecycleCostsMap = {
-  development: 'Development',
-  operationsMaintenance: 'Operations and Maintenance',
-  helpDesk: 'Help desk/call center',
-  software: 'Software licenses',
-  planning: 'Planning, support, and professional services',
-  infrastructure: 'Infrastructure',
-  oit: 'OIT services, tools, and pilots',
-  other: 'Other services, tools, and pilots'
+const yearsObject = {
+  year1: '',
+  year2: '',
+  year3: '',
+  year4: '',
+  year5: ''
 };
 
-export const defaultEstimatedLifecycle = Object.keys(lifecycleCostsMap).reduce(
-  (acc, cost) => {
-    return {
-      ...acc,
-      [cost]: {
-        label: lifecycleCostsMap[cost as keyof LifecycleCosts],
-        isPresent: false,
-        type:
-          cost === 'development' || cost === 'operationsMaintenance'
-            ? 'primary'
-            : 'related',
-        years: {
-          year1: '',
-          year2: '',
-          year3: '',
-          year4: '',
-          year5: ''
-        }
-      }
-    };
+export const defaultEstimatedLifecycle: LifecycleCosts = {
+  development: {
+    label: 'Development',
+    isPresent: false,
+    type: 'primary',
+    years: cloneDeep(yearsObject)
   },
-  {}
-);
+  operationsMaintenance: {
+    label: 'Operations and Maintenance',
+    isPresent: false,
+    type: 'primary',
+    years: cloneDeep(yearsObject)
+  },
+  helpDesk: {
+    label: 'Help desk/call center',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  software: {
+    label: 'Software licenses',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  planning: {
+    label: 'Planning, support, and professional services',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  infrastructure: {
+    label: 'Infrastructure',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  oit: {
+    label: 'OIT services, tools, and pilots',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  other: {
+    label: 'Other services, tools, and pilots',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  }
+};
 
 export const defaultProposedSolution = {
   title: '',
@@ -207,13 +231,13 @@ export const prepareBusinessCaseForApp = (
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
     preferredSolution: {
-      title: businessCase.preferredTitle,
-      summary: businessCase.preferredSummary,
-      acquisitionApproach: businessCase.preferredAcquisitionApproach,
-      pros: businessCase.preferredPros,
-      cons: businessCase.preferredCons,
-      costSavings: businessCase.preferredCostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.Preferred,
+      title: businessCase.preferredTitle || '',
+      summary: businessCase.preferredSummary || '',
+      acquisitionApproach: businessCase.preferredAcquisitionApproach || '',
+      pros: businessCase.preferredPros || '',
+      cons: businessCase.preferredCons || '',
+      costSavings: businessCase.preferredCostSavings || '',
+      estimatedLifecycleCost: lifecycleCostLines.Preferred || '',
       security: {
         isApproved: businessCase.preferredSecurityIsApproved,
         isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
@@ -226,13 +250,13 @@ export const prepareBusinessCaseForApp = (
       hasUserInterface: businessCase.preferredHasUI
     },
     alternativeA: {
-      title: businessCase.alternativeATitle,
-      summary: businessCase.alternativeASummary,
-      acquisitionApproach: businessCase.alternativeAAcquisitionApproach,
-      pros: businessCase.alternativeAPros,
-      cons: businessCase.alternativeACons,
-      costSavings: businessCase.alternativeACostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.A,
+      title: businessCase.alternativeATitle || '',
+      summary: businessCase.alternativeASummary || '',
+      acquisitionApproach: businessCase.alternativeAAcquisitionApproach || '',
+      pros: businessCase.alternativeAPros || '',
+      cons: businessCase.alternativeACons || '',
+      costSavings: businessCase.alternativeACostSavings || '',
+      estimatedLifecycleCost: lifecycleCostLines.A || '',
       security: {
         isApproved: businessCase.alternativeASecurityIsApproved,
         isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed

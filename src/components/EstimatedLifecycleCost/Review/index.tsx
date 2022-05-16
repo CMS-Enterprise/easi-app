@@ -122,7 +122,7 @@ const EstimatedLifecycleCostReview = ({
                               data[cost as keyof LifecycleCosts].isPresent
                           )
                           .map(cost => (
-                            <tr>
+                            <tr key={cost}>
                               <th
                                 className="padding-y-2 text-right text-normal"
                                 aria-label={`Fiscal year ${yearMapping[year]} ${
@@ -188,7 +188,7 @@ const EstimatedLifecycleCostReview = ({
                           </TableHead>
                           {Object.keys(yearMapping).map(year => (
                             <td
-                              key={`${year}-development-costs`}
+                              key={`${year}-${cost}-costs`}
                               className="padding-y-3 text-right"
                             >
                               {formatDollarsOrDash(
@@ -201,7 +201,7 @@ const EstimatedLifecycleCostReview = ({
                             </td>
                           ))}
                           <td
-                            data-testid="total-development-costs"
+                            data-testid={`total-${cost}-costs`}
                             className="padding-y-3 text-right"
                           >
                             {formatDollarsOrDash(
