@@ -193,9 +193,9 @@ type ComplexityRoot struct {
 		RecoveryPointObjective                    func(childComplexity int) int
 		RecoveryTimeObjective                     func(childComplexity int) int
 		SystemOfRecordsNotice                     func(childComplexity int) int
-		TLCPhase                                  func(childComplexity int) int
+		TlcPhase                                  func(childComplexity int) int
 		UUID                                      func(childComplexity int) int
-		XLCPhase                                  func(childComplexity int) int
+		XlcPhase                                  func(childComplexity int) int
 	}
 
 	CedarDataCenter struct {
@@ -705,18 +705,31 @@ type BusinessCaseResolver interface {
 }
 type CedarAuthorityToOperateResolver interface {
 	ActualDispositionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
-
+	ContainsPersonallyIdentifiableInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error)
+	CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
+	CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
+	CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
 	DateAuthorizationMemoExpires(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	DateAuthorizationMemoSigned(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
-
+	EAuthenticationLevel(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error)
+	Fips199OverallImpactRating(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
+	FismaSystemAcronym(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error)
+	FismaSystemName(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error)
+	IsAccessedByNonOrganizationalUsers(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error)
+	IsPiiLimitedToUserNameAndPass(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error)
+	IsProtectedHealthInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error)
 	LastActScaDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	LastAssessmentDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	LastContingencyPlanCompletionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	LastPenTestDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	PiaCompletionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
-
+	PrimaryCyberRiskAdvisor(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error)
+	PrivacySubjectMatterExpert(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error)
 	RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error)
 	RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error)
+
+	TlcPhase(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error)
+	XlcPhase(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error)
 }
 type CedarDataCenterResolver interface {
 	ID(ctx context.Context, obj *models.CedarDataCenter) (*string, error)
@@ -1564,11 +1577,11 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		return e.complexity.CedarAuthorityToOperate.SystemOfRecordsNotice(childComplexity), true
 
 	case "CedarAuthorityToOperate.tlcPhase":
-		if e.complexity.CedarAuthorityToOperate.TLCPhase == nil {
+		if e.complexity.CedarAuthorityToOperate.TlcPhase == nil {
 			break
 		}
 
-		return e.complexity.CedarAuthorityToOperate.TLCPhase(childComplexity), true
+		return e.complexity.CedarAuthorityToOperate.TlcPhase(childComplexity), true
 
 	case "CedarAuthorityToOperate.uuid":
 		if e.complexity.CedarAuthorityToOperate.UUID == nil {
@@ -1578,11 +1591,11 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		return e.complexity.CedarAuthorityToOperate.UUID(childComplexity), true
 
 	case "CedarAuthorityToOperate.xlcPhase":
-		if e.complexity.CedarAuthorityToOperate.XLCPhase == nil {
+		if e.complexity.CedarAuthorityToOperate.XlcPhase == nil {
 			break
 		}
 
-		return e.complexity.CedarAuthorityToOperate.XLCPhase(childComplexity), true
+		return e.complexity.CedarAuthorityToOperate.XlcPhase(childComplexity), true
 
 	case "CedarDataCenter.address1":
 		if e.complexity.CedarDataCenter.Address1 == nil {
@@ -8823,14 +8836,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_containsPersonallyIdentifia
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ContainsPersonallyIdentifiableInformation, nil
+		return ec.resolvers.CedarAuthorityToOperate().ContainsPersonallyIdentifiableInformation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8839,9 +8852,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_containsPersonallyIdentifia
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(*bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalNonPrivilegedUserPopulation(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -8855,14 +8868,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalNonPrivilegedUs
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CountOfTotalNonPrivilegedUserPopulation, nil
+		return ec.resolvers.CedarAuthorityToOperate().CountOfTotalNonPrivilegedUserPopulation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8871,9 +8884,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalNonPrivilegedUs
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(int32)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOInt2int32(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_countOfOpenPoams(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -8887,14 +8900,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfOpenPoams(ctx contex
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CountOfOpenPoams, nil
+		return ec.resolvers.CedarAuthorityToOperate().CountOfOpenPoams(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8903,9 +8916,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfOpenPoams(ctx contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(int32)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOInt2int32(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -8919,14 +8932,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalPrivilegedUserP
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CountOfTotalPrivilegedUserPopulation, nil
+		return ec.resolvers.CedarAuthorityToOperate().CountOfTotalPrivilegedUserPopulation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8935,9 +8948,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalPrivilegedUserP
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(int32)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOInt2int32(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_dateAuthorizationMemoExpires(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9015,14 +9028,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_eAuthenticationLevel(ctx co
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.EAuthenticationLevel, nil
+		return ec.resolvers.CedarAuthorityToOperate().EAuthenticationLevel(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9031,9 +9044,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_eAuthenticationLevel(ctx co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_fips199OverallImpactRating(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9047,14 +9060,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_fips199OverallImpactRating(
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Fips199OverallImpactRating, nil
+		return ec.resolvers.CedarAuthorityToOperate().Fips199OverallImpactRating(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9063,9 +9076,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_fips199OverallImpactRating(
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(int32)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOInt2int32(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_fismaSystemAcronym(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9079,14 +9092,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_fismaSystemAcronym(ctx cont
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.FismaSystemAcronym, nil
+		return ec.resolvers.CedarAuthorityToOperate().FismaSystemAcronym(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9095,9 +9108,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_fismaSystemAcronym(ctx cont
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_fismaSystemName(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9111,14 +9124,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_fismaSystemName(ctx context
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.FismaSystemName, nil
+		return ec.resolvers.CedarAuthorityToOperate().FismaSystemName(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9127,9 +9140,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_fismaSystemName(ctx context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_isAccessedByNonOrganizationalUsers(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9143,14 +9156,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_isAccessedByNonOrganization
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.IsAccessedByNonOrganizationalUsers, nil
+		return ec.resolvers.CedarAuthorityToOperate().IsAccessedByNonOrganizationalUsers(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9159,9 +9172,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_isAccessedByNonOrganization
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(*bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_isPiiLimitedToUserNameAndPass(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9175,14 +9188,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_isPiiLimitedToUserNameAndPa
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.IsPiiLimitedToUserNameAndPass, nil
+		return ec.resolvers.CedarAuthorityToOperate().IsPiiLimitedToUserNameAndPass(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9191,9 +9204,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_isPiiLimitedToUserNameAndPa
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(*bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_isProtectedHealthInformation(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9207,14 +9220,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_isProtectedHealthInformatio
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.IsProtectedHealthInformation, nil
+		return ec.resolvers.CedarAuthorityToOperate().IsProtectedHealthInformation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9223,9 +9236,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_isProtectedHealthInformatio
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(*bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_lastActScaDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9399,14 +9412,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_primaryCyberRiskAdvisor(ctx
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PrimaryCyberRiskAdvisor, nil
+		return ec.resolvers.CedarAuthorityToOperate().PrimaryCyberRiskAdvisor(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9415,9 +9428,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_primaryCyberRiskAdvisor(ctx
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_privacySubjectMatterExpert(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9431,14 +9444,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_privacySubjectMatterExpert(
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PrivacySubjectMatterExpert, nil
+		return ec.resolvers.CedarAuthorityToOperate().PrivacySubjectMatterExpert(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9447,9 +9460,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_privacySubjectMatterExpert(
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_recoveryPointObjective(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9562,14 +9575,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_tlcPhase(ctx context.Contex
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.TLCPhase, nil
+		return ec.resolvers.CedarAuthorityToOperate().TlcPhase(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9578,9 +9591,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_tlcPhase(ctx context.Contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_xlcPhase(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9594,14 +9607,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_xlcPhase(ctx context.Contex
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.XLCPhase, nil
+		return ec.resolvers.CedarAuthorityToOperate().XlcPhase(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9610,9 +9623,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_xlcPhase(ctx context.Contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarDataCenter_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarDataCenter) (ret graphql.Marshaler) {
@@ -23964,33 +23977,73 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 
 			})
 		case "containsPersonallyIdentifiableInformation":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_containsPersonallyIdentifiableInformation(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_containsPersonallyIdentifiableInformation(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "countOfTotalNonPrivilegedUserPopulation":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_countOfTotalNonPrivilegedUserPopulation(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_countOfTotalNonPrivilegedUserPopulation(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "countOfOpenPoams":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_countOfOpenPoams(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_countOfOpenPoams(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "countOfTotalPrivilegedUserPopulation":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "dateAuthorizationMemoExpires":
 			field := field
 
@@ -24026,54 +24079,124 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 
 			})
 		case "eAuthenticationLevel":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_eAuthenticationLevel(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_eAuthenticationLevel(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "fips199OverallImpactRating":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_fips199OverallImpactRating(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_fips199OverallImpactRating(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "fismaSystemAcronym":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_fismaSystemAcronym(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_fismaSystemAcronym(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "fismaSystemName":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_fismaSystemName(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_fismaSystemName(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "isAccessedByNonOrganizationalUsers":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_isAccessedByNonOrganizationalUsers(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_isAccessedByNonOrganizationalUsers(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "isPiiLimitedToUserNameAndPass":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_isPiiLimitedToUserNameAndPass(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_isPiiLimitedToUserNameAndPass(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "isProtectedHealthInformation":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_isProtectedHealthInformation(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_isProtectedHealthInformation(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "lastActScaDate":
 			field := field
 
@@ -24160,19 +24283,39 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 
 			})
 		case "primaryCyberRiskAdvisor":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_primaryCyberRiskAdvisor(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_primaryCyberRiskAdvisor(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "privacySubjectMatterExpert":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_privacySubjectMatterExpert(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_privacySubjectMatterExpert(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "recoveryPointObjective":
 			field := field
 
@@ -24218,19 +24361,39 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "tlcPhase":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_tlcPhase(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_tlcPhase(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "xlcPhase":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CedarAuthorityToOperate_xlcPhase(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_xlcPhase(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -31234,16 +31397,6 @@ func (ec *executionContext) marshalOGeneratePresignedUploadURLPayload2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._GeneratePresignedUploadURLPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOInt2int32(ctx context.Context, v interface{}) (int32, error) {
-	res, err := graphql.UnmarshalInt32(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOInt2int32(ctx context.Context, sel ast.SelectionSet, v int32) graphql.Marshaler {
-	res := graphql.MarshalInt32(v)
-	return res
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {

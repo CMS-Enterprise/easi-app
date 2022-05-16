@@ -272,12 +272,56 @@ func (r *cedarAuthorityToOperateResolver) ActualDispositionDate(ctx context.Cont
 	return obj.ActualDispositionDate.Ptr(), nil
 }
 
+func (r *cedarAuthorityToOperateResolver) ContainsPersonallyIdentifiableInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
+	return obj.ContainsPersonallyIdentifiableInformation.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
+	return zeroIntToIntPtr(obj.CountOfTotalNonPrivilegedUserPopulation), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
+	return zeroIntToIntPtr(obj.CountOfOpenPoams), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
+	return zeroIntToIntPtr(obj.CountOfTotalPrivilegedUserPopulation), nil
+}
+
 func (r *cedarAuthorityToOperateResolver) DateAuthorizationMemoExpires(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
 	return obj.DateAuthorizationMemoExpires.Ptr(), nil
 }
 
 func (r *cedarAuthorityToOperateResolver) DateAuthorizationMemoSigned(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
 	return obj.DateAuthorizationMemoSigned.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) EAuthenticationLevel(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.EAuthenticationLevel.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) Fips199OverallImpactRating(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
+	return zeroIntToIntPtr(obj.Fips199OverallImpactRating), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) FismaSystemAcronym(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.FismaSystemAcronym.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) FismaSystemName(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.FismaSystemName.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) IsAccessedByNonOrganizationalUsers(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
+	return obj.IsAccessedByNonOrganizationalUsers.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) IsPiiLimitedToUserNameAndPass(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
+	return obj.IsPiiLimitedToUserNameAndPass.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) IsProtectedHealthInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
+	return obj.IsProtectedHealthInformation.Ptr(), nil
 }
 
 func (r *cedarAuthorityToOperateResolver) LastActScaDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
@@ -300,16 +344,28 @@ func (r *cedarAuthorityToOperateResolver) PiaCompletionDate(ctx context.Context,
 	return obj.PiaCompletionDate.Ptr(), nil
 }
 
+func (r *cedarAuthorityToOperateResolver) PrimaryCyberRiskAdvisor(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.PrimaryCyberRiskAdvisor.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) PrivacySubjectMatterExpert(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.PrivacySubjectMatterExpert.Ptr(), nil
+}
+
 func (r *cedarAuthorityToOperateResolver) RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
-	// convert float32 to float64
-	var rpo64Conv float64 = float64(obj.RecoveryPointObjective)
-	return &rpo64Conv, nil
+	return obj.RecoveryPointObjective.Ptr(), nil
 }
 
 func (r *cedarAuthorityToOperateResolver) RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
-	// convert float32 to float64
-	var rto64Conv float64 = float64(obj.RecoveryTimeObjective)
-	return &rto64Conv, nil
+	return obj.RecoveryTimeObjective.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) TlcPhase(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.TLCPhase.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) XlcPhase(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.XLCPhase.Ptr(), nil
 }
 
 func (r *cedarDataCenterResolver) ID(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
