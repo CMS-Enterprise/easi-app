@@ -101,10 +101,9 @@ type CreateAccessibilityRequestInput struct {
 
 // The data used when adding a note to a 508/accessibility request
 type CreateAccessibilityRequestNoteInput struct {
-	RequestID              uuid.UUID                           `json:"requestID"`
-	Note                   string                              `json:"note"`
-	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	RequestID       uuid.UUID `json:"requestID"`
+	Note            string    `json:"note"`
+	ShouldSendEmail bool      `json:"shouldSendEmail"`
 }
 
 // The payload for adding a note to a 508/accessibility request

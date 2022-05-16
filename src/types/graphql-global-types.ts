@@ -182,7 +182,6 @@ export interface CreateAccessibilityRequestNoteInput {
   requestID: UUID;
   note: string;
   shouldSendEmail: boolean;
-  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**

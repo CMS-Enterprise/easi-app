@@ -255,7 +255,6 @@ input CreateAccessibilityRequestNoteInput {
   requestID: UUID!
   note: String!
   shouldSendEmail: Boolean!
-  notificationRecipients: EmailNotificationRecipients
 }
 
 """
