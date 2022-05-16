@@ -231,13 +231,13 @@ export const prepareBusinessCaseForApp = (
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
     preferredSolution: {
-      title: businessCase.preferredTitle || '',
-      summary: businessCase.preferredSummary || '',
-      acquisitionApproach: businessCase.preferredAcquisitionApproach || '',
-      pros: businessCase.preferredPros || '',
-      cons: businessCase.preferredCons || '',
-      costSavings: businessCase.preferredCostSavings || '',
-      estimatedLifecycleCost: lifecycleCostLines.Preferred || '',
+      title: businessCase.preferredTitle,
+      summary: businessCase.preferredSummary,
+      acquisitionApproach: businessCase.preferredAcquisitionApproach,
+      pros: businessCase.preferredPros,
+      cons: businessCase.preferredCons,
+      costSavings: businessCase.preferredCostSavings,
+      estimatedLifecycleCost: lifecycleCostLines.Preferred,
       security: {
         isApproved: businessCase.preferredSecurityIsApproved,
         isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
@@ -250,13 +250,13 @@ export const prepareBusinessCaseForApp = (
       hasUserInterface: businessCase.preferredHasUI
     },
     alternativeA: {
-      title: businessCase.alternativeATitle || '',
-      summary: businessCase.alternativeASummary || '',
-      acquisitionApproach: businessCase.alternativeAAcquisitionApproach || '',
-      pros: businessCase.alternativeAPros || '',
-      cons: businessCase.alternativeACons || '',
-      costSavings: businessCase.alternativeACostSavings || '',
-      estimatedLifecycleCost: lifecycleCostLines.A || '',
+      title: businessCase.alternativeATitle,
+      summary: businessCase.alternativeASummary,
+      acquisitionApproach: businessCase.alternativeAAcquisitionApproach,
+      pros: businessCase.alternativeAPros,
+      cons: businessCase.alternativeACons,
+      costSavings: businessCase.alternativeACostSavings,
+      estimatedLifecycleCost: lifecycleCostLines.A,
       security: {
         isApproved: businessCase.alternativeASecurityIsApproved,
         isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
