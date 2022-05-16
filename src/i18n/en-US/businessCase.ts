@@ -49,7 +49,8 @@ const businessCase = {
       'If you do not anticipate costs for any given fiscal year (FY) or category, input $0.',
     fiscalYear: 'FY {{year}}',
     addRelatedCost: 'Add a related cost',
-    newRelatedCost: 'What is your related cost?'
+    newRelatedCost: 'What is your related cost?',
+    removeCategory: 'Remove category'
   }
 };
 

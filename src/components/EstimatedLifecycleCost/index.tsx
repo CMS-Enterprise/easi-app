@@ -85,7 +85,6 @@ type PhaseProps = {
   formikKey: string;
   fiscalYear: number;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
-  errors: any;
   lifecycleCosts: LifecycleCosts;
   removeCategory: (category: CategoryKeys) => void;
   total: number;
@@ -96,7 +95,6 @@ const Phase = ({
   formikKey,
   fiscalYear,
   setFieldValue,
-  errors = {},
   lifecycleCosts,
   removeCategory,
   total
@@ -104,13 +102,9 @@ const Phase = ({
   const { t } = useTranslation('businessCase');
 
   return (
-    <FieldArray name={`${formikKey}.`}>
+    <FieldArray name={`${formikKey}.${category}`}>
       {() => (
-        <FieldGroup
-          className="est-lifecycle-cost__phase-costs margin-0"
-          error={Object.keys(errors).length > 0}
-          scrollElement={`${formikKey}.${category}`}
-        >
+        <FieldGroup className="est-lifecycle-cost__phase-costs margin-0">
           <div className="est-lifecycle-cost__phase-fieldset">
             <fieldset
               className="usa-fieldset"
@@ -128,7 +122,7 @@ const Phase = ({
                       className="text-error"
                       onClick={() => removeCategory(category)}
                     >
-                      Remove category
+                      {t('lifecycleCost.removeCategory')}
                     </Button>
                   )}
                 </div>
@@ -138,7 +132,6 @@ const Phase = ({
                     <FieldGroup
                       key={`${category}-${year}`}
                       className="margin-0"
-                      scrollElement={`${formikKey}.${category}.years.${year}`}
                     >
                       <Label
                         className="desktop:display-none maxw-none"
@@ -149,11 +142,9 @@ const Phase = ({
                       >
                         {t('lifecycleCost.fiscalYear', { year: currentYear })}
                       </Label>
-                      <FieldErrorMsg>{errors?.development?.cost}</FieldErrorMsg>
                       <Field
                         type="text"
                         className="desktop:margin-y-0 maxw-none usa-input"
-                        error={errors?.development?.years?.year}
                         id={`BusinessCase-${formikKey}.${category}.years.${year}`}
                         name={`${formikKey}.${category}.years.${year}`}
                         maxLength={10}
@@ -165,7 +156,7 @@ const Phase = ({
                           );
                           setFieldValue(
                             `${formikKey}.${category}.isPresent`,
-                            true
+                            e.target.value.length > 0
                           );
                         }}
                       />
@@ -246,7 +237,7 @@ const OtherCosts = ({
               setActiveRelatedCost(null);
             }}
           >
-            {t('save')}
+            {t('Save')}
           </Button>
           <Button
             className="width-auto"
@@ -254,7 +245,7 @@ const OtherCosts = ({
             outline
             onClick={() => setActiveRelatedCost(null)}
           >
-            {t('cancel')}
+            {t('Cancel')}
           </Button>
         </div>
       )}
@@ -341,63 +332,65 @@ const EstimatedLifecycleCost = ({
       <CostSummary />
 
       <div className="cost-table margin-y-4">
-        <h4 className="margin-0">{t('lifecycleCost.tableHeading')}</h4>
-        <p className="margin-top-1 text-base">
-          {t('lifecycleCost.tableDescription')}
-        </p>
-        <FieldErrorMsg>
-          {typeof errors === 'string' ? errors : ''}
-        </FieldErrorMsg>
-        <div className="cost-table-row cost-table-row__headings minh-0">
-          {Object.keys(lifecycleCosts.development.years).map((year, i) => {
+        <FieldGroup
+          error={Object.keys(errors).length > 0}
+          scrollElement={formikKey}
+        >
+          <h4 className="margin-0">{t('lifecycleCost.tableHeading')}</h4>
+          <p className="margin-top-1 text-base">
+            {t('lifecycleCost.tableDescription')}
+          </p>
+          <FieldErrorMsg>
+            {typeof errors === 'string' ? errors : ''}
+          </FieldErrorMsg>
+          <div className="cost-table-row cost-table-row__headings minh-0">
+            {Object.keys(lifecycleCosts.development.years).map((year, i) => {
+              return (
+                <h4 key={year} className="cost-table-col margin-0">
+                  FY {fiscalYear + i}
+                </h4>
+              );
+            })}
+            <h4 className="cost-table-col margin-0">Total</h4>
+          </div>
+          <Phase
+            category="development"
+            formikKey={formikKey}
+            fiscalYear={fiscalYear}
+            setFieldValue={setFieldValue}
+            lifecycleCosts={lifecycleCosts}
+            removeCategory={removeCategory}
+            total={calculateCategoryCost('development')}
+          />
+          <Phase
+            category="operationsMaintenance"
+            formikKey={formikKey}
+            fiscalYear={fiscalYear}
+            setFieldValue={setFieldValue}
+            lifecycleCosts={lifecycleCosts}
+            removeCategory={removeCategory}
+            total={calculateCategoryCost('operationsMaintenance')}
+          />
+          {relatedCosts.map((cost: any) => {
             return (
-              <h4 key={year} className="cost-table-col margin-0">
-                FY {fiscalYear + i}
-              </h4>
+              <Phase
+                key={cost}
+                category={cost}
+                formikKey={formikKey}
+                fiscalYear={fiscalYear}
+                setFieldValue={setFieldValue}
+                lifecycleCosts={lifecycleCosts}
+                removeCategory={removeCategory}
+                total={calculateCategoryCost(cost)}
+              />
             );
           })}
-          <h4 className="cost-table-col margin-0">Total</h4>
-        </div>
-        <Phase
-          category="development"
-          formikKey={formikKey}
-          fiscalYear={fiscalYear}
-          setFieldValue={setFieldValue}
-          errors={errors}
-          lifecycleCosts={lifecycleCosts}
-          removeCategory={removeCategory}
-          total={calculateCategoryCost('development')}
-        />
-        <Phase
-          category="operationsMaintenance"
-          formikKey={formikKey}
-          fiscalYear={fiscalYear}
-          setFieldValue={setFieldValue}
-          errors={errors}
-          lifecycleCosts={lifecycleCosts}
-          removeCategory={removeCategory}
-          total={calculateCategoryCost('operationsMaintenance')}
-        />
-        {relatedCosts.map((cost: any) => {
-          return (
-            <Phase
-              key={cost}
-              category={cost}
-              formikKey={formikKey}
-              fiscalYear={fiscalYear}
-              setFieldValue={setFieldValue}
-              errors={errors}
-              lifecycleCosts={lifecycleCosts}
-              removeCategory={removeCategory}
-              total={calculateCategoryCost(cost)}
-            />
-          );
-        })}
-        <OtherCosts
-          lifecycleCosts={lifecycleCosts}
-          relatedCosts={relatedCosts}
-          setRelatedCosts={setRelatedCosts}
-        />
+          <OtherCosts
+            lifecycleCosts={lifecycleCosts}
+            relatedCosts={relatedCosts}
+            setRelatedCosts={setRelatedCosts}
+          />
+        </FieldGroup>
         <div className="cost-table-row cost-table-row__totals border-bottom-0">
           {Object.keys(lifecycleCosts.development.years).map(year => {
             return <span key={year}>{formatDollars(sumCostinYear(year))}</span>;
