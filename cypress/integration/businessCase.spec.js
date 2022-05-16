@@ -300,11 +300,11 @@ describe('The Business Case Form', () => {
             infrastructure: {
               label: 'Infrastructure',
               type: 'related',
-              isPresent: true,
+              isPresent: false,
               years: {
-                year1: '4',
+                year1: '',
                 year2: '',
-                year3: '8',
+                year3: '',
                 year4: '',
                 year5: ''
               }
