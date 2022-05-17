@@ -16,21 +16,24 @@ import './index.scss';
 type BusinessCaseReviewProps = {
   values: BusinessCaseModel;
   grtFeedbacks?: GRTFeedback[] | null;
+  helpArticle?: boolean;
 };
 
 const BusinessCaseReview = ({
   values,
-  grtFeedbacks
+  grtFeedbacks,
+  helpArticle = false
 }: BusinessCaseReviewProps) => {
   const filename = `Business case for ${values.requestName}.pdf`;
   return (
-    <>
+    <div className="margin-top-neg-1">
       <PDFExport
         title="Business Case"
         filename={filename}
         label="Download Business Case as PDF"
       >
-        <div className="grid-container">
+        <div className={helpArticle ? '' : 'grid-container'}>
+          {helpArticle && <hr className="margin-top-5 margin-bottom-4" />}
           <h2 className="font-heading-xl">General request information</h2>
           <GeneralRequestInfoReview
             values={{
@@ -45,7 +48,9 @@ const BusinessCaseReview = ({
             }}
           />
 
-          <h2 className="font-heading-xl margin-top-6">Request description</h2>
+          {helpArticle && <hr className="margin-top-5" />}
+
+          <h2 className="font-heading-xl margin-top-4">Request description</h2>
           <RequestDescriptionReview
             values={{
               businessNeed: values.businessNeed,
@@ -57,13 +62,15 @@ const BusinessCaseReview = ({
           />
         </div>
 
-        <div className="grid-container">
-          <h2 className="font-heading-xl margin-top-6 margin-bottom-2 easi-no-print">
+        {helpArticle && <hr />}
+
+        <div className={helpArticle ? '' : 'grid-container'}>
+          <h2 className="font-heading-xl margin-top-4 margin-bottom-2 easi-no-print">
             Alternatives analysis
           </h2>
         </div>
         <div className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
-          <div className="grid-container">
+          <div className={helpArticle ? '' : 'grid-container'}>
             <AlternativeAnalysisReview
               fiscalYear={
                 values.createdAt
@@ -77,14 +84,14 @@ const BusinessCaseReview = ({
           </div>
         </div>
         {grtFeedbacks && grtFeedbacks.length > 0 && (
-          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1">
+          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1 margin-bottom-6">
             <div className="grid-container">
               <GRTFeedbackView grtFeedbacks={grtFeedbacks} />
             </div>
           </div>
         )}
       </PDFExport>
-    </>
+    </div>
   );
 };
 
