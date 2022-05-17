@@ -149,13 +149,14 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 
 	// If it's not cached, populate the cache, and try the cache again
 	err := c.populateSystemSummaryCache(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	// Try the cache again now that we know it is fresh
-	if err != nil {
-		cachedSystem = c.getSystemFromCache(ctx, systemID)
-		if cachedSystem != nil {
-			return cachedSystem, nil
-		}
+	cachedSystem = c.getSystemFromCache(ctx, systemID)
+	if cachedSystem != nil {
+		return cachedSystem, nil
 	}
 
 	// If we still haven't found it after repopulating the cache, then it doesn't exist in CEDAR
