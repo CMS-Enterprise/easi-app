@@ -4,6 +4,8 @@ import HelpBreadcrumb from 'components/HelpBreadcrumb';
 import HelpPageIntro from 'components/HelpPageIntro';
 import MainContent from 'components/MainContent';
 
+import sampleBusinessCaseData from './sampleBusinessCaseData';
+
 export default function SampleBusinessCase() {
   return (
     <MainContent className="grid-container">
