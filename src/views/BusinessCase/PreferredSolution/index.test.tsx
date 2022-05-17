@@ -193,7 +193,7 @@ describe('Business case preferred solution form', () => {
         screen.queryByTestId('security-approval-in-progress')
       ).not.toBeInTheDocument();
     });
-  });
+  }, 10000);
 
   it('fills out data center branch', async () => {
     renderPage(defaultStore);
