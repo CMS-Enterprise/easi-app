@@ -146,6 +146,8 @@ type CreateSystemIntakeActionExtendLifecycleIDPayload struct {
 type CreateSystemIntakeContactInput struct {
 	EuaUserID      string    `json:"euaUserId"`
 	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+	Component      string    `json:"component"`
+	Role           string    `json:"role"`
 }
 
 // The payload when creating a system intake contact
