@@ -76,6 +76,8 @@ func makeTestData() *testData {
 		ContractEndDate:   date(2023, 12, 31),
 		ContractVehicle:   null.StringFrom("Sole source"),
 		Contractor:        null.StringFrom("Contractor Name"),
+
+		LifecycleCostBaseline: null.StringFrom("100 BILLION DOLLARS!"),
 	}
 
 	// borrowed from cmd/devdata/main.go makeSystemIntake()
