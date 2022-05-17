@@ -5,11 +5,19 @@
   "definitions": {
     "EASIGrtFeedback": {
       "required": [
+        "feedbackId",
         "feedback",
         "feedbackType",
         "intakeId"
       ],
       "properties": {
+        "feedbackId": {
+          "type": "string",
+          "description": "Unique UUID of this item of feedback",
+          "examples": [
+            "fa62c23b-c16f-497b-9bb6-c42166e82b93"
+          ]
+        },
         "feedback": {
           "type": "string"
         },

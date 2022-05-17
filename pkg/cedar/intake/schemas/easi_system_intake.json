@@ -5,6 +5,7 @@
   "definitions": {
     "EASIIntake": {
       "required": [
+        "intakeId",
         "businessNeed",
         "businessOwner",
         "businessOwnerComponent",
@@ -23,6 +24,13 @@
         "userEUA"
       ],
       "properties": {
+        "intakeId": {
+          "type": "string",
+          "description": "Unique UUID of this system intake",
+          "examples": [
+            "0a16ce4e-8d8a-41ab-aeba-9303067f065b"
+          ]
+        },
         "adminLead": {
           "type": "string",
           "description": "Government Admin responsible for handling request",
