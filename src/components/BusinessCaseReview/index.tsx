@@ -31,6 +31,7 @@ const BusinessCaseReview = ({
         title="Business Case"
         filename={filename}
         label="Download Business Case as PDF"
+        linkPosition={helpArticle ? 'top' : 'bottom'}
       >
         <div className={helpArticle ? '' : 'grid-container'}>
           {helpArticle && <hr className="margin-top-5 margin-bottom-4" />}

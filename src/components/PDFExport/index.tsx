@@ -12,6 +12,7 @@ type PDFExportProps = {
   title: string;
   children: React.ReactNode;
   label?: string;
+  linkPosition?: 'top' | 'bottom';
 };
 
 function generatePDF(filename: string, content: string) {
@@ -86,12 +87,18 @@ const downloadRefAsPDF = (
 // PDFExport adds a "Download PDF" button to the screen. When this button is clicked,
 // the HTML content of child elements is sent to the server and converted
 // to PDF format.
-const PDFExport = ({ title, filename, children, label }: PDFExportProps) => {
+const PDFExport = ({
+  title,
+  filename,
+  children,
+  label,
+  linkPosition = 'bottom'
+}: PDFExportProps) => {
   const divEl = useRef<HTMLDivElement>(null);
 
   return (
     <div className="easi-pdf-export" ref={divEl}>
-      {children}
+      {linkPosition === 'bottom' && children}
 
       <div className="easi-pdf-export__controls">
         <button
@@ -108,6 +115,8 @@ const PDFExport = ({ title, filename, children, label }: PDFExportProps) => {
           {label || 'Download PDF'}
         </button>
       </div>
+
+      {linkPosition === 'top' && children}
     </div>
   );
 };
