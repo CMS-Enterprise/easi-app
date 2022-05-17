@@ -235,12 +235,11 @@ jobs:
       - name: Install go-swagger
         id: install-go-swagger
         run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https gnupg curl
-          curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/gpg.2F8CB673971B5C9E.key' | sudo apt-key add -
-          curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/config.deb.txt?distro=debian&codename=any-version' | sudo tee /etc/apt/sources.list.d/go-swagger-go-swagger.list
-          sudo apt-get update
-          sudo apt-get install -y swagger
+          sudo apt install gnupg ca-certificates
+          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 379CE192D401AB61
+          echo "deb https://dl.bintray.com/go-swagger/goswagger-debian ubuntu main" | sudo tee /etc/apt/sources.list.d/goswagger.list
+          sudo apt update 
+          sudo apt install swagger
       - name: Pre-commit checks
         uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe
         with:
