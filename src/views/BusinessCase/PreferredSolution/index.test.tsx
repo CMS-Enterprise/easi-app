@@ -185,9 +185,12 @@ describe('Business case preferred solution form', () => {
       name: /yes/i
     });
     approvedRadio.click();
-    await waitFor(() => {
-      expect(approvedRadio).toBeChecked();
-    });
+    await waitFor(
+      () => {
+        expect(approvedRadio).toBeChecked();
+      },
+      { timeout: 8000 }
+    );
     await waitFor(() => {
       expect(
         screen.queryByTestId('security-approval-in-progress')
