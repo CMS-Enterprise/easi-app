@@ -168,28 +168,28 @@ cy.businessCase = {
 
       // Estimated Lifecycle Costs Years 1
       cy.get(
-        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.development\\.years\\.year1`
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.development\\.years\\.year1`
       )
         .type('2')
         .should('have.value', '2');
 
       // Estimated Lifecycle Costs Years 2
       cy.get(
-        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.operationsMaintenance\\.years\\.year2`
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.operationsMaintenance\\.years\\.year2`
       )
         .type('6')
         .should('have.value', '6');
 
       // Estimated Lifecycle Costs Years 4
       cy.get(
-        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.operationsMaintenance\\.years\\.year4`
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.operationsMaintenance\\.years\\.year4`
       )
         .type('10')
         .should('have.value', '10');
 
       // Estimated Lifecycle Costs Years 5
       cy.get(
-        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.development\\.years\\.year5`
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.development\\.years\\.year5`
       )
         .type('12')
         .should('have.value', '12');
