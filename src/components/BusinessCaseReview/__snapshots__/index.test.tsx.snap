@@ -5,15 +5,10 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
   className="easi-pdf-export"
 >
   <div
-    className="grid-container"
+    class="margin-top-neg-1"
   >
-    <h2
-      className="font-heading-xl"
-    >
-      General request information
-    </h2>
-    <dl
-      title="General request information"
+    <div
+      class="easi-pdf-export"
     >
       <div
         className="easi-review-row"
@@ -83,788 +78,270 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
       <div
         className="easi-review-row"
       >
-        <div
-          className="margin-bottom-205 line-height-body-3"
+        <h2
+          class="font-heading-xl"
         >
-          <dt
-            className="text-bold margin-bottom-05"
-          >
-            What is your business or user need?
-          </dt>
-          <dd
-            className="description-definition margin-0 text-pre-wrap"
-          >
-            Test business need
-          </dd>
-        </div>
-      </div>
-      <div
-        className="easi-review-row"
-      >
-        <div
-          className="margin-bottom-205 line-height-body-3"
-        >
-          <dt
-            className="text-bold margin-bottom-05"
-          >
-            How will CMS benefit from this effort?
-          </dt>
-          <dd
-            className="description-definition margin-0 text-pre-wrap"
-          >
-            Test CMS benefit
-          </dd>
-        </div>
-      </div>
-      <div
-        className="easi-review-row"
-      >
-        <div
-          className="margin-bottom-205 line-height-body-3"
-        >
-          <dt
-            className="text-bold margin-bottom-05"
-          >
-            Summary of Current Solution
-          </dt>
-          <dd
-            className="description-definition margin-0 text-pre-wrap"
-          >
-            Test current solution summary
-          </dd>
-        </div>
-      </div>
-      <div
-        className="easi-review-row"
-      >
-        <div
-          className="margin-bottom-205 line-height-body-3"
-        >
-          <dt
-            className="text-bold margin-bottom-05"
-          >
-            How does this effort align with organizational priorities?
-          </dt>
-          <dd
-            className="description-definition margin-0 text-pre-wrap"
-          >
-            Test priority alignment
-          </dd>
-        </div>
-      </div>
-      <div
-        className="easi-review-row"
-      >
-        <div
-          className="margin-bottom-205 line-height-body-3"
-        >
-          <dt
-            className="text-bold margin-bottom-05"
-          >
-            How will you determine whether or not this effort is successful?
-          </dt>
-          <dd
-            className="description-definition margin-0 text-pre-wrap"
-          >
-            Test success indicators
-          </dd>
-        </div>
-      </div>
-    </dl>
-  </div>
-  <div
-    className="grid-container"
-  >
-    <h2
-      className="font-heading-xl margin-top-6 margin-bottom-2 easi-no-print"
-    >
-      Alternatives analysis
-    </h2>
-  </div>
-  <div
-    className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper"
-  >
-    <div
-      className="grid-container"
-    >
-      <div
-        className="easi-responsive-tabs bg-base-lightest"
-      >
-        <div
-          className="easi-responsive-tabs__navigation"
+          General request information
+        </h2>
+        <dl
+          title="General request information"
         >
           <div
-            className="easi-responsive-tabs__tabs-wrapper"
+            class="easi-review-row"
           >
-            <ul
-              className="easi-responsive-tabs__tab-list"
-            >
-              <li
-                className="easi-responsive-tabs__tab easi-responsive-tabs__tab--selected"
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
               >
-                <button
-                  className="easi-responsive-tabs__tab-btn"
-                  onClick={[Function]}
-                  type="button"
-                >
-                  <span
-                    className="easi-responsive-tabs__tab-divider"
-                  >
-                    <span
-                      className="easi-responsive-tabs__tab-text"
-                    >
-                      Preferred solution
-                    </span>
-                  </span>
-                </button>
-              </li>
-              <li
-                className="easi-responsive-tabs__tab"
+                Project Name
+              </dt>
+              <dd
+                class="description-definition margin-0"
               >
-                <button
-                  className="easi-responsive-tabs__tab-btn"
-                  onClick={[Function]}
-                  type="button"
-                >
-                  <span
-                    className="easi-responsive-tabs__tab-divider"
-                  >
-                    <span
-                      className="easi-responsive-tabs__tab-text"
-                    >
-                      Alternative A
-                    </span>
-                  </span>
-                </button>
-              </li>
-              <li
-                className="easi-responsive-tabs__tab"
-              >
-                <button
-                  className="easi-responsive-tabs__tab-btn"
-                  onClick={[Function]}
-                  type="button"
-                >
-                  <span
-                    className="easi-responsive-tabs__tab-divider"
-                  >
-                    <span
-                      className="easi-responsive-tabs__tab-text"
-                    >
-                      Alternative B
-                    </span>
-                  </span>
-                </button>
-              </li>
-            </ul>
-          </div>
-          <div />
-        </div>
-        <div
-          className="bg-white easi-business-case__review-solutions-wrapper"
-          style={
-            Object {
-              "overflow": "auto",
-            }
-          }
-        >
-          <h3
-            className="easi-only-print business-case-solution-header"
-          >
-            Preferred solution
-          </h3>
-          <dl
-            title="Preferred solution"
-          >
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Preferred solution: Title
-                </dt>
-                <dd
-                  className="description-definition margin-0"
-                >
-                  Test preferred solution
-                </dd>
-              </div>
-            </div>
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Preferred solution: Summary
-                </dt>
-                <dd
-                  className="description-definition margin-0 text-pre-wrap"
-                >
-                  Test summary
-                </dd>
-              </div>
-            </div>
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Preferred solution: Acquisition approach
-                </dt>
-                <dd
-                  className="description-definition margin-0 text-pre-wrap"
-                >
-                  Test acquisition approach
-                </dd>
-              </div>
-            </div>
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Do you need to host your solution?
-                </dt>
-                <dd
-                  className="description-definition margin-0 text-pre-wrap"
-                >
-                  Yes, in the cloud (AWS, Azure, etc.)
-                </dd>
-              </div>
+                EASi Test
+              </dd>
             </div>
             <div>
-              <div
-                className="easi-review-row"
+              <dt
+                class="text-bold margin-bottom-05"
               >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Where are you planning to host?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test location
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
+                Business Owner
+              </dt>
+              <dd
+                class="description-definition margin-0"
               >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test cloud service
-                  </dd>
-                </div>
-              </div>
+                Jane Smith
+              </dd>
             </div>
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                </dt>
-                <dd
-                  className="description-definition margin-0 text-pre-wrap"
-                >
-                  No
-                </dd>
-              </div>
-            </div>
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Is your solution in the process of CMS IT Security approval?
-                </dt>
-                <dd
-                  className="description-definition margin-0 text-pre-wrap"
-                >
-                  Yes
-                </dd>
-              </div>
-            </div>
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Will your solution have a User Interface?
-                </dt>
-                <dd
-                  className="description-definition margin-0 text-pre-wrap"
-                >
-                  Yes
-                </dd>
-              </div>
-            </div>
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Preferred solution: Pros
-                </dt>
-                <dd
-                  className="description-definition margin-0 text-pre-wrap"
-                >
-                  Test pros
-                </dd>
-              </div>
-            </div>
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  Preferred solution: Cons
-                </dt>
-                <dd
-                  className="description-definition margin-0 text-pre-wrap"
-                >
-                  Test cons
-                </dd>
-              </div>
-            </div>
-            <div
-              className="easi-review-row"
-            >
-              <div>
-                <div
-                  className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
-                >
-                  <dl
-                    title="System total cost"
-                  >
-                    <dt
-                      className="text-bold margin-bottom-05"
-                    >
-                      System total cost
-                    </dt>
-                    <dd
-                      className="description-definition margin-0"
-                    >
-                      $1,000
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-            <div
-              className="easi-review-row"
-            >
-              <div
-                className="line-height-body-3"
-              >
-                <dt
-                  className="text-bold margin-bottom-05"
-                >
-                  What is the cost savings or avoidance associated with this solution?
-                </dt>
-                <dd
-                  className="description-definition margin-0 text-pre-wrap"
-                >
-                  Test cost savings
-                </dd>
-              </div>
-            </div>
-          </dl>
-          <div
-            className="easi-only-print"
-          >
-            <h3
-              className="easi-only-print business-case-solution-header"
-            >
-              Alternative A
-            </h3>
-            <dl
-              title="Alternative A"
-            >
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative A: Title
-                  </dt>
-                  <dd
-                    className="description-definition margin-0"
-                  >
-                    Test alternative a solution
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative A: Summary
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test summary
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative A: Acquisition approach
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test acquisition approach
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Do you need to host your solution?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Yes, in the cloud (AWS, Azure, etc.)
-                  </dd>
-                </div>
-              </div>
-              <div>
-                <div
-                  className="easi-review-row"
-                >
-                  <div
-                    className="line-height-body-3"
-                  >
-                    <dt
-                      className="text-bold margin-bottom-05"
-                    >
-                      Where are you planning to host?
-                    </dt>
-                    <dd
-                      className="description-definition margin-0 text-pre-wrap"
-                    >
-                      Test location
-                    </dd>
-                  </div>
-                </div>
-                <div
-                  className="easi-review-row"
-                >
-                  <div
-                    className="line-height-body-3"
-                  >
-                    <dt
-                      className="text-bold margin-bottom-05"
-                    >
-                      What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
-                    </dt>
-                    <dd
-                      className="description-definition margin-0 text-pre-wrap"
-                    >
-                      Test cloud service
-                    </dd>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    No
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Is your solution in the process of CMS IT Security approval?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Yes
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Will your solution have a User Interface?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Yes
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative A: Pros
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test pros
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative A: Cons
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test cons
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div>
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Requester indicated there is no associated cost with this solution
-                  </dt>
-                  <div
-                    className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
-                  >
-                    <dl
-                      title="System total cost"
-                    >
-                      <dt
-                        className="text-bold margin-bottom-05"
-                      >
-                        System total cost
-                      </dt>
-                      <dd
-                        className="description-definition margin-0"
-                      >
-                        $0
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    What is the cost savings or avoidance associated with this solution?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test cost savings
-                  </dd>
-                </div>
-              </div>
-            </dl>
           </div>
           <div
-            className="easi-only-print"
+            class="easi-review-row"
           >
-            <h3
-              className="easi-only-print business-case-solution-header"
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Requester
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Jane Smith
+              </dd>
+            </div>
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Requester Phone Number
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                1234567890
+              </dd>
+            </div>
+          </div>
+        </dl>
+        <h2
+          class="font-heading-xl margin-top-4"
+        >
+          Request description
+        </h2>
+        <dl
+          title="Request description"
+        >
+          <div
+            class="easi-review-row"
+          >
+            <div
+              class="margin-bottom-205 line-height-body-3"
             >
-              Alternative B
-            </h3>
-            <dl
-              title="Alternative B"
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                What is your business or user need?
+              </dt>
+              <dd
+                class="description-definition margin-0 text-pre-wrap"
+              >
+                Test business need
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div
+              class="margin-bottom-205 line-height-body-3"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                How will CMS benefit from this effort?
+              </dt>
+              <dd
+                class="description-definition margin-0 text-pre-wrap"
+              >
+                Test CMS benefit
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div
+              class="margin-bottom-205 line-height-body-3"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Summary of Current Solution
+              </dt>
+              <dd
+                class="description-definition margin-0 text-pre-wrap"
+              >
+                Test current solution summary
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div
+              class="margin-bottom-205 line-height-body-3"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                How does this effort align with organizational priorities?
+              </dt>
+              <dd
+                class="description-definition margin-0 text-pre-wrap"
+              >
+                Test priority alignment
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div
+              class="margin-bottom-205 line-height-body-3"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                How will you determine whether or not this effort is successful?
+              </dt>
+              <dd
+                class="description-definition margin-0 text-pre-wrap"
+              >
+                Test success indicators
+              </dd>
+            </div>
+          </div>
+        </dl>
+      </div>
+      <div
+        class="grid-container"
+      >
+        <h2
+          class="font-heading-xl margin-top-4 margin-bottom-2 easi-no-print"
+        >
+          Alternatives analysis
+        </h2>
+      </div>
+      <div
+        class="padding-top-2 padding-bottom-8 alternative-analysis-wrapper"
+      >
+        <div
+          class="grid-container"
+        >
+          <div
+            class="easi-responsive-tabs bg-base-lightest"
+          >
+            <div
+              class="easi-responsive-tabs__navigation"
             >
               <div
-                className="easi-review-row"
+                class="easi-responsive-tabs__tabs-wrapper"
+              >
+                <ul
+                  class="easi-responsive-tabs__tab-list"
+                >
+                  <li
+                    class="easi-responsive-tabs__tab easi-responsive-tabs__tab--selected"
+                  >
+                    <button
+                      class="easi-responsive-tabs__tab-btn"
+                      type="button"
+                    >
+                      <span
+                        class="easi-responsive-tabs__tab-divider"
+                      >
+                        <span
+                          class="easi-responsive-tabs__tab-text"
+                        >
+                          Preferred solution
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                  <li
+                    class="easi-responsive-tabs__tab"
+                  >
+                    <button
+                      class="easi-responsive-tabs__tab-btn"
+                      type="button"
+                    >
+                      <span
+                        class="easi-responsive-tabs__tab-divider"
+                      >
+                        <span
+                          class="easi-responsive-tabs__tab-text"
+                        >
+                          Alternative A
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                  <li
+                    class="easi-responsive-tabs__tab"
+                  >
+                    <button
+                      class="easi-responsive-tabs__tab-btn"
+                      type="button"
+                    >
+                      <span
+                        class="easi-responsive-tabs__tab-divider"
+                      >
+                        <span
+                          class="easi-responsive-tabs__tab-text"
+                        >
+                          Alternative B
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div />
+            </div>
+            <div
+              class="bg-white easi-business-case__review-solutions-wrapper"
+              style="overflow: auto;"
+            >
+              <h3
+                class="easi-only-print business-case-solution-header"
+              >
+                Preferred solution
+              </h3>
+              <dl
+                title="Preferred solution"
               >
                 <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative B: Title
-                  </dt>
-                  <dd
-                    className="description-definition margin-0"
-                  >
-                    Test alternative b solution
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative B: Summary
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test summary
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative B: Acquisition approach
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test acquisition approach
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Do you need to host your solution?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Yes, in the cloud (AWS, Azure, etc.)
-                  </dd>
-                </div>
-              </div>
-              <div>
-                <div
-                  className="easi-review-row"
+                  class="easi-review-row"
                 >
                   <div
                     className="line-height-body-3"
@@ -872,12 +349,12 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
                     <dt
                       className="text-bold margin-bottom-05"
                     >
-                      Where are you planning to host?
+                      Preferred solution: Title
                     </dt>
                     <dd
-                      className="description-definition margin-0 text-pre-wrap"
+                      class="description-definition margin-0"
                     >
-                      Test location
+                      Test preferred solution
                     </dd>
                   </div>
                 </div>
@@ -890,109 +367,51 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
                     <dt
                       className="text-bold margin-bottom-05"
                     >
-                      What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                      Preferred solution: Summary
                     </dt>
                     <dd
                       className="description-definition margin-0 text-pre-wrap"
                     >
-                      Test cloud service
+                      Test summary
                     </dd>
                   </div>
                 </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
                 <div
-                  className="line-height-body-3"
+                  class="easi-review-row"
                 >
-                  <dt
-                    className="text-bold margin-bottom-05"
+                  <div
+                    class="line-height-body-3"
                   >
-                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    No
-                  </dd>
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Preferred solution: Acquisition approach
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test acquisition approach
+                    </dd>
+                  </div>
                 </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
                 <div
-                  className="line-height-body-3"
+                  class="easi-review-row"
                 >
-                  <dt
-                    className="text-bold margin-bottom-05"
+                  <div
+                    class="line-height-body-3"
                   >
-                    Is your solution in the process of CMS IT Security approval?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Yes
-                  </dd>
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Do you need to host your solution?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Yes, in the cloud (AWS, Azure, etc.)
+                    </dd>
+                  </div>
                 </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Will your solution have a User Interface?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Yes
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative B: Pros
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test pros
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
-                <div
-                  className="line-height-body-3"
-                >
-                  <dt
-                    className="text-bold margin-bottom-05"
-                  >
-                    Alternative B: Cons
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test cons
-                  </dd>
-                </div>
-              </div>
-              <div
-                className="easi-review-row"
-              >
                 <div>
                   <dt
                     className="text-bold margin-bottom-05"
@@ -1000,46 +419,714 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
                     Requester indicated there is no associated cost with this solution
                   </dt>
                   <div
-                    className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
+                    class="easi-review-row"
                   >
-                    <dl
-                      title="System total cost"
+                    <div
+                      class="line-height-body-3"
                     >
                       <dt
                         className="text-bold margin-bottom-05"
                       >
-                        System total cost
+                        Where are you planning to host?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test location
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test cloud service
+                      </dd>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      No
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Is your solution in the process of CMS IT Security approval?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Yes
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Will your solution have a User Interface?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Yes
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Preferred solution: Pros
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test pros
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Preferred solution: Cons
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test cons
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div>
+                    <div
+                      class="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
+                    >
+                      <dl
+                        title="System total cost"
+                      >
+                        <dt
+                          class="text-bold margin-bottom-05"
+                        >
+                          System total cost
+                        </dt>
+                        <dd
+                          class="description-definition margin-0"
+                        >
+                          $1,000
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      What is the cost savings or avoidance associated with this solution?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test cost savings
+                    </dd>
+                  </div>
+                </div>
+              </dl>
+              <div
+                class="easi-only-print"
+              >
+                <h3
+                  class="easi-only-print business-case-solution-header"
+                >
+                  Alternative A
+                </h3>
+                <dl
+                  title="Alternative A"
+                >
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative A: Title
                       </dt>
                       <dd
                         className="description-definition margin-0"
                       >
-                        $0
+                        Test alternative a solution
                       </dd>
-                    </dl>
+                    </div>
                   </div>
-                </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative A: Summary
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test summary
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative A: Acquisition approach
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test acquisition approach
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Do you need to host your solution?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Yes, in the cloud (AWS, Azure, etc.)
+                      </dd>
+                    </div>
+                  </div>
+                  <div>
+                    <div
+                      class="easi-review-row"
+                    >
+                      <div
+                        class="line-height-body-3"
+                      >
+                        <dt
+                          class="text-bold margin-bottom-05"
+                        >
+                          Where are you planning to host?
+                        </dt>
+                        <dd
+                          class="description-definition margin-0 text-pre-wrap"
+                        >
+                          Test location
+                        </dd>
+                      </div>
+                    </div>
+                    <div
+                      class="easi-review-row"
+                    >
+                      <div
+                        class="line-height-body-3"
+                      >
+                        <dt
+                          class="text-bold margin-bottom-05"
+                        >
+                          What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                        </dt>
+                        <dd
+                          class="description-definition margin-0 text-pre-wrap"
+                        >
+                          Test cloud service
+                        </dd>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        No
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Is your solution in the process of CMS IT Security approval?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Yes
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Will your solution have a User Interface?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Yes
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative A: Pros
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test pros
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative A: Cons
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test cons
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div>
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Requester indicated there is no associated cost with this solution
+                      </dt>
+                      <div
+                        class="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
+                      >
+                        <dl
+                          title="System total cost"
+                        >
+                          <dt
+                            class="text-bold margin-bottom-05"
+                          >
+                            System total cost
+                          </dt>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            $0
+                          </dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        What is the cost savings or avoidance associated with this solution?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test cost savings
+                      </dd>
+                    </div>
+                  </div>
+                </dl>
               </div>
               <div
-                className="easi-review-row"
+                class="easi-only-print"
               >
-                <div
-                  className="line-height-body-3"
+                <h3
+                  class="easi-only-print business-case-solution-header"
                 >
-                  <dt
-                    className="text-bold margin-bottom-05"
+                  Alternative B
+                </h3>
+                <dl
+                  title="Alternative B"
+                >
+                  <div
+                    class="easi-review-row"
                   >
-                    What is the cost savings or avoidance associated with this solution?
-                  </dt>
-                  <dd
-                    className="description-definition margin-0 text-pre-wrap"
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative B: Title
+                      </dt>
+                      <dd
+                        class="description-definition margin-0"
+                      >
+                        Test alternative b solution
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
                   >
-                    Test cost savings
-                  </dd>
-                </div>
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative B: Summary
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test summary
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative B: Acquisition approach
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test acquisition approach
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Do you need to host your solution?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Yes, in the cloud (AWS, Azure, etc.)
+                      </dd>
+                    </div>
+                  </div>
+                  <div>
+                    <div
+                      class="easi-review-row"
+                    >
+                      <div
+                        class="line-height-body-3"
+                      >
+                        <dt
+                          class="text-bold margin-bottom-05"
+                        >
+                          Where are you planning to host?
+                        </dt>
+                        <dd
+                          class="description-definition margin-0 text-pre-wrap"
+                        >
+                          Test location
+                        </dd>
+                      </div>
+                    </div>
+                    <div
+                      class="easi-review-row"
+                    >
+                      <div
+                        class="line-height-body-3"
+                      >
+                        <dt
+                          class="text-bold margin-bottom-05"
+                        >
+                          What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                        </dt>
+                        <dd
+                          class="description-definition margin-0 text-pre-wrap"
+                        >
+                          Test cloud service
+                        </dd>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        No
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Is your solution in the process of CMS IT Security approval?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Yes
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Will your solution have a User Interface?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Yes
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative B: Pros
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test pros
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Alternative B: Cons
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test cons
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div>
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        Requester indicated there is no associated cost with this solution
+                      </dt>
+                      <div
+                        class="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
+                      >
+                        <dl
+                          title="System total cost"
+                        >
+                          <dt
+                            class="text-bold margin-bottom-05"
+                          >
+                            System total cost
+                          </dt>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            $0
+                          </dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
+                        What is the cost savings or avoidance associated with this solution?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test cost savings
+                      </dd>
+                    </div>
+                  </div>
+                </dl>
               </div>
-            </dl>
+            </div>
           </div>
         </div>
+      </div>
+      <div
+        class="easi-pdf-export__controls"
+      >
+        <button
+          class="usa-button usa-button--unstyled easi-no-print"
+          type="button"
+        >
+          <img
+            alt=""
+            aria-hidden="true"
+            class="margin-right-1"
+            src="download.svg"
+          />
+          Download Business Case as PDF
+        </button>
       </div>
     </div>
   </div>
