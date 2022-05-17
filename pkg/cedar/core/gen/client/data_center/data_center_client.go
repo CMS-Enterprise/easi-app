@@ -51,7 +51,7 @@ func (a *Client) DataCenterFindList(params *DataCenterFindListParams, authInfo r
 		PathPattern:        "/dataCenter",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
+		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &DataCenterFindListReader{formats: a.formats},
 		AuthInfo:           authInfo,
