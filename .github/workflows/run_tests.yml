@@ -235,11 +235,9 @@ jobs:
       - name: Install go-swagger
         id: install-go-swagger
         run: |
-          sudo apt install gnupg ca-certificates
-          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 379CE192D401AB61
-          echo "deb https://dl.bintray.com/go-swagger/goswagger-debian ubuntu main" | sudo tee /etc/apt/sources.list.d/goswagger.list
-          sudo apt update 
-          sudo apt install swagger
+          cd /usr/local/bin
+          wget -o swagger https://github.com/go-swagger/go-swagger/releases/download/v0.29.0/swagger_linux_amd64
+          chmod =x swagger
       - name: Pre-commit checks
         uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe
         with:
