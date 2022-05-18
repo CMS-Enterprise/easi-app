@@ -136,8 +136,6 @@ const GovernanceTaskList = () => {
     return <NotFound />;
   }
 
-  console.log(status);
-
   return (
     <MainContent
       className="governance-task-list grid-container margin-bottom-7"
