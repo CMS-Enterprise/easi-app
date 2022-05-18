@@ -18,4 +18,6 @@ type SystemIntakeContact struct {
 	EUAUserID      string     `json:"euaUserId" db:"eua_user_id"`
 	SystemIntakeID uuid.UUID  `json:"systemIntakeId" db:"system_intake_id"`
 	CreatedAt      *time.Time `db:"created_at"`
+	Component      string     `json:"component" db:"component"`
+	Role           string     `json:"role" db:"role"`
 }
