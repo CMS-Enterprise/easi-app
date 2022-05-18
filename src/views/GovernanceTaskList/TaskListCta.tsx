@@ -5,7 +5,6 @@ import { Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { isIntakeStarted } from 'data/systemIntake';
-import { attendGrbMeetingTag } from 'data/taskList';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 // CTA for Task List Intake Draft
