@@ -317,11 +317,7 @@ const GovernanceTaskList = () => {
                     }`}
                     target="_blank"
                     variant="unstyled"
-                    data-testid={
-                      status === 'READY_FOR_GRT'
-                        ? 'prepare-for-grt-btn'
-                        : 'prepare-for-grt-link'
-                    }
+                    data-testid="prepare-for-grt-cta"
                     to="/help/it-governance/prepare-for-grt"
                   >
                     Prepare for the GRT meeting (opens in new tab)

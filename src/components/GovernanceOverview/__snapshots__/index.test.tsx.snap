@@ -112,6 +112,13 @@ exports[`Governance Overview Content renders default version without crashing 1`
           >
             Discuss your draft Business Case with the Governance Review Team (GRT). They will give you feedback and help you refine your Business Case before you present to the Governance Review Board (GRB).
           </p>
+          <a
+            class="usa-link"
+            href="/help/it-governance/prepare-for-grt"
+            target="_blank"
+          >
+            Prepare for the GRT meeting (opens in new tab)
+          </a>
         </li>
         <li
           class="usa-process-list__item"
@@ -157,6 +164,13 @@ exports[`Governance Overview Content renders default version without crashing 1`
           >
             Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
           </p>
+          <a
+            class="usa-link"
+            href="/help/it-governance/prepare-for-grb"
+            target="_blank"
+          >
+            Prepare for the GRB meeting (opens in new tab)
+          </a>
         </li>
         <li
           class="usa-process-list__item"
