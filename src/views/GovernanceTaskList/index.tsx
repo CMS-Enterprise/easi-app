@@ -136,6 +136,8 @@ const GovernanceTaskList = () => {
     return <NotFound />;
   }
 
+  console.log(status);
+
   return (
     <MainContent
       className="governance-task-list grid-container margin-bottom-7"
@@ -281,6 +283,7 @@ const GovernanceTaskList = () => {
                     availability. You may go through multiple rounds of editing
                     your business case and receiving feedback.
                   </p>
+
                   {businessCaseStage && (
                     <p>
                       <span className="text-bold">Status:&nbsp;</span>
@@ -288,9 +291,19 @@ const GovernanceTaskList = () => {
                     </p>
                   )}
                   {grtDate && (
-                    <span className="governance-task-list__meeting-date">
+                    <p className="governance-task-list__meeting-date">
                       {getMeetingDate(grtDate)}
-                    </span>
+                    </p>
+                  )}
+                  {status !== 'READY_FOR_GRT' && (
+                    <UswdsReactLink
+                      className="display-inline-block margin-bottom-2"
+                      target="_blank"
+                      variant="unstyled"
+                      to="/help/it-governance/prepare-for-grt"
+                    >
+                      Prepare for the GRT meeting (opens in new tab)
+                    </UswdsReactLink>
                   )}
                 </TaskListDescription>
                 <div>

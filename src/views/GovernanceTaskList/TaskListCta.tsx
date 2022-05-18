@@ -128,7 +128,7 @@ export const BusinessCaseDraftCta = ({
         <>
           <UswdsReactLink
             data-testid="prepare-for-grt-cta"
-            className="display-table margin-bottom-3 usa-button"
+            className="display-table margin-bottom-2 usa-button"
             variant="unstyled"
             to={`/governance-task-list/${id}/prepare-for-grt`}
           >
@@ -155,7 +155,7 @@ export const AttendGrbMeetingCta = ({ intake }: { intake: SystemIntake }) => {
     return (
       <UswdsReactLink
         data-testid="prepare-for-grb-btn"
-        className="usa-button"
+        className="usa-button margin-top-2"
         variant="unstyled"
         to={`/governance-task-list/${id}/prepare-for-grb`}
       >
@@ -163,7 +163,6 @@ export const AttendGrbMeetingCta = ({ intake }: { intake: SystemIntake }) => {
       </UswdsReactLink>
     );
   }
-
   if (attendGrbMeetingTag(intake) === 'COMPLETED') {
     return (
       <UswdsReactLink
@@ -175,7 +174,16 @@ export const AttendGrbMeetingCta = ({ intake }: { intake: SystemIntake }) => {
     );
   }
 
-  return <></>;
+  return (
+    <UswdsReactLink
+      className="margin-top-2 display-inline-block"
+      target="_blank"
+      variant="unstyled"
+      to="/help/it-governance/prepare-for-grb"
+    >
+      Prepare for the GRB meeting (opens in new tab)
+    </UswdsReactLink>
+  );
 };
 
 // CTA for Task List Decision
