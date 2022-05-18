@@ -7,7 +7,6 @@ import axios from 'axios';
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
-import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import useMessage from 'hooks/useMessage';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
 import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
@@ -61,11 +60,6 @@ const List = () => {
 
   return (
     <>
-      <SecondaryNav>
-        <NavLink to="/">
-          {t('accessibility:tabs.accessibilityRequests')}
-        </NavLink>
-      </SecondaryNav>
       <div
         className="grid-container"
         data-testid="accessibility-request-list-page"
