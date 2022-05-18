@@ -104,6 +104,7 @@ export const BusinessCaseDraftCta = ({
       if (businessCaseId) {
         return (
           <UswdsReactLink
+            className="display-block margin-top-2"
             data-testid="view-biz-case-link"
             to={`/business/${businessCaseId}/view`}
           >
@@ -116,7 +117,7 @@ export const BusinessCaseDraftCta = ({
       return (
         <UswdsReactLink
           data-testid="update-biz-case-draft-btn"
-          className="usa-button"
+          className="usa-button margin-top-2"
           variant="unstyled"
           to={`/business/${businessCaseId}/general-request-info`}
         >
@@ -125,23 +126,13 @@ export const BusinessCaseDraftCta = ({
       );
     case 'READY_FOR_GRT':
       return (
-        <>
-          <UswdsReactLink
-            data-testid="prepare-for-grt-cta"
-            className="display-table margin-bottom-2 usa-button"
-            variant="unstyled"
-            to={`/governance-task-list/${id}/prepare-for-grt`}
-          >
-            Prepare for review team meeting
-          </UswdsReactLink>
-
-          <UswdsReactLink
-            data-testid="view-biz-case-cta"
-            to={`/business/${businessCaseId}/general-request-info`}
-          >
-            Update submitted draft business case
-          </UswdsReactLink>
-        </>
+        <UswdsReactLink
+          className="display-block margin-top-2"
+          data-testid="view-biz-case-cta"
+          to={`/business/${businessCaseId}/general-request-info`}
+        >
+          Update submitted draft business case
+        </UswdsReactLink>
       );
     default:
       return <></>;
@@ -150,35 +141,18 @@ export const BusinessCaseDraftCta = ({
 
 // CTA for Task List GRB Meeting
 export const AttendGrbMeetingCta = ({ intake }: { intake: SystemIntake }) => {
-  const { id, status } = intake || {};
-  if (status === 'READY_FOR_GRB') {
-    return (
-      <UswdsReactLink
-        data-testid="prepare-for-grb-btn"
-        className="usa-button margin-top-2"
-        variant="unstyled"
-        to={`/governance-task-list/${id}/prepare-for-grb`}
-      >
-        Prepare for the Review Board meeting
-      </UswdsReactLink>
-    );
-  }
-  if (attendGrbMeetingTag(intake) === 'COMPLETED') {
-    return (
-      <UswdsReactLink
-        data-testid="prepare-for-grb-link"
-        to={`/governance-task-list/${id}/prepare-for-grb`}
-      >
-        Prepare for the Review Board meeting
-      </UswdsReactLink>
-    );
-  }
-
   return (
     <UswdsReactLink
-      className="margin-top-2 display-inline-block"
+      className={`display-inline-block ${
+        intake.status === 'READY_FOR_GRB' ? 'usa-button' : ''
+      }`}
       target="_blank"
       variant="unstyled"
+      data-testid={
+        intake.status === 'READY_FOR_GRB'
+          ? 'prepare-for-grb-btn'
+          : 'prepare-for-grb-link'
+      }
       to="/help/it-governance/prepare-for-grb"
     >
       Prepare for the GRB meeting (opens in new tab)

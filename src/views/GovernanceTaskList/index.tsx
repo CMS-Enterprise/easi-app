@@ -228,7 +228,7 @@ const GovernanceTaskList = () => {
                 status={initialReviewTag(status || '')}
               >
                 <TaskListDescription>
-                  <p className="margin-top-0">
+                  <p className="margin-y-0">
                     The Governance Admin Team will review your request and
                     decide if it needs further governance. If it does, they’ll
                     direct you to go through the remaining steps.
@@ -295,16 +295,6 @@ const GovernanceTaskList = () => {
                       {getMeetingDate(grtDate)}
                     </p>
                   )}
-                  {status !== 'READY_FOR_GRT' && (
-                    <UswdsReactLink
-                      className="display-inline-block margin-bottom-2"
-                      target="_blank"
-                      variant="unstyled"
-                      to="/help/it-governance/prepare-for-grt"
-                    >
-                      Prepare for the GRT meeting (opens in new tab)
-                    </UswdsReactLink>
-                  )}
                 </TaskListDescription>
                 <div>
                   {grtFeedback &&
@@ -321,6 +311,21 @@ const GovernanceTaskList = () => {
                         <br />
                       </>
                     )}
+                  <UswdsReactLink
+                    className={`display-inline-block ${
+                      status === 'READY_FOR_GRT' ? 'usa-button' : ''
+                    }`}
+                    target="_blank"
+                    variant="unstyled"
+                    data-testid={
+                      status === 'READY_FOR_GRT'
+                        ? 'prepare-for-grt-btn'
+                        : 'prepare-for-grt-link'
+                    }
+                    to="/help/it-governance/prepare-for-grt"
+                  >
+                    Prepare for the GRT meeting (opens in new tab)
+                  </UswdsReactLink>
                   <BusinessCaseDraftCta systemIntake={systemIntake} />
                 </div>
               </TaskListItem>
@@ -330,7 +335,7 @@ const GovernanceTaskList = () => {
                 status={finalBusinessCaseTag(systemIntake)}
               >
                 <TaskListDescription>
-                  <p className="margin-top-0">
+                  <p className="margin-y-0">
                     Update the Business Case based on feedback from the review
                     meeting and submit it to the Governance Review Board.
                   </p>
@@ -340,7 +345,7 @@ const GovernanceTaskList = () => {
                   status === 'BIZ_CASE_FINAL_NEEDED' && (
                     <>
                       <UswdsReactLink
-                        className="usa-button margin-y-2"
+                        className="usa-button margin-top-2"
                         variant="unstyled"
                         to={`/governance-task-list/${id}/feedback`}
                       >
@@ -351,7 +356,7 @@ const GovernanceTaskList = () => {
                   )}
                 {status === 'BIZ_CASE_FINAL_NEEDED' && (
                   <UswdsReactLink
-                    className="usa-button"
+                    className="usa-button margin-top-2"
                     variant="unstyled"
                     to={`/business/${businessCaseId}/general-request-info`}
                   >
@@ -372,9 +377,9 @@ const GovernanceTaskList = () => {
                     Review Team.
                   </p>
                   {grbDate && (
-                    <span className="governance-task-list__meeting-date">
+                    <p className="governance-task-list__meeting-date margin-bottom-2">
                       {getMeetingDate(grbDate)}
-                    </span>
+                    </p>
                   )}
                 </TaskListDescription>
                 <AttendGrbMeetingCta intake={systemIntake} />
