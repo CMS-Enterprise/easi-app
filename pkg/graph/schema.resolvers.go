@@ -1342,6 +1342,8 @@ func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input 
 	contact := &models.SystemIntakeContact{
 		SystemIntakeID: input.SystemIntakeID,
 		EUAUserID:      input.EuaUserID,
+		Component:      input.Component,
+		Role:           input.Role,
 	}
 	createdContact, err := r.store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
