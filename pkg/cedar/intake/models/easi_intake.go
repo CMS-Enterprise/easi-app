@@ -7,6 +7,7 @@ package models
 
 // EASIIntake represents a system intake
 type EASIIntake struct {
+	IntakeID                    string  `json:"intakeId" jsonschema:"description=Unique UUID of this system intake,example=0a16ce4e-8d8a-41ab-aeba-9303067f065b"`
 	AdminLead                   *string `json:"adminLead,omitempty" jsonschema:"description=Government Admin responsible for handling request,example=John Doe"`
 	ArchivedAt                  *string `json:"archivedAt,omitempty" jsonschema:"description=Timestamp of when request was archived,example=2022-02-17T14:34:43Z"`
 	BusinessNeed                string  `json:"businessNeed" jsonschema:"description=Business Need for the effort detailed in this request,example=Process takes too long and holds up key stakeholders"`

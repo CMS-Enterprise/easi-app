@@ -24,6 +24,7 @@ func (si *TranslatableSystemIntake) ObjectType() string {
 // CreateIntakeModel translates a SystemIntake into an IntakeInput
 func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := &intakemodels.EASIIntake{
+		IntakeID:                    si.ID.String(),
 		UserEUA:                     si.EUAUserID.ValueOrZero(),
 		Status:                      string(si.Status),
 		RequestType:                 string(si.RequestType),
