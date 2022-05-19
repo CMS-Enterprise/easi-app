@@ -39,6 +39,23 @@ func (c CedarLdapClient) FetchUserInfo(_ context.Context, euaID string) (*models
 	}, nil
 }
 
+// FetchUserInfos fetches multiple users' personal details
+func (c CedarLdapClient) FetchUserInfos(_ context.Context, euaIDs []string) ([]*models.UserInfo, error) {
+	c.logger.Info("Mock FetchUserInfos from LDAP", zap.Strings("euaIDs", euaIDs))
+
+	userInfos := make([]*models.UserInfo, len(euaIDs))
+	for i, euaID := range euaIDs {
+		userInfo := &models.UserInfo{
+			CommonName: fmt.Sprintf("%s Doe", strings.ToLower(euaID)),
+			Email:      models.NewEmailAddress(fmt.Sprintf("%s@local.fake", euaID)),
+			EuaUserID:  euaID,
+		}
+		userInfos[i] = userInfo
+	}
+
+	return userInfos, nil
+}
+
 // SearchCommonNameContains fetches a user's personal details by their common name
 func (c CedarLdapClient) SearchCommonNameContains(_ context.Context, commonName string) ([]*models.UserInfo, error) {
 	c.logger.Info("Mock SearchCommonNameContains from LDAP")

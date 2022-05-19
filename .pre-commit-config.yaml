@@ -80,7 +80,7 @@ repos:
         name: check-intake-schema-generation
         entry: scripts/gen_intake_schema
         language: script
-        files: cmd/gen_intake_schema/main\.go|pkg/cedar/intake/models/.*\.go|pkg/cedar/intake/schemas/.*\.json
+        files: cmd/gen_intake_schema/main\.go|pkg/cedar/intake/models/.*\.go|pkg/cedar/intake/schemas/.*\.json|pkg/cedar/intake/translation/constants\.go
 
   - repo: local
     hooks:
