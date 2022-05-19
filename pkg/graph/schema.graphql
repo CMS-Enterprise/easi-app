@@ -1216,6 +1216,8 @@ Represents a contact associated with a system intake
 type SystemIntakeContact {
   euaUserId: String!
   systemIntakeId: UUID!
+  component: String!
+  role: String!
 }
 
 """
@@ -1224,6 +1226,8 @@ Represents a contact associated with a system intake, including additional field
 type AugmentedSystemIntakeContact {
   euaUserId: String!
   systemIntakeId: UUID!
+  component: String!
+  role: String!
   commonName: String
   email: String
 }
@@ -1234,6 +1238,8 @@ The data needed to associate a contact with a system intake
 input CreateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
+  component: String!
+  role: String!
 }
 
 """
