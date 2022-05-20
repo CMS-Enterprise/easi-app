@@ -1,7 +1,7 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API's. These reusable API's are mainly used in support of higher level API's. See the API resources section for a list of available interfaces and operations.\n",
+    "description" : "# Introduction\n \n    The CMS Enterprise Data and Analytics Repository (CEDAR) Core API provides the CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User objects.\n\n# Specification\n\nThis API is published in Swagger JSON 2.0 format and can be exported for consumption. For each of the resource, API provides **GET**, **POST**, **DELETE** operations. And to invoke, any of these methods, you can request for an `access-token`. In addition, POST & DELETE methods are not permitted in Production.\n",
     "version" : "1.0.0",
     "title" : "CEDAR Core API",
     "termsOfService" : "https://www.cedardev.cms.gov/",
@@ -9,44 +9,62 @@
       "email" : "EnterpriseArchitecture@cms.hhs.gov"
     }
   },
-  "host" : "cdrdevapigw02.awscloud.cms.local:5555",
+  "host" : "webmethods-apigw.cedarimpl.cms.gov",
   "basePath" : "/gateway/CEDAR Core API/1.0.0",
   "tags" : [ {
+    "name" : "authority to operate",
+    "description" : "CMS authority to operate (ATO) data from CFACTS"
+  }, {
     "name" : "budget",
-    "description" : ""
+    "description" : "CMS budget projects funding a particular system"
   }, {
     "name" : "component",
-    "description" : ""
+    "description" : "CMS components"
   }, {
     "name" : "contract",
-    "description" : ""
+    "description" : "CMS contracts funded by budget projects"
+  }, {
+    "name" : "cost type",
+    "description" : "CMS cost types"
   }, {
     "name" : "data center",
-    "description" : ""
+    "description" : "Data centers hosting CMS systems"
   }, {
     "name" : "deployment",
-    "description" : ""
+    "description" : "CMS deployment of a system"
+  }, {
+    "name" : "domain model",
+    "description" : "Domain heirarchy areas that categorize CMS and Federal agencies' assets"
   }, {
     "name" : "enumeration",
-    "description" : ""
+    "description" : "CMS system enumerations"
   }, {
     "name" : "exchange",
-    "description" : ""
+    "description" : "CMS data exchanges"
   }, {
-    "name" : "stakeholder",
-    "description" : ""
-  }, {
-    "name" : "role",
-    "description" : ""
+    "name" : "organization",
+    "description" : "The official CMS organizational chart"
   }, {
     "name" : "person",
-    "description" : ""
+    "description" : "CMS people"
+  }, {
+    "name" : "role",
+    "description" : "CEDAR role assignments and types"
+  }, {
+    "name" : "stakeholder",
+    "description" : "CMS stakeholders"
+  }, {
+    "name" : "support contact",
+    "description" : "CMS suport contacts"
   }, {
     "name" : "system",
-    "description" : ""
+    "description" : "CMS system information"
+  }, {
+    "name" : "threat",
+    "description" : "Threats to CMS assets"
   }, {
     "name" : "user",
-    "description" : ""
+    "description" : "CEDAR system users"
   } ],
   "schemes" : [ "https" ],
   "security" : [ {
@@ -1841,6 +1859,48 @@
         }
       }
     },
+    "/url/{id}" : {
+      "get" : {
+        "tags" : [ "url" ],
+        "summary" : "Retrieve a list of URLs associated with an object in CEDAR",
+        "description" : "Retrieve a list of URLs associated with an object in CEDAR. An object could include a System, ATO, etc",
+        "operationId" : "urlFindList",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of object the URLs are associated with.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/UrlFindResponse"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
     "/role" : {
       "get" : {
         "tags" : [ "role" ],
@@ -2730,100 +2790,6 @@
           }
         }
       }
-    },
-    "/system/detail" : {
-      "post" : {
-        "tags" : [ "system" ],
-        "summary" : "Add a new system to Alfabet. This interface takes id, name, description, acronym and status.",
-        "description" : "Add a new system to Alfabet. This interface takes id, name, description, acronym and status.",
-        "operationId" : "systemDetailAdd",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "body",
-          "description" : "System information to be added to Alfabet.",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/SystemDetail"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
-          },
-          "400" : {
-            "description" : "Bad Request",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
-          },
-          "401" : {
-            "description" : "Access Denied",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
-          }
-        }
-      },
-      "put" : {
-        "tags" : [ "system" ],
-        "summary" : "Update an existing system within Alfabet. This interface takes id, name, description, acronym and status.",
-        "description" : "Update an existing system within Alfabet. This interface takes id, name, description, acronym and status.",
-        "operationId" : "systemDetailUpdate",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "body",
-          "description" : "System information to be updated in CEDAR",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/SystemDetail"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
-          },
-          "400" : {
-            "description" : "Bad Request",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
-          },
-          "401" : {
-            "description" : "Access Denied",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
-          },
-          "404" : {
-            "description" : "Not Found",
-            "schema" : {
-              "$ref" : "#/definitions/Response"
-            }
-          }
-        }
-      }
     }
   },
   "securityDefinitions" : {
@@ -3391,6 +3357,22 @@
         }
       }
     },
+    "UrlFindResponse" : {
+      "type" : "object",
+      "required" : [ "count" ],
+      "properties" : {
+        "count" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "UrlList" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Url"
+          }
+        }
+      }
+    },
     "SupportContact" : {
       "type" : "object",
       "properties" : {
@@ -3414,6 +3396,61 @@
         },
         "email" : {
           "type" : "string"
+        }
+      }
+    },
+    "BusinessOwnerInformation" : {
+      "type" : "object",
+      "properties" : {
+        "storesBeneficiaryAddress" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "beneficiaryAddressPurpose" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "example" : "Customer Service"
+          }
+        },
+        "beneficiaryAddressSource" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "example" : "Medicaid Address (State)"
+          }
+        },
+        "beneficiaryAddressSourceOther" : {
+          "type" : "string",
+          "example" : "Medicaid Address (State)"
+        },
+        "storesBankingData" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "numberOfContractorFte" : {
+          "type" : "string",
+          "example" : "100"
+        },
+        "costPerYear" : {
+          "type" : "string",
+          "example" : "13759255.66"
+        },
+        "isCmsOwned" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "numberOfFederalFte" : {
+          "type" : "string",
+          "example" : "25"
+        },
+        "beneficiaryAddressPurposeOther" : {
+          "type" : "string",
+          "example" : "Customer Service"
+        },
+        "numberOfSupportedUsersPerMonth" : {
+          "type" : "string",
+          "example" : "314"
         }
       }
     },
@@ -4013,6 +4050,38 @@
         }
       }
     },
+    "Url" : {
+      "type" : "object",
+      "required" : [ "urlId" ],
+      "properties" : {
+        "isVersionCodeRepository" : {
+          "type" : "boolean",
+          "description" : "A boolean flag to indicate if this URL provides access to a versioned code repository?"
+        },
+        "address" : {
+          "type" : "string",
+          "description" : "A valid and full URL"
+        },
+        "urlHostingEnv" : {
+          "type" : "string",
+          "example" : "Production",
+          "description" : "The hosting environment associated with a specific URL"
+        },
+        "isApiEndpoint" : {
+          "type" : "boolean",
+          "description" : "A boolean flag to indicate whether URL is an API Endpoint"
+        },
+        "urlId" : {
+          "type" : "string",
+          "example" : "218-10-0",
+          "description" : "Unique key that uniquely identified the URL in database"
+        },
+        "isBehindWebApplicationFirewall" : {
+          "type" : "boolean",
+          "description" : "A boolean flag to indicate whether the application is behind a Web Application Firewall (WAF)"
+        }
+      }
+    },
     "ExchangeUpdateRequest" : {
       "type" : "object",
       "required" : [ "Exchanges" ],
@@ -4075,25 +4144,77 @@
     },
     "SystemDetail" : {
       "type" : "object",
-      "required" : [ "id" ],
+      "required" : [ "ictObjectId", "id", "name", "version" ],
       "properties" : {
+        "SystemMaintainerInformation" : {
+          "$ref" : "#/definitions/SystemMaintainerInformation"
+        },
+        "ictObjectId" : {
+          "type" : "string",
+          "example" : "326-3-0"
+        },
         "acronym" : {
-          "type" : "string"
+          "type" : "string",
+          "example" : "CMSS"
+        },
+        "systemMaintainerOrg" : {
+          "type" : "string",
+          "example" : "OIT"
+        },
+        "description" : {
+          "type" : "string",
+          "example" : "This is a CMS System decription"
+        },
+        "uuid" : {
+          "type" : "string",
+          "example" : "12FFF52E-195B-4E48-9A38-669A8BD71234"
+        },
+        "version" : {
+          "type" : "string",
+          "example" : "1.0"
+        },
+        "BusinessOwnerInformation" : {
+          "$ref" : "#/definitions/BusinessOwnerInformation"
+        },
+        "nextVersionId" : {
+          "type" : "string",
+          "example" : "326-1-0"
+        },
+        "previousVersionId" : {
+          "type" : "string",
+          "example" : "326-3-0"
+        },
+        "businessOwnerOrg" : {
+          "type" : "string",
+          "example" : "Center for Medicare Management"
         },
         "name" : {
           "type" : "string",
           "example" : "CMS System"
         },
-        "description" : {
-          "type" : "string"
+        "businessOwnerOrgComp" : {
+          "type" : "string",
+          "example" : "CM-(FFS)"
         },
         "id" : {
           "type" : "string",
-          "example" : "326-1-0"
+          "example" : "326-2-0"
+        },
+        "state" : {
+          "type" : "string",
+          "example" : "Active"
+        },
+        "systemMaintainerOrgComp" : {
+          "type" : "string",
+          "example" : "Enterprise Architecture and Data Group"
+        },
+        "belongsTo" : {
+          "type" : "string",
+          "example" : "326-10-0"
         },
         "status" : {
           "type" : "string",
-          "example" : "Active"
+          "example" : "Approved"
         }
       }
     },
@@ -4126,6 +4247,119 @@
         "count" : {
           "type" : "integer",
           "format" : "int32"
+        }
+      }
+    },
+    "SystemMaintainerInformation" : {
+      "type" : "object",
+      "properties" : {
+        "majorRefreshDate" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "yearToRetireReplace" : {
+          "type" : "string",
+          "example" : "2023"
+        },
+        "systemProductionDate" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "sourceCodeOnDemand" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "hardCodedIpAddress" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "ecapParticipation" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "systemRequirementsOnDemand" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "businessArtifactsOnDemand" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "testScriptsOnDemand" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "frontendAccessType" : {
+          "type" : "string",
+          "example" : "IPv4 and IPv6"
+        },
+        "devCompletionPercent" : {
+          "type" : "string",
+          "example" : "10-14%"
+        },
+        "netAccessibility" : {
+          "type" : "string",
+          "example" : "Accessible to a CMS-internal network only"
+        },
+        "testPlanOnDemand" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "quarterToRetireReplace" : {
+          "type" : "string",
+          "example" : "3"
+        },
+        "agileUsed" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "systemDesignOnDemand" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "plansToRetireReplace" : {
+          "type" : "string",
+          "example" : "Yes - Retire and Replace"
+        },
+        "ipEnabledAssetCount" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "devWorkDescription" : {
+          "type" : "string",
+          "example" : "The type of development work underway..."
+        },
+        "testReportsOnDemand" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "ip6TransitionPlan" : {
+          "type" : "string",
+          "example" : "Yes, transition to IPv6"
+        },
+        "ip6EnabledAssetPercent" : {
+          "type" : "string",
+          "example" : "Between 20% and 49%"
+        },
+        "deploymentFrequency" : {
+          "type" : "string",
+          "example" : "Monthly"
+        },
+        "recordsManagementBucket" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "example" : "Administrative Management"
+          }
+        },
+        "omDocumentationOnDemand" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "systemCustomization" : {
+          "type" : "string",
+          "example" : "Less Than 20% Customization"
         }
       }
     },
