@@ -89,6 +89,19 @@ type CedarSystem {
 }
 
 """
+CedarThreat represents the response from the /threat endpoint from the CEDAR Core API.
+"""
+type CedarThreat {
+  alternativeId: String
+  controlFamily: String
+  daysOpen: Int
+  id: String
+  parentId: String
+  type: String
+  weaknessRiskLevel: String
+}
+
+"""
 This is the Representation of Cedar system with additional related information
 """
 type DetailedCedarSystem {
@@ -1394,6 +1407,7 @@ type Query {
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
+  cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   detailedCedarSystemInfo(cedarSystemId: String!): DetailedCedarSystem

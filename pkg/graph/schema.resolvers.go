@@ -520,6 +520,34 @@ func (r *cedarRoleResolver) ObjectType(ctx context.Context, obj *models.CedarRol
 	return obj.ObjectType.Ptr(), nil
 }
 
+func (r *cedarThreatResolver) AlternativeID(ctx context.Context, obj *models.CedarThreat) (*string, error) {
+	return obj.AlternativeID.Ptr(), nil
+}
+
+func (r *cedarThreatResolver) ControlFamily(ctx context.Context, obj *models.CedarThreat) (*string, error) {
+	return obj.ControlFamily.Ptr(), nil
+}
+
+func (r *cedarThreatResolver) DaysOpen(ctx context.Context, obj *models.CedarThreat) (*int, error) {
+	return zeroIntToIntPtr(obj.DaysOpen), nil
+}
+
+func (r *cedarThreatResolver) ID(ctx context.Context, obj *models.CedarThreat) (*string, error) {
+	return obj.ID.Ptr(), nil
+}
+
+func (r *cedarThreatResolver) ParentID(ctx context.Context, obj *models.CedarThreat) (*string, error) {
+	return obj.ParentID.Ptr(), nil
+}
+
+func (r *cedarThreatResolver) Type(ctx context.Context, obj *models.CedarThreat) (*string, error) {
+	return obj.Type.Ptr(), nil
+}
+
+func (r *cedarThreatResolver) WeaknessRiskLevel(ctx context.Context, obj *models.CedarThreat) (*string, error) {
+	return obj.WeaknessRiskLevel.Ptr(), nil
+}
+
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
@@ -1625,6 +1653,14 @@ func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.Ced
 	return cedarSystemBookmarks, nil
 }
 
+func (r *queryResolver) CedarThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error) {
+	cedarThreat, err := r.cedarCoreClient.GetThreat(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+	return cedarThreat, nil
+}
+
 func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error) {
 	var optionalParams *cedarcore.GetDeploymentsOptionalParams
 	if deploymentType != nil || state != nil || status != nil {
@@ -2106,6 +2142,9 @@ func (r *Resolver) CedarDeployment() generated.CedarDeploymentResolver {
 // CedarRole returns generated.CedarRoleResolver implementation.
 func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleResolver{r} }
 
+// CedarThreat returns generated.CedarThreatResolver implementation.
+func (r *Resolver) CedarThreat() generated.CedarThreatResolver { return &cedarThreatResolver{r} }
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -2127,6 +2166,7 @@ type cedarAuthorityToOperateResolver struct{ *Resolver }
 type cedarDataCenterResolver struct{ *Resolver }
 type cedarDeploymentResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
+type cedarThreatResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
