@@ -55,7 +55,7 @@ const GovernanceTaskList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { showMessageOnNextPage } = useMessage();
-  const { t } = useTranslation();
+  const { t } = useTranslation('taskList');
 
   const { data: grtFeedbackData } = useQuery<
     GetGRTFeedback,
@@ -95,7 +95,7 @@ const GovernanceTaskList = () => {
 
   const archiveIntake = () => {
     const redirect = () => {
-      const message = t('taskList:withdraw_modal.confirmationText', {
+      const message = t('withdraw_modal.confirmationText', {
         context: requestName ? 'name' : 'noName',
         requestName
       });
@@ -145,12 +145,10 @@ const GovernanceTaskList = () => {
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/">
-              <span>{t('taskList:navigation.home')}</span>
+              <span>{t('navigation.home')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
-          <Breadcrumb current>
-            {t('taskList:navigation.governanceTaskList')}
-          </Breadcrumb>
+          <Breadcrumb current>{t('navigation.governanceTaskList')}</Breadcrumb>
         </BreadcrumbBar>
       </div>
       {loading && <PageLoading />}
@@ -158,7 +156,7 @@ const GovernanceTaskList = () => {
         <div className="grid-row">
           <div className="tablet:grid-col-9">
             <PageHeading>
-              Get governance approval
+              {t('pageHeading')}
               {requestName && (
                 <span className="display-block line-height-body-5 font-body-lg text-light">
                   {isRecompete
@@ -174,11 +172,7 @@ const GovernanceTaskList = () => {
                 className="margin-bottom-5"
                 data-testid="task-list-closed-alert"
               >
-                <span>
-                  A decision has been made for this request, you can view the
-                  decision at the bottom of this page. Please check the email
-                  sent to you for further information.
-                </span>
+                <span>{t('decision.alert')}</span>
               </Alert>
             )}
             {/* If intake has had an LCID issued but is currently in an open status - display alert directing user to LCID info */}
@@ -186,18 +180,20 @@ const GovernanceTaskList = () => {
               <Alert
                 type="info"
                 noIcon
-                heading="Lifecycle ID Information"
+                heading={t('lcidAlert.heading')}
                 className="margin-bottom-5"
                 data-testid="lcid-issued-alert"
               >
                 <>
-                  <span>LCID: {systemIntake.lcid}</span>
+                  <span>
+                    {t('lcidAlert.label')} {systemIntake.lcid}
+                  </span>
                   <br />
                   <UswdsReactLink
                     variant="unstyled"
                     to={`/governance-task-list/${id}/lcid-info`}
                   >
-                    Read about this LCID
+                    {t('lcidAlert.link')}
                   </UswdsReactLink>
                 </>
               </Alert>
@@ -208,28 +204,22 @@ const GovernanceTaskList = () => {
             >
               <TaskListItem
                 testId="task-list-intake-form"
-                heading="Fill in the request form"
+                heading={t('requestForm.heading')}
                 status={intakeTag(status || '')}
               >
                 <TaskListDescription>
-                  <p className="margin-top-0">
-                    Tell the Governance Admin Team about your idea. This step
-                    lets CMS build context about your request and start
-                    preparing for discussions with your team.
-                  </p>
+                  <p className="margin-top-0">{t('requestForm.description')}</p>
                 </TaskListDescription>
                 <IntakeDraftCta intake={systemIntake} />
               </TaskListItem>
               <TaskListItem
                 testId="task-list-intake-review"
-                heading="Feedback from initial review"
+                heading={t('initialReviewFeedback.heading')}
                 status={initialReviewTag(status || '')}
               >
                 <TaskListDescription>
                   <p className="margin-y-0">
-                    The Governance Admin Team will review your request and
-                    decide if it needs further governance. If it does, they’ll
-                    direct you to go through the remaining steps.
+                    {t('initialReviewFeedback.description')}
                   </p>
                 </TaskListDescription>
                 {/* Only display review Alert if intake is in initial stages (i.e. before review or request for business case) */}
@@ -237,17 +227,10 @@ const GovernanceTaskList = () => {
                   status || ''
                 ) && (
                   <Alert type="info">
-                    <span>
-                      To help with that review, someone from the IT Governance
-                      team will schedule a phone call with you and Enterprise
-                      Architecture (EA).
-                    </span>
+                    <span>{t('initialReviewFeedback.alertOne')}</span>
                     <br />
                     <br />
-                    <span>
-                      After that phone call, the governance team will decide if
-                      you need to go through a full governance process.
-                    </span>
+                    <span>{t('initialReviewFeedback.alertTwo')}</span>
                   </Alert>
                 )}
                 {grtFeedback &&
@@ -260,31 +243,26 @@ const GovernanceTaskList = () => {
                       variant="unstyled"
                       to={`/governance-task-list/${id}/feedback`}
                     >
-                      Read feedback
+                      {t('initialReviewFeedback.link')}
                     </UswdsReactLink>
                   )}
               </TaskListItem>
               <TaskListItem
                 testId="task-list-business-case-draft"
-                heading="Prepare your Business Case for the GRT"
+                heading={t('businessCase.heading')}
                 status={businessCaseTag(systemIntake)}
               >
                 <TaskListDescription>
                   <p className="margin-top-0">
-                    Draft a business case to communicate the business need, the
-                    solutions and its associated costs. Meet with the Governance
-                    Review Team to discuss your draft, receive feedback and
-                    refine your business case.
+                    {t('businessCase.descriptionOne')}
                   </p>
-                  <p>
-                    This step can take some time due to scheduling and
-                    availability. You may go through multiple rounds of editing
-                    your business case and receiving feedback.
-                  </p>
+                  <p>{t('businessCase.descriptionTwo')}</p>
 
                   {businessCaseStage && (
                     <p>
-                      <span className="text-bold">Status:&nbsp;</span>
+                      <span className="text-bold">
+                        {t('businessCase.status')}&nbsp;
+                      </span>
                       <span>{businessCaseStage}</span>
                     </p>
                   )}
@@ -303,7 +281,7 @@ const GovernanceTaskList = () => {
                         variant="unstyled"
                         to={`/governance-task-list/${id}/feedback`}
                       >
-                        Read feedback
+                        {t('initialReviewFeedback.link')}
                       </UswdsReactLink>
                       <br />
                     </>
@@ -319,20 +297,17 @@ const GovernanceTaskList = () => {
                   data-testid="prepare-for-grt-cta"
                   to="/help/it-governance/prepare-for-grt"
                 >
-                  Prepare for the GRT meeting (opens in new tab)
+                  {t('cta.prepareGRT')}
                 </UswdsReactLink>
                 <BusinessCaseDraftCta systemIntake={systemIntake} />
               </TaskListItem>
               <TaskListItem
                 testId="task-list-business-case-final"
-                heading="Submit the business case for final approval"
+                heading={t('finalApproval.heading')}
                 status={finalBusinessCaseTag(systemIntake)}
               >
                 <TaskListDescription>
-                  <p className="margin-y-0">
-                    Update the Business Case based on feedback from the review
-                    meeting and submit it to the Governance Review Board.
-                  </p>
+                  <p className="margin-y-0">{t('finalApproval.description')}</p>
                 </TaskListDescription>
                 {grtFeedback &&
                   grtFeedback.length > 0 &&
@@ -343,7 +318,7 @@ const GovernanceTaskList = () => {
                         variant="unstyled"
                         to={`/governance-task-list/${id}/feedback`}
                       >
-                        Read feedback
+                        {t('initialReviewFeedback.link')}
                       </UswdsReactLink>
                       <br />
                     </>
@@ -354,22 +329,18 @@ const GovernanceTaskList = () => {
                     variant="unstyled"
                     to={`/business/${businessCaseId}/general-request-info`}
                   >
-                    Review and Submit
+                    {t('finalApproval.link')}
                   </UswdsReactLink>
                 )}
               </TaskListItem>
 
               <TaskListItem
                 testId="task-list-grb-meeting"
-                heading="Attend the GRB meeting"
+                heading={t('attendGRB.heading')}
                 status={attendGrbMeetingTag(systemIntake)}
               >
                 <TaskListDescription>
-                  <p className="margin-top-0">
-                    The Governance Review Board will discuss and make decisions
-                    based on the Business Case and recommendations from the
-                    Review Team.
-                  </p>
+                  <p className="margin-top-0">{t('attendGRB.description')}</p>
                   {grbDate && (
                     <p className="governance-task-list__meeting-date margin-bottom-2">
                       {getMeetingDate(grbDate)}
@@ -380,14 +351,12 @@ const GovernanceTaskList = () => {
               </TaskListItem>
               <TaskListItem
                 testId="task-list-decision"
-                heading="Decision and next steps"
+                heading={t('decisionNextSteps.heading')}
                 status={decisionTag(systemIntake)}
               >
                 <TaskListDescription>
                   <p className="margin-top-0">
-                    If your Business Case is approved you will receive a unique
-                    Lifecycle ID. If it is not approved, you would need to
-                    address the concerns to proceed.
+                    {t('decisionNextSteps.description')}
                   </p>
                 </TaskListDescription>
                 <DecisionCta id={id || ''} status={status || ''} />
