@@ -75,7 +75,7 @@ export const BusinessCaseDraftCta = ({
               }
             });
           }}
-          className="usa-button"
+          className="usa-button margin-top-2"
           data-testid="start-biz-case-btn"
         >
           Start
@@ -85,7 +85,7 @@ export const BusinessCaseDraftCta = ({
       return (
         <UswdsReactLink
           data-testid="continue-biz-case-btn"
-          className="usa-button"
+          className="usa-button margin-top-2"
           variant="unstyled"
           to={`/business/${businessCaseId}/general-request-info`}
         >

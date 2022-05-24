@@ -294,34 +294,34 @@ const GovernanceTaskList = () => {
                     </p>
                   )}
                 </TaskListDescription>
-                <div>
-                  {grtFeedback &&
-                    grtFeedback.length > 0 &&
-                    status === 'BIZ_CASE_CHANGES_NEEDED' && (
-                      <>
-                        <UswdsReactLink
-                          className="usa-button margin-bottom-2"
-                          variant="unstyled"
-                          to={`/governance-task-list/${id}/feedback`}
-                        >
-                          Read feedback
-                        </UswdsReactLink>
-                        <br />
-                      </>
-                    )}
-                  <UswdsReactLink
-                    className={`display-inline-block ${
-                      status === 'READY_FOR_GRT' ? 'usa-button' : ''
-                    }`}
-                    target="_blank"
-                    variant="unstyled"
-                    data-testid="prepare-for-grt-cta"
-                    to="/help/it-governance/prepare-for-grt"
-                  >
-                    Prepare for the GRT meeting (opens in new tab)
-                  </UswdsReactLink>
-                  <BusinessCaseDraftCta systemIntake={systemIntake} />
-                </div>
+                {grtFeedback &&
+                  grtFeedback.length > 0 &&
+                  status === 'BIZ_CASE_CHANGES_NEEDED' && (
+                    <>
+                      <UswdsReactLink
+                        className="usa-button margin-bottom-2"
+                        variant="unstyled"
+                        to={`/governance-task-list/${id}/feedback`}
+                      >
+                        Read feedback
+                      </UswdsReactLink>
+                      <br />
+                    </>
+                  )}
+                <UswdsReactLink
+                  className={`display-block ${
+                    status === 'READY_FOR_GRT'
+                      ? 'usa-button display-inline-block'
+                      : ''
+                  }`}
+                  target="_blank"
+                  variant="unstyled"
+                  data-testid="prepare-for-grt-cta"
+                  to="/help/it-governance/prepare-for-grt"
+                >
+                  Prepare for the GRT meeting (opens in new tab)
+                </UswdsReactLink>
+                <BusinessCaseDraftCta systemIntake={systemIntake} />
               </TaskListItem>
               <TaskListItem
                 testId="task-list-business-case-final"
