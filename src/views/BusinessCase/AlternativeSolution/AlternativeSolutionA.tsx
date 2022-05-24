@@ -91,7 +91,7 @@ const AlternativeSolutionA = ({
               </Alert>
             </div>
             <Form>
-              <div className="tablet:grid-col-9">
+              <div>
                 <h2 className="margin-y-4">Alternative A</h2>
                 <AlternativeSolutionFields
                   altLetter="A"
@@ -102,7 +102,7 @@ const AlternativeSolutionA = ({
                 {!alternativeSolutionHasFilledFields(
                   businessCase.alternativeB
                 ) && (
-                  <div className="margin-bottom-7">
+                  <div className="margin-bottom-7 tablet:grid-col-9">
                     <h2 className="margin-bottom-1">Additional alternatives</h2>
                     <HelpText>
                       If you are buillding a multi-year project that will

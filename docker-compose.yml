@@ -62,7 +62,8 @@ services:
       - SERVER_KEY
       - USE_TLS
     depends_on:
-      - db_migrate
+      db_migrate:
+        condition: service_completed_successfully # Only start if migrations completed successfully
   easi_client:
     image: easi-frontend:latest
   minio:

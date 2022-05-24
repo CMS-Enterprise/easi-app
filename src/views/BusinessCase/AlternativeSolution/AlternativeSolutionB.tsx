@@ -96,8 +96,8 @@ const AlternativeSolutionB = ({
               </Alert>
             </div>
             <Form>
-              <div className="tablet:grid-col-9">
-                <div className="easi-business-case__name-wrapper">
+              <div>
+                <div className="easi-business-case__name-wrapper tablet:grid-col-9">
                   <h2 className="margin-0">Alternative B</h2>
                   <Button
                     type="button"
