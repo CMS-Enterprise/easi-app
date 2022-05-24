@@ -10,7 +10,7 @@ import (
 )
 
 // GetSystemDetail makes a GET call to the /system/detail/{id} endpoint
-func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetail, error) {
+func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return nil, nil
@@ -37,8 +37,8 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 		return nil, fmt.Errorf("no body received")
 	}
 
-	retVal := &models.CedarSystemDetail{
-		CedarSystem: *cedarSystem,
+	retVal := &models.CedarSystemDetails{
+		CedarSystem: cedarSystem,
 	}
 
 	if busOwnerInfo := sys.BusinessOwnerInformation; busOwnerInfo != nil {
