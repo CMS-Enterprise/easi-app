@@ -61,10 +61,7 @@ func NewBudgetUpdateParamsWithHTTPClient(client *http.Client) *BudgetUpdateParam
 */
 type BudgetUpdateParams struct {
 
-	/* Body.
-
-	   Budgets to be updated in CEDAR. This required input in a list of Budget documents (id, projectId, systemId, fundingId and funding).
-	*/
+	// Body.
 	Body *models.BudgetUpdateRequest
 
 	timeout    time.Duration
