@@ -520,6 +520,26 @@ func (r *cedarRoleResolver) ObjectType(ctx context.Context, obj *models.CedarRol
 	return obj.ObjectType.Ptr(), nil
 }
 
+func (r *cedarURLResolver) Address(ctx context.Context, obj *models.CedarURL) (*string, error) {
+	return obj.Address.Ptr(), nil
+}
+
+func (r *cedarURLResolver) IsBehindWebApplicationFirewall(ctx context.Context, obj *models.CedarURL) (*bool, error) {
+	return obj.IsBehindWebApplicationFirewall.Ptr(), nil
+}
+
+func (r *cedarURLResolver) IsAPIEndpoint(ctx context.Context, obj *models.CedarURL) (*bool, error) {
+	return obj.IsAPIEndpoint.Ptr(), nil
+}
+
+func (r *cedarURLResolver) IsVersionCodeRepository(ctx context.Context, obj *models.CedarURL) (*bool, error) {
+	return obj.IsVersionCodeRepository.Ptr(), nil
+}
+
+func (r *cedarURLResolver) URLHostingEnv(ctx context.Context, obj *models.CedarURL) (*string, error) {
+	return obj.URLHostingEnv.Ptr(), nil
+}
+
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
@@ -1668,6 +1688,19 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 	return cedarRoles, nil
 }
 
+func (r *queryResolver) Urls(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error) {
+	cedarURLs, err := r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(cedarURLs) == 0 {
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no URLs found"), Resource: []*models.CedarURL{}}
+	}
+
+	return cedarURLs, nil
+}
+
 func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystemID string) (*model.DetailedCedarSystem, error) {
 	g := new(errgroup.Group)
 	var cedarSystem *models.CedarSystem
@@ -2106,6 +2139,9 @@ func (r *Resolver) CedarDeployment() generated.CedarDeploymentResolver {
 // CedarRole returns generated.CedarRoleResolver implementation.
 func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleResolver{r} }
 
+// CedarURL returns generated.CedarURLResolver implementation.
+func (r *Resolver) CedarURL() generated.CedarURLResolver { return &cedarURLResolver{r} }
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -2127,6 +2163,7 @@ type cedarAuthorityToOperateResolver struct{ *Resolver }
 type cedarDataCenterResolver struct{ *Resolver }
 type cedarDeploymentResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
+type cedarURLResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }

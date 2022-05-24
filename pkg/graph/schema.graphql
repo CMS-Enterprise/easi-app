@@ -209,6 +209,18 @@ type CedarRole {
 }
 
 """
+CedarURL represents info about a URL associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+"""
+type CedarURL {
+  id: String!
+  address: String
+  isBehindWebApplicationFirewall: Boolean
+  isAPIEndpoint: Boolean
+  isVersionCodeRepository: Boolean
+  urlHostingEnv: String
+}
+
+"""
 An accessibility request represents a system that needs to go through
 the 508 process
 """
@@ -1396,6 +1408,7 @@ type Query {
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
+  urls(cedarSystemId: String!): [CedarURL!]!
   detailedCedarSystemInfo(cedarSystemId: String!): DetailedCedarSystem
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
 }
