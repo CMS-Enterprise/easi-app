@@ -232,6 +232,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
           Preferred solution
         </h3>
         <dl
+          className="margin-bottom-0"
           title="Preferred solution"
         >
           <div
@@ -419,7 +420,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
             </div>
           </div>
           <div
-            className="easi-review-row"
+            className="easi-review-row margin-bottom-0"
           >
             <div
               className="line-height-body-3"
