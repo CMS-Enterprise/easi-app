@@ -285,7 +285,11 @@ const SystemProfile = () => {
             </Grid>
           </div>
         </SummaryBox>
-        <SystemSubNav subinfo={subinfo} systemInfo={systemInfo} />
+        <SystemSubNav
+          subinfo={subinfo}
+          systemInfo={systemInfo}
+          systemProfileHiddenFields={flags.systemProfileHiddenFields}
+        />
         <SectionWrapper className="margin-top-5 margin-bottom-5">
           <GridContainer>
             <Grid row gap>
