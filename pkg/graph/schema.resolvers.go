@@ -1638,15 +1638,50 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystem
 }
 
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
-	sys, err := r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
-	if err != nil {
+	g := new(errgroup.Group)
+	var sys *models.CedarSystemDetails
+	var errS error
+	g.Go(func() error {
+		sys, errS = r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
+		return errS
+	})
+
+	var cedarRoles []*models.CedarRole
+	var errR error
+	g.Go(func() error {
+		cedarRoles, errS = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.String{})
+		return errR
+	})
+
+	var cedarDeployments []*models.CedarDeployment
+	var errD error
+
+	g.Go(func() error {
+		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, cedarSystemID, nil)
+		return errD
+	})
+	if err := g.Wait(); err != nil {
 		return nil, err
 	}
-	return &models.CedarSystemDetails{
+
+	dCedarSys := models.CedarSystemDetails{
 		CedarSystem:                 sys.CedarSystem,
 		BusinessOwnerInformation:    sys.BusinessOwnerInformation,
 		SystemMaintainerInformation: sys.SystemMaintainerInformation,
-	}, nil
+		Roles:                       cedarRoles,
+		Deployments:                 cedarDeployments,
+	}
+
+	return &dCedarSys, nil
+	// sys, err := r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// return &models.CedarSystemDetails{
+	// 	CedarSystem:                 sys.CedarSystem,
+	// 	BusinessOwnerInformation:    sys.BusinessOwnerInformation,
+	// 	SystemMaintainerInformation: sys.SystemMaintainerInformation,
+	// }, nil
 }
 
 func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*model.SystemIntakeContactsPayload, error) {
@@ -2076,3 +2111,16 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *cedarSystemDetailsResolver) Roles(ctx context.Context, obj *models.CedarSystemDetails) ([]*models.CedarRole, error) {
+	return obj.Roles, nil
+}
+func (r *cedarSystemDetailsResolver) Deployments(ctx context.Context, obj *models.CedarSystemDetails) ([]*models.CedarDeployment, error) {
+	return obj.Deployments, nil
+}

@@ -64,4 +64,6 @@ type CedarSystemDetails struct {
 	CedarSystem                 *CedarSystem
 	BusinessOwnerInformation    *BusinessOwnerInformation
 	SystemMaintainerInformation *SystemMaintainerInformation
+	Roles                       []*CedarRole       `json:"roles"`
+	Deployments                 []*CedarDeployment `json:"deployments"`
 }

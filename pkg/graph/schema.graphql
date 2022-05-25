@@ -110,6 +110,8 @@ type CedarSystemDetails {
  cedarSystem: CedarSystem!
  systemMaintainerInformation: CedarSystemMaintainerInformation!
  businessOwnerInformation: CedarBusinessOwnerInformation!
+ roles: [CedarRole!]!
+ deployments: [CedarDeployment!]!
 }
 
 """
