@@ -11,12 +11,15 @@ type CedarAuthorityToOperate struct {
 	UUID                  string   `json:"uuid"`
 	SystemOfRecordsNotice []string `json:"systemOfRecordsNotice"`
 
+	// possibly-null in CEDAR Swagger, but in practice are never null
+	// per CEDAR team on Slack - "the count fields we get from CFACTS are 100% populated" - https://cmsgov.slack.com/archives/C02KTCN3ADD/p1652983526196749?thread_ts=1652982592.922789&cid=C02KTCN3ADD
+	CountOfTotalNonPrivilegedUserPopulation int `json:"countOfTotalNonPrivilegedUserPopulation"`
+	CountOfOpenPoams                        int `json:"countOfOpenPoams"`
+	CountOfTotalPrivilegedUserPopulation    int `json:"countOfTotalPrivilegedUserPopulation"`
+
 	// possibly-null fields
 	ActualDispositionDate                     zero.Time   `json:"actualDispositionDate"`
 	ContainsPersonallyIdentifiableInformation zero.Bool   `json:"containsPersonallyIdentifiableInformation"`
-	CountOfTotalNonPrivilegedUserPopulation   zero.Int    `json:"countOfTotalNonPrivilegedUserPopulation"`
-	CountOfOpenPoams                          zero.Int    `json:"countOfOpenPoams"`
-	CountOfTotalPrivilegedUserPopulation      zero.Int    `json:"countOfTotalPrivilegedUserPopulation"`
 	DateAuthorizationMemoExpires              zero.Time   `json:"dateAuthorizationMemoExpires"`
 	DateAuthorizationMemoSigned               zero.Time   `json:"dateAuthorizationMemoSigned"`
 	EAuthenticationLevel                      zero.String `json:"eAuthenticationLevel"`

@@ -276,18 +276,6 @@ func (r *cedarAuthorityToOperateResolver) ContainsPersonallyIdentifiableInformat
 	return obj.ContainsPersonallyIdentifiableInformation.Ptr(), nil
 }
 
-func (r *cedarAuthorityToOperateResolver) CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	return zeroIntToIntPtr(obj.CountOfTotalNonPrivilegedUserPopulation), nil
-}
-
-func (r *cedarAuthorityToOperateResolver) CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	return zeroIntToIntPtr(obj.CountOfOpenPoams), nil
-}
-
-func (r *cedarAuthorityToOperateResolver) CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	return zeroIntToIntPtr(obj.CountOfTotalPrivilegedUserPopulation), nil
-}
-
 func (r *cedarAuthorityToOperateResolver) DateAuthorizationMemoExpires(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
 	return obj.DateAuthorizationMemoExpires.Ptr(), nil
 }

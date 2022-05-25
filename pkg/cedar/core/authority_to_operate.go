@@ -54,9 +54,9 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 			ActualDispositionDate: zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
 			CedarID:               *ato.CedarID, // required
 			ContainsPersonallyIdentifiableInformation: zero.BoolFrom(ato.ContainsPersonallyIdentifiableInformation),
-			CountOfTotalNonPrivilegedUserPopulation:   zero.IntFrom(int64(ato.CountOfTotalNonPrivilegedUserPopulation)),
-			CountOfOpenPoams:                          zero.IntFrom(int64(ato.CountOfOpenPoams)),
-			CountOfTotalPrivilegedUserPopulation:      zero.IntFrom(int64(ato.CountOfTotalPrivilegedUserPopulation)),
+			CountOfTotalNonPrivilegedUserPopulation:   int(ato.CountOfTotalNonPrivilegedUserPopulation),
+			CountOfTotalPrivilegedUserPopulation:      int(ato.CountOfTotalPrivilegedUserPopulation),
+			CountOfOpenPoams:                          int(ato.CountOfOpenPoams),
 			DateAuthorizationMemoExpires:              zero.TimeFrom(time.Time(ato.DateAuthorizationMemoExpires)),
 			DateAuthorizationMemoSigned:               zero.TimeFrom(time.Time(ato.DateAuthorizationMemoSigned)),
 			EAuthenticationLevel:                      zero.StringFrom(ato.EAuthenticationLevel),

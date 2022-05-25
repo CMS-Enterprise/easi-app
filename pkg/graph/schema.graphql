@@ -45,9 +45,9 @@ type CedarAuthorityToOperate {
   uuid: String!
   actualDispositionDate: Time
   containsPersonallyIdentifiableInformation: Boolean
-  countOfTotalNonPrivilegedUserPopulation: Int
-  countOfOpenPoams: Int
-  countOfTotalPrivilegedUserPopulation: Int
+  countOfTotalNonPrivilegedUserPopulation: Int!
+  countOfOpenPoams: Int!
+  countOfTotalPrivilegedUserPopulation: Int!
   dateAuthorizationMemoExpires: Time
   dateAuthorizationMemoSigned: Time
   eAuthenticationLevel: String
