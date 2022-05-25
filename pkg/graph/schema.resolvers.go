@@ -1639,10 +1639,10 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystem
 
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
 	g := new(errgroup.Group)
-	var sys *models.CedarSystemDetails
+	var sysDetail *models.CedarSystemDetails
 	var errS error
 	g.Go(func() error {
-		sys, errS = r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
+		sysDetail, errS = r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
 		return errS
 	})
 
@@ -1665,23 +1665,14 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 	}
 
 	dCedarSys := models.CedarSystemDetails{
-		CedarSystem:                 sys.CedarSystem,
-		BusinessOwnerInformation:    sys.BusinessOwnerInformation,
-		SystemMaintainerInformation: sys.SystemMaintainerInformation,
+		CedarSystem:                 sysDetail.CedarSystem,
+		BusinessOwnerInformation:    sysDetail.BusinessOwnerInformation,
+		SystemMaintainerInformation: sysDetail.SystemMaintainerInformation,
 		Roles:                       cedarRoles,
 		Deployments:                 cedarDeployments,
 	}
 
 	return &dCedarSys, nil
-	// sys, err := r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// return &models.CedarSystemDetails{
-	// 	CedarSystem:                 sys.CedarSystem,
-	// 	BusinessOwnerInformation:    sys.BusinessOwnerInformation,
-	// 	SystemMaintainerInformation: sys.SystemMaintainerInformation,
-	// }, nil
 }
 
 func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*model.SystemIntakeContactsPayload, error) {
