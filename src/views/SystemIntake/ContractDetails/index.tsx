@@ -28,6 +28,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import MultiSelect from 'components/shared/MultiSelect';
 import fundingSources from 'constants/enums/fundingSources';
 import { yesNoMap } from 'data/common';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -218,28 +219,23 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           error={!!flatErrors['fundingSource.source']}
                         >
                           <Label htmlFor="IntakeForm-FundingSource">
-                            Funding Source
+                            Which existing model does your proposed track/model
+                            most closely resemble?
                           </Label>
+                          <HelpText className="margin-y-05">
+                            Start typing the name of the model
+                          </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['fundingSource.source']}
                           </FieldErrorMsg>
                           <Field
-                            as={Dropdown}
+                            as={MultiSelect}
                             id="IntakeForm-FundingSource"
                             name="fundingSource.source"
-                          >
-                            <option value="" disabled>
-                              Select an option
-                            </option>
-                            {fundingSources.map(source => (
-                              <option
-                                key={source.split(' ').join('-')}
-                                value={source}
-                              >
-                                {source}
-                              </option>
-                            ))}
-                          </Field>
+                            options={fundingSources}
+                            selectedLabel="Selected models"
+                            tags
+                          />
                         </FieldGroup>
                         <FieldGroup
                           scrollElement="fundingSource.fundingNumber"
