@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
+import Divider from 'components/shared/Divider';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
@@ -34,7 +35,7 @@ const BusinessCaseReview = ({
         linkPosition={helpArticle ? 'top' : 'bottom'}
       >
         <div className={helpArticle ? '' : 'grid-container'}>
-          {helpArticle && <hr className="margin-top-5 margin-bottom-4" />}
+          {helpArticle && <Divider className="margin-top-5 margin-bottom-4" />}
           <h2 className="font-heading-xl">General request information</h2>
           <GeneralRequestInfoReview
             values={{
@@ -49,7 +50,7 @@ const BusinessCaseReview = ({
             }}
           />
 
-          {helpArticle && <hr className="margin-top-5" />}
+          {helpArticle && <Divider className="margin-top-5" />}
 
           <h2 className="font-heading-xl margin-top-4">Request description</h2>
           <RequestDescriptionReview
@@ -63,7 +64,7 @@ const BusinessCaseReview = ({
           />
         </div>
 
-        {helpArticle && <hr />}
+        {helpArticle && <Divider />}
 
         <div className={helpArticle ? '' : 'grid-container'}>
           <h2 className="font-heading-xl margin-top-4 margin-bottom-2 easi-no-print">
