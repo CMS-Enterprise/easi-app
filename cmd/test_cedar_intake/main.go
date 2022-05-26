@@ -44,6 +44,9 @@ func makeTestData() *testData {
 	systemIntake := &models.SystemIntake{
 		ID: uuid.New(),
 
+		CreatedAt: &tenMinutesAgo,
+		UpdatedAt: &fiveMinutesAgo,
+
 		EUAUserID: null.StringFrom("ABCD"),
 		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
 
@@ -107,6 +110,8 @@ func makeTestData() *testData {
 	noCost := 0
 	businessCase := &models.BusinessCase{
 		ID:                   uuid.New(),
+		CreatedAt:            &fiveMinutesAgo,
+		UpdatedAt:            &now,
 		SystemIntakeID:       systemIntake.ID,
 		EUAUserID:            "ABCD",
 		Requester:            null.StringFrom("Shane Clark"),

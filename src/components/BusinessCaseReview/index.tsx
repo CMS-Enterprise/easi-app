@@ -65,7 +65,11 @@ const BusinessCaseReview = ({
         <div className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
           <div className="grid-container">
             <AlternativeAnalysisReview
-              fiscalYear={getFiscalYear(DateTime.fromISO(values.createdAt))}
+              fiscalYear={
+                values.createdAt
+                  ? getFiscalYear(DateTime.fromISO(values.createdAt))
+                  : new Date().getFullYear()
+              }
               preferredSolution={values.preferredSolution}
               alternativeA={values.alternativeA}
               alternativeB={values.alternativeB}

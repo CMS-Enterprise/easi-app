@@ -103,7 +103,7 @@ const GovernanceOverviewContent = ({
                     {step.heading}
                   </ProcessListHeading>
                   <p className="margin-bottom-1">{step.content}</p>
-                  {helpArticle && step.link && (
+                  {step.link && (
                     <UswdsReactLink to={step.link.path} target="_blank">
                       {step.link.text}
                     </UswdsReactLink>

@@ -268,6 +268,106 @@ func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.Bus
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
 }
 
+func (r *cedarAuthorityToOperateResolver) ActualDispositionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
+	return obj.ActualDispositionDate.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) ContainsPersonallyIdentifiableInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
+	return obj.ContainsPersonallyIdentifiableInformation.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
+	return zeroIntToIntPtr(obj.CountOfTotalNonPrivilegedUserPopulation), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
+	return zeroIntToIntPtr(obj.CountOfOpenPoams), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
+	return zeroIntToIntPtr(obj.CountOfTotalPrivilegedUserPopulation), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) DateAuthorizationMemoExpires(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
+	return obj.DateAuthorizationMemoExpires.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) DateAuthorizationMemoSigned(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
+	return obj.DateAuthorizationMemoSigned.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) EAuthenticationLevel(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.EAuthenticationLevel.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) Fips199OverallImpactRating(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
+	return zeroIntToIntPtr(obj.Fips199OverallImpactRating), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) FismaSystemAcronym(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.FismaSystemAcronym.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) FismaSystemName(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.FismaSystemName.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) IsAccessedByNonOrganizationalUsers(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
+	return obj.IsAccessedByNonOrganizationalUsers.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) IsPiiLimitedToUserNameAndPass(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
+	return obj.IsPiiLimitedToUserNameAndPass.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) IsProtectedHealthInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
+	return obj.IsProtectedHealthInformation.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) LastActScaDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
+	return obj.LastActScaDate.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) LastAssessmentDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
+	return obj.LastAssessmentDate.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) LastContingencyPlanCompletionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
+	return obj.LastContingencyPlanCompletionDate.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) LastPenTestDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
+	return obj.LastPenTestDate.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) PiaCompletionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
+	return obj.PiaCompletionDate.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) PrimaryCyberRiskAdvisor(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.PrimaryCyberRiskAdvisor.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) PrivacySubjectMatterExpert(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.PrivacySubjectMatterExpert.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
+	return obj.RecoveryPointObjective.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
+	return obj.RecoveryTimeObjective.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) TlcPhase(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.TLCPhase.Ptr(), nil
+}
+
+func (r *cedarAuthorityToOperateResolver) XlcPhase(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
+	return obj.XLCPhase.Ptr(), nil
+}
+
 func (r *cedarDataCenterResolver) ID(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
 	return obj.ID.Ptr(), nil
 }
@@ -1390,6 +1490,8 @@ func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input 
 	contact := &models.SystemIntakeContact{
 		SystemIntakeID: input.SystemIntakeID,
 		EUAUserID:      input.EuaUserID,
+		Component:      input.Component,
+		Role:           input.Role,
 	}
 	createdContact, err := r.store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -1523,6 +1625,19 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, er
 		},
 	}
 	return &currentUser, nil
+}
+
+func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
+	cedarATO, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(cedarATO) == 0 {
+		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no ATOs found"), Resource: []*models.CedarAuthorityToOperate{}}
+	}
+
+	return cedarATO, nil
 }
 
 func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
@@ -2023,6 +2138,11 @@ func (r *Resolver) AugmentedSystemIntakeContact() generated.AugmentedSystemIntak
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
+// CedarAuthorityToOperate returns generated.CedarAuthorityToOperateResolver implementation.
+func (r *Resolver) CedarAuthorityToOperate() generated.CedarAuthorityToOperateResolver {
+	return &cedarAuthorityToOperateResolver{r}
+}
+
 // CedarDataCenter returns generated.CedarDataCenterResolver implementation.
 func (r *Resolver) CedarDataCenter() generated.CedarDataCenterResolver {
 	return &cedarDataCenterResolver{r}
@@ -2058,6 +2178,7 @@ type accessibilityRequestDocumentResolver struct{ *Resolver }
 type accessibilityRequestNoteResolver struct{ *Resolver }
 type augmentedSystemIntakeContactResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
+type cedarAuthorityToOperateResolver struct{ *Resolver }
 type cedarDataCenterResolver struct{ *Resolver }
 type cedarDeploymentResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
