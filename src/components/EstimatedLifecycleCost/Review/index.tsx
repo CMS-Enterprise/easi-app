@@ -99,12 +99,12 @@ const EstimatedLifecycleCostReview = ({
                       <tbody>
                         <tr>
                           <th
-                            className="padding-y-2"
+                            className="padding-y-2 text-left"
                             aria-label={`Fiscal year ${yearMapping[year]}`}
                           >
                             {`FY ${yearMapping[year]}`}
                           </th>
-                          <td className="padding-y-2 text-bold">
+                          <td className="padding-y-2 text-bold text-right">
                             {formatDollarsOrDash(
                               sum(
                                 Object.values(
@@ -124,14 +124,14 @@ const EstimatedLifecycleCostReview = ({
                           .map(cost => (
                             <tr key={cost}>
                               <th
-                                className="padding-y-2 text-normal"
+                                className="padding-y-2 text-normal text-left"
                                 aria-label={`Fiscal year ${yearMapping[year]} ${
                                   data[cost as keyof LifecycleCosts].label
                                 } costs`}
                               >
                                 {data[cost as keyof LifecycleCosts].label}
                               </th>
-                              <td className="padding-y-2 text-normal">
+                              <td className="padding-y-2 text-normal text-right">
                                 {formatDollarsOrDash(
                                   parseFloat(
                                     data[cost as keyof LifecycleCosts].years[
