@@ -39,7 +39,7 @@ const PropsedBusinessCaseSolutionReview = ({
 }: ReviewProps) => (
   <>
     <h3 className="easi-only-print business-case-solution-header">{name}</h3>
-    <DescriptionList title={name}>
+    <DescriptionList title={name} className="margin-bottom-0">
       <ReviewRow>
         <div className="line-height-body-3">
           <DescriptionTerm term={`${name}: Title`} />
@@ -150,7 +150,7 @@ const PropsedBusinessCaseSolutionReview = ({
           data={solution.estimatedLifecycleCost}
         />
       </ReviewRow>
-      <ReviewRow>
+      <ReviewRow className="margin-bottom-0">
         <div className="line-height-body-3">
           <DescriptionTerm term="What is the cost savings or avoidance associated with this solution?" />
           <DescriptionDefinition

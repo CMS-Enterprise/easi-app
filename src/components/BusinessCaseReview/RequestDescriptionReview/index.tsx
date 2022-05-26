@@ -17,8 +17,8 @@ const RequestDescriptionReview = ({
 }: RequestDescriptionReviewProps) => {
   return (
     <DescriptionList title="Request description">
-      <ReviewRow>
-        <div className="margin-bottom-205 line-height-body-3">
+      <ReviewRow className="margin-bottom-3">
+        <div className="line-height-body-3">
           <DescriptionTerm term="What is your business or user need?" />
           <DescriptionDefinition
             className="text-pre-wrap"
@@ -26,8 +26,8 @@ const RequestDescriptionReview = ({
           />
         </div>
       </ReviewRow>
-      <ReviewRow>
-        <div className="margin-bottom-205 line-height-body-3">
+      <ReviewRow className="margin-bottom-3">
+        <div className="line-height-body-3">
           <DescriptionTerm term="How will CMS benefit from this effort?" />
           <DescriptionDefinition
             className="text-pre-wrap"
@@ -35,8 +35,8 @@ const RequestDescriptionReview = ({
           />
         </div>
       </ReviewRow>
-      <ReviewRow>
-        <div className="margin-bottom-205 line-height-body-3">
+      <ReviewRow className="margin-bottom-3">
+        <div className="line-height-body-3">
           <DescriptionTerm term="Summary of Current Solution" />
           <DescriptionDefinition
             className="text-pre-wrap"
@@ -44,8 +44,8 @@ const RequestDescriptionReview = ({
           />
         </div>
       </ReviewRow>
-      <ReviewRow>
-        <div className="margin-bottom-205 line-height-body-3">
+      <ReviewRow className="margin-bottom-3">
+        <div className="line-height-body-3">
           <DescriptionTerm term="How does this effort align with organizational priorities?" />
           <DescriptionDefinition
             className="text-pre-wrap"
@@ -53,8 +53,8 @@ const RequestDescriptionReview = ({
           />
         </div>
       </ReviewRow>
-      <ReviewRow>
-        <div className="margin-bottom-205 line-height-body-3">
+      <ReviewRow className="margin-bottom-3">
+        <div className="line-height-body-3">
           <DescriptionTerm term="How will you determine whether or not this effort is successful?" />
           <DescriptionDefinition
             className="text-pre-wrap"
