@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink, useParams } from 'react-router-dom';
+import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
@@ -11,6 +11,7 @@ import {
   GridContainer,
   IconBookmark,
   IconExpandMore,
+  Link,
   SideNav,
   SummaryBox
 } from '@trussworks/react-uswds';
@@ -94,24 +95,26 @@ const SystemProfile = () => {
     systemData
   };
 
+  const subComponents = sideNavItems(
+    systemInfo,
+    flags.systemProfileHiddenFields
+  );
+
   // Mapping of all sub navigation links
-  const subNavigationLinks: React.ReactNode[] = Object.keys(
-    sideNavItems(systemInfo, flags.systemProfileHiddenFields)
-  ).map((key: string) => (
-    <NavLink
-      to={sideNavItems(systemInfo, flags.systemProfileHiddenFields)[key].route}
-      key={key}
-      activeClassName="usa-current"
-      className={classnames({
-        'nav-group-border': sideNavItems(
-          systemInfo,
-          flags.systemProfileHiddenFields
-        )[key].groupEnd
-      })}
-    >
-      {t(`navigation.${key}`)}
-    </NavLink>
-  ));
+  const subNavigationLinks: React.ReactNode[] = Object.keys(subComponents).map(
+    (key: string) => (
+      <NavLink
+        to={subComponents[key].route}
+        key={key}
+        activeClassName="usa-current"
+        className={classnames({
+          'nav-group-border': subComponents[key].groupEnd
+        })}
+      >
+        {t(`navigation.${key}`)}
+      </NavLink>
+    )
+  );
 
   const descriptionRef = React.createRef<HTMLElement>();
   const [
@@ -136,14 +139,11 @@ const SystemProfile = () => {
   }
 
   // TODO: Handle errors and loading
-  if (
-    error ||
-    !systemInfo ||
-    (subinfo &&
-      !sideNavItems(systemInfo, flags.systemProfileHiddenFields)[subinfo])
-  ) {
+  if (error || !systemInfo || (subinfo && !subComponents)) {
     return <NotFound />;
   }
+
+  const subComponent = subComponents[subinfo || 'home'];
 
   return (
     <MainContent>
@@ -160,7 +160,7 @@ const SystemProfile = () => {
               >
                 <Breadcrumb>
                   <span>&larr; </span>
-                  <BreadcrumbLink asCustom={Link} to="/systems">
+                  <BreadcrumbLink asCustom={RouterLink} to="/systems">
                     <span>{t('singleSystem.summary.back')}</span>
                   </BreadcrumbLink>
                 </Breadcrumb>
@@ -285,7 +285,13 @@ const SystemProfile = () => {
             </Grid>
           </div>
         </SummaryBox>
-        <SystemSubNav subinfo={subinfo} systemInfo={systemInfo} />
+
+        <SystemSubNav
+          subinfo={subinfo}
+          systemInfo={systemInfo}
+          systemProfileHiddenFields={flags.systemProfileHiddenFields}
+        />
+
         <SectionWrapper className="margin-top-5 margin-bottom-5">
           <GridContainer>
             <Grid row gap>
@@ -300,12 +306,60 @@ const SystemProfile = () => {
               )}
 
               <Grid desktop={{ col: 9 }}>
-                {/* This renders the selected sidenav central component */}
-                {
-                  sideNavItems(systemInfo, flags.systemProfileHiddenFields)[
-                    subinfo || 'home'
-                  ].component
-                }
+                <div id={subComponent.componentId ?? ''}>
+                  <GridContainer className="padding-left-0 padding-right-0">
+                    <Grid row gap>
+                      {/* Central component */}
+                      <Grid desktop={{ col: 8 }}>{subComponent.component}</Grid>
+
+                      {/* Contact info sidebar */}
+                      <Grid
+                        desktop={{ col: 4 }}
+                        className={classnames({
+                          'sticky-nav': !isMobile
+                        })}
+                      >
+                        {/* Setting a ref here to reference the grid width for the fixed side nav */}
+                        <div className="side-divider">
+                          <div className="top-divider" />
+                          <p className="font-body-xs margin-top-1 margin-bottom-3">
+                            {t('singleSystem.pointOfContact')}
+                          </p>
+                          <h3 className="system-profile__subheader margin-bottom-1">
+                            Geraldine Hobbs {/* TODO: Get from CEDAR */}
+                          </h3>
+                          <DescriptionDefinition
+                            definition={t('singleSystem.summary.subheader2')}
+                          />
+                          <p>
+                            <Link
+                              aria-label={t('singleSystem.sendEmail')}
+                              className="line-height-body-5"
+                              href="/" // TODO: Get link from CEDAR?
+                              variant="external"
+                              target="_blank"
+                            >
+                              {t('singleSystem.sendEmail')}
+                              <span aria-hidden>&nbsp;</span>
+                            </Link>
+                          </p>
+                          <p>
+                            <Link
+                              aria-label={t('singleSystem.moreContact')}
+                              className="line-height-body-5"
+                              href="/" // TODO: Get link from CEDAR?
+                              target="_blank"
+                            >
+                              {t('singleSystem.moreContact')}
+                              <span aria-hidden>&nbsp;</span>
+                              <span aria-hidden>&rarr; </span>
+                            </Link>
+                          </p>
+                        </div>
+                      </Grid>
+                    </Grid>
+                  </GridContainer>
+                </div>
               </Grid>
             </Grid>
           </GridContainer>

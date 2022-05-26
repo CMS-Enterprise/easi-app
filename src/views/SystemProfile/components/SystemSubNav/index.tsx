@@ -13,9 +13,14 @@ import './index.scss';
 type SystemSubNavProps = {
   subinfo: string;
   systemInfo: any;
+  systemProfileHiddenFields: boolean;
 };
 
-const SystemSubNav = ({ subinfo, systemInfo }: SystemSubNavProps) => {
+const SystemSubNav = ({
+  subinfo,
+  systemInfo,
+  systemProfileHiddenFields
+}: SystemSubNavProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const [isAccordionOpen, setIsAccordionOpen] = useState<boolean>(false);
@@ -49,16 +54,23 @@ const SystemSubNav = ({ subinfo, systemInfo }: SystemSubNavProps) => {
           className="system-detail__subNav__list-container bg-primary-dark"
         >
           <ul className="system-detail__subNav__list subNav">
-            {Object.keys(sideNavItems(systemInfo)).map((key: string) => (
+            {Object.keys(
+              sideNavItems(systemInfo, systemProfileHiddenFields)
+            ).map((key: string) => (
               <li
                 key={key}
                 className={classnames({
-                  'subNav__item--group-border': sideNavItems(systemInfo)[key]
-                    .groupEnd
+                  'subNav__item--group-border': sideNavItems(
+                    systemInfo,
+                    systemProfileHiddenFields
+                  )[key].groupEnd
                 })}
               >
                 <NavLink
-                  to={sideNavItems(systemInfo)[key].route}
+                  to={
+                    sideNavItems(systemInfo, systemProfileHiddenFields)[key]
+                      .route
+                  }
                   key={key}
                   className={classnames({
                     'subNav--current': key === subinfo

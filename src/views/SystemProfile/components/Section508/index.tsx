@@ -17,7 +17,6 @@ import {
   Link,
   Table as UswdsTable
 } from '@trussworks/react-uswds';
-import classnames from 'classnames';
 
 // import UswdsReactLink from 'components/LinkWrapper';
 import {
@@ -26,13 +25,13 @@ import {
 } from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
-import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
 import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
 import RequestStatusTag, {
   RequestStatus
 } from 'views/SystemProfile/RequestStatusTag';
+
+import { SystemProfileSubComponentProps } from '..';
 
 import './index.scss';
 
@@ -333,9 +332,8 @@ const DocumentCardTable = ({
   );
 };
 
-export default ({ system }: { system: tempCedarSystemProps }) => {
+export default ({ system }: SystemProfileSubComponentProps) => {
   const { t } = useTranslation('systemProfile');
-  const isMobile = useCheckResponsiveScreen('tablet');
 
   const tableData = useMemo(
     () => [
@@ -357,112 +355,61 @@ export default ({ system }: { system: tempCedarSystemProps }) => {
   );
 
   return (
-    <div id="system-section-508">
-      <GridContainer className="padding-left-0 padding-right-0">
-        <Grid row gap>
-          <Grid desktop={{ col: 8 }}>
-            <SectionWrapper borderBottom className="padding-bottom-4">
-              <h2 className="margin-top-0 margin-bottom-4 line-height-heading-2">
-                {t('singleSystem.section508.openRequests')}
-              </h2>
-              <CardGroup className="margin-0">
-                <RequestCard
-                  name="My test for HAM"
-                  status="Open"
-                  numTests={1}
-                  initialTestDate="mm/dd/yyyy"
-                  scorePct={98}
-                  businessOwner="Geraldine"
-                  submissionDate="March"
-                  numUploadedDocuments={4}
-                />
-              </CardGroup>
-              <div className="margin-top-1">
-                <Button type="button" outline>
-                  {t('singleSystem.section508.startNewRequest')}
-                </Button>
-              </div>
-            </SectionWrapper>
-            <SectionWrapper borderBottom className="padding-y-4">
-              <h2 className="margin-top-0 margin-bottom-4">
-                {t('singleSystem.section508.closedRequests')}
-              </h2>
-              <CardGroup className="margin-0">
-                <RequestCard
-                  name="My test for HAM"
-                  status="Closed"
-                  changeDate="02/08/2020"
-                  numTests={1}
-                  initialTestDate="mm/dd/yyyy"
-                  scorePct={100}
-                />
-                <RequestCard
-                  name="My test for HAM"
-                  status="Closed"
-                  changeDate="02/08/2020"
-                />
-              </CardGroup>
-            </SectionWrapper>
-            <SectionWrapper>
-              <h2>{t('singleSystem.section508.testingDocuments')}</h2>
-              <DocumentCardTable
-                title="Voluntary Product Accessibility Template"
-                documentName="VPAT"
-                mostRecentDocumentLink=""
-                uploaded="September 12, 2021"
-                data={tableData}
-              />
-              <DocumentCardTable title="Remediation Plan" />
-              <DocumentCardTable title="Other documents" data={tableData} />
-            </SectionWrapper>
-          </Grid>
-          {/* Point of contact/ miscellaneous info */}
-          <Grid
-            desktop={{ col: 4 }}
-            className={classnames({
-              'sticky-nav': !isMobile
-            })}
-          >
-            {/* Setting a ref here to reference the grid width for the fixed side nav */}
-            <div className="side-divider">
-              <div className="top-divider" />
-              <p className="font-body-xs margin-top-1 margin-bottom-3">
-                {t('singleSystem.pointOfContact')}
-              </p>
-              <h3 className="system-profile__subheader margin-bottom-1">
-                Geraldine Hobbs
-              </h3>
-              <DescriptionDefinition
-                definition={t('singleSystem.summary.subheader2')}
-              />
-              <p>
-                <Link
-                  aria-label={t('singleSystem.sendEmail')}
-                  className="line-height-body-5"
-                  href="mailto:patrick.segura@oddball.io" // TODO: Get link from CEDAR?
-                  variant="external"
-                  target="_blank"
-                >
-                  {t('singleSystem.sendEmail')}
-                  <span aria-hidden>&nbsp;</span>
-                </Link>
-              </p>
-              <p>
-                <Link
-                  aria-label={t('singleSystem.moreContact')}
-                  className="line-height-body-5"
-                  href="mailto:patrick.segura@oddball.io" // TODO: Get link from CEDAR?
-                  target="_blank"
-                >
-                  {t('singleSystem.moreContact')}
-                  <span aria-hidden>&nbsp;</span>
-                  <span aria-hidden>&rarr; </span>
-                </Link>
-              </p>
-            </div>
-          </Grid>
-        </Grid>
-      </GridContainer>
-    </div>
+    <>
+      <SectionWrapper borderBottom className="padding-bottom-4">
+        <h2 className="margin-top-0 margin-bottom-4 line-height-heading-2">
+          {t('singleSystem.section508.openRequests')}
+        </h2>
+        <CardGroup className="margin-0">
+          <RequestCard
+            name="My test for HAM"
+            status="Open"
+            numTests={1}
+            initialTestDate="mm/dd/yyyy"
+            scorePct={98}
+            businessOwner="Geraldine"
+            submissionDate="March"
+            numUploadedDocuments={4}
+          />
+        </CardGroup>
+        <div className="margin-top-1">
+          <Button type="button" outline>
+            {t('singleSystem.section508.startNewRequest')}
+          </Button>
+        </div>
+      </SectionWrapper>
+      <SectionWrapper borderBottom className="padding-y-4">
+        <h2 className="margin-top-0 margin-bottom-4">
+          {t('singleSystem.section508.closedRequests')}
+        </h2>
+        <CardGroup className="margin-0">
+          <RequestCard
+            name="My test for HAM"
+            status="Closed"
+            changeDate="02/08/2020"
+            numTests={1}
+            initialTestDate="mm/dd/yyyy"
+            scorePct={100}
+          />
+          <RequestCard
+            name="My test for HAM"
+            status="Closed"
+            changeDate="02/08/2020"
+          />
+        </CardGroup>
+      </SectionWrapper>
+      <SectionWrapper>
+        <h2>{t('singleSystem.section508.testingDocuments')}</h2>
+        <DocumentCardTable
+          title="Voluntary Product Accessibility Template"
+          documentName="VPAT"
+          mostRecentDocumentLink=""
+          uploaded="September 12, 2021"
+          data={tableData}
+        />
+        <DocumentCardTable title="Remediation Plan" />
+        <DocumentCardTable title="Other documents" data={tableData} />
+      </SectionWrapper>
+    </>
   );
 };
