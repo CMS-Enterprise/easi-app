@@ -10,182 +10,192 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
     <div
       className="grid-container"
     >
-      <h2
-        className="font-heading-xl"
+      <div
+        className="easi-section"
+        data-testid="section-wrapper"
       >
-        General request information
-      </h2>
-      <dl
-        title="General request information"
+        <h2
+          className="font-heading-xl margin-top-4"
+        >
+          General request information
+        </h2>
+        <dl
+          title="General request information"
+        >
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Project Name
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                EASi Test
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Business Owner
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                Jane Smith
+              </dd>
+            </div>
+          </div>
+          <div
+            className="easi-review-row"
+          >
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Requester
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                Jane Smith
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Requester Phone Number
+              </dt>
+              <dd
+                className="description-definition margin-0"
+              >
+                1234567890
+              </dd>
+            </div>
+          </div>
+        </dl>
+      </div>
+      <div
+        className="easi-section"
+        data-testid="section-wrapper"
       >
-        <div
-          className="easi-review-row"
+        <h2
+          className="font-heading-xl margin-top-4"
         >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Project Name
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              EASi Test
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Business Owner
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              Jane Smith
-            </dd>
-          </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Requester
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              Jane Smith
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
-              Requester Phone Number
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              1234567890
-            </dd>
-          </div>
-        </div>
-      </dl>
-      <h2
-        className="font-heading-xl margin-top-4"
-      >
-        Request description
-      </h2>
-      <dl
-        title="Request description"
-      >
-        <div
-          className="easi-review-row"
+          Request description
+        </h2>
+        <dl
+          title="Request description"
         >
           <div
-            className="margin-bottom-205 line-height-body-3"
+            className="easi-review-row margin-bottom-3"
           >
-            <dt
-              className="text-bold margin-bottom-05"
+            <div
+              className="line-height-body-3"
             >
-              What is your business or user need?
-            </dt>
-            <dd
-              className="description-definition margin-0 text-pre-wrap"
-            >
-              Test business need
-            </dd>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                What is your business or user need?
+              </dt>
+              <dd
+                className="description-definition margin-0 text-pre-wrap"
+              >
+                Test business need
+              </dd>
+            </div>
           </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
           <div
-            className="margin-bottom-205 line-height-body-3"
+            className="easi-review-row margin-bottom-3"
           >
-            <dt
-              className="text-bold margin-bottom-05"
+            <div
+              className="line-height-body-3"
             >
-              How will CMS benefit from this effort?
-            </dt>
-            <dd
-              className="description-definition margin-0 text-pre-wrap"
-            >
-              Test CMS benefit
-            </dd>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                How will CMS benefit from this effort?
+              </dt>
+              <dd
+                className="description-definition margin-0 text-pre-wrap"
+              >
+                Test CMS benefit
+              </dd>
+            </div>
           </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
           <div
-            className="margin-bottom-205 line-height-body-3"
+            className="easi-review-row margin-bottom-3"
           >
-            <dt
-              className="text-bold margin-bottom-05"
+            <div
+              className="line-height-body-3"
             >
-              Summary of Current Solution
-            </dt>
-            <dd
-              className="description-definition margin-0 text-pre-wrap"
-            >
-              Test current solution summary
-            </dd>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                Summary of Current Solution
+              </dt>
+              <dd
+                className="description-definition margin-0 text-pre-wrap"
+              >
+                Test current solution summary
+              </dd>
+            </div>
           </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
           <div
-            className="margin-bottom-205 line-height-body-3"
+            className="easi-review-row margin-bottom-3"
           >
-            <dt
-              className="text-bold margin-bottom-05"
+            <div
+              className="line-height-body-3"
             >
-              How does this effort align with organizational priorities?
-            </dt>
-            <dd
-              className="description-definition margin-0 text-pre-wrap"
-            >
-              Test priority alignment
-            </dd>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                How does this effort align with organizational priorities?
+              </dt>
+              <dd
+                className="description-definition margin-0 text-pre-wrap"
+              >
+                Test priority alignment
+              </dd>
+            </div>
           </div>
-        </div>
-        <div
-          className="easi-review-row"
-        >
           <div
-            className="margin-bottom-205 line-height-body-3"
+            className="easi-review-row margin-bottom-3"
           >
-            <dt
-              className="text-bold margin-bottom-05"
+            <div
+              className="line-height-body-3"
             >
-              How will you determine whether or not this effort is successful?
-            </dt>
-            <dd
-              className="description-definition margin-0 text-pre-wrap"
-            >
-              Test success indicators
-            </dd>
+              <dt
+                className="text-bold margin-bottom-05"
+              >
+                How will you determine whether or not this effort is successful?
+              </dt>
+              <dd
+                className="description-definition margin-0 text-pre-wrap"
+              >
+                Test success indicators
+              </dd>
+            </div>
           </div>
-        </div>
-      </dl>
+        </dl>
+      </div>
     </div>
     <div
       className="grid-container"
     >
       <h2
-        className="font-heading-xl margin-top-4 margin-bottom-2 easi-no-print"
+        className="font-heading-xl margin-top-4 easi-no-print"
       >
         Alternatives analysis
       </h2>
     </div>
     <div
-      className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper"
+      className="padding-bottom-8 alternative-analysis-wrapper"
     >
       <div
         className="grid-container"
@@ -483,7 +493,9 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
               <div
                 className="easi-review-row"
               >
-                <div>
+                <div
+                  className="margin-y-1"
+                >
                   <div
                     className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
                   >
@@ -738,7 +750,9 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
                 <div
                   className="easi-review-row"
                 >
-                  <div>
+                  <div
+                    className="margin-y-1"
+                  >
                     <dt
                       className="text-bold margin-bottom-05"
                     >
@@ -999,7 +1013,9 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
                 <div
                   className="easi-review-row"
                 >
-                  <div>
+                  <div
+                    className="margin-y-1"
+                  >
                     <dt
                       className="text-bold margin-bottom-05"
                     >
