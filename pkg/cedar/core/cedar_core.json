@@ -69,7 +69,7 @@
     "name" : "user",
     "description" : ""
   } ],
-  "schemes" : [ "http" ],
+  "schemes" : [ "https" ],
   "security" : [ {
     "apiKey" : [ ]
   } ],
