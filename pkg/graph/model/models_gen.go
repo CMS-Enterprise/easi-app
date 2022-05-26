@@ -280,13 +280,6 @@ type DeleteTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
-// This is the Representation of Cedar system with additional related information
-type DetailedCedarSystem struct {
-	CedarSystem *models.CedarSystem       `json:"cedarSystem"`
-	Roles       []*models.CedarRole       `json:"roles"`
-	Deployments []*models.CedarDeployment `json:"deployments"`
-}
-
 // Input associated with a document to be uploaded to a 508/accessibility request
 type GeneratePresignedUploadURLInput struct {
 	FileName string `json:"fileName"`

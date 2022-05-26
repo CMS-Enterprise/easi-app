@@ -115,15 +115,6 @@ type CedarSystemDetails {
 }
 
 """
-This is the Representation of Cedar system with additional related information
-"""
-type DetailedCedarSystem {
- cedarSystem: CedarSystem!
- roles: [CedarRole!]!
- deployments: [CedarDeployment!]!
-}
-
-"""
 Represents a user's bookmark of a cedar system
 """
 type CedarSystemBookmark {
@@ -1415,7 +1406,6 @@ type Query {
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
-  detailedCedarSystemInfo(cedarSystemId: String!): DetailedCedarSystem
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
 }

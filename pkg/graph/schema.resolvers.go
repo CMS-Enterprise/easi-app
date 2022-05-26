@@ -1601,42 +1601,6 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 	return cedarRoles, nil
 }
 
-func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystemID string) (*model.DetailedCedarSystem, error) {
-	g := new(errgroup.Group)
-	var cedarSystem *models.CedarSystem
-	var errS error
-	g.Go(func() error {
-		cedarSystem, errS = r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
-		return errS
-	})
-
-	var cedarRoles []*models.CedarRole
-	var errR error
-	g.Go(func() error {
-		cedarRoles, errS = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.String{})
-		return errR
-	})
-
-	var cedarDeployments []*models.CedarDeployment
-	var errD error
-
-	g.Go(func() error {
-		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, cedarSystemID, nil)
-		return errD
-	})
-	if err := g.Wait(); err != nil {
-		return nil, err
-	}
-
-	dCedarSys := model.DetailedCedarSystem{
-		CedarSystem: cedarSystem,
-		Roles:       cedarRoles,
-		Deployments: cedarDeployments,
-	}
-
-	return &dCedarSys, nil
-}
-
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
 	g := new(errgroup.Group)
 	var sysDetail *models.CedarSystemDetails
