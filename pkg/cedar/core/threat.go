@@ -25,7 +25,7 @@ func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models
 	}
 
 	// Use GetAuthorityToOperate to retrieve ATO for system
-	cedarATO, err := c.GetAuthorityToOperate(ctx, cedarSystem.VersionID)
+	cedarATOs, err := c.GetAuthorityToOperate(ctx, cedarSystem.VersionID)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models
 	var atoIDs []string
 
 	// Run through all ATO objects and append ATO ID(s) to id list
-	for _, ato := range cedarATO {
+	for _, ato := range cedarATOs {
 		atoIDs = append(atoIDs, ato.CedarID)
 	}
 
