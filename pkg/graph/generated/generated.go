@@ -4088,9 +4088,9 @@ type CedarSystem {
 BusinessOwnerInformation contains information about the business owner for a CEDAR system
 """
 type CedarBusinessOwnerInformation {
-	beneficiaryAddressPurpose: [String!]
+	beneficiaryAddressPurpose: [String!]!
 	beneficiaryAddressPurposeOther: String
-	beneficiaryAddressSource: [String!]
+	beneficiaryAddressSource: [String!]!
 	beneficiaryAddressSourceOther: String
 	costPerYear: String
 	isCmsOwned: Boolean
@@ -4121,7 +4121,7 @@ type CedarSystemMaintainerInformation {
 	omDocumentationOnDemand: Boolean
 	plansToRetireReplace: String
 	quarterToRetireReplace: String
-	recordsManagementBucket: [String!]
+	recordsManagementBucket: [String!]!
 	sourceCodeOnDemand: Boolean
 	systemCustomization: String
 	systemDesignOnDemand: Boolean
@@ -8868,11 +8868,14 @@ func (ec *executionContext) _CedarBusinessOwnerInformation_beneficiaryAddressPur
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]string)
 	fc.Result = res
-	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarBusinessOwnerInformation_beneficiaryAddressPurposeOther(ctx context.Context, field graphql.CollectedField, obj *model.CedarBusinessOwnerInformation) (ret graphql.Marshaler) {
@@ -8932,11 +8935,14 @@ func (ec *executionContext) _CedarBusinessOwnerInformation_beneficiaryAddressSou
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]string)
 	fc.Result = res
-	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarBusinessOwnerInformation_beneficiaryAddressSourceOther(ctx context.Context, field graphql.CollectedField, obj *model.CedarBusinessOwnerInformation) (ret graphql.Marshaler) {
@@ -11828,11 +11834,14 @@ func (ec *executionContext) _CedarSystemMaintainerInformation_recordsManagementB
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]string)
 	fc.Result = res
-	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarSystemMaintainerInformation_sourceCodeOnDemand(ctx context.Context, field graphql.CollectedField, obj *model.CedarSystemMaintainerInformation) (ret graphql.Marshaler) {
@@ -24517,6 +24526,9 @@ func (ec *executionContext) _CedarBusinessOwnerInformation(ctx context.Context, 
 
 			out.Values[i] = innerFunc(ctx)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "beneficiaryAddressPurposeOther":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CedarBusinessOwnerInformation_beneficiaryAddressPurposeOther(ctx, field, obj)
@@ -24531,6 +24543,9 @@ func (ec *executionContext) _CedarBusinessOwnerInformation(ctx context.Context, 
 
 			out.Values[i] = innerFunc(ctx)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "beneficiaryAddressSourceOther":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CedarBusinessOwnerInformation_beneficiaryAddressSourceOther(ctx, field, obj)
@@ -25749,6 +25764,9 @@ func (ec *executionContext) _CedarSystemMaintainerInformation(ctx context.Contex
 
 			out.Values[i] = innerFunc(ctx)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "sourceCodeOnDemand":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CedarSystemMaintainerInformation_sourceCodeOnDemand(ctx, field, obj)
@@ -31918,44 +31936,6 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	res := graphql.MarshalString(v)
 	return res
-}
-
-func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]string, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
-	}
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

@@ -58,9 +58,9 @@ type CedarSystem {
 BusinessOwnerInformation contains information about the business owner for a CEDAR system
 """
 type CedarBusinessOwnerInformation {
-	beneficiaryAddressPurpose: [String!]
+	beneficiaryAddressPurpose: [String!]!
 	beneficiaryAddressPurposeOther: String
-	beneficiaryAddressSource: [String!]
+	beneficiaryAddressSource: [String!]!
 	beneficiaryAddressSourceOther: String
 	costPerYear: String
 	isCmsOwned: Boolean
@@ -91,7 +91,7 @@ type CedarSystemMaintainerInformation {
 	omDocumentationOnDemand: Boolean
 	plansToRetireReplace: String
 	quarterToRetireReplace: String
-	recordsManagementBucket: [String!]
+	recordsManagementBucket: [String!]!
 	sourceCodeOnDemand: Boolean
 	systemCustomization: String
 	systemDesignOnDemand: Boolean
