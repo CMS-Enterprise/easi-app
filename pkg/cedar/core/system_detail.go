@@ -43,48 +43,48 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 
 	if busOwnerInfo := sys.BusinessOwnerInformation; busOwnerInfo != nil {
 		retVal.BusinessOwnerInformation = &models.BusinessOwnerInformation{
-			BeneficiaryAddressPurpose:      busOwnerInfo.BeneficiaryAddressPurpose,      // []string `json:"beneficiaryAddressPurpose"`
-			BeneficiaryAddressPurposeOther: busOwnerInfo.BeneficiaryAddressPurposeOther, // string   `json:"beneficiaryAddressPurposeOther,omitempty"`
-			BeneficiaryAddressSource:       busOwnerInfo.BeneficiaryAddressSource,       // []string `json:"beneficiaryAddressSource"`
-			BeneficiaryAddressSourceOther:  busOwnerInfo.BeneficiaryAddressSourceOther,  // string   `json:"beneficiaryAddressSourceOther,omitempty"`
-			CostPerYear:                    busOwnerInfo.CostPerYear,                    // string   `json:"costPerYear,omitempty"`
-			IsCmsOwned:                     busOwnerInfo.IsCmsOwned,                     // bool     `json:"isCmsOwned,omitempty"`
-			NumberOfContractorFte:          busOwnerInfo.NumberOfContractorFte,          // string   `json:"numberOfContractorFte,omitempty"`
-			NumberOfFederalFte:             busOwnerInfo.NumberOfFederalFte,             // string   `json:"numberOfFederalFte,omitempty"`
-			NumberOfSupportedUsersPerMonth: busOwnerInfo.NumberOfSupportedUsersPerMonth, // string   `json:"numberOfSupportedUsersPerMonth,omitempty"`
-			StoresBankingData:              busOwnerInfo.StoresBankingData,              // bool     `json:"storesBankingData,omitempty"`
-			StoresBeneficiaryAddress:       busOwnerInfo.StoresBeneficiaryAddress,       // bool     `json:"storesBeneficiaryAddress,omitempty"`
+			BeneficiaryAddressPurpose:      busOwnerInfo.BeneficiaryAddressPurpose,
+			BeneficiaryAddressPurposeOther: busOwnerInfo.BeneficiaryAddressPurposeOther,
+			BeneficiaryAddressSource:       busOwnerInfo.BeneficiaryAddressSource,
+			BeneficiaryAddressSourceOther:  busOwnerInfo.BeneficiaryAddressSourceOther,
+			CostPerYear:                    busOwnerInfo.CostPerYear,
+			IsCmsOwned:                     busOwnerInfo.IsCmsOwned,
+			NumberOfContractorFte:          busOwnerInfo.NumberOfContractorFte,
+			NumberOfFederalFte:             busOwnerInfo.NumberOfFederalFte,
+			NumberOfSupportedUsersPerMonth: busOwnerInfo.NumberOfSupportedUsersPerMonth,
+			StoresBankingData:              busOwnerInfo.StoresBankingData,
+			StoresBeneficiaryAddress:       busOwnerInfo.StoresBeneficiaryAddress,
 		}
 	}
 
 	if sysMaintInfo := sys.SystemMaintainerInformation; sysMaintInfo != nil {
 		retVal.SystemMaintainerInformation = &models.SystemMaintainerInformation{
-			AgileUsed:                  sysMaintInfo.AgileUsed,                     // bool     `json:"agileUsed,omitempty"`
-			BusinessArtifactsOnDemand:  sysMaintInfo.BusinessArtifactsOnDemand,     // bool     `json:"businessArtifactsOnDemand,omitempty"`
-			DeploymentFrequency:        sysMaintInfo.DeploymentFrequency,           // string   `json:"deploymentFrequency,omitempty"`
-			DevCompletionPercent:       sysMaintInfo.DevCompletionPercent,          // string   `json:"devCompletionPercent,omitempty"`
-			DevWorkDescription:         sysMaintInfo.DevWorkDescription,            // string   `json:"devWorkDescription,omitempty"`
-			EcapParticipation:          sysMaintInfo.EcapParticipation,             // bool     `json:"ecapParticipation,omitempty"`
-			FrontendAccessType:         sysMaintInfo.FrontendAccessType,            // string   `json:"frontendAccessType,omitempty"`
-			HardCodedIPAddress:         sysMaintInfo.HardCodedIPAddress,            // bool     `json:"hardCodedIpAddress,omitempty"`
-			IP6EnabledAssetPercent:     sysMaintInfo.Ip6EnabledAssetPercent,        // string   `json:"ip6EnabledAssetPercent,omitempty"`
-			IP6TransitionPlan:          sysMaintInfo.Ip6TransitionPlan,             // string   `json:"ip6TransitionPlan,omitempty"`
-			IPEnabledAssetCount:        sysMaintInfo.IPEnabledAssetCount,           // int32    `json:"ipEnabledAssetCount,omitempty"`
-			MajorRefreshDate:           sysMaintInfo.MajorRefreshDate.String(),     // string   `json:"majorRefreshDate,omitempty"`
-			NetAccessibility:           sysMaintInfo.NetAccessibility,              // string   `json:"netAccessibility,omitempty"`
-			OmDocumentationOnDemand:    sysMaintInfo.OmDocumentationOnDemand,       // bool     `json:"omDocumentationOnDemand,omitempty"`
-			PlansToRetireReplace:       sysMaintInfo.PlansToRetireReplace,          // string   `json:"plansToRetireReplace,omitempty"`
-			QuarterToRetireReplace:     sysMaintInfo.QuarterToRetireReplace,        // string   `json:"quarterToRetireReplace,omitempty"`
-			RecordsManagementBucket:    sysMaintInfo.RecordsManagementBucket,       // []string `json:"recordsManagementBucket"`
-			SourceCodeOnDemand:         sysMaintInfo.SourceCodeOnDemand,            // bool     `json:"sourceCodeOnDemand,omitempty"`
-			SystemCustomization:        sysMaintInfo.SystemCustomization,           // string   `json:"systemCustomization,omitempty"`
-			SystemDesignOnDemand:       sysMaintInfo.SystemDesignOnDemand,          // bool     `json:"systemDesignOnDemand,omitempty"`
-			SystemProductionDate:       sysMaintInfo.SystemProductionDate.String(), // string   `json:"systemProductionDate,omitempty"`
-			SystemRequirementsOnDemand: sysMaintInfo.SystemRequirementsOnDemand,    // bool     `json:"systemRequirementsOnDemand,omitempty"`
-			TestPlanOnDemand:           sysMaintInfo.TestPlanOnDemand,              // bool     `json:"testPlanOnDemand,omitempty"`
-			TestReportsOnDemand:        sysMaintInfo.TestReportsOnDemand,           // bool     `json:"testReportsOnDemand,omitempty"`
-			TestScriptsOnDemand:        sysMaintInfo.TestScriptsOnDemand,           // bool     `json:"testScriptsOnDemand,omitempty"`
-			YearToRetireReplace:        sysMaintInfo.YearToRetireReplace,           // string   `json:"yearToRetireReplace,omitempty"`
+			AgileUsed:                  sysMaintInfo.AgileUsed,
+			BusinessArtifactsOnDemand:  sysMaintInfo.BusinessArtifactsOnDemand,
+			DeploymentFrequency:        sysMaintInfo.DeploymentFrequency,
+			DevCompletionPercent:       sysMaintInfo.DevCompletionPercent,
+			DevWorkDescription:         sysMaintInfo.DevWorkDescription,
+			EcapParticipation:          sysMaintInfo.EcapParticipation,
+			FrontendAccessType:         sysMaintInfo.FrontendAccessType,
+			HardCodedIPAddress:         sysMaintInfo.HardCodedIPAddress,
+			IP6EnabledAssetPercent:     sysMaintInfo.Ip6EnabledAssetPercent,
+			IP6TransitionPlan:          sysMaintInfo.Ip6TransitionPlan,
+			IPEnabledAssetCount:        sysMaintInfo.IPEnabledAssetCount,
+			MajorRefreshDate:           sysMaintInfo.MajorRefreshDate.String(),
+			NetAccessibility:           sysMaintInfo.NetAccessibility,
+			OmDocumentationOnDemand:    sysMaintInfo.OmDocumentationOnDemand,
+			PlansToRetireReplace:       sysMaintInfo.PlansToRetireReplace,
+			QuarterToRetireReplace:     sysMaintInfo.QuarterToRetireReplace,
+			RecordsManagementBucket:    sysMaintInfo.RecordsManagementBucket,
+			SourceCodeOnDemand:         sysMaintInfo.SourceCodeOnDemand,
+			SystemCustomization:        sysMaintInfo.SystemCustomization,
+			SystemDesignOnDemand:       sysMaintInfo.SystemDesignOnDemand,
+			SystemProductionDate:       sysMaintInfo.SystemProductionDate.String(),
+			SystemRequirementsOnDemand: sysMaintInfo.SystemRequirementsOnDemand,
+			TestPlanOnDemand:           sysMaintInfo.TestPlanOnDemand,
+			TestReportsOnDemand:        sysMaintInfo.TestReportsOnDemand,
+			TestScriptsOnDemand:        sysMaintInfo.TestScriptsOnDemand,
+			YearToRetireReplace:        sysMaintInfo.YearToRetireReplace,
 		}
 	}
 	return retVal, nil
