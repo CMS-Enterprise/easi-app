@@ -65,7 +65,7 @@ const EstimatedLifecycleCostReview = ({
     totalDevelopmentCosts + totalOperationsMaintenanceCosts + totalOtherCosts;
 
   return (
-    <div>
+    <div className="margin-y-1">
       {sumOfTotalCosts === 0 && (
         <DescriptionTerm term="Requester indicated there is no associated cost with this solution" />
       )}

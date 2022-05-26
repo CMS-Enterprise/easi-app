@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
 import Divider from 'components/shared/Divider';
+import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
@@ -35,43 +36,55 @@ const BusinessCaseReview = ({
         linkPosition={helpArticle ? 'top' : 'bottom'}
       >
         <div className={helpArticle ? '' : 'grid-container'}>
-          {helpArticle && <Divider className="margin-top-5 margin-bottom-4" />}
-          <h2 className="font-heading-xl">General request information</h2>
-          <GeneralRequestInfoReview
-            values={{
-              requestName: values.requestName,
-              businessOwner: {
-                name: values.businessOwner.name
-              },
-              requester: {
-                name: values.requester.name,
-                phoneNumber: values.requester.phoneNumber
-              }
-            }}
-          />
+          <SectionWrapper
+            borderBottom={!!helpArticle}
+            borderTop={!!helpArticle}
+            className={
+              helpArticle ? 'request-information-wrapper margin-top-4' : ''
+            }
+          >
+            <h2 className="font-heading-xl margin-top-4">
+              General request information
+            </h2>
+            <GeneralRequestInfoReview
+              values={{
+                requestName: values.requestName,
+                businessOwner: {
+                  name: values.businessOwner.name
+                },
+                requester: {
+                  name: values.requester.name,
+                  phoneNumber: values.requester.phoneNumber
+                }
+              }}
+            />
+          </SectionWrapper>
 
-          {helpArticle && <Divider className="margin-top-5" />}
-
-          <h2 className="font-heading-xl margin-top-4">Request description</h2>
-          <RequestDescriptionReview
-            values={{
-              businessNeed: values.businessNeed,
-              currentSolutionSummary: values.currentSolutionSummary,
-              cmsBenefit: values.cmsBenefit,
-              priorityAlignment: values.priorityAlignment,
-              successIndicators: values.successIndicators
-            }}
-          />
+          <SectionWrapper
+            borderBottom={!!helpArticle}
+            className={helpArticle ? 'padding-bottom-3' : ''}
+          >
+            <h2 className="font-heading-xl margin-top-4">
+              Request description
+            </h2>
+            <RequestDescriptionReview
+              values={{
+                businessNeed: values.businessNeed,
+                currentSolutionSummary: values.currentSolutionSummary,
+                cmsBenefit: values.cmsBenefit,
+                priorityAlignment: values.priorityAlignment,
+                successIndicators: values.successIndicators
+              }}
+            />
+          </SectionWrapper>
         </div>
 
-        {helpArticle && <Divider />}
-
         <div className={helpArticle ? '' : 'grid-container'}>
-          <h2 className="font-heading-xl margin-top-4 margin-bottom-2 easi-no-print">
+          <h2 className="font-heading-xl margin-top-4 easi-no-print">
             Alternatives analysis
           </h2>
         </div>
-        <div className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
+        <div className="padding-bottom-8 alternative-analysis-wrapper">
           <div className={helpArticle ? '' : 'grid-container'}>
             <AlternativeAnalysisReview
               fiscalYear={
