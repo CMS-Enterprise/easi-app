@@ -26,7 +26,6 @@ interface sideNavProps {
 
 export type SystemProfileSubComponentProps = {
   system: tempCedarSystemProps;
-  componentId?: string;
 };
 
 // groupEnd value is used to designate the end of navigation related grouping
