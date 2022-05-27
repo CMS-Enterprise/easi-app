@@ -520,6 +520,54 @@ func (r *cedarRoleResolver) ObjectType(ctx context.Context, obj *models.CedarRol
 	return obj.ObjectType.Ptr(), nil
 }
 
+func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
+	ipEnabledCt := int(obj.SystemMaintainerInformation.IPEnabledAssetCount)
+	return &model.CedarSystemMaintainerInformation{
+		AgileUsed:                  &obj.SystemMaintainerInformation.AgileUsed,
+		BusinessArtifactsOnDemand:  &obj.SystemMaintainerInformation.BusinessArtifactsOnDemand,
+		DeploymentFrequency:        &obj.SystemMaintainerInformation.DeploymentFrequency,
+		DevCompletionPercent:       &obj.SystemMaintainerInformation.DevCompletionPercent,
+		DevWorkDescription:         &obj.SystemMaintainerInformation.DevWorkDescription,
+		EcapParticipation:          &obj.SystemMaintainerInformation.EcapParticipation,
+		FrontendAccessType:         &obj.SystemMaintainerInformation.FrontendAccessType,
+		HardCodedIPAddress:         &obj.SystemMaintainerInformation.HardCodedIPAddress,
+		IP6EnabledAssetPercent:     &obj.SystemMaintainerInformation.IP6EnabledAssetPercent,
+		IP6TransitionPlan:          &obj.SystemMaintainerInformation.IP6TransitionPlan,
+		IPEnabledAssetCount:        &ipEnabledCt,
+		MajorRefreshDate:           &obj.SystemMaintainerInformation.MajorRefreshDate,
+		NetAccessibility:           &obj.SystemMaintainerInformation.NetAccessibility,
+		OmDocumentationOnDemand:    &obj.SystemMaintainerInformation.OmDocumentationOnDemand,
+		PlansToRetireReplace:       &obj.SystemMaintainerInformation.PlansToRetireReplace,
+		QuarterToRetireReplace:     &obj.SystemMaintainerInformation.QuarterToRetireReplace,
+		RecordsManagementBucket:    obj.SystemMaintainerInformation.RecordsManagementBucket,
+		SourceCodeOnDemand:         &obj.SystemMaintainerInformation.SourceCodeOnDemand,
+		SystemCustomization:        &obj.SystemMaintainerInformation.SystemCustomization,
+		SystemDesignOnDemand:       &obj.SystemMaintainerInformation.SystemDesignOnDemand,
+		SystemProductionDate:       &obj.SystemMaintainerInformation.SystemProductionDate,
+		SystemRequirementsOnDemand: &obj.SystemMaintainerInformation.SystemRequirementsOnDemand,
+		TestPlanOnDemand:           &obj.SystemMaintainerInformation.TestPlanOnDemand,
+		TestReportsOnDemand:        &obj.SystemMaintainerInformation.TestReportsOnDemand,
+		TestScriptsOnDemand:        &obj.SystemMaintainerInformation.TestScriptsOnDemand,
+		YearToRetireReplace:        &obj.SystemMaintainerInformation.YearToRetireReplace,
+	}, nil
+}
+
+func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarBusinessOwnerInformation, error) {
+	return &model.CedarBusinessOwnerInformation{
+		BeneficiaryAddressPurpose:      obj.BusinessOwnerInformation.BeneficiaryAddressPurpose,
+		BeneficiaryAddressPurposeOther: &obj.BusinessOwnerInformation.BeneficiaryAddressPurposeOther,
+		BeneficiaryAddressSource:       obj.BusinessOwnerInformation.BeneficiaryAddressSource,
+		BeneficiaryAddressSourceOther:  &obj.BusinessOwnerInformation.BeneficiaryAddressSourceOther,
+		CostPerYear:                    &obj.BusinessOwnerInformation.CostPerYear,
+		IsCmsOwned:                     &obj.BusinessOwnerInformation.IsCmsOwned,
+		NumberOfContractorFte:          &obj.BusinessOwnerInformation.NumberOfContractorFte,
+		NumberOfFederalFte:             &obj.BusinessOwnerInformation.NumberOfFederalFte,
+		NumberOfSupportedUsersPerMonth: &obj.BusinessOwnerInformation.NumberOfSupportedUsersPerMonth,
+		StoresBankingData:              &obj.BusinessOwnerInformation.StoresBankingData,
+		StoresBeneficiaryAddress:       &obj.BusinessOwnerInformation.StoresBeneficiaryAddress,
+	}, nil
+}
+
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
@@ -1668,12 +1716,12 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 	return cedarRoles, nil
 }
 
-func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystemID string) (*model.DetailedCedarSystem, error) {
+func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
 	g := new(errgroup.Group)
-	var cedarSystem *models.CedarSystem
+	var sysDetail *models.CedarSystemDetails
 	var errS error
 	g.Go(func() error {
-		cedarSystem, errS = r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
+		sysDetail, errS = r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
 		return errS
 	})
 
@@ -1695,10 +1743,12 @@ func (r *queryResolver) DetailedCedarSystemInfo(ctx context.Context, cedarSystem
 		return nil, err
 	}
 
-	dCedarSys := model.DetailedCedarSystem{
-		CedarSystem: cedarSystem,
-		Roles:       cedarRoles,
-		Deployments: cedarDeployments,
+	dCedarSys := models.CedarSystemDetails{
+		CedarSystem:                 sysDetail.CedarSystem,
+		BusinessOwnerInformation:    sysDetail.BusinessOwnerInformation,
+		SystemMaintainerInformation: sysDetail.SystemMaintainerInformation,
+		Roles:                       cedarRoles,
+		Deployments:                 cedarDeployments,
 	}
 
 	return &dCedarSys, nil
@@ -2106,6 +2156,11 @@ func (r *Resolver) CedarDeployment() generated.CedarDeploymentResolver {
 // CedarRole returns generated.CedarRoleResolver implementation.
 func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleResolver{r} }
 
+// CedarSystemDetails returns generated.CedarSystemDetailsResolver implementation.
+func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
+	return &cedarSystemDetailsResolver{r}
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -2127,6 +2182,7 @@ type cedarAuthorityToOperateResolver struct{ *Resolver }
 type cedarDataCenterResolver struct{ *Resolver }
 type cedarDeploymentResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
+type cedarSystemDetailsResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
