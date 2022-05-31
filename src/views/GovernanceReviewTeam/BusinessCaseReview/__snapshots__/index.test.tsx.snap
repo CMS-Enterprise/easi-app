@@ -88,10 +88,10 @@ exports[`The GRT business case review matches the snapshot 1`] = `
       title="Request description"
     >
       <div
-        className="easi-review-row"
+        className="easi-review-row margin-bottom-3"
       >
         <div
-          className="margin-bottom-205 line-height-body-3"
+          className="line-height-body-3"
         >
           <dt
             className="text-bold margin-bottom-05"
@@ -106,10 +106,10 @@ exports[`The GRT business case review matches the snapshot 1`] = `
         </div>
       </div>
       <div
-        className="easi-review-row"
+        className="easi-review-row margin-bottom-3"
       >
         <div
-          className="margin-bottom-205 line-height-body-3"
+          className="line-height-body-3"
         >
           <dt
             className="text-bold margin-bottom-05"
@@ -124,10 +124,10 @@ exports[`The GRT business case review matches the snapshot 1`] = `
         </div>
       </div>
       <div
-        className="easi-review-row"
+        className="easi-review-row margin-bottom-3"
       >
         <div
-          className="margin-bottom-205 line-height-body-3"
+          className="line-height-body-3"
         >
           <dt
             className="text-bold margin-bottom-05"
@@ -142,10 +142,10 @@ exports[`The GRT business case review matches the snapshot 1`] = `
         </div>
       </div>
       <div
-        className="easi-review-row"
+        className="easi-review-row margin-bottom-3"
       >
         <div
-          className="margin-bottom-205 line-height-body-3"
+          className="line-height-body-3"
         >
           <dt
             className="text-bold margin-bottom-05"
@@ -160,10 +160,10 @@ exports[`The GRT business case review matches the snapshot 1`] = `
         </div>
       </div>
       <div
-        className="easi-review-row"
+        className="easi-review-row margin-bottom-3"
       >
         <div
-          className="margin-bottom-205 line-height-body-3"
+          className="line-height-body-3"
         >
           <dt
             className="text-bold margin-bottom-05"
@@ -232,6 +232,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
           Preferred solution
         </h3>
         <dl
+          className="margin-bottom-0"
           title="Preferred solution"
         >
           <div
@@ -397,7 +398,9 @@ exports[`The GRT business case review matches the snapshot 1`] = `
           <div
             className="easi-review-row"
           >
-            <div>
+            <div
+              className="margin-y-1"
+            >
               <div
                 className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2"
               >
@@ -419,7 +422,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
             </div>
           </div>
           <div
-            className="easi-review-row"
+            className="easi-review-row margin-bottom-0"
           >
             <div
               className="line-height-body-3"

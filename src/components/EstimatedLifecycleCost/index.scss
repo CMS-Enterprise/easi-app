@@ -59,41 +59,46 @@
     table-layout: fixed;
     border-collapse: collapse;
     width: 100%;
-
-    &--mobile {
-      width: 300px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-
-      &:last-of-type {
-        border-bottom: none;
-      }
-    }
   }
 
   &__review-table-caption {
-    margin-bottom: 1em;
-    font-size: 1.4rem;
+    margin-bottom: 1.5em;
     font-weight: bold;
     text-align: left;
   }
 
   &__review-th {
     &--col {
-      padding-bottom: 24px;
+      padding-bottom: 12px;
     }
 
     &--row {
-      width: 110px;
+      width: 140px;
     }
   }
 
   &__border {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid color('disabled-light');
   }
 
   &__help-box {
     border: 3px solid color('base-darkest');
     padding: 1rem;
     margin-bottom: 1rem;
+  }
+
+  &__review-table {
+    tr {
+      border-bottom: 1px solid color('disabled-light');
+      &:last-child:not(.est-lifecycle-cost__border) {
+        border-bottom: none;
+      }
+      th {
+        border: none !important;
+      }
+      td {
+        border: none !important;
+      }
+    }
   }
 }

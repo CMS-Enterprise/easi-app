@@ -65,7 +65,7 @@ const EstimatedLifecycleCostReview = ({
     totalDevelopmentCosts + totalOperationsMaintenanceCosts + totalOtherCosts;
 
   return (
-    <div>
+    <div className="margin-y-1">
       {sumOfTotalCosts === 0 && (
         <DescriptionTerm term="Requester indicated there is no associated cost with this solution" />
       )}
@@ -99,12 +99,12 @@ const EstimatedLifecycleCostReview = ({
                       <tbody>
                         <tr>
                           <th
-                            className="padding-y-2 text-right"
+                            className="padding-y-2 text-left"
                             aria-label={`Fiscal year ${yearMapping[year]}`}
                           >
                             {`FY ${yearMapping[year]}`}
                           </th>
-                          <td className="padding-y-2 text-right text-bold">
+                          <td className="padding-y-2 text-bold text-right">
                             {formatDollarsOrDash(
                               sum(
                                 Object.values(
@@ -124,14 +124,14 @@ const EstimatedLifecycleCostReview = ({
                           .map(cost => (
                             <tr key={cost}>
                               <th
-                                className="padding-y-2 text-right text-normal"
+                                className="padding-y-2 text-normal text-left"
                                 aria-label={`Fiscal year ${yearMapping[year]} ${
                                   data[cost as keyof LifecycleCosts].label
                                 } costs`}
                               >
                                 {data[cost as keyof LifecycleCosts].label}
                               </th>
-                              <td className="padding-y-2 text-right text-normal">
+                              <td className="padding-y-2 text-normal text-right">
                                 {formatDollarsOrDash(
                                   parseFloat(
                                     data[cost as keyof LifecycleCosts].years[
@@ -152,7 +152,7 @@ const EstimatedLifecycleCostReview = ({
             {matches.desktop && (
               <div
                 data-testid="est-lifecycle--desktop"
-                className="est-lifecycle-cost__review-table-wrapper bg-base-lightest margin-bottom-2"
+                className="est-lifecycle-cost__review-table-wrapper bg-base-lightest margin-bottom-2 padding-top-2 padding-bottom-1"
               >
                 <table className="est-lifecycle-cost__review-table">
                   <caption className="est-lifecycle-cost__review-table-caption">
@@ -189,7 +189,7 @@ const EstimatedLifecycleCostReview = ({
                           {Object.keys(yearMapping).map(year => (
                             <td
                               key={`${year}-${cost}-costs`}
-                              className="padding-y-3 text-right"
+                              className="padding-y-3 padding-x-2"
                             >
                               {formatDollarsOrDash(
                                 parseFloat(
@@ -202,7 +202,7 @@ const EstimatedLifecycleCostReview = ({
                           ))}
                           <td
                             data-testid={`total-${cost}-costs`}
-                            className="padding-y-3 text-right"
+                            className="padding-y-3 padding-x-2"
                           >
                             {formatDollarsOrDash(
                               sum(
@@ -219,7 +219,7 @@ const EstimatedLifecycleCostReview = ({
                       {Object.keys(yearMapping).map(year => (
                         <td
                           key={`${year}-costs`}
-                          className="padding-y-3 text-right"
+                          className="padding-y-3 padding-x-2"
                         >
                           {formatDollarsOrDash(
                             sum(
@@ -261,9 +261,9 @@ const TableHead = ({
 }) => (
   <th
     scope={scope}
-    className={classnames('text-bold', 'text-right', {
-      'est-lifecycle-cost__review-th--col': scope === 'col',
-      'est-lifecycle-cost__review-th--row': scope === 'row'
+    className={classnames('text-bold', 'text-left', {
+      'est-lifecycle-cost__review-th--col padding-x-2': scope === 'col',
+      'est-lifecycle-cost__review-th--row padding-right-2': scope === 'row'
     })}
     {...props}
   >
