@@ -19,13 +19,11 @@ func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models
 		return []*models.CedarThreat{}, nil
 	}
 
-	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
+	// NOTE: We do not need to use the GetSystem call or check the cache here b/c
+	//   the GetAuthorityToOperate call will do that when called below
 
 	// Use GetAuthorityToOperate to retrieve ATO for system
-	cedarATOs, err := c.GetAuthorityToOperate(ctx, cedarSystem.VersionID)
+	cedarATOs, err := c.GetAuthorityToOperate(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
 	}
