@@ -66,4 +66,6 @@ type CedarSystemDetails struct {
 	SystemMaintainerInformation *SystemMaintainerInformation
 	Roles                       []*CedarRole       `json:"roles"`
 	Deployments                 []*CedarDeployment `json:"deployments"`
+	Threats                     []*CedarThreat     `json:"threats"`
+	URLs                        []*CedarURL        `json:"urls"`
 }

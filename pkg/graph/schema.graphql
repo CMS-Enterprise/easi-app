@@ -159,6 +159,8 @@ type CedarSystemDetails {
  businessOwnerInformation: CedarBusinessOwnerInformation!
  roles: [CedarRole!]!
  deployments: [CedarDeployment!]!
+ threats: [CedarThreat!]!
+ urls: [CedarURL!]!
 }
 
 """
