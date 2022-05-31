@@ -12,7 +12,28 @@
   "host" : "webmethods-apigw.cedarimpl.cms.gov",
   "basePath" : "/gateway/CEDAR Core API/1.0.0",
   "tags" : [ {
+    "name" : "authority to operate",
+    "description" : ""
+  }, {
+    "name" : "cost type",
+    "description" : ""
+  }, {
+    "name" : "domain model",
+    "description" : ""
+  }, {
+    "name" : "organization",
+    "description" : ""
+  }, {
+    "name" : "support contact",
+    "description" : ""
+  }, {
+    "name" : "threat",
+    "description" : ""
+  }, {
     "name" : "url",
+    "description" : ""
+  }, {
+    "name" : "budget",
     "description" : ""
   }, {
     "name" : "authority to operate",
