@@ -61,10 +61,7 @@ func NewBudgetAddParamsWithHTTPClient(client *http.Client) *BudgetAddParams {
 */
 type BudgetAddParams struct {
 
-	/* Body.
-
-	   Budget(s) to be added to CEDAR.  This required input in a list of Budget documents.
-	*/
+	// Body.
 	Body *models.BudgetAddRequest
 
 	timeout    time.Duration

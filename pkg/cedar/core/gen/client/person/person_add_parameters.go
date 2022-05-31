@@ -61,10 +61,7 @@ func NewPersonAddParamsWithHTTPClient(client *http.Client) *PersonAddParams {
 */
 type PersonAddParams struct {
 
-	/* Body.
-
-	   Person information to be added to Alfabet.
-	*/
+	// Body.
 	Body *models.Person
 
 	timeout    time.Duration

@@ -27,6 +27,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/support_contact"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/threat"
+	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/url"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/user"
 )
 
@@ -43,7 +44,7 @@ const (
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
-var DefaultSchemes = []string{"https"}
+var DefaultSchemes = []string{"http"}
 
 // NewHTTPClient creates a new c e d a r core API HTTP client.
 func NewHTTPClient(formats strfmt.Registry) *CEDARCoreAPI {
@@ -89,6 +90,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CEDARCoreA
 	cli.SupportContact = support_contact.New(transport, formats)
 	cli.System = system.New(transport, formats)
 	cli.Threat = threat.New(transport, formats)
+	cli.URL = url.New(transport, formats)
 	cli.User = user.New(transport, formats)
 	return cli
 }
@@ -168,6 +170,8 @@ type CEDARCoreAPI struct {
 
 	Threat threat.ClientService
 
+	URL url.ClientService
+
 	User user.ClientService
 
 	Transport runtime.ClientTransport
@@ -193,5 +197,6 @@ func (c *CEDARCoreAPI) SetTransport(transport runtime.ClientTransport) {
 	c.SupportContact.SetTransport(transport)
 	c.System.SetTransport(transport)
 	c.Threat.SetTransport(transport)
+	c.URL.SetTransport(transport)
 	c.User.SetTransport(transport)
 }

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   Row,
+  SortingRule,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -52,9 +53,27 @@ import './index.scss';
 const RequestRepository = () => {
   type TableTypes = 'open' | 'closed';
   const isMobile = useCheckResponsiveScreen('tablet');
-  const [activeTable, setActiveTable] = useState<TableTypes>('open');
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
+
+  const [activeTable, setActiveTable] = useState<TableTypes>('open');
+
+  // Last sort states on active tables with their initial sort rules
+  const [lastSort, setLastSort] = useState<
+    Record<TableTypes, SortingRule<object>[]>
+  >({
+    open: [{ id: 'submittedAt', desc: true }],
+    closed: [{ id: 'lastAdminNote', desc: true }]
+  });
+
+  // Select an active table and restore its last sort state
+  function selectActiveTable(nextActiveTable: TableTypes) {
+    if (nextActiveTable === activeTable) return;
+    setLastSort(prev => ({ ...prev, [activeTable]: state.sortBy }));
+    setActiveTable(nextActiveTable);
+    setSortBy(lastSort[nextActiveTable]);
+  }
+
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
@@ -199,31 +218,35 @@ const RequestRepository = () => {
 
   const lastAdminNoteColumn = {
     Header: t('intake:fields.lastAdminNote'),
-    accessor: ({ lastAdminNote }: { lastAdminNote: LastAdminNote }) => {
-      if (lastAdminNote?.content) {
-        /* eslint react/prop-types: 0 */
-        return lastAdminNote.content;
-      }
-      return null;
-    },
-    Cell: ({ value }: any) => {
-      if (value) {
+    accessor: 'lastAdminNote',
+    Cell: ({ value }: { value: LastAdminNote }) => {
+      if (value !== null) {
         return (
           // Display admin note using truncated text field that
           // will display note with expandable extra text (if applicable)
-          <TruncatedText
-            id="last-admin-note"
-            label="less"
-            closeLabel="more"
-            text={value}
-            charLimit={freeFormTextCharLimit}
-          />
+          <>
+            {DateTime.fromISO(value.createdAt!).toLocaleString(
+              DateTime.DATE_FULL
+            )}
+            <TruncatedText
+              id="last-admin-note"
+              label="less"
+              closeLabel="more"
+              text={value.content!}
+              charLimit={freeFormTextCharLimit}
+            />
+          </>
         );
       }
 
       // If no admin note exits, display 'No Admin Notes'
       return 'No Admin Notes';
-    }
+    },
+    sortType: (a: Row<LastAdminNote>, b: Row<LastAdminNote>) =>
+      (a.values.lastAdminNote?.createdAt ?? '') >
+      (b.values.lastAdminNote?.createdAt ?? '')
+        ? 1
+        : -1
   };
 
   const columns: any = useMemo(() => {
@@ -279,7 +302,8 @@ const RequestRepository = () => {
     setGlobalFilter,
     state,
     page,
-    prepareRow
+    prepareRow,
+    setSortBy
   } = useTable(
     {
       columns,
@@ -296,7 +320,7 @@ const RequestRepository = () => {
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
+        sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
         pageSize: 50
       }
     },
@@ -346,7 +370,7 @@ const RequestRepository = () => {
             <button
               type="button"
               className="easi-request-repo__tab-btn"
-              onClick={() => setActiveTable('open')}
+              onClick={() => selectActiveTable('open')}
               aria-label={
                 activeTable === 'open' ? 'Open requests selected' : ''
               }
@@ -362,7 +386,7 @@ const RequestRepository = () => {
             <button
               type="button"
               className="easi-request-repo__tab-btn"
-              onClick={() => setActiveTable('closed')}
+              onClick={() => selectActiveTable('closed')}
               data-testid="view-closed-intakes-btn"
               aria-label={
                 activeTable === 'closed' ? 'Closed requests selected' : ''
