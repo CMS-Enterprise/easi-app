@@ -779,9 +779,9 @@ type BusinessCaseResolver interface {
 type CedarAuthorityToOperateResolver interface {
 	ActualDispositionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	ContainsPersonallyIdentifiableInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error)
-	CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
-	CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
-	CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
+	CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error)
+	CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error)
+	CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error)
 	DateAuthorizationMemoExpires(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	DateAuthorizationMemoSigned(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	EAuthenticationLevel(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error)
@@ -4492,9 +4492,9 @@ type CedarAuthorityToOperate {
   uuid: String!
   actualDispositionDate: Time
   containsPersonallyIdentifiableInformation: Boolean
-  countOfTotalNonPrivilegedUserPopulation: Int
-  countOfOpenPoams: Int
-  countOfTotalPrivilegedUserPopulation: Int
+  countOfTotalNonPrivilegedUserPopulation: Int!
+  countOfOpenPoams: Int!
+  countOfTotalPrivilegedUserPopulation: Int!
   dateAuthorizationMemoExpires: Time
   dateAuthorizationMemoSigned: Time
   eAuthenticationLevel: String
@@ -9577,11 +9577,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalNonPrivilegedUs
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_countOfOpenPoams(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9609,11 +9612,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfOpenPoams(ctx contex
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9641,11 +9647,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalPrivilegedUserP
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_dateAuthorizationMemoExpires(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -26570,6 +26579,9 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 					}
 				}()
 				res = ec._CedarAuthorityToOperate_countOfTotalNonPrivilegedUserPopulation(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -26587,6 +26599,9 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 					}
 				}()
 				res = ec._CedarAuthorityToOperate_countOfOpenPoams(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -26604,6 +26619,9 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 					}
 				}()
 				res = ec._CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
