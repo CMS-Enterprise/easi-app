@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guregu/null/zero"
-
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiurl "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/url"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -46,14 +44,13 @@ func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID string) ([]
 
 	// convert items in response payload to our models
 	for _, url := range resp.Payload.URLList {
-		// TODO - should bools be zero.Bool or null.Bool?
 		retVal = append(retVal, &models.CedarURL{
 			ID:                             *url.URLID,
-			Address:                        zero.StringFrom(url.Address),
-			IsBehindWebApplicationFirewall: zero.BoolFrom(url.IsBehindWebApplicationFirewall),
-			IsAPIEndpoint:                  zero.BoolFrom(url.IsAPIEndpoint),
-			IsVersionCodeRepository:        zero.BoolFrom(url.IsVersionCodeRepository),
-			URLHostingEnv:                  zero.StringFrom(url.URLHostingEnv),
+			Address:                        url.Address,
+			IsBehindWebApplicationFirewall: url.IsBehindWebApplicationFirewall,
+			IsAPIEndpoint:                  url.IsAPIEndpoint,
+			IsVersionCodeRepository:        url.IsVersionCodeRepository,
+			URLHostingEnv:                  url.URLHostingEnv,
 		})
 	}
 

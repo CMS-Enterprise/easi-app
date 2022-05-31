@@ -50,7 +50,6 @@ type ResolverRoot interface {
 	CedarRole() CedarRoleResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
 	CedarThreat() CedarThreatResolver
-	CedarURL() CedarURLResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
@@ -861,13 +860,6 @@ type CedarThreatResolver interface {
 	ParentID(ctx context.Context, obj *models.CedarThreat) (*string, error)
 	Type(ctx context.Context, obj *models.CedarThreat) (*string, error)
 	WeaknessRiskLevel(ctx context.Context, obj *models.CedarThreat) (*string, error)
-}
-type CedarURLResolver interface {
-	Address(ctx context.Context, obj *models.CedarURL) (*string, error)
-	IsBehindWebApplicationFirewall(ctx context.Context, obj *models.CedarURL) (*bool, error)
-	IsAPIEndpoint(ctx context.Context, obj *models.CedarURL) (*bool, error)
-	IsVersionCodeRepository(ctx context.Context, obj *models.CedarURL) (*bool, error)
-	URLHostingEnv(ctx context.Context, obj *models.CedarURL) (*string, error)
 }
 type MutationResolver interface {
 	AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
@@ -13891,14 +13883,14 @@ func (ec *executionContext) _CedarURL_address(ctx context.Context, field graphql
 		Object:     "CedarURL",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarURL().Address(rctx, obj)
+		return obj.Address, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13907,9 +13899,9 @@ func (ec *executionContext) _CedarURL_address(ctx context.Context, field graphql
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarURL_isBehindWebApplicationFirewall(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
@@ -13923,14 +13915,14 @@ func (ec *executionContext) _CedarURL_isBehindWebApplicationFirewall(ctx context
 		Object:     "CedarURL",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarURL().IsBehindWebApplicationFirewall(rctx, obj)
+		return obj.IsBehindWebApplicationFirewall, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13939,9 +13931,9 @@ func (ec *executionContext) _CedarURL_isBehindWebApplicationFirewall(ctx context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarURL_isAPIEndpoint(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
@@ -13955,14 +13947,14 @@ func (ec *executionContext) _CedarURL_isAPIEndpoint(ctx context.Context, field g
 		Object:     "CedarURL",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarURL().IsAPIEndpoint(rctx, obj)
+		return obj.IsAPIEndpoint, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13971,9 +13963,9 @@ func (ec *executionContext) _CedarURL_isAPIEndpoint(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarURL_isVersionCodeRepository(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
@@ -13987,14 +13979,14 @@ func (ec *executionContext) _CedarURL_isVersionCodeRepository(ctx context.Contex
 		Object:     "CedarURL",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarURL().IsVersionCodeRepository(rctx, obj)
+		return obj.IsVersionCodeRepository, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14003,9 +13995,9 @@ func (ec *executionContext) _CedarURL_isVersionCodeRepository(ctx context.Contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarURL_urlHostingEnv(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
@@ -14019,14 +14011,14 @@ func (ec *executionContext) _CedarURL_urlHostingEnv(ctx context.Context, field g
 		Object:     "CedarURL",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarURL().URLHostingEnv(rctx, obj)
+		return obj.URLHostingEnv, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14035,9 +14027,9 @@ func (ec *executionContext) _CedarURL_urlHostingEnv(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ContractDate_day(ctx context.Context, field graphql.CollectedField, obj *model.ContractDate) (ret graphql.Marshaler) {
@@ -28480,93 +28472,43 @@ func (ec *executionContext) _CedarURL(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "address":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CedarURL_address(ctx, field, obj)
-				return res
+				return ec._CedarURL_address(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
 		case "isBehindWebApplicationFirewall":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CedarURL_isBehindWebApplicationFirewall(ctx, field, obj)
-				return res
+				return ec._CedarURL_isBehindWebApplicationFirewall(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
 		case "isAPIEndpoint":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CedarURL_isAPIEndpoint(ctx, field, obj)
-				return res
+				return ec._CedarURL_isAPIEndpoint(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
 		case "isVersionCodeRepository":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CedarURL_isVersionCodeRepository(ctx, field, obj)
-				return res
+				return ec._CedarURL_isVersionCodeRepository(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
 		case "urlHostingEnv":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CedarURL_urlHostingEnv(ctx, field, obj)
-				return res
+				return ec._CedarURL_urlHostingEnv(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

@@ -596,26 +596,6 @@ func (r *cedarThreatResolver) WeaknessRiskLevel(ctx context.Context, obj *models
 	return obj.WeaknessRiskLevel.Ptr(), nil
 }
 
-func (r *cedarURLResolver) Address(ctx context.Context, obj *models.CedarURL) (*string, error) {
-	return obj.Address.Ptr(), nil
-}
-
-func (r *cedarURLResolver) IsBehindWebApplicationFirewall(ctx context.Context, obj *models.CedarURL) (*bool, error) {
-	return obj.IsBehindWebApplicationFirewall.Ptr(), nil
-}
-
-func (r *cedarURLResolver) IsAPIEndpoint(ctx context.Context, obj *models.CedarURL) (*bool, error) {
-	return obj.IsAPIEndpoint.Ptr(), nil
-}
-
-func (r *cedarURLResolver) IsVersionCodeRepository(ctx context.Context, obj *models.CedarURL) (*bool, error) {
-	return obj.IsVersionCodeRepository.Ptr(), nil
-}
-
-func (r *cedarURLResolver) URLHostingEnv(ctx context.Context, obj *models.CedarURL) (*string, error) {
-	return obj.URLHostingEnv.Ptr(), nil
-}
-
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
@@ -2233,9 +2213,6 @@ func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 // CedarThreat returns generated.CedarThreatResolver implementation.
 func (r *Resolver) CedarThreat() generated.CedarThreatResolver { return &cedarThreatResolver{r} }
 
-// CedarURL returns generated.CedarURLResolver implementation.
-func (r *Resolver) CedarURL() generated.CedarURLResolver { return &cedarURLResolver{r} }
-
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -2259,7 +2236,6 @@ type cedarDeploymentResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
-type cedarURLResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
