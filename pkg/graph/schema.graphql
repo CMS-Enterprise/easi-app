@@ -89,10 +89,74 @@ type CedarSystem {
 }
 
 """
+CedarThreat represents the response from the /threat endpoint from the CEDAR Core API.
+"""
+type CedarThreat {
+  alternativeId: String
+  controlFamily: String
+  daysOpen: Int
+  id: String
+  parentId: String
+  type: String
+  weaknessRiskLevel: String
+}
+
+"""
+BusinessOwnerInformation contains information about the business owner for a CEDAR system
+"""
+type CedarBusinessOwnerInformation {
+	beneficiaryAddressPurpose: [String!]!
+	beneficiaryAddressPurposeOther: String
+	beneficiaryAddressSource: [String!]!
+	beneficiaryAddressSourceOther: String
+	costPerYear: String
+	isCmsOwned: Boolean
+	numberOfContractorFte: String
+	numberOfFederalFte: String
+	numberOfSupportedUsersPerMonth: String
+	storesBankingData: Boolean
+	storesBeneficiaryAddress: Boolean
+}
+
+"""
+SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
+"""
+type CedarSystemMaintainerInformation {
+	agileUsed: Boolean
+	businessArtifactsOnDemand: Boolean
+	deploymentFrequency: String
+	devCompletionPercent: String
+	devWorkDescription: String
+	ecapParticipation: Boolean
+	frontendAccessType: String
+	hardCodedIPAddress: Boolean
+	ip6EnabledAssetPercent: String
+	ip6TransitionPlan: String
+	ipEnabledAssetCount: Int
+	majorRefreshDate: String
+	netAccessibility: String
+	omDocumentationOnDemand: Boolean
+	plansToRetireReplace: String
+	quarterToRetireReplace: String
+	recordsManagementBucket: [String!]!
+	sourceCodeOnDemand: Boolean
+	systemCustomization: String
+	systemDesignOnDemand: Boolean
+	systemProductionDate: String
+	systemRequirementsOnDemand: Boolean
+	testPlanOnDemand: Boolean
+	testReportsOnDemand: Boolean
+	testScriptsOnDemand: Boolean
+	yearToRetireReplace: String
+}
+
+"""
 This is the Representation of Cedar system with additional related information
 """
-type DetailedCedarSystem {
+type CedarSystemDetails {
  cedarSystem: CedarSystem!
+ systemMaintainerInformation: CedarSystemMaintainerInformation!
+ businessOwnerInformation: CedarBusinessOwnerInformation!
  roles: [CedarRole!]!
  deployments: [CedarDeployment!]!
 }
@@ -1394,9 +1458,10 @@ type Query {
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
+  cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
-  detailedCedarSystemInfo(cedarSystemId: String!): DetailedCedarSystem
+  cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
 }
 

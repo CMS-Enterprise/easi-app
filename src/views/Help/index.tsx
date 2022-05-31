@@ -6,6 +6,7 @@ import NotFound from 'views/NotFound';
 import NewSystem from './ITGovernance/NewSystem';
 import PrepareForGRB from './ITGovernance/PrepareForGRB';
 import PrepareForGRT from './ITGovernance/PrepareForGRT';
+import SampleBusinessCase from './ITGovernance/SampleBusinessCase';
 import StepsInvolved from './Section508/StepsInvolved';
 import TestingTemplates from './Section508/TestingTemplate';
 import AllHelp from './All';
@@ -35,6 +36,10 @@ const Help = () => {
       <Route
         path="/help/it-governance/steps-overview/new-system"
         render={() => <NewSystem />}
+      />
+      <Route
+        path="/help/it-governance/sample-business-case"
+        render={() => <SampleBusinessCase />}
       />
 
       {/* Section 508 Help Routes */}
