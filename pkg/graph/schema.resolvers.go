@@ -1767,6 +1767,7 @@ func (r *queryResolver) Urls(ctx context.Context, cedarSystemID string) ([]*mode
 
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
 	g := new(errgroup.Group)
+
 	var sysDetail *models.CedarSystemDetails
 	var errS error
 	g.Go(func() error {
@@ -1783,11 +1784,25 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 
 	var cedarDeployments []*models.CedarDeployment
 	var errD error
-
 	g.Go(func() error {
 		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, cedarSystemID, nil)
 		return errD
 	})
+
+	var cedarThreats []*models.CedarThreat
+	var errT error
+	g.Go(func() error {
+		cedarThreats, errT = r.cedarCoreClient.GetThreat(ctx, cedarSystemID)
+		return errT
+	})
+
+	var cedarURLs []*models.CedarURL
+	var errU error
+	g.Go(func() error {
+		cedarURLs, errU = r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
+		return errU
+	})
+
 	if err := g.Wait(); err != nil {
 		return nil, err
 	}
@@ -1798,6 +1813,8 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 		SystemMaintainerInformation: sysDetail.SystemMaintainerInformation,
 		Roles:                       cedarRoles,
 		Deployments:                 cedarDeployments,
+		Threats:                     cedarThreats,
+		URLs:                        cedarURLs,
 	}
 
 	return &dCedarSys, nil
