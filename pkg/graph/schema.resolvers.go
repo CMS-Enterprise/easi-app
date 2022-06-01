@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1661,10 +1660,6 @@ func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystem
 		return nil, err
 	}
 
-	if len(cedarATO) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no ATOs found"), Resource: []*models.CedarAuthorityToOperate{}}
-	}
-
 	return cedarATO, nil
 }
 
@@ -1732,10 +1727,6 @@ func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, d
 		return nil, err
 	}
 
-	if len(cedarDeployments) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no deployments found"), Resource: []*models.CedarDeployment{}}
-	}
-
 	return cedarDeployments, nil
 }
 
@@ -1743,10 +1734,6 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.StringFromPtr(roleTypeID))
 	if err != nil {
 		return nil, err
-	}
-
-	if len(cedarRoles) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no roles found"), Resource: []*models.CedarRole{}}
 	}
 
 	return cedarRoles, nil
@@ -1757,11 +1744,6 @@ func (r *queryResolver) Urls(ctx context.Context, cedarSystemID string) ([]*mode
 	if err != nil {
 		return nil, err
 	}
-
-	if len(cedarURLs) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no URLs found"), Resource: []*models.CedarURL{}}
-	}
-
 	return cedarURLs, nil
 }
 
