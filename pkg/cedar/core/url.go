@@ -10,9 +10,10 @@ import (
 )
 
 // GetURLsForSystem queries CEDAR for URLs associated with a particular system, taking the version-independent ID of a system
-// note: CEDAR's /url/{id} endpoint theoretically supports querying for URLs associated with any sort of CEDAR object;
-// however, this assumes the parameter is a version-independent system ID.
-// If we need to look up URLs based on something other than systems, we will need to create another method
+//
+// Note: CEDAR's /url/{id} endpoint theoretically supports querying for URLs associated with any sort of CEDAR object;
+// however, this method assumes that the parameter is a version-independent system ID.
+// If we need to look up URLs based on something other than systems, we will need to create another method.
 func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")

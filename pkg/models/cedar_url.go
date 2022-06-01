@@ -6,9 +6,10 @@ type CedarURL struct {
 	ID string
 
 	// possibly-null fields
-	Address                        string // the actual URL
+
+	Address                        string // The actual URL.
 	IsBehindWebApplicationFirewall bool
 	IsAPIEndpoint                  bool
-	IsVersionCodeRepository        bool   // does this URL provide access to a versioned code repository?
-	URLHostingEnv                  string // should correspond with .DeploymentType on a CedarDeployment object
+	IsVersionCodeRepository        bool   // Represents whether this URL provides access to a versioned code repository.
+	URLHostingEnv                  string // This should correspond with .DeploymentType on a CedarDeployment object.
 }
