@@ -45,9 +45,9 @@ type CedarAuthorityToOperate {
   uuid: String!
   actualDispositionDate: Time
   containsPersonallyIdentifiableInformation: Boolean
-  countOfTotalNonPrivilegedUserPopulation: Int
-  countOfOpenPoams: Int
-  countOfTotalPrivilegedUserPopulation: Int
+  countOfTotalNonPrivilegedUserPopulation: Int!
+  countOfOpenPoams: Int!
+  countOfTotalPrivilegedUserPopulation: Int!
   dateAuthorizationMemoExpires: Time
   dateAuthorizationMemoSigned: Time
   eAuthenticationLevel: String
@@ -159,6 +159,8 @@ type CedarSystemDetails {
  businessOwnerInformation: CedarBusinessOwnerInformation!
  roles: [CedarRole!]!
  deployments: [CedarDeployment!]!
+ threats: [CedarThreat!]!
+ urls: [CedarURL!]!
 }
 
 """
@@ -270,6 +272,18 @@ type CedarRole {
   roleTypeDesc: String
   roleID: String
   objectType: String
+}
+
+"""
+CedarURL represents info about a URL associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+"""
+type CedarURL {
+  id: String!
+  address: String
+  isBehindWebApplicationFirewall: Boolean
+  isAPIEndpoint: Boolean
+  isVersionCodeRepository: Boolean
+  urlHostingEnv: String
 }
 
 """
@@ -1461,6 +1475,7 @@ type Query {
   cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
+  urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
 }

@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -276,16 +275,16 @@ func (r *cedarAuthorityToOperateResolver) ContainsPersonallyIdentifiableInformat
 	return obj.ContainsPersonallyIdentifiableInformation.Ptr(), nil
 }
 
-func (r *cedarAuthorityToOperateResolver) CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	return zeroIntToIntPtr(obj.CountOfTotalNonPrivilegedUserPopulation), nil
+func (r *cedarAuthorityToOperateResolver) CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
+	return int(obj.CountOfTotalNonPrivilegedUserPopulation.ValueOrZero()), nil
 }
 
-func (r *cedarAuthorityToOperateResolver) CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	return zeroIntToIntPtr(obj.CountOfOpenPoams), nil
+func (r *cedarAuthorityToOperateResolver) CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
+	return int(obj.CountOfOpenPoams.ValueOrZero()), nil
 }
 
-func (r *cedarAuthorityToOperateResolver) CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	return zeroIntToIntPtr(obj.CountOfTotalPrivilegedUserPopulation), nil
+func (r *cedarAuthorityToOperateResolver) CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
+	return int(obj.CountOfTotalPrivilegedUserPopulation.ValueOrZero()), nil
 }
 
 func (r *cedarAuthorityToOperateResolver) DateAuthorizationMemoExpires(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
@@ -1661,10 +1660,6 @@ func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystem
 		return nil, err
 	}
 
-	if len(cedarATO) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no ATOs found"), Resource: []*models.CedarAuthorityToOperate{}}
-	}
-
 	return cedarATO, nil
 }
 
@@ -1732,10 +1727,6 @@ func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, d
 		return nil, err
 	}
 
-	if len(cedarDeployments) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no deployments found"), Resource: []*models.CedarDeployment{}}
-	}
-
 	return cedarDeployments, nil
 }
 
@@ -1745,15 +1736,20 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 		return nil, err
 	}
 
-	if len(cedarRoles) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no roles found"), Resource: []*models.CedarRole{}}
-	}
-
 	return cedarRoles, nil
+}
+
+func (r *queryResolver) Urls(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error) {
+	cedarURLs, err := r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+	return cedarURLs, nil
 }
 
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
 	g := new(errgroup.Group)
+
 	var sysDetail *models.CedarSystemDetails
 	var errS error
 	g.Go(func() error {
@@ -1770,11 +1766,25 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 
 	var cedarDeployments []*models.CedarDeployment
 	var errD error
-
 	g.Go(func() error {
 		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, cedarSystemID, nil)
 		return errD
 	})
+
+	var cedarThreats []*models.CedarThreat
+	var errT error
+	g.Go(func() error {
+		cedarThreats, errT = r.cedarCoreClient.GetThreat(ctx, cedarSystemID)
+		return errT
+	})
+
+	var cedarURLs []*models.CedarURL
+	var errU error
+	g.Go(func() error {
+		cedarURLs, errU = r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
+		return errU
+	})
+
 	if err := g.Wait(); err != nil {
 		return nil, err
 	}
@@ -1785,6 +1795,8 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 		SystemMaintainerInformation: sysDetail.SystemMaintainerInformation,
 		Roles:                       cedarRoles,
 		Deployments:                 cedarDeployments,
+		Threats:                     cedarThreats,
+		URLs:                        cedarURLs,
 	}
 
 	return &dCedarSys, nil
