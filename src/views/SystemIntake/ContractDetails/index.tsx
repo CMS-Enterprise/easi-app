@@ -54,6 +54,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     fundingSource: {
       isFunded: fundingSource.isFunded,
       fundingNumber: fundingSource.fundingNumber || '',
+      // TODO: Update empty string to empty array after backend work is completed
       source: fundingSource.source || ''
     },
     costs: {
@@ -232,25 +233,25 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             id="IntakeForm-FundingSource"
                             name="fundingSource.source"
                             options={fundingSources}
-                            onChange={(
-                              value: { label: string; value: string }[]
-                            ) =>
+                            selectedLabel="Selected models"
+                            // Workaround to convert array to/from comma separated string
+                            // TODO: Delete after backend work is completed
+                            onChange={(value: string[] | []) => {
                               setFieldValue(
                                 'fundingSource.source',
-                                value.map(option => option.label).join()
-                              )
-                            }
+                                value.join()
+                              );
+                            }}
                             initialValues={
                               initialValues.fundingSource.source
-                                ? initialValues.fundingSource.source
-                                    .split(',')
-                                    .map(option => ({
-                                      label: option,
-                                      value: option
-                                    }))
+                                ? initialValues.fundingSource.source.split(',')
                                 : []
                             }
-                            selectedLabel="Selected models"
+                            // TODO: Uncomment after backend work is completed
+                            // onChange={(value: string[] | []) => {
+                            //   setFieldValue('fundingSource.source', value);
+                            // }}
+                            // initialValues={initialValues.fundingSource.source}
                           />
                         </FieldGroup>
                         <FieldGroup

@@ -5,15 +5,10 @@ import classNames from 'classnames';
 
 import './index.scss';
 
-type OptionType = {
-  label: string;
-  value: string | number;
-};
-
 type OptionsProps = {
-  options: OptionType[];
-  selected: OptionType[];
-  optionClick: (option: OptionType) => void;
+  options: string[];
+  selected: string[];
+  optionClick: (option: string) => void;
 };
 
 const Options = ({ options, selected, optionClick }: OptionsProps) => {
@@ -21,24 +16,21 @@ const Options = ({ options, selected, optionClick }: OptionsProps) => {
   return (
     <ul className="easi-multiselect__options usa-list--unstyled padding-y-05 border-1px border-top-0 maxh-card overflow-scroll position-absolute right-0 left-0 z-top bg-white">
       {options.map(option => {
-        const isChecked = selected.some(
-          object => object.value === option.value
-        );
         return (
           <li
             className="display-flex flex-align-center padding-y-05 padding-x-1"
-            key={option.value}
+            key={option}
             role="option"
-            aria-selected={isChecked}
+            aria-selected={selected.includes(option)}
           >
             <label>
               <input
                 className="margin-right-1"
                 type="checkbox"
-                checked={isChecked}
+                checked={selected.includes(option)}
                 onChange={() => optionClick(option)}
               />
-              {t(option.label)}
+              {t(option)}
             </label>
           </li>
         );
@@ -50,11 +42,10 @@ const Options = ({ options, selected, optionClick }: OptionsProps) => {
 type MultiSelectProps = {
   className?: string;
   id?: string;
-  placeholder?: string;
-  options: OptionType[];
+  options: string[];
   selectedLabel?: string;
-  onChange: (value: OptionType[]) => void;
-  initialValues: OptionType[];
+  onChange: (value: string[]) => void;
+  initialValues: string[];
 };
 
 export default function MultiSelect({
@@ -73,25 +64,17 @@ export default function MultiSelect({
   const { t } = useTranslation();
   const selectRef = useRef(null);
 
-  const optionClick = (option: OptionType) => {
-    if (
-      selected.some(selectedOption => selectedOption.value === option.value)
-    ) {
-      setSelected(
-        selected.filter(selectedOption => selectedOption.value !== option.value)
-      );
+  const optionClick = (option: string) => {
+    if (selected.includes(option)) {
+      setSelected(selected.filter(selectedOption => selectedOption !== option));
     } else {
       setSelected([...selected, option]);
     }
   };
 
-  const handleSearch = (value: string) => {
-    setSearchValue(value);
-  };
-
   const filterSearchResults = () => {
-    const searchIndex = (option: OptionType) => {
-      return option.label.toLowerCase().search(searchValue);
+    const searchIndex = (option: string) => {
+      return option.toLowerCase().search(searchValue);
     };
     return options
       .filter(option => searchIndex(option) > -1)
@@ -131,7 +114,7 @@ export default function MultiSelect({
             value={searchValue}
             placeholder={t(`${selected.length} selected`)}
             onClick={() => setActive(true)}
-            onChange={e => handleSearch(e.target.value)}
+            onChange={e => setSearchValue(e.target.value)}
           />
         </div>
         {active && (
@@ -148,11 +131,11 @@ export default function MultiSelect({
           <ul className="usa-list--unstyled margin-top-1">
             {selected.map(option => (
               <li
-                key={option.value}
+                key={option}
                 className="display-flex flex-justify-start margin-y-05"
               >
                 <Tag className="bg-primary-lighter text-ink text-no-uppercase padding-y-1 padding-x-105 display-flex flex-align-center">
-                  {option.label}
+                  {option}
                   <IconClose
                     className="margin-left-1"
                     onClick={() => optionClick(option)}
