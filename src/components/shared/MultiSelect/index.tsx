@@ -63,8 +63,6 @@ type MultiSelectProps = {
   placeholder?: string;
   options: OptionType[];
   selectedLabel?: string;
-  tags?: boolean;
-  disabled?: boolean;
   onChange: (value: OptionType[]) => void;
   initialValues: OptionType[];
 };
@@ -102,10 +100,20 @@ export default function MultiSelect({
     setSearchValue(value);
   };
 
+  const filterSearchResults = () => {
+    const searchIndex = (option: OptionType) => {
+      return option.label.toLowerCase().search(searchValue);
+    };
+    return options
+      .filter(option => searchIndex(option) > -1)
+      .sort((a, b) => searchIndex(a) - searchIndex(b));
+  };
+
   useEffect(() => {
     function handleClickOutside(e) {
       if (selectRef.current && !selectRef.current.contains(e.target)) {
         setActive(false);
+        setSearchValue('');
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -138,7 +146,7 @@ export default function MultiSelect({
         </div>
         {active && (
           <Options
-            options={options}
+            options={searchValue ? filterSearchResults() : options}
             selected={selected}
             optionClick={optionClick}
           />
