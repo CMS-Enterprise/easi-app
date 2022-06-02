@@ -5,6 +5,7 @@ package models
 
 // EASIGrtFeedback represents an item of feedback from the Governance Review team
 type EASIGrtFeedback struct {
+	FeedbackID   string `json:"feedbackId" jsonschema:"description=Unique UUID of this item of feedback,example=fa62c23b-c16f-497b-9bb6-c42166e82b93"`
 	Feedback     string `json:"feedback"`
 	FeedbackType string `json:"feedbackType"`
 	IntakeID     string `json:"intakeId"`

@@ -24,12 +24,16 @@ func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeConta
 		INSERT INTO system_intake_contacts (
 			eua_user_id,
 			system_intake_id,
-			created_at
+			created_at,
+			role,
+			component
 		)
 		VALUES (
 			:eua_user_id,
 			:system_intake_id,
-			:created_at
+			:created_at,
+			:role,
+			:component
 		) ON CONFLICT ON CONSTRAINT system_intake_contacts_pkey DO UPDATE SET created_at = :created_at`
 	_, err := s.db.NamedExecContext(
 		ctx,

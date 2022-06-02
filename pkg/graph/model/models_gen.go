@@ -65,6 +65,51 @@ type BusinessCaseSolution struct {
 	Title                   *string `json:"title"`
 }
 
+// BusinessOwnerInformation contains information about the business owner for a CEDAR system
+type CedarBusinessOwnerInformation struct {
+	BeneficiaryAddressPurpose      []string `json:"beneficiaryAddressPurpose"`
+	BeneficiaryAddressPurposeOther *string  `json:"beneficiaryAddressPurposeOther"`
+	BeneficiaryAddressSource       []string `json:"beneficiaryAddressSource"`
+	BeneficiaryAddressSourceOther  *string  `json:"beneficiaryAddressSourceOther"`
+	CostPerYear                    *string  `json:"costPerYear"`
+	IsCmsOwned                     *bool    `json:"isCmsOwned"`
+	NumberOfContractorFte          *string  `json:"numberOfContractorFte"`
+	NumberOfFederalFte             *string  `json:"numberOfFederalFte"`
+	NumberOfSupportedUsersPerMonth *string  `json:"numberOfSupportedUsersPerMonth"`
+	StoresBankingData              *bool    `json:"storesBankingData"`
+	StoresBeneficiaryAddress       *bool    `json:"storesBeneficiaryAddress"`
+}
+
+// SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
+type CedarSystemMaintainerInformation struct {
+	AgileUsed                  *bool    `json:"agileUsed"`
+	BusinessArtifactsOnDemand  *bool    `json:"businessArtifactsOnDemand"`
+	DeploymentFrequency        *string  `json:"deploymentFrequency"`
+	DevCompletionPercent       *string  `json:"devCompletionPercent"`
+	DevWorkDescription         *string  `json:"devWorkDescription"`
+	EcapParticipation          *bool    `json:"ecapParticipation"`
+	FrontendAccessType         *string  `json:"frontendAccessType"`
+	HardCodedIPAddress         *bool    `json:"hardCodedIPAddress"`
+	IP6EnabledAssetPercent     *string  `json:"ip6EnabledAssetPercent"`
+	IP6TransitionPlan          *string  `json:"ip6TransitionPlan"`
+	IPEnabledAssetCount        *int     `json:"ipEnabledAssetCount"`
+	MajorRefreshDate           *string  `json:"majorRefreshDate"`
+	NetAccessibility           *string  `json:"netAccessibility"`
+	OmDocumentationOnDemand    *bool    `json:"omDocumentationOnDemand"`
+	PlansToRetireReplace       *string  `json:"plansToRetireReplace"`
+	QuarterToRetireReplace     *string  `json:"quarterToRetireReplace"`
+	RecordsManagementBucket    []string `json:"recordsManagementBucket"`
+	SourceCodeOnDemand         *bool    `json:"sourceCodeOnDemand"`
+	SystemCustomization        *string  `json:"systemCustomization"`
+	SystemDesignOnDemand       *bool    `json:"systemDesignOnDemand"`
+	SystemProductionDate       *string  `json:"systemProductionDate"`
+	SystemRequirementsOnDemand *bool    `json:"systemRequirementsOnDemand"`
+	TestPlanOnDemand           *bool    `json:"testPlanOnDemand"`
+	TestReportsOnDemand        *bool    `json:"testReportsOnDemand"`
+	TestScriptsOnDemand        *bool    `json:"testScriptsOnDemand"`
+	YearToRetireReplace        *string  `json:"yearToRetireReplace"`
+}
+
 // Represents a date used for start and end dates on a contract
 type ContractDate struct {
 	Day   *string `json:"day"`
@@ -146,6 +191,8 @@ type CreateSystemIntakeActionExtendLifecycleIDPayload struct {
 type CreateSystemIntakeContactInput struct {
 	EuaUserID      string    `json:"euaUserId"`
 	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+	Component      string    `json:"component"`
+	Role           string    `json:"role"`
 }
 
 // The payload when creating a system intake contact
@@ -233,13 +280,6 @@ type DeleteTestDateInput struct {
 type DeleteTestDatePayload struct {
 	TestDate   *models.TestDate `json:"testDate"`
 	UserErrors []*UserError     `json:"userErrors"`
-}
-
-// This is the Representation of Cedar system with additional related information
-type DetailedCedarSystem struct {
-	CedarSystem *models.CedarSystem       `json:"cedarSystem"`
-	Roles       []*models.CedarRole       `json:"roles"`
-	Deployments []*models.CedarDeployment `json:"deployments"`
 }
 
 // Input associated with a document to be uploaded to a 508/accessibility request

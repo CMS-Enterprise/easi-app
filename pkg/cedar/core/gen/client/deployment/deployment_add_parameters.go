@@ -61,10 +61,7 @@ func NewDeploymentAddParamsWithHTTPClient(client *http.Client) *DeploymentAddPar
 */
 type DeploymentAddParams struct {
 
-	/* Body.
-
-	   Deployment list to be added to CEDAR
-	*/
+	// Body.
 	Body *models.DeploymentAddRequest
 
 	timeout    time.Duration

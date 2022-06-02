@@ -67,6 +67,13 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 		return []*models.CedarSystem{}, fmt.Errorf("no body received")
 	}
 
+	// This may look like an odd block of code, but should never expect an empty response from CEDAR with the
+	// hard-coded parameters we have set.
+	// This is defensive programming against this case.
+	if len(resp.Payload.SystemSummary) == 0 {
+		return []*models.CedarSystem{}, fmt.Errorf("empty response array received")
+	}
+
 	// Convert the auto-generated struct to our own pkg/models struct
 	retVal := []*models.CedarSystem{}
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
@@ -149,13 +156,14 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 
 	// If it's not cached, populate the cache, and try the cache again
 	err := c.populateSystemSummaryCache(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	// Try the cache again now that we know it is fresh
-	if err != nil {
-		cachedSystem = c.getSystemFromCache(ctx, systemID)
-		if cachedSystem != nil {
-			return cachedSystem, nil
-		}
+	cachedSystem = c.getSystemFromCache(ctx, systemID)
+	if cachedSystem != nil {
+		return cachedSystem, nil
 	}
 
 	// If we still haven't found it after repopulating the cache, then it doesn't exist in CEDAR
