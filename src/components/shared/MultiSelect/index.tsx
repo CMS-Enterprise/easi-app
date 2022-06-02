@@ -8,7 +8,6 @@ import './index.scss';
 type OptionType = {
   label: string;
   value: string | number;
-  selected?: boolean;
 };
 
 type OptionsProps = {
@@ -19,7 +18,6 @@ type OptionsProps = {
 
 const Options = ({ options, selected, optionClick }: OptionsProps) => {
   const { t } = useTranslation();
-  console.log(selected);
   return (
     <ul className="easi-multiselect__options usa-list--unstyled padding-y-05 border-1px border-top-0 maxh-card overflow-scroll position-absolute right-0 left-0 z-top bg-white">
       {options.map(option => {
@@ -49,14 +47,6 @@ const Options = ({ options, selected, optionClick }: OptionsProps) => {
   );
 };
 
-// const formatOptions = (options: OptionType[], initialValues: OptionType[]) => {
-//   return options.map(option => {
-//     return initialValues.some(object => option.value === object.value)
-//       ? { ...option, selected: true }
-//       : option;
-//   });
-// };
-
 type MultiSelectProps = {
   className?: string;
   id?: string;
@@ -70,7 +60,6 @@ type MultiSelectProps = {
 export default function MultiSelect({
   className,
   id,
-  placeholder,
   options,
   selectedLabel = 'Selected options',
   onChange,
@@ -132,6 +121,7 @@ export default function MultiSelect({
         'easi-multiselect maxw-mobile-lg position-relative',
         className
       )}
+      id={id}
     >
       <div className="easi-multiselect__field" role="listbox" ref={selectRef}>
         <div className="usa-select maxw-none padding-0">
