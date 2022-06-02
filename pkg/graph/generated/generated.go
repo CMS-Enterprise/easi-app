@@ -296,6 +296,8 @@ type ComplexityRoot struct {
 		Deployments                 func(childComplexity int) int
 		Roles                       func(childComplexity int) int
 		SystemMaintainerInformation func(childComplexity int) int
+		Threats                     func(childComplexity int) int
+		URLs                        func(childComplexity int) int
 	}
 
 	CedarSystemMaintainerInformation struct {
@@ -335,6 +337,15 @@ type ComplexityRoot struct {
 		ParentID          func(childComplexity int) int
 		Type              func(childComplexity int) int
 		WeaknessRiskLevel func(childComplexity int) int
+	}
+
+	CedarURL struct {
+		Address                        func(childComplexity int) int
+		ID                             func(childComplexity int) int
+		IsAPIEndpoint                  func(childComplexity int) int
+		IsBehindWebApplicationFirewall func(childComplexity int) int
+		IsVersionCodeRepository        func(childComplexity int) int
+		URLHostingEnv                  func(childComplexity int) int
 	}
 
 	ContractDate struct {
@@ -491,6 +502,7 @@ type ComplexityRoot struct {
 		SystemIntake             func(childComplexity int, id uuid.UUID) int
 		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
 		Systems                  func(childComplexity int, after *string, first int) int
+		Urls                     func(childComplexity int, cedarSystemID string) int
 	}
 
 	Request struct {
@@ -768,9 +780,9 @@ type BusinessCaseResolver interface {
 type CedarAuthorityToOperateResolver interface {
 	ActualDispositionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	ContainsPersonallyIdentifiableInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error)
-	CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
-	CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
-	CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
+	CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error)
+	CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error)
+	CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error)
 	DateAuthorizationMemoExpires(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	DateAuthorizationMemoSigned(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error)
 	EAuthenticationLevel(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error)
@@ -906,6 +918,7 @@ type QueryResolver interface {
 	CedarThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error)
 	Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
 	Roles(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error)
+	Urls(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error)
 	CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error)
 	SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*model.SystemIntakeContactsPayload, error)
 }
@@ -2212,6 +2225,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CedarSystemDetails.SystemMaintainerInformation(childComplexity), true
 
+	case "CedarSystemDetails.threats":
+		if e.complexity.CedarSystemDetails.Threats == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemDetails.Threats(childComplexity), true
+
+	case "CedarSystemDetails.urls":
+		if e.complexity.CedarSystemDetails.URLs == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemDetails.URLs(childComplexity), true
+
 	case "CedarSystemMaintainerInformation.agileUsed":
 		if e.complexity.CedarSystemMaintainerInformation.AgileUsed == nil {
 			break
@@ -2442,6 +2469,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarThreat.WeaknessRiskLevel(childComplexity), true
+
+	case "CedarURL.address":
+		if e.complexity.CedarURL.Address == nil {
+			break
+		}
+
+		return e.complexity.CedarURL.Address(childComplexity), true
+
+	case "CedarURL.id":
+		if e.complexity.CedarURL.ID == nil {
+			break
+		}
+
+		return e.complexity.CedarURL.ID(childComplexity), true
+
+	case "CedarURL.isAPIEndpoint":
+		if e.complexity.CedarURL.IsAPIEndpoint == nil {
+			break
+		}
+
+		return e.complexity.CedarURL.IsAPIEndpoint(childComplexity), true
+
+	case "CedarURL.isBehindWebApplicationFirewall":
+		if e.complexity.CedarURL.IsBehindWebApplicationFirewall == nil {
+			break
+		}
+
+		return e.complexity.CedarURL.IsBehindWebApplicationFirewall(childComplexity), true
+
+	case "CedarURL.isVersionCodeRepository":
+		if e.complexity.CedarURL.IsVersionCodeRepository == nil {
+			break
+		}
+
+		return e.complexity.CedarURL.IsVersionCodeRepository(childComplexity), true
+
+	case "CedarURL.urlHostingEnv":
+		if e.complexity.CedarURL.URLHostingEnv == nil {
+			break
+		}
+
+		return e.complexity.CedarURL.URLHostingEnv(childComplexity), true
 
 	case "ContractDate.day":
 		if e.complexity.ContractDate.Day == nil {
@@ -3348,6 +3417,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Systems(childComplexity, args["after"].(*string), args["first"].(int)), true
+
+	case "Query.urls":
+		if e.complexity.Query.Urls == nil {
+			break
+		}
+
+		args, err := ec.field_Query_urls_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Urls(childComplexity, args["cedarSystemId"].(string)), true
 
 	case "Request.id":
 		if e.complexity.Request.ID == nil {
@@ -4419,9 +4500,9 @@ type CedarAuthorityToOperate {
   uuid: String!
   actualDispositionDate: Time
   containsPersonallyIdentifiableInformation: Boolean
-  countOfTotalNonPrivilegedUserPopulation: Int
-  countOfOpenPoams: Int
-  countOfTotalPrivilegedUserPopulation: Int
+  countOfTotalNonPrivilegedUserPopulation: Int!
+  countOfOpenPoams: Int!
+  countOfTotalPrivilegedUserPopulation: Int!
   dateAuthorizationMemoExpires: Time
   dateAuthorizationMemoSigned: Time
   eAuthenticationLevel: String
@@ -4533,6 +4614,8 @@ type CedarSystemDetails {
  businessOwnerInformation: CedarBusinessOwnerInformation!
  roles: [CedarRole!]!
  deployments: [CedarDeployment!]!
+ threats: [CedarThreat!]!
+ urls: [CedarURL!]!
 }
 
 """
@@ -4644,6 +4727,18 @@ type CedarRole {
   roleTypeDesc: String
   roleID: String
   objectType: String
+}
+
+"""
+CedarURL represents info about a URL associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+"""
+type CedarURL {
+  id: String!
+  address: String
+  isBehindWebApplicationFirewall: Boolean
+  isAPIEndpoint: Boolean
+  isVersionCodeRepository: Boolean
+  urlHostingEnv: String
 }
 
 """
@@ -5835,6 +5930,7 @@ type Query {
   cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
+  urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
 }
@@ -6743,6 +6839,21 @@ func (ec *executionContext) field_Query_systems_args(ctx context.Context, rawArg
 		}
 	}
 	args["first"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_urls_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["cedarSystemId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["cedarSystemId"] = arg0
 	return args, nil
 }
 
@@ -9476,11 +9587,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalNonPrivilegedUs
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_countOfOpenPoams(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9508,11 +9622,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfOpenPoams(ctx contex
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -9540,11 +9657,14 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalPrivilegedUserP
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CedarAuthorityToOperate_dateAuthorizationMemoExpires(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
@@ -12676,6 +12796,76 @@ func (ec *executionContext) _CedarSystemDetails_deployments(ctx context.Context,
 	return ec.marshalNCedarDeployment2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CedarSystemDetails_threats(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarSystemDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Threats, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarThreat)
+	fc.Result = res
+	return ec.marshalNCedarThreat2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreatᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CedarSystemDetails_urls(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarSystemDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URLs, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarURL)
+	fc.Result = res
+	return ec.marshalNCedarURL2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CedarSystemMaintainerInformation_agileUsed(ctx context.Context, field graphql.CollectedField, obj *model.CedarSystemMaintainerInformation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -13733,6 +13923,201 @@ func (ec *executionContext) _CedarThreat_weaknessRiskLevel(ctx context.Context, 
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CedarURL_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarURL",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CedarURL_address(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarURL",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Address, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CedarURL_isBehindWebApplicationFirewall(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarURL",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsBehindWebApplicationFirewall, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CedarURL_isAPIEndpoint(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarURL",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsAPIEndpoint, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CedarURL_isVersionCodeRepository(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarURL",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsVersionCodeRepository, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CedarURL_urlHostingEnv(ctx context.Context, field graphql.CollectedField, obj *models.CedarURL) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CedarURL",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URLHostingEnv, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ContractDate_day(ctx context.Context, field graphql.CollectedField, obj *model.ContractDate) (ret graphql.Marshaler) {
@@ -17606,6 +17991,48 @@ func (ec *executionContext) _Query_roles(ctx context.Context, field graphql.Coll
 	res := resTmp.([]*models.CedarRole)
 	fc.Result = res
 	return ec.marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_urls(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_urls_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Urls(rctx, args["cedarSystemId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarURL)
+	fc.Result = res
+	return ec.marshalNCedarURL2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_cedarSystemDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -26232,6 +26659,9 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 					}
 				}()
 				res = ec._CedarAuthorityToOperate_countOfTotalNonPrivilegedUserPopulation(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -26249,6 +26679,9 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 					}
 				}()
 				res = ec._CedarAuthorityToOperate_countOfOpenPoams(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -26266,6 +26699,9 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 					}
 				}()
 				res = ec._CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -27749,6 +28185,26 @@ func (ec *executionContext) _CedarSystemDetails(ctx context.Context, sel ast.Sel
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "threats":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CedarSystemDetails_threats(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "urls":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CedarSystemDetails_urls(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -28095,6 +28551,72 @@ func (ec *executionContext) _CedarThreat(ctx context.Context, sel ast.SelectionS
 				return innerFunc(ctx)
 
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var cedarURLImplementors = []string{"CedarURL"}
+
+func (ec *executionContext) _CedarURL(ctx context.Context, sel ast.SelectionSet, obj *models.CedarURL) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarURLImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarURL")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CedarURL_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "address":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CedarURL_address(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "isBehindWebApplicationFirewall":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CedarURL_isBehindWebApplicationFirewall(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "isAPIEndpoint":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CedarURL_isAPIEndpoint(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "isVersionCodeRepository":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CedarURL_isVersionCodeRepository(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "urlHostingEnv":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CedarURL_urlHostingEnv(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -29402,6 +29924,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_roles(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "urls":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_urls(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -32704,6 +33249,60 @@ func (ec *executionContext) marshalNCedarThreat2ᚖgithubᚗcomᚋcmsgovᚋeasi�
 		return graphql.Null
 	}
 	return ec._CedarThreat(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCedarURL2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarURL) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarURL2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURL(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCedarURL2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURL(ctx context.Context, sel ast.SelectionSet, v *models.CedarURL) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._CedarURL(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx context.Context, sel ast.SelectionSet, v *model.ContractDate) graphql.Marshaler {

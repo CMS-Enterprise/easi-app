@@ -51,7 +51,7 @@ func (a *Client) URLFindList(params *URLFindListParams, authInfo runtime.ClientA
 		PathPattern:        "/url/{id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &URLFindListReader{formats: a.formats},
 		AuthInfo:           authInfo,

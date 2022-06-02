@@ -37,14 +37,14 @@ var Default = NewHTTPClient(nil)
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "cdrdevapigw02.awscloud.cms.local:5555"
+	DefaultHost string = "webmethods-apigw.cedarimpl.cms.gov"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
 	DefaultBasePath string = "/gateway/CEDAR Core API/1.0.0"
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
-var DefaultSchemes = []string{"http"}
+var DefaultSchemes = []string{"https"}
 
 // NewHTTPClient creates a new c e d a r core API HTTP client.
 func NewHTTPClient(formats strfmt.Registry) *CEDARCoreAPI {
