@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
-  Dropdown,
   IconNavigateBefore,
   Label,
   Link,
@@ -233,8 +232,25 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             id="IntakeForm-FundingSource"
                             name="fundingSource.source"
                             options={fundingSources}
+                            onChange={(
+                              value: { label: string; value: string }[]
+                            ) =>
+                              setFieldValue(
+                                'fundingSource.source',
+                                value.map(option => option.label).join()
+                              )
+                            }
+                            initialValues={
+                              initialValues.fundingSource.source
+                                ? initialValues.fundingSource.source
+                                    .split(',')
+                                    .map(option => ({
+                                      label: option,
+                                      value: option
+                                    }))
+                                : []
+                            }
                             selectedLabel="Selected models"
-                            tags
                           />
                         </FieldGroup>
                         <FieldGroup

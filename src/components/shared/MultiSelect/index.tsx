@@ -8,6 +8,7 @@ import './index.scss';
 type OptionType = {
   label: string;
   value: string | number;
+  selected?: boolean;
 };
 
 type OptionsProps = {
@@ -18,29 +19,43 @@ type OptionsProps = {
 
 const Options = ({ options, selected, optionClick }: OptionsProps) => {
   const { t } = useTranslation();
+  console.log(selected);
   return (
     <ul className="easi-multiselect__options usa-list--unstyled padding-y-05 border-1px border-top-0 maxh-card overflow-scroll position-absolute right-0 left-0 z-top bg-white">
-      {options.map(option => (
-        <li
-          className="display-flex flex-align-center padding-y-05 padding-x-1"
-          key={option.value}
-          role="option"
-          aria-selected={selected.includes(option)}
-        >
-          <label>
-            <input
-              className="margin-right-1"
-              type="checkbox"
-              checked={selected.includes(option)}
-              onChange={() => optionClick(option)}
-            />
-            {t(option.label)}
-          </label>
-        </li>
-      ))}
+      {options.map(option => {
+        const isChecked = selected.some(
+          object => object.value === option.value
+        );
+        return (
+          <li
+            className="display-flex flex-align-center padding-y-05 padding-x-1"
+            key={option.value}
+            role="option"
+            aria-selected={isChecked}
+          >
+            <label>
+              <input
+                className="margin-right-1"
+                type="checkbox"
+                checked={isChecked}
+                onChange={() => optionClick(option)}
+              />
+              {t(option.label)}
+            </label>
+          </li>
+        );
+      })}
     </ul>
   );
 };
+
+// const formatOptions = (options: OptionType[], initialValues: OptionType[]) => {
+//   return options.map(option => {
+//     return initialValues.some(object => option.value === object.value)
+//       ? { ...option, selected: true }
+//       : option;
+//   });
+// };
 
 type MultiSelectProps = {
   className?: string;
@@ -50,6 +65,8 @@ type MultiSelectProps = {
   selectedLabel?: string;
   tags?: boolean;
   disabled?: boolean;
+  onChange: (value: OptionType[]) => void;
+  initialValues: OptionType[];
 };
 
 export default function MultiSelect({
@@ -58,20 +75,24 @@ export default function MultiSelect({
   placeholder,
   options,
   selectedLabel = 'Selected options',
-  tags = false,
-  disabled = false
+  onChange,
+  initialValues
 }: MultiSelectProps) {
   const [searchValue, setSearchValue] = useState('');
 
-  const [selected, setSelected] = useState<any[]>([]);
+  const [selected, setSelected] = useState<any[]>(initialValues);
   const [active, setActive] = useState(false);
 
   const { t } = useTranslation();
   const selectRef = useRef(null);
 
   const optionClick = (option: OptionType) => {
-    if (selected.includes(option)) {
-      setSelected(selected.filter(selectedOption => selectedOption !== option));
+    if (
+      selected.some(selectedOption => selectedOption.value === option.value)
+    ) {
+      setSelected(
+        selected.filter(selectedOption => selectedOption.value !== option.value)
+      );
     } else {
       setSelected([...selected, option]);
     }
@@ -93,6 +114,10 @@ export default function MultiSelect({
     };
   }, [selectRef]);
 
+  useEffect(() => {
+    onChange(selected);
+  }, [selected]);
+
   return (
     <div
       className={classNames(
@@ -106,6 +131,7 @@ export default function MultiSelect({
             type="search"
             className="usa-input padding-1 height-full border-0"
             value={searchValue}
+            placeholder={t(`${selected.length} selected`)}
             onClick={() => setActive(true)}
             onChange={e => handleSearch(e.target.value)}
           />
@@ -118,9 +144,9 @@ export default function MultiSelect({
           />
         )}
       </div>
-      <div className="easi-multiselect__selected-list margin-top-3">
-        {t(selectedLabel)}
-        {selected && (
+      {selected.length > 0 && (
+        <div className="easi-multiselect__selected-list margin-top-3">
+          {t(selectedLabel)}
           <ul className="usa-list--unstyled margin-top-1">
             {selected.map(option => (
               <li
@@ -137,8 +163,8 @@ export default function MultiSelect({
               </li>
             ))}
           </ul>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
