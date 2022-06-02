@@ -67,6 +67,13 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 		return []*models.CedarSystem{}, fmt.Errorf("no body received")
 	}
 
+	// This may look like an odd block of code, but should never expect an empty response from CEDAR with the
+	// hard-coded parameters we have set.
+	// This is defensive programming against this case.
+	if len(resp.Payload.SystemSummary) == 0 {
+		return []*models.CedarSystem{}, fmt.Errorf("empty response array received")
+	}
+
 	// Convert the auto-generated struct to our own pkg/models struct
 	retVal := []*models.CedarSystem{}
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
