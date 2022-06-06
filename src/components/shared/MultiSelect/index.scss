@@ -21,9 +21,14 @@
   }
 }
 
+.easi-multiselect__options {
+  max-height: 11em;
+  .usa-checkbox__label {
+    margin: 0;
+  }
+}
+
 .easi-multiselect__selected-list svg:hover,
-.easi-multiselect__options li,
-.easi-multiselect__options li *,
 .easi-multiselect__controls-button svg {
   cursor: pointer;
 }
