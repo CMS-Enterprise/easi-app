@@ -31,11 +31,10 @@ const Options = ({ options, selected, optionClick }: OptionsProps) => {
             <Checkbox
               className="padding-1 hover:bg-base-lightest"
               key={option.value}
-              role="option"
-              aria-selected={selected.some(
+              defaultChecked={selected.some(
                 selectedOption => selectedOption.value === option.value
               )}
-              id={`easi-multiselect-${option.value}`}
+              id={`easi-multiselect__option-${option.value}`}
               name={`easi-multiselect-${option.value}`}
               label={t(option.label)}
               onChange={() => optionClick(option)}
@@ -166,7 +165,10 @@ export default function MultiSelect({
                 key={option.value}
                 className="display-flex flex-justify-start margin-y-05"
               >
-                <Tag className="bg-primary-lighter text-ink text-no-uppercase padding-y-1 padding-x-105 display-flex flex-align-center">
+                <Tag
+                  className="bg-primary-lighter text-ink text-no-uppercase padding-y-1 padding-x-105 display-flex flex-align-center"
+                  id={`easi-multiselect__tag-${option.value}`}
+                >
                   {option.label}
                   <IconClose
                     className="margin-left-1"
