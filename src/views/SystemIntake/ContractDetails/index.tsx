@@ -232,26 +232,48 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             as={MultiSelect}
                             id="IntakeForm-FundingSource"
                             name="fundingSource.source"
-                            options={fundingSources}
+                            options={fundingSources.map(option => ({
+                              key: option,
+                              label: option,
+                              value: option
+                            }))}
                             selectedLabel="Selected models"
                             // Workaround to convert array to/from comma separated string
                             // TODO: Delete after backend work is completed
-                            onChange={(value: string[] | []) => {
+                            onChange={(
+                              value: { label: string; value: string }[] | []
+                            ) => {
                               setFieldValue(
                                 'fundingSource.source',
-                                value.join()
+                                value.map(option => option.value).join()
                               );
                             }}
                             initialValues={
                               initialValues.fundingSource.source
-                                ? initialValues.fundingSource.source.split(',')
+                                ? initialValues.fundingSource.source
+                                    .split(',')
+                                    .map(option => ({
+                                      key: option,
+                                      label: option,
+                                      value: option
+                                    }))
                                 : []
                             }
                             // TODO: Uncomment after backend work is completed
-                            // onChange={(value: string[] | []) => {
-                            //   setFieldValue('fundingSource.source', value);
+                            // onChange={(
+                            //   value: { label: string; value: string }[] | []
+                            // ) => {
+                            //   setFieldValue(
+                            //     'fundingSource.source',
+                            //     value.map(option => option.value)
+                            //   );
                             // }}
-                            // initialValues={initialValues.fundingSource.source}
+                            // initialValues={initialValues.fundingSource.source.map(
+                            //   (option: string) => ({
+                            //     label: option,
+                            //     value: option
+                            //   })
+                            // )}
                           />
                         </FieldGroup>
                         <FieldGroup

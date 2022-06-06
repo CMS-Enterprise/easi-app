@@ -5,10 +5,15 @@ import classNames from 'classnames';
 
 import './index.scss';
 
+type OptionType = {
+  label: string;
+  value: string;
+};
+
 type OptionsProps = {
-  options: string[];
-  selected: string[];
-  optionClick: (option: string) => void;
+  options: OptionType[];
+  selected: OptionType[];
+  optionClick: (option: OptionType) => void;
 };
 
 const Options = ({ options, selected, optionClick }: OptionsProps) => {
@@ -19,18 +24,22 @@ const Options = ({ options, selected, optionClick }: OptionsProps) => {
         return (
           <li
             className="display-flex flex-align-center padding-y-05 padding-x-1"
-            key={option}
+            key={option.value}
             role="option"
-            aria-selected={selected.includes(option)}
+            aria-selected={selected.some(
+              selectedOption => selectedOption.value === option.value
+            )}
           >
             <label>
               <input
                 className="margin-right-1"
                 type="checkbox"
-                checked={selected.includes(option)}
+                checked={selected.some(
+                  selectedOption => selectedOption.value === option.value
+                )}
                 onChange={() => optionClick(option)}
               />
-              {t(option)}
+              {t(option.label)}
             </label>
           </li>
         );
@@ -42,10 +51,10 @@ const Options = ({ options, selected, optionClick }: OptionsProps) => {
 type MultiSelectProps = {
   className?: string;
   id?: string;
-  options: string[];
+  options: OptionType[];
   selectedLabel?: string;
   onChange: (value: string[]) => void;
-  initialValues: string[];
+  initialValues: OptionType[];
 };
 
 export default function MultiSelect({
@@ -64,8 +73,10 @@ export default function MultiSelect({
   const { t } = useTranslation();
   const selectRef = useRef(null);
 
-  const optionClick = (option: string) => {
-    if (selected.includes(option)) {
+  const optionClick = (option: OptionType) => {
+    if (
+      selected.some(selectedOption => selectedOption.value === option.value)
+    ) {
       setSelected(selected.filter(selectedOption => selectedOption !== option));
     } else {
       setSelected([...selected, option]);
@@ -77,12 +88,12 @@ export default function MultiSelect({
       return option.toLowerCase().search(searchValue);
     };
     return options
-      .filter(option => searchIndex(option) > -1)
-      .sort((a, b) => searchIndex(a) - searchIndex(b));
+      .filter(option => searchIndex(option.label) > -1)
+      .sort((a, b) => searchIndex(a.label) - searchIndex(b.label));
   };
 
   useEffect(() => {
-    function handleClickOutside(e) {
+    function handleClickOutside(e: any) {
       if (selectRef.current && !selectRef.current.contains(e.target)) {
         setActive(false);
         setSearchValue('');
@@ -131,11 +142,11 @@ export default function MultiSelect({
           <ul className="usa-list--unstyled margin-top-1">
             {selected.map(option => (
               <li
-                key={option}
+                key={option.value}
                 className="display-flex flex-justify-start margin-y-05"
               >
                 <Tag className="bg-primary-lighter text-ink text-no-uppercase padding-y-1 padding-x-105 display-flex flex-align-center">
-                  {option}
+                  {option.label}
                   <IconClose
                     className="margin-left-1"
                     onClick={() => optionClick(option)}
