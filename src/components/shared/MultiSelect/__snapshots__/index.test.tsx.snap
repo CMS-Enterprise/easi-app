@@ -7,7 +7,6 @@ exports[`The MultiSelect component matches the snapshot 1`] = `
   >
     <div
       class="easi-multiselect__field"
-      role="listbox"
     >
       <div
         class="usa-select maxw-none padding-0"
@@ -86,7 +85,7 @@ exports[`The MultiSelect component matches the snapshot 1`] = `
               class="usa-icon margin-left-1"
               focusable="false"
               height="1em"
-              role="img"
+              role="button"
               viewBox="0 0 24 24"
               width="1em"
               xmlns="http://www.w3.org/2000/svg"

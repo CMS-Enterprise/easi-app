@@ -119,7 +119,7 @@ export default function MultiSelect({
       )}
       id={id}
     >
-      <div className="easi-multiselect__field" role="listbox" ref={selectRef}>
+      <div className="easi-multiselect__field" ref={selectRef}>
         <div className="usa-select maxw-none padding-0">
           <input
             type="search"
@@ -173,6 +173,7 @@ export default function MultiSelect({
                   <IconClose
                     className="margin-left-1"
                     onClick={() => optionClick(option)}
+                    role="button"
                   />
                 </Tag>
               </li>
