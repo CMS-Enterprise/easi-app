@@ -109,6 +109,7 @@ export default function MultiSelect({
 
   useEffect(() => {
     onChange(selected);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   return (
