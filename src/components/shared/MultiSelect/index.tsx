@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IconClose, Tag } from '@trussworks/react-uswds';
+import { IconClose, IconExpandMore, Tag } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import './index.scss';
@@ -20,30 +20,34 @@ const Options = ({ options, selected, optionClick }: OptionsProps) => {
   const { t } = useTranslation();
   return (
     <ul className="easi-multiselect__options usa-list--unstyled padding-y-05 border-1px border-top-0 maxh-card overflow-scroll position-absolute right-0 left-0 z-top bg-white">
-      {options.map(option => {
-        return (
-          <li
-            className="display-flex flex-align-center padding-y-05 padding-x-1"
-            key={option.value}
-            role="option"
-            aria-selected={selected.some(
-              selectedOption => selectedOption.value === option.value
-            )}
-          >
-            <label>
-              <input
-                className="margin-right-1"
-                type="checkbox"
-                checked={selected.some(
-                  selectedOption => selectedOption.value === option.value
-                )}
-                onChange={() => optionClick(option)}
-              />
-              {t(option.label)}
-            </label>
-          </li>
-        );
-      })}
+      {options.length > 0 ? (
+        options.map(option => {
+          return (
+            <li
+              className="display-flex flex-align-center padding-y-05 padding-x-1 hover:bg-base-lightest"
+              key={option.value}
+              role="option"
+              aria-selected={selected.some(
+                selectedOption => selectedOption.value === option.value
+              )}
+            >
+              <label>
+                <input
+                  className="margin-right-1"
+                  type="checkbox"
+                  checked={selected.some(
+                    selectedOption => selectedOption.value === option.value
+                  )}
+                  onChange={() => optionClick(option)}
+                />
+                {t(option.label)}
+              </label>
+            </li>
+          );
+        })
+      ) : (
+        <li className="padding-x-1">No results</li>
+      )}
     </ul>
   );
 };
@@ -127,6 +131,24 @@ export default function MultiSelect({
             onClick={() => setActive(true)}
             onChange={e => setSearchValue(e.target.value)}
           />
+          <div className="easi-multiselect__controls">
+            {selected.length > 0 && (
+              <div className="easi-multiselect__controls-button border-right-1px">
+                <IconClose
+                  onClick={() => setSelected([])}
+                  size={3}
+                  role="button"
+                />
+              </div>
+            )}
+            <div className="easi-multiselect__controls-button">
+              <IconExpandMore
+                onClick={() => setActive(!active)}
+                size={4}
+                role="button"
+              />
+            </div>
+          </div>
         </div>
         {active && (
           <Options

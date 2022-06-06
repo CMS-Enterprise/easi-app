@@ -1,0 +1,29 @@
+.easi-multiselect__controls {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+
+  &-button {
+    height: 22px;
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: color('base');
+
+    &:hover {
+      color: color('base-darker');
+    }
+  }
+}
+
+.easi-multiselect__selected-list svg:hover,
+.easi-multiselect__options li,
+.easi-multiselect__options li *,
+.easi-multiselect__controls-button svg {
+  cursor: pointer;
+}
