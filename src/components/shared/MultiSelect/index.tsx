@@ -43,7 +43,7 @@ const Options = ({ options, selected, optionClick }: OptionsProps) => {
           );
         })
       ) : (
-        <li className="padding-x-1">No results</li>
+        <span className="padding-1">No results</span>
       )}
     </div>
   );
@@ -55,7 +55,7 @@ type MultiSelectProps = {
   options: OptionType[];
   selectedLabel?: string;
   onChange: (value: string[]) => void;
-  initialValues: OptionType[];
+  initialValues?: OptionType[];
 };
 
 export default function MultiSelect({
@@ -64,7 +64,7 @@ export default function MultiSelect({
   options,
   selectedLabel = 'Selected options',
   onChange,
-  initialValues
+  initialValues = []
 }: MultiSelectProps) {
   const [searchValue, setSearchValue] = useState('');
 
