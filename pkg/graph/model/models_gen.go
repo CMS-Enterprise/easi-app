@@ -262,8 +262,7 @@ type DeleteCedarSystemBookmarkPayload struct {
 
 // The data needed to delete a system intake contact
 type DeleteSystemIntakeContactInput struct {
-	EuaUserID      string    `json:"euaUserId"`
-	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+	ID uuid.UUID `json:"id"`
 }
 
 // The payload when deleting a system intake contact
@@ -584,6 +583,15 @@ type UpdateSystemIntakeContactDetailsInput struct {
 	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
 	Isso            *SystemIntakeISSOInput                   `json:"isso"`
 	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
+}
+
+// The data needed to update a contact associated with a system intake
+type UpdateSystemIntakeContactInput struct {
+	ID             uuid.UUID `json:"id"`
+	EuaUserID      string    `json:"euaUserId"`
+	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+	Component      string    `json:"component"`
+	Role           string    `json:"role"`
 }
 
 // Input data for updating contract details related to a system request

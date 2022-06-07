@@ -1529,10 +1529,28 @@ func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input 
 	}, nil
 }
 
-func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input model.UpdateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
 	contact := &models.SystemIntakeContact{
+		ID:             input.ID,
 		SystemIntakeID: input.SystemIntakeID,
 		EUAUserID:      input.EuaUserID,
+		Component:      input.Component,
+		Role:           input.Role,
+	}
+
+	updatedContact, err := r.store.UpdateSystemIntakeContact(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.CreateSystemIntakeContactPayload{
+		SystemIntakeContact: updatedContact,
+	}, nil
+}
+
+func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error) {
+	contact := &models.SystemIntakeContact{
+		ID: input.ID,
 	}
 	_, err := r.store.DeleteSystemIntakeContact(ctx, contact)
 	if err != nil {

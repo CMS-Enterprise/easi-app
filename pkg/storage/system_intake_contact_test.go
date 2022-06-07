@@ -18,7 +18,11 @@ func (s StoreTestSuite) TestCreateSystemIntakeContact() {
 			EUAUserID:      "ANON",
 			SystemIntakeID: intake.ID,
 		}
-		_, err := s.store.CreateSystemIntakeContact(ctx, &contact)
+		createdContact, err := s.store.CreateSystemIntakeContact(ctx, &contact)
+		s.NoError(err)
+
+		createdContact.Role = "Supreme Overlord"
+		_, err = s.store.UpdateSystemIntakeContact(ctx, createdContact)
 		s.NoError(err)
 	})
 
