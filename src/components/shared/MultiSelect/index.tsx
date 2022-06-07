@@ -54,7 +54,7 @@ type MultiSelectProps = {
   options: OptionType[];
   selectedLabel?: string;
   onChange: (value: string[]) => void;
-  initialValues?: OptionType[];
+  initialValues?: string[];
 };
 
 export default function MultiSelect({
@@ -67,7 +67,9 @@ export default function MultiSelect({
 }: MultiSelectProps) {
   const [searchValue, setSearchValue] = useState('');
 
-  const [selected, setSelected] = useState<any[]>(initialValues);
+  const [selected, setSelected] = useState<any[]>(
+    options.filter(option => initialValues.includes(option.value))
+  );
   const [active, setActive] = useState(false);
 
   const { t } = useTranslation();

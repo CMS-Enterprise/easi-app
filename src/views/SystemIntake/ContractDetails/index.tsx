@@ -250,13 +250,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             }}
                             initialValues={
                               initialValues.fundingSource.source
-                                ? initialValues.fundingSource.source
-                                    .split(',')
-                                    .map(option => ({
-                                      key: option,
-                                      label: option,
-                                      value: option
-                                    }))
+                                ? initialValues.fundingSource.source.split(',')
                                 : []
                             }
                             // TODO: Uncomment after backend work is completed
@@ -268,12 +262,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             //     value.map(option => option.value)
                             //   );
                             // }}
-                            // initialValues={initialValues.fundingSource.source.map(
-                            //   (option: string) => ({
-                            //     label: option,
-                            //     value: option
-                            //   })
-                            // )}
+                            // initialValues={initialValues.fundingSource.source}
                           />
                         </FieldGroup>
                         <FieldGroup
