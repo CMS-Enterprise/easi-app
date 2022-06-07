@@ -47,22 +47,17 @@ const EstimatedLifecycleCostReview = ({
       return {
         year1: { ...acc.year1, [cost]: years.year1 },
         year2: { ...acc.year2, [cost]: years.year2 },
-        year3: { ...acc.year2, [cost]: years.year3 },
-        year4: { ...acc.year2, [cost]: years.year4 },
-        year5: { ...acc.year2, [cost]: years.year5 }
+        year3: { ...acc.year3, [cost]: years.year3 },
+        year4: { ...acc.year4, [cost]: years.year4 },
+        year5: { ...acc.year5, [cost]: years.year5 }
       };
     },
     { year1: {}, year2: {}, year3: {}, year4: {}, year5: {} }
   );
 
-  const totalDevelopmentCosts = sum(Object.values(data.development.years));
-  const totalOperationsMaintenanceCosts = sum(
-    Object.values(data.operationsMaintenance.years)
-  );
-  const totalOtherCosts = sum(Object.values(data.other.years));
-
-  const sumOfTotalCosts =
-    totalDevelopmentCosts + totalOperationsMaintenanceCosts + totalOtherCosts;
+  const sumOfTotalCosts = Object.keys(data).reduce((acc, cost) => {
+    return acc + sum(Object.values(data[cost as keyof LifecycleCosts].years));
+  }, 0);
 
   return (
     <div className="margin-y-1">
