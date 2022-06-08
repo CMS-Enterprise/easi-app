@@ -260,12 +260,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   scrollElement="businessOwner.name"
                   error={!!flatErrors['businessOwner.name']}
                 >
-                  <Label
-                    className="margin-bottom-1"
-                    htmlFor="IntakeForm-BusinessOwner"
-                  >
+                  <h4 className="margin-bottom-1">
                     {t('contactDetails.businessOwner.name')}
-                  </Label>
+                  </h4>
                   <HelpText id="IntakeForm-BusinessOwnerHelp">
                     {t('contactDetails.businessOwner.helpText')}
                   </HelpText>
@@ -291,6 +288,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     }}
                     value=""
                   />
+                  <Label
+                    className="margin-bottom-1"
+                    htmlFor="IntakeForm-BusinessOwner"
+                  >
+                    {t('contactDetails.businessOwner.nameField')}
+                  </Label>
                   <FieldErrorMsg>
                     {flatErrors['businessOwner.name']}
                   </FieldErrorMsg>
@@ -334,12 +337,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   scrollElement="productManager.name"
                   error={!!flatErrors['productManager.name']}
                 >
-                  <Label
-                    htmlFor="IntakeForm-ProductManager"
-                    className="margin-bottom-1"
-                  >
+                  <h4 className="margin-bottom-1">
                     {t('contactDetails.productManager.name')}
-                  </Label>
+                  </h4>
                   <HelpText id="IntakeForm-ProductManagerHelp">
                     {t('contactDetails.productManager.helpText')}
                   </HelpText>
@@ -365,6 +365,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     }}
                     value=""
                   />
+                  <Label
+                    className="margin-bottom-1"
+                    htmlFor="IntakeForm-ProductManager"
+                  >
+                    {t('contactDetails.productManager.nameField')}
+                  </Label>
                   <FieldErrorMsg>
                     {flatErrors['productManager.name']}
                   </FieldErrorMsg>
@@ -440,11 +446,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {values.isso.isPresent && (
                       <div
                         data-testid="isso-name-container"
-                        className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1"
+                        className="margin-left-4 margin-bottom-1"
                       >
                         <FieldGroup
                           scrollElement="isso.name"
                           error={!!flatErrors['isso.name']}
+                          className="margin-top-2"
                         >
                           <Label htmlFor="IntakeForm-IssoName">
                             {t('contactDetails.isso.name')}
@@ -459,6 +466,28 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             maxLength={50}
                             name="isso.name"
                           />
+                        </FieldGroup>
+                        <FieldGroup
+                          scrollElement="isso.component"
+                          error={!!flatErrors['isso.component']}
+                        >
+                          <Label htmlFor="IntakeForm-IssoComponent">
+                            {t('contactDetails.isso.component')}
+                          </Label>
+                          <FieldErrorMsg>
+                            {flatErrors['isso.component']}
+                          </FieldErrorMsg>
+                          <Field
+                            as={Dropdown}
+                            id="IntakeForm-IssoComponent"
+                            label="ISSO Component"
+                            name="isso.component"
+                          >
+                            <option value="" disabled>
+                              Select an option
+                            </option>
+                            {cmsDivionsAndOfficesOptions('IssoComponent')}
+                          </Field>
                         </FieldGroup>
                       </div>
                     )}

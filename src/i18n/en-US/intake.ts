@@ -151,15 +151,17 @@ const intake = {
     requester: 'Requester',
     requesterComponent: 'Requester Component',
     businessOwner: {
-      name: 'CMS Business Owner Name',
+      name: 'CMS Business Owner',
       helpText:
         'This person owns a line of business related to this request and will champion the request moving forward',
+      nameField: 'CMS Business Owner name',
       component: 'CMS Business Owner Component'
     },
     productManager: {
       name: 'CMS Project/Product Manager, or lead',
       helpText:
         'This person may be contacted for follow ups and to understand the state of the contract',
+      nameField: 'CMS Project/Product Manager, or lead name',
       component: 'CMS Product Manager Component'
     },
     isso: {
@@ -167,7 +169,8 @@ const intake = {
         'Does your project have an Information System Security Officer (ISSO)?',
       helpText:
         'If yes, please tell us the name of your Information System Security Officer so we can get in touch with them',
-      name: 'ISSO Name'
+      name: 'ISSO Name',
+      component: 'ISSO Component'
     },
     collaboration: {
       label: 'For this request, I have started collaborating/consulting with:',
