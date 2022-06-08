@@ -73,11 +73,6 @@ const sideNavItems = (
           component: <ATO system={system} />,
           route: `/systems/${system.id}/ato`,
           componentId: 'ato'
-        },
-        'section-508': {
-          component: <Section508 system={system} />,
-          route: `/systems/${system.id}/section-508`,
-          componentId: 'system-section-508'
         }
       }
     : {
