@@ -86,7 +86,8 @@ func (c *Client) startCacheRefresh(ctx context.Context, cacheRefreshTime time.Du
 		for {
 			err := populateCache(ctx)
 			if err != nil {
-				appcontext.ZLogger(ctx).Error("Failed to refresh cache", zap.Error(err))
+				// This is a Warn() instead of Error() as it happens somewhat frequently, and doesn't necessarily warrant immediate attention
+				appcontext.ZLogger(ctx).Warn("Failed to refresh cache", zap.Error(err))
 			}
 			// Wait for the ticker. This will block the current goroutine until the ticker sends a message over the channel
 			<-ticker.C
