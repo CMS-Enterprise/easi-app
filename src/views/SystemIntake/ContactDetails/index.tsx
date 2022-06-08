@@ -313,15 +313,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   <FieldErrorMsg>
                     {flatErrors['businessOwner.name']}
                   </FieldErrorMsg>
-                  {/* <Field
-                    as={TextInput}
-                    error={!!flatErrors['businessOwner.name']}
-                    disabled={isReqAndBusOwnerSame}
-                    id="IntakeForm-BusinessOwner"
-                    maxLength={50}
-                    name="businessOwner.name"
-                    aria-describedby="IntakeForm-BusinessOwnerHelp"
-                  /> */}
                   {!loading && (
                     <ComboBox
                       id="IntakeForm-BusinessOwner"
@@ -336,6 +327,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                         setFieldValue('businessOwner.name', contact || '')
                       }
                       defaultValue={businessOwner.name || undefined}
+                      disabled={isReqAndBusOwnerSame}
                     />
                   )}
                 </FieldGroup>
@@ -406,15 +398,23 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   <FieldErrorMsg>
                     {flatErrors['productManager.name']}
                   </FieldErrorMsg>
-                  <Field
-                    as={TextInput}
-                    error={!!flatErrors['productManager.name']}
-                    id="IntakeForm-ProductManager"
-                    maxLength={50}
-                    name="productManager.name"
-                    aria-describedby="IntakeForm-ProductManagerHelp"
-                    disabled={isReqAndProductManagerSame}
-                  />
+                  {!loading && (
+                    <ComboBox
+                      id="IntakeForm-ProductManager"
+                      name="productManager.name"
+                      inputProps={{
+                        id: 'IntakeForm-ProductManager',
+                        name: 'productManager.name',
+                        'aria-describedby': 'IntakeForm-ProductManagerHelp'
+                      }}
+                      options={contacts}
+                      onChange={contact =>
+                        setFieldValue('productManager.name', contact || '')
+                      }
+                      defaultValue={productManager.name || undefined}
+                      disabled={isReqAndProductManagerSame}
+                    />
+                  )}
                 </FieldGroup>
 
                 {/* Product Manager Component */}
@@ -491,13 +491,21 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           <FieldErrorMsg>
                             {flatErrors['isso.name']}
                           </FieldErrorMsg>
-                          <Field
-                            as={TextInput}
-                            error={!!flatErrors['isso.name']}
-                            id="IntakeForm-IssoName"
-                            maxLength={50}
-                            name="isso.name"
-                          />
+                          {!loading && (
+                            <ComboBox
+                              id="IntakeForm-IssoName"
+                              name="isso.name"
+                              inputProps={{
+                                id: 'IntakeForm-IssoName',
+                                name: 'isso.name'
+                              }}
+                              options={contacts}
+                              onChange={contact =>
+                                setFieldValue('isso.name', contact || '')
+                              }
+                              defaultValue={isso.name || undefined}
+                            />
+                          )}
                         </FieldGroup>
                         <FieldGroup
                           scrollElement="isso.component"
