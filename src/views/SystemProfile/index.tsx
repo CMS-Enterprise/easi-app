@@ -164,17 +164,9 @@ const SystemProfile = () => {
     [data]
   );
 
-  // Point of Contact
-  // Fallback to the roles: isso, business owner
-  const pointOfContact = useMemo(
-    () =>
-      data?.cedarSystemDetails?.roles.find(
-        role =>
-          role.assigneeType === CedarAssigneeType.PERSON &&
-          role.roleTypeID === SURVEY_POINT_OF_CONTACT
-      ) ?? businessOwner,
-    [data, businessOwner]
-  );
+  // Point of Contact is the business owner for now
+  // Contextualized poc will be determined later
+  const pointOfContact = businessOwner;
 
   const ato = data?.cedarAuthorityToOperate[0];
 
@@ -512,20 +504,18 @@ const SystemProfile = () => {
                                 </Link>
                               </p>
                             )}
-                            {/*
                             <p>
-                              <Link
+                              <UswdsReactLink
                                 aria-label={t('singleSystem.moreContact')}
                                 className="line-height-body-5"
-                                href="/"
+                                to={`/systems/${systemId}/team-and-contract`}
                                 target="_blank"
                               >
                                 {t('singleSystem.moreContact')}
                                 <span aria-hidden>&nbsp;</span>
                                 <span aria-hidden>&rarr; </span>
-                              </Link>
+                              </UswdsReactLink>
                             </p>
-                            */}
                           </div>
                         )}
                       </Grid>
