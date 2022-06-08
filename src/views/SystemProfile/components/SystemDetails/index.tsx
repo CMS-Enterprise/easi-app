@@ -67,9 +67,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
       console.log('deployments', systemDetails?.deployments);
     }
     return systemDetails?.urls.map(url => {
-      // match url.urlHostingEnv with deployment.deploymentType
-      // if (url.urlHostingEnv?.toLowerCase() === 'production') {
-      // }
+      // Find a deployment from matching its type with the url host env
       const hostenv = url.urlHostingEnv;
       const deployment = systemDetails.deployments.filter(
         dpl => dpl.deploymentType?.toLowerCase() === hostenv?.toLowerCase()
@@ -238,7 +236,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
                   )}
                 </CardHeader>
                 <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
-                  <h2 className="link-header margin-top-0 margin-bottom-2">
+                  <h3 className="link-header margin-top-0 margin-bottom-2">
                     {location.address ? (
                       <UswdsReactLink
                         className="link-header"
@@ -252,7 +250,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
                         {t('singleSystem.systemDetails.noEnvironmentURL')}
                       </dd>
                     )}
-                  </h2>
+                  </h3>
                   {location.tags.map((tag: string) => (
                     <Tag
                       key={tag}
