@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Button,
   Checkbox,
+  ComboBox,
   Dropdown,
   IconNavigateBefore,
   Label,
@@ -22,8 +23,10 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
+import { GetCedarContacts } from 'queries/types/GetCedarContacts';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   UpdateSystemIntakeContactDetails,
@@ -126,6 +129,19 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       }
     ]
   });
+
+  const { data, loading } = useQuery<GetCedarContacts>(GetCedarContactsQuery, {
+    variables: { commonName: '' }
+  });
+
+  const contacts = useMemo(() => {
+    return (data?.cedarPersonsByCommonName || []).map(
+      (contact: { commonName: string; email: string; euaUserId: string }) => ({
+        label: contact.commonName,
+        value: contact.commonName
+      })
+    );
+  }, [data]);
 
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
     cmsDivisionsAndOffices.map((office: any) => (
@@ -297,7 +313,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   <FieldErrorMsg>
                     {flatErrors['businessOwner.name']}
                   </FieldErrorMsg>
-                  <Field
+                  {/* <Field
                     as={TextInput}
                     error={!!flatErrors['businessOwner.name']}
                     disabled={isReqAndBusOwnerSame}
@@ -305,7 +321,23 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     maxLength={50}
                     name="businessOwner.name"
                     aria-describedby="IntakeForm-BusinessOwnerHelp"
-                  />
+                  /> */}
+                  {!loading && (
+                    <ComboBox
+                      id="IntakeForm-BusinessOwner"
+                      name="businessOwner.name"
+                      inputProps={{
+                        id: 'IntakeForm-BusinessOwner',
+                        name: 'businessOwner.name',
+                        'aria-describedby': 'IntakeForm-BusinessOwnerHelp'
+                      }}
+                      options={contacts}
+                      onChange={contact =>
+                        setFieldValue('businessOwner.name', contact || '')
+                      }
+                      defaultValue={businessOwner.name || undefined}
+                    />
+                  )}
                 </FieldGroup>
 
                 {/* Business Owner Component */}
