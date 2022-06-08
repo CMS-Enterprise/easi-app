@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@apollo/client';
 import {
   Alert,
   Button,
@@ -16,7 +17,9 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
+import { camelCase } from 'lodash';
 
+import PageLoading from 'components/PageLoading';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -25,17 +28,86 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import GetSystemProfileAtoQuery from 'queries/GetSystemProfileAtoQuery';
+import {
+  GetSystemProfileAto,
+  GetSystemProfileAtoVariables
+} from 'queries/types/GetSystemProfileAto';
+// import { formatDate } from 'utils/date';
+import NotFound from 'views/NotFound';
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import { tempATOProp } from 'views/Sandbox/mockSystemData';
+import { formatDate, showAtoExpirationDate } from 'views/SystemProfile';
 
-import { SystemProfileSubComponentProps } from '..';
+import { showVal, SystemProfileSubComponentProps } from '..';
 
 import './index.scss';
+
+// Threat levels match values from cedarThreat.weaknessRiskLevel
+const threatLevelGrades = [
+  'Critical',
+  'High',
+  'Moderate',
+  'Low',
+  'Not Rated'
+] as const;
+
+type ThreatLevel = typeof threatLevelGrades[number];
+
+type SecurityFindings = Partial<Record<ThreatLevel | 'total', number>>;
 
 const ATO = ({ system }: SystemProfileSubComponentProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
+  const { loading, error, data } = useQuery<
+    GetSystemProfileAto,
+    GetSystemProfileAtoVariables
+  >(GetSystemProfileAtoQuery, {
+    variables: {
+      cedarSystemId: system.id
+    }
+  });
+
+  const { ato, atoStatus } = system;
+
+  // Accumulate security findings from cedar threat levels
+  const cedarThreat = data?.cedarThreat;
+  const securityFindings = useMemo<SecurityFindings | undefined>(() => {
+    return cedarThreat?.reduce<SecurityFindings>(
+      (prev: SecurityFindings, curr) => {
+        const acc = prev;
+        const level = curr!.weaknessRiskLevel as ThreatLevel;
+        // Ignore nulls for non-prod environments, but should always exist on prod
+        if (level === null) return acc;
+        if (!(level in acc)) {
+          acc[level] = 0;
+        }
+        acc[level]! += 1;
+        return acc;
+      },
+      { total: cedarThreat.length }
+    );
+  }, [cedarThreat]);
+
+  useEffect(() => {
+    if (!data) return;
+    /* eslint-disable no-console */
+    console.groupCollapsed('cedarThreat');
+    console.table(cedarThreat);
+    console.groupEnd();
+    console.log('securityFindings:', securityFindings);
+    /* eslint-enable no-console */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  if (loading) {
+    return <PageLoading />;
+  }
+  if (error) {
+    return <NotFound />;
+  }
+
   return (
     <>
       <SectionWrapper borderBottom className="margin-bottom-4 padding-bottom-4">
@@ -43,74 +115,67 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
           {t('singleSystem.ato.header')}
         </h2>
 
-        {/* TODO:  Map status to card colors */}
-        <CardGroup className="margin-0">
-          <Card
-            className={classnames('grid-col-12', {
-              'bg-success-dark': system.atoStatus === 'Active',
-              'bg-warning':
-                system.atoStatus === 'Due Soon' ||
-                system.atoStatus === 'In Progress',
-              'bg-error-dark': system.atoStatus === 'Expired',
-              'bg-base-lighter': system.atoStatus === 'No ATO'
-            })}
-          >
-            <CardHeader
-              className={classnames('padding-2 padding-bottom-0 text-top', {
-                'text-white':
-                  system.atoStatus === 'Active' ||
-                  system.atoStatus === 'Expired',
-                'text-base-darkest':
-                  system.atoStatus === 'Due Soon' ||
-                  system.atoStatus === 'No ATO' ||
-                  system.atoStatus === 'In Progress'
+        {ato ? (
+          <CardGroup className="margin-0">
+            <Card
+              className={classnames('grid-col-12', {
+                'bg-success-dark': atoStatus === 'Active',
+                'bg-warning':
+                  atoStatus === 'Due Soon' || atoStatus === 'In Progress',
+                'bg-error-dark': atoStatus === 'Expired',
+                'bg-base-lighter': atoStatus === 'No ATO'
               })}
             >
-              <DescriptionTerm term={t('singleSystem.ato.status')} />
-              <DescriptionDefinition
-                className="line-height-body-3 font-body-lg text-bold margin-bottom-2"
-                definition={
-                  system.atoStatus === 'No ATO'
-                    ? 'No ATO on file'
-                    : system.atoStatus
-                }
-              />
-              {system.atoStatus !== 'No ATO' && (
-                <Divider
-                  className={classnames('grid-col-12', {
-                    'border-success-darker': system.atoStatus === 'Active',
-                    'border-warning-dark':
-                      system.atoStatus === 'Due Soon' ||
-                      system.atoStatus === 'In Progress',
-                    'border-error-darker': system.atoStatus === 'Expired',
-                    'border-base-light': system.atoStatus === 'No ATO'
-                  })}
-                />
-              )}
-            </CardHeader>
-            {system.atoStatus !== 'No ATO' && (
-              <CardFooter
-                className={classnames('padding-2', {
+              <CardHeader
+                className={classnames('padding-2 padding-bottom-0 text-top', {
                   'text-white':
-                    system.atoStatus === 'Active' ||
-                    system.atoStatus === 'Expired',
+                    atoStatus === 'Active' || atoStatus === 'Expired',
                   'text-base-darkest':
-                    system.atoStatus === 'Due Soon' ||
-                    system.atoStatus === 'No ATO' ||
-                    system.atoStatus === 'In Progress'
+                    atoStatus === 'Due Soon' ||
+                    atoStatus === 'No ATO' ||
+                    atoStatus === 'In Progress'
                 })}
               >
-                <DescriptionTerm term={t('singleSystem.ato.expiration')} />
+                <DescriptionTerm term={t('singleSystem.ato.status')} />
                 <DescriptionDefinition
-                  className="line-height-body-3 font-body-md"
-                  definition="September 15, 2022"
+                  className="line-height-body-3 font-body-lg text-bold margin-bottom-2"
+                  definition={
+                    atoStatus === 'No ATO' ? 'No ATO on file' : atoStatus
+                  }
                 />
-              </CardFooter>
-            )}
-          </Card>
-        </CardGroup>
-
-        {system.atoStatus === 'No ATO' && (
+                {atoStatus !== 'No ATO' && (
+                  <Divider
+                    className={classnames('grid-col-12', {
+                      'border-success-darker': atoStatus === 'Active',
+                      'border-warning-dark':
+                        atoStatus === 'Due Soon' || atoStatus === 'In Progress',
+                      'border-error-darker': atoStatus === 'Expired'
+                      // 'border-base-light': atoStatus === 'No ATO'
+                    })}
+                  />
+                )}
+              </CardHeader>
+              {atoStatus !== 'No ATO' && (
+                <CardFooter
+                  className={classnames('padding-2', {
+                    'text-white':
+                      atoStatus === 'Active' || atoStatus === 'Expired',
+                    'text-base-darkest':
+                      atoStatus === 'Due Soon' ||
+                      // atoStatus === 'No ATO' ||
+                      atoStatus === 'In Progress'
+                  })}
+                >
+                  <DescriptionTerm term={t('singleSystem.ato.expiration')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 font-body-md"
+                    definition={showAtoExpirationDate(ato)}
+                  />
+                </CardFooter>
+              )}
+            </Card>
+          </CardGroup>
+        ) : (
           <Grid row gap className="margin-top-0 margin-bottom-4">
             <Grid tablet={{ col: 12 }}>
               <Alert type="info">{t('singleSystem.ato.noATO')}</Alert>
@@ -118,7 +183,7 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
           </Grid>
         )}
 
-        {flags.systemProfileHiddenFields && system.atoStatus === 'In Progress' && (
+        {flags.systemProfileHiddenFields && atoStatus === 'In Progress' && (
           // @ts-expect-error
           <ProcessList>
             {system?.activities?.map((act: tempATOProp) => (
@@ -179,7 +244,7 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
       <SectionWrapper borderBottom className="margin-bottom-4">
         <h2 className="margin-top-0">{t('singleSystem.ato.POAM')}</h2>
 
-        {system.atoStatus === 'No ATO' && (
+        {atoStatus === 'No ATO' && (
           <Grid row gap className="margin-top-2 margin-bottom-2">
             <Grid tablet={{ col: 12 }}>
               <Alert type="info">{t('singleSystem.ato.noATOPOAM')}</Alert>
@@ -188,14 +253,14 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
         )}
 
         {/* TODO: Map and populate tags with CEDAR */}
-        {system.atoStatus !== 'No ATO' && (
+        {atoStatus !== 'No ATO' && (
           <div>
             <Grid row gap className="margin-top-2">
               <Grid tablet={{ col: 6 }} className="padding-right-2">
                 <DescriptionTerm term={t('singleSystem.ato.totalPOAM')} />
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
-                  definition="12"
+                  definition={showVal(ato?.countOfOpenPoams)}
                 />
               </Grid>
               {flags.systemProfileHiddenFields && (
@@ -228,57 +293,52 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
         )}
       </SectionWrapper>
 
-      <SectionWrapper borderBottom className="margin-bottom-4">
-        <h2 className="margin-top-0">
-          {t('singleSystem.ato.securityFindings')}
-        </h2>
+      {securityFindings && (
+        <SectionWrapper borderBottom className="margin-bottom-4">
+          <h2 className="margin-top-0">
+            {t('singleSystem.ato.securityFindings')}
+          </h2>
 
-        {system.atoStatus === 'No ATO' && (
-          <Grid row gap className="margin-top-2 margin-bottom-2">
-            <Grid tablet={{ col: 12 }}>
-              <Alert type="info">{t('singleSystem.ato.noATOPOAM')}</Alert>
+          {atoStatus === 'No ATO' && (
+            <Grid row gap className="margin-top-2 margin-bottom-2">
+              <Grid tablet={{ col: 12 }}>
+                <Alert type="info">{t('singleSystem.ato.noATOPOAM')}</Alert>
+              </Grid>
             </Grid>
-          </Grid>
-        )}
+          )}
 
-        {/* TODO: Map and populate tags with CEDAR */}
-        {system.atoStatus !== 'No ATO' && (
-          <Grid row gap className="margin-top-2 margin-bottom-2">
-            <Grid className="padding-right-2 grid-col-6">
-              <DescriptionTerm term={t('singleSystem.ato.totalFindings')} />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="12"
-              />
-              <DescriptionTerm term={t('singleSystem.ato.mediumFindings')} />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="2"
-              />
+          {atoStatus !== 'No ATO' && (
+            <Grid row gap className="margin-top-2 margin-bottom-2">
+              {['total', ...threatLevelGrades]
+                .filter(k => k in securityFindings)
+                .map(k => {
+                  const camelKey = camelCase(k);
+                  return (
+                    <Grid key={camelKey} className="padding-right-2 grid-col-6">
+                      <DescriptionTerm
+                        term={t(`singleSystem.ato.${camelKey}Findings`)}
+                      />
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={
+                          securityFindings[k as keyof SecurityFindings]
+                        }
+                      />
+                    </Grid>
+                  );
+                })}
             </Grid>
-            <Grid className="padding-right-2 grid-col-6">
-              <DescriptionTerm term={t('singleSystem.ato.highFindings')} />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="4"
-              />
-              <DescriptionTerm term={t('singleSystem.ato.lowFindings')} />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="6"
-              />
-            </Grid>
-          </Grid>
-        )}
-        {/* TODO: Fill external CFACT link */}
-        {flags.systemProfileHiddenFields && (
-          <Link href="/" target="_blank">
-            <Button type="button" outline>
-              {t('singleSystem.ato.viewFindings')}
-            </Button>
-          </Link>
-        )}
-      </SectionWrapper>
+          )}
+          {/* TODO: Fill external CFACT link */}
+          {flags.systemProfileHiddenFields && (
+            <Link href="/" target="_blank">
+              <Button type="button" outline>
+                {t('singleSystem.ato.viewFindings')}
+              </Button>
+            </Link>
+          )}
+        </SectionWrapper>
+      )}
 
       <SectionWrapper
         borderBottom={isMobile}
@@ -288,7 +348,7 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
           {t('singleSystem.ato.datesAndTests')}
         </h2>
 
-        {system.atoStatus === 'No ATO' && (
+        {atoStatus === 'No ATO' && (
           <Grid row gap className="margin-top-2 margin-bottom-2">
             <Grid tablet={{ col: 12 }}>
               <Alert type="info">{t('singleSystem.ato.noATODates')}</Alert>
@@ -297,7 +357,7 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
         )}
 
         {/* TODO: Map and populate tags with CEDAR */}
-        {system.atoStatus !== 'No ATO' && (
+        {atoStatus !== 'No ATO' && (
           <div>
             {flags.systemProfileHiddenFields ? (
               <>
@@ -397,7 +457,10 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
                   />
                   <DescriptionDefinition
                     className="line-height-body-3 margin-bottom-4"
-                    definition="September 24, 2021"
+                    definition={showVal(
+                      ato?.lastAssessmentDate &&
+                        formatDate(ato!.lastAssessmentDate)
+                    )}
                   />
                 </Grid>
               </Grid>

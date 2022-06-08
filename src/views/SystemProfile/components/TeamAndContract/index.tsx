@@ -22,11 +22,15 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import GetSystemProfileTeamQuery from 'queries/GetSystemProfileTeamQuery';
-import { GetSystemProfileTeam } from 'queries/types/GetSystemProfileTeam';
+import {
+  GetSystemProfileTeam,
+  GetSystemProfileTeamVariables
+} from 'queries/types/GetSystemProfileTeam';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
+import { showPersonFullName } from 'views/SystemProfile';
 
-import { SystemProfileSubComponentProps } from '..';
+import { showVal, SystemProfileSubComponentProps } from '..';
 
 import './index.scss';
 
@@ -61,20 +65,22 @@ const vendorsData = [
 const SystemTeamAndContract = ({ system }: SystemProfileSubComponentProps) => {
   const { t } = useTranslation('systemProfile');
   const flags = useFlags();
-  const { loading, error, data } = useQuery<GetSystemProfileTeam>(
-    GetSystemProfileTeamQuery,
-    {
-      variables: {
-        systemId: system.id
-      }
+  const { loading, error, data } = useQuery<
+    GetSystemProfileTeam,
+    GetSystemProfileTeamVariables
+  >(GetSystemProfileTeamQuery, {
+    variables: {
+      systemId: system.id
     }
-  );
+  });
+
   if (loading) {
     return <PageLoading />;
   }
   if (error) {
     return <NotFound />;
   }
+
   return (
     <>
       <SectionWrapper borderBottom className="padding-bottom-4">
@@ -91,7 +97,10 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubComponentProps) => {
               />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
-                definition="5"
+                definition={showVal(
+                  data!.cedarSystemDetails!.businessOwnerInformation
+                    .numberOfFederalFte
+                )}
               />
             </Grid>
             <Grid tablet={{ col: true }}>
@@ -102,7 +111,10 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubComponentProps) => {
               />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
-                definition="6"
+                definition={showVal(
+                  data!.cedarSystemDetails!.businessOwnerInformation
+                    .numberOfContractorFte
+                )}
               />
             </Grid>
           </Grid>
@@ -204,17 +216,17 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubComponentProps) => {
         {t('singleSystem.teamAndContract.header.pointsOfContact')}
       </h2>
       <CardGroup className="margin-0">
-        {data!.roles
-          .filter(role => role.assigneeType === CedarAssigneeType.PERSON)
+        {data!
+          .cedarSystemDetails!.roles.filter(
+            role => role.assigneeType === CedarAssigneeType.PERSON
+          )
           .map(contact => (
             <Card key={contact.roleID} className="grid-col-12 margin-bottom-2">
               <CardHeader className="padding-2 padding-bottom-0">
                 <h5 className="margin-y-0 font-sans-2xs text-normal">
                   {contact.roleTypeName}
                 </h5>
-                <h3 className="margin-y-0">
-                  {contact.assigneeFirstName} {contact.assigneeLastName}
-                </h3>
+                <h3 className="margin-y-0">{showPersonFullName(contact)}</h3>
                 {contact.assigneeEmail !== null && (
                   <div>
                     <Link

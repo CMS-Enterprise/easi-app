@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@apollo/client';
 import {
   Alert,
   Card,
@@ -14,6 +15,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import { ReactComponent as VerifiedUserIcon } from 'uswds/src/img/usa-icons/verified_user.svg';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import PageLoading from 'components/PageLoading';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -22,22 +24,90 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import { tempLocationProp } from 'views/Sandbox/mockSystemData';
+import GetSystemProfileDetailsQuery from 'queries/GetSystemProfileDetailsQuery';
+import {
+  GetSystemProfileDetails,
+  GetSystemProfileDetailsVariables
+} from 'queries/types/GetSystemProfileDetails';
+import NotFound from 'views/NotFound';
 
-import { SystemProfileSubComponentProps } from '..';
+// import { tempLocationProp } from 'views/Sandbox/mockSystemData';
+import { showVal, SystemProfileSubComponentProps } from '..';
 
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import 'index.scss';
-
-// Function for determining if a system has any URLs (otherwise results in alert)
-const checkURLsExist = (locations: tempLocationProp[]): boolean => {
-  return locations.some((location: tempLocationProp) => location.url);
-};
 
 const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
+  const { loading, error, data } = useQuery<
+    GetSystemProfileDetails,
+    GetSystemProfileDetailsVariables
+  >(GetSystemProfileDetailsQuery, {
+    variables: {
+      cedarSystemId: system.id
+    }
+  });
+
+  const systemDetails = data?.cedarSystemDetails;
+
+  // Development tags are derived
+  const developmentTags = useMemo(() => {
+    const tags = [];
+    if (systemDetails?.systemMaintainerInformation.agileUsed === true) {
+      tags.push('Agile Methodology');
+    }
+    return tags;
+  }, [systemDetails]);
+
+  const locations = useMemo(() => {
+    if (systemDetails?.deployments) {
+      // eslint-disable-next-line no-console
+      console.log('deployments', systemDetails?.deployments);
+    }
+    return systemDetails?.urls.map(url => {
+      // match url.urlHostingEnv with deployment.deploymentType
+      // if (url.urlHostingEnv?.toLowerCase() === 'production') {
+      // }
+      const hostenv = url.urlHostingEnv;
+      const deployment = systemDetails.deployments.filter(
+        dpl => dpl.deploymentType?.toLowerCase() === hostenv?.toLowerCase()
+      );
+      // eslint-disable-next-line no-console
+      console.log(
+        'location',
+        'hostenv:',
+        hostenv,
+        'url:',
+        url,
+        'deployment match:',
+        deployment
+      );
+
+      const tags = [];
+      if (url.isAPIEndpoint) tags.push('API endpoint');
+      if (url.isVersionCodeRepository) tags.push('Versioned code respository');
+
+      const provider = deployment[0]?.dataCenter?.name;
+      // eslint-disable-next-line no-console
+      console.log('provider:', provider);
+
+      return {
+        ...url,
+        environment: deployment[0]?.deploymentType,
+        tags,
+        provider
+      };
+    });
+  }, [systemDetails]);
+
+  if (loading) {
+    return <PageLoading />;
+  }
+  if (error) {
+    return <NotFound />;
+  }
 
   return (
     <>
@@ -52,7 +122,11 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionTerm term={t('singleSystem.systemDetails.ownership')} />
             <DescriptionDefinition
               className="font-body-md line-height-body-3"
-              definition="CMS owned"
+              definition={
+                systemDetails!.businessOwnerInformation.isCmsOwned
+                  ? 'CMS owned'
+                  : 'Contractor owned'
+              }
             />
           </Grid>
           <Grid tablet={{ col: 6 }} className="margin-bottom-5">
@@ -61,14 +135,19 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 font-body-md"
-              definition="2,345"
+              definition={showVal(
+                systemDetails!.businessOwnerInformation
+                  .numberOfSupportedUsersPerMonth
+              )}
             />
           </Grid>
           <Grid tablet={{ col: 6 }} className="margin-bottom-5">
             <DescriptionTerm term={t('singleSystem.systemDetails.access')} />
             <DescriptionDefinition
               className="line-height-body-3"
-              definition="Both public and internal access"
+              definition={showVal(
+                systemDetails!.systemMaintainerInformation.netAccessibility
+              )}
             />
           </Grid>
           {flags.systemProfileHiddenFields && (
@@ -82,7 +161,6 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
           )}
         </Grid>
 
-        {/* TODO: Map and populate tags with CEDAR */}
         {flags.systemProfileHiddenFields && (
           <>
             <h3 className="margin-top-0 margin-bottom-1">
@@ -115,103 +193,99 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
           {t('singleSystem.systemDetails.urlsAndLocations')}
         </h2>
 
-        <DescriptionTerm term={t('singleSystem.systemDetails.migrationDate')} />
-        <DescriptionDefinition
-          className="line-height-body-3 margin-bottom-4"
-          definition={
-            'December 12, 2017' ||
-            t('singleSystem.systemDetails.noMigrationDate')
-          }
-        />
-
-        {system.locations && !checkURLsExist(system.locations) && (
-          <Alert type="info" className="margin-bottom-2">
-            {t('singleSystem.systemDetails.noURL')}
-          </Alert>
+        {flags.systemProfileHiddenFields && (
+          <>
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.migrationDate')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={
+                'December 12, 2017' ||
+                t('singleSystem.systemDetails.noMigrationDate')
+              }
+            />
+          </>
         )}
-        <CardGroup className="margin-0">
-          {system?.locations?.map(
-            (location: tempLocationProp): React.ReactNode => (
+
+        {locations && locations.length ? (
+          <CardGroup className="margin-0">
+            {locations?.map(location => (
               <Card
                 key={location.id}
                 data-testid="system-card"
                 className="grid-col-12"
               >
                 <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                  <dt>{location.environment}</dt>
-                  <div>
-                    <dd className="text-right text-base-dark system-profile__icon-container">
-                      <VerifiedUserIcon
-                        width="1rem"
-                        height="1rem"
-                        fill="#00a91c"
-                        className="margin-right-1"
-                        aria-label="verified"
-                      />
-                      <span className="text-tbottom line-height-body-3">
-                        {location.firewall && 'Web Application Firewall'}
-                      </span>
-
-                      {/* TODO: Map defined CEDAR variable once availabe */}
-                    </dd>
-                  </div>
+                  {location.environment && <dt>{location.environment}</dt>}
+                  {location.isBehindWebApplicationFirewall && (
+                    <div>
+                      <dd className="text-right text-base-dark system-profile__icon-container">
+                        <VerifiedUserIcon
+                          width="1rem"
+                          height="1rem"
+                          fill="#00a91c"
+                          className="margin-right-1"
+                          aria-label="verified"
+                        />
+                        <span className="text-tbottom line-height-body-3">
+                          {t(
+                            'singleSystem.systemDetails.webApplicationFirewall'
+                          )}
+                        </span>
+                      </dd>
+                    </div>
+                  )}
                 </CardHeader>
-
                 <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
                   <h2 className="link-header margin-top-0 margin-bottom-2">
-                    {location.url ? (
+                    {location.address ? (
                       <UswdsReactLink
                         className="link-header"
                         variant="external"
-                        to={location.url}
+                        to={location.address}
                       >
-                        {location.url}
+                        {location.address}
                       </UswdsReactLink>
                     ) : (
                       <dd className="margin-left-0">
                         {t('singleSystem.systemDetails.noEnvironmentURL')}
-                        {/* TODO: Map defined CEDAR variable once availabe */}
                       </dd>
                     )}
                   </h2>
-                  {location?.tags?.map((tag: string) => (
+                  {location.tags.map((tag: string) => (
                     <Tag
                       key={tag}
                       className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
                     >
-                      {tag}{' '}
-                      {/* TODO: Map defined CEDAR variable once availabe */}
+                      {tag}
                     </Tag>
                   ))}
-
-                  <Divider />
+                  <Divider /> {/* todo reposition into footer */}
                 </CardBody>
-                <CardFooter className="padding-0">
-                  <Grid row>
-                    <Grid desktop={{ col: 6 }} className="padding-2">
-                      <DescriptionTerm
-                        term={t('singleSystem.systemDetails.location')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3"
-                        definition={location.location}
-                      />
+                {location.provider && (
+                  <CardFooter className="padding-0">
+                    <Grid row>
+                      <Grid desktop={{ col: 6 }} className="padding-2">
+                        <DescriptionTerm
+                          term={t('singleSystem.systemDetails.provider')}
+                        />
+                        <DescriptionDefinition
+                          className="line-height-body-3"
+                          definition={location.provider}
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid desktop={{ col: 6 }} className="padding-2">
-                      <DescriptionTerm
-                        term={t('singleSystem.systemDetails.cloudProvider')}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3"
-                        definition={location.cloudProvider}
-                      />
-                    </Grid>
-                  </Grid>
-                </CardFooter>
+                  </CardFooter>
+                )}
               </Card>
-            )
-          )}
-        </CardGroup>
+            ))}
+          </CardGroup>
+        ) : (
+          <Alert type="info" className="margin-bottom-2">
+            {t('singleSystem.systemDetails.noURL')}
+          </Alert>
+        )}
       </SectionWrapper>
 
       <SectionWrapper
@@ -226,13 +300,13 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
           {t('singleSystem.systemDetails.development')}
         </h2>
 
-        {system.developmentTags?.map((tag: string) => (
+        {developmentTags.map((tag: string) => (
           <Tag
             key={tag}
             className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
           >
             <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
-            {tag} {/* TODO: Map defined CEDAR variable once availabe */}
+            {tag}
           </Tag>
         ))}
 
@@ -255,7 +329,10 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition="Every two weeks"
+              definition={showVal(
+                data!.cedarSystemDetails!.systemMaintainerInformation
+                  .devCompletionPercent
+              )}
             />
           </Grid>
           <Grid desktop={{ col: 6 }}>
@@ -264,7 +341,10 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition="92%"
+              definition={showVal(
+                data!.cedarSystemDetails!.systemMaintainerInformation
+                  .deploymentFrequency
+              )}
             />
             {flags.systemProfileHiddenFields && (
               <>
@@ -284,7 +364,10 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat elementum nibh feugiat donec. Ultricies at libero nullam egestas ipsum, sed."
+              definition={showVal(
+                data!.cedarSystemDetails!.systemMaintainerInformation
+                  .devWorkDescription
+              )}
             />
           </Grid>
           {flags.systemProfileHiddenFields && (

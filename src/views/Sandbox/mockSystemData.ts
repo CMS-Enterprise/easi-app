@@ -1,4 +1,6 @@
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
+// eslint-disable-next-line camelcase
+import { GetSystemProfileAto_cedarAuthorityToOperate } from 'queries/types/GetSystemProfileAto';
 
 // Temporary extension of CEDAR types under BE integration complete
 export type tempLocationProp = {
@@ -75,6 +77,12 @@ export interface tempCedarSystemProps extends CedarSystemProps {
   products?: tempProductsProp[];
   systemData?: tempSystemDataProp[];
   subSystems?: tempSubSystemProp[];
+  //
+  // eslint-disable-next-line camelcase
+  ato?: GetSystemProfileAto_cedarAuthorityToOperate;
+  numberOfContractorFte: number;
+  numberOfFederalFte: number;
+  numberOfFte: number;
 }
 
 export const systemData: tempSystemDataProp[] = [

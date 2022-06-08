@@ -23,10 +23,11 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import { showAtoExpirationDate } from 'views/SystemProfile';
 import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
 import RequestStatusTag from 'views/SystemProfile/RequestStatusTag';
 
-import { SystemProfileSubComponentProps } from '..';
+import { showVal, SystemProfileSubComponentProps } from '..';
 
 // import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
@@ -37,6 +38,8 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
   const [toggleSystemData, setToggleSystemData] = useState(false);
   const [toggleSubSystems, setToggleSubSystems] = useState(false);
   const flags = useFlags();
+
+  const { ato } = system;
 
   return (
     <SectionWrapper
@@ -127,7 +130,7 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
                 <h3 className="link-header margin-top-0 margin-bottom-2">
-                  March 2, 2022 {/* TODO: Get from CEDAR */}
+                  {showAtoExpirationDate(ato)}
                 </h3>
                 <div className="margin-bottom-2">
                   <UswdsReactLink
@@ -142,23 +145,19 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
                 </div>
               </Grid>
             </Grid>
+            <Divider />
           </CardBody>
-          {flags.systemProfileHiddenFields && (
-            <CardFooter className="padding-0">
-              <Divider />
-              <Grid row>
-                <Grid desktop={{ col: 6 }} className="padding-2">
-                  <DescriptionTerm
-                    term={t('singleSystem.ato.currentActivity')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3"
-                    definition="ATO Activity 4" // TODO: Get from CEDAR
-                  />
-                </Grid>
+          <CardFooter className="padding-0">
+            <Grid row>
+              <Grid desktop={{ col: 6 }} className="padding-2">
+                <DescriptionTerm term={t('singleSystem.ato.totalPOAM')} />
+                <DescriptionDefinition
+                  className="line-height-body-3"
+                  definition={showVal(ato?.countOfOpenPoams)}
+                />
               </Grid>
-            </CardFooter>
-          )}
+            </Grid>
+          </CardFooter>
         </Card>
         <Card className="grid-col-12">
           <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
@@ -430,13 +429,12 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
                 <h3 className="link-header margin-top-0 margin-bottom-2">
-                  85 {/* TODO: Get from CEDAR */}
+                  {system.numberOfFte}
                 </h3>
                 <UswdsReactLink
                   className="link-header"
                   to={`/systems/${system.id}/team-and-contract`}
                 >
-                  {/* TODO: Get from CEDAR */}
                   {t('singleSystem.teamAndContract.viewMoreInfo')}
                   <span aria-hidden>&nbsp;</span>
                   <span aria-hidden>&rarr; </span>
@@ -453,7 +451,7 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
                 />
                 <DescriptionDefinition
                   className="line-height-body-3"
-                  definition="12" // TODO: Get from CEDAR
+                  definition={system.numberOfFederalFte}
                 />
               </Grid>
               <Grid desktop={{ col: 6 }} className="padding-2">
@@ -462,7 +460,7 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
                 />
                 <DescriptionDefinition
                   className="line-height-body-3"
-                  definition="73" // TODO: Get from CEDAR
+                  definition={system.numberOfContractorFte}
                 />
               </Grid>
             </Grid>

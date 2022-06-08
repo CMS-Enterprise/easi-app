@@ -1,0 +1,107 @@
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+import { CedarAssigneeType } from "./../../types/graphql-global-types";
+
+// ====================================================
+// GraphQL query operation: GetSystemProfile
+// ====================================================
+
+export interface GetSystemProfile_cedarAuthorityToOperate {
+  __typename: "CedarAuthorityToOperate";
+  uuid: string;
+  tlcPhase: string | null;
+  dateAuthorizationMemoExpires: Time | null;
+  countOfOpenPoams: number;
+  lastAssessmentDate: Time | null;
+}
+
+export interface GetSystemProfile_cedarThreat {
+  __typename: "CedarThreat";
+  id: string | null;
+  parentId: string | null;
+  alternativeId: string | null;
+  type: string | null;
+  weaknessRiskLevel: string | null;
+  daysOpen: number | null;
+  controlFamily: string | null;
+}
+
+export interface GetSystemProfile_cedarSystemDetails_businessOwnerInformation {
+  __typename: "CedarBusinessOwnerInformation";
+  numberOfContractorFte: string | null;
+  numberOfFederalFte: string | null;
+}
+
+export interface GetSystemProfile_cedarSystemDetails_cedarSystem {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
+  description: string | null;
+  acronym: string | null;
+  status: string | null;
+  businessOwnerOrg: string | null;
+  businessOwnerOrgComp: string | null;
+  systemMaintainerOrg: string | null;
+  systemMaintainerOrgComp: string | null;
+}
+
+export interface GetSystemProfile_cedarSystemDetails_deployments_dataCenter {
+  __typename: "CedarDataCenter";
+  name: string | null;
+}
+
+export interface GetSystemProfile_cedarSystemDetails_deployments {
+  __typename: "CedarDeployment";
+  id: string;
+  dataCenter: GetSystemProfile_cedarSystemDetails_deployments_dataCenter | null;
+  deploymentType: string | null;
+  name: string;
+}
+
+export interface GetSystemProfile_cedarSystemDetails_roles {
+  __typename: "CedarRole";
+  application: string;
+  objectID: string;
+  roleTypeID: string;
+  assigneeType: CedarAssigneeType | null;
+  assigneeUsername: string | null;
+  assigneeEmail: string | null;
+  assigneeOrgID: string | null;
+  assigneeOrgName: string | null;
+  assigneeFirstName: string | null;
+  assigneeLastName: string | null;
+  roleTypeName: string | null;
+  roleID: string | null;
+}
+
+export interface GetSystemProfile_cedarSystemDetails_urls {
+  __typename: "CedarURL";
+  id: string;
+  address: string | null;
+  isAPIEndpoint: boolean | null;
+  isBehindWebApplicationFirewall: boolean | null;
+  isVersionCodeRepository: boolean | null;
+  urlHostingEnv: string | null;
+}
+
+export interface GetSystemProfile_cedarSystemDetails {
+  __typename: "CedarSystemDetails";
+  businessOwnerInformation: GetSystemProfile_cedarSystemDetails_businessOwnerInformation;
+  cedarSystem: GetSystemProfile_cedarSystemDetails_cedarSystem;
+  deployments: GetSystemProfile_cedarSystemDetails_deployments[];
+  roles: GetSystemProfile_cedarSystemDetails_roles[];
+  urls: GetSystemProfile_cedarSystemDetails_urls[];
+}
+
+export interface GetSystemProfile {
+  cedarAuthorityToOperate: GetSystemProfile_cedarAuthorityToOperate[];
+  cedarThreat: GetSystemProfile_cedarThreat[];
+  cedarSystemDetails: GetSystemProfile_cedarSystemDetails | null;
+}
+
+export interface GetSystemProfileVariables {
+  cedarSystemId: string;
+}
