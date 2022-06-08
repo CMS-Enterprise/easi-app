@@ -1292,6 +1292,7 @@ type CurrentUser {
 Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
+  id: UUID!
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
@@ -1302,6 +1303,7 @@ type SystemIntakeContact {
 Represents a contact associated with a system intake, including additional fields from CEDAR
 """
 type AugmentedSystemIntakeContact {
+  id: UUID!
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
@@ -1321,11 +1323,21 @@ input CreateSystemIntakeContactInput {
 }
 
 """
+The data needed to update a contact associated with a system intake
+"""
+input UpdateSystemIntakeContactInput {
+  id: UUID!
+  euaUserId: String!
+  systemIntakeId: UUID!
+  component: String!
+  role: String!
+}
+
+"""
 The data needed to delete a system intake contact
 """
 input DeleteSystemIntakeContactInput {
-  euaUserId: String!
-  systemIntakeId: UUID!
+  id: UUID!
 }
 
 """
@@ -1451,6 +1463,7 @@ type Mutation {
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
+  updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
 }
 

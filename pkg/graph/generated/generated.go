@@ -125,6 +125,7 @@ type ComplexityRoot struct {
 		Component      func(childComplexity int) int
 		EUAUserID      func(childComplexity int) int
 		Email          func(childComplexity int) int
+		ID             func(childComplexity int) int
 		Role           func(childComplexity int) int
 		SystemIntakeID func(childComplexity int) int
 	}
@@ -478,6 +479,7 @@ type ComplexityRoot struct {
 		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
 		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
 		UpdateSystemIntakeAdminLead                      func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
+		UpdateSystemIntakeContact                        func(childComplexity int, input model.UpdateSystemIntakeContactInput) int
 		UpdateSystemIntakeContactDetails                 func(childComplexity int, input model.UpdateSystemIntakeContactDetailsInput) int
 		UpdateSystemIntakeContractDetails                func(childComplexity int, input model.UpdateSystemIntakeContractDetailsInput) int
 		UpdateSystemIntakeRequestDetails                 func(childComplexity int, input model.UpdateSystemIntakeRequestDetailsInput) int
@@ -619,6 +621,7 @@ type ComplexityRoot struct {
 	SystemIntakeContact struct {
 		Component      func(childComplexity int) int
 		EUAUserID      func(childComplexity int) int
+		ID             func(childComplexity int) int
 		Role           func(childComplexity int) int
 		SystemIntakeID func(childComplexity int) int
 	}
@@ -901,6 +904,7 @@ type MutationResolver interface {
 	CreateCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.CreateCedarSystemBookmarkPayload, error)
 	DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error)
 	CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error)
+	UpdateSystemIntakeContact(ctx context.Context, input model.UpdateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error)
 	DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error)
 }
 type QueryResolver interface {
@@ -1258,6 +1262,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AugmentedSystemIntakeContact.Email(childComplexity), true
+
+	case "AugmentedSystemIntakeContact.id":
+		if e.complexity.AugmentedSystemIntakeContact.ID == nil {
+			break
+		}
+
+		return e.complexity.AugmentedSystemIntakeContact.ID(childComplexity), true
 
 	case "AugmentedSystemIntakeContact.role":
 		if e.complexity.AugmentedSystemIntakeContact.Role == nil {
@@ -3181,6 +3192,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateSystemIntakeAdminLead(childComplexity, args["input"].(model.UpdateSystemIntakeAdminLeadInput)), true
 
+	case "Mutation.updateSystemIntakeContact":
+		if e.complexity.Mutation.UpdateSystemIntakeContact == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeContact_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeContact(childComplexity, args["input"].(model.UpdateSystemIntakeContactInput)), true
+
 	case "Mutation.updateSystemIntakeContactDetails":
 		if e.complexity.Mutation.UpdateSystemIntakeContactDetails == nil {
 			break
@@ -3989,6 +4012,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeContact.EUAUserID(childComplexity), true
+
+	case "SystemIntakeContact.id":
+		if e.complexity.SystemIntakeContact.ID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContact.ID(childComplexity), true
 
 	case "SystemIntakeContact.role":
 		if e.complexity.SystemIntakeContact.Role == nil {
@@ -5747,6 +5777,7 @@ type CurrentUser {
 Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
+  id: UUID!
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
@@ -5757,6 +5788,7 @@ type SystemIntakeContact {
 Represents a contact associated with a system intake, including additional fields from CEDAR
 """
 type AugmentedSystemIntakeContact {
+  id: UUID!
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
@@ -5776,11 +5808,21 @@ input CreateSystemIntakeContactInput {
 }
 
 """
+The data needed to update a contact associated with a system intake
+"""
+input UpdateSystemIntakeContactInput {
+  id: UUID!
+  euaUserId: String!
+  systemIntakeId: UUID!
+  component: String!
+  role: String!
+}
+
+"""
 The data needed to delete a system intake contact
 """
 input DeleteSystemIntakeContactInput {
-  euaUserId: String!
-  systemIntakeId: UUID!
+  id: UUID!
 }
 
 """
@@ -5906,6 +5948,7 @@ type Mutation {
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
+  updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
 }
 
@@ -6501,6 +6544,21 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeContactDetails_args
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateSystemIntakeContactDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeContactDetailsInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeContact_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateSystemIntakeContactInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSystemIntakeContactInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeContactInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -8142,6 +8200,41 @@ func (ec *executionContext) _AddGRTFeedbackPayload_id(ctx context.Context, field
 	res := resTmp.(*uuid.UUID)
 	fc.Result = res
 	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AugmentedSystemIntakeContact_id(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AugmentedSystemIntakeContact",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AugmentedSystemIntakeContact_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
@@ -17411,6 +17504,45 @@ func (ec *executionContext) _Mutation_createSystemIntakeContact(ctx context.Cont
 	return ec.marshalOCreateSystemIntakeContactPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeContactPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updateSystemIntakeContact(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateSystemIntakeContact_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateSystemIntakeContact(rctx, args["input"].(model.UpdateSystemIntakeContactInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CreateSystemIntakeContactPayload)
+	fc.Result = res
+	return ec.marshalOCreateSystemIntakeContactPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeContactPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_deleteSystemIntakeContact(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -20801,6 +20933,41 @@ func (ec *executionContext) _SystemIntakeCollaborator_name(ctx context.Context, 
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeContact_id(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContact) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContact",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeContact_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContact) (ret graphql.Marshaler) {
@@ -24470,19 +24637,11 @@ func (ec *executionContext) unmarshalInputDeleteSystemIntakeContactInput(ctx con
 
 	for k, v := range asMap {
 		switch k {
-		case "euaUserId":
+		case "id":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
-			it.EuaUserID, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "systemIntakeId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
-			it.SystemIntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25208,6 +25367,61 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("governanceTeams"))
 			it.GovernanceTeams, err = ec.unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeamInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeContactInput, error) {
+	var it model.UpdateSystemIntakeContactInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "euaUserId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
+			it.EuaUserID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "systemIntakeId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
+			it.SystemIntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "component":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
+			it.Component, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "role":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
+			it.Role, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -26052,6 +26266,16 @@ func (ec *executionContext) _AugmentedSystemIntakeContact(ctx context.Context, s
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AugmentedSystemIntakeContact")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AugmentedSystemIntakeContact_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "euaUserId":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._AugmentedSystemIntakeContact_euaUserId(ctx, field, obj)
@@ -29602,6 +29826,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
+		case "updateSystemIntakeContact":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateSystemIntakeContact(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "deleteSystemIntakeContact":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteSystemIntakeContact(ctx, field)
@@ -31275,6 +31506,16 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("SystemIntakeContact")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SystemIntakeContact_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "euaUserId":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._SystemIntakeContact_euaUserId(ctx, field, obj)
@@ -34176,6 +34417,11 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗ
 
 func (ec *executionContext) unmarshalNUpdateSystemIntakeContactDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeContactDetailsInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeContactDetailsInput, error) {
 	res, err := ec.unmarshalInputUpdateSystemIntakeContactDetailsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateSystemIntakeContactInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeContactInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeContactInput, error) {
+	res, err := ec.unmarshalInputUpdateSystemIntakeContactInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
