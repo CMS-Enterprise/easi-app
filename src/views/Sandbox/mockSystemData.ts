@@ -1,6 +1,12 @@
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
-// eslint-disable-next-line camelcase
+/* eslint-disable camelcase */
+import {
+  GetSystemProfile_cedarSystemDetails_deployments,
+  GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
+  GetSystemProfile_cedarSystemDetails_urls
+} from 'queries/types/GetSystemProfile';
 import { GetSystemProfileAto_cedarAuthorityToOperate } from 'queries/types/GetSystemProfileAto';
+/* eslint-enable camelcase */
 
 // Temporary extension of CEDAR types under BE integration complete
 export type tempLocationProp = {
@@ -67,9 +73,20 @@ export type tempSystemDataProp = {
   tags: string[];
 };
 
+export type UrlLocationTag = 'API endpoint' | 'Versioned code respository';
+
+// eslint-disable-next-line camelcase
+export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
+  // eslint-disable-next-line camelcase
+  environment: GetSystemProfile_cedarSystemDetails_deployments['deploymentType'];
+  tags: UrlLocationTag[];
+  // eslint-disable-next-line camelcase
+  provider?: GetSystemProfile_cedarSystemDetails_deployments_dataCenter['name'];
+}
+
 // Temporary extension of CEDAR types under BE integration complete
 export interface tempCedarSystemProps extends CedarSystemProps {
-  locations?: tempLocationProp[];
+  // locations?: tempLocationProp[];
   developmentTags?: string[];
   budgets?: tempBudgetProp[];
   activities?: tempATOProp[];
@@ -78,6 +95,8 @@ export interface tempCedarSystemProps extends CedarSystemProps {
   systemData?: tempSystemDataProp[];
   subSystems?: tempSubSystemProp[];
   //
+  // eslint-disable-next-line camelcase
+  locations?: UrlLocation[];
   // eslint-disable-next-line camelcase
   ato?: GetSystemProfileAto_cedarAuthorityToOperate;
   numberOfContractorFte: number;

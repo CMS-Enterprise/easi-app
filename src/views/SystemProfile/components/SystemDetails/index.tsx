@@ -50,6 +50,8 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
     }
   });
 
+  const { locations } = system;
+
   const systemDetails = data?.cedarSystemDetails;
 
   // Development tags are derived
@@ -59,45 +61,6 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
       tags.push('Agile Methodology');
     }
     return tags;
-  }, [systemDetails]);
-
-  const locations = useMemo(() => {
-    if (systemDetails?.deployments) {
-      // eslint-disable-next-line no-console
-      console.log('deployments', systemDetails?.deployments);
-    }
-    return systemDetails?.urls.map(url => {
-      // Find a deployment from matching its type with the url host env
-      const hostenv = url.urlHostingEnv;
-      const deployment = systemDetails.deployments.filter(
-        dpl => dpl.deploymentType?.toLowerCase() === hostenv?.toLowerCase()
-      );
-      // eslint-disable-next-line no-console
-      console.log(
-        'location',
-        'hostenv:',
-        hostenv,
-        'url:',
-        url,
-        'deployment match:',
-        deployment
-      );
-
-      const tags = [];
-      if (url.isAPIEndpoint) tags.push('API endpoint');
-      if (url.isVersionCodeRepository) tags.push('Versioned code respository');
-
-      const provider = deployment[0]?.dataCenter?.name;
-      // eslint-disable-next-line no-console
-      console.log('provider:', provider);
-
-      return {
-        ...url,
-        environment: deployment[0]?.deploymentType,
-        tags,
-        provider
-      };
-    });
   }, [systemDetails]);
 
   if (loading) {

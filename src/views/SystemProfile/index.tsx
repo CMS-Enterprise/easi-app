@@ -31,10 +31,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import {
-  BUSINESS_OWNER,
-  SURVEY_POINT_OF_CONTACT
-} from 'constants/cedarSystemRoleIds';
+import { BUSINESS_OWNER } from 'constants/cedarSystemRoleIds';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 // import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
@@ -56,11 +53,13 @@ import {
   activities,
   budgetsInfo,
   developmentTags,
-  locationsInfo,
+  // locationsInfo,
   products,
   subSystems,
   systemData,
-  tempCedarSystemProps
+  tempCedarSystemProps,
+  UrlLocation,
+  UrlLocationTag
 } from 'views/Sandbox/mockSystemData';
 
 // components/index contains all the sideNavItems components, routes, labels and translations
@@ -168,6 +167,52 @@ const SystemProfile = () => {
   // Contextualized poc will be determined later
   const pointOfContact = businessOwner;
 
+  const systemDetails = data?.cedarSystemDetails;
+
+  // Url locations
+  const locations: UrlLocation[] | undefined = useMemo(() => {
+    /*
+    if (systemDetails?.deployments) {
+      // eslint-disable-next-line no-console
+      console.log('deployments', systemDetails?.deployments);
+    }
+    */
+    return systemDetails?.urls.map(url => {
+      // Find a deployment from matching its type with the url host env
+      const hostenv = url.urlHostingEnv;
+      const deployment = systemDetails.deployments.filter(
+        dpl => dpl.deploymentType?.toLowerCase() === hostenv?.toLowerCase()
+      );
+      // eslint-disable-next-line no-console
+      /*
+      console.log(
+        'location',
+        'hostenv:',
+        hostenv,
+        'url:',
+        url,
+        'deployment match:',
+        deployment
+      );
+      */
+
+      const tags: UrlLocationTag[] = [];
+      if (url.isAPIEndpoint) tags.push('API endpoint');
+      if (url.isVersionCodeRepository) tags.push('Versioned code respository');
+
+      const provider: UrlLocation['provider'] = deployment[0]?.dataCenter?.name;
+      // eslint-disable-next-line no-console
+      // console.log('provider:', provider);
+
+      return {
+        ...url,
+        environment: deployment[0]?.deploymentType,
+        tags,
+        provider
+      };
+    });
+  }, [systemDetails]);
+
   const ato = data?.cedarAuthorityToOperate[0];
 
   // Ato Status
@@ -248,7 +293,7 @@ const SystemProfile = () => {
   const systemInfo = {
     ...cedarData,
     id: data?.cedarSystemDetails?.cedarSystem.id as string,
-    locations: locationsInfo,
+    // locations: locationsInfo,
     developmentTags,
     budgets: budgetsInfo,
     subSystems,
@@ -259,6 +304,7 @@ const SystemProfile = () => {
     //
     ato,
     atoStatus,
+    locations,
     numberOfContractorFte,
     numberOfFederalFte,
     numberOfFte

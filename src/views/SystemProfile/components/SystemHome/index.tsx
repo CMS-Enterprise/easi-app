@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Card,
@@ -39,7 +39,18 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
   const [toggleSubSystems, setToggleSubSystems] = useState(false);
   const flags = useFlags();
 
-  const { ato } = system;
+  const { ato, locations } = system;
+
+  const urlLocationCard = useMemo(() => {
+    const productionLocation = locations?.find(
+      location => location.environment === 'Production'
+    );
+    if (!productionLocation) return undefined;
+    return {
+      ...productionLocation,
+      count: locations?.length
+    };
+  }, [locations]);
 
   return (
     <SectionWrapper
@@ -47,17 +58,18 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
       className="padding-bottom-4 margin-bottom-4"
     >
       <CardGroup className="margin-0">
-        <>
+        {urlLocationCard && (
           <Card className="grid-col-12">
             <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
               <Grid row>
                 <Grid desktop={{ col: 12 }} className="padding-0">
-                  <dt>Production Environment</dt>
-                  {/* TODO: Get from CEDAR */}
+                  <dt>
+                    {urlLocationCard.environment}{' '}
+                    {t('singleSystem.systemDetails.environment')}
+                  </dt>
                 </Grid>
               </Grid>
             </CardHeader>
-
             <CardBody className="padding-x-2 padding-y-0">
               <Grid row>
                 <Grid desktop={{ col: 12 }} className="padding-0">
@@ -65,48 +77,42 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
                     <UswdsReactLink
                       className="link-header"
                       variant="external"
-                      to="/"
+                      to={urlLocationCard.address!}
                     >
-                      {/* TODO: Get from CEDAR */}
-                      ham.cms.gov
+                      {urlLocationCard.address}
                     </UswdsReactLink>
                   </h3>
-                  {system?.locations ? (
-                    <div className="margin-bottom-2">
-                      <UswdsReactLink
-                        className="link-header"
-                        to={`/systems/${system.id}/details`}
-                      >
-                        {/* TODO: Get from CEDAR */}
-                        {t('singleSystem.systemDetails.view')}{' '}
-                        {system.locations.length}{' '}
-                        {t('singleSystem.systemDetails.moreURLs')}
-                        <span aria-hidden>&nbsp;</span>
-                        <span aria-hidden>&rarr; </span>
-                      </UswdsReactLink>
-                    </div>
-                  ) : (
-                    ''
-                  )}
+                  <div className="margin-bottom-2">
+                    <UswdsReactLink
+                      className="link-header"
+                      to={`/systems/${system.id}/details`}
+                    >
+                      {t('singleSystem.systemDetails.view')}{' '}
+                      {urlLocationCard.count}{' '}
+                      {t('singleSystem.systemDetails.moreURLs')}
+                      <span aria-hidden>&nbsp;</span>
+                      <span aria-hidden>&rarr; </span>
+                    </UswdsReactLink>
+                  </div>
                 </Grid>
               </Grid>
               <Divider />
             </CardBody>
             <CardFooter className="padding-0">
               <Grid row>
-                <Grid desktop={{ col: 6 }} className="padding-2">
+                <Grid className="padding-2">
                   <DescriptionTerm
-                    term={t('singleSystem.systemDetails.location')}
+                    term={t('singleSystem.systemDetails.provider')}
                   />
                   <DescriptionDefinition
                     className="line-height-body-3"
-                    definition="AWS East" // TODO: Get from CEDAR
+                    definition={urlLocationCard.provider}
                   />
                 </Grid>
               </Grid>
             </CardFooter>
           </Card>
-        </>
+        )}
         <Card className="grid-col-12">
           <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
             <dt>{t('singleSystem.ato.atoExpiration')}</dt>
