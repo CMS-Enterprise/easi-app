@@ -156,6 +156,7 @@ const systemProfile = {
       webApplicationFirewall: 'Web Application Firewall',
       migrationDate: 'Cloud migration date',
       noMigrationDate: 'No clould migration planned yet',
+      environment: 'environment',
       provider: 'Data Center/Cloud Service Provider name',
       location: 'Location',
       // cloudProvider: 'Cloud Service Provider',

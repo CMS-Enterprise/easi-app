@@ -215,7 +215,12 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
                 className="grid-col-12"
               >
                 <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                  {location.environment && <dt>{location.environment}</dt>}
+                  <dt>
+                    {location.environment &&
+                      `${location.environment} ${t(
+                        'singleSystem.systemDetails.environment'
+                      )}`}
+                  </dt>
                   {location.isBehindWebApplicationFirewall && (
                     <div>
                       <dd className="text-right text-base-dark system-profile__icon-container">
@@ -259,12 +264,13 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
                       {tag}
                     </Tag>
                   ))}
-                  <Divider /> {/* todo reposition into footer */}
+                  <div />
                 </CardBody>
                 {location.provider && (
                   <CardFooter className="padding-0">
                     <Grid row>
-                      <Grid desktop={{ col: 6 }} className="padding-2">
+                      <Divider className="margin-x-2" />
+                      <Grid desktop={{ col: 12 }} className="padding-2">
                         <DescriptionTerm
                           term={t('singleSystem.systemDetails.provider')}
                         />
