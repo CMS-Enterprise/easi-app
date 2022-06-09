@@ -15,9 +15,11 @@ type AugmentedSystemIntakeContact struct {
 
 // SystemIntakeContact represents an EUA user's association with a system intake
 type SystemIntakeContact struct {
+	ID             uuid.UUID  `json:"id"`
 	EUAUserID      string     `json:"euaUserId" db:"eua_user_id"`
 	SystemIntakeID uuid.UUID  `json:"systemIntakeId" db:"system_intake_id"`
-	CreatedAt      *time.Time `db:"created_at"`
 	Component      string     `json:"component" db:"component"`
 	Role           string     `json:"role" db:"role"`
+	UpdatedAt      *time.Time `db:"updated_at"`
+	CreatedAt      *time.Time `db:"created_at"`
 }
