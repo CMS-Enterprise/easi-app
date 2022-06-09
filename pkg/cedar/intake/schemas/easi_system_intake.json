@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIIntake",
-  "title": "EASIIntakeV03",
+  "title": "EASIIntakeV04",
   "definitions": {
     "EASIIntake": {
       "required": [
@@ -130,13 +130,6 @@
             "Go get a contract"
           ]
         },
-        "eaCollaborator": {
-          "type": "string",
-          "description": "N/A",
-          "examples": [
-            "N/A"
-          ]
-        },
         "eaCollaboratorName": {
           "type": "string",
           "description": "Enterprise Architecture (EA) Collaborator",
@@ -187,20 +180,6 @@
             "2025-10-20T00:00:00Z"
           ]
         },
-        "grtReviewEmailBody": {
-          "type": "string",
-          "description": "N/A",
-          "examples": [
-            "N/A"
-          ]
-        },
-        "isso": {
-          "type": "string",
-          "description": "N/A",
-          "examples": [
-            "N/A"
-          ]
-        },
         "issoName": {
           "type": "string",
           "description": "Information System Security Officer (ISSO) for the effort detailed in this request",
@@ -234,13 +213,6 @@
           "description": "Scope of LCID",
           "examples": [
             "This LCID covers development and operation of the application"
-          ]
-        },
-        "oitSecurityCollaborator": {
-          "type": "string",
-          "description": "N/A",
-          "examples": [
-            "N/A"
           ]
         },
         "oitSecurityCollaboratorName": {
@@ -332,13 +304,6 @@
           "description": "Timestamp of when request was submitted",
           "examples": [
             "2022-02-17T14:34:43Z"
-          ]
-        },
-        "trbCollaborator": {
-          "type": "string",
-          "description": "N/A",
-          "examples": [
-            "N/A"
           ]
         },
         "trbCollaboratorName": {
