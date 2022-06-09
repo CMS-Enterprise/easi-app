@@ -124,7 +124,10 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
                     system.atoStatus === 'Due Soon' ||
                     system.atoStatus === 'In Progress',
                   'bg-error-dark': system.atoStatus === 'Expired',
-                  'bg-base-lighter': system.atoStatus === 'No ATO'
+                  'bg-base-lighter': system.atoStatus === 'No ATO',
+                  'text-white':
+                    system.atoStatus === 'Active' ||
+                    system.atoStatus === 'Expired'
                 })}
               >
                 {system.atoStatus}
