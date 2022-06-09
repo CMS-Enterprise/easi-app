@@ -1431,16 +1431,29 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 	}
 
 	if input.FundingSource != nil {
-		if null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
-			intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
-			intake.FundingSource = null.StringFromPtr(input.FundingSource.Source)
-			intake.FundingNumber = null.StringFromPtr(input.FundingSource.FundingNumber)
-		}
+		intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.ExistingFunding)
+		if intake.ExistingFunding.ValueOrZero() {
+			fundingSources := make([]*models.SystemIntakeFundingSource, 0, len(input.FundingSource.FundingSources))
+			for _, fundingSourceInput := range input.FundingSource.FundingSources {
+				fundingSources = append(fundingSources, &models.SystemIntakeFundingSource{
+					SystemIntakeID: intake.ID,
+					Source:         null.StringFromPtr(fundingSourceInput.Source),
+					FundingNumber:  null.StringFromPtr(fundingSourceInput.FundingNumber),
+				})
+			}
 
-		if !null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
-			intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
-			intake.FundingSource = null.StringFromPtr(nil)
-			intake.FundingNumber = null.StringFromPtr(nil)
+			_, err = r.store.UpdateSystemIntakeFundingSources(ctx, input.ID, fundingSources)
+
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			// Delete existing funding source records
+			_, err = r.store.UpdateSystemIntakeFundingSources(ctx, input.ID, nil)
+
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -2006,12 +2019,8 @@ func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.System
 	return obj.EUAUserID.String, nil
 }
 
-func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeFundingSource, error) {
-	return &model.SystemIntakeFundingSource{
-		IsFunded:      obj.ExistingFunding.Ptr(),
-		FundingNumber: obj.FundingNumber.Ptr(),
-		Source:        obj.FundingSource.Ptr(),
-	}, nil
+func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.ExistingFunding.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error) {
@@ -2177,6 +2186,14 @@ func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.Sy
 	return obj.CedarSystemID.Ptr(), nil
 }
 
+func (r *systemIntakeFundingSourceResolver) FundingNumber(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
+	return obj.FundingNumber.Ptr(), nil
+}
+
+func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
+	return obj.Source.Ptr(), nil
+}
+
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return string(obj.Email), nil
 }
@@ -2239,6 +2256,11 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
+// SystemIntakeFundingSource returns generated.SystemIntakeFundingSourceResolver implementation.
+func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSourceResolver {
+	return &systemIntakeFundingSourceResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2256,4 +2278,5 @@ type cedarThreatResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+type systemIntakeFundingSourceResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

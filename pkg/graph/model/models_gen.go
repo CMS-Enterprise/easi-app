@@ -444,17 +444,16 @@ type SystemIntakeCostsInput struct {
 }
 
 // Represents the source of funding for a system
-type SystemIntakeFundingSource struct {
-	FundingNumber *string `json:"fundingNumber"`
-	IsFunded      *bool   `json:"isFunded"`
-	Source        *string `json:"source"`
+type SystemIntakeFundingSourceInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
+	FundingNumber  *string   `json:"fundingNumber"`
+	Source         *string   `json:"source"`
 }
 
-// Input data detailing how a system is funded
-type SystemIntakeFundingSourceInput struct {
-	FundingNumber *string `json:"fundingNumber"`
-	IsFunded      *bool   `json:"isFunded"`
-	Source        *string `json:"source"`
+// The input required to specify the funding source(s) for a system intake
+type SystemIntakeFundingSourcesInput struct {
+	ExistingFunding *bool                             `json:"existingFunding"`
+	FundingSources  []*SystemIntakeFundingSourceInput `json:"fundingSources"`
 }
 
 // Contains multiple system request collaborators, if any
@@ -596,10 +595,10 @@ type UpdateSystemIntakeContactInput struct {
 
 // Input data for updating contract details related to a system request
 type UpdateSystemIntakeContractDetailsInput struct {
-	ID            uuid.UUID                       `json:"id"`
-	FundingSource *SystemIntakeFundingSourceInput `json:"fundingSource"`
-	Costs         *SystemIntakeCostsInput         `json:"costs"`
-	Contract      *SystemIntakeContractInput      `json:"contract"`
+	ID            uuid.UUID                        `json:"id"`
+	FundingSource *SystemIntakeFundingSourcesInput `json:"fundingSource"`
+	Costs         *SystemIntakeCostsInput          `json:"costs"`
+	Contract      *SystemIntakeContractInput       `json:"contract"`
 }
 
 // The payload for updating a system's IT governance request

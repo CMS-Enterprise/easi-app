@@ -184,8 +184,15 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 		ExistingFunding: null.BoolFrom(true),
 		FundingNumber:   null.StringFrom("123456"),
 		FundingSource:   null.StringFrom("Research"),
-		BusinessNeed:    null.StringFrom("A business need. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
-		Solution:        null.StringFrom("A solution. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
+		FundingSources: []*models.SystemIntakeFundingSource{
+			{
+				FundingNumber: null.StringFrom("123456"),
+				Source:        null.StringFrom("Research"),
+			},
+		},
+
+		BusinessNeed: null.StringFrom("A business need. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
+		Solution:     null.StringFrom("A solution. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
 
 		ProcessStatus:      null.StringFrom("I have done some initial research"),
 		EASupportRequest:   null.BoolFrom(true),

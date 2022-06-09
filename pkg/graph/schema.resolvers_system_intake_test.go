@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
@@ -1211,9 +1212,14 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 			updateSystemIntakeContractDetails(input: {
 				id: "%s",
 				fundingSource: {
-					fundingNumber: "123456"
-					isFunded: true
-					source: "Prog Ops"
+					existingFunding: true
+					fundingSources: [
+						{
+							systemIntakeId: "%s"
+							source: "Prog Ops"
+							fundingNumber: "123456"
+						}
+					]
 				}
 				costs: {
 					expectedIncreaseAmount: "A little bit"
@@ -1229,9 +1235,9 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 			}) {
 				systemIntake {
 					id
-					fundingSource {
+					existingFunding
+					fundingSources {
 						fundingNumber
-						isFunded
 						source
 					}
 					costs {
@@ -1255,7 +1261,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID, intake.ID), &resp)
 
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
 
@@ -1301,11 +1307,12 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 	var resp struct {
 		UpdateSystemIntakeContractDetails struct {
 			SystemIntake struct {
-				ID            string
-				FundingSource struct {
-					FundingNumber *string
-					IsFunded      bool
-					Source        *string
+				ID              string
+				ExistingFunding bool
+				FundingSources  []*struct {
+					SystemIntakeID uuid.UUID
+					FundingNumber  *string
+					Source         *string
 				}
 			}
 		}
@@ -1316,16 +1323,15 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 			updateSystemIntakeContractDetails(input: {
 				id: "%s",
 				fundingSource: {
-					fundingNumber: ""
-					isFunded: false
-					source: ""
+					existingFunding: false
+					fundingSources: []
 				}
 			}) {
 				systemIntake {
 					id
-					fundingSource {
+					existingFunding
+					fundingSources {
 						fundingNumber
-						isFunded
 						source
 					}
 				}
@@ -1335,10 +1341,9 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
-	fundingSource := respIntake.FundingSource
-	s.Nil(fundingSource.FundingNumber)
-	s.False(fundingSource.IsFunded)
-	s.Nil(fundingSource.Source)
+	fundingSources := respIntake.FundingSources
+	s.True(len(fundingSources) == 0)
+	s.False(respIntake.ExistingFunding)
 }
 
 func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
