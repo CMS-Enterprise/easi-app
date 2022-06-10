@@ -37,7 +37,7 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 				fundingSource.UpdatedAt = &now
 			}
 			const createFundingSourceSQL = `
-				INSERT INTO system_intakes (
+				INSERT INTO system_intake_funding_sources (
 					id,
 					system_intake_id,
 					source,
