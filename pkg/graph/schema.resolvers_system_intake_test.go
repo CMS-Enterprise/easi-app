@@ -1307,14 +1307,12 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 	var resp struct {
 		UpdateSystemIntakeContractDetails struct {
 			SystemIntake struct {
-				ID            string
-				FundingSource struct {
-					ExistingFunding bool
-					FundingSources  []struct {
-						SystemIntakeID string
-						Source         string
-						FundingNumber  string
-					}
+				ID              string
+				ExistingFunding bool
+				FundingSources  []struct {
+					SystemIntakeID string
+					Source         string
+					FundingNumber  string
 				}
 			}
 		}
@@ -1343,9 +1341,8 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
-	fundingSources := respIntake.FundingSource.FundingSources
+	fundingSources := respIntake.FundingSources
 	s.True(len(fundingSources) == 0)
-	s.False(respIntake.FundingSource.ExistingFunding)
 }
 
 func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
