@@ -1037,7 +1037,6 @@ type SystemIntakeFundingSource {
 Represents the source of funding for a system
 """
 input SystemIntakeFundingSourceInput {
-  systemIntakeId: UUID!
   fundingNumber: String
   source: String
 }

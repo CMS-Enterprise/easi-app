@@ -445,9 +445,8 @@ type SystemIntakeCostsInput struct {
 
 // Represents the source of funding for a system
 type SystemIntakeFundingSourceInput struct {
-	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
-	FundingNumber  *string   `json:"fundingNumber"`
-	Source         *string   `json:"source"`
+	FundingNumber *string `json:"fundingNumber"`
+	Source        *string `json:"source"`
 }
 
 // The input required to specify the funding source(s) for a system intake

@@ -340,7 +340,6 @@ export interface SystemIntakeCostsInput {
  * Represents the source of funding for a system
  */
 export interface SystemIntakeFundingSourceInput {
-  systemIntakeId: UUID;
   fundingNumber?: string | null;
   source?: string | null;
 }

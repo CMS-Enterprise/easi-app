@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1425,14 +1426,20 @@ func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context,
 }
 
 func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+	fmt.Printf("**************************************\n\n\n\n")
 	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
 	}
 
+	fmt.Println("    1. Loaded intake with ID ", intake.ID)
+
 	if input.FundingSource != nil {
+		fmt.Println("    2. Funding source not nil ")
 		intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.ExistingFunding)
+		fmt.Println("    5. ExistingFunding: ", intake.ExistingFunding)
 		if intake.ExistingFunding.ValueOrZero() {
+			fmt.Println("    4. len(input.FundingSource.FundingSources): ", len(input.FundingSource.FundingSources))
 			fundingSources := make([]*models.SystemIntakeFundingSource, 0, len(input.FundingSource.FundingSources))
 			for _, fundingSourceInput := range input.FundingSource.FundingSources {
 				fundingSources = append(fundingSources, &models.SystemIntakeFundingSource{
@@ -1441,9 +1448,11 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 					FundingNumber:  null.StringFromPtr(fundingSourceInput.FundingNumber),
 				})
 			}
+			fmt.Println("    5. len(input.FundingSource.FundingSources): ", len(input.FundingSource.FundingSources))
 
 			_, err = r.store.UpdateSystemIntakeFundingSources(ctx, input.ID, fundingSources)
 
+			fmt.Println("    6. len(input.FundingSource.FundingSources): ", len(input.FundingSource.FundingSources))
 			if err != nil {
 				return nil, err
 			}

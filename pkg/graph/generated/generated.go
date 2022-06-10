@@ -5536,7 +5536,6 @@ type SystemIntakeFundingSource {
 Represents the source of funding for a system
 """
 input SystemIntakeFundingSourceInput {
-  systemIntakeId: UUID!
   fundingNumber: String
   source: String
 }
@@ -25101,14 +25100,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeFundingSourceInput(ctx con
 
 	for k, v := range asMap {
 		switch k {
-		case "systemIntakeId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
-			it.SystemIntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "fundingNumber":
 			var err error
 

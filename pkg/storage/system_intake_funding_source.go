@@ -17,7 +17,7 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 
 	deleteFundingSourcesSQL := `
 		DELETE FROM system_intake_funding_sources
-		WHERE system_intake_id = "$1";
+		WHERE system_intake_id = $1;
 	`
 	_, err := tx.Exec(deleteFundingSourcesSQL, systemIntakeID.String())
 
