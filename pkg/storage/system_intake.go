@@ -134,6 +134,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 // UpdateSystemIntake does an upsert for a system intake
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
+	fmt.Println("... 1")
 	const updateSystemIntakeSQL = `
 		UPDATE system_intakes
 		SET
@@ -192,6 +193,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 		updateSystemIntakeSQL,
 		intake,
 	)
+	fmt.Println("... 2")
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update system intake %s", err),
@@ -204,6 +206,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			Operation: apperrors.QueryUpdate,
 		}
 	}
+	fmt.Println("... 3, intake: ", intake.ID)
 	// the SystemIntake may have been updated to Archived, so we want to use
 	// the un-filtered fetch to return the saved object
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
