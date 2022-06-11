@@ -9,15 +9,6 @@ export default gql`
       countOfOpenPoams
       lastAssessmentDate
     }
-    cedarThreat(cedarSystemId: $cedarSystemId) {
-      id
-      parentId
-      alternativeId
-      type
-      weaknessRiskLevel
-      daysOpen
-      controlFamily
-    }
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       businessOwnerInformation {
         numberOfContractorFte

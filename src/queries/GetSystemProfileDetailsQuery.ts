@@ -7,31 +7,12 @@ export default gql`
         isCmsOwned
         numberOfSupportedUsersPerMonth
       }
-      cedarSystem {
-        id
-      }
-      deployments {
-        id
-        dataCenter {
-          name
-        }
-        deploymentType
-        name
-      }
       systemMaintainerInformation {
         agileUsed
         deploymentFrequency
         devCompletionPercent
         devWorkDescription
         netAccessibility
-      }
-      urls {
-        id
-        address
-        isAPIEndpoint
-        isBehindWebApplicationFirewall
-        isVersionCodeRepository
-        urlHostingEnv
       }
     }
   }

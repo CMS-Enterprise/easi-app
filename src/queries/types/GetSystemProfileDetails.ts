@@ -13,24 +13,6 @@ export interface GetSystemProfileDetails_cedarSystemDetails_businessOwnerInforma
   numberOfSupportedUsersPerMonth: string | null;
 }
 
-export interface GetSystemProfileDetails_cedarSystemDetails_cedarSystem {
-  __typename: "CedarSystem";
-  id: string;
-}
-
-export interface GetSystemProfileDetails_cedarSystemDetails_deployments_dataCenter {
-  __typename: "CedarDataCenter";
-  name: string | null;
-}
-
-export interface GetSystemProfileDetails_cedarSystemDetails_deployments {
-  __typename: "CedarDeployment";
-  id: string;
-  dataCenter: GetSystemProfileDetails_cedarSystemDetails_deployments_dataCenter | null;
-  deploymentType: string | null;
-  name: string;
-}
-
 export interface GetSystemProfileDetails_cedarSystemDetails_systemMaintainerInformation {
   __typename: "CedarSystemMaintainerInformation";
   agileUsed: boolean | null;
@@ -40,23 +22,10 @@ export interface GetSystemProfileDetails_cedarSystemDetails_systemMaintainerInfo
   netAccessibility: string | null;
 }
 
-export interface GetSystemProfileDetails_cedarSystemDetails_urls {
-  __typename: "CedarURL";
-  id: string;
-  address: string | null;
-  isAPIEndpoint: boolean | null;
-  isBehindWebApplicationFirewall: boolean | null;
-  isVersionCodeRepository: boolean | null;
-  urlHostingEnv: string | null;
-}
-
 export interface GetSystemProfileDetails_cedarSystemDetails {
   __typename: "CedarSystemDetails";
   businessOwnerInformation: GetSystemProfileDetails_cedarSystemDetails_businessOwnerInformation;
-  cedarSystem: GetSystemProfileDetails_cedarSystemDetails_cedarSystem;
-  deployments: GetSystemProfileDetails_cedarSystemDetails_deployments[];
   systemMaintainerInformation: GetSystemProfileDetails_cedarSystemDetails_systemMaintainerInformation;
-  urls: GetSystemProfileDetails_cedarSystemDetails_urls[];
 }
 
 export interface GetSystemProfileDetails {

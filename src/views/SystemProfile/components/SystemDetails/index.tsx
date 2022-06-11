@@ -58,7 +58,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
   const developmentTags = useMemo(() => {
     const tags = [];
     if (systemDetails?.systemMaintainerInformation.agileUsed === true) {
-      tags.push('Agile Methodology');
+      tags.push('Agile Methodology'); // todo i18
     }
     return tags;
   }, [systemDetails]);
@@ -77,7 +77,6 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
           {t('singleSystem.systemDetails.header')}
         </h2>
 
-        {/* TODO: Map <DescriptionTerm /> to CEDAR data */}
         <Grid row className="margin-top-3">
           <Grid tablet={{ col: 6 }} className="margin-bottom-5">
             <DescriptionTerm term={t('singleSystem.systemDetails.ownership')} />
@@ -85,7 +84,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
               className="font-body-md line-height-body-3"
               definition={
                 systemDetails!.businessOwnerInformation.isCmsOwned
-                  ? 'CMS owned'
+                  ? 'CMS owned' // todo i18, move out to fn
                   : 'Contractor owned'
               }
             />
@@ -297,8 +296,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
               definition={showVal(
-                data!.cedarSystemDetails!.systemMaintainerInformation
-                  .devCompletionPercent
+                systemDetails!.systemMaintainerInformation.devCompletionPercent
               )}
             />
           </Grid>
@@ -309,8 +307,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
               definition={showVal(
-                data!.cedarSystemDetails!.systemMaintainerInformation
-                  .deploymentFrequency
+                systemDetails!.systemMaintainerInformation.deploymentFrequency
               )}
             />
             {flags.systemProfileHiddenFields && (
@@ -332,8 +329,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
               definition={showVal(
-                data!.cedarSystemDetails!.systemMaintainerInformation
-                  .devWorkDescription
+                systemDetails!.systemMaintainerInformation.devWorkDescription
               )}
             />
           </Grid>

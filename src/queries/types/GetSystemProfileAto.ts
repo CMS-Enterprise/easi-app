@@ -7,15 +7,6 @@
 // GraphQL query operation: GetSystemProfileAto
 // ====================================================
 
-export interface GetSystemProfileAto_cedarAuthorityToOperate {
-  __typename: "CedarAuthorityToOperate";
-  uuid: string;
-  tlcPhase: string | null;
-  dateAuthorizationMemoExpires: Time | null;
-  countOfOpenPoams: number;
-  lastAssessmentDate: Time | null;
-}
-
 export interface GetSystemProfileAto_cedarThreat {
   __typename: "CedarThreat";
   id: string | null;
@@ -28,7 +19,6 @@ export interface GetSystemProfileAto_cedarThreat {
 }
 
 export interface GetSystemProfileAto {
-  cedarAuthorityToOperate: GetSystemProfileAto_cedarAuthorityToOperate[];
   cedarThreat: GetSystemProfileAto_cedarThreat[];
 }
 

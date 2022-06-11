@@ -18,17 +18,6 @@ export interface GetSystemProfile_cedarAuthorityToOperate {
   lastAssessmentDate: Time | null;
 }
 
-export interface GetSystemProfile_cedarThreat {
-  __typename: "CedarThreat";
-  id: string | null;
-  parentId: string | null;
-  alternativeId: string | null;
-  type: string | null;
-  weaknessRiskLevel: string | null;
-  daysOpen: number | null;
-  controlFamily: string | null;
-}
-
 export interface GetSystemProfile_cedarSystemDetails_businessOwnerInformation {
   __typename: "CedarBusinessOwnerInformation";
   numberOfContractorFte: string | null;
@@ -98,7 +87,6 @@ export interface GetSystemProfile_cedarSystemDetails {
 
 export interface GetSystemProfile {
   cedarAuthorityToOperate: GetSystemProfile_cedarAuthorityToOperate[];
-  cedarThreat: GetSystemProfile_cedarThreat[];
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails | null;
 }
 

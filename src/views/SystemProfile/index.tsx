@@ -287,11 +287,13 @@ const SystemProfile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  const cedarData = (data?.cedarSystem ?? null) as tempCedarSystemProps; // Temp props for locations
+  // const cedarData = (data?.cedarSystem ?? null) as tempCedarSystemProps; // Temp props for locations
 
   // Mocking additional location info on payload until CEDAR location type is defined
+  // todo untangle this ref
+
   const systemInfo = {
-    ...cedarData,
+    ...data?.cedarSystemDetails?.cedarSystem,
     id: data?.cedarSystemDetails?.cedarSystem.id as string,
     // locations: locationsInfo,
     developmentTags,
@@ -302,6 +304,7 @@ const SystemProfile = () => {
     products,
     systemData,
     //
+    cedarSystemDetails: data?.cedarSystemDetails, // todo explain ref for reuse
     ato,
     atoStatus,
     locations,
