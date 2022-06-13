@@ -210,6 +210,16 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
 }
 
 /**
+ * The data needed to associate a contact with a system intake
+ */
+export interface CreateSystemIntakeContactInput {
+  euaUserId: string;
+  systemIntakeId: UUID;
+  component: string;
+  role: string;
+}
+
+/**
  * The input data used to initialize an IT governance request for a system
  */
 export interface CreateSystemIntakeInput {

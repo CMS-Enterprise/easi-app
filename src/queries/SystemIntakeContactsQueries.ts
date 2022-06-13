@@ -15,4 +15,15 @@ export const GetSystemIntakeContactsQuery = gql`
   }
 `;
 
-export const UpdateSystemIntakeContacts = '';
+export const CreateSystemIntakeContact = gql`
+  mutation CreateSystemIntakeContact($input: CreateSystemIntakeContactInput!) {
+    createSystemIntakeContact(input: $input) {
+      systemIntakeContact {
+        euaUserId
+        systemIntakeId
+        component
+        role
+      }
+    }
+  }
+`;
