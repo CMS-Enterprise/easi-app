@@ -22,7 +22,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -32,10 +31,15 @@ import {
   UpdateSystemIntakeContactDetails,
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
+import { CedarContactProps } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
+import AdditionalContacts from './AdditionalContacts';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
+import { cmsDivionsAndOfficesOptions } from './utilities';
+
+import './index.scss';
 
 export type ContactDetailsForm = {
   requester: {
@@ -136,19 +140,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   const contacts = useMemo(() => {
     return (data?.cedarPersonsByCommonName || []).map(
-      (contact: { commonName: string; email: string; euaUserId: string }) => ({
-        label: contact.commonName,
-        value: contact.commonName
+      (contact: CedarContactProps) => ({
+        label: contact.commonName || '',
+        value: contact.commonName || ''
       })
     );
-  }, [data]);
-
-  const cmsDivionsAndOfficesOptions = (fieldId: string) =>
-    cmsDivisionsAndOffices.map((office: any) => (
-      <option key={`${fieldId}-${office.acronym}`} value={office.name}>
-        {office.acronym ? `${office.name} (${office.acronym})` : office.name}
-      </option>
-    ));
+  }, [data?.cedarPersonsByCommonName]);
 
   const saveExitLink = (() => {
     let link = '';
@@ -545,6 +542,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     />
                   </fieldset>
                 </FieldGroup>
+
+                {/* Add new contacts */}
+                {!loading && (
+                  <AdditionalContacts
+                    systemIntakeId={id}
+                    contacts={data?.cedarPersonsByCommonName || []}
+                  />
+                )}
 
                 {/* Governance Teams */}
                 <FieldGroup
