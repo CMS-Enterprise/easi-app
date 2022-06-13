@@ -28,3 +28,17 @@ export const CreateSystemIntakeContact = gql`
     }
   }
 `;
+
+export const DeleteSystemIntakeContact = gql`
+  mutation DeleteSystemIntakeContact($input: DeleteSystemIntakeContactInput!) {
+    deleteSystemIntakeContact(input: $input) {
+      systemIntakeContact {
+        id
+        euaUserId
+        systemIntakeId
+        component
+        role
+      }
+    }
+  }
+`;

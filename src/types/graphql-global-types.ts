@@ -262,6 +262,13 @@ export interface DeleteAccessibilityRequestInput {
 }
 
 /**
+ * The data needed to delete a system intake contact
+ */
+export interface DeleteSystemIntakeContactInput {
+  id: UUID;
+}
+
+/**
  * The input required to delete a test date/score
  */
 export interface DeleteTestDateInput {
