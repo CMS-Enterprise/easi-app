@@ -160,3 +160,10 @@ export type SubmitDatesForm = {
   grbDateMonth: string;
   grbDateYear: string;
 };
+
+// Cedar contacts
+export type CedarContactProps = {
+  euaUserId: string | null;
+  commonName: string | null;
+  email: string | null;
+};
