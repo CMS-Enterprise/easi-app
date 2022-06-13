@@ -4,6 +4,7 @@ export const GetSystemIntakeContactsQuery = gql`
   query GetSystemIntakeContactsQuery($id: UUID!) {
     systemIntakeContacts(id: $id) {
       systemIntakeContacts {
+        id
         euaUserId
         systemIntakeId
         component

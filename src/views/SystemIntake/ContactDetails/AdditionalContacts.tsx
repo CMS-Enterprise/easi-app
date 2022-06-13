@@ -93,7 +93,7 @@ export default function AdditionalContacts({
     });
   };
 
-  const addNewContact = () => {
+  const createContact = () => {
     if (newContact.euaUserId) {
       const { euaUserId, component, role } = newContact;
       mutate({
@@ -116,11 +116,10 @@ export default function AdditionalContacts({
 
   const additionalContacts =
     data?.systemIntakeContacts?.systemIntakeContacts || null;
-  console.log(additionalContacts);
 
   return (
     <div className="system-intake-contacts">
-      {/* {additionalContacts && (
+      {additionalContacts && (
         <>
           <h4>Additional contacts</h4>
           <ul className="system-intake-contacts__contacts-list usa-list--unstyled">
@@ -129,7 +128,7 @@ export default function AdditionalContacts({
             ))}
           </ul>
         </>
-      )} */}
+      )}
       {createFormActive && (
         <>
           <h4 className="margin-bottom-2">Add another contact</h4>
@@ -207,7 +206,7 @@ export default function AdditionalContacts({
             <Button type="button" outline onClick={() => resetNewContact()}>
               Cancel
             </Button>
-            <Button type="button" onClick={() => addNewContact()}>
+            <Button type="button" onClick={() => createContact()}>
               Add contact
             </Button>
           </div>
