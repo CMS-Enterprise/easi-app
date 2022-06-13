@@ -8,7 +8,6 @@ export default gql`
         numberOfSupportedUsersPerMonth
       }
       systemMaintainerInformation {
-        agileUsed
         deploymentFrequency
         devCompletionPercent
         devWorkDescription

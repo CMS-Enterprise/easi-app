@@ -18,20 +18,18 @@ import {
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 
-// import UswdsReactLink from 'components/LinkWrapper';
 import {
   DescriptionDefinition,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
+import { SystemProfileSubviewProps } from 'types/systemProfile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
 import RequestStatusTag, {
   RequestStatus
 } from 'views/SystemProfile/RequestStatusTag';
-
-import { SystemProfileSubComponentProps } from '..';
 
 import './index.scss';
 
@@ -332,7 +330,7 @@ const DocumentCardTable = ({
   );
 };
 
-export default ({ system }: SystemProfileSubComponentProps) => {
+export default ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
 
   const tableData = useMemo(

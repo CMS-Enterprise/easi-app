@@ -55,6 +55,9 @@ export default gql`
         isVersionCodeRepository
         urlHostingEnv
       }
+      systemMaintainerInformation {
+        agileUsed
+      }
     }
   }
 `;

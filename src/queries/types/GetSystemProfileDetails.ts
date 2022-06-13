@@ -15,7 +15,6 @@ export interface GetSystemProfileDetails_cedarSystemDetails_businessOwnerInforma
 
 export interface GetSystemProfileDetails_cedarSystemDetails_systemMaintainerInformation {
   __typename: "CedarSystemMaintainerInformation";
-  agileUsed: boolean | null;
   deploymentFrequency: string | null;
   devCompletionPercent: string | null;
   devWorkDescription: string | null;

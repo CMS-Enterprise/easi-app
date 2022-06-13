@@ -20,41 +20,13 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import { CedarAssigneeType } from 'types/graphql-global-types';
-import { showPersonFullName } from 'views/SystemProfile';
-
-import { showVal, SystemProfileSubComponentProps } from '..';
+import { SystemProfileSubviewProps } from 'types/systemProfile';
+import { mockVendors } from 'views/Sandbox/mockSystemData';
+import { getPersonFullName, showVal } from 'views/SystemProfile';
 
 import './index.scss';
 
-const vendorsData = [
-  {
-    vendors: ['TechSystems, Inc', 'Massive Dynamic'],
-    contractAwardDate: 'March 19, 2021',
-    popStartDate: 'March 20, 2021',
-    popEndDate: 'March 21, 2021',
-    contractNumber: 'GS1234567890BA-987654321',
-    technologyFunctions: [
-      'Application',
-      'Delivery',
-      'End User',
-      'IT Management',
-      'Platform',
-      'Security & Compliance'
-    ],
-    assetsOrServices: ['External Labor', 'Software']
-  },
-  {
-    vendors: ['SkyNet'],
-    contractAwardDate: 'April 19, 2021',
-    popStartDate: 'April 20, 2021',
-    popEndDate: 'April 21, 2021',
-    contractNumber: 'GS1234567890BA-123456789',
-    technologyFunctions: ['Network', 'Storage'],
-    assetsOrServices: ['Outside Services']
-  }
-];
-
-const SystemTeamAndContract = ({ system }: SystemProfileSubComponentProps) => {
+const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const flags = useFlags();
   return (
@@ -96,7 +68,7 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubComponentProps) => {
             {t('singleSystem.teamAndContract.header.contractInformation')}
           </h2>
           <CardGroup className="margin-0">
-            {vendorsData.map(vendor => {
+            {mockVendors.map(vendor => {
               return (
                 <Card className="grid-col-12 margin-bottom-2">
                   <CardHeader className="padding-2 padding-bottom-0">
@@ -186,7 +158,7 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubComponentProps) => {
         {t('singleSystem.teamAndContract.header.pointsOfContact')}
       </h2>
       <CardGroup className="margin-0">
-        {system?.cedarSystemDetails.roles
+        {system.cedarSystemDetails?.roles
           .filter(role => role.assigneeType === CedarAssigneeType.PERSON)
           .map(contact => (
             <Card key={contact.roleID} className="grid-col-12 margin-bottom-2">
@@ -194,7 +166,7 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubComponentProps) => {
                 <h5 className="margin-y-0 font-sans-2xs text-normal">
                   {contact.roleTypeName}
                 </h5>
-                <h3 className="margin-y-0">{showPersonFullName(contact)}</h3>
+                <h3 className="margin-y-0">{getPersonFullName(contact)}</h3>
                 {contact.assigneeEmail !== null && (
                   <div>
                     <Link

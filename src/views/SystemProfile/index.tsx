@@ -31,40 +31,42 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import { BUSINESS_OWNER } from 'constants/cedarSystemRoleIds';
+import {
+  ATO_STATUS_DUE_SOON_DAYS,
+  BUSINESS_OWNER_ROLE_ID
+} from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-// import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
-// import {
-//   GetCedarSystem
-//   // GetCedarSystem_cedarSystem as CedarSystem
-// } from 'queries/types/GetCedarSystem';
 import {
   GetSystemProfile,
-  // eslint-disable-next-line camelcase
+  /* eslint-disable camelcase */
+  GetSystemProfile_cedarAuthorityToOperate,
+  GetSystemProfile_cedarSystemDetails,
   GetSystemProfile_cedarSystemDetails_roles,
+  /* eslint-enable camelcase */
   GetSystemProfileVariables
 } from 'queries/types/GetSystemProfile';
 // eslint-disable-next-line camelcase
-import { GetSystemProfileAto_cedarAuthorityToOperate } from 'queries/types/GetSystemProfileAto';
 import { CedarAssigneeType } from 'types/graphql-global-types';
-import NotFound from 'views/NotFound';
 import {
-  activities,
-  budgetsInfo,
-  developmentTags,
-  // locationsInfo,
-  products,
-  subSystems,
-  systemData,
-  tempCedarSystemProps,
+  AtoStatus,
+  DevelopmentTag,
+  SystemProfileData,
   UrlLocation,
   UrlLocationTag
+} from 'types/systemProfile';
+import NotFound from 'views/NotFound';
+import {
+  activities as mockActivies,
+  budgetsInfo as mockBudgets,
+  products as mockProducts,
+  subSystems as mockSubSystems,
+  systemData as mockSystemData
 } from 'views/Sandbox/mockSystemData';
 
 // components/index contains all the sideNavItems components, routes, labels and translations
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
-import sideNavItems, { showVal } from './components/index';
+import sideNavItems from './components/index';
 import SystemSubNav from './components/SystemSubNav/index';
 
 import './index.scss';
@@ -73,25 +75,97 @@ export function formatDate(v: string) {
   return DateTime.fromISO(v).toLocaleString(DateTime.DATE_FULL);
 }
 
-const ATO_STATUS_DUE_SOON_SUBTRACT_DAYS = 90;
-
-type AtoStatus = 'Active' | 'Due Soon' | 'In Progress' | 'Expired' | 'No ATO';
-
-export function showAtoExpirationDate(
+/**
+ * Get the ATO Status from certain date properties and flags.
+ */
+function getAtoStatus(
   // eslint-disable-next-line camelcase
-  ato?: GetSystemProfileAto_cedarAuthorityToOperate
-): React.ReactNode {
-  return showVal(
-    ato?.dateAuthorizationMemoExpires &&
-      formatDate(ato.dateAuthorizationMemoExpires)
-  );
+  cedarAuthorityToOperate?: GetSystemProfile_cedarAuthorityToOperate
+): AtoStatus {
+  // `ato.dateAuthorizationMemoExpires` will be null if tlcPhase is Initiate|Develop
+
+  // No ato if it doesn't exist
+  if (!cedarAuthorityToOperate) return 'No ATO';
+
+  // return 'In Progress'; // tbd
+
+  const expiry = cedarAuthorityToOperate.dateAuthorizationMemoExpires;
+  if (!expiry) return 'No ATO';
+
+  const date = new Date().toISOString();
+  // console.log(date, expiry);
+
+  if (date >= expiry) return 'Expired';
+  if (date >= subDays(expiry, ATO_STATUS_DUE_SOON_DAYS).toISOString())
+    return 'Due Soon';
+  return 'Active';
+}
+
+/**
+ * Get Development Tags which are derived from various other properties.
+ */
+export function getDevelopmentTags(
+  // eslint-disable-next-line camelcase
+  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+): DevelopmentTag[] {
+  const tags: DevelopmentTag[] = [];
+  if (cedarSystemDetails.systemMaintainerInformation.agileUsed === true) {
+    tags.push('Agile Methodology');
+  }
+  return tags;
+}
+
+/**
+ * Get a list of UrlLocations found from Cedar system Urls and Deployments.
+ * A `UrlLocation` is extended from a Cedar Url with some additional parsing
+ * and Deployment assignments.
+ */
+function getLocations(
+  // eslint-disable-next-line camelcase
+  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+): UrlLocation[] {
+  return cedarSystemDetails.urls.map(url => {
+    // Find a deployment from matching its type with the url host env
+    const hostenv = url.urlHostingEnv;
+    const deployment = cedarSystemDetails.deployments.filter(
+      dpl => dpl.deploymentType === hostenv
+    );
+    // eslint-disable-next-line no-console
+    /*
+    console.debug(
+      'location',
+      'hostenv:',
+      hostenv,
+      'url:',
+      url,
+      'deployment match:',
+      deployment
+    );
+    */
+
+    // Location tags derived from certain properties
+    const tags: UrlLocationTag[] = [];
+    if (url.isAPIEndpoint) tags.push('API endpoint');
+    if (url.isVersionCodeRepository) tags.push('Versioned code respository');
+
+    const provider: UrlLocation['provider'] = deployment[0]?.dataCenter?.name;
+    // eslint-disable-next-line no-console
+    // console.debug('provider:', provider);
+
+    return {
+      ...url,
+      environment: deployment[0]?.deploymentType,
+      provider,
+      tags
+    };
+  });
 }
 
 /**
  * Get a person's full name from a Cedar Role.
  * Format the name in title case if the full name is in all caps.
  */
-export function showPersonFullName(
+export function getPersonFullName(
   // eslint-disable-next-line camelcase
   role: GetSystemProfile_cedarSystemDetails_roles
 ): string {
@@ -99,6 +173,31 @@ export function showPersonFullName(
   return fullname === fullname.toUpperCase()
     ? startCase(fullname.toLowerCase())
     : fullname;
+}
+
+export function showAtoExpirationDate(
+  // eslint-disable-next-line camelcase
+  systemProfileAto?: GetSystemProfile_cedarAuthorityToOperate
+): React.ReactNode {
+  return showVal(
+    systemProfileAto?.dateAuthorizationMemoExpires &&
+      formatDate(systemProfileAto.dateAuthorizationMemoExpires)
+  );
+}
+
+/**
+ * Show the value if it's not `null`, `undefined`, or `''`,
+ * otherwise render `defaultVal`.
+ */
+export function showVal(
+  val: string | number | null | undefined,
+  defaultVal: string = 'No information to display',
+  classNames?: string
+): React.ReactNode {
+  if (val === null || val === undefined || val === '') {
+    return <span className="text-italic">{defaultVal}</span>;
+  }
+  return val;
 }
 
 const SystemProfile = () => {
@@ -128,6 +227,7 @@ const SystemProfile = () => {
     }
   });
 
+  // Header description expand toggle
   const descriptionRef = React.createRef<HTMLElement>();
   const [
     isDescriptionExpandable,
@@ -137,6 +237,7 @@ const SystemProfile = () => {
     false
   );
 
+  // Enable the description toggle if it overflows
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const { current: el } = descriptionRef;
@@ -146,175 +247,91 @@ const SystemProfile = () => {
     }
   });
 
-  const cmsComponent = useMemo(
-    () => data?.cedarSystemDetails?.cedarSystem.businessOwnerOrg,
-    [data]
-  );
+  const fields = useMemo(() => {
+    if (!data) return {};
 
-  // Business Owner
-  // Select the first found Business Owner
-  const businessOwner = useMemo(
-    () =>
-      data?.cedarSystemDetails?.roles.find(
-        role =>
-          role.assigneeType === CedarAssigneeType.PERSON &&
-          role.roleTypeID === BUSINESS_OWNER
-      ),
-    [data]
-  );
+    const { cedarSystemDetails } = data!;
 
-  // Point of Contact is the business owner for now
-  // Contextualized poc will be determined later
-  const pointOfContact = businessOwner;
-
-  const systemDetails = data?.cedarSystemDetails;
-
-  // Url locations
-  const locations: UrlLocation[] | undefined = useMemo(() => {
-    /*
-    if (systemDetails?.deployments) {
-      // eslint-disable-next-line no-console
-      console.log('deployments', systemDetails?.deployments);
-    }
-    */
-    return systemDetails?.urls.map(url => {
-      // Find a deployment from matching its type with the url host env
-      const hostenv = url.urlHostingEnv;
-      const deployment = systemDetails.deployments.filter(
-        dpl => dpl.deploymentType?.toLowerCase() === hostenv?.toLowerCase()
-      );
-      // eslint-disable-next-line no-console
-      /*
-      console.log(
-        'location',
-        'hostenv:',
-        hostenv,
-        'url:',
-        url,
-        'deployment match:',
-        deployment
-      );
-      */
-
-      const tags: UrlLocationTag[] = [];
-      if (url.isAPIEndpoint) tags.push('API endpoint');
-      if (url.isVersionCodeRepository) tags.push('Versioned code respository');
-
-      const provider: UrlLocation['provider'] = deployment[0]?.dataCenter?.name;
-      // eslint-disable-next-line no-console
-      // console.log('provider:', provider);
-
-      return {
-        ...url,
-        environment: deployment[0]?.deploymentType,
-        tags,
-        provider
-      };
-    });
-  }, [systemDetails]);
-
-  const ato = data?.cedarAuthorityToOperate[0];
-
-  // Ato Status
-  // `ato.dateAuthorizationMemoExpires` will be null if tlcPhase is Initiate|Develop
-  const atoStatus = useMemo<AtoStatus>(() => {
-    // No ato if it doesn't exist
-    if (!ato) return 'No ATO';
-
-    // return 'In Progress'; // tbd
-
-    const expiry = ato!.dateAuthorizationMemoExpires;
-    if (!expiry) return 'No ATO';
-
-    const date = new Date().toISOString();
-    // console.log(date, expiry);
-
-    if (date >= expiry) return 'Expired';
-    if (
-      date >= subDays(expiry, ATO_STATUS_DUE_SOON_SUBTRACT_DAYS).toISOString()
-    )
-      return 'Due Soon';
-    return 'Active';
-  }, [ato]);
-
-  const {
-    numberOfContractorFte,
-    numberOfFederalFte,
-    numberOfFte
-  } = useMemo(() => {
-    if (data) {
-      // eslint-disable-next-line no-shadow
-      const numberOfContractorFte = parseInt(
-        data?.cedarSystemDetails?.businessOwnerInformation
-          ?.numberOfContractorFte ?? '0',
-        10
-      );
-      // eslint-disable-next-line no-shadow
-      const numberOfFederalFte = parseInt(
-        data?.cedarSystemDetails?.businessOwnerInformation
-          ?.numberOfFederalFte ?? '0',
-        10
-      );
-      // eslint-disable-next-line no-shadow
-      const numberOfFte = numberOfContractorFte + numberOfFederalFte;
-      return { numberOfContractorFte, numberOfFederalFte, numberOfFte };
-    }
-    return {};
-  }, [data]);
-
-  useEffect(() => {
-    if (!data) return;
-    /* eslint-disable no-console */
-    console.group('system profile parent');
-    console.log('urls');
-    console.table(data?.cedarSystemDetails?.urls);
-    console.log('roles');
-    console.table(data?.cedarSystemDetails?.roles);
-    console.log('cmsComponent', cmsComponent);
-    console.log('businessOwner', businessOwner);
-    console.log('pointOfContact', pointOfContact);
-    console.log('ato:', ato, 'atoStatus:', atoStatus);
-    console.log(
-      'numberOfContractorFte',
-      numberOfContractorFte,
-      'numberOfFederalFte',
-      numberOfFederalFte,
-      'numberOfFte',
-      numberOfFte
+    // Business Owner
+    // Select the first found Business Owner
+    const businessOwner = cedarSystemDetails?.roles.find(
+      role =>
+        role.assigneeType === CedarAssigneeType.PERSON &&
+        role.roleTypeID === BUSINESS_OWNER_ROLE_ID
     );
-    console.groupEnd();
-    /* eslint-enable no-console */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // Point of Contact is the business owner for now
+    // Contextualized poc will be determined later
+    const pointOfContact = businessOwner;
+
+    return {
+      cmsComponent: data!.cedarSystemDetails?.cedarSystem.businessOwnerOrg,
+      businessOwner,
+      pointOfContact
+    };
   }, [data]);
 
-  // const cedarData = (data?.cedarSystem ?? null) as tempCedarSystemProps; // Temp props for locations
+  const { cmsComponent, businessOwner, pointOfContact } = fields;
 
-  // Mocking additional location info on payload until CEDAR location type is defined
-  // todo untangle this ref
+  /**
+   * SystemProfile data is a merge of request data and parsed data
+   * required by SystemHome and at least one other subpage.
+   * It is passed to all SystemProfile subpage components.
+   */
+  const systemProfileData: SystemProfileData | undefined = useMemo(() => {
+    if (!data) return undefined;
 
-  const systemInfo = {
-    ...data?.cedarSystemDetails?.cedarSystem,
-    id: data?.cedarSystemDetails?.cedarSystem.id as string,
-    // locations: locationsInfo,
-    developmentTags,
-    budgets: budgetsInfo,
-    subSystems,
-    activities,
-    // atoStatus: 'In Progress',
-    products,
-    systemData,
-    //
-    cedarSystemDetails: data?.cedarSystemDetails, // todo explain ref for reuse
-    ato,
-    atoStatus,
-    locations,
-    numberOfContractorFte,
-    numberOfFederalFte,
-    numberOfFte
-  };
+    const { cedarSystemDetails } = data;
+
+    // Data is generally unavailable if `cedarSystemDetails` is empty
+    if (!cedarSystemDetails) return undefined;
+
+    const cedarAuthorityToOperate = data.cedarAuthorityToOperate[0];
+    const { cedarSystem } = cedarSystemDetails;
+
+    const numberOfContractorFte = parseInt(
+      cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte ?? '0',
+      10
+    );
+
+    const numberOfFederalFte = parseInt(
+      cedarSystemDetails.businessOwnerInformation?.numberOfFederalFte ?? '0',
+      10
+    );
+
+    const numberOfFte = numberOfContractorFte + numberOfFederalFte;
+
+    return {
+      ...data,
+      id: cedarSystem.id,
+      ato: cedarAuthorityToOperate,
+      atoStatus: getAtoStatus(cedarAuthorityToOperate),
+      developmentTags: getDevelopmentTags(cedarSystemDetails),
+      locations: getLocations(cedarSystemDetails),
+      numberOfContractorFte,
+      numberOfFederalFte,
+      numberOfFte,
+      status: cedarSystem.status,
+
+      // Remaining mock data stubs
+      activities: mockActivies,
+      budgets: mockBudgets,
+      products: mockProducts,
+      subSystems: mockSubSystems,
+      systemData: mockSystemData
+    };
+  }, [data]);
+
+  if (loading) {
+    return <PageLoading />;
+  }
+
+  if (error || !systemProfileData) {
+    return <NotFound />;
+  }
 
   const subComponents = sideNavItems(
-    systemInfo,
+    systemProfileData,
     flags.systemProfileHiddenFields
   );
 
@@ -333,15 +350,6 @@ const SystemProfile = () => {
       </NavLink>
     )
   );
-
-  if (loading) {
-    return <PageLoading />;
-  }
-
-  // TODO: Handle errors and loading
-  if (error || !systemInfo || (subinfo && !subComponents)) {
-    return <NotFound />;
-  }
 
   const subComponent = subComponents[subinfo || 'home'];
 
@@ -449,7 +457,7 @@ const SystemProfile = () => {
                           />
                           <DescriptionTerm
                             className="font-body-md"
-                            term={showPersonFullName(businessOwner)}
+                            term={getPersonFullName(businessOwner)}
                           />
                         </Grid>
                       )}
@@ -493,7 +501,7 @@ const SystemProfile = () => {
 
         <SystemSubNav
           subinfo={subinfo}
-          systemInfo={systemInfo}
+          system={systemProfileData}
           systemProfileHiddenFields={flags.systemProfileHiddenFields}
         />
 
@@ -532,7 +540,7 @@ const SystemProfile = () => {
                               {t('singleSystem.pointOfContact')}
                             </p>
                             <h3 className="system-profile__subheader margin-bottom-1">
-                              {showPersonFullName(pointOfContact)}
+                              {getPersonFullName(pointOfContact)}
                             </h3>
                             {pointOfContact.roleTypeName && (
                               <DescriptionDefinition

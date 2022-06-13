@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
-import { tempCedarSystemProps } from 'views/Sandbox/mockSystemData';
+import { SystemProfileData } from 'types/systemProfile';
 
 import ATO from './ATO';
 import FundingAndBudget from './FundingAndBudget';
@@ -24,29 +23,10 @@ interface sideNavProps {
   [key: string]: sideNavItemProps;
 }
 
-export type SystemProfileSubComponentProps = {
-  system: tempCedarSystemProps;
-};
-
-/**
- * Show the value if it's not `null`, `undefined`, or `''`,
- * otherwise render `defaultVal`.
- */
-export function showVal(
-  val: string | number | null | undefined,
-  defaultVal: string = 'No information to display',
-  classNames?: string
-): React.ReactNode {
-  if (val === null || val === undefined || val === '') {
-    return <span className="text-italic">{defaultVal}</span>;
-  }
-  return val;
-}
-
 // groupEnd value is used to designate the end of navigation related grouping
 
 const sideNavItems = (
-  system: CedarSystemProps,
+  system: SystemProfileData,
   systemProfileHiddenFields: boolean
 ): sideNavProps => {
   // return systemProfileHiddenFields

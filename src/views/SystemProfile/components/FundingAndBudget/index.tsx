@@ -16,14 +16,11 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-// import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
-import { tempBudgetProp } from 'views/Sandbox/mockSystemData';
-
-import { SystemProfileSubComponentProps } from '..';
+import { SystemProfileSubviewProps } from 'types/systemProfile';
 
 import './index.scss';
 
-const FundingAndBudget = ({ system }: SystemProfileSubComponentProps) => {
+const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   return (
@@ -86,8 +83,8 @@ const FundingAndBudget = ({ system }: SystemProfileSubComponentProps) => {
         className="margin-bottom-4 padding-bottom-4"
       >
         <CardGroup className="margin-0">
-          {system?.budgets?.map(
-            (budget: tempBudgetProp): React.ReactNode => (
+          {system.budgets?.map(
+            (budget): React.ReactNode => (
               <Card
                 key={budget.id}
                 data-testid="system-card"

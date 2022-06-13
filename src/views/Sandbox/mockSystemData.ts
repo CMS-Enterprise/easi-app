@@ -1,12 +1,4 @@
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
-/* eslint-disable camelcase */
-import {
-  GetSystemProfile_cedarSystemDetails_deployments,
-  GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
-  GetSystemProfile_cedarSystemDetails_urls
-} from 'queries/types/GetSystemProfile';
-import { GetSystemProfileAto_cedarAuthorityToOperate } from 'queries/types/GetSystemProfileAto';
-/* eslint-enable camelcase */
 
 // Temporary extension of CEDAR types under BE integration complete
 export type tempLocationProp = {
@@ -73,20 +65,10 @@ export type tempSystemDataProp = {
   tags: string[];
 };
 
-export type UrlLocationTag = 'API endpoint' | 'Versioned code respository';
-
-// eslint-disable-next-line camelcase
-export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
-  // eslint-disable-next-line camelcase
-  environment: GetSystemProfile_cedarSystemDetails_deployments['deploymentType'];
-  tags: UrlLocationTag[];
-  // eslint-disable-next-line camelcase
-  provider?: GetSystemProfile_cedarSystemDetails_deployments_dataCenter['name'];
-}
-
 // Temporary extension of CEDAR types under BE integration complete
+// See src/types/systemProfile SystemProfileData for the integrating object
 export interface tempCedarSystemProps extends CedarSystemProps {
-  // locations?: tempLocationProp[];
+  locations?: tempLocationProp[];
   developmentTags?: string[];
   budgets?: tempBudgetProp[];
   activities?: tempATOProp[];
@@ -94,14 +76,6 @@ export interface tempCedarSystemProps extends CedarSystemProps {
   products?: tempProductsProp[];
   systemData?: tempSystemDataProp[];
   subSystems?: tempSubSystemProp[];
-  //
-  // eslint-disable-next-line camelcase
-  locations?: UrlLocation[];
-  // eslint-disable-next-line camelcase
-  ato?: GetSystemProfileAto_cedarAuthorityToOperate;
-  numberOfContractorFte: number;
-  numberOfFederalFte: number;
-  numberOfFte: number;
 }
 
 export const systemData: tempSystemDataProp[] = [
@@ -361,5 +335,33 @@ export const subSystems: tempSubSystemProp[] = [
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.',
     retirementDate: 'Planned retirement: Q2 2023'
+  }
+];
+
+export const mockVendors = [
+  {
+    vendors: ['TechSystems, Inc', 'Massive Dynamic'],
+    contractAwardDate: 'March 19, 2021',
+    popStartDate: 'March 20, 2021',
+    popEndDate: 'March 21, 2021',
+    contractNumber: 'GS1234567890BA-987654321',
+    technologyFunctions: [
+      'Application',
+      'Delivery',
+      'End User',
+      'IT Management',
+      'Platform',
+      'Security & Compliance'
+    ],
+    assetsOrServices: ['External Labor', 'Software']
+  },
+  {
+    vendors: ['SkyNet'],
+    contractAwardDate: 'April 19, 2021',
+    popStartDate: 'April 20, 2021',
+    popEndDate: 'April 21, 2021',
+    contractNumber: 'GS1234567890BA-123456789',
+    technologyFunctions: ['Network', 'Storage'],
+    assetsOrServices: ['Outside Services']
   }
 ];

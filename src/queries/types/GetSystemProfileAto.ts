@@ -9,13 +9,7 @@
 
 export interface GetSystemProfileAto_cedarThreat {
   __typename: "CedarThreat";
-  id: string | null;
-  parentId: string | null;
-  alternativeId: string | null;
-  type: string | null;
   weaknessRiskLevel: string | null;
-  daysOpen: number | null;
-  controlFamily: string | null;
 }
 
 export interface GetSystemProfileAto {

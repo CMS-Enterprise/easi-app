@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
 import {
@@ -29,15 +29,13 @@ import {
   GetSystemProfileDetails,
   GetSystemProfileDetailsVariables
 } from 'queries/types/GetSystemProfileDetails';
+import { SystemProfileSubviewProps } from 'types/systemProfile';
 import NotFound from 'views/NotFound';
+import { showVal } from 'views/SystemProfile';
 
-// import { tempLocationProp } from 'views/Sandbox/mockSystemData';
-import { showVal, SystemProfileSubComponentProps } from '..';
-
-// import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import 'index.scss';
 
-const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
+const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
@@ -50,25 +48,16 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
     }
   });
 
-  const { locations } = system;
-
-  const systemDetails = data?.cedarSystemDetails;
-
-  // Development tags are derived
-  const developmentTags = useMemo(() => {
-    const tags = [];
-    if (systemDetails?.systemMaintainerInformation.agileUsed === true) {
-      tags.push('Agile Methodology'); // todo i18
-    }
-    return tags;
-  }, [systemDetails]);
-
   if (loading) {
     return <PageLoading />;
   }
   if (error) {
     return <NotFound />;
   }
+
+  const { locations, developmentTags } = system;
+
+  const { cedarSystemDetails } = data!;
 
   return (
     <>
@@ -83,8 +72,8 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionDefinition
               className="font-body-md line-height-body-3"
               definition={
-                systemDetails!.businessOwnerInformation.isCmsOwned
-                  ? 'CMS owned' // todo i18, move out to fn
+                cedarSystemDetails?.businessOwnerInformation.isCmsOwned
+                  ? 'CMS owned'
                   : 'Contractor owned'
               }
             />
@@ -96,7 +85,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionDefinition
               className="line-height-body-3 font-body-md"
               definition={showVal(
-                systemDetails!.businessOwnerInformation
+                cedarSystemDetails?.businessOwnerInformation
                   .numberOfSupportedUsersPerMonth
               )}
             />
@@ -106,7 +95,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionDefinition
               className="line-height-body-3"
               definition={showVal(
-                systemDetails!.systemMaintainerInformation.netAccessibility
+                cedarSystemDetails?.systemMaintainerInformation.netAccessibility
               )}
             />
           </Grid>
@@ -266,7 +255,7 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
           {t('singleSystem.systemDetails.development')}
         </h2>
 
-        {developmentTags.map((tag: string) => (
+        {developmentTags?.map((tag: string) => (
           <Tag
             key={tag}
             className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
@@ -296,7 +285,8 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
               definition={showVal(
-                systemDetails!.systemMaintainerInformation.devCompletionPercent
+                cedarSystemDetails?.systemMaintainerInformation
+                  .devCompletionPercent
               )}
             />
           </Grid>
@@ -307,7 +297,8 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
               definition={showVal(
-                systemDetails!.systemMaintainerInformation.deploymentFrequency
+                cedarSystemDetails?.systemMaintainerInformation
+                  .deploymentFrequency
               )}
             />
             {flags.systemProfileHiddenFields && (
@@ -329,7 +320,8 @@ const SystemDetails = ({ system }: SystemProfileSubComponentProps) => {
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
               definition={showVal(
-                systemDetails!.systemMaintainerInformation.devWorkDescription
+                cedarSystemDetails?.systemMaintainerInformation
+                  .devWorkDescription
               )}
             />
           </Grid>

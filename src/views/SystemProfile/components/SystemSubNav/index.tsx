@@ -5,6 +5,7 @@ import { IconExpandLess, IconExpandMore } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import { SystemProfileData } from 'types/systemProfile';
 
 import sideNavItems from '..';
 
@@ -12,13 +13,13 @@ import './index.scss';
 
 type SystemSubNavProps = {
   subinfo: string;
-  systemInfo: any;
+  system: SystemProfileData;
   systemProfileHiddenFields: boolean;
 };
 
 const SystemSubNav = ({
   subinfo,
-  systemInfo,
+  system,
   systemProfileHiddenFields
 }: SystemSubNavProps) => {
   const { t } = useTranslation('systemProfile');
@@ -54,33 +55,32 @@ const SystemSubNav = ({
           className="system-detail__subNav__list-container bg-primary-dark"
         >
           <ul className="system-detail__subNav__list subNav">
-            {Object.keys(
-              sideNavItems(systemInfo, systemProfileHiddenFields)
-            ).map((key: string) => (
-              <li
-                key={key}
-                className={classnames({
-                  'subNav__item--group-border': sideNavItems(
-                    systemInfo,
-                    systemProfileHiddenFields
-                  )[key].groupEnd
-                })}
-              >
-                <NavLink
-                  to={
-                    sideNavItems(systemInfo, systemProfileHiddenFields)[key]
-                      .route
-                  }
+            {Object.keys(sideNavItems(system, systemProfileHiddenFields)).map(
+              (key: string) => (
+                <li
                   key={key}
                   className={classnames({
-                    'subNav--current': key === subinfo
+                    'subNav__item--group-border': sideNavItems(
+                      system,
+                      systemProfileHiddenFields
+                    )[key].groupEnd
                   })}
-                  onClick={() => setIsAccordionOpen(!isAccordionOpen)}
                 >
-                  {t(`navigation.${key}`)}
-                </NavLink>
-              </li>
-            ))}
+                  <NavLink
+                    to={
+                      sideNavItems(system, systemProfileHiddenFields)[key].route
+                    }
+                    key={key}
+                    className={classnames({
+                      'subNav--current': key === subinfo
+                    })}
+                    onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+                  >
+                    {t(`navigation.${key}`)}
+                  </NavLink>
+                </li>
+              )
+            )}
           </ul>
         </div>
       )}

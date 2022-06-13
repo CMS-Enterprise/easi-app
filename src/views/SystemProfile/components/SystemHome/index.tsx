@@ -23,15 +23,12 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import { showAtoExpirationDate } from 'views/SystemProfile';
+import { SystemProfileSubviewProps } from 'types/systemProfile';
+import { showAtoExpirationDate, showVal } from 'views/SystemProfile';
 import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
 import RequestStatusTag from 'views/SystemProfile/RequestStatusTag';
 
-import { showVal, SystemProfileSubComponentProps } from '..';
-
-// import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
-
-const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
+const SystemHome = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const [toggleTags, setToggleTags] = useState(false);
@@ -39,7 +36,7 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
   const [toggleSubSystems, setToggleSubSystems] = useState(false);
   const flags = useFlags();
 
-  const { ato, locations } = system;
+  const { ato, locations, developmentTags } = system;
 
   const urlLocationCard = useMemo(() => {
     const productionLocation = locations?.find(
@@ -245,7 +242,7 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
                   <DescriptionTerm
                     term={t('singleSystem.systemData.dataCategories')}
                   />
-                  {system?.developmentTags?.map(
+                  {developmentTags?.map(
                     (tag: string, index: number) =>
                       (index < 2 || toggleTags) && (
                         <Tag
@@ -253,27 +250,24 @@ const SystemHome = ({ system }: SystemProfileSubComponentProps) => {
                           className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
                         >
                           {tag}{' '}
-                          {/* TODO: Map defined CEDAR variable once availabe */}
                         </Tag>
                       )
                   )}
-                  {system?.developmentTags &&
-                    system.developmentTags.length > 2 && (
-                      <Tag
-                        key="expand-tags"
-                        className="system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
-                        onClick={() => setToggleTags(!toggleTags)}
-                      >
-                        {toggleTags ? '-' : '+'}
-                        {system.developmentTags.length - 2}
-                      </Tag>
-                    )}
+                  {developmentTags && developmentTags.length > 2 && (
+                    <Tag
+                      key="expand-tags"
+                      className="system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
+                      onClick={() => setToggleTags(!toggleTags)}
+                    >
+                      {toggleTags ? '-' : '+'}
+                      {developmentTags.length - 2}
+                    </Tag>
+                  )}
                 </Grid>
               </Grid>
             </CardFooter>
           </Card>
         )}
-        {/* 508 request name todo? */}
 
         {flags.systemProfileHiddenFields && (
           <>

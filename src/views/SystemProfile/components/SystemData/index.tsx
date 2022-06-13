@@ -21,28 +21,28 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import { tempSystemDataProp } from 'views/Sandbox/mockSystemData';
+import { SystemProfileSubviewProps } from 'types/systemProfile';
 
-import { SystemProfileSubComponentProps } from '..';
-
-const SystemData = ({ system }: SystemProfileSubComponentProps) => {
+const SystemData = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
+
+  const { developmentTags } = system;
+
   return (
     <>
       <SectionWrapper borderBottom className="margin-bottom-4 padding-bottom-4">
         <h2 className="margin-top-0">{t('singleSystem.systemData.header')}</h2>
 
-        {/* TODO: Map and populate tags with CEDAR */}
         <h3 className="margin-top-2 margin-bottom-1">
           {t('singleSystem.systemData.recordCategories')}
         </h3>
-        {system?.developmentTags?.map((tag: string) => (
+        {developmentTags?.map(tag => (
           <Tag
             key={tag}
             className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
           >
-            {tag} {/* TODO: Map defined CEDAR variable once availabe */}
+            {tag}
           </Tag>
         ))}
 
@@ -142,7 +142,6 @@ const SystemData = ({ system }: SystemProfileSubComponentProps) => {
           </Grid>
         </Grid>
 
-        {/* TODO: Map and populate tags with CEDAR */}
         <h3 className="margin-top-0 margin-bottom-1">
           {t('singleSystem.systemData.dataCategories')}
         </h3>
@@ -151,7 +150,7 @@ const SystemData = ({ system }: SystemProfileSubComponentProps) => {
             key={tag}
             className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
           >
-            {tag} {/* TODO: Map defined CEDAR variable once availabe */}
+            {tag}
           </Tag>
         ))}
       </SectionWrapper>
@@ -165,7 +164,7 @@ const SystemData = ({ system }: SystemProfileSubComponentProps) => {
         </h2>
 
         <CardGroup className="margin-0">
-          {system?.systemData?.map((data: tempSystemDataProp) => {
+          {system.systemData?.map(data => {
             return (
               <Card key={data.id} className="grid-col-12 margin-bottom-2">
                 <CardHeader className="padding-2 padding-bottom-0">

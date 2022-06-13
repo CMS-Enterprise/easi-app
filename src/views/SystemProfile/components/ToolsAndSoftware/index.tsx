@@ -15,13 +15,11 @@ import {
 } from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
 import Tag from 'components/shared/Tag';
+import { SystemProfileSubviewProps } from 'types/systemProfile';
 
-import { SystemProfileSubComponentProps } from '..';
-
-// import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import './index.scss';
 
-const SystemToolsAndSoftware = ({ system }: SystemProfileSubComponentProps) => {
+const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   return (
     <>
@@ -29,7 +27,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubComponentProps) => {
         {t('singleSystem.toolsAndSoftware.header')}
       </h2>
       <CardGroup className="margin-0">
-        {system?.products?.map(product => {
+        {system.products?.map(product => {
           return (
             <Card key={product.id} className="grid-col-12 margin-bottom-2">
               <CardHeader className="padding-2 padding-bottom-0">

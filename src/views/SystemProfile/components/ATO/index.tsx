@@ -27,36 +27,51 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
+import { threatLevelGrades } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileAtoQuery from 'queries/GetSystemProfileAtoQuery';
 import {
   GetSystemProfileAto,
+  // eslint-disable-next-line camelcase
+  GetSystemProfileAto_cedarThreat,
   GetSystemProfileAtoVariables
 } from 'queries/types/GetSystemProfileAto';
-// import { formatDate } from 'utils/date';
+import {
+  SecurityFindings,
+  SystemProfileSubviewProps,
+  ThreatLevel
+} from 'types/systemProfile';
 import NotFound from 'views/NotFound';
-// import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
-import { tempATOProp } from 'views/Sandbox/mockSystemData';
-import { formatDate, showAtoExpirationDate } from 'views/SystemProfile';
-
-import { showVal, SystemProfileSubComponentProps } from '..';
+import {
+  formatDate,
+  showAtoExpirationDate,
+  showVal
+} from 'views/SystemProfile';
 
 import './index.scss';
 
-// Threat levels match values from cedarThreat.weaknessRiskLevel
-const threatLevelGrades = [
-  'Critical',
-  'High',
-  'Moderate',
-  'Low',
-  'Not Rated'
-] as const;
+/**
+ * Get counts of Security Findings from Cedar threat levels.
+ */
+// eslint-disable-next-line camelcase
+function getSecurityFindings(cedarThreat: GetSystemProfileAto_cedarThreat[]) {
+  return cedarThreat.reduce<SecurityFindings>(
+    (prev: SecurityFindings, curr) => {
+      const acc = prev;
+      const level = curr!.weaknessRiskLevel as ThreatLevel;
+      // Ignore nulls for non-prod environments, but should always exist on prod
+      if (level === null) return acc;
+      if (!(level in acc)) {
+        acc[level] = 0;
+      }
+      acc[level]! += 1;
+      return acc;
+    },
+    { total: cedarThreat.length }
+  );
+}
 
-type ThreatLevel = typeof threatLevelGrades[number];
-
-type SecurityFindings = Partial<Record<ThreatLevel | 'total', number>>;
-
-const ATO = ({ system }: SystemProfileSubComponentProps) => {
+const ATO = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
@@ -69,37 +84,17 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
     }
   });
 
-  const { ato, atoStatus } = system;
+  const { ato, atoStatus, developmentTags } = system;
 
-  // Accumulate security findings from cedar threat levels
-  const cedarThreat = data?.cedarThreat;
-  const securityFindings = useMemo<SecurityFindings | undefined>(() => {
-    return cedarThreat?.reduce<SecurityFindings>(
-      (prev: SecurityFindings, curr) => {
-        const acc = prev;
-        const level = curr!.weaknessRiskLevel as ThreatLevel;
-        // Ignore nulls for non-prod environments, but should always exist on prod
-        if (level === null) return acc;
-        if (!(level in acc)) {
-          acc[level] = 0;
-        }
-        acc[level]! += 1;
-        return acc;
-      },
-      { total: cedarThreat.length }
-    );
-  }, [cedarThreat]);
-
-  useEffect(() => {
-    if (!data) return;
-    /* eslint-disable no-console */
-    console.groupCollapsed('cedarThreat');
-    console.table(cedarThreat);
-    console.groupEnd();
-    console.log('securityFindings:', securityFindings);
-    /* eslint-enable no-console */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fields = useMemo(() => {
+    const cedarThreat = data?.cedarThreat;
+    if (!cedarThreat) return {};
+    return {
+      securityFindings: getSecurityFindings(cedarThreat)
+    };
   }, [data]);
+
+  const { securityFindings } = fields;
 
   if (loading) {
     return <PageLoading />;
@@ -186,7 +181,7 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
         {flags.systemProfileHiddenFields && atoStatus === 'In Progress' && (
           // @ts-expect-error
           <ProcessList>
-            {system?.activities?.map((act: tempATOProp) => (
+            {system.activities?.map(act => (
               <ProcessListItem key={act.id}>
                 <ProcessListHeading
                   type="h4"
@@ -223,19 +218,18 @@ const ATO = ({ system }: SystemProfileSubComponentProps) => {
           </ProcessList>
         )}
 
-        {/* TODO: Map and populate tags with CEDAR */}
         {flags.systemProfileHiddenFields && (
           <>
             <h3 className="margin-top-2 margin-bottom-1">
               {t('singleSystem.ato.methodologies')}
             </h3>
-            {system?.developmentTags?.map((tag: string) => (
+            {developmentTags?.map(tag => (
               <Tag
                 key={tag}
                 className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
               >
                 <IconCheckCircle className="text-primary-dark margin-right-1" />
-                {tag} {/* TODO: Map defined CEDAR variable once availabe */}
+                {tag}
               </Tag>
             ))}
           </>

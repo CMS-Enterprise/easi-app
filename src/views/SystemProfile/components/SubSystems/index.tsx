@@ -14,13 +14,11 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
+import { SystemProfileSubviewProps } from 'types/systemProfile';
 
-import { SystemProfileSubComponentProps } from '..';
-
-// import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import './index.scss';
 
-const SystemSubSystems = ({ system }: SystemProfileSubComponentProps) => {
+const SystemSubSystems = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   return (
     <>
@@ -28,14 +26,14 @@ const SystemSubSystems = ({ system }: SystemProfileSubComponentProps) => {
         {t('singleSystem.subSystems.header')}
       </h2>
       <CardGroup className="margin-0">
-        {system?.subSystems?.map(sub => {
+        {system.subSystems?.map(sub => {
           return (
             <Card key={sub.id} className="grid-col-12 margin-bottom-2">
               <CardHeader className="padding-2 padding-bottom-0">
                 <div className="display-flex margin-bottom-105">
                   <div className="flex-fill">
                     <h3 className="margin-y-0 line-height-body-2">
-                      <UswdsReactLink to="todo">{sub.name}</UswdsReactLink>
+                      <UswdsReactLink to="/">{sub.name}</UswdsReactLink>
                     </h3>
                   </div>
                   <div className="flex-auto">

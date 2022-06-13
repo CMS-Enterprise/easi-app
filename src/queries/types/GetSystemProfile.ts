@@ -76,6 +76,11 @@ export interface GetSystemProfile_cedarSystemDetails_urls {
   urlHostingEnv: string | null;
 }
 
+export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation {
+  __typename: "CedarSystemMaintainerInformation";
+  agileUsed: boolean | null;
+}
+
 export interface GetSystemProfile_cedarSystemDetails {
   __typename: "CedarSystemDetails";
   businessOwnerInformation: GetSystemProfile_cedarSystemDetails_businessOwnerInformation;
@@ -83,6 +88,7 @@ export interface GetSystemProfile_cedarSystemDetails {
   deployments: GetSystemProfile_cedarSystemDetails_deployments[];
   roles: GetSystemProfile_cedarSystemDetails_roles[];
   urls: GetSystemProfile_cedarSystemDetails_urls[];
+  systemMaintainerInformation: GetSystemProfile_cedarSystemDetails_systemMaintainerInformation;
 }
 
 export interface GetSystemProfile {
