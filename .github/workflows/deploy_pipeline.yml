@@ -51,7 +51,7 @@ jobs:
       ECR_REGISTRY: ${{secrets.ECR_REGISTRY }}
 
   deploy_impl:
-    needs: deploy_dev
+    needs: Run_Tests
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: impl
