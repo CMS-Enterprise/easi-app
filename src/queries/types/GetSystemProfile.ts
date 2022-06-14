@@ -18,10 +18,17 @@ export interface GetSystemProfile_cedarAuthorityToOperate {
   lastAssessmentDate: Time | null;
 }
 
+export interface GetSystemProfile_cedarThreat {
+  __typename: "CedarThreat";
+  weaknessRiskLevel: string | null;
+}
+
 export interface GetSystemProfile_cedarSystemDetails_businessOwnerInformation {
   __typename: "CedarBusinessOwnerInformation";
+  isCmsOwned: boolean | null;
   numberOfContractorFte: string | null;
   numberOfFederalFte: string | null;
+  numberOfSupportedUsersPerMonth: string | null;
 }
 
 export interface GetSystemProfile_cedarSystemDetails_cedarSystem {
@@ -79,6 +86,10 @@ export interface GetSystemProfile_cedarSystemDetails_urls {
 export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation {
   __typename: "CedarSystemMaintainerInformation";
   agileUsed: boolean | null;
+  deploymentFrequency: string | null;
+  devCompletionPercent: string | null;
+  devWorkDescription: string | null;
+  netAccessibility: string | null;
 }
 
 export interface GetSystemProfile_cedarSystemDetails {
@@ -93,6 +104,7 @@ export interface GetSystemProfile_cedarSystemDetails {
 
 export interface GetSystemProfile {
   cedarAuthorityToOperate: GetSystemProfile_cedarAuthorityToOperate[];
+  cedarThreat: GetSystemProfile_cedarThreat[];
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails | null;
 }
 

@@ -9,10 +9,15 @@ export default gql`
       countOfOpenPoams
       lastAssessmentDate
     }
+    cedarThreat(cedarSystemId: $cedarSystemId) {
+      weaknessRiskLevel
+    }
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       businessOwnerInformation {
+        isCmsOwned
         numberOfContractorFte
         numberOfFederalFte
+        numberOfSupportedUsersPerMonth
       }
       cedarSystem {
         id
@@ -57,6 +62,10 @@ export default gql`
       }
       systemMaintainerInformation {
         agileUsed
+        deploymentFrequency
+        devCompletionPercent
+        devWorkDescription
+        netAccessibility
       }
     }
   }

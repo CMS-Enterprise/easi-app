@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@apollo/client';
 import {
   Alert,
   Button,
@@ -19,7 +18,6 @@ import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { camelCase } from 'lodash';
 
-import PageLoading from 'components/PageLoading';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -29,19 +27,13 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import { threatLevelGrades } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import GetSystemProfileAtoQuery from 'queries/GetSystemProfileAtoQuery';
-import {
-  GetSystemProfileAto,
-  // eslint-disable-next-line camelcase
-  GetSystemProfileAto_cedarThreat,
-  GetSystemProfileAtoVariables
-} from 'queries/types/GetSystemProfileAto';
+// eslint-disable-next-line camelcase
+import { GetSystemProfile_cedarThreat } from 'queries/types/GetSystemProfile';
 import {
   SecurityFindings,
   SystemProfileSubviewProps,
   ThreatLevel
 } from 'types/systemProfile';
-import NotFound from 'views/NotFound';
 import {
   formatDate,
   showAtoExpirationDate,
@@ -54,7 +46,7 @@ import './index.scss';
  * Get counts of Security Findings from Cedar threat levels.
  */
 // eslint-disable-next-line camelcase
-function getSecurityFindings(cedarThreat: GetSystemProfileAto_cedarThreat[]) {
+function getSecurityFindings(cedarThreat: GetSystemProfile_cedarThreat[]) {
   return cedarThreat.reduce<SecurityFindings>(
     (prev: SecurityFindings, curr) => {
       const acc = prev;
@@ -75,33 +67,16 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
-  const { loading, error, data } = useQuery<
-    GetSystemProfileAto,
-    GetSystemProfileAtoVariables
-  >(GetSystemProfileAtoQuery, {
-    variables: {
-      cedarSystemId: system.id
-    }
-  });
 
-  const { ato, atoStatus, developmentTags } = system;
+  const { ato, atoStatus, developmentTags, cedarThreat } = system;
 
   const fields = useMemo(() => {
-    const cedarThreat = data?.cedarThreat;
-    if (!cedarThreat) return {};
     return {
-      securityFindings: getSecurityFindings(cedarThreat)
+      securityFindings: cedarThreat && getSecurityFindings(cedarThreat)
     };
-  }, [data]);
+  }, [cedarThreat]);
 
   const { securityFindings } = fields;
-
-  if (loading) {
-    return <PageLoading />;
-  }
-  if (error) {
-    return <NotFound />;
-  }
 
   return (
     <>
@@ -246,7 +221,6 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         )}
 
-        {/* TODO: Map and populate tags with CEDAR */}
         {atoStatus !== 'No ATO' && (
           <div>
             <Grid row gap className="margin-top-2">

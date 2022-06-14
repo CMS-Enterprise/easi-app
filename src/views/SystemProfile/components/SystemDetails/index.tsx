@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@apollo/client';
 import {
   Alert,
   Card,
@@ -15,7 +14,6 @@ import {
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { ReactComponent as VerifiedUserIcon } from 'uswds/src/img/usa-icons/verified_user.svg';
 
-import PageLoading from 'components/PageLoading';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -24,13 +22,7 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import GetSystemProfileDetailsQuery from 'queries/GetSystemProfileDetailsQuery';
-import {
-  GetSystemProfileDetails,
-  GetSystemProfileDetailsVariables
-} from 'queries/types/GetSystemProfileDetails';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
-import NotFound from 'views/NotFound';
 import { showVal } from 'views/SystemProfile';
 
 import 'index.scss';
@@ -39,26 +31,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
-  const { loading, error, data } = useQuery<
-    GetSystemProfileDetails,
-    GetSystemProfileDetailsVariables
-  >(GetSystemProfileDetailsQuery, {
-    variables: {
-      cedarSystemId: system.id
-    }
-  });
-
-  if (loading) {
-    return <PageLoading />;
-  }
-  if (error) {
-    return <NotFound />;
-  }
-
-  const { locations, developmentTags } = system;
-
-  const { cedarSystemDetails } = data!;
-
+  const { locations, developmentTags, cedarSystemDetails } = system;
   return (
     <>
       <SectionWrapper borderBottom className="padding-bottom-4">
