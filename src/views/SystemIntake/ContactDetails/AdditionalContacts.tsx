@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
 import { Button, ComboBox, Dropdown, Label } from '@trussworks/react-uswds';
 
 import FieldGroup from 'components/shared/FieldGroup';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import {
-  CreateSystemIntakeContact,
-  GetSystemIntakeContactsQuery
-} from 'queries/SystemIntakeContactsQueries';
-import { GetSystemIntakeContacts } from 'queries/types/GetSystemIntakeContacts';
-import { CedarContactProps } from 'types/systemIntake';
+  CedarContactProps,
+  SystemIntakeContactProps
+} from 'types/systemIntake';
 
 import { cmsDivionsAndOfficesOptions, getContactByEUA } from './utilities';
 
@@ -24,15 +22,17 @@ const contactRoles = [
   'and Unknown'
 ];
 
-type ContactProps = {
-  euaUserId: string | null;
-  commonName: string | null;
-  role: string | null;
-  component: string | null;
-  // email: string | null;
-};
+const Contact = ({
+  contact,
+  deleteContact,
+  resetNewContact
+}: {
+  contact: SystemIntakeContactProps;
+  deleteContact: (id: string, callback?: () => any) => void;
+  resetNewContact: () => void;
+}) => {
+  const { commonName, component, role, id } = contact;
 
-const Contact = ({ euaUserId, commonName, role, component }: ContactProps) => {
   return (
     <li>
       <p className="text-bold">
@@ -44,7 +44,12 @@ const Contact = ({ euaUserId, commonName, role, component }: ContactProps) => {
         <Button type="button" unstyled>
           Edit
         </Button>
-        <Button type="button" unstyled className="text-error margin-left-2">
+        <Button
+          type="button"
+          unstyled
+          className="text-error margin-left-2"
+          onClick={() => deleteContact(id as string, resetNewContact)}
+        >
           Delete Contact
         </Button>
       </div>
@@ -55,9 +60,10 @@ const Contact = ({ euaUserId, commonName, role, component }: ContactProps) => {
 const initialContact = {
   euaUserId: '',
   commonName: '',
-  // email: '',
+  email: '',
   component: '',
-  role: ''
+  role: '',
+  id: ''
 };
 
 export default function AdditionalContacts({
@@ -66,19 +72,16 @@ export default function AdditionalContacts({
 }: {
   systemIntakeId: string;
   contacts: CedarContactProps[];
-  // contacts: { label: string; value: string }[];
 }) {
+  const [
+    additionalContacts,
+    { createContact, deleteContact }
+  ] = useSystemIntakeContacts(systemIntakeId);
   const [createFormActive, setCreateFormActive] = useState(true);
-  const [newContact, setNewContact] = useState<ContactProps>(initialContact);
-
-  const { data, loading } = useQuery<GetSystemIntakeContacts>(
-    GetSystemIntakeContactsQuery,
-    {
-      variables: { id: systemIntakeId }
-    }
-  );
-
-  const [mutate] = useMutation(CreateSystemIntakeContact);
+  const [newContact, setNewContact] = useState<SystemIntakeContactProps>({
+    ...initialContact,
+    systemIntakeId
+  });
 
   const handleSelectContact = (euaUserId: string) => {
     const { commonName, email } = getContactByEUA(
@@ -93,29 +96,13 @@ export default function AdditionalContacts({
     });
   };
 
-  const createContact = () => {
-    if (newContact.euaUserId) {
-      const { euaUserId, component, role } = newContact;
-      mutate({
-        variables: {
-          input: {
-            euaUserId,
-            component,
-            role,
-            systemIntakeId
-          }
-        }
-      });
-    }
-  };
-
   const resetNewContact = () => {
-    setNewContact(initialContact);
+    setNewContact({
+      ...initialContact,
+      systemIntakeId
+    });
     setCreateFormActive(false);
   };
-
-  const additionalContacts =
-    data?.systemIntakeContacts?.systemIntakeContacts || null;
 
   return (
     <div className="system-intake-contacts">
@@ -123,9 +110,16 @@ export default function AdditionalContacts({
         <>
           <h4>Additional contacts</h4>
           <ul className="system-intake-contacts__contacts-list usa-list--unstyled">
-            {additionalContacts.map(contact => (
-              <Contact key={contact.euaUserId} {...contact} />
-            ))}
+            {additionalContacts.map(contact => {
+              return (
+                <Contact
+                  key={contact.euaUserId}
+                  contact={contact}
+                  deleteContact={deleteContact}
+                  resetNewContact={resetNewContact}
+                />
+              );
+            })}
           </ul>
         </>
       )}
@@ -206,7 +200,10 @@ export default function AdditionalContacts({
             <Button type="button" outline onClick={() => resetNewContact()}>
               Cancel
             </Button>
-            <Button type="button" onClick={() => createContact()}>
+            <Button
+              type="button"
+              onClick={() => createContact(newContact, resetNewContact)}
+            >
               Add contact
             </Button>
           </div>
