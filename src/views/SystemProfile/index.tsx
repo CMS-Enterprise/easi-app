@@ -74,6 +74,13 @@ export function formatDate(v: string) {
   return DateTime.fromISO(v).toLocaleString(DateTime.DATE_FULL);
 }
 
+function httpsUrl(url: string): string {
+  if (/^https?/.test(url)) {
+    return url;
+  }
+  return `https://${url}`;
+}
+
 /**
  * Get the ATO Status from certain date properties and flags.
  */
@@ -159,8 +166,13 @@ function getLocations(
     // eslint-disable-next-line no-console
     // console.debug('provider:', provider);
 
+    // Fix address urls without a protocol
+    // and reassign it to the original address property
+    const address = url.address && httpsUrl(url.address);
+
     return {
       ...url,
+      address,
       environment: deployment[0]?.deploymentType,
       provider,
       tags

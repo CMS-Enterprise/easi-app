@@ -9,12 +9,12 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  IconCheckCircle
+  IconCheckCircle,
+  Link
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { ReactComponent as VerifiedUserIcon } from 'uswds/src/img/usa-icons/verified_user.svg';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import {
   DescriptionDefinition,
@@ -194,13 +194,14 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
                   <h3 className="link-header margin-top-0 margin-bottom-2">
                     {location.address ? (
-                      <UswdsReactLink
+                      <Link
                         className="link-header"
                         variant="external"
-                        to={location.address}
+                        target="_blank"
+                        href={location.address}
                       >
                         {location.address}
-                      </UswdsReactLink>
+                      </Link>
                     ) : (
                       <dd className="margin-left-0">
                         {t('singleSystem.systemDetails.noEnvironmentURL')}

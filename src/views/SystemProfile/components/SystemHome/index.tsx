@@ -9,7 +9,8 @@ import {
   Grid,
   IconBookmark,
   IconCheckCircleOutline,
-  IconFileDownload
+  IconFileDownload,
+  Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -71,13 +72,14 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Grid row>
                 <Grid desktop={{ col: 12 }} className="padding-0">
                   <h3 className="link-header margin-top-0 margin-bottom-2">
-                    <UswdsReactLink
+                    <Link
                       className="link-header"
                       variant="external"
-                      to={urlLocationCard.address!}
+                      target="_blank"
+                      href={urlLocationCard.address!}
                     >
                       {urlLocationCard.address}
-                    </UswdsReactLink>
+                    </Link>
                   </h3>
                   <div className="margin-bottom-2">
                     <UswdsReactLink
