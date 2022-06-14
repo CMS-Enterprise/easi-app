@@ -308,17 +308,17 @@ const SystemProfile = () => {
     const cedarAuthorityToOperate = data.cedarAuthorityToOperate[0];
     const { cedarSystem } = cedarSystemDetails;
 
-    const numberOfContractorFte = parseInt(
-      cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte ?? '0',
-      10
+    const numberOfContractorFte = parseFloat(
+      cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte ?? '0'
     );
 
-    const numberOfFederalFte = parseInt(
-      cedarSystemDetails.businessOwnerInformation?.numberOfFederalFte ?? '0',
-      10
+    const numberOfFederalFte = parseFloat(
+      cedarSystemDetails.businessOwnerInformation?.numberOfFederalFte ?? '0'
     );
 
-    const numberOfFte = numberOfContractorFte + numberOfFederalFte;
+    const numberOfFte = Number(
+      (numberOfContractorFte + numberOfFederalFte).toFixed(2)
+    );
 
     return {
       ...data,
