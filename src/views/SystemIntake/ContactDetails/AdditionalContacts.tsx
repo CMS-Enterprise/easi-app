@@ -25,11 +25,11 @@ const contactRoles = [
 const Contact = ({
   contact,
   deleteContact,
-  resetNewContact
+  setActiveContact
 }: {
   contact: SystemIntakeContactProps;
   deleteContact: (id: string, callback?: () => any) => void;
-  resetNewContact: () => void;
+  setActiveContact: any;
 }) => {
   const { commonName, component, role, id } = contact;
 
@@ -48,7 +48,7 @@ const Contact = ({
           type="button"
           unstyled
           className="text-error margin-left-2"
-          onClick={() => deleteContact(id as string, resetNewContact)}
+          onClick={() => deleteContact(id as string, setActiveContact(null))}
         >
           Delete Contact
         </Button>
@@ -77,31 +77,24 @@ export default function AdditionalContacts({
     additionalContacts,
     { createContact, deleteContact }
   ] = useSystemIntakeContacts(systemIntakeId);
-  const [createFormActive, setCreateFormActive] = useState(true);
-  const [newContact, setNewContact] = useState<SystemIntakeContactProps>({
-    ...initialContact,
-    systemIntakeId
-  });
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
 
   const handleSelectContact = (euaUserId: string) => {
     const { commonName, email } = getContactByEUA(
       contacts,
       euaUserId
     ) as CedarContactProps;
-    setNewContact({
-      ...newContact,
+    setActiveContact({
       euaUserId,
-      // email,
-      commonName
+      commonName,
+      email,
+      systemIntakeId,
+      role: '',
+      component: ''
     });
-  };
-
-  const resetNewContact = () => {
-    setNewContact({
-      ...initialContact,
-      systemIntakeId
-    });
-    setCreateFormActive(false);
   };
 
   return (
@@ -116,14 +109,15 @@ export default function AdditionalContacts({
                   key={contact.euaUserId}
                   contact={contact}
                   deleteContact={deleteContact}
-                  resetNewContact={resetNewContact}
+                  setActiveContact={setActiveContact}
                 />
               );
             })}
           </ul>
         </>
       )}
-      {createFormActive && (
+
+      {activeContact && !activeContact.id && (
         <>
           <h4 className="margin-bottom-2">Add another contact</h4>
           {/* Contact name */}
@@ -162,9 +156,12 @@ export default function AdditionalContacts({
             <Dropdown
               id="systemIntakeContact.component"
               name="systemIntakeContact.component"
-              value={newContact.component || ''}
+              value={activeContact?.component || ''}
               onChange={e =>
-                setNewContact({ ...newContact, component: e.target.value })
+                setActiveContact({
+                  ...(activeContact as SystemIntakeContactProps),
+                  component: e.target.value
+                })
               }
             >
               <option value="" disabled>
@@ -181,9 +178,11 @@ export default function AdditionalContacts({
             <Dropdown
               id="systemIntakeContact.role"
               name="systemIntakeContact.role"
-              value={newContact.role || ''}
+              value={activeContact?.role || ''}
               onChange={e =>
-                setNewContact({ ...newContact, role: e.target.value })
+                setActiveContact(
+                  activeContact && { ...activeContact, role: e.target.value }
+                )
               }
             >
               <option value="" disabled>
@@ -197,12 +196,20 @@ export default function AdditionalContacts({
             </Dropdown>
           </FieldGroup>
           <div className="margin-top-2">
-            <Button type="button" outline onClick={() => resetNewContact()}>
+            <Button
+              type="button"
+              outline
+              onClick={() => setActiveContact(null)}
+            >
               Cancel
             </Button>
             <Button
               type="button"
-              onClick={() => createContact(newContact, resetNewContact)}
+              onClick={() =>
+                createContact(activeContact as SystemIntakeContactProps, () =>
+                  setActiveContact(null)
+                )
+              }
             >
               Add contact
             </Button>
@@ -210,8 +217,14 @@ export default function AdditionalContacts({
         </>
       )}
 
-      {!createFormActive && (
-        <Button type="button" outline onClick={() => setCreateFormActive(true)}>
+      {!activeContact && (
+        <Button
+          type="button"
+          outline
+          onClick={() =>
+            setActiveContact({ ...initialContact, systemIntakeId })
+          }
+        >
           Add another contact
         </Button>
       )}

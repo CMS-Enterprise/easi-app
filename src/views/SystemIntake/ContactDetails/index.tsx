@@ -544,12 +544,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 </FieldGroup>
 
                 {/* Add new contacts */}
-                {!loading && (
-                  <AdditionalContacts
-                    systemIntakeId={id}
-                    contacts={data?.cedarPersonsByCommonName || []}
-                  />
-                )}
+                {/* {!loading && ( */}
+                <AdditionalContacts
+                  systemIntakeId={id}
+                  contacts={data?.cedarPersonsByCommonName ?? []}
+                />
+                {/* )} */}
 
                 {/* Governance Teams */}
                 <FieldGroup
