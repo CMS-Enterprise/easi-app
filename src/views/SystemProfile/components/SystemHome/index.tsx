@@ -73,7 +73,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 <Grid desktop={{ col: 12 }} className="padding-0">
                   <h3 className="link-header margin-top-0 margin-bottom-2">
                     <Link
-                      className="link-header"
+                      className="link-header url-card-link"
                       variant="external"
                       target="_blank"
                       href={urlLocationCard.address!}

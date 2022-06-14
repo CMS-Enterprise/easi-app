@@ -195,7 +195,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                   <h3 className="link-header margin-top-0 margin-bottom-2">
                     {location.address ? (
                       <Link
-                        className="link-header"
+                        className="link-header url-card-link"
                         variant="external"
                         target="_blank"
                         href={location.address}
