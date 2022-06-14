@@ -441,6 +441,17 @@ export interface UpdateSystemIntakeContactDetailsInput {
 }
 
 /**
+ * The data needed to update a contact associated with a system intake
+ */
+export interface UpdateSystemIntakeContactInput {
+  id: UUID;
+  euaUserId: string;
+  systemIntakeId: UUID;
+  component: string;
+  role: string;
+}
+
+/**
  * Input data for updating contract details related to a system request
  */
 export interface UpdateSystemIntakeContractDetailsInput {

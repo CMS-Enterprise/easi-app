@@ -4,9 +4,15 @@ import { useMutation, useQuery } from '@apollo/client';
 import {
   CreateSystemIntakeContact,
   DeleteSystemIntakeContact,
-  GetSystemIntakeContactsQuery
+  GetSystemIntakeContactsQuery,
+  UpdateSystemIntakeContact
 } from 'queries/SystemIntakeContactsQueries';
 import { GetSystemIntakeContacts } from 'queries/types/GetSystemIntakeContacts';
+import {
+  CreateSystemIntakeContactInput,
+  DeleteSystemIntakeContactInput,
+  UpdateSystemIntakeContactInput
+} from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
 export default function useSystemIntakeContacts(
@@ -15,6 +21,10 @@ export default function useSystemIntakeContacts(
   SystemIntakeContactProps[],
   {
     createContact: (
+      contact: SystemIntakeContactProps,
+      callback?: () => any
+    ) => void;
+    updateContact: (
       contact: SystemIntakeContactProps,
       callback?: () => any
     ) => void;
@@ -35,9 +45,15 @@ export default function useSystemIntakeContacts(
     [data?.systemIntakeContacts?.systemIntakeContacts]
   ) as SystemIntakeContactProps[];
 
-  const [createSystemIntakeContact] = useMutation(CreateSystemIntakeContact);
-
-  const [deleteSystemIntakeContact] = useMutation(DeleteSystemIntakeContact);
+  const [
+    createSystemIntakeContact
+  ] = useMutation<CreateSystemIntakeContactInput>(CreateSystemIntakeContact);
+  const [
+    updateSystemIntakeContact
+  ] = useMutation<UpdateSystemIntakeContactInput>(UpdateSystemIntakeContact);
+  const [
+    deleteSystemIntakeContact
+  ] = useMutation<DeleteSystemIntakeContactInput>(DeleteSystemIntakeContact);
 
   const createContact = (
     contact: SystemIntakeContactProps,
@@ -47,6 +63,26 @@ export default function useSystemIntakeContacts(
     createSystemIntakeContact({
       variables: {
         input: {
+          euaUserId,
+          component,
+          role,
+          systemIntakeId
+        }
+      }
+    })
+      .then(refetch)
+      .then(callback || null);
+  };
+
+  const updateContact = (
+    contact: SystemIntakeContactProps,
+    callback?: () => any
+  ) => {
+    const { id, euaUserId, component, role } = contact;
+    updateSystemIntakeContact({
+      variables: {
+        input: {
+          id,
           euaUserId,
           component,
           role,
@@ -74,5 +110,5 @@ export default function useSystemIntakeContacts(
     setContacts(systemIntakeContacts);
   }, [systemIntakeContacts]);
 
-  return [contacts, { createContact, deleteContact }];
+  return [contacts, { createContact, updateContact, deleteContact }];
 }
