@@ -16,7 +16,6 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { subDays } from 'date-fns';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { startCase } from 'lodash';
 import { DateTime } from 'luxon';
@@ -89,15 +88,23 @@ function getAtoStatus(
 
   // return 'In Progress'; // tbd
 
-  const expiry = cedarAuthorityToOperate.dateAuthorizationMemoExpires;
-  if (!expiry) return 'No ATO';
+  const { dateAuthorizationMemoExpires } = cedarAuthorityToOperate;
+
+  if (!dateAuthorizationMemoExpires) return 'No ATO';
+
+  const expiry = DateTime.fromISO(dateAuthorizationMemoExpires)
+    .toUTC()
+    .toString();
 
   const date = new Date().toISOString();
-  // console.log(date, expiry);
 
   if (date >= expiry) return 'Expired';
-  if (date >= subDays(expiry, ATO_STATUS_DUE_SOON_DAYS).toISOString())
-    return 'Due Soon';
+
+  const soon = DateTime.fromISO(expiry)
+    .minus({ days: ATO_STATUS_DUE_SOON_DAYS })
+    .toString();
+  if (date >= soon) return 'Due Soon';
+
   return 'Active';
 }
 
