@@ -32,7 +32,7 @@ import {
 import SectionWrapper from 'components/shared/SectionWrapper';
 import {
   ATO_STATUS_DUE_SOON_DAYS,
-  BUSINESS_OWNER_ROLE_ID
+  BUSINESS_OWNER_ROLE_TYPE_ID
 } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
@@ -276,7 +276,7 @@ const SystemProfile = () => {
     const businessOwner = cedarSystemDetails?.roles.find(
       role =>
         role.assigneeType === CedarAssigneeType.PERSON &&
-        role.roleTypeID === BUSINESS_OWNER_ROLE_ID
+        role.roleTypeID === BUSINESS_OWNER_ROLE_TYPE_ID
     );
 
     // Point of Contact is the business owner for now
