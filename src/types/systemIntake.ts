@@ -163,7 +163,18 @@ export type SubmitDatesForm = {
 
 // Cedar contacts
 export type CedarContactProps = {
-  euaUserId: string | null;
-  commonName: string | null;
-  email: string | null;
+  euaUserId: string;
+  commonName: string;
+  email: string;
+};
+
+// System intake contacts
+export type SystemIntakeContactProps = {
+  id: string;
+  euaUserId: string;
+  systemIntakeId: string;
+  component: string;
+  role: string;
+  commonName: string;
+  email: string;
 };
