@@ -5,8 +5,8 @@ import { Button, Card, IconBookmark } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import Divider from 'components/shared/Divider';
-import SystemHealthIcon from 'components/SystemHealthIcon';
+// import Divider from 'components/shared/Divider';
+// import SystemHealthIcon from 'components/SystemHealthIcon';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import { IconStatus } from 'types/iconStatus';
@@ -70,6 +70,7 @@ const BookmarkCard = ({
         <p className="bookmark__body-text line-height-body-4">{description}</p>
         <p className="margin-bottom-0">{t(`${type}:bookmark.subHeader1`)}</p>
         <p className="text-bold margin-top-1">{businessOwnerOrg}</p>
+        {/*
         <Divider />
         <div className="bookmark__header easi-header__basic">
           <div>
@@ -84,6 +85,7 @@ const BookmarkCard = ({
             className="margin-top-3"
           />
         </div>
+        */}
       </div>
     </Card>
   );
