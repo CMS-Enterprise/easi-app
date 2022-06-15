@@ -6,6 +6,7 @@ import {
   GetSystemProfile_cedarSystemDetails_cedarSystem,
   GetSystemProfile_cedarSystemDetails_deployments,
   GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
+  GetSystemProfile_cedarSystemDetails_roles,
   GetSystemProfile_cedarSystemDetails_urls
   /* eslint-enable camelcase */
 } from 'queries/types/GetSystemProfile';
@@ -57,9 +58,14 @@ export interface SystemProfileData extends GetSystemProfile {
   ato?: GetSystemProfile_cedarAuthorityToOperate;
   atoStatus?: AtoStatus;
   locations?: UrlLocation[];
+  // eslint-disable-next-line camelcase
+  businessOwner?: GetSystemProfile_cedarSystemDetails_roles;
+  developmentTags?: DevelopmentTag[];
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
+  // eslint-disable-next-line camelcase
+  pointOfContact?: GetSystemProfile_cedarSystemDetails_roles;
   // eslint-disable-next-line camelcase
   productionLocation?: UrlLocation;
   // eslint-disable-next-line camelcase
@@ -68,7 +74,6 @@ export interface SystemProfileData extends GetSystemProfile {
   // Remaining mock data stubs
   activities?: tempATOProp[];
   budgets?: tempBudgetProp[];
-  developmentTags?: DevelopmentTag[];
   products?: tempProductsProp[];
   subSystems?: tempSubSystemProp[];
   systemData?: tempSystemDataProp[];

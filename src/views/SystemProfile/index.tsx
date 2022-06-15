@@ -307,7 +307,6 @@ const SystemProfile = () => {
     cedarSystem,
     cmsComponent,
     pointOfContact,
-    locations,
     productionLocation
   } = fields;
 
@@ -342,12 +341,14 @@ const SystemProfile = () => {
       id: cedarSystem.id,
       ato: cedarAuthorityToOperate,
       atoStatus: getAtoStatus(cedarAuthorityToOperate),
+      businessOwner: fields.businessOwner,
       developmentTags: getDevelopmentTags(cedarSystemDetails),
-      locations,
+      locations: fields.locations,
       numberOfContractorFte,
       numberOfFederalFte,
       numberOfFte,
-      productionLocation,
+      pointOfContact: fields.pointOfContact,
+      productionLocation: fields.productionLocation,
       status: cedarSystem.status,
 
       // Remaining mock data stubs
@@ -357,7 +358,7 @@ const SystemProfile = () => {
       subSystems: mockSubSystems,
       systemData: mockSystemData
     };
-  }, [data, cedarSystem, locations, productionLocation]);
+  }, [data, cedarSystem, fields]);
 
   if (loading) {
     return <PageLoading />;

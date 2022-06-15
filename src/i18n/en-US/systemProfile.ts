@@ -76,10 +76,11 @@ const systemProfile = {
       activityOwner: 'Activity owner',
       completed: 'Completed on ',
       due: 'Due ',
+      noEmailContact: "Please contact this system's business owner.",
       noATO:
-        'There is no ATO on file for this system. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+        'There is no ATO on file for this system. If you believe this to be an error, please contact',
       noATOPOAM:
-        'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+        'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact',
       noATODates:
         'There is no information about previous tests or assessments available for this system',
       viewATOInfo: 'View ATO information'

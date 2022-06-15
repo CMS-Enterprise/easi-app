@@ -68,15 +68,22 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
 
-  const { ato, atoStatus, developmentTags, cedarThreat } = system;
+  const {
+    ato,
+    atoStatus,
+    developmentTags,
+    cedarThreat,
+    businessOwner
+  } = system;
 
   const fields = useMemo(() => {
     return {
+      businessOwnerEmail: businessOwner && businessOwner.assigneeEmail,
       securityFindings: cedarThreat && getSecurityFindings(cedarThreat)
     };
-  }, [cedarThreat]);
+  }, [businessOwner, cedarThreat]);
 
-  const { securityFindings } = fields;
+  const { securityFindings, businessOwnerEmail } = fields;
 
   return (
     <>
@@ -148,7 +155,11 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
         ) : (
           <Grid row gap className="margin-top-0 margin-bottom-4">
             <Grid tablet={{ col: 12 }}>
-              <Alert type="info">{t('singleSystem.ato.noATO')}</Alert>
+              <Alert type="info">
+                {businessOwnerEmail
+                  ? `${t('singleSystem.ato.noATO')} ${businessOwnerEmail}`
+                  : t('singleSystem.ato.noEmailContact')}
+              </Alert>
             </Grid>
           </Grid>
         )}
@@ -216,7 +227,11 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
         {atoStatus === 'No ATO' && (
           <Grid row gap className="margin-top-2 margin-bottom-2">
             <Grid tablet={{ col: 12 }}>
-              <Alert type="info">{t('singleSystem.ato.noATOPOAM')}</Alert>
+              <Alert type="info">
+                {businessOwnerEmail
+                  ? `${t('singleSystem.ato.noATOPOAM')} ${businessOwnerEmail}`
+                  : t('singleSystem.ato.noEmailContact')}
+              </Alert>
             </Grid>
           </Grid>
         )}
@@ -270,7 +285,11 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           {atoStatus === 'No ATO' && (
             <Grid row gap className="margin-top-2 margin-bottom-2">
               <Grid tablet={{ col: 12 }}>
-                <Alert type="info">{t('singleSystem.ato.noATOPOAM')}</Alert>
+                <Alert type="info">
+                  {businessOwnerEmail
+                    ? `${t('singleSystem.ato.noATOPOAM')} ${businessOwnerEmail}`
+                    : t('singleSystem.ato.noEmailContact')}
+                </Alert>
               </Grid>
             </Grid>
           )}
