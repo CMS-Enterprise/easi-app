@@ -4,6 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
+import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
 import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
 
 import SystemProfile from './index';
@@ -79,29 +80,33 @@ describe('System profile description is expandable', () => {
   it('shows read more & less', async () => {
     const query = {
       request: {
-        query: GetCedarSystemQuery,
+        query: GetSystemProfileQuery,
         variables: {
-          id: '000-0000-1'
+          id: '000-100-0'
         }
       },
       result: {
         data: {
-          cedarSystem: {
-            id: '000-0000-1',
-            name: 'Application Programming Interface Gateway',
-            description: '',
-            acronym: '',
-            status: '',
-            businessOwnerOrg: '',
-            businessOwnerOrgComp: '',
-            systemMaintainerOrg: '',
-            systemMaintainerOrgComp: ''
+          cedarAuthorityToOperate: [],
+          cedarThreat: [],
+          cedarSystemDetails: {
+            cedarSystem: {
+              id: '000-100-0',
+              name: 'Application Programming Interface Gateway',
+              description: '',
+              acronym: '',
+              status: '',
+              businessOwnerOrg: '',
+              businessOwnerOrgComp: '',
+              systemMaintainerOrg: '',
+              systemMaintainerOrgComp: ''
+            }
           }
         }
       }
     };
     const { getByText, findByTestId } = render(
-      <MemoryRouter initialEntries={['/systems/000-0000-1/home']}>
+      <MemoryRouter initialEntries={['/systems/000-100-0/home']}>
         <Route path="/systems/:systemId/:subinfo">
           <MockedProvider mocks={[query]} addTypename={false}>
             <SystemProfile />
