@@ -589,8 +589,7 @@ const SystemProfile = () => {
                                 <Link
                                   aria-label={t('singleSystem.sendEmail')}
                                   className="line-height-body-5"
-                                  href={pointOfContact.assigneeEmail}
-                                  variant="external"
+                                  href={`mailto:${pointOfContact.assigneeEmail}`}
                                   target="_blank"
                                 >
                                   {t('singleSystem.sendEmail')}
