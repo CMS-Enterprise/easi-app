@@ -37,18 +37,15 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
   const [toggleSubSystems, setToggleSubSystems] = useState(false);
   const flags = useFlags();
 
-  const { ato, locations, developmentTags } = system;
+  const { ato, locations, developmentTags, productionLocation } = system;
 
   const urlLocationCard = useMemo(() => {
-    const productionLocation = locations?.find(
-      location => location.environment === 'Production'
-    );
     if (!productionLocation) return undefined;
     return {
       ...productionLocation,
       count: locations?.length
     };
-  }, [locations]);
+  }, [locations, productionLocation]);
 
   return (
     <SectionWrapper

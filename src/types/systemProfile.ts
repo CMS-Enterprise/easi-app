@@ -45,9 +45,9 @@ export type UrlLocationTag = 'API endpoint' | 'Versioned code respository';
 export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
   // eslint-disable-next-line camelcase
   environment: GetSystemProfile_cedarSystemDetails_deployments['deploymentType'];
-  tags: UrlLocationTag[];
   // eslint-disable-next-line camelcase
   provider?: GetSystemProfile_cedarSystemDetails_deployments_dataCenter['name'];
+  tags: UrlLocationTag[];
 }
 
 export interface SystemProfileData extends GetSystemProfile {
@@ -60,6 +60,8 @@ export interface SystemProfileData extends GetSystemProfile {
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
+  // eslint-disable-next-line camelcase
+  productionLocation?: UrlLocation;
   // eslint-disable-next-line camelcase
   status: GetSystemProfile_cedarSystemDetails_cedarSystem['status'];
 

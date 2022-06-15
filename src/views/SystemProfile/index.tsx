@@ -118,7 +118,7 @@ function getAtoStatus(
 /**
  * Get Development Tags which are derived from various other properties.
  */
-export function getDevelopmentTags(
+function getDevelopmentTags(
   // eslint-disable-next-line camelcase
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails
 ): DevelopmentTag[] {
@@ -246,6 +246,8 @@ const SystemProfile = () => {
     }
   });
 
+  // Data is generally unavailable if `data.cedarSystemDetails` is empty
+
   // Header description expand toggle
   const descriptionRef = React.createRef<HTMLElement>();
   const [
@@ -270,10 +272,11 @@ const SystemProfile = () => {
     if (!data) return {};
 
     const { cedarSystemDetails } = data!;
+    if (!cedarSystemDetails) return {};
 
     // Business Owner
     // Select the first found Business Owner
-    const businessOwner = cedarSystemDetails?.roles.find(
+    const businessOwner = cedarSystemDetails.roles.find(
       role =>
         role.assigneeType === CedarAssigneeType.PERSON &&
         role.roleTypeID === BUSINESS_OWNER_ROLE_TYPE_ID
@@ -283,14 +286,30 @@ const SystemProfile = () => {
     // Contextualized poc will be determined later
     const pointOfContact = businessOwner;
 
+    const locations = getLocations(cedarSystemDetails);
+
+    const productionLocation = locations.find(
+      location => location.environment === 'Production'
+    );
+
     return {
-      cmsComponent: data!.cedarSystemDetails?.cedarSystem.businessOwnerOrg,
       businessOwner,
-      pointOfContact
+      cedarSystem: cedarSystemDetails.cedarSystem,
+      cmsComponent: cedarSystemDetails.cedarSystem.businessOwnerOrg,
+      locations,
+      pointOfContact,
+      productionLocation
     };
   }, [data]);
 
-  const { cmsComponent, businessOwner, pointOfContact } = fields;
+  const {
+    businessOwner,
+    cedarSystem,
+    cmsComponent,
+    pointOfContact,
+    locations,
+    productionLocation
+  } = fields;
 
   /**
    * SystemProfile data is a merge of request data and parsed data
@@ -302,11 +321,9 @@ const SystemProfile = () => {
 
     const { cedarSystemDetails } = data;
 
-    // Data is generally unavailable if `cedarSystemDetails` is empty
-    if (!cedarSystemDetails) return undefined;
+    if (!cedarSystemDetails || !cedarSystem) return undefined;
 
     const cedarAuthorityToOperate = data.cedarAuthorityToOperate[0];
-    const { cedarSystem } = cedarSystemDetails;
 
     const numberOfContractorFte = parseFloat(
       cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte ?? '0'
@@ -326,10 +343,11 @@ const SystemProfile = () => {
       ato: cedarAuthorityToOperate,
       atoStatus: getAtoStatus(cedarAuthorityToOperate),
       developmentTags: getDevelopmentTags(cedarSystemDetails),
-      locations: getLocations(cedarSystemDetails),
+      locations,
       numberOfContractorFte,
       numberOfFederalFte,
       numberOfFte,
+      productionLocation,
       status: cedarSystem.status,
 
       // Remaining mock data stubs
@@ -339,13 +357,13 @@ const SystemProfile = () => {
       subSystems: mockSubSystems,
       systemData: mockSystemData
     };
-  }, [data]);
+  }, [data, cedarSystem, locations, productionLocation]);
 
   if (loading) {
     return <PageLoading />;
   }
 
-  if (error || !systemProfileData) {
+  if (error || !cedarSystem || !systemProfileData) {
     return <NotFound />;
   }
 
@@ -395,9 +413,9 @@ const SystemProfile = () => {
 
               <PageHeading className="margin-top-2">
                 <IconBookmark size={4} className="text-primary" />{' '}
-                <span>{data!.cedarSystemDetails!.cedarSystem.name} </span>
+                <span>{cedarSystem.name} </span>
                 <span className="text-normal font-body-sm">
-                  ({data!.cedarSystemDetails!.cedarSystem.acronym})
+                  ({cedarSystem.acronym})
                 </span>
                 <div className="text-normal font-body-md">
                   <CollapsableLink
@@ -420,9 +438,7 @@ const SystemProfile = () => {
                       )}
                     >
                       <DescriptionDefinition
-                        definition={
-                          data!.cedarSystemDetails!.cedarSystem.description
-                        }
+                        definition={cedarSystem.description}
                         ref={descriptionRef}
                         className="font-body-lg line-height-body-5 text-light"
                       />
@@ -446,17 +462,18 @@ const SystemProfile = () => {
                         </div>
                       )}
                     </div>
-                    <UswdsReactLink
-                      aria-label={t('singleSystem.summary.label')}
-                      className="line-height-body-5"
-                      to="/" // TODO: Get link from CEDAR?
-                      variant="external"
-                      target="_blank"
-                    >
-                      {t('singleSystem.summary.view')}{' '}
-                      {data!.cedarSystemDetails!.cedarSystem.name}
-                      <span aria-hidden>&nbsp;</span>
-                    </UswdsReactLink>
+                    {productionLocation && productionLocation.address && (
+                      <Link
+                        aria-label={t('singleSystem.summary.label')}
+                        className="line-height-body-5"
+                        href={productionLocation.address}
+                        variant="external"
+                        target="_blank"
+                      >
+                        {t('singleSystem.summary.view')} {cedarSystem.name}
+                        <span aria-hidden>&nbsp;</span>
+                      </Link>
+                    )}
                     <Grid row className="margin-top-3">
                       {cmsComponent && (
                         <Grid desktop={{ col: 6 }} className="margin-bottom-2">

@@ -47,7 +47,7 @@ const sideNavItems = (
           groupEnd: true,
           component: <TeamAndContract system={system} />,
           route: `/systems/${system.id}/team-and-contract`,
-          componentId: 'system-system-team-and-contract'
+          componentId: 'system-team-and-contract'
         },
         ato: {
           component: <ATO system={system} />,
@@ -70,7 +70,7 @@ const sideNavItems = (
         'team-and-contract': {
           component: <TeamAndContract system={system} />,
           route: `/systems/${system.id}/team-and-contract`,
-          componentId: 'system-system-team-and-contract'
+          componentId: 'system-team-and-contract'
         },
         'funding-and-budget': {
           component: <FundingAndBudget system={system} />,
