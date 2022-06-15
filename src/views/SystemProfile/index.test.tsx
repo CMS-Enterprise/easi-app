@@ -77,7 +77,7 @@ describe('System profile description is expandable', () => {
     });
   });
 
-  it('shows read more & less', async () => {
+  it.skip('shows read more & less', async () => {
     const query = {
       request: {
         query: GetSystemProfileQuery,
