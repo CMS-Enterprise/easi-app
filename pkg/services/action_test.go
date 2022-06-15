@@ -14,33 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func MaybeSayHi() (string, error) {
-	return "hello", nil
-}
-
 func (s ServicesTestSuite) TestNewTakeAction() {
-	hello, err := MaybeSayHi()
-	if err != nil {
-		s.Fail("program didn't say hello to me :(")
-	}
-	s.Equal("hello", hello)
-
-	go func() {
-		helloAgain, err := MaybeSayHi()
-		if err != nil {
-			s.Fail("program didn't say hello again to me :(")
-		}
-		s.Equal("hello", helloAgain)
-	}()
-
-	go func() {
-		helloAThirdTime, err := MaybeSayHi()
-		if err != nil {
-			s.Fail("program got bored of saying hi :(")
-		}
-		s.Equal("hello", helloAThirdTime)
-	}()
-
 	ctx := context.Background()
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{ID: id}, nil
