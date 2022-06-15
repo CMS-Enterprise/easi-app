@@ -23,7 +23,7 @@ import {
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import SystemHealthIcon from 'components/SystemHealthIcon';
+// import SystemHealthIcon from 'components/SystemHealthIcon';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -33,7 +33,7 @@ import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQue
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
-import { mapCedarStatusToIcon } from 'types/iconStatus';
+// import { mapCedarStatusToIcon } from 'types/iconStatus';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
