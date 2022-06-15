@@ -45,7 +45,7 @@ export type UrlLocationTag = 'API endpoint' | 'Versioned code respository';
 // eslint-disable-next-line camelcase
 export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
   // eslint-disable-next-line camelcase
-  environment: GetSystemProfile_cedarSystemDetails_deployments['deploymentType'];
+  environment?: GetSystemProfile_cedarSystemDetails_deployments['deploymentType'];
   // eslint-disable-next-line camelcase
   provider?: GetSystemProfile_cedarSystemDetails_deployments_dataCenter['name'];
   tags: UrlLocationTag[];
