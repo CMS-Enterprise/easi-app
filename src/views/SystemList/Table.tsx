@@ -139,7 +139,8 @@ export const Table = ({
             )?.acronym || row.original.businessOwnerOrg}
           </p>
         )
-      },
+      }
+      /*
       {
         Header: t<string>('systemTable.header.systemStatus'),
         accessor: 'status',
@@ -156,6 +157,7 @@ export const Table = ({
           </div>
         )
       }
+      */
     ];
   }, [t, savedBookmarks, createMutate, deleteMutate, refetchBookmarks]);
 
