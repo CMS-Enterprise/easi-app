@@ -239,7 +239,7 @@ jobs:
           wget -O swagger https://github.com/go-swagger/go-swagger/releases/download/v0.28.0/swagger_linux_amd64
           chmod +x swagger
       - name: Pre-commit checks
-        uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe
+        uses: pre-commit/action@4835dd97624f38176d7f9f87fcce089836248ee9
         with:
           extra_args: --all-files
       - name: Announce failure
