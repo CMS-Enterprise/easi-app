@@ -22,13 +22,13 @@ export default function useSystemIntakeContacts(
   {
     createContact: (
       contact: SystemIntakeContactProps,
-      callback?: () => any
+      callback?: () => void
     ) => void;
     updateContact: (
       contact: SystemIntakeContactProps,
-      callback?: () => any
+      callback?: () => void
     ) => void;
-    deleteContact: (id: string, callback?: () => any) => void;
+    deleteContact: (id: string, callback?: () => void) => void;
   }
 ] {
   const [contacts, setContacts] = useState<SystemIntakeContactProps[]>([]);

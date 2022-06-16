@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { Button, ComboBox, Dropdown, Label } from '@trussworks/react-uswds';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, Dropdown, Label } from '@trussworks/react-uswds';
 
 import FieldGroup from 'components/shared/FieldGroup';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import {
-  CedarContactProps,
-  SystemIntakeContactProps
-} from 'types/systemIntake';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 
-import { cmsDivionsAndOfficesOptions, getContactByEUA } from './utilities';
+import CedarContactSelect from './CedarContactSelect';
+import { cmsDivionsAndOfficesOptions } from './utilities';
 
-const contactRoles = [
+const contactRoleOptions = [
   'Product Owner',
   'System Owner',
   'System Maintainer',
@@ -29,31 +28,37 @@ const Contact = ({
 }: {
   contact: SystemIntakeContactProps;
   deleteContact: (id: string, callback?: () => any) => void;
-  setActiveContact: any;
+  setActiveContact: (activeContact: SystemIntakeContactProps | null) => void;
 }) => {
   const { commonName, component, role, id } = contact;
 
   return (
-    <li>
+    <div>
       <p className="text-bold">
         {commonName}, {component}
       </p>
       <p>{role}</p>
       {/* <p>{contact.email}</p> */}
       <div className="system-intake-contacts__contact-actions">
-        <Button type="button" unstyled>
+        <Button
+          type="button"
+          unstyled
+          onClick={() => setActiveContact(contact)}
+        >
           Edit
         </Button>
         <Button
           type="button"
           unstyled
           className="text-error margin-left-2"
-          onClick={() => deleteContact(id as string, setActiveContact(null))}
+          onClick={() =>
+            deleteContact(id as string, () => setActiveContact(null))
+          }
         >
           Delete Contact
         </Button>
       </div>
-    </li>
+    </div>
   );
 };
 
@@ -66,44 +71,151 @@ const initialContact = {
   id: ''
 };
 
+const ContactForm = ({
+  activeContact,
+  setActiveContact,
+  onSubmit
+}: {
+  activeContact: SystemIntakeContactProps;
+  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  onSubmit: (
+    contact: SystemIntakeContactProps,
+    callback?: (() => any) | undefined
+  ) => void;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="systemIntakeContactForm">
+      <h4 className="margin-bottom-2">
+        {t(activeContact?.id ? 'Edit contact' : 'Add another contact')}
+      </h4>
+
+      {/* Contact Name */}
+      <FieldGroup className="margin-top-2">
+        <Label className="text-normal" htmlFor="systemIntakeContact.commonName">
+          {t('New contact name')}
+        </Label>
+        <CedarContactSelect
+          id="systemIntakeContact.commonName"
+          name="systemIntakeContact.commonName"
+          ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
+          defaultValue={activeContact.euaUserId}
+          onChange={cedarContact =>
+            setActiveContact({ ...activeContact, ...cedarContact })
+          }
+        />
+      </FieldGroup>
+
+      {/* Contact Component */}
+      <FieldGroup className="margin-top-2">
+        <Label className="text-normal" htmlFor="systemIntakeContact.component">
+          {t('New contact component')}
+        </Label>
+        <Dropdown
+          id="systemIntakeContact.component"
+          name="systemIntakeContact.component"
+          value={activeContact.component}
+          onChange={e =>
+            setActiveContact({
+              ...activeContact,
+              component: e.target.value
+            })
+          }
+        >
+          <option value="" disabled>
+            {t('Select an option')}
+          </option>
+          {cmsDivionsAndOfficesOptions('systemIntakeContact')}
+        </Dropdown>
+      </FieldGroup>
+
+      {/* Contact Role */}
+      <FieldGroup className="margin-top-2">
+        <Label className="text-normal" htmlFor="systemIntakeContact.role">
+          {t('New contact role')}
+        </Label>
+        <Dropdown
+          id="systemIntakeContact.role"
+          name="systemIntakeContact.role"
+          value={activeContact.role}
+          onChange={e =>
+            setActiveContact({ ...activeContact, role: e.target.value })
+          }
+        >
+          <option value="" disabled>
+            {t('Select an option')}
+          </option>
+          {contactRoleOptions.map(option => (
+            <option key={option} value={option}>
+              {t(option)}
+            </option>
+          ))}
+        </Dropdown>
+      </FieldGroup>
+
+      {/* Action Buttons */}
+      <div className="margin-top-2">
+        <Button type="button" outline onClick={() => setActiveContact(null)}>
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          onClick={() => onSubmit(activeContact, () => setActiveContact(null))}
+        >
+          {t(activeContact?.id ? 'Save' : 'Add contact')}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 export default function AdditionalContacts({
   systemIntakeId,
-  contacts
+  activeContact,
+  setActiveContact
 }: {
   systemIntakeId: string;
-  contacts: CedarContactProps[];
+  activeContact: SystemIntakeContactProps | null;
+  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
 }) {
   const [
     additionalContacts,
-    { createContact, deleteContact }
+    { createContact, updateContact, deleteContact }
   ] = useSystemIntakeContacts(systemIntakeId);
-  const [
-    activeContact,
-    setActiveContact
-  ] = useState<SystemIntakeContactProps | null>(null);
-
-  const handleSelectContact = (euaUserId: string) => {
-    const { commonName, email } = getContactByEUA(
-      contacts,
-      euaUserId
-    ) as CedarContactProps;
-    setActiveContact({
-      euaUserId,
-      commonName,
-      email,
-      systemIntakeId,
-      role: '',
-      component: ''
-    });
-  };
 
   return (
     <div className="system-intake-contacts">
       {additionalContacts && (
         <>
           <h4>Additional contacts</h4>
-          <ul className="system-intake-contacts__contacts-list usa-list--unstyled">
+          <div className="system-intake-contacts__contacts-list">
             {additionalContacts.map(contact => {
+              // Show form if editing contact
+              if (activeContact && activeContact?.id === contact.id) {
+                return (
+                  <div>
+                    <ContactForm
+                      key={contact.euaUserId}
+                      activeContact={activeContact}
+                      setActiveContact={setActiveContact}
+                      onSubmit={updateContact}
+                    />
+                    <Button
+                      type="button"
+                      unstyled
+                      className="text-error margin-top-2"
+                      onClick={() =>
+                        deleteContact(activeContact.id as string, () =>
+                          setActiveContact(null)
+                        )
+                      }
+                    >
+                      Delete Contact
+                    </Button>
+                  </div>
+                );
+              }
               return (
                 <Contact
                   key={contact.euaUserId}
@@ -113,117 +225,26 @@ export default function AdditionalContacts({
                 />
               );
             })}
-          </ul>
-        </>
-      )}
-
-      {activeContact && !activeContact.id && (
-        <>
-          <h4 className="margin-bottom-2">Add another contact</h4>
-          {/* Contact name */}
-          <FieldGroup className="margin-top-2">
-            <Label
-              className="text-normal"
-              htmlFor="systemIntakeContact.commonName"
-            >
-              New contact name
-            </Label>
-            <ComboBox
-              id="systemIntakeContact.commonName"
-              name="systemIntakeContact.commonName"
-              inputProps={{
-                id: 'systemIntakeContact.commonName',
-                name: 'systemIntakeContact.commonName',
-                'aria-describedby': 'IntakeForm-BusinessOwnerHelp'
-              }}
-              options={contacts.map(contact => ({
-                label: contact.commonName || '',
-                value: contact.euaUserId || ''
-              }))}
-              onChange={euaUserId =>
-                euaUserId ? handleSelectContact(euaUserId) : null
-              }
-            />
-          </FieldGroup>
-          {/* Contact Component */}
-          <FieldGroup className="margin-top-2">
-            <Label
-              className="text-normal"
-              htmlFor="systemIntakeContact.component"
-            >
-              New contact component
-            </Label>
-            <Dropdown
-              id="systemIntakeContact.component"
-              name="systemIntakeContact.component"
-              value={activeContact?.component || ''}
-              onChange={e =>
-                setActiveContact({
-                  ...(activeContact as SystemIntakeContactProps),
-                  component: e.target.value
-                })
-              }
-            >
-              <option value="" disabled>
-                Select an option
-              </option>
-              {cmsDivionsAndOfficesOptions('systemIntakeContact')}
-            </Dropdown>
-          </FieldGroup>
-          {/* Contact Role */}
-          <FieldGroup className="margin-top-2">
-            <Label className="text-normal" htmlFor="systemIntakeContact.role">
-              New contact role
-            </Label>
-            <Dropdown
-              id="systemIntakeContact.role"
-              name="systemIntakeContact.role"
-              value={activeContact?.role || ''}
-              onChange={e =>
-                setActiveContact(
-                  activeContact && { ...activeContact, role: e.target.value }
-                )
-              }
-            >
-              <option value="" disabled>
-                Select an option
-              </option>
-              {contactRoles.map(role => (
-                <option key={role} value={role}>
-                  {role}
-                </option>
-              ))}
-            </Dropdown>
-          </FieldGroup>
-          <div className="margin-top-2">
-            <Button
-              type="button"
-              outline
-              onClick={() => setActiveContact(null)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              onClick={() =>
-                createContact(activeContact as SystemIntakeContactProps, () =>
-                  setActiveContact(null)
-                )
-              }
-            >
-              Add contact
-            </Button>
           </div>
         </>
       )}
 
-      {!activeContact && (
+      {activeContact && !activeContact.id && (
+        <ContactForm
+          activeContact={activeContact}
+          setActiveContact={setActiveContact}
+          onSubmit={createContact}
+        />
+      )}
+
+      {(!activeContact || activeContact?.id) && (
         <Button
           type="button"
           outline
           onClick={() =>
             setActiveContact({ ...initialContact, systemIntakeId })
           }
+          disabled={!!activeContact?.id}
         >
           Add another contact
         </Button>

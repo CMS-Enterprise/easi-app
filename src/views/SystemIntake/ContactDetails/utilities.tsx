@@ -5,11 +5,10 @@ import { CedarContactProps } from 'types/systemIntake';
 
 export const getContactByEUA = (
   contacts: CedarContactProps[],
-  euaUserId: string,
-  field?: 'email' | 'commonName'
-) => {
+  euaUserId: string
+): CedarContactProps | null => {
   const contact = contacts.find(person => person.euaUserId === euaUserId);
-  return field ? contact?.[field] : contact;
+  return contact ?? null;
 };
 
 export const cmsDivionsAndOfficesOptions = (fieldId: string) => {

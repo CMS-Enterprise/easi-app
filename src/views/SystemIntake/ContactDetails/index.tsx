@@ -31,11 +31,15 @@ import {
   UpdateSystemIntakeContactDetails,
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
-import { CedarContactProps } from 'types/systemIntake';
+import {
+  CedarContactProps,
+  SystemIntakeContactProps
+} from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 import AdditionalContacts from './AdditionalContacts';
+import CedarContactSelect from './CedarContactSelect';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 import { cmsDivionsAndOfficesOptions } from './utilities';
 
@@ -91,6 +95,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState(
     false
   );
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
 
   const initialValues = {
     requester: {
@@ -311,17 +319,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['businessOwner.name']}
                   </FieldErrorMsg>
                   {!loading && (
-                    <ComboBox
+                    <CedarContactSelect
                       id="IntakeForm-BusinessOwner"
                       name="businessOwner.name"
-                      inputProps={{
-                        id: 'IntakeForm-BusinessOwner',
-                        name: 'businessOwner.name',
-                        'aria-describedby': 'IntakeForm-BusinessOwnerHelp'
-                      }}
-                      options={contacts}
+                      ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
                       onChange={contact =>
-                        setFieldValue('businessOwner.name', contact || '')
+                        setFieldValue(
+                          'businessOwner.name',
+                          contact?.commonName || ''
+                        )
                       }
                       defaultValue={businessOwner.name || undefined}
                       disabled={isReqAndBusOwnerSame}
@@ -396,19 +402,17 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['productManager.name']}
                   </FieldErrorMsg>
                   {!loading && (
-                    <ComboBox
+                    <CedarContactSelect
                       id="IntakeForm-ProductManager"
                       name="productManager.name"
-                      inputProps={{
-                        id: 'IntakeForm-ProductManager',
-                        name: 'productManager.name',
-                        'aria-describedby': 'IntakeForm-ProductManagerHelp'
-                      }}
-                      options={contacts}
+                      ariaDescribedBy="IntakeForm-ProductManagerHelp"
                       onChange={contact =>
-                        setFieldValue('productManager.name', contact || '')
+                        setFieldValue(
+                          'productManager.name',
+                          contact?.commonName || ''
+                        )
                       }
-                      defaultValue={productManager.name || undefined}
+                      defaultValue={productManager.name ?? undefined}
                       disabled={isReqAndProductManagerSame}
                     />
                   )}
@@ -489,16 +493,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             {flatErrors['isso.name']}
                           </FieldErrorMsg>
                           {!loading && (
-                            <ComboBox
+                            <CedarContactSelect
                               id="IntakeForm-IssoName"
                               name="isso.name"
-                              inputProps={{
-                                id: 'IntakeForm-IssoName',
-                                name: 'isso.name'
-                              }}
-                              options={contacts}
                               onChange={contact =>
-                                setFieldValue('isso.name', contact || '')
+                                setFieldValue(
+                                  'isso.name',
+                                  contact?.commonName || ''
+                                )
                               }
                               defaultValue={isso.name || undefined}
                             />
@@ -544,12 +546,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 </FieldGroup>
 
                 {/* Add new contacts */}
-                {/* {!loading && ( */}
                 <AdditionalContacts
                   systemIntakeId={id}
-                  contacts={data?.cedarPersonsByCommonName ?? []}
+                  activeContact={activeContact}
+                  setActiveContact={setActiveContact}
                 />
-                {/* )} */}
 
                 {/* Governance Teams */}
                 <FieldGroup
@@ -610,6 +611,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   </fieldset>
                 </FieldGroup>
                 <Button
+                  disabled={!!activeContact}
                   type="button"
                   onClick={() => {
                     formikProps.validateForm().then(err => {
@@ -634,6 +636,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 </Button>
                 <div className="margin-y-3">
                   <Button
+                    disabled={!!activeContact}
                     type="button"
                     unstyled
                     onClick={() => {
