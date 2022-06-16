@@ -140,17 +140,15 @@ function getLocations(
 ): UrlLocation[] {
   return cedarSystemDetails.urls.map(url => {
     // Find a deployment from matching its type with the url host env
-    const hostenv = url.urlHostingEnv;
+    const { urlHostingEnv } = url;
     const deployment = cedarSystemDetails.deployments.find(
-      dpl => hostenv !== null && dpl.deploymentType === hostenv
+      dpl => urlHostingEnv && dpl.deploymentType === urlHostingEnv
     );
 
     // Location tags derived from certain properties
     const tags: UrlLocationTag[] = [];
     if (url.isAPIEndpoint) tags.push('API endpoint');
     if (url.isVersionCodeRepository) tags.push('Versioned code respository');
-
-    const provider: UrlLocation['provider'] = deployment?.dataCenter?.name;
 
     // Fix address urls without a protocol
     // and reassign it to the original address property
@@ -159,8 +157,7 @@ function getLocations(
     return {
       ...url,
       address,
-      environment: deployment?.deploymentType,
-      provider,
+      deploymentDataCenterName: deployment?.dataCenter?.name,
       tags
     };
   });
@@ -275,7 +272,7 @@ const SystemProfile = () => {
     const locations = getLocations(cedarSystemDetails);
 
     const productionLocation = locations.find(
-      location => location.environment === 'Production'
+      location => location.urlHostingEnv === 'Production'
     );
 
     return {

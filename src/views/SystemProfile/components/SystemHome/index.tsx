@@ -59,7 +59,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Grid row>
                 <Grid desktop={{ col: 12 }} className="padding-0">
                   <dt>
-                    {urlLocationCard.environment}{' '}
+                    {urlLocationCard.urlHostingEnv}{' '}
                     {t('singleSystem.systemDetails.environment')}
                   </dt>
                 </Grid>
@@ -102,7 +102,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                   />
                   <DescriptionDefinition
                     className="line-height-body-3"
-                    definition={urlLocationCard.provider}
+                    definition={urlLocationCard.deploymentDataCenterName}
                   />
                 </Grid>
               </Grid>

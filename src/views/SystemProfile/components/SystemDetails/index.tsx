@@ -140,8 +140,8 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
               >
                 <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
                   <dt>
-                    {location.environment &&
-                      `${location.environment} ${t(
+                    {location.urlHostingEnv &&
+                      `${location.urlHostingEnv} ${t(
                         'singleSystem.systemDetails.environment'
                       )}`}
                   </dt>
@@ -191,7 +191,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                   ))}
                   <div />
                 </CardBody>
-                {location.provider && (
+                {location.deploymentDataCenterName && (
                   <CardFooter className="padding-0">
                     <Grid row>
                       <Divider className="margin-x-2" />
@@ -201,7 +201,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                         />
                         <DescriptionDefinition
                           className="line-height-body-3"
-                          definition={location.provider}
+                          definition={location.deploymentDataCenterName}
                         />
                       </Grid>
                     </Grid>
