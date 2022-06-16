@@ -588,7 +588,6 @@ const SystemProfile = () => {
                                 aria-label={t('singleSystem.moreContact')}
                                 className="line-height-body-5"
                                 to={`/systems/${systemId}/team-and-contract`}
-                                target="_blank"
                               >
                                 {t('singleSystem.moreContact')}
                                 <span aria-hidden>&nbsp;</span>
