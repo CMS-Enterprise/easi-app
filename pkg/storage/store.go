@@ -46,13 +46,16 @@ func NewStore(
 	}
 
 	var password string
+	var username string
 	if config.UseIAM {
 		creds := credentials.NewEnvCredentials()
-		password, err = rdsutils.BuildAuthToken(config.Host, "us-west-1", "iam_user", creds)
+		password, err = rdsutils.BuildAuthToken(config.Host, "us-west-2", "iam_user", creds)
 		if err != nil {
 			panic(err)
 		}
+		username = "iam_user"
 	} else {
+		username = config.Username
 		password = config.Password
 	}
 
@@ -61,7 +64,7 @@ func NewStore(
 			"password=%s dbname=%s sslmode=%s",
 		config.Host,
 		config.Port,
-		config.Username,
+		username,
 		password,
 		config.Database,
 		config.SSLMode,
