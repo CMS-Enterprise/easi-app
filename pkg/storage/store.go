@@ -48,12 +48,12 @@ func NewStore(
 	var password string
 	var username string
 	if config.UseIAM {
+		username = "app_user_iam"
 		creds := credentials.NewEnvCredentials()
-		password, err = rdsutils.BuildAuthToken(config.Host, "us-west-2", "iam_user", creds)
+		password, err = rdsutils.BuildAuthToken(config.Host, "us-west-2", username, creds)
 		if err != nil {
 			panic(err)
 		}
-		username = "app_user_iam"
 	} else {
 		username = config.Username
 		password = config.Password
