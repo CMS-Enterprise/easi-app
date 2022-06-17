@@ -53,7 +53,7 @@ func NewStore(
 		if err != nil {
 			panic(err)
 		}
-		username = "iam_user"
+		username = "app_user_iam"
 	} else {
 		username = config.Username
 		password = config.Password
