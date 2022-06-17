@@ -47,6 +47,7 @@ services:
       - PGDATABASE=postgres
       - PGUSER=app_user
       - PGPASS=supersecretapp
+      - USE_IAM
       - PGSSLMODE=disable
       - DB_MAX_CONNECTIONS=20
       - FLAG_SOURCE

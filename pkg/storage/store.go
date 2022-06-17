@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/service/rds/rdsutils"
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
@@ -27,6 +29,7 @@ type DBConfig struct {
 	Username       string
 	Password       string
 	SSLMode        string
+	UseIAM         bool
 	MaxConnections int
 }
 
@@ -42,13 +45,24 @@ func NewStore(
 		return nil, err
 	}
 
+	var password string
+	if config.UseIAM {
+		creds := credentials.NewEnvCredentials()
+		password, err = rdsutils.BuildAuthToken(config.Host, "us-west-1", "iam_user", creds)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		password = config.Password
+	}
+
 	dataSourceName := fmt.Sprintf(
 		"host=%s port=%s user=%s "+
 			"password=%s dbname=%s sslmode=%s",
 		config.Host,
 		config.Port,
 		config.Username,
-		config.Password,
+		password,
 		config.Database,
 		config.SSLMode,
 	)
