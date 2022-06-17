@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/rds/rdsutils"
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
@@ -49,7 +49,8 @@ func NewStore(
 	var username string
 	if config.UseIAM {
 		username = "app_user_iam"
-		creds := credentials.NewEnvCredentials()
+		sess := session.Must(session.NewSession())
+		creds := sess.Config.Credentials
 		password, err = rdsutils.BuildAuthToken(config.Host, "us-west-2", username, creds)
 		if err != nil {
 			panic(err)
