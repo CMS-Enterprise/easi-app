@@ -92,7 +92,6 @@ jobs:
           PGUSER: app_user
           PGPASS: supersecretapp
           PGSSLMODE: disable
-          USE_IAM: false
           DB_MAX_CONNECTIONS: 20
           FLAG_SOURCE: LOCAL
         run: |

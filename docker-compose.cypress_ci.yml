@@ -14,7 +14,6 @@ services:
       - PGUSER=postgres
       - PGPASS=mysecretpassword
       - PGSSLMODE=disable
-      - USE_IAM=false
       - DB_MAX_CONNECTIONS=20
   easi:
     image: '${ECR_REGISTRY}/easi-backend:${GIT_HASH}'
@@ -51,7 +50,6 @@ services:
       - PGUSER=postgres
       - PGPASS=mysecretpassword
       - PGSSLMODE=disable
-      - USE_IAM=false
       - DB_MAX_CONNECTIONS=20
     network_mode: 'service:easi_client'
     depends_on:

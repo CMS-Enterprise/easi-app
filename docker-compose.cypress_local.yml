@@ -72,7 +72,6 @@ services:
       - PGUSER=postgres
       - PGPASS=mysecretpassword
       - PGSSLMODE=disable
-      - USE_IAM=false
       - DB_MAX_CONNECTIONS=20
     network_mode: 'service:easi_client'
     volumes:

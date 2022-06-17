@@ -114,9 +114,6 @@ const DBPasswordConfigKey = "PGPASS"
 // DBSSLModeConfigKey is the Postgres SSL mode config key
 const DBSSLModeConfigKey = "PGSSLMODE"
 
-// UseIAMConfigKey is the key to use IAM config key
-const UseIAMConfigKey = "USE_IAM"
-
 // DBMaxConnections is the maximum number of connections to the database
 const DBMaxConnections = "DB_MAX_CONNECTIONS"
 
