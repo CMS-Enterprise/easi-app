@@ -28,6 +28,12 @@ func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models
 		return nil, err
 	}
 
+	// if there aren't any ATOS, early return;
+	// otherwise /threat endpoint in CEDAR will return an error when no IDs are specified
+	if len(cedarATOs) == 0 {
+		return []*models.CedarThreat{}, nil
+	}
+
 	// List of ATO ID(s) to be passed into Threat endpoint
 	var atoIDs []string
 

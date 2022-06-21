@@ -30,7 +30,6 @@ describe('The making a request page', () => {
 
     await waitFor(() => {
       expect(screen.getByText('HAM Project funding')).toBeInTheDocument();
-      expect(screen.getByText('Geraldine Hobbs')).toBeInTheDocument();
       expect(screen.getByText('Fed Admin')).toBeInTheDocument();
     });
   });

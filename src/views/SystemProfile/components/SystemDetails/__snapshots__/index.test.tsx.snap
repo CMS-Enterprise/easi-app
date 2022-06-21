@@ -3,227 +3,146 @@
 exports[`The making a request page matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    id="system-detail"
+    class="easi-section easi-section__border-bottom padding-bottom-4"
+    data-testid="section-wrapper"
   >
+    <h2
+      class="margin-top-0 margin-bottom-4"
+    >
+      System Details
+    </h2>
     <div
-      class="grid-container padding-left-0 padding-right-0"
-      data-testid="gridContainer"
+      class="grid-row margin-top-3"
+      data-testid="grid"
     >
       <div
-        class="grid-row grid-gap"
+        class="tablet:grid-col-6 margin-bottom-5"
         data-testid="grid"
       >
-        <div
-          class="desktop:grid-col-8"
-          data-testid="grid"
+        <dt
+          class="text-bold margin-bottom-05"
         >
-          <div
-            class="easi-section easi-section__border-bottom padding-bottom-4"
-            data-testid="section-wrapper"
-          >
-            <h2
-              class="margin-top-0 margin-bottom-4"
-            >
-              System Details
-            </h2>
-            <div
-              class="grid-row margin-top-3"
-              data-testid="grid"
-            >
-              <div
-                class="tablet:grid-col-6 margin-bottom-5"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  System ownership
-                </dt>
-                <dd
-                  class="description-definition margin-0 font-body-md line-height-body-3"
-                >
-                  CMS owned
-                </dd>
-              </div>
-              <div
-                class="tablet:grid-col-6 margin-bottom-5"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Users per month
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 font-body-md"
-                >
-                  2,345
-                </dd>
-              </div>
-              <div
-                class="tablet:grid-col-6 margin-bottom-5"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Internal or public access
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3"
-                >
-                  Both public and internal access
-                </dd>
-              </div>
-            </div>
-          </div>
-          <div
-            class="easi-section easi-section__border-bottom padding-bottom-3 margin-bottom-3"
-            data-testid="section-wrapper"
-          >
-            <h2
-              class="margin-top-3"
-            >
-              URLs and Locations
-            </h2>
-            <dt
-              class="text-bold margin-bottom-05"
-            >
-              Cloud migration date
-            </dt>
-            <dd
-              class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-            >
-              December 12, 2017
-            </dd>
-            <ul
-              class="usa-card-group margin-0"
-              data-testid="CardGroup"
-            />
-          </div>
-          <div
-            class="easi-section margin-bottom-5"
-            data-testid="section-wrapper"
-          >
-            <h2
-              class="margin-top-4 margin-bottom-1"
-            >
-              Development
-            </h2>
-            <div
-              class="grid-row margin-top-3"
-              data-testid="grid"
-            >
-              <div
-                class="desktop:grid-col-6"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Development work completed
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  Every two weeks
-                </dd>
-              </div>
-              <div
-                class="desktop:grid-col-6"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Planned release frequency
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  92%
-                </dd>
-              </div>
-              <div
-                class="desktop:grid-col-12"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Description of development work to be completed
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat elementum nibh feugiat donec. Ultricies at libero nullam egestas ipsum, sed.
-                </dd>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="desktop:grid-col-4 sticky-nav"
-          data-testid="grid"
+          System ownership
+        </dt>
+        <dd
+          class="description-definition margin-0 font-body-md line-height-body-3"
         >
-          <div
-            class="side-divider"
-          >
-            <div
-              class="top-divider"
-            />
-            <p
-              class="font-body-xs margin-top-1 margin-bottom-3"
-            >
-              Point of contact
-            </p>
-            <h3
-              class="system-profile__subheader margin-bottom-1"
-            >
-              Geraldine Hobbs
-            </h3>
-            <dd
-              class="description-definition margin-0"
-            >
-              Business Owner
-            </dd>
-            <p>
-              <a
-                aria-label="Send an email"
-                class="usa-link usa-link--external line-height-body-5"
-                href="mailto:patrick.segura@oddball.io"
-                target="_blank"
-              >
-                Send an email
-                <span
-                  aria-hidden="true"
-                >
-                   
-                </span>
-              </a>
-            </p>
-            <p>
-              <a
-                aria-label="More points of contact"
-                class="usa-link line-height-body-5"
-                href="mailto:patrick.segura@oddball.io"
-                target="_blank"
-              >
-                More points of contact
-                <span
-                  aria-hidden="true"
-                >
-                   
-                </span>
-                <span
-                  aria-hidden="true"
-                >
-                  → 
-                </span>
-              </a>
-            </p>
-          </div>
-        </div>
+          CMS owned
+        </dd>
+      </div>
+      <div
+        class="tablet:grid-col-6 margin-bottom-5"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Users per month
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 font-body-md"
+        >
+          2,345
+        </dd>
+      </div>
+      <div
+        class="tablet:grid-col-6 margin-bottom-5"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Internal or public access
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3"
+        >
+          Both public and internal access
+        </dd>
+      </div>
+    </div>
+  </div>
+  <div
+    class="easi-section easi-section__border-bottom padding-bottom-3 margin-bottom-3"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-3"
+    >
+      URLs and Locations
+    </h2>
+    <dt
+      class="text-bold margin-bottom-05"
+    >
+      Cloud migration date
+    </dt>
+    <dd
+      class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+    >
+      December 12, 2017
+    </dd>
+    <ul
+      class="usa-card-group margin-0"
+      data-testid="CardGroup"
+    />
+  </div>
+  <div
+    class="easi-section margin-bottom-5"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-4 margin-bottom-1"
+    >
+      Development
+    </h2>
+    <div
+      class="grid-row margin-top-3"
+      data-testid="grid"
+    >
+      <div
+        class="desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Development work completed
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          Every two weeks
+        </dd>
+      </div>
+      <div
+        class="desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Planned release frequency
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          92%
+        </dd>
+      </div>
+      <div
+        class="desktop:grid-col-12"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Description of development work to be completed
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat elementum nibh feugiat donec. Ultricies at libero nullam egestas ipsum, sed.
+        </dd>
       </div>
     </div>
   </div>
