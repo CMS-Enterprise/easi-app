@@ -44,6 +44,8 @@ export default function CedarContactSelect({
     );
   }, [data?.cedarPersonsByCommonName]);
 
+  if (loading) return null;
+
   return (
     <ComboBox
       className={className}
