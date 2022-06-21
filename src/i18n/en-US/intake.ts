@@ -155,14 +155,16 @@ const intake = {
       helpText:
         'This person owns a line of business related to this request and will champion the request moving forward',
       nameField: 'CMS Business Owner name',
-      component: 'CMS Business Owner Component'
+      component: 'CMS Business Owner component',
+      email: 'CMS Business Owner email'
     },
     productManager: {
       name: 'CMS Project/Product Manager, or lead',
       helpText:
         'This person may be contacted for follow ups and to understand the state of the contract',
       nameField: 'CMS Project/Product Manager, or lead name',
-      component: 'CMS Product Manager Component'
+      component: 'CMS Product Manager component',
+      email: 'CMS Product Manager email'
     },
     isso: {
       label:
@@ -170,7 +172,8 @@ const intake = {
       helpText:
         'If yes, please tell us the name of your Information System Security Officer so we can get in touch with them',
       name: 'ISSO Name',
-      component: 'ISSO Component'
+      component: 'ISSO Component',
+      email: 'ISSO email'
     },
     collaboration: {
       label: 'For this request, I have started collaborating/consulting with:',
