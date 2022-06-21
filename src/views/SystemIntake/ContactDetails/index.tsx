@@ -1,11 +1,10 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
   Button,
   Checkbox,
-  ComboBox,
   Dropdown,
   IconNavigateBefore,
   Label,
@@ -22,10 +21,9 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
-import { GetCedarContacts } from 'queries/types/GetCedarContacts';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   UpdateSystemIntakeContactDetails,
@@ -50,18 +48,9 @@ export type ContactDetailsForm = {
     name: string;
     component: string;
   };
-  businessOwner: {
-    name: string;
-    component: string;
-  };
-  productManager: {
-    name: string;
-    component: string;
-  };
-  isso: {
-    isPresent: boolean | null;
-    name: string;
-  };
+  businessOwner: SystemIntakeContactProps;
+  productManager: SystemIntakeContactProps;
+  isso: SystemIntakeContactProps & { isPresent: boolean };
   governanceTeams: {
     isPresent: boolean | null;
     teams:
@@ -100,22 +89,21 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setActiveContact
   ] = useState<SystemIntakeContactProps | null>(null);
 
+  const [
+    contacts,
+    { createContact, updateContact, deleteContact }
+  ] = useSystemIntakeContacts(id);
+
   const initialValues = {
     requester: {
       name: requester.name || '',
       component: requester.component || ''
     },
-    businessOwner: {
-      name: businessOwner.name || '',
-      component: businessOwner.component || ''
-    },
-    productManager: {
-      name: productManager.name || '',
-      component: productManager.component || ''
-    },
+    businessOwner: contacts?.businessOwner,
+    productManager: contacts?.productManager,
     isso: {
-      isPresent: isso.isPresent,
-      name: isso.name || ''
+      isPresent: !!contacts?.isso?.euaUserId,
+      ...contacts?.isso
     },
     governanceTeams: {
       isPresent: governanceTeams.isPresent,
@@ -142,19 +130,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     ]
   });
 
-  const { data, loading } = useQuery<GetCedarContacts>(GetCedarContactsQuery, {
-    variables: { commonName: '' }
-  });
-
-  const contacts = useMemo(() => {
-    return (data?.cedarPersonsByCommonName || []).map(
-      (contact: CedarContactProps) => ({
-        label: contact.commonName || '',
-        value: contact.commonName || ''
-      })
-    );
-  }, [data?.cedarPersonsByCommonName]);
-
   const saveExitLink = (() => {
     let link = '';
     if (requestType === 'SHUTDOWN') {
@@ -167,17 +142,65 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   const onSubmit = (values?: ContactDetailsForm) => {
     if (values) {
-      mutate({
-        variables: {
-          input: {
-            id,
-            ...values,
-            governanceTeams: values.governanceTeams || []
+      const updateStandardContact = (
+        type: 'businessOwner' | 'productManager' | 'isso'
+      ) => {
+        // Check if fields are valid and have changed from initial values
+        if (
+          values[type].euaUserId &&
+          values[type].component &&
+          values[type] !== initialValues[type]
+        ) {
+          // console.log('validation');
+          if (!contacts?.[type]?.id) {
+            // If contact type does not have ID, create new contact
+            // console.log('create');
+            createContact(values[type]);
+          } else {
+            // If contact type has ID, update existing contact
+            // console.log('update');
+            updateContact(values[type]);
           }
         }
-      });
+      };
+
+      updateStandardContact('businessOwner');
+      updateStandardContact('productManager');
+      updateStandardContact('isso');
+
+      // const contactDetails = {
+      //   requester: {
+      //     name: values.requester.name,
+      //     component: values.requester.component
+      //   },
+      //   businessOwner: {
+      //     name: values.businessOwner.commonName,
+      //     component: values.businessOwner.component
+      //   },
+      //   productManager: {
+      //     name: values.productManager.commonName,
+      //     component: values?.productManager.component
+      //   },
+      //   isso: {
+      //     name: values.isso.commonName,
+      //     component: values.isso.component
+      //   }
+      // };
+
+      // mutate({
+      //   variables: {
+      //     input: {
+      //       id,
+      //       ...contactDetails,
+      //       governanceTeams: values.governanceTeams || []
+      //     }
+      //   }
+      // });
     }
   };
+
+  // Wait until contacts are loaded to return form
+  if (!contacts) return null;
 
   return (
     <Formik
@@ -192,6 +215,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       {(formikProps: FormikProps<ContactDetailsForm>) => {
         const { values, setFieldValue, errors } = formikProps;
         const flatErrors = flattenErrors(errors);
+
+        const setContactFieldsFromName = (
+          contact: CedarContactProps | null,
+          role: 'businessOwner' | 'productManager' | 'isso'
+        ) => {
+          setFieldValue(`${role}.commonName`, contact?.commonName || '');
+          setFieldValue(`${role}.euaUserId`, contact?.euaUserId || '');
+          setFieldValue(`${role}.email`, contact?.email || '');
+        };
+
         return (
           <>
             {Object.keys(errors).length > 0 && (
@@ -278,8 +311,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
                 {/* Business Owner Name */}
                 <FieldGroup
-                  scrollElement="businessOwner.name"
-                  error={!!flatErrors['businessOwner.name']}
+                  scrollElement="businessOwner.commonName"
+                  error={!!flatErrors['businessOwner.commonName']}
                 >
                   <h4 className="margin-bottom-1">
                     {t('contactDetails.businessOwner.name')}
@@ -296,7 +329,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       if (e.target.checked) {
                         setReqAndBusOwnerSame(true);
                         setFieldValue(
-                          'businessOwner.name',
+                          'businessOwner.commonName',
                           values.requester.name
                         );
                         setFieldValue(
@@ -316,23 +349,19 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {t('contactDetails.businessOwner.nameField')}
                   </Label>
                   <FieldErrorMsg>
-                    {flatErrors['businessOwner.name']}
+                    {flatErrors['businessOwner.commonName']}
                   </FieldErrorMsg>
-                  {!loading && (
-                    <CedarContactSelect
-                      id="IntakeForm-BusinessOwner"
-                      name="businessOwner.name"
-                      ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
-                      onChange={contact =>
-                        setFieldValue(
-                          'businessOwner.name',
-                          contact?.commonName || ''
-                        )
-                      }
-                      defaultValue={businessOwner.name || undefined}
-                      disabled={isReqAndBusOwnerSame}
-                    />
-                  )}
+                  <CedarContactSelect
+                    id="IntakeForm-BusinessOwner"
+                    name="businessOwner.commonName"
+                    ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
+                    onChange={contact => {
+                      if (contact !== null)
+                        setContactFieldsFromName(contact, 'businessOwner');
+                    }}
+                    defaultValue={initialValues?.businessOwner?.euaUserId}
+                    disabled={isReqAndBusOwnerSame}
+                  />
                 </FieldGroup>
 
                 {/* Business Owner Component */}
@@ -347,8 +376,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['businessOwner.component']}
                   </FieldErrorMsg>
                   <Field
-                    as={Dropdown}
                     disabled={isReqAndBusOwnerSame}
+                    as={Dropdown}
                     id="IntakeForm-BusinessOwnerComponent"
                     name="businessOwner.component"
                   >
@@ -358,6 +387,27 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {cmsDivionsAndOfficesOptions('BusinessOwnerComponent')}
                   </Field>
                 </FieldGroup>
+
+                {/* Business Owner Email */}
+                {values.businessOwner.euaUserId && (
+                  <FieldGroup
+                    scrollElement="businessOwner.email"
+                    error={!!flatErrors['businessOwner.email']}
+                  >
+                    <Label htmlFor="IntakeForm-BusinessOwnerEmail">
+                      {t('contactDetails.businessOwner.email')}
+                    </Label>
+                    <FieldErrorMsg>
+                      {flatErrors['businessOwner.email']}
+                    </FieldErrorMsg>
+                    <Field
+                      disabled
+                      as={TextInput}
+                      id="IntakeForm-BusinessOwnerEmail"
+                      name="businessOwner.email"
+                    />
+                  </FieldGroup>
+                )}
 
                 {/* Product Manager Name */}
                 <FieldGroup
@@ -379,7 +429,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       if (e.target.checked) {
                         setReqAndProductManagerSame(true);
                         setFieldValue(
-                          'productManager.name',
+                          'productManager.commonName',
                           values.requester.name
                         );
                         setFieldValue(
@@ -399,23 +449,19 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {t('contactDetails.productManager.nameField')}
                   </Label>
                   <FieldErrorMsg>
-                    {flatErrors['productManager.name']}
+                    {flatErrors['productManager.commonName']}
                   </FieldErrorMsg>
-                  {!loading && (
-                    <CedarContactSelect
-                      id="IntakeForm-ProductManager"
-                      name="productManager.name"
-                      ariaDescribedBy="IntakeForm-ProductManagerHelp"
-                      onChange={contact =>
-                        setFieldValue(
-                          'productManager.name',
-                          contact?.commonName || ''
-                        )
-                      }
-                      defaultValue={productManager.name ?? undefined}
-                      disabled={isReqAndProductManagerSame}
-                    />
-                  )}
+                  <CedarContactSelect
+                    id="IntakeForm-ProductManager"
+                    name="productManager.commonName"
+                    ariaDescribedBy="IntakeForm-ProductManagerHelp"
+                    onChange={contact => {
+                      if (contact !== null)
+                        setContactFieldsFromName(contact, 'productManager');
+                    }}
+                    defaultValue={initialValues?.productManager?.euaUserId}
+                    disabled={isReqAndProductManagerSame}
+                  />
                 </FieldGroup>
 
                 {/* Product Manager Component */}
@@ -442,6 +488,27 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {cmsDivionsAndOfficesOptions('ProductManagerComponent')}
                   </Field>
                 </FieldGroup>
+
+                {/* Product Manager Email */}
+                {values.productManager.euaUserId && (
+                  <FieldGroup
+                    scrollElement="productManager.email"
+                    error={!!flatErrors['productManager.email']}
+                  >
+                    <Label htmlFor="IntakeForm-ProductManagerEmail">
+                      {t('contactDetails.productManager.email')}
+                    </Label>
+                    <FieldErrorMsg>
+                      {flatErrors['productManager.email']}
+                    </FieldErrorMsg>
+                    <Field
+                      disabled
+                      as={TextInput}
+                      id="IntakeForm-ProductManagerEmail"
+                      name="productManager.email"
+                    />
+                  </FieldGroup>
+                )}
 
                 {/* ISSO */}
                 <FieldGroup
@@ -482,30 +549,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                         className="margin-left-4 margin-bottom-1"
                       >
                         <FieldGroup
-                          scrollElement="isso.name"
-                          error={!!flatErrors['isso.name']}
+                          scrollElement="isso.commonName"
+                          error={!!flatErrors['isso.commonName']}
                           className="margin-top-2"
                         >
-                          <Label htmlFor="IntakeForm-IssoName">
+                          <Label htmlFor="IntakeForm-IssoCommonName">
                             {t('contactDetails.isso.name')}
                           </Label>
                           <FieldErrorMsg>
-                            {flatErrors['isso.name']}
+                            {flatErrors['isso.commonName']}
                           </FieldErrorMsg>
-                          {!loading && (
-                            <CedarContactSelect
-                              id="IntakeForm-IssoName"
-                              name="isso.name"
-                              onChange={contact =>
-                                setFieldValue(
-                                  'isso.name',
-                                  contact?.commonName || ''
-                                )
-                              }
-                              defaultValue={isso.name || undefined}
-                            />
-                          )}
+                          <CedarContactSelect
+                            id="IntakeForm-IssoCommonName"
+                            name="isso.commonName"
+                            onChange={contact =>
+                              setContactFieldsFromName(contact, 'isso')
+                            }
+                            defaultValue={initialValues?.isso?.euaUserId}
+                          />
                         </FieldGroup>
+                        {/* ISSO Component */}
                         <FieldGroup
                           scrollElement="isso.component"
                           error={!!flatErrors['isso.component']}
@@ -528,6 +591,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             {cmsDivionsAndOfficesOptions('IssoComponent')}
                           </Field>
                         </FieldGroup>
+                        {/* ISSO Email */}
+                        {values.isso.euaUserId && (
+                          <FieldGroup
+                            scrollElement="isso.email"
+                            error={!!flatErrors['isso.email']}
+                          >
+                            <Label htmlFor="IntakeForm-IssoEmail">
+                              {t('contactDetails.isso.email')}
+                            </Label>
+                            <FieldErrorMsg>
+                              {flatErrors['isso.email']}
+                            </FieldErrorMsg>
+                            <Field
+                              disabled
+                              as={TextInput}
+                              id="IntakeForm-IssoEmail"
+                              name="isso.email"
+                            />
+                          </FieldGroup>
+                        )}
                       </div>
                     )}
                     <Field
@@ -538,7 +621,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       label="No"
                       onChange={() => {
                         setFieldValue('isso.isPresent', false);
-                        setFieldValue('isso.name', '');
+                        if (values.isso.id) deleteContact(values.isso.id);
+                        setFieldValue('isso.commonName', '');
+                        setFieldValue('isso.euaUserId', '');
+                        setFieldValue('isso.component', '');
+                        setFieldValue('isso.email', '');
                       }}
                       value={false}
                     />
@@ -550,6 +637,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   systemIntakeId={id}
                   activeContact={activeContact}
                   setActiveContact={setActiveContact}
+                  contacts={contacts.additionalContacts}
+                  createContact={createContact}
+                  updateContact={updateContact}
+                  deleteContact={deleteContact}
                 />
 
                 {/* Governance Teams */}

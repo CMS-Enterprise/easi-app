@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Button, Dropdown, Label } from '@trussworks/react-uswds';
 
 import FieldGroup from 'components/shared/FieldGroup';
-import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
 import CedarContactSelect from './CedarContactSelect';
@@ -18,7 +17,7 @@ const contactRoleOptions = [
   'Privacy Advisor',
   'CRA',
   'Other',
-  'and Unknown'
+  'Unknown'
 ];
 
 const Contact = ({
@@ -38,7 +37,7 @@ const Contact = ({
         {commonName}, {component}
       </p>
       <p>{role}</p>
-      {/* <p>{contact.email}</p> */}
+      <p>{contact.email}</p>
       <div className="system-intake-contacts__contact-actions">
         <Button
           type="button"
@@ -173,24 +172,33 @@ const ContactForm = ({
 export default function AdditionalContacts({
   systemIntakeId,
   activeContact,
-  setActiveContact
+  setActiveContact,
+  contacts,
+  createContact,
+  updateContact,
+  deleteContact
 }: {
   systemIntakeId: string;
   activeContact: SystemIntakeContactProps | null;
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  contacts: SystemIntakeContactProps[] | [];
+  createContact: (
+    contact: SystemIntakeContactProps,
+    callback?: () => any
+  ) => void;
+  updateContact: (
+    contact: SystemIntakeContactProps,
+    callback?: () => any
+  ) => void;
+  deleteContact: (id: string, callback?: () => any) => void;
 }) {
-  const [
-    additionalContacts,
-    { createContact, updateContact, deleteContact }
-  ] = useSystemIntakeContacts(systemIntakeId);
-
   return (
     <div className="system-intake-contacts">
-      {additionalContacts && (
+      {contacts && (
         <>
           <h4>Additional contacts</h4>
           <div className="system-intake-contacts__contacts-list">
-            {additionalContacts.map(contact => {
+            {contacts.map(contact => {
               // Show form if editing contact
               if (activeContact && activeContact?.id === contact.id) {
                 return (
