@@ -9,12 +9,6 @@ import { UpdateSystemIntakeContactDetailsInput } from "./../../types/graphql-glo
 // GraphQL mutation operation: UpdateSystemIntakeContactDetails
 // ====================================================
 
-export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_businessOwner {
-  __typename: "SystemIntakeBusinessOwner";
-  component: string | null;
-  name: string | null;
-}
-
 export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_governanceTeams_teams {
   __typename: "SystemIntakeCollaborator";
   acronym: string;
@@ -30,18 +24,6 @@ export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetai
   teams: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_governanceTeams_teams[] | null;
 }
 
-export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_isso {
-  __typename: "SystemIntakeISSO";
-  isPresent: boolean | null;
-  name: string | null;
-}
-
-export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_productManager {
-  __typename: "SystemIntakeProductManager";
-  component: string | null;
-  name: string | null;
-}
-
 export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_requester {
   __typename: "SystemIntakeRequester";
   component: string | null;
@@ -51,10 +33,7 @@ export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetai
 export interface UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
-  businessOwner: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_businessOwner;
   governanceTeams: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_governanceTeams;
-  isso: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_isso;
-  productManager: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_productManager;
   requester: UpdateSystemIntakeContactDetails_updateSystemIntakeContactDetails_systemIntake_requester;
 }
 

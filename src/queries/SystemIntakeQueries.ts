@@ -73,10 +73,6 @@ export const UpdateSystemIntakeContactDetails = gql`
     updateSystemIntakeContactDetails(input: $input) {
       systemIntake {
         id
-        businessOwner {
-          component
-          name
-        }
         governanceTeams {
           isPresent
           teams {
@@ -86,14 +82,6 @@ export const UpdateSystemIntakeContactDetails = gql`
             label
             name
           }
-        }
-        isso {
-          isPresent
-          name
-        }
-        productManager {
-          component
-          name
         }
         requester {
           component
