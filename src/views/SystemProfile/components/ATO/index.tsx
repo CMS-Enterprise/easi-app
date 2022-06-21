@@ -164,45 +164,50 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         )}
 
-        {flags.systemProfileHiddenFields && atoStatus === 'In Progress' && (
-          // @ts-expect-error
-          <ProcessList>
-            {system.activities?.map(act => (
-              <ProcessListItem key={act.id}>
-                <ProcessListHeading
-                  type="h4"
-                  className="easi-header__basic flex-align-start"
-                >
-                  <div className="margin-0 font-body-lg">Start a process</div>
-                  <div className="text-right margin-bottom-0">
-                    <Tag
-                      className={classnames('font-body-md', 'margin-bottom-1', {
-                        'bg-success-dark text-white':
-                          act.status === 'Completed',
-                        'bg-warning': act.status === 'In progress',
-                        'bg-white text-base border-base border-2px':
-                          act.status === 'Not started'
-                      })}
-                    >
-                      {act.status}
-                    </Tag>
-                    <h5 className="text-normal margin-y-0 text-base-dark">
-                      {act.status === 'Completed'
-                        ? t('singleSystem.ato.completed')
-                        : t('singleSystem.ato.due')}
-                      {act.dueDate}
-                    </h5>
-                  </div>
-                </ProcessListHeading>
-                <DescriptionTerm term={t('singleSystem.ato.activityOwner')} />
-                <DescriptionDefinition
-                  className="line-height-body-3 font-body-md margin-bottom-0"
-                  definition={act.activityOwner}
-                />
-              </ProcessListItem>
-            ))}
-          </ProcessList>
-        )}
+        {flags.systemProfileHiddenFields &&
+          atoStatus === 'In Progress' &&
+          system.activities !== undefined && (
+            <ProcessList>
+              {system.activities.map(act => (
+                <ProcessListItem key={act.id}>
+                  <ProcessListHeading
+                    type="h4"
+                    className="easi-header__basic flex-align-start"
+                  >
+                    <div className="margin-0 font-body-lg">Start a process</div>
+                    <div className="text-right margin-bottom-0">
+                      <Tag
+                        className={classnames(
+                          'font-body-md',
+                          'margin-bottom-1',
+                          {
+                            'bg-success-dark text-white':
+                              act.status === 'Completed',
+                            'bg-warning': act.status === 'In progress',
+                            'bg-white text-base border-base border-2px':
+                              act.status === 'Not started'
+                          }
+                        )}
+                      >
+                        {act.status}
+                      </Tag>
+                      <h5 className="text-normal margin-y-0 text-base-dark">
+                        {act.status === 'Completed'
+                          ? t('singleSystem.ato.completed')
+                          : t('singleSystem.ato.due')}
+                        {act.dueDate}
+                      </h5>
+                    </div>
+                  </ProcessListHeading>
+                  <DescriptionTerm term={t('singleSystem.ato.activityOwner')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 font-body-md margin-bottom-0"
+                    definition={act.activityOwner}
+                  />
+                </ProcessListItem>
+              ))}
+            </ProcessList>
+          )}
 
         {flags.systemProfileHiddenFields && (
           <>
@@ -446,7 +451,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                     className="line-height-body-3 margin-bottom-4"
                     definition={showVal(
                       ato?.lastAssessmentDate &&
-                        formatDate(ato!.lastAssessmentDate)
+                        formatDate(ato.lastAssessmentDate)
                     )}
                   />
                 </Grid>

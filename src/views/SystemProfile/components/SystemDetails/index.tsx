@@ -130,9 +130,9 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
           </>
         )}
 
-        {locations && locations.length ? (
+        {locations?.length ? (
           <CardGroup className="margin-0">
-            {locations?.map(location => (
+            {locations.map(location => (
               <Card
                 key={location.id}
                 data-testid="system-card"
@@ -239,7 +239,6 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
           </Tag>
         ))}
 
-        {/* TODO: Map and populate tags with CEDAR */}
         <Grid row className="margin-top-3">
           <Grid desktop={{ col: 6 }}>
             {flags.systemProfileHiddenFields && (

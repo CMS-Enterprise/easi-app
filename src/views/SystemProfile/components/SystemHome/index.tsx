@@ -142,7 +142,6 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                     className="link-header"
                     to={`/systems/${system.id}/ato`}
                   >
-                    {/* TODO: Get from CEDAR */}
                     {t('singleSystem.ato.viewATOInfo')}
                     <span aria-hidden>&nbsp;</span>
                     <span aria-hidden>&rarr; </span>
