@@ -15,10 +15,46 @@ import {
 } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
+const contactDetails: SystemIntakeContactProps = {
+  id: '',
+  euaUserId: '',
+  systemIntakeId: '',
+  component: '',
+  role: '',
+  commonName: '',
+  email: ''
+};
+
+type FormattedContacts = {
+  businessOwner: SystemIntakeContactProps;
+  productManager: SystemIntakeContactProps;
+  isso: SystemIntakeContactProps;
+  additionalContacts: SystemIntakeContactProps[];
+};
+
+const initialContactsObject: FormattedContacts = {
+  businessOwner: { ...contactDetails, role: 'Business Owner' },
+  productManager: { ...contactDetails, role: 'Product Manager' },
+  isso: { ...contactDetails, role: 'ISSO' },
+  additionalContacts: []
+};
+
+type Roles = {
+  'Business Owner': 'businessOwner';
+  'Product Manager': 'productManager';
+  ISSO: 'isso';
+};
+
+const rolesMap: Roles = {
+  'Business Owner': 'businessOwner',
+  'Product Manager': 'productManager',
+  ISSO: 'isso'
+};
+
 export default function useSystemIntakeContacts(
   systemIntakeId: string
 ): [
-  SystemIntakeContactProps[],
+  FormattedContacts | null,
   {
     createContact: (
       contact: SystemIntakeContactProps,
@@ -31,8 +67,6 @@ export default function useSystemIntakeContacts(
     deleteContact: (id: string, callback?: () => void) => void;
   }
 ] {
-  const [contacts, setContacts] = useState<SystemIntakeContactProps[]>([]);
-
   const { data, refetch } = useQuery<GetSystemIntakeContacts>(
     GetSystemIntakeContactsQuery,
     {
@@ -40,10 +74,24 @@ export default function useSystemIntakeContacts(
     }
   );
 
-  const systemIntakeContacts = useMemo(
-    () => data?.systemIntakeContacts?.systemIntakeContacts || [],
-    [data?.systemIntakeContacts?.systemIntakeContacts]
-  ) as SystemIntakeContactProps[];
+  const contacts = useMemo(() => {
+    const systemIntakeContacts =
+      data?.systemIntakeContacts?.systemIntakeContacts;
+    return systemIntakeContacts
+      ? systemIntakeContacts.reduce((acc, contact: any) => {
+          if (rolesMap[contact.role as keyof Roles]) {
+            return {
+              ...acc,
+              [rolesMap[contact.role as keyof Roles]]: contact
+            };
+          }
+          return {
+            ...acc,
+            additionalContacts: [...acc.additionalContacts, contact]
+          };
+        }, initialContactsObject)
+      : null;
+  }, [data?.systemIntakeContacts?.systemIntakeContacts]);
 
   const [
     createSystemIntakeContact
@@ -105,10 +153,6 @@ export default function useSystemIntakeContacts(
       .then(refetch)
       .then(callback || null);
   };
-
-  useEffect(() => {
-    setContacts(systemIntakeContacts);
-  }, [systemIntakeContacts]);
 
   return [contacts, { createContact, updateContact, deleteContact }];
 }
