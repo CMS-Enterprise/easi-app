@@ -68,22 +68,16 @@ type ContactDetailsProps = {
 };
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
-  const {
-    id,
-    requestType,
-    requester,
-    businessOwner,
-    productManager,
-    isso,
-    governanceTeams
-  } = systemIntake;
+  const { id, requestType, requester, governanceTeams } = systemIntake;
   const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
+
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
   const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState(
     false
   );
+
   const [
     activeContact,
     setActiveContact
@@ -142,60 +136,69 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   const onSubmit = (values?: ContactDetailsForm) => {
     if (values) {
-      const updateStandardContact = (
-        type: 'businessOwner' | 'productManager' | 'isso'
-      ) => {
-        // Check if fields are valid and have changed from initial values
-        if (
-          values[type].euaUserId &&
-          values[type].component &&
-          values[type] !== initialValues[type]
-        ) {
-          // console.log('validation');
-          if (!contacts?.[type]?.id) {
-            // If contact type does not have ID, create new contact
-            // console.log('create');
-            createContact(values[type]);
-          } else {
-            // If contact type has ID, update existing contact
-            // console.log('update');
-            updateContact(values[type]);
+      // Update business owner
+      if (
+        values.businessOwner.euaUserId &&
+        values.businessOwner.component &&
+        values.businessOwner !== initialValues.businessOwner
+      ) {
+        if (!contacts?.businessOwner?.id) {
+          createContact(values.businessOwner);
+        } else {
+          updateContact(values.businessOwner);
+        }
+      }
+
+      // Update product manager
+      if (
+        values.productManager.euaUserId &&
+        values.productManager.component &&
+        values.productManager !== initialValues.productManager
+      ) {
+        if (!contacts?.productManager?.id) {
+          createContact(values.productManager);
+        } else {
+          updateContact(values.productManager);
+        }
+      }
+
+      // Update isso
+      if (
+        values.isso.isPresent &&
+        values.isso.euaUserId &&
+        values.isso !== initialValues.isso
+      ) {
+        if (!contacts?.isso?.id) {
+          createContact(values.isso);
+        } else {
+          updateContact(values.isso);
+        }
+      }
+
+      mutate({
+        variables: {
+          input: {
+            id,
+            requester: {
+              name: values.requester.name,
+              component: values.requester.component
+            },
+            businessOwner: {
+              name: values.businessOwner.commonName,
+              component: values.businessOwner.component
+            },
+            productManager: {
+              name: values.productManager.commonName,
+              component: values.productManager.component
+            },
+            isso: {
+              isPresent: values.isso.isPresent,
+              name: values.isso.commonName
+            },
+            governanceTeams: values.governanceTeams || []
           }
         }
-      };
-
-      updateStandardContact('businessOwner');
-      updateStandardContact('productManager');
-      updateStandardContact('isso');
-
-      // const contactDetails = {
-      //   requester: {
-      //     name: values.requester.name,
-      //     component: values.requester.component
-      //   },
-      //   businessOwner: {
-      //     name: values.businessOwner.commonName,
-      //     component: values.businessOwner.component
-      //   },
-      //   productManager: {
-      //     name: values.productManager.commonName,
-      //     component: values?.productManager.component
-      //   },
-      //   isso: {
-      //     name: values.isso.commonName,
-      //     component: values.isso.component
-      //   }
-      // };
-
-      // mutate({
-      //   variables: {
-      //     input: {
-      //       id,
-      //       ...contactDetails,
-      //       governanceTeams: values.governanceTeams || []
-      //     }
-      //   }
-      // });
+      });
     }
   };
 
@@ -411,8 +414,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
                 {/* Product Manager Name */}
                 <FieldGroup
-                  scrollElement="productManager.name"
-                  error={!!flatErrors['productManager.name']}
+                  scrollElement="productManager.commonName"
+                  error={!!flatErrors['productManager.commonName']}
                 >
                   <h4 className="margin-bottom-1">
                     {t('contactDetails.productManager.name')}
@@ -567,29 +570,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             }
                             defaultValue={initialValues?.isso?.euaUserId}
                           />
-                        </FieldGroup>
-                        {/* ISSO Component */}
-                        <FieldGroup
-                          scrollElement="isso.component"
-                          error={!!flatErrors['isso.component']}
-                        >
-                          <Label htmlFor="IntakeForm-IssoComponent">
-                            {t('contactDetails.isso.component')}
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['isso.component']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={Dropdown}
-                            id="IntakeForm-IssoComponent"
-                            label="ISSO Component"
-                            name="isso.component"
-                          >
-                            <option value="" disabled>
-                              Select an option
-                            </option>
-                            {cmsDivionsAndOfficesOptions('IssoComponent')}
-                          </Field>
                         </FieldGroup>
                         {/* ISSO Email */}
                         {values.isso.euaUserId && (
