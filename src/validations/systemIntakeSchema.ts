@@ -11,13 +11,13 @@ const SystemIntakeValidationSchema: any = {
       component: Yup.string().required("Select the Requester's component")
     }),
     businessOwner: Yup.object().shape({
-      name: Yup.string()
+      commonName: Yup.string()
         .trim()
         .required("Enter the Business or Product Owner's name"),
       component: Yup.string().required('Select a Business Owner Component')
     }),
     productManager: Yup.object().shape({
-      name: Yup.string()
+      commonName: Yup.string()
         .trim()
         .required('Enter the CMS Project/Product Manager or Lead name'),
       component: Yup.string().required(
@@ -28,9 +28,13 @@ const SystemIntakeValidationSchema: any = {
       isPresent: Yup.boolean()
         .nullable()
         .required('Select Yes or No to indicate if you have an ISSO'),
-      name: Yup.string().when('isPresent', {
+      commonName: Yup.string().when('isPresent', {
         is: true,
         then: Yup.string().trim().required('Tell us the name of your ISSO')
+      }),
+      component: Yup.string().when('isPresent', {
+        is: true,
+        then: Yup.string().required('Select an ISSO component')
       })
     }),
     governanceTeams: Yup.object().shape({
