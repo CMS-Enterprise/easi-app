@@ -121,74 +121,100 @@ describe('The Business Case Form', () => {
           pros: 'Preferred Solution Pros',
           cons: 'Preferred Solution Cons',
           estimatedLifecycleCost: {
-            year1: {
-              development: {
-                isPresent: false,
-                cost: ''
-              },
-              operationsMaintenance: {
-                isPresent: true,
-                cost: '5'
-              },
-              other: {
-                isPresent: false,
-                cost: ''
+            development: {
+              label: 'Development',
+              type: 'primary',
+              isPresent: true,
+              years: {
+                year1: '',
+                year2: '10',
+                year3: '',
+                year4: '',
+                year5: '25'
               }
             },
-            year2: {
-              development: {
-                isPresent: true,
-                cost: '10'
-              },
-              operationsMaintenance: {
-                isPresent: false,
-                cost: ''
-              },
-              other: {
-                isPresent: false,
-                cost: ''
+            operationsMaintenance: {
+              label: 'Operations and Maintenance',
+              type: 'primary',
+              isPresent: true,
+              years: {
+                year1: '5',
+                year2: '',
+                year3: '',
+                year4: '20',
+                year5: ''
               }
             },
-            year3: {
-              development: {
-                isPresent: false,
-                cost: ''
-              },
-              operationsMaintenance: {
-                isPresent: false,
-                cost: ''
-              },
-              other: {
-                isPresent: true,
-                cost: '15'
+            helpDesk: {
+              label: 'Help desk/call center',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
               }
             },
-            year4: {
-              development: {
-                isPresent: false,
-                cost: ''
-              },
-              operationsMaintenance: {
-                isPresent: true,
-                cost: '20'
-              },
-              other: {
-                isPresent: false,
-                cost: ''
+            software: {
+              label: 'Software licenses',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
               }
             },
-            year5: {
-              development: {
-                isPresent: true,
-                cost: '25'
-              },
-              operationsMaintenance: {
-                isPresent: false,
-                cost: ''
-              },
-              other: {
-                isPresent: false,
-                cost: ''
+            planning: {
+              label: 'Planning, support, and professional services',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
+              }
+            },
+            infrastructure: {
+              label: 'Infrastructure',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
+              }
+            },
+            oit: {
+              label: 'OIT services, tools, and pilots',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
+              }
+            },
+            other: {
+              label: 'Other services, tools, and pilots',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
               }
             }
           },
@@ -211,74 +237,100 @@ describe('The Business Case Form', () => {
           pros: 'Alternative A Pros',
           cons: 'Alternative A Cons',
           estimatedLifecycleCost: {
-            year1: {
-              development: {
-                isPresent: true,
-                cost: '2'
-              },
-              operationsMaintenance: {
-                isPresent: false,
-                cost: ''
-              },
-              other: {
-                isPresent: true,
-                cost: '4'
+            development: {
+              label: 'Development',
+              type: 'primary',
+              isPresent: true,
+              years: {
+                year1: '2',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: '12'
               }
             },
-            year2: {
-              development: {
-                isPresent: false,
-                cost: ''
-              },
-              operationsMaintenance: {
-                isPresent: true,
-                cost: '6'
-              },
-              other: {
-                isPresent: false,
-                cost: ''
+            operationsMaintenance: {
+              label: 'Operations and Maintenance',
+              type: 'primary',
+              isPresent: true,
+              years: {
+                year1: '',
+                year2: '6',
+                year3: '',
+                year4: '10',
+                year5: ''
               }
             },
-            year3: {
-              development: {
-                isPresent: false,
-                cost: ''
-              },
-              operationsMaintenance: {
-                isPresent: false,
-                cost: ''
-              },
-              other: {
-                isPresent: true,
-                cost: '8'
+            helpDesk: {
+              label: 'Help desk/call center',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
               }
             },
-            year4: {
-              development: {
-                isPresent: false,
-                cost: ''
-              },
-              operationsMaintenance: {
-                isPresent: true,
-                cost: '10'
-              },
-              other: {
-                isPresent: false,
-                cost: ''
+            software: {
+              label: 'Software licenses',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
               }
             },
-            year5: {
-              development: {
-                isPresent: true,
-                cost: '12'
-              },
-              operationsMaintenance: {
-                isPresent: false,
-                cost: ''
-              },
-              other: {
-                isPresent: false,
-                cost: ''
+            planning: {
+              label: 'Planning, support, and professional services',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
+              }
+            },
+            infrastructure: {
+              label: 'Infrastructure',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
+              }
+            },
+            oit: {
+              label: 'OIT services, tools, and pilots',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
+              }
+            },
+            other: {
+              label: 'Other services, tools, and pilots',
+              type: 'related',
+              isPresent: false,
+              years: {
+                year1: '',
+                year2: '',
+                year3: '',
+                year4: '',
+                year5: ''
               }
             }
           },

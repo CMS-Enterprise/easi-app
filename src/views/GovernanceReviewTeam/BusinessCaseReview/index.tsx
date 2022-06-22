@@ -74,7 +74,11 @@ const BusinessCaseReview = ({
           Alternatives analysis
         </h2>
         <AlternativeAnalysisReview
-          fiscalYear={getFiscalYear(DateTime.fromISO(businessCase.createdAt))}
+          fiscalYear={
+            businessCase.createdAt
+              ? getFiscalYear(DateTime.fromISO(businessCase.createdAt))
+              : new Date().getFullYear()
+          }
           preferredSolution={businessCase.preferredSolution}
           alternativeA={businessCase.alternativeA}
           alternativeB={businessCase.alternativeB}

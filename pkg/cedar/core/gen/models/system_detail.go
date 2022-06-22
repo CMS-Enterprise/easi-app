@@ -19,37 +19,159 @@ import (
 // swagger:model SystemDetail
 type SystemDetail struct {
 
+	// business owner information
+	BusinessOwnerInformation *BusinessOwnerInformation `json:"BusinessOwnerInformation,omitempty"`
+
+	// system maintainer information
+	SystemMaintainerInformation *SystemMaintainerInformation `json:"SystemMaintainerInformation,omitempty"`
+
 	// acronym
+	// Example: CMSS
 	Acronym string `json:"acronym,omitempty"`
 
+	// belongs to
+	// Example: 326-10-0
+	BelongsTo string `json:"belongsTo,omitempty"`
+
+	// business owner org
+	// Example: Center for Medicare Management
+	BusinessOwnerOrg string `json:"businessOwnerOrg,omitempty"`
+
+	// business owner org comp
+	// Example: CM-(FFS)
+	BusinessOwnerOrgComp string `json:"businessOwnerOrgComp,omitempty"`
+
 	// description
+	// Example: This is a CMS System decription
 	Description string `json:"description,omitempty"`
 
+	// ict object Id
+	// Example: 326-3-0
+	// Required: true
+	IctObjectID *string `json:"ictObjectId"`
+
 	// id
-	// Example: 326-1-0
+	// Example: 326-2-0
 	// Required: true
 	ID *string `json:"id"`
 
 	// name
 	// Example: CMS System
-	Name string `json:"name,omitempty"`
+	// Required: true
+	Name *string `json:"name"`
+
+	// next version Id
+	// Example: 326-1-0
+	NextVersionID string `json:"nextVersionId,omitempty"`
+
+	// previous version Id
+	// Example: 326-3-0
+	PreviousVersionID string `json:"previousVersionId,omitempty"`
+
+	// state
+	// Example: Active
+	State string `json:"state,omitempty"`
 
 	// status
-	// Example: Active
+	// Example: Approved
 	Status string `json:"status,omitempty"`
+
+	// system maintainer org
+	// Example: OIT
+	SystemMaintainerOrg string `json:"systemMaintainerOrg,omitempty"`
+
+	// system maintainer org comp
+	// Example: Enterprise Architecture and Data Group
+	SystemMaintainerOrgComp string `json:"systemMaintainerOrgComp,omitempty"`
+
+	// uuid
+	// Example: 12FFF52E-195B-4E48-9A38-669A8BD71234
+	UUID string `json:"uuid,omitempty"`
+
+	// version
+	// Example: 1.0
+	// Required: true
+	Version *string `json:"version"`
 }
 
 // Validate validates this system detail
 func (m *SystemDetail) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateBusinessOwnerInformation(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSystemMaintainerInformation(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIctObjectID(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVersion(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *SystemDetail) validateBusinessOwnerInformation(formats strfmt.Registry) error {
+	if swag.IsZero(m.BusinessOwnerInformation) { // not required
+		return nil
+	}
+
+	if m.BusinessOwnerInformation != nil {
+		if err := m.BusinessOwnerInformation.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("BusinessOwnerInformation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("BusinessOwnerInformation")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *SystemDetail) validateSystemMaintainerInformation(formats strfmt.Registry) error {
+	if swag.IsZero(m.SystemMaintainerInformation) { // not required
+		return nil
+	}
+
+	if m.SystemMaintainerInformation != nil {
+		if err := m.SystemMaintainerInformation.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("SystemMaintainerInformation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("SystemMaintainerInformation")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *SystemDetail) validateIctObjectID(formats strfmt.Registry) error {
+
+	if err := validate.Required("ictObjectId", "body", m.IctObjectID); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -62,8 +184,71 @@ func (m *SystemDetail) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this system detail based on context it is used
+func (m *SystemDetail) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SystemDetail) validateVersion(formats strfmt.Registry) error {
+
+	if err := validate.Required("version", "body", m.Version); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this system detail based on the context it is used
 func (m *SystemDetail) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateBusinessOwnerInformation(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSystemMaintainerInformation(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SystemDetail) contextValidateBusinessOwnerInformation(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.BusinessOwnerInformation != nil {
+		if err := m.BusinessOwnerInformation.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("BusinessOwnerInformation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("BusinessOwnerInformation")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *SystemDetail) contextValidateSystemMaintainerInformation(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.SystemMaintainerInformation != nil {
+		if err := m.SystemMaintainerInformation.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("SystemMaintainerInformation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("SystemMaintainerInformation")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

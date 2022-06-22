@@ -1,12 +1,13 @@
 package models
 
 // NOTE: this type is used to create a schema used by the CEDAR Intake API
-// When changing this type, add a new version for it in pkg/cedar/intake/translation/constants.go
+// When changing this type, update the version for it in pkg/cedar/intake/translation/constants.go (IntakeInputSchemaEASIIntakeVersion)
 
 // NOTE: Optional fields are marked with omitempty JSON tag
 
 // EASIIntake represents a system intake
 type EASIIntake struct {
+	IntakeID                    string  `json:"intakeId" jsonschema:"description=Unique UUID of this system intake,example=0a16ce4e-8d8a-41ab-aeba-9303067f065b"`
 	AdminLead                   *string `json:"adminLead,omitempty" jsonschema:"description=Government Admin responsible for handling request,example=John Doe"`
 	ArchivedAt                  *string `json:"archivedAt,omitempty" jsonschema:"description=Timestamp of when request was archived,example=2022-02-17T14:34:43Z"`
 	BusinessNeed                string  `json:"businessNeed" jsonschema:"description=Business Need for the effort detailed in this request,example=Process takes too long and holds up key stakeholders"`
@@ -21,7 +22,6 @@ type EASIIntake struct {
 	CostIncreaseAmount          *string `json:"costIncreaseAmount,omitempty" jsonschema:"description=How much is the cost increase,example=Over two million dollars"`
 	DecidedAt                   *string `json:"decidedAt,omitempty" jsonschema:"description=Timestamp of when decision was reached,example=2022-02-17T14:34:43Z"`
 	DecisionNextSteps           *string `json:"decisionNextSteps,omitempty" jsonschema:"description=Steps that the business owner should take after receiving their decision,example=Go get a contract"`
-	EaCollaborator              *string `json:"eaCollaborator,omitempty" jsonschema:"description=N/A,example=N/A"` // TODO: doesn't seem like this is ever populated, remove?
 	EaCollaboratorName          *string `json:"eaCollaboratorName,omitempty" jsonschema:"description=Enterprise Architecture (EA) Collaborator,example=John Doe"`
 	EaSupportRequest            *bool   `json:"eaSupportRequest,omitempty" jsonschema:"description=Does the request need EA support,example=True"`
 	ExistingContract            string  `json:"existingContract" jsonschema:"description=Is there an existing contract for this effort,example=HAVE_CONTRACT"`
@@ -30,14 +30,11 @@ type EASIIntake struct {
 	FundingSource               *string `json:"fundingSource,omitempty" jsonschema:"description=Source of funding,example=Prog Ops"`
 	GrbDate                     *string `json:"grbDate,omitempty" jsonschema:"description=Scheduled date for the Governance Review Board (GRB) meeting,example=2025-12-12T00:00:00Z"`
 	GrtDate                     *string `json:"grtDate,omitempty" jsonschema:"description=Scheduled date for the Governance Review Team (GRT) meeting,example=2025-10-20T00:00:00Z"`
-	GrtReviewEmailBody          *string `json:"grtReviewEmailBody,omitempty" jsonschema:"description=N/A,example=N/A"` // TODO: not sure when/if this is populated
-	Isso                        *string `json:"isso,omitempty" jsonschema:"description=N/A,example=N/A"`               // TODO: doesn't seem like this is ever populated, remove?
 	IssoName                    *string `json:"issoName,omitempty" jsonschema:"description=Information System Security Officer (ISSO) for the effort detailed in this request,example=John Doe"`
 	LifecycleCostBaseline       *string `json:"lifecycleCostBaseline,omitempty" jsonschema:"description=Cost baseline associated with this LCID,example=about $10 million"`
 	LifecycleExpiresAt          *string `json:"lifecycleExpiresAt,omitempty" jsonschema:"description=Expiration date for the LCID associated with this request,example=2030-12-23T00:00:00Z"`
 	LifecycleID                 *string `json:"lifecycleID,omitempty" jsonschema:"description=LCID (if one is issued) associated with this request,example=220970"`
 	LifecycleScope              *string `json:"lifecycleScope,omitempty" jsonschema:"description=Scope of LCID,example=This LCID covers development and operation of the application"`
-	OitSecurityCollaborator     *string `json:"oitSecurityCollaborator,omitempty" jsonschema:"description=N/A,example=N/A"` // TODO: doesn't seem like this is ever populated, remove?
 	OitSecurityCollaboratorName *string `json:"oitSecurityCollaboratorName,omitempty" jsonschema:"description=OIT's Security and Privacy (ISPG) Collaborator,example=John Doe"`
 	ProcessStatus               string  `json:"processStatus" jsonschema:"description=Where is the business owner in process,example=Initial development underway"`
 	ProductManager              string  `json:"productManager" jsonschema:"description=Product Manager for the effort deatiled in this request,example=John Doe"`
@@ -51,7 +48,6 @@ type EASIIntake struct {
 	Solution                    string  `json:"solution" jsonschema:"description=Initial solution,example=Build new application in ServiceNow"`
 	Status                      string  `json:"status" jsonschema:"description=Current status of this request,example=INTAKE_SUBMITTED"`
 	SubmittedAt                 string  `json:"submittedAt" jsonschema:"description=Timestamp of when request was submitted,example=2022-02-17T14:34:43Z"`
-	TrbCollaborator             *string `json:"trbCollaborator,omitempty" jsonschema:"description=N/A,example=N/A"` // TODO: doesn't seem like this is ever populated, remove?
 	TrbCollaboratorName         *string `json:"trbCollaboratorName,omitempty" jsonschema:"description=Technical Review Board (TRB) Collaborator,example=John Doe"`
 	UserEUA                     string  `json:"userEUA" jsonschema:"description=EUA id of the requester,example=J8YN"`
 }

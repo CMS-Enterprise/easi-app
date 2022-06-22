@@ -1,16 +1,45 @@
 /* autoprefixer grid: autoplace */
 
 .est-lifecycle-cost {
-  margin-top: 1rem;
   flex-direction: row-reverse;
 
-  &__phase-costs {
-    margin: 0.5rem 2rem 2rem 0;
-  }
+  .cost-table-row {
+    display: grid;
+    grid-template-columns: 160px repeat(6, 1fr);
+    grid-gap: .5rem;
+    min-height: 65px;
+    align-items: center;
+    border-bottom: 1px solid color('base-light');
+    padding: .75rem 0;
 
-  &__phase-fieldset {
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid color($theme-color-base-dark);
+    &__headings {
+      display: grid;
+    }
+
+    &__headings h4:first-child,
+    &__totals span:first-child {
+      grid-column-start: 2;
+    }
+
+    &__other {
+      grid-template-columns: 1fr;
+    }
+
+    @media (max-width: 1023px) {
+      grid-template-columns: 1fr;
+      grid-gap: 1rem;
+      padding: 1.5rem 0 2rem;
+      &__headings {
+        display: none;
+      }
+      &__totals {
+        display: none;
+      }
+      &__other {
+        padding: .75rem 0;
+      }
+    }
+
   }
 
   .usa-label {
@@ -30,41 +59,46 @@
     table-layout: fixed;
     border-collapse: collapse;
     width: 100%;
-
-    &--mobile {
-      width: 300px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-
-      &:last-of-type {
-        border-bottom: none;
-      }
-    }
   }
 
   &__review-table-caption {
-    margin-bottom: 1em;
-    font-size: 1.4rem;
+    margin-bottom: 1.5em;
     font-weight: bold;
     text-align: left;
   }
 
   &__review-th {
     &--col {
-      padding-bottom: 24px;
+      padding-bottom: 12px;
     }
 
     &--row {
-      width: 110px;
+      width: 140px;
     }
   }
 
   &__border {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid color('disabled-light');
   }
 
   &__help-box {
     border: 3px solid color('base-darkest');
     padding: 1rem;
     margin-bottom: 1rem;
+  }
+
+  &__review-table {
+    tr {
+      border-bottom: 1px solid color('disabled-light');
+      &:last-child:not(.est-lifecycle-cost__border) {
+        border-bottom: none;
+      }
+      th {
+        border: none !important;
+      }
+      td {
+        border: none !important;
+      }
+    }
   }
 }

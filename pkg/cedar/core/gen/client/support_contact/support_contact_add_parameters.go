@@ -61,10 +61,7 @@ func NewSupportContactAddParamsWithHTTPClient(client *http.Client) *SupportConta
 */
 type SupportContactAddParams struct {
 
-	/* Body.
-
-	   supportContact information to be added to Alfabet.
-	*/
+	// Body.
 	Body *models.SupportContactAddRequest
 
 	timeout    time.Duration

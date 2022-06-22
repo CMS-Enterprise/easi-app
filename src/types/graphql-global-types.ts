@@ -50,6 +50,14 @@ export enum AccessibilityRequestStatus {
 }
 
 /**
+ * The possible types of assignees for CedarRoles
+ */
+export enum CedarAssigneeType {
+  ORGANIZATION = "ORGANIZATION",
+  PERSON = "PERSON",
+}
+
+/**
  * Indicates who the source is of feedback on a system request
  */
 export enum GRTFeedbackType {

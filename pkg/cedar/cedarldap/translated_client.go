@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"go.uber.org/zap"
 
@@ -28,6 +29,7 @@ type TranslatedClient struct {
 // Client is an interface for helping test dependencies
 type Client interface {
 	FetchUserInfo(context.Context, string) (*models2.UserInfo, error)
+	FetchUserInfos(context.Context, []string) ([]*models2.UserInfo, error)
 	SearchCommonNameContains(context.Context, string) ([]*models2.UserInfo, error)
 }
 
@@ -94,6 +96,53 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 		Email:      models2.NewEmailAddress(person.Email),
 		EuaUserID:  person.UserName,
 	}, nil
+}
+
+// FetchUserInfos fetches multiple users' personal details
+func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) ([]*models2.UserInfo, error) {
+	if len(euaIDs) == 0 {
+		appcontext.ZLogger(ctx).Error("No EUA ID specified; unable to request user info from CEDAR LDAP")
+		return nil, &apperrors.InvalidParametersError{
+			FunctionName: "cedarldap.FetchUserInfo",
+		}
+	}
+
+	idsStr := strings.Join(euaIDs, ",")
+	params := operations.NewPersonIdsParams()
+	params.Ids = idsStr
+	resp, err := c.client.Operations.PersonIds(params, c.apiAuthHeader)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch people from CEDAR LDAP with error: %v", err), zap.Strings("euaIDsFetched", euaIDs))
+		return nil, &apperrors.ExternalAPIError{
+			Err:       err,
+			Model:     models.Person{},
+			ModelID:   idsStr,
+			Operation: apperrors.Fetch,
+			Source:    "CEDAR LDAP",
+		}
+	}
+	if resp.Payload == nil {
+		return nil, &apperrors.ExternalAPIError{
+			Err:       errors.New("failed to return person from CEDAR LDAP"),
+			ModelID:   idsStr,
+			Model:     models.Person{},
+			Operation: apperrors.Fetch,
+			Source:    "CEDAR LDAP",
+		}
+	}
+
+	// Convert the response to our UserInfo model
+	userInfos := []*models2.UserInfo{}
+	for _, person := range resp.Payload.Persons {
+		userInfo := &models2.UserInfo{
+			CommonName: person.CommonName,
+			Email:      models2.NewEmailAddress(person.Email),
+			EuaUserID:  person.UserName,
+		}
+		userInfos = append(userInfos, userInfo)
+	}
+
+	return userInfos, nil
 }
 
 // SearchCommonNameContains fetches a user's personal details by their common name, automatically wrapping the

@@ -3,868 +3,410 @@
 exports[`The making a request page matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    id="system-detail"
+    class="easi-section padding-bottom-4 margin-bottom-4"
+    data-testid="section-wrapper"
   >
-    <div
-      class="grid-container padding-left-0 padding-right-0"
-      data-testid="gridContainer"
+    <ul
+      class="usa-card-group margin-0"
+      data-testid="CardGroup"
     >
-      <div
-        class="grid-row grid-gap"
-        data-testid="grid"
+      <li
+        class="usa-card grid-col-12"
+        data-testid="Card"
       >
         <div
-          class="desktop:grid-col-8"
-          data-testid="grid"
+          class="usa-card__container"
         >
-          <div
-            class="easi-section padding-bottom-4 margin-bottom-4"
-            data-testid="section-wrapper"
-          >
-            <ul
-              class="usa-card-group margin-0"
-              data-testid="CardGroup"
-            >
-              <li
-                class="usa-card grid-col-12"
-                data-testid="Card"
-              >
-                <div
-                  class="usa-card__container"
-                >
-                  <header
-                    class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
-                    data-testid="CardHeader"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <dt>
-                          Production Environment
-                        </dt>
-                      </div>
-                    </div>
-                  </header>
-                  <div
-                    class="usa-card__body padding-x-2 padding-y-0"
-                    data-testid="CardBody"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <h3
-                          class="link-header margin-top-0 margin-bottom-2"
-                        >
-                          <a
-                            class="usa-link usa-link--external link-header"
-                            href="/"
-                          >
-                            ham.cms.gov
-                          </a>
-                        </h3>
-                        <div
-                          class="margin-bottom-2"
-                        >
-                          <a
-                            class="usa-link link-header"
-                            href="/systems/326-9-0/details"
-                          >
-                            View 3 more URLs
-                            <span
-                              aria-hidden="true"
-                            >
-                               
-                            </span>
-                            <span
-                              aria-hidden="true"
-                            >
-                              → 
-                            </span>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="easi-divider"
-                    />
-                  </div>
-                  <div
-                    class="usa-card__footer padding-0"
-                    data-testid="CardFooter"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-6 padding-2"
-                        data-testid="grid"
-                      >
-                        <dt
-                          class="text-bold margin-bottom-05"
-                        >
-                          Location
-                        </dt>
-                        <dd
-                          class="description-definition margin-0 line-height-body-3"
-                        >
-                          AWS East
-                        </dd>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li
-                class="usa-card grid-col-12"
-                data-testid="Card"
-              >
-                <div
-                  class="usa-card__container"
-                >
-                  <header
-                    class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
-                    data-testid="CardHeader"
-                  >
-                    <dt>
-                      ATO Expiration
-                    </dt>
-                    <div
-                      class="text-right margin-bottom-0"
-                    >
-                      <span
-                        class="easi-tag grid-col-12 bg-warning"
-                        data-testid="tag"
-                      >
-                        In Progress
-                      </span>
-                    </div>
-                  </header>
-                  <div
-                    class="usa-card__body padding-x-2 padding-y-0"
-                    data-testid="CardBody"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <h3
-                          class="link-header margin-top-0 margin-bottom-2"
-                        >
-                          March 2, 2022 
-                        </h3>
-                        <div
-                          class="margin-bottom-2"
-                        >
-                          <a
-                            class="usa-link link-header"
-                            href="/systems/326-9-0/ato"
-                          >
-                            View ATO information
-                            <span
-                              aria-hidden="true"
-                            >
-                               
-                            </span>
-                            <span
-                              aria-hidden="true"
-                            >
-                              → 
-                            </span>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="easi-divider"
-                    />
-                  </div>
-                  <div
-                    class="usa-card__footer padding-0"
-                    data-testid="CardFooter"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-6 padding-2"
-                        data-testid="grid"
-                      >
-                        <dt
-                          class="text-bold margin-bottom-05"
-                        >
-                          Current activity
-                        </dt>
-                        <dd
-                          class="description-definition margin-0 line-height-body-3"
-                        >
-                          ATO Activity 4
-                        </dd>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li
-                class="usa-card grid-col-12"
-                data-testid="Card"
-              >
-                <div
-                  class="usa-card__container"
-                >
-                  <header
-                    class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
-                    data-testid="CardHeader"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <dt>
-                          API status
-                        </dt>
-                      </div>
-                    </div>
-                  </header>
-                  <div
-                    class="usa-card__body padding-x-2 padding-y-0"
-                    data-testid="CardBody"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <h3
-                          class="link-header margin-top-0 margin-bottom-2"
-                        >
-                          API developed and launched 
-                        </h3>
-                        <div
-                          class="margin-bottom-2"
-                        >
-                          <a
-                            class="usa-link link-header"
-                            href="/systems/326-9-0/system-data"
-                          >
-                            View API information
-                            <span
-                              aria-hidden="true"
-                            >
-                               
-                            </span>
-                            <span
-                              aria-hidden="true"
-                            >
-                              → 
-                            </span>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="easi-divider"
-                    />
-                  </div>
-                  <div
-                    class="usa-card__footer padding-0"
-                    data-testid="CardFooter"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-2"
-                        data-testid="grid"
-                      >
-                        <dt
-                          class="text-bold margin-bottom-05"
-                        >
-                          Data content categories
-                        </dt>
-                        <span
-                          class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-                          data-testid="tag"
-                        >
-                          Agile Methodology 
-                        </span>
-                        <span
-                          class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-                          data-testid="tag"
-                        >
-                          AI Technologies 
-                        </span>
-                        <span
-                          class="easi-tag system-profile__tag bg-base-lighter margin-bottom-1 pointer bg-primary text-white"
-                          data-testid="tag"
-                        >
-                          +2
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li
-                class="usa-card grid-col-12"
-                data-testid="Card"
-              >
-                <div
-                  class="usa-card__container"
-                >
-                  <div
-                    class="usa-card__body padding-2"
-                    data-testid="CardBody"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <dt>
-                          System fiscal year (FY) cost
-                        </dt>
-                        <h3
-                          class="link-header margin-top-0 margin-bottom-2"
-                        >
-                          $4,500,000 
-                        </h3>
-                        <a
-                          class="usa-link link-header"
-                          href="/systems/326-9-0/funding-and-budget"
-                        >
-                          View more funding and budget information
-                          <span
-                            aria-hidden="true"
-                          >
-                             
-                          </span>
-                          <span
-                            aria-hidden="true"
-                          >
-                            → 
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li
-                class="usa-card grid-col-12"
-                data-testid="Card"
-              >
-                <div
-                  class="usa-card__container"
-                >
-                  <header
-                    class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2"
-                    data-testid="CardHeader"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <dt>
-                          Data Exchanges
-                        </dt>
-                      </div>
-                    </div>
-                  </header>
-                  <div
-                    class="usa-card__body padding-x-2 padding-y-0"
-                    data-testid="CardBody"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <div
-                          class="margin-bottom-1 text-bold"
-                        >
-                          <svg
-                            class="usa-icon text-success"
-                            focusable="false"
-                            height="1em"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0V0zm0 0h24v24H0V0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                            />
-                          </svg>
-                           
-                          <span
-                            class="text-tbottom line-height-body-3"
-                          >
-                            Beneficiary Information in the Cloud 
-                          </span>
-                          <svg
-                            class="usa-icon text-base"
-                            focusable="false"
-                            height="1em"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-                            />
-                          </svg>
-                        </div>
-                        <div
-                          class="margin-bottom-1 text-bold"
-                        >
-                          <svg
-                            class="usa-icon text-success"
-                            focusable="false"
-                            height="1em"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0V0zm0 0h24v24H0V0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                            />
-                          </svg>
-                           
-                          <span
-                            class="text-tbottom line-height-body-3"
-                          >
-                            Happiness Quality Information 
-                          </span>
-                          <svg
-                            class="usa-icon text-base"
-                            focusable="false"
-                            height="1em"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-                            />
-                          </svg>
-                        </div>
-                        <div
-                          class="text-underline link-header text-primary pointer"
-                          role="button"
-                          tabindex="0"
-                        >
-                          + 1 more
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="easi-divider margin-top-2"
-                    />
-                  </div>
-                  <div
-                    class="usa-card__footer padding-0"
-                    data-testid="CardFooter"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-2"
-                        data-testid="grid"
-                      >
-                        <a
-                          class="usa-link link-header"
-                          href="/systems/326-9-0/system-data"
-                        >
-                          View data exchange details
-                          <span
-                            aria-hidden="true"
-                          >
-                             
-                          </span>
-                          <span
-                            aria-hidden="true"
-                          >
-                            → 
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li
-                class="usa-card grid-col-12"
-                data-testid="Card"
-              >
-                <div
-                  class="usa-card__container"
-                >
-                  <header
-                    class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2"
-                    data-testid="CardHeader"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <dt>
-                          Sub-systems
-                        </dt>
-                      </div>
-                    </div>
-                  </header>
-                  <div
-                    class="usa-card__body padding-x-2 padding-y-0"
-                    data-testid="CardBody"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <div
-                          class="margin-bottom-1"
-                        >
-                          <svg
-                            class="usa-icon text-base-lighter margin-right-1"
-                            focusable="false"
-                            height="1em"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                            />
-                          </svg>
-                          <a
-                            class="usa-link link-header margin-bottom-1 text-bold"
-                            href="/systems/326-9-0/sub-systems"
-                          >
-                            <span
-                              class="text-tbottom line-height-body-3"
-                            >
-                              Test Ocular Fiction Utensil 
-                            </span>
-                          </a>
-                        </div>
-                        <div
-                          class="margin-bottom-1"
-                        >
-                          <svg
-                            class="usa-icon text-base-lighter margin-right-1"
-                            focusable="false"
-                            height="1em"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                            />
-                          </svg>
-                          <a
-                            class="usa-link link-header margin-bottom-1 text-bold"
-                            href="/systems/326-9-0/sub-systems"
-                          >
-                            <span
-                              class="text-tbottom line-height-body-3"
-                            >
-                              Bio-Energy Engagement File 
-                            </span>
-                          </a>
-                        </div>
-                        <div
-                          class="text-underline link-header text-primary pointer margin-top-2"
-                          role="button"
-                          tabindex="0"
-                        >
-                          + 1 more
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="easi-divider margin-top-2"
-                    />
-                  </div>
-                  <div
-                    class="usa-card__footer padding-0"
-                    data-testid="CardFooter"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-2"
-                        data-testid="grid"
-                      >
-                        <a
-                          class="usa-link link-header"
-                          href="/systems/326-9-0/sub-systems"
-                        >
-                          View sub-system information
-                          <span
-                            aria-hidden="true"
-                          >
-                             
-                          </span>
-                          <span
-                            aria-hidden="true"
-                          >
-                            → 
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li
-                class="usa-card grid-col-12"
-                data-testid="Card"
-              >
-                <div
-                  class="usa-card__container"
-                >
-                  <header
-                    class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
-                    data-testid="CardHeader"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <dt>
-                          Total Full Time Employees (FTE)
-                        </dt>
-                      </div>
-                    </div>
-                  </header>
-                  <div
-                    class="usa-card__body padding-x-2 padding-y-0"
-                    data-testid="CardBody"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-12 padding-0"
-                        data-testid="grid"
-                      >
-                        <h3
-                          class="link-header margin-top-0 margin-bottom-2"
-                        >
-                          85 
-                        </h3>
-                        <a
-                          class="usa-link link-header"
-                          href="/systems/326-9-0/team-and-contract"
-                        >
-                          View more Team and Contract information
-                          <span
-                            aria-hidden="true"
-                          >
-                             
-                          </span>
-                          <span
-                            aria-hidden="true"
-                          >
-                            → 
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                    <div
-                      class="easi-divider margin-top-2"
-                    />
-                  </div>
-                  <div
-                    class="usa-card__footer padding-0"
-                    data-testid="CardFooter"
-                  >
-                    <div
-                      class="grid-row"
-                      data-testid="grid"
-                    >
-                      <div
-                        class="desktop:grid-col-6 padding-2"
-                        data-testid="grid"
-                      >
-                        <dt
-                          class="text-bold margin-bottom-05"
-                        >
-                          Federal FTE
-                        </dt>
-                        <dd
-                          class="description-definition margin-0 line-height-body-3"
-                        >
-                          12
-                        </dd>
-                      </div>
-                      <div
-                        class="desktop:grid-col-6 padding-2"
-                        data-testid="grid"
-                      >
-                        <dt
-                          class="text-bold margin-bottom-05"
-                        >
-                          Contractor FTE
-                        </dt>
-                        <dd
-                          class="description-definition margin-0 line-height-body-3"
-                        >
-                          73
-                        </dd>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div
-          class="desktop:grid-col-4 sticky-nav"
-          data-testid="grid"
-        >
-          <div
-            class="side-divider"
+          <header
+            class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+            data-testid="CardHeader"
           >
             <div
-              class="top-divider"
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <dt>
+                  Production Environment
+                </dt>
+              </div>
+            </div>
+          </header>
+          <div
+            class="usa-card__body padding-x-2 padding-y-0"
+            data-testid="CardBody"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <h3
+                  class="link-header margin-top-0 margin-bottom-2"
+                >
+                  <a
+                    class="usa-link usa-link--external link-header"
+                    href="/"
+                  >
+                    ham.cms.gov
+                  </a>
+                </h3>
+                <div
+                  class="margin-bottom-2"
+                >
+                  <a
+                    class="usa-link link-header"
+                    href="/systems/326-9-0/details"
+                  >
+                    View 2 more URLs
+                    <span
+                      aria-hidden="true"
+                    >
+                       
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                      → 
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="easi-divider"
             />
-            <p
-              class="font-body-xs margin-top-1 margin-bottom-3"
+          </div>
+          <div
+            class="usa-card__footer padding-0"
+            data-testid="CardFooter"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
             >
-              Point of contact
-            </p>
-            <h3
-              class="system-profile__subheader margin-bottom-1"
-            >
-              Geraldine Hobbs 
-            </h3>
-            <dd
-              class="description-definition margin-0"
-            >
-              Business Owner
-            </dd>
-            <p>
-              <a
-                aria-label="Send an email"
-                class="usa-link usa-link--external line-height-body-5"
-                href="mailto:patrick.segura@oddball.io"
-                target="_blank"
+              <div
+                class="desktop:grid-col-6 padding-2"
+                data-testid="grid"
               >
-                Send an email
-                <span
-                  aria-hidden="true"
+                <dt
+                  class="text-bold margin-bottom-05"
                 >
-                   
-                </span>
-              </a>
-            </p>
-            <p>
-              <a
-                aria-label="More points of contact"
-                class="usa-link line-height-body-5"
-                href="mailto:patrick.segura@oddball.io"
-                target="_blank"
-              >
-                More points of contact
-                <span
-                  aria-hidden="true"
+                  Location
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3"
                 >
-                   
-                </span>
-                <span
-                  aria-hidden="true"
-                >
-                  → 
-                </span>
-              </a>
-            </p>
+                  AWS East
+                </dd>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </li>
+      <li
+        class="usa-card grid-col-12"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+            data-testid="CardHeader"
+          >
+            <dt>
+              ATO Expiration
+            </dt>
+            <div
+              class="text-right margin-bottom-0"
+            >
+              <span
+                class="easi-tag grid-col-12 bg-warning"
+                data-testid="tag"
+              >
+                In Progress
+              </span>
+            </div>
+          </header>
+          <div
+            class="usa-card__body padding-x-2 padding-y-0"
+            data-testid="CardBody"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <h3
+                  class="link-header margin-top-0 margin-bottom-2"
+                >
+                  March 2, 2022 
+                </h3>
+                <div
+                  class="margin-bottom-2"
+                >
+                  <a
+                    class="usa-link link-header"
+                    href="/systems/326-9-0/ato"
+                  >
+                    View ATO information
+                    <span
+                      aria-hidden="true"
+                    >
+                       
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                      → 
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card grid-col-12"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+            data-testid="CardHeader"
+          >
+            <dt>
+              508 request name
+            </dt>
+            <div
+              class="text-right margin-bottom-0"
+            >
+              <span
+                class="easi-tag bg-accent-cool display-inline-block margin-right-0"
+                data-testid="tag"
+              >
+                Open
+              </span>
+            </div>
+          </header>
+          <div
+            class="usa-card__body padding-x-2 padding-y-0"
+            data-testid="CardBody"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <h3
+                  class="link-header margin-top-0 margin-bottom-2"
+                >
+                  My Test for HAM
+                </h3>
+                <div
+                  class="margin-bottom-2"
+                >
+                  <a
+                    class="usa-link link-header"
+                    href="/systems/326-9-0/section-508"
+                  >
+                    View more 508 request information
+                    <span
+                      aria-hidden="true"
+                    >
+                       
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                      → 
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="easi-divider"
+            />
+          </div>
+          <div
+            class="usa-card__footer padding-0"
+            data-testid="CardFooter"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="padding-2"
+                data-testid="grid"
+              >
+                <div
+                  class="margin-bottom-1"
+                >
+                  <strong>
+                    Latest test
+                  </strong>
+                </div>
+                <div>
+                  <svg
+                    class="usa-icon usa-icon--size-3 text-warning-dark margin-right-1 text-middle"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <span
+                    class="text-middle"
+                  >
+                    <span
+                      class="margin-right-1 text-base"
+                    >
+                      Initial Test: mm/dd/yyyy
+                    </span>
+                    <span>
+                      Score: 98%
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card grid-col-12"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+            data-testid="CardHeader"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <dt>
+                  Total Full Time Employees (FTE)
+                </dt>
+              </div>
+            </div>
+          </header>
+          <div
+            class="usa-card__body padding-x-2 padding-y-0"
+            data-testid="CardBody"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-12 padding-0"
+                data-testid="grid"
+              >
+                <h3
+                  class="link-header margin-top-0 margin-bottom-2"
+                >
+                  85 
+                </h3>
+                <a
+                  class="usa-link link-header"
+                  href="/systems/326-9-0/team-and-contract"
+                >
+                  View more Team and Contract information
+                  <span
+                    aria-hidden="true"
+                  >
+                     
+                  </span>
+                  <span
+                    aria-hidden="true"
+                  >
+                    → 
+                  </span>
+                </a>
+              </div>
+            </div>
+            <div
+              class="easi-divider margin-top-2"
+            />
+          </div>
+          <div
+            class="usa-card__footer padding-0"
+            data-testid="CardFooter"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
+            >
+              <div
+                class="desktop:grid-col-6 padding-2"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Federal FTE
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3"
+                >
+                  12
+                </dd>
+              </div>
+              <div
+                class="desktop:grid-col-6 padding-2"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Contractor FTE
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3"
+                >
+                  73
+                </dd>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 </DocumentFragment>
 `;

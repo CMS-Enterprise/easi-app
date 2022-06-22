@@ -24,6 +24,7 @@ func (si *TranslatableSystemIntake) ObjectType() string {
 // CreateIntakeModel translates a SystemIntake into an IntakeInput
 func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := &intakemodels.EASIIntake{
+		IntakeID:                    si.ID.String(),
 		UserEUA:                     si.EUAUserID.ValueOrZero(),
 		Status:                      string(si.Status),
 		RequestType:                 string(si.RequestType),
@@ -33,13 +34,9 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		BusinessOwnerComponent:      si.BusinessOwnerComponent.ValueOrZero(),
 		ProductManager:              si.ProductManager.ValueOrZero(),
 		ProductManagerComponent:     si.ProductManagerComponent.ValueOrZero(),
-		Isso:                        si.ISSO.Ptr(),
 		IssoName:                    si.ISSOName.Ptr(),
-		TrbCollaborator:             si.TRBCollaborator.Ptr(),
 		TrbCollaboratorName:         si.TRBCollaboratorName.Ptr(),
-		OitSecurityCollaborator:     si.OITSecurityCollaborator.Ptr(),
 		OitSecurityCollaboratorName: si.OITSecurityCollaboratorName.Ptr(),
-		EaCollaborator:              si.EACollaborator.Ptr(),
 		EaCollaboratorName:          si.EACollaboratorName.Ptr(),
 		ProjectName:                 si.ProjectName.ValueOrZero(),
 		ProjectAcronym:              si.ProjectAcronym.Ptr(),
@@ -53,7 +50,6 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		CostIncreaseAmount:          si.CostIncreaseAmount.Ptr(),
 		Contractor:                  si.Contractor.Ptr(),
 		ContractVehicle:             si.ContractVehicle.Ptr(),
-		GrtReviewEmailBody:          si.GrtReviewEmailBody.Ptr(),
 		RequesterEmailAddress:       si.RequesterEmailAddress.Ptr(),
 		LifecycleID:                 si.LifecycleID.Ptr(),
 		LifecycleScope:              si.LifecycleScope.Ptr(),
@@ -61,16 +57,17 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		RejectionReason:             si.RejectionReason.Ptr(),
 		AdminLead:                   si.AdminLead.Ptr(),
 
-		ExistingFunding:    si.ExistingFunding.Ptr(),
-		EaSupportRequest:   si.EASupportRequest.Ptr(),
-		ContractStartDate:  pStr(strDate(si.ContractStartDate)),
-		ContractEndDate:    pStr(strDate(si.ContractEndDate)),
-		SubmittedAt:        strDateTime(si.SubmittedAt),
-		DecidedAt:          pStr(strDateTime(si.DecidedAt)),
-		ArchivedAt:         pStr(strDateTime(si.ArchivedAt)),
-		GrbDate:            pStr(strDate(si.GRBDate)),
-		GrtDate:            pStr(strDate(si.GRTDate)),
-		LifecycleExpiresAt: pStr(strDate(si.LifecycleExpiresAt)),
+		ExistingFunding:       si.ExistingFunding.Ptr(),
+		EaSupportRequest:      si.EASupportRequest.Ptr(),
+		ContractStartDate:     pStr(strDate(si.ContractStartDate)),
+		ContractEndDate:       pStr(strDate(si.ContractEndDate)),
+		SubmittedAt:           strDateTime(si.SubmittedAt),
+		DecidedAt:             pStr(strDateTime(si.DecidedAt)),
+		ArchivedAt:            pStr(strDateTime(si.ArchivedAt)),
+		GrbDate:               pStr(strDate(si.GRBDate)),
+		GrtDate:               pStr(strDate(si.GRTDate)),
+		LifecycleExpiresAt:    pStr(strDate(si.LifecycleExpiresAt)),
+		LifecycleCostBaseline: si.LifecycleCostBaseline.Ptr(),
 	}
 
 	blob, err := json.Marshal(&obj)

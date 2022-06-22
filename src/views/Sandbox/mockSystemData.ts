@@ -66,6 +66,7 @@ export type tempSystemDataProp = {
 };
 
 // Temporary extension of CEDAR types under BE integration complete
+// See src/types/systemProfile SystemProfileData for the integrating object
 export interface tempCedarSystemProps extends CedarSystemProps {
   locations?: tempLocationProp[];
   developmentTags?: string[];
@@ -153,14 +154,11 @@ export const budgetsInfo: tempBudgetProp[] = [
   }
 ];
 
-export const developmentTags: string[] = [
-  'Agile Methodology',
-  'AI Technologies',
-  'Healthcare Quality',
-  'Health Insurance Program'
-];
+const systemProfileHiddenFields = false;
 
-export const locationsInfo: tempLocationProp[] = [
+export const developmentTags: string[] = ['Agile Methodology'];
+
+const locationsInfo: tempLocationProp[] = [
   {
     id: '1',
     environment: 'Production environment',
@@ -178,8 +176,10 @@ export const locationsInfo: tempLocationProp[] = [
     location: 'AWS East',
     cloudProvider: 'Amazon Web Services',
     firewall: true
-  },
-  {
+  }
+];
+if (systemProfileHiddenFields) {
+  locationsInfo.push({
     id: '3',
     environment: 'Code Repository',
     url: 'github.com/ham',
@@ -187,8 +187,15 @@ export const locationsInfo: tempLocationProp[] = [
     location: 'AWS East',
     cloudProvider: 'Amazon Web Services',
     firewall: true
-  }
-];
+  });
+
+  developmentTags.push(
+    'AI Technologies',
+    'Healthcare Quality',
+    'Health Insurance Program'
+  );
+}
+export { locationsInfo };
 
 export const mockSystemInfo: CedarSystemProps[] = [
   {
@@ -328,5 +335,33 @@ export const subSystems: tempSubSystemProp[] = [
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.',
     retirementDate: 'Planned retirement: Q2 2023'
+  }
+];
+
+export const mockVendors = [
+  {
+    vendors: ['TechSystems, Inc', 'Massive Dynamic'],
+    contractAwardDate: 'March 19, 2021',
+    popStartDate: 'March 20, 2021',
+    popEndDate: 'March 21, 2021',
+    contractNumber: 'GS1234567890BA-987654321',
+    technologyFunctions: [
+      'Application',
+      'Delivery',
+      'End User',
+      'IT Management',
+      'Platform',
+      'Security & Compliance'
+    ],
+    assetsOrServices: ['External Labor', 'Software']
+  },
+  {
+    vendors: ['SkyNet'],
+    contractAwardDate: 'April 19, 2021',
+    popStartDate: 'April 20, 2021',
+    popEndDate: 'April 21, 2021',
+    contractNumber: 'GS1234567890BA-123456789',
+    technologyFunctions: ['Network', 'Storage'],
+    assetsOrServices: ['Outside Services']
   }
 ];
