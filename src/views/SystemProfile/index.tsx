@@ -177,6 +177,79 @@ export function getPersonFullName(
     : fullname;
 }
 
+/**
+ * `SystemProfileData` is a merge of request data and parsed data
+ * required by SystemHome and at least one other subpage.
+ * It is passed to all SystemProfile subpage components.
+ */
+export function getSystemProfileData(
+  data?: GetSystemProfile
+): SystemProfileData | undefined {
+  if (!data) return undefined;
+
+  // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
+
+  const { cedarSystemDetails } = data;
+  const cedarSystem = cedarSystemDetails?.cedarSystem;
+
+  if (!cedarSystemDetails || !cedarSystem) return undefined;
+
+  // Business Owner
+  // Select the first found Business Owner
+  const businessOwner = cedarSystemDetails.roles.find(
+    role =>
+      role.assigneeType === CedarAssigneeType.PERSON &&
+      role.roleTypeID === BUSINESS_OWNER_ROLE_TYPE_ID
+  );
+
+  // Point of Contact is the business owner for now
+  // Contextualized poc will be determined later
+  const pointOfContact = businessOwner;
+
+  const locations = getLocations(cedarSystemDetails);
+
+  const productionLocation = locations.find(
+    location => location.urlHostingEnv === 'Production'
+  );
+
+  const cedarAuthorityToOperate = data.cedarAuthorityToOperate[0];
+
+  const numberOfContractorFte = parseFloat(
+    cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte || '0'
+  );
+
+  const numberOfFederalFte = parseFloat(
+    cedarSystemDetails.businessOwnerInformation?.numberOfFederalFte || '0'
+  );
+
+  const numberOfFte = Number(
+    (numberOfContractorFte + numberOfFederalFte).toFixed(2)
+  );
+
+  return {
+    ...data,
+    id: cedarSystem.id,
+    ato: cedarAuthorityToOperate,
+    atoStatus: getAtoStatus(cedarAuthorityToOperate),
+    businessOwner,
+    developmentTags: getDevelopmentTags(cedarSystemDetails),
+    locations,
+    numberOfContractorFte,
+    numberOfFederalFte,
+    numberOfFte,
+    pointOfContact,
+    productionLocation,
+    status: cedarSystem.status,
+
+    // Remaining mock data stubs
+    activities: mockActivies,
+    budgets: mockBudgets,
+    products: mockProducts,
+    subSystems: mockSubSystems,
+    systemData: mockSystemData
+  };
+}
+
 export function showAtoExpirationDate(
   // eslint-disable-next-line camelcase
   systemProfileAto?: GetSystemProfile_cedarAuthorityToOperate
@@ -229,8 +302,6 @@ const SystemProfile = () => {
     }
   });
 
-  // Data is generally unavailable if `data.cedarSystemDetails` is empty
-
   // Header description expand toggle
   const descriptionRef = React.createRef<HTMLElement>();
   const [
@@ -251,105 +322,38 @@ const SystemProfile = () => {
     }
   });
 
+  const systemProfileData: SystemProfileData | undefined = useMemo(
+    () => getSystemProfileData(data),
+    [data]
+  );
+
   const fields = useMemo(() => {
     if (!data) return {};
 
     const { cedarSystemDetails } = data!;
     if (!cedarSystemDetails) return {};
 
-    // Business Owner
-    // Select the first found Business Owner
-    const businessOwner = cedarSystemDetails.roles.find(
-      role =>
-        role.assigneeType === CedarAssigneeType.PERSON &&
-        role.roleTypeID === BUSINESS_OWNER_ROLE_TYPE_ID
-    );
-
-    // Point of Contact is the business owner for now
-    // Contextualized poc will be determined later
-    const pointOfContact = businessOwner;
-
-    const locations = getLocations(cedarSystemDetails);
-
-    const productionLocation = locations.find(
-      location => location.urlHostingEnv === 'Production'
-    );
-
     return {
-      businessOwner,
       cedarSystem: cedarSystemDetails.cedarSystem,
-      cmsComponent: cedarSystemDetails.cedarSystem.businessOwnerOrg,
-      locations,
-      pointOfContact,
-      productionLocation
+      cmsComponent: cedarSystemDetails.cedarSystem.businessOwnerOrg
     };
   }, [data]);
 
-  const {
-    businessOwner,
-    cedarSystem,
-    cmsComponent,
-    pointOfContact,
-    productionLocation
-  } = fields;
-
-  /**
-   * SystemProfile data is a merge of request data and parsed data
-   * required by SystemHome and at least one other subpage.
-   * It is passed to all SystemProfile subpage components.
-   */
-  const systemProfileData: SystemProfileData | undefined = useMemo(() => {
-    if (!data) return undefined;
-
-    const { cedarSystemDetails } = data;
-
-    if (!cedarSystemDetails || !cedarSystem) return undefined;
-
-    const cedarAuthorityToOperate = data.cedarAuthorityToOperate[0];
-
-    const numberOfContractorFte = parseFloat(
-      cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte || '0'
-    );
-
-    const numberOfFederalFte = parseFloat(
-      cedarSystemDetails.businessOwnerInformation?.numberOfFederalFte || '0'
-    );
-
-    const numberOfFte = Number(
-      (numberOfContractorFte + numberOfFederalFte).toFixed(2)
-    );
-
-    return {
-      ...data,
-      id: cedarSystem.id,
-      ato: cedarAuthorityToOperate,
-      atoStatus: getAtoStatus(cedarAuthorityToOperate),
-      businessOwner: fields.businessOwner,
-      developmentTags: getDevelopmentTags(cedarSystemDetails),
-      locations: fields.locations,
-      numberOfContractorFte,
-      numberOfFederalFte,
-      numberOfFte,
-      pointOfContact: fields.pointOfContact,
-      productionLocation: fields.productionLocation,
-      status: cedarSystem.status,
-
-      // Remaining mock data stubs
-      activities: mockActivies,
-      budgets: mockBudgets,
-      products: mockProducts,
-      subSystems: mockSubSystems,
-      systemData: mockSystemData
-    };
-  }, [data, cedarSystem, fields]);
+  const { cedarSystem, cmsComponent } = fields;
 
   if (loading) {
     return <PageLoading />;
   }
 
-  if (error || !cedarSystem || !systemProfileData) {
+  if (error || !systemProfileData || !cedarSystem) {
     return <NotFound />;
   }
+
+  const {
+    businessOwner,
+    pointOfContact,
+    productionLocation
+  } = systemProfileData;
 
   const subComponents = sideNavItems(
     systemProfileData,
