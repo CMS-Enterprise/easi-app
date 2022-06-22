@@ -30,6 +30,7 @@ const Contact = ({
   setActiveContact: (activeContact: SystemIntakeContactProps | null) => void;
 }) => {
   const { commonName, component, role, id } = contact;
+  const { t } = useTranslation('intake');
 
   return (
     <div>
@@ -44,7 +45,7 @@ const Contact = ({
           unstyled
           onClick={() => setActiveContact(contact)}
         >
-          Edit
+          {t('Edit')}
         </Button>
         <Button
           type="button"
@@ -54,7 +55,7 @@ const Contact = ({
             deleteContact(id as string, () => setActiveContact(null))
           }
         >
-          Delete Contact
+          {t('contactDetails.additionalContacts.delete')}
         </Button>
       </div>
     </div>
@@ -82,18 +83,22 @@ const ContactForm = ({
     callback?: (() => any) | undefined
   ) => void;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('intake');
 
   return (
     <div className="systemIntakeContactForm">
       <h4 className="margin-bottom-2">
-        {t(activeContact?.id ? 'Edit contact' : 'Add another contact')}
+        {t(
+          activeContact?.id
+            ? 'contactDetails.additionalContacts.edit'
+            : 'contactDetails.additionalContacts.add'
+        )}
       </h4>
 
       {/* Contact Name */}
       <FieldGroup className="margin-top-2">
         <Label className="text-normal" htmlFor="systemIntakeContact.commonName">
-          {t('New contact name')}
+          {t('contactDetails.additionalContacts.name')}
         </Label>
         <CedarContactSelect
           id="systemIntakeContact.commonName"
@@ -109,7 +114,7 @@ const ContactForm = ({
       {/* Contact Component */}
       <FieldGroup className="margin-top-2">
         <Label className="text-normal" htmlFor="systemIntakeContact.component">
-          {t('New contact component')}
+          {t('contactDetails.additionalContacts.component')}
         </Label>
         <Dropdown
           id="systemIntakeContact.component"
@@ -123,7 +128,7 @@ const ContactForm = ({
           }
         >
           <option value="" disabled>
-            {t('Select an option')}
+            {t('contactDetails.additionalContacts.select')}
           </option>
           {cmsDivisionsAndOfficesOptions('systemIntakeContact')}
         </Dropdown>
@@ -132,7 +137,7 @@ const ContactForm = ({
       {/* Contact Role */}
       <FieldGroup className="margin-top-2">
         <Label className="text-normal" htmlFor="systemIntakeContact.role">
-          {t('New contact role')}
+          {t('contactDetails.additionalContacts.role')}
         </Label>
         <Dropdown
           id="systemIntakeContact.role"
@@ -143,7 +148,7 @@ const ContactForm = ({
           }
         >
           <option value="" disabled>
-            {t('Select an option')}
+            {t('contactDetails.additionalContacts.select')}
           </option>
           {contactRoleOptions.map(option => (
             <option key={option} value={option}>
@@ -162,7 +167,11 @@ const ContactForm = ({
           type="button"
           onClick={() => onSubmit(activeContact, () => setActiveContact(null))}
         >
-          {t(activeContact?.id ? 'Save' : 'Add contact')}
+          {t(
+            activeContact?.id
+              ? 'contactDetails.additionalContacts.save'
+              : 'contactDetails.additionalContacts.addContact'
+          )}
         </Button>
       </div>
     </div>
@@ -192,11 +201,12 @@ export default function AdditionalContacts({
   ) => void;
   deleteContact: (id: string, callback?: () => any) => void;
 }) {
+  const { t } = useTranslation('intake');
   return (
     <div className="system-intake-contacts margin-top-4">
       {contacts.length > 0 && (
         <>
-          <h4>Additional contacts</h4>
+          <h4>{t('contactDetails.additionalContacts.title')}</h4>
           <div className="system-intake-contacts__contacts-list">
             {contacts.map(contact => {
               // Show form if editing contact
@@ -219,7 +229,7 @@ export default function AdditionalContacts({
                         )
                       }
                     >
-                      Delete Contact
+                      {t('contactDetails.additionalContacts.delete')}
                     </Button>
                   </div>
                 );
@@ -254,7 +264,7 @@ export default function AdditionalContacts({
           }
           disabled={!!activeContact?.id}
         >
-          Add another contact
+          {t('contactDetails.additionalContacts.add')}
         </Button>
       )}
     </div>

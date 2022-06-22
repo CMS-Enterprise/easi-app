@@ -175,6 +175,18 @@ const intake = {
       component: 'ISSO Component',
       email: 'ISSO email'
     },
+    additionalContacts: {
+      title: 'Additional contacts',
+      delete: 'Delete contact',
+      add: 'Add another contact',
+      edit: 'Edit contact',
+      name: 'New contact name',
+      component: 'New contact component',
+      select: 'Select an option',
+      role: 'New contact role',
+      save: 'Save',
+      addContact: 'Add contact'
+    },
     collaboration: {
       label: 'For this request, I have started collaborating/consulting with:',
       helpText: `Please disclose the name of each person you've worked with. This helps us locate any additional information on your request`,
