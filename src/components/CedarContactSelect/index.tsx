@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { ComboBox } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import useCedarContacts from 'hooks/useCedarContacts';
 import { CedarContactProps } from 'types/systemIntake';
@@ -32,11 +33,9 @@ export default function CedarContactSelect({
     }));
   }, [contacts]);
 
-  if (!contacts) return null;
-
   return (
     <ComboBox
-      className={className}
+      className={classNames('cedarContactSelect', className)}
       id={id}
       name={name}
       inputProps={{

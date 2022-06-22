@@ -13,6 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import CedarContactSelect from 'components/CedarContactSelect';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
@@ -37,10 +38,9 @@ import {
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
-import AdditionalContacts from './AdditionalContacts';
-import CedarContactSelect from './CedarContactSelect';
-import GovernanceTeamOptions from './GovernanceTeamOptions';
-import cmsDivisionsAndOfficesOptions from './utilities';
+import AdditionalContacts from './components/AdditionalContacts';
+import GovernanceTeamOptions from './components/GovernanceTeamOptions';
+import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 
 import './index.scss';
 
@@ -205,7 +205,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             governanceTeams: values.governanceTeams || []
           }
         }
-      });
+      }).then(response => console.log(response));
     }
   };
 

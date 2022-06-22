@@ -2,11 +2,11 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Dropdown, Label } from '@trussworks/react-uswds';
 
+import CedarContactSelect from 'components/CedarContactSelect';
 import FieldGroup from 'components/shared/FieldGroup';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
-import CedarContactSelect from './CedarContactSelect';
-import cmsDivisionsAndOfficesOptions from './utilities';
+import cmsDivisionsAndOfficesOptions from '../cmsDivisionsAndOfficesOptions';
 
 const contactRoleOptions = [
   'Product Owner',
