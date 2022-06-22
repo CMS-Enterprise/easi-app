@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CedarContactSelect matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="usa-combo-box cedarContactSelect"
+    data-enhanced="true"
+    data-testid="combo-box"
+  >
+    <select
+      aria-hidden="true"
+      class="usa-select usa-sr-only usa-combo-box__select"
+      data-testid="combo-box-select"
+      name="cedarContactSelect"
+      tabindex="-1"
+    />
+    <input
+      aria-activedescendant=""
+      aria-autocomplete="list"
+      aria-describedby="cedarContactSelect--assistiveHint"
+      aria-expanded="false"
+      aria-owns="cedarContactSelect--list"
+      autocapitalize="off"
+      autocomplete="off"
+      class="usa-combo-box__input"
+      data-testid="combo-box-input"
+      id="cedarContactSelect"
+      name="cedarContactSelect"
+      role="combobox"
+      type="text"
+      value=""
+    />
+    <span
+      class="usa-combo-box__clear-input__wrapper"
+      tabindex="-1"
+    >
+      <button
+        aria-label="Clear the select contents"
+        class="usa-combo-box__clear-input"
+        data-testid="combo-box-clear-button"
+        hidden=""
+        type="button"
+      >
+         
+      </button>
+    </span>
+    <span
+      class="usa-combo-box__input-button-separator"
+    >
+       
+    </span>
+    <span
+      class="usa-combo-box__toggle-list__wrapper"
+      tabindex="-1"
+    >
+      <button
+        aria-label="Toggle the dropdown list"
+        class="usa-combo-box__toggle-list"
+        data-testid="combo-box-toggle"
+        tabindex="-1"
+        type="button"
+      >
+         
+      </button>
+    </span>
+    <ul
+      class="usa-combo-box__list"
+      data-testid="combo-box-option-list"
+      hidden=""
+      id="cedarContactSelect--list"
+      role="listbox"
+      tabindex="-1"
+    >
+      <li
+        class="usa-combo-box__list-option--no-results"
+      >
+        No results found
+      </li>
+    </ul>
+    <div
+      class="usa-combo-box__status usa-sr-only"
+      role="status"
+    />
+    <span
+      class="usa-sr-only"
+      data-testid="combo-box-assistive-hint"
+      id="cedarContactSelect--assistiveHint"
+    >
+      When autocomplete results are available use up and down arrows to review
+           and enter to select. Touch device users, explore by touch or with swipe
+           gestures.
+    </span>
+  </div>
+</DocumentFragment>
+`;
