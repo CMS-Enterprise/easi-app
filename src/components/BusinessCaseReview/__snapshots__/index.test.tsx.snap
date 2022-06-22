@@ -195,7 +195,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
       </h2>
     </div>
     <div
-      className="alternative-analysis-wrapper"
+      className="padding-bottom-8 alternative-analysis-wrapper"
     >
       <div
         className="grid-container"
@@ -1066,7 +1066,7 @@ exports[`The Business Case Review Component matches the snapshot 1`] = `
       </div>
     </div>
     <div
-      className="easi-pdf-export__controls margin-top-6"
+      className="easi-pdf-export__controls"
     >
       <button
         className="usa-button usa-button--unstyled easi-no-print"

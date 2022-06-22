@@ -83,7 +83,7 @@ const BusinessCaseReview = ({
             Alternatives analysis
           </h2>
         </div>
-        <div className="alternative-analysis-wrapper">
+        <div className="padding-bottom-8 alternative-analysis-wrapper">
           <div className={helpArticle ? '' : 'grid-container'}>
             <AlternativeAnalysisReview
               fiscalYear={
@@ -98,7 +98,7 @@ const BusinessCaseReview = ({
           </div>
         </div>
         {grtFeedbacks && grtFeedbacks.length > 0 && (
-          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1">
+          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1 margin-bottom-6">
             <div className="grid-container">
               <GRTFeedbackView grtFeedbacks={grtFeedbacks} />
             </div>

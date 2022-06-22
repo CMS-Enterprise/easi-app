@@ -2,12 +2,14 @@ package storage
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s StoreTestSuite) TestCreateSystemIntakeContact() {
+	fmt.Println("TestCreateSystemIntakeContact()...")
 	ctx := context.Background()
 	intake := testhelpers.NewSystemIntake()
 	_, err := s.store.CreateSystemIntake(ctx, &intake)

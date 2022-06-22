@@ -1,11 +1,11 @@
 package models
 
 // NOTE: these types are used to create a schema used by the CEDAR Intake API
-// When changing any of these types, update the biz case version in pkg/cedar/intake/translation/constants.go (IntakeInputSchemaEASIBizCaseVersion)
+// When changing any of these types, add a new version for BizCase in pkg/cedar/intake/translation/constants.go
 
 // NOTE: Optional fields are marked with omitempty JSON tag
-// All fields are optional for draft business cases (all are required in final business case);
-// we are not making any distinction between draft and final business cases in CEDAR
+// All fields are optional for draft business cases (all are required in final business case) and we are not making
+// the distinction between draft and final business cases in CEDAR
 
 // EASIBizCase represents a business case for a system
 type EASIBizCase struct {

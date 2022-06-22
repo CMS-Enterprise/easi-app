@@ -1166,6 +1166,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 }
 
 func (s GraphQLTestSuite) TestUpdateContractDetails() {
+
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1177,13 +1178,11 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 	var resp struct {
 		UpdateSystemIntakeContractDetails struct {
 			SystemIntake struct {
-				ID            string
-				FundingSource struct {
-					ExistingFunding bool
-					FundingSources  []struct {
-						Source        string
-						FundingNumber string
-					}
+				ID              string
+				ExistingFunding bool
+				FundingSources  []struct {
+					Source        string
+					FundingNumber string
 				}
 				Costs struct {
 					ExpectedIncreaseAmount string
@@ -1267,9 +1266,9 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 
 	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
 
-	fundingSources := respIntake.FundingSource.FundingSources
+	fundingSources := respIntake.FundingSources
 	s.Equal(fundingSources[0].FundingNumber, "123456")
-	s.True(respIntake.FundingSource.ExistingFunding)
+	s.True(respIntake.ExistingFunding)
 	s.Equal(fundingSources[0].Source, "Prog Ops")
 
 	costs := respIntake.Costs
@@ -1293,6 +1292,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 }
 
 func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
+
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
