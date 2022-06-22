@@ -1,64 +1,32 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  waitFor,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 
-import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
-import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
-import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
+import { query } from 'data/mock/systemProfile';
 
 import SystemProfile from './index';
 
-const mocks = [
-  {
-    request: {
-      query: GetCedarSystemQuery,
-      variables: {
-        id: '326-9-0'
-      }
-    },
-    result: {
-      data: {
-        cedarSystem: mockSystemInfo[3]
-      }
-    }
-  }
-];
-
-describe('The making a request page', () => {
-  /*
-  it('renders without errors', async () => {
-    render(
-      <MemoryRouter initialEntries={['/systems/326-9-0/tools-and-software']}>
-        <Route path="/systems/:systemId/:subinfo">
-          <MockedProvider mocks={mocks} addTypename={false}>
-            <SystemProfile />
-          </MockedProvider>
-        </Route>
-      </MemoryRouter>
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Medicare Beneficiary Contact Center')
-      ).toBeInTheDocument();
-    });
-  });
-  */
-
+describe('System Profile parent request', () => {
   it('matches snapshot', async () => {
-    const { asFragment } = render(
-      <MemoryRouter initialEntries={['/systems/326-9-0/tools-and-software']}>
+    const { asFragment, getByText, getAllByText, getByTestId } = render(
+      <MemoryRouter initialEntries={['/systems/000-100-0/home']}>
         <Route path="/systems/:systemId/:subinfo">
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={[query]} addTypename={false}>
             <SystemProfile />
           </MockedProvider>
         </Route>
       </MemoryRouter>
     );
-    await waitFor(() => {
-      expect(asFragment()).toMatchSnapshot();
-    });
+    await waitForElementToBeRemoved(() => getByTestId('page-loading'));
+    expect(asFragment()).toMatchSnapshot();
+    expect(getByText('CMS.gov')).toBeInTheDocument();
+    expect(getAllByText('Jane Doe')[0]).toBeInTheDocument();
   });
 });
 
@@ -77,34 +45,7 @@ describe('System profile description is expandable', () => {
     });
   });
 
-  it.skip('shows read more & less', async () => {
-    const query = {
-      request: {
-        query: GetSystemProfileQuery,
-        variables: {
-          id: '000-100-0'
-        }
-      },
-      result: {
-        data: {
-          cedarAuthorityToOperate: [],
-          cedarThreat: [],
-          cedarSystemDetails: {
-            cedarSystem: {
-              id: '000-100-0',
-              name: 'Application Programming Interface Gateway',
-              description: '',
-              acronym: '',
-              status: '',
-              businessOwnerOrg: '',
-              businessOwnerOrgComp: '',
-              systemMaintainerOrg: '',
-              systemMaintainerOrgComp: ''
-            }
-          }
-        }
-      }
-    };
+  it('shows read more & less', async () => {
     const { getByText, findByTestId } = render(
       <MemoryRouter initialEntries={['/systems/000-100-0/home']}>
         <Route path="/systems/:systemId/:subinfo">
