@@ -11,7 +11,7 @@ import {
 
 import ATO from './index';
 
-describe('ATO sub page for System Profile', () => {
+describe.skip('ATO sub page for System Profile', () => {
   /*
   it('renders the progress page when status of In Progress', async () => {
     render(

@@ -6,7 +6,7 @@ import { mockSystemInfo, subSystems } from 'views/Sandbox/mockSystemData';
 
 import SubSystems from './index';
 
-describe('System Sub-systems subpage', () => {
+describe.skip('System Sub-systems subpage', () => {
   it('renders without errors', async () => {
     render(
       <MemoryRouter initialEntries={['/systems/326-9-0/sub-systems']}>
