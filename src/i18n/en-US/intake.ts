@@ -187,6 +187,10 @@ const intake = {
       save: 'Save',
       addContact: 'Add contact'
     },
+    governanceTeam: {
+      helpText:
+        "For the checkboxes below, select all the teams you've collaborated with. Please disclose the name of the person on each team you've worked with."
+    },
     collaboration: {
       label: 'For this request, I have started collaborating/consulting with:',
       helpText: `Please disclose the name of each person you've worked with. This helps us locate any additional information on your request`,
