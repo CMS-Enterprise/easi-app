@@ -44,11 +44,13 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             <DescriptionTerm term={t('singleSystem.systemDetails.ownership')} />
             <DescriptionDefinition
               className="font-body-md line-height-body-3"
-              definition={
-                cedarSystemDetails?.businessOwnerInformation.isCmsOwned
-                  ? 'CMS owned'
-                  : 'Contractor owned'
-              }
+              definition={t(
+                `singleSystem.systemDetails.ownershipValues.${
+                  cedarSystemDetails?.businessOwnerInformation.isCmsOwned
+                    ? 'cmsOwned'
+                    : 'contractorOwned'
+                }`
+              )}
             />
           </Grid>
           <Grid tablet={{ col: 6 }} className="margin-bottom-5">

@@ -148,6 +148,10 @@ const systemProfile = {
     systemDetails: {
       header: 'System Details',
       ownership: 'System ownership',
+      ownershipValues: {
+        cmsOwned: 'CMS owned',
+        contractorOwned: 'Contractor owned'
+      },
       usersPerMonth: 'Users per month',
       access: 'Internal or public access',
       fismaID: 'FISMA Sytem ID',
@@ -160,7 +164,6 @@ const systemProfile = {
       environment: 'environment',
       provider: 'Data Center/Cloud Service Provider name',
       location: 'Location',
-      // cloudProvider: 'Cloud Service Provider',
       development: 'Development',
       customDevelopment: 'Custom Development',
       workCompleted: 'Development work completed',
