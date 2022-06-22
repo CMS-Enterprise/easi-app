@@ -114,8 +114,7 @@ export const Table = ({
       },
       {
         Header: t<string>('systemTable.header.systemAcronym'),
-        accessor: 'acronym',
-        disableGlobalFilter: true
+        accessor: 'acronym'
       },
       {
         Header: t<string>('systemTable.header.systemName'),
@@ -131,7 +130,6 @@ export const Table = ({
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
         id: 'systemOwner',
-        disableGlobalFilter: true,
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
           <p>
             {cmsDivisionsAndOffices.find(
