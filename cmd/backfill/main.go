@@ -268,8 +268,6 @@ func convert(row []string) (*entry, error) {
 	// TODO - labelled "Project #" - what does this map to?
 	// usually: "000120"; occaisonally: "001595, 000102, 002014", "FY20-000792,  FY-2021: 000787 and 000924"
 
-	data.Intake.FundingNumber = null.StringFrom(row[colPrjNum])
-	data.Intake.FundingSource = null.StringFrom(row[colFundSrc])
 	if row[colPrjNum] != "" || row[colFundSrc] != "" {
 		data.Intake.ExistingFunding = null.BoolFrom(true)
 		data.Intake.FundingSources = []*models.SystemIntakeFundingSource{

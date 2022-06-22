@@ -64,8 +64,6 @@ func makeTestData() *testData {
 
 		ProjectName:     null.StringFrom(projectName),
 		ExistingFunding: null.BoolFrom(true),
-		FundingNumber:   null.StringFrom("123456"),
-		FundingSource:   null.StringFrom("Research"),
 		FundingSources: []*models.SystemIntakeFundingSource{
 			{
 				FundingNumber: null.StringFrom("123456"),

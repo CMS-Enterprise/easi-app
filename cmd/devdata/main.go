@@ -182,8 +182,6 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 
 		ProjectName:     null.StringFrom(name),
 		ExistingFunding: null.BoolFrom(true),
-		FundingNumber:   null.StringFrom("123456"),
-		FundingSource:   null.StringFrom("Research"),
 		FundingSources: []*models.SystemIntakeFundingSource{
 			{
 				FundingNumber: null.StringFrom("123456"),

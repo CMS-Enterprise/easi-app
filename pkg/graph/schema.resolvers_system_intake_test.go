@@ -1299,10 +1299,17 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 		Status:          models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType:     models.SystemIntakeRequestTypeNEW,
 		ExistingFunding: null.BoolFrom(true),
-		FundingSource:   null.StringFrom("Prog Ops"),
-		FundingNumber:   null.StringFrom("123456"),
+		FundingSources: []*models.SystemIntakeFundingSource{
+			{
+				Source:        null.StringFrom("Prog Ops"),
+				FundingNumber: null.StringFrom("123456"),
+			},
+		},
 	})
 	s.NoError(intakeErr)
+
+	_, sourcesErr := s.store.UpdateSystemIntakeFundingSources(ctx, intake.ID, intake.FundingSources)
+	s.NoError(sourcesErr)
 
 	var resp struct {
 		UpdateSystemIntakeContractDetails struct {
