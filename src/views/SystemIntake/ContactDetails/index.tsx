@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -21,6 +21,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import useCedarContacts from 'hooks/useCedarContacts';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -39,7 +40,7 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import AdditionalContacts from './AdditionalContacts';
 import CedarContactSelect from './CedarContactSelect';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
-import { cmsDivionsAndOfficesOptions } from './utilities';
+import cmsDivisionsAndOfficesOptions from './utilities';
 
 import './index.scss';
 
@@ -87,6 +88,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     contacts,
     { createContact, updateContact, deleteContact }
   ] = useSystemIntakeContacts(id);
+
+  const { getContactByEua } = useCedarContacts();
+  const requesterContact = useMemo(
+    () => getContactByEua(systemIntake.euaUserId),
+    [systemIntake.euaUserId, getContactByEua]
+  );
 
   const initialValues = {
     requester: {
@@ -207,7 +214,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={initialValues as ContactDetailsForm}
       onSubmit={onSubmit}
       validationSchema={SystemIntakeValidationSchema.contactDetails}
       validateOnBlur={false}
@@ -308,7 +315,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     <option value="" disabled>
                       Select an option
                     </option>
-                    {cmsDivionsAndOfficesOptions('RequesterComponent')}
+                    {cmsDivisionsAndOfficesOptions('RequesterComponent')}
                   </Field>
                 </FieldGroup>
 
@@ -331,9 +338,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       if (e.target.checked) {
                         setReqAndBusOwnerSame(true);
-                        setFieldValue(
-                          'businessOwner.commonName',
-                          values.requester.name
+                        setContactFieldsFromName(
+                          requesterContact,
+                          'businessOwner'
                         );
                         setFieldValue(
                           'businessOwner.component',
@@ -362,7 +369,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       if (contact !== null)
                         setContactFieldsFromName(contact, 'businessOwner');
                     }}
-                    defaultValue={initialValues?.businessOwner?.euaUserId}
+                    defaultValue={values?.businessOwner?.euaUserId}
                     disabled={isReqAndBusOwnerSame}
                   />
                 </FieldGroup>
@@ -387,30 +394,28 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     <option value="" disabled>
                       Select an option
                     </option>
-                    {cmsDivionsAndOfficesOptions('BusinessOwnerComponent')}
+                    {cmsDivisionsAndOfficesOptions('BusinessOwnerComponent')}
                   </Field>
                 </FieldGroup>
 
                 {/* Business Owner Email */}
-                {values.businessOwner.euaUserId && (
-                  <FieldGroup
-                    scrollElement="businessOwner.email"
-                    error={!!flatErrors['businessOwner.email']}
-                  >
-                    <Label htmlFor="IntakeForm-BusinessOwnerEmail">
-                      {t('contactDetails.businessOwner.email')}
-                    </Label>
-                    <FieldErrorMsg>
-                      {flatErrors['businessOwner.email']}
-                    </FieldErrorMsg>
-                    <Field
-                      disabled
-                      as={TextInput}
-                      id="IntakeForm-BusinessOwnerEmail"
-                      name="businessOwner.email"
-                    />
-                  </FieldGroup>
-                )}
+                <FieldGroup
+                  scrollElement="businessOwner.email"
+                  error={!!flatErrors['businessOwner.email']}
+                >
+                  <Label htmlFor="IntakeForm-BusinessOwnerEmail">
+                    {t('contactDetails.businessOwner.email')}
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors['businessOwner.email']}
+                  </FieldErrorMsg>
+                  <Field
+                    disabled
+                    as={TextInput}
+                    id="IntakeForm-BusinessOwnerEmail"
+                    name="businessOwner.email"
+                  />
+                </FieldGroup>
 
                 {/* Product Manager Name */}
                 <FieldGroup
@@ -431,9 +436,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       if (e.target.checked) {
                         setReqAndProductManagerSame(true);
-                        setFieldValue(
-                          'productManager.commonName',
-                          values.requester.name
+                        setContactFieldsFromName(
+                          requesterContact,
+                          'productManager'
                         );
                         setFieldValue(
                           'productManager.component',
@@ -462,7 +467,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       if (contact !== null)
                         setContactFieldsFromName(contact, 'productManager');
                     }}
-                    defaultValue={initialValues?.productManager?.euaUserId}
+                    defaultValue={values?.productManager?.euaUserId}
                     disabled={isReqAndProductManagerSame}
                   />
                 </FieldGroup>
@@ -488,30 +493,28 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     <option value="" disabled>
                       Select an option
                     </option>
-                    {cmsDivionsAndOfficesOptions('ProductManagerComponent')}
+                    {cmsDivisionsAndOfficesOptions('ProductManagerComponent')}
                   </Field>
                 </FieldGroup>
 
                 {/* Product Manager Email */}
-                {values.productManager.euaUserId && (
-                  <FieldGroup
-                    scrollElement="productManager.email"
-                    error={!!flatErrors['productManager.email']}
-                  >
-                    <Label htmlFor="IntakeForm-ProductManagerEmail">
-                      {t('contactDetails.productManager.email')}
-                    </Label>
-                    <FieldErrorMsg>
-                      {flatErrors['productManager.email']}
-                    </FieldErrorMsg>
-                    <Field
-                      disabled
-                      as={TextInput}
-                      id="IntakeForm-ProductManagerEmail"
-                      name="productManager.email"
-                    />
-                  </FieldGroup>
-                )}
+                <FieldGroup
+                  scrollElement="productManager.email"
+                  error={!!flatErrors['productManager.email']}
+                >
+                  <Label htmlFor="IntakeForm-ProductManagerEmail">
+                    {t('contactDetails.productManager.email')}
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors['productManager.email']}
+                  </FieldErrorMsg>
+                  <Field
+                    disabled
+                    as={TextInput}
+                    id="IntakeForm-ProductManagerEmail"
+                    name="productManager.email"
+                  />
+                </FieldGroup>
 
                 {/* ISSO */}
                 <FieldGroup
@@ -520,7 +523,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 >
                   <fieldset
                     data-testid="isso-fieldset"
-                    className="usa-fieldset margin-top-4"
+                    className="usa-fieldset margin-top-3"
                   >
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.isso.label')}
@@ -549,7 +552,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {values.isso.isPresent && (
                       <div
                         data-testid="isso-name-container"
-                        className="margin-left-4 margin-bottom-1"
+                        className="margin-left-4 margin-bottom-3"
                       >
                         <FieldGroup
                           scrollElement="isso.commonName"
@@ -568,29 +571,50 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             onChange={contact =>
                               setContactFieldsFromName(contact, 'isso')
                             }
-                            defaultValue={initialValues?.isso?.euaUserId}
+                            defaultValue={values?.isso?.euaUserId}
                           />
                         </FieldGroup>
-                        {/* ISSO Email */}
-                        {values.isso.euaUserId && (
-                          <FieldGroup
-                            scrollElement="isso.email"
-                            error={!!flatErrors['isso.email']}
+                        {/* ISSO Component */}
+                        <FieldGroup
+                          scrollElement="isso.component"
+                          error={!!flatErrors['isso.component']}
+                        >
+                          <Label htmlFor="IntakeForm-IssoComponent">
+                            {t('contactDetails.isso.component')}
+                          </Label>
+                          <FieldErrorMsg>
+                            {flatErrors['isso.component']}
+                          </FieldErrorMsg>
+                          <Field
+                            as={Dropdown}
+                            id="IntakeForm-IssoComponent"
+                            label="ISSO Component"
+                            name="isso.component"
                           >
-                            <Label htmlFor="IntakeForm-IssoEmail">
-                              {t('contactDetails.isso.email')}
-                            </Label>
-                            <FieldErrorMsg>
-                              {flatErrors['isso.email']}
-                            </FieldErrorMsg>
-                            <Field
-                              disabled
-                              as={TextInput}
-                              id="IntakeForm-IssoEmail"
-                              name="isso.email"
-                            />
-                          </FieldGroup>
-                        )}
+                            <option value="" disabled>
+                              Select an option
+                            </option>
+                            {cmsDivisionsAndOfficesOptions('IssoComponent')}
+                          </Field>
+                        </FieldGroup>
+                        {/* ISSO Email */}
+                        <FieldGroup
+                          scrollElement="isso.email"
+                          error={!!flatErrors['isso.email']}
+                        >
+                          <Label htmlFor="IntakeForm-IssoEmail">
+                            {t('contactDetails.isso.email')}
+                          </Label>
+                          <FieldErrorMsg>
+                            {flatErrors['isso.email']}
+                          </FieldErrorMsg>
+                          <Field
+                            disabled
+                            as={TextInput}
+                            id="IntakeForm-IssoEmail"
+                            name="isso.email"
+                          />
+                        </FieldGroup>
                       </div>
                     )}
                     <Field

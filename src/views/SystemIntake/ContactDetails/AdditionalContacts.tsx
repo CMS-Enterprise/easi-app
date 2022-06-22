@@ -6,7 +6,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
 import CedarContactSelect from './CedarContactSelect';
-import { cmsDivionsAndOfficesOptions } from './utilities';
+import cmsDivisionsAndOfficesOptions from './utilities';
 
 const contactRoleOptions = [
   'Product Owner',
@@ -125,7 +125,7 @@ const ContactForm = ({
           <option value="" disabled>
             {t('Select an option')}
           </option>
-          {cmsDivionsAndOfficesOptions('systemIntakeContact')}
+          {cmsDivisionsAndOfficesOptions('systemIntakeContact')}
         </Dropdown>
       </FieldGroup>
 
@@ -193,8 +193,8 @@ export default function AdditionalContacts({
   deleteContact: (id: string, callback?: () => any) => void;
 }) {
   return (
-    <div className="system-intake-contacts">
-      {contacts && (
+    <div className="system-intake-contacts margin-top-4">
+      {contacts.length > 0 && (
         <>
           <h4>Additional contacts</h4>
           <div className="system-intake-contacts__contacts-list">
