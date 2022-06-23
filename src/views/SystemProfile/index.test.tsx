@@ -14,7 +14,7 @@ import SystemProfile from './index';
 
 describe('System Profile parent request', () => {
   it('matches snapshot', async () => {
-    const { /* asFragment, */ getByText, getAllByText, getByTestId } = render(
+    const { asFragment, getByText, getAllByText, getByTestId } = render(
       <MemoryRouter initialEntries={['/systems/000-100-0/home']}>
         <Route path="/systems/:systemId/:subinfo">
           <MockedProvider mocks={[query]} addTypename={false}>
@@ -24,8 +24,7 @@ describe('System Profile parent request', () => {
       </MemoryRouter>
     );
     await waitForElementToBeRemoved(() => getByTestId('page-loading'));
-    // skip due to parsed datetime difference in ci test
-    // expect(asFragment()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
     expect(getByText('CMS.gov')).toBeInTheDocument();
     expect(getAllByText('Jane Doe')[0]).toBeInTheDocument();
   });
