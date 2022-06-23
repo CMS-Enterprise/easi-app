@@ -25,10 +25,7 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
-import {
-  securityFindingKeysOrdered,
-  threatLevelGrades
-} from 'constants/systemProfile';
+import { securityFindingKeysOrdered } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 // eslint-disable-next-line camelcase
 import { GetSystemProfile_cedarThreat } from 'queries/types/GetSystemProfile';
@@ -53,10 +50,9 @@ function getSecurityFindings(
   cedarThreat: GetSystemProfile_cedarThreat[]
 ): SecurityFindings {
   // Init finding props with 0 count
-  const findings = {
-    total: 0,
-    ...Object.fromEntries(threatLevelGrades.map(k => [k, 0]))
-  } as SecurityFindings;
+  const findings = Object.fromEntries(
+    securityFindingKeysOrdered.map(k => [k, 0])
+  ) as SecurityFindings;
 
   // eslint-disable-next-line no-restricted-syntax
   for (const threat of cedarThreat) {
