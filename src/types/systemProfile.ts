@@ -1,4 +1,7 @@
-import { threatLevelGrades } from 'constants/systemProfile';
+import {
+  securityFindingKeysOrdered,
+  threatLevelGrades
+} from 'constants/systemProfile';
 import {
   GetSystemProfile,
   /* eslint-disable camelcase */
@@ -28,7 +31,10 @@ export type AtoStatus =
 
 export type ThreatLevel = typeof threatLevelGrades[number];
 
-export type SecurityFindings = Partial<Record<ThreatLevel | 'total', number>>;
+export type SecurityFindings = Record<
+  typeof securityFindingKeysOrdered[number],
+  number
+>;
 
 // Development Tags
 
