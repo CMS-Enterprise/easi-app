@@ -1,5 +1,6 @@
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
 import { GetSystemProfile } from 'queries/types/GetSystemProfile';
+import { CedarAssigneeType } from 'types/graphql-global-types';
 import { SystemProfileData } from 'types/systemProfile';
 import { getSystemProfileData } from 'views/SystemProfile';
 
@@ -8,7 +9,7 @@ const assigneeEmail = 'jane.doe@psu.edo';
 const assigneeFirstName = 'Jane';
 const assigneeLastName = 'Doe';
 
-export const result = {
+export const result: { data: GetSystemProfile } = {
   data: {
     cedarAuthorityToOperate: [
       {
@@ -243,7 +244,7 @@ export const result = {
       },
       {
         weaknessRiskLevel: 'High',
-        __typename: 'Cedarhreat'
+        __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
@@ -364,7 +365,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-17-0',
-          assigneeType: 'ORGANIZATION',
+          assigneeType: CedarAssigneeType.ORGANIZATION,
           assigneeUsername: null,
           assigneeEmail: null,
           assigneeOrgID: '261-1497-0',
@@ -379,7 +380,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-28-0',
-          assigneeType: 'ORGANIZATION',
+          assigneeType: CedarAssigneeType.ORGANIZATION,
           assigneeUsername: null,
           assigneeEmail: null,
           assigneeOrgID: '261-1497-0',
@@ -394,7 +395,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-17-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail: null,
           assigneeOrgID: null,
@@ -409,7 +410,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-29-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail,
           assigneeOrgID: null,
@@ -424,7 +425,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-32-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail: null,
           assigneeOrgID: null,
@@ -439,7 +440,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-53-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail: null,
           assigneeOrgID: null,
@@ -454,7 +455,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-51-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail: null,
           assigneeOrgID: null,
@@ -469,7 +470,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-52-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail,
           assigneeOrgID: null,
@@ -484,7 +485,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-50-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail,
           assigneeOrgID: null,
@@ -499,7 +500,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-50-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail,
           assigneeOrgID: null,
@@ -514,7 +515,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-28-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail,
           assigneeOrgID: null,
@@ -529,7 +530,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-35-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail: null,
           assigneeOrgID: null,
@@ -544,7 +545,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-55-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail,
           assigneeOrgID: null,
@@ -559,7 +560,7 @@ export const result = {
           application: 'alfabet',
           objectID: '000-0000-0',
           roleTypeID: '238-56-0',
-          assigneeType: 'PERSON',
+          assigneeType: CedarAssigneeType.PERSON,
           assigneeUsername,
           assigneeEmail,
           assigneeOrgID: null,
@@ -608,7 +609,5 @@ export const query = {
 };
 
 export function getSystemProfileMockData(): SystemProfileData {
-  return getSystemProfileData(
-    result.data as GetSystemProfile
-  ) as SystemProfileData;
+  return getSystemProfileData(result.data)!;
 }
