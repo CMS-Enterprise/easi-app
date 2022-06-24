@@ -366,7 +366,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                                         class="usa-link link-header"
                                         href="/systems/000-100-0/details"
                                       >
-                                        View 1 more URLs
+                                        View URLs
                                         <span
                                           aria-hidden="true"
                                         >

@@ -44,9 +44,15 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
 
     const urlcount = locations?.length;
     const urlsleft = urlcount ? urlcount - 1 : 0;
-    const moreUrls = t('singleSystem.systemDetails.moreURLs', {
-      count: urlsleft
-    });
+
+    // Temp 0 condition until react-i18next plural usage fixed
+    const moreUrls =
+      urlsleft === 0
+        ? t('singleSystem.systemDetails.moreURLs_0')
+        : t('singleSystem.systemDetails.moreURLs', {
+            count: urlsleft
+          });
+
     return {
       ...productionLocation,
       moreUrls
