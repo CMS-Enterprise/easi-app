@@ -180,8 +180,9 @@ const systemProfile = {
       ipv6Transition: 'IPv6 transition',
       percentTransitioned: 'Percent transitioned to IPv6',
       hardCodedIP: 'Hard-coded IP addresses',
-      view: 'View',
-      moreURLs: 'more URLs'
+      moreURLs_0: 'View URLs',
+      moreURLs: 'View {{count}} more URL',
+      moreURLs_plural: 'View {{count}} more URLs'
     },
     subSystems: {
       header: 'Sub-systems',

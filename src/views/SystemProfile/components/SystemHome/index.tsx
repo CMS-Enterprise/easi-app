@@ -41,11 +41,17 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
 
   const urlLocationCard = useMemo(() => {
     if (!productionLocation) return undefined;
+
+    const urlcount = locations?.length;
+    const urlsleft = urlcount ? urlcount - 1 : 0;
+    const moreUrls = t('singleSystem.systemDetails.moreURLs', {
+      count: urlsleft
+    });
     return {
       ...productionLocation,
-      count: locations?.length
+      moreUrls
     };
-  }, [locations, productionLocation]);
+  }, [locations, productionLocation, t]);
 
   return (
     <SectionWrapper
@@ -83,9 +89,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                       className="link-header"
                       to={`/systems/${system.id}/details`}
                     >
-                      {t('singleSystem.systemDetails.view')}{' '}
-                      {urlLocationCard.count}{' '}
-                      {t('singleSystem.systemDetails.moreURLs')}
+                      {urlLocationCard.moreUrls}
                       <span aria-hidden>&nbsp;</span>
                       <span aria-hidden>&rarr; </span>
                     </UswdsReactLink>
