@@ -51,7 +51,7 @@ func NewStore(
 		username = "app_user_iam"
 		sess := session.Must(session.NewSession())
 		creds := sess.Config.Credentials
-		password, err = rdsutils.BuildAuthToken(config.Host, "us-west-2", username, creds)
+		password, err = rdsutils.BuildAuthToken(config.Host+":"+config.Port, "us-west-2", username, creds)
 		if err != nil {
 			panic(err)
 		}
