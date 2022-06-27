@@ -185,9 +185,8 @@ export function getPersonFullName(
 export function getSystemProfileData(
   data?: GetSystemProfile
 ): SystemProfileData | undefined {
-  if (!data) return undefined;
-
   // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
+  if (!data) return undefined;
 
   const { cedarSystemDetails } = data;
   const cedarSystem = cedarSystemDetails?.cedarSystem;
