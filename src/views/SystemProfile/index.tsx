@@ -263,15 +263,24 @@ export function showAtoExpirationDate(
 /**
  * Show the value if it's not `null`, `undefined`, or `''`,
  * otherwise render `defaultVal`.
+ * Use a `format` function on the value if provided.
  */
 export function showVal(
   val: string | number | null | undefined,
-  defaultVal: string = 'No information to display',
-  classNames?: string
+  {
+    defaultVal = 'No information to display',
+    format
+  }: {
+    defaultVal?: string;
+    format?: (v: any) => string;
+  } = {}
 ): React.ReactNode {
   if (val === null || val === undefined || val === '') {
     return <span className="text-italic">{defaultVal}</span>;
   }
+
+  if (format) return format(val);
+
   return val;
 }
 

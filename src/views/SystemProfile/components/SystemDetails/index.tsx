@@ -23,6 +23,7 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
+import formatNumber from 'utils/formatNumber';
 import { showVal } from 'views/SystemProfile';
 
 import 'index.scss';
@@ -61,7 +62,8 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
               className="line-height-body-3 font-body-md"
               definition={showVal(
                 cedarSystemDetails?.businessOwnerInformation
-                  .numberOfSupportedUsersPerMonth
+                  .numberOfSupportedUsersPerMonth,
+                { format: formatNumber }
               )}
             />
           </Grid>
