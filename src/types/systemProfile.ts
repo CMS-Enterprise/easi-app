@@ -1,5 +1,5 @@
 import {
-  securityFindingKeysOrdered,
+  securityFindingKeys,
   threatLevelGrades
 } from 'constants/systemProfile';
 import {
@@ -32,7 +32,7 @@ export type AtoStatus =
 export type ThreatLevel = typeof threatLevelGrades[number];
 
 export type SecurityFindings = Record<
-  typeof securityFindingKeysOrdered[number],
+  typeof securityFindingKeys[number],
   number
 >;
 

@@ -25,7 +25,7 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
-import { securityFindingKeysOrdered } from 'constants/systemProfile';
+import { securityFindingKeys } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 // eslint-disable-next-line camelcase
 import { GetSystemProfile_cedarThreat } from 'queries/types/GetSystemProfile';
@@ -51,7 +51,7 @@ function getSecurityFindings(
 ): SecurityFindings {
   // Init finding props with 0 count
   const findings = Object.fromEntries(
-    securityFindingKeysOrdered.map(k => [k, 0])
+    securityFindingKeys.map(k => [k, 0])
   ) as SecurityFindings;
 
   // eslint-disable-next-line no-restricted-syntax
@@ -303,7 +303,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
 
           {atoStatus !== 'No ATO' && (
             <Grid row gap className="margin-top-2 margin-bottom-2">
-              {securityFindingKeysOrdered
+              {securityFindingKeys
                 .filter(
                   k =>
                     k === 'total' || // always show total
