@@ -1,3 +1,3 @@
-export default function showNumber(val: any): string {
+export default function formatNumber(val: any): string {
   return Number(val).toLocaleString();
 }
