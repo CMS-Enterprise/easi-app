@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/rds/rdsutils"
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
@@ -45,35 +44,35 @@ func NewStore(
 		return nil, err
 	}
 
-	var password string
-	var username string
+	var db *sqlx.DB
 	if config.UseIAM {
-		username = "app_user_iam"
+		// Connect using the IAM DB package
+		config.Username = "app_user_iam" // TODO introduce actual new env vars
 		sess := session.Must(session.NewSession())
-		creds := sess.Config.Credentials
-		password, err = rdsutils.BuildAuthToken(config.Host+":"+config.Port, "us-west-2", username, creds)
+		db = newConnectionPoolWithIam(sess, config)
+		err = db.Ping()
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 	} else {
-		username = config.Username
-		password = config.Password
+		// Connect via normal user/pass
+		dataSourceName := fmt.Sprintf(
+			"host=%s port=%s user=%s "+
+				"password=%s dbname=%s sslmode=%s",
+			config.Host,
+			config.Port,
+			config.Username,
+			config.Password,
+			config.Database,
+			config.SSLMode,
+		)
+
+		db, err = sqlx.Connect("postgres", dataSourceName)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	dataSourceName := fmt.Sprintf(
-		"host=%s port=%s user=%s "+
-			"password=%s dbname=%s sslmode=%s",
-		config.Host,
-		config.Port,
-		username,
-		password,
-		config.Database,
-		config.SSLMode,
-	)
-	db, err := sqlx.Connect("postgres", dataSourceName)
-	if err != nil {
-		return nil, err
-	}
 	db.SetMaxOpenConns(config.MaxConnections)
 
 	return &Store{
