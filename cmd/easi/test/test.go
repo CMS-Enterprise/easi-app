@@ -21,6 +21,7 @@ func Server() {
 	c := exec.Command(
 		"go",
 		"test",
+		"-race",
 		"-p=1",
 		"-coverprofile=go-coverage.out",
 		"./pkg/...")

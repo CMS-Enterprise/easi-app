@@ -20,8 +20,12 @@ go tool cover -html=go-coverage.out -o "go-coverage.html"
 # https://unix.stackexchange.com/questions/305190/remove-last-character-from-string-captured-with-awk
 percent=$(grep '(statements)' "go-coverage.txt" | awk '{print substr($NF, 1, length($NF)-1)}')
 goal_percent=50
-# using a oneline python function to test if percent is less than goal and return a proper exit code
-if python -c "exit(1) if ${percent} < ${goal_percent} else exit()"; then
+
+# use bc to perform floating-point comparison,
+# then use (( )) to have bash use an arithmetic context to interpret bc's output
+# see https://stackoverflow.com/a/11238237 for this specific use case
+# also see https://stackoverflow.com/a/49716000 for background - "The result code of an arithmetic expression is 0 if the result of the arithmetic evaluation was not 0 (or an error)."
+if ((  $(echo "$percent >= $goal_percent" | bc -l) )); then
     # coverage is good
     echo "total coverage is ${percent}%"
 else
