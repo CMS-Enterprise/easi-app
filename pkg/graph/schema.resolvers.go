@@ -1826,6 +1826,10 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 		return nil, err
 	}
 
+	if len(contacts) == 0 {
+		return &model.SystemIntakeContactsPayload{}, nil
+	}
+
 	euaIDs := make([]string, len(contacts))
 	for i, contact := range contacts {
 		euaIDs[i] = contact.EUAUserID
