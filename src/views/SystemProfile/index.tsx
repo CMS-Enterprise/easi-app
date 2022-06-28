@@ -84,7 +84,7 @@ function httpsUrl(url: string): string {
 /**
  * Get the ATO Status from certain date properties and flags.
  */
-function getAtoStatus(
+export function getAtoStatus(
   // eslint-disable-next-line camelcase
   cedarAuthorityToOperate?: GetSystemProfile_cedarAuthorityToOperate
 ): AtoStatus {

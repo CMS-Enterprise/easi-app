@@ -7,10 +7,13 @@ import {
   waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
+import { clone } from 'lodash';
+import { DateTime } from 'luxon';
 
-import { query } from 'data/mock/systemProfile';
+import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
+import { query, result } from 'data/mock/systemProfile';
 
-import SystemProfile from './index';
+import SystemProfile, { getAtoStatus } from './index';
 
 describe('System Profile parent request', () => {
   it('matches snapshot', async () => {
@@ -71,5 +74,37 @@ describe('System profile description is expandable', () => {
     await waitFor(() => {
       expect(getByText(/read less/i)).toBeInTheDocument();
     });
+  });
+});
+
+describe('System Profile ATO Status', () => {
+  test('output "No ATO" on missing cedarAuthorityToOperate', () => {
+    expect(getAtoStatus(undefined)).toBe('No ATO');
+  });
+
+  test('output "No ATO" on missing cedarAuthorityToOperate.dateAuthorizationMemoExpires', () => {
+    const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
+
+    cedarAto.dateAuthorizationMemoExpires = '';
+    expect(getAtoStatus(cedarAto)).toBe('No ATO');
+
+    cedarAto.dateAuthorizationMemoExpires = null;
+    expect(getAtoStatus(cedarAto)).toBe('No ATO');
+  });
+
+  test.each([
+    { status: 'Expired', dt: DateTime.utc().minus({ days: 1 }) },
+    {
+      status: 'Due Soon',
+      dt: DateTime.utc().plus({ days: ATO_STATUS_DUE_SOON_DAYS })
+    },
+    {
+      status: 'Active',
+      dt: DateTime.utc().plus({ days: ATO_STATUS_DUE_SOON_DAYS + 1 })
+    }
+  ])('output based on current date %j', ({ status, dt }) => {
+    const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
+    cedarAto.dateAuthorizationMemoExpires = dt.toString();
+    expect(getAtoStatus(cedarAto)).toBe(status);
   });
 });
