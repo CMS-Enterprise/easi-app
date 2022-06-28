@@ -47,7 +47,6 @@ func NewStore(
 	var db *sqlx.DB
 	if config.UseIAM {
 		// Connect using the IAM DB package
-		config.Username = "app_user_iam" // TODO introduce actual new env vars
 		sess := session.Must(session.NewSession())
 		db = newConnectionPoolWithIam(sess, config)
 		err = db.Ping()

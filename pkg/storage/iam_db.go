@@ -14,6 +14,8 @@ import (
 	"github.com/lib/pq"
 )
 
+// iamDb is a custom struct that satisfies the driver.Connector so that it can be used with sql.OpenDB.
+// It implements a custom Connect() function that will get a new IAM auth token for each connection.
 type iamDb struct {
 	config     DBConfig
 	awsSession *session.Session
@@ -33,19 +35,15 @@ func (idb *iamDb) Connect(ctx context.Context) (driver.Conn, error) {
 		return nil, err
 	}
 
-	psqlURL, err := url.Parse("postgres://")
-	if err != nil {
-		return nil, err
+	psqlURL := url.URL{
+		Scheme: "postgres",
+		Host:   dbEndpoint,
+		User:   url.UserPassword(idb.config.Username, authToken),
+		Path:   idb.config.Database,
 	}
-
-	// TODO replace with fmt.Sprintf
-	psqlURL.Host = dbEndpoint
-	psqlURL.User = url.UserPassword(idb.config.Username, authToken)
-	psqlURL.Path = idb.config.Database
 
 	q := psqlURL.Query()
 	q.Add("sslmode", idb.config.SSLMode)
-	// q.Add("sslrootcert", idb.config.SSLMode) // TODO is this actually needed??
 
 	psqlURL.RawQuery = q.Encode()
 
@@ -71,6 +69,8 @@ func (idb *iamDb) Open(name string) (driver.Conn, error) {
 	return nil, errors.New("driver open method not supported")
 }
 
+// newConnectionPoolWithIam opens a sql.DB using the custom iamDb as a connector.
+// It will wrap that sql.DB and return it as a *sqlx.DB
 func newConnectionPoolWithIam(awsSession *session.Session, config DBConfig) *sqlx.DB {
 	db := sql.OpenDB(&iamDb{config, awsSession})
 	return sqlx.NewDb(db, "postgres")
