@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ATO sub page for System Profile matches snapshot 1`] = `
+exports[`ATO subpage for System Profile matches snapshot 1`] = `
 <DocumentFragment>
   <div
     class="easi-section easi-section__border-bottom margin-bottom-4 padding-bottom-4"
@@ -34,7 +34,7 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
             <dd
               class="description-definition margin-0 line-height-body-3 font-body-lg text-bold margin-bottom-2"
             >
-              In Progress
+              Due Soon
             </dd>
             <div
               class="easi-divider grid-col-12 border-warning-dark"
@@ -52,7 +52,7 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
             <dd
               class="description-definition margin-0 line-height-body-3 font-body-md"
             >
-              September 15, 2022
+              July 30, 2022
             </dd>
           </div>
         </div>
@@ -85,7 +85,7 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
           <dd
             class="description-definition margin-0 line-height-body-3 margin-bottom-4"
           >
-            12
+            7
           </dd>
         </div>
       </div>
@@ -116,17 +116,7 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
         <dd
           class="description-definition margin-0 line-height-body-3 margin-bottom-4"
         >
-          12
-        </dd>
-        <dt
-          class="text-bold margin-bottom-05"
-        >
-          Medium findings
-        </dt>
-        <dd
-          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-        >
-          2
+          66
         </dd>
       </div>
       <div
@@ -141,8 +131,28 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
         <dd
           class="description-definition margin-0 line-height-body-3 margin-bottom-4"
         >
-          4
+          18
         </dd>
+      </div>
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Medium findings
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          27
+        </dd>
+      </div>
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
         <dt
           class="text-bold margin-bottom-05"
         >
@@ -151,7 +161,7 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
         <dd
           class="description-definition margin-0 line-height-body-3 margin-bottom-4"
         >
-          6
+          21
         </dd>
       </div>
     </div>
@@ -182,7 +192,7 @@ exports[`ATO sub page for System Profile matches snapshot 1`] = `
           <dd
             class="description-definition margin-0 line-height-body-3 margin-bottom-4"
           >
-            September 24, 2021
+            November 15, 2021
           </dd>
         </div>
       </div>

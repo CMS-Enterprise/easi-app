@@ -23,6 +23,7 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
+import formatNumber from 'utils/formatNumber';
 import { showVal } from 'views/SystemProfile';
 
 import 'index.scss';
@@ -44,11 +45,13 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             <DescriptionTerm term={t('singleSystem.systemDetails.ownership')} />
             <DescriptionDefinition
               className="font-body-md line-height-body-3"
-              definition={
-                cedarSystemDetails?.businessOwnerInformation.isCmsOwned
-                  ? 'CMS owned'
-                  : 'Contractor owned'
-              }
+              definition={t(
+                `singleSystem.systemDetails.ownershipValues.${
+                  cedarSystemDetails?.businessOwnerInformation.isCmsOwned
+                    ? 'cmsOwned'
+                    : 'contractorOwned'
+                }`
+              )}
             />
           </Grid>
           <Grid tablet={{ col: 6 }} className="margin-bottom-5">
@@ -59,7 +62,8 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
               className="line-height-body-3 font-body-md"
               definition={showVal(
                 cedarSystemDetails?.businessOwnerInformation
-                  .numberOfSupportedUsersPerMonth
+                  .numberOfSupportedUsersPerMonth,
+                { format: formatNumber }
               )}
             />
           </Grid>
@@ -130,9 +134,9 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
           </>
         )}
 
-        {locations && locations.length ? (
+        {locations?.length ? (
           <CardGroup className="margin-0">
-            {locations?.map(location => (
+            {locations.map(location => (
               <Card
                 key={location.id}
                 data-testid="system-card"
@@ -140,8 +144,8 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
               >
                 <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
                   <dt>
-                    {location.environment &&
-                      `${location.environment} ${t(
+                    {location.urlHostingEnv &&
+                      `${location.urlHostingEnv} ${t(
                         'singleSystem.systemDetails.environment'
                       )}`}
                   </dt>
@@ -191,7 +195,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                   ))}
                   <div />
                 </CardBody>
-                {location.provider && (
+                {location.deploymentDataCenterName && (
                   <CardFooter className="padding-0">
                     <Grid row>
                       <Divider className="margin-x-2" />
@@ -201,7 +205,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                         />
                         <DescriptionDefinition
                           className="line-height-body-3"
-                          definition={location.provider}
+                          definition={location.deploymentDataCenterName}
                         />
                       </Grid>
                     </Grid>
@@ -239,7 +243,6 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
           </Tag>
         ))}
 
-        {/* TODO: Map and populate tags with CEDAR */}
         <Grid row className="margin-top-3">
           <Grid desktop={{ col: 6 }}>
             {flags.systemProfileHiddenFields && (

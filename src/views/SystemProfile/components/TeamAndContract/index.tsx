@@ -21,6 +21,7 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
+import formatNumber from 'utils/formatNumber';
 import { mockVendors } from 'views/Sandbox/mockSystemData';
 import { getPersonFullName, showVal } from 'views/SystemProfile';
 
@@ -45,7 +46,9 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
               />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
-                definition={showVal(system.numberOfFederalFte)}
+                definition={showVal(system.numberOfFederalFte, {
+                  format: formatNumber
+                })}
               />
             </Grid>
             <Grid tablet={{ col: true }}>
@@ -56,7 +59,9 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
               />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
-                definition={showVal(system.numberOfContractorFte)}
+                definition={showVal(system.numberOfContractorFte, {
+                  format: formatNumber
+                })}
               />
             </Grid>
           </Grid>

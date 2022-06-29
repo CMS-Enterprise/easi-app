@@ -148,6 +148,10 @@ const systemProfile = {
     systemDetails: {
       header: 'System Details',
       ownership: 'System ownership',
+      ownershipValues: {
+        cmsOwned: 'CMS owned',
+        contractorOwned: 'Contractor owned'
+      },
       usersPerMonth: 'Users per month',
       access: 'Internal or public access',
       fismaID: 'FISMA Sytem ID',
@@ -160,7 +164,6 @@ const systemProfile = {
       environment: 'environment',
       provider: 'Data Center/Cloud Service Provider name',
       location: 'Location',
-      // cloudProvider: 'Cloud Service Provider',
       development: 'Development',
       customDevelopment: 'Custom Development',
       workCompleted: 'Development work completed',
@@ -177,8 +180,9 @@ const systemProfile = {
       ipv6Transition: 'IPv6 transition',
       percentTransitioned: 'Percent transitioned to IPv6',
       hardCodedIP: 'Hard-coded IP addresses',
-      view: 'View',
-      moreURLs: 'more URLs'
+      moreURLs_nocount: 'View URLs',
+      moreURLs: 'View {{count}} more URL',
+      moreURLs_plural: 'View {{count}} more URLs'
     },
     subSystems: {
       header: 'Sub-systems',
