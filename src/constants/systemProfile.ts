@@ -12,3 +12,5 @@ export const threatLevelGrades = [
   'Low',
   'Not Rated'
 ] as const;
+
+export const securityFindingKeys = ['total', ...threatLevelGrades] as const;
