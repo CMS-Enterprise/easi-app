@@ -60,6 +60,10 @@ describe('BookmarkCard', () => {
     // expect(getByText('ATO Status')).toBeInTheDocument();
   });
 
+  //
+  // Skip render status tests until the appropriate data for status is available
+  //
+
   it.skip('renders corresponding success health icon for status', () => {
     const { getByTestId } = render(
       <MemoryRouter>
