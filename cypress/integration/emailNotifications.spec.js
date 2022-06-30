@@ -1,3 +1,7 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-unused-expressions */
+// eslint no-restricted-syntax disabled to allow using for-of loops
+// eslint no-unused-expressions disabled to avoid throwing errors with Chai assertions
 /// <reference types="cypress" />
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,6 +17,7 @@ const generateNewLCID = () => {
 };
 
 // create system intake through UI
+// UUID for system intake can then be accessed with cy.get('@intakeId')
 const createIntake = () => {
   cy.localLogin({ name: 'ABCD' });
 
@@ -55,7 +60,6 @@ const createIntake = () => {
   cy.location().then(location => {
     const match = guidRegex.exec(location.pathname);
 
-    // eslint-disable-next-line no-unused-expressions
     expect(match).to.not.be.null;
 
     const intakeId = match[0];
@@ -102,11 +106,9 @@ describe('Email notifications', () => {
               email.recipients.includes(recipient2WithBrackets)
             );
 
-            // eslint-disable-next-line no-unused-expressions
             expect(notification1, `mail not sent to recipient1: ${recipient1}`)
               .not.to.be.undefined;
 
-            // eslint-disable-next-line no-unused-expressions
             expect(notification2, `mail not sent to recipient2: ${recipient2}`)
               .not.to.be.undefined;
 
@@ -152,7 +154,6 @@ describe('Email notifications', () => {
             );
 
             // make sure of all the notifications sent for issuing LCIDs, none were sent for *this specific LCID* (indicated by scope)
-            // eslint-disable-next-line no-restricted-syntax
             for (const email of lcidIssuingEmails) {
               cy.request(
                 `http://localhost:1080/messages/${email.id}.html`
@@ -198,7 +199,6 @@ describe('Email notifications', () => {
 
             // make sure a notification was sent for issuing *this specific LCID*
 
-            // eslint-disable-next-line no-restricted-syntax
             for (const email of emailsSentToMultipleRecipients) {
               cy.request(
                 `http://localhost:1080/messages/${email.id}.html`
@@ -210,7 +210,6 @@ describe('Email notifications', () => {
               });
             }
             cy.get('@specificEmailId').then(specificEmailId => {
-              // eslint-disable-next-line no-unused-expressions
               expect(specificEmailId).not.to.be.undefined;
             });
           }
@@ -245,8 +244,6 @@ describe('Email notifications', () => {
             );
 
             // make sure of all the notifications sent for issuing LCIDs, none were sent for *this specific LCID* (indicated by scope)
-
-            // eslint-disable-next-line no-restricted-syntax
             for (const email of lcidIssuingEmails) {
               cy.request(
                 `http://localhost:1080/messages/${email.id}.html`
@@ -311,11 +308,9 @@ describe('Email notifications', () => {
               email.recipients.includes(recipient2WithBrackets)
             );
 
-            // eslint-disable-next-line no-unused-expressions
+            // check that notifications *were* sent to recipients
             expect(notification1, `mail not sent to recipient1: ${recipient1}`)
               .not.to.be.undefined;
-
-            // eslint-disable-next-line no-unused-expressions
             expect(notification2, `mail not sent to recipient2: ${recipient2}`)
               .not.to.be.undefined;
 
@@ -332,7 +327,54 @@ describe('Email notifications', () => {
         );
       });
 
-      it("Doesn't send emails when no recipients are specified", () => {});
+      it("Doesn't send emails when no recipients are specified", () => {
+        createIntake();
+
+        // issue LCID, then extend it through GQL
+        // TODO - EASI-2019 - go through UI instead of making GQL calls
+        cy.get('@intakeId').then(intakeId => {
+          cy.task('issueLCID', {
+            euaId: euaIDFeatureFlagSet,
+            intakeId,
+            shouldSendEmail: false,
+            recipientEmails: [],
+            scope: 'scope',
+            lcid: generateNewLCID()
+          });
+
+          // use for uniquely identifying any emails for extending this LCID
+          const scope = `scope-${uuidv4()}`;
+
+          cy.task('extendLCID', {
+            euaId: euaIDFeatureFlagSet,
+            intakeId,
+            shouldSendEmail: true,
+            recipientEmails: [],
+            scope
+          });
+        });
+
+        // check mailcatcher API for what emails have been sent
+        cy.request('http://localhost:1080/messages').then(
+          mailcatcherResponse => {
+            expect(mailcatcherResponse.status).to.eq(200);
+
+            const lcidExtensionEmails = mailcatcherResponse.body.filter(
+              email => email.subject === 'Lifecycle ID Extended'
+            );
+
+            // make sure of all the notifications sent for extending LCIDs, none were sent for *this specific LCID* (indicated by scope)
+            for (const email of lcidExtensionEmails) {
+              cy.request(
+                `http://localhost:1080/messages/${email.id}.html`
+              ).then(emailBodyResponse => {
+                expect(emailBodyResponse.status).to.eq(200);
+                expect(emailBodyResponse.body).not.to.include(scope);
+              });
+            }
+          }
+        );
+      });
     });
 
     describe('Without feature flag for multiple notifications set', () => {
