@@ -3,6 +3,7 @@ package cedarcore
 import (
 	"context"
 	"fmt"
+	"sort"
 
 	"github.com/guregu/null/zero"
 
@@ -41,6 +42,8 @@ func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models
 	for _, ato := range cedarATOs {
 		atoIDs = append(atoIDs, ato.CedarID)
 	}
+
+	sort.StringSlice(atoIDs).Sort()
 
 	// Construct the parameters
 	params := apithreat.NewThreatFindListParams()

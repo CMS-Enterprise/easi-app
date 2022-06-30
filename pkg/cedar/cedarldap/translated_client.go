@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 
 	"go.uber.org/zap"
@@ -107,12 +108,19 @@ func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) (
 		}
 	}
 
-	idsStr := strings.Join(euaIDs, ",")
+	// this function's caller might not expect euaIDs to be mutated by sorting,
+	// so we copy it into a separate slice, then sort and use the copy
+	sortedEUAIDs := make([]string, len(euaIDs)) // needs to have the same length as euaIDs for copy() to work
+	copy(sortedEUAIDs, euaIDs)
+
+	sort.StringSlice(sortedEUAIDs).Sort()
+
+	idsStr := strings.Join(sortedEUAIDs, ",")
 	params := operations.NewPersonIdsParams()
 	params.Ids = idsStr
 	resp, err := c.client.Operations.PersonIds(params, c.apiAuthHeader)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch people from CEDAR LDAP with error: %v", err), zap.Strings("euaIDsFetched", euaIDs))
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch people from CEDAR LDAP with error: %v", err), zap.Strings("euaIDsFetched", sortedEUAIDs))
 		return nil, &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     models.Person{},
