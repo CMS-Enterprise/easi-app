@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 
@@ -12,24 +11,20 @@ import (
 // UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake
 func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
 	now := s.clock.Now()
-	fmt.Println("Updating system intake funding sources: ", len(fundingSources))
 
 	tx := s.db.MustBegin()
 	defer tx.Rollback()
-	fmt.Println("    Began transaction")
 	deleteFundingSourcesSQL := `
 		DELETE FROM system_intake_funding_sources
 		WHERE system_intake_id = $1;
 	`
 	_, err := tx.Exec(deleteFundingSourcesSQL, systemIntakeID.String())
 
-	fmt.Println("    Delete err: ", err)
 	if err != nil {
 		return nil, err
 	}
 
-	for i, fundingSource := range fundingSources {
-		fmt.Println("        Inserting funding source ", i)
+	for _, fundingSource := range fundingSources {
 		if fundingSource != nil {
 			if fundingSource.ID == uuid.Nil {
 				fundingSource.ID = uuid.New()
@@ -64,7 +59,6 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 			)
 
 			if err != nil {
-				fmt.Println("        Err inserting funding source ", err)
 				return nil, err
 			}
 		}
@@ -72,7 +66,6 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 
 	err = tx.Commit()
 	if err != nil {
-		fmt.Println("    Commit err: ", err)
 		return nil, err
 	}
 
