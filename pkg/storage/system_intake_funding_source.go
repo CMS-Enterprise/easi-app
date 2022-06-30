@@ -2,9 +2,11 @@ package storage
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -21,6 +23,7 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 	_, err := tx.Exec(deleteFundingSourcesSQL, systemIntakeID.String())
 
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
 		return nil, err
 	}
 
@@ -59,6 +62,7 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 			)
 
 			if err != nil {
+				appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to insert a funding source, error %s", err))
 				return nil, err
 			}
 		}
@@ -66,6 +70,7 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 
 	err = tx.Commit()
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to commit funding sources transaction, error %s", err))
 		return nil, err
 	}
 
