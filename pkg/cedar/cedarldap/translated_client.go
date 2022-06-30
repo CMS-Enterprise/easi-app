@@ -113,7 +113,7 @@ func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) (
 	sortedEUAIDs := make([]string, len(euaIDs)) // needs to have the same length as euaIDs for copy() to work
 	copy(sortedEUAIDs, euaIDs)
 
-	sort.StringSlice(sortedEUAIDs).Sort()
+	sort.Strings(sortedEUAIDs)
 
 	idsStr := strings.Join(sortedEUAIDs, ",")
 	params := operations.NewPersonIdsParams()

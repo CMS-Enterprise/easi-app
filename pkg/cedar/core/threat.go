@@ -43,7 +43,7 @@ func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models
 		atoIDs = append(atoIDs, ato.CedarID)
 	}
 
-	sort.StringSlice(atoIDs).Sort()
+	sort.Strings(atoIDs)
 
 	// Construct the parameters
 	params := apithreat.NewThreatFindListParams()
