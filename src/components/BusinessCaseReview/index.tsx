@@ -83,7 +83,7 @@ const BusinessCaseReview = ({
             Alternatives analysis
           </h2>
         </div>
-        <div className="padding-bottom-8 alternative-analysis-wrapper">
+        <div className="alternative-analysis-wrapper">
           <div className={helpArticle ? '' : 'grid-container'}>
             <AlternativeAnalysisReview
               fiscalYear={
