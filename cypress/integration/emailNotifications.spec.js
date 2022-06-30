@@ -8,6 +8,14 @@ import { v4 as uuidv4 } from 'uuid';
 const euaIDFeatureFlagSet = 'CYPT';
 const euaIDFeatureFlagUnset = 'CYPF';
 
+// mailcatcher API returns email addresses surrounded by angle brackets, i.e. <abcd@local.fake> (applies to requesterEmail and grtEmail)
+const euaIDRequester = 'ABCD';
+const requesterEmail = `<${euaIDRequester}@local.fake>`;
+// GRT inbox address used when running locally
+// When running in CI tests or a deployed environment, GRT email is pulled from the GRT_EMAIL environment variable;
+// when running locally, pkg/server/routes.go hardcodes the address in emailConfig for clarity
+const grtEmail = `<${Cypress.env('grtEmail') || 'grt_email@cms.gov'}>`;
+
 // generate our own LCIDs to avoid issues if >9 LCIDs are generated on the same day (see EASI-2037)
 let nextLCID = 0;
 const generateNewLCID = () => {
@@ -19,7 +27,7 @@ const generateNewLCID = () => {
 // create system intake through UI
 // UUID for system intake can then be accessed with cy.get('@intakeId')
 const createIntake = () => {
-  cy.localLogin({ name: 'ABCD' });
+  cy.localLogin({ name: euaIDRequester });
 
   cy.intercept('POST', '/api/graph/query', req => {
     if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
@@ -192,25 +200,34 @@ describe('Email notifications', () => {
           mailcatcherResponse => {
             expect(mailcatcherResponse.status).to.eq(200);
 
+            // this check isn't technically *required*, but it cuts down on the number of requests we have to make to Mailcatcher
             const emailsSentToMultipleRecipients = mailcatcherResponse.body.filter(
               email => email.recipients.length === 2
             );
             expect(emailsSentToMultipleRecipients.length).to.be.greaterThan(0);
 
-            // make sure a notification was sent for issuing *this specific LCID*
-
+            // make sure a notification was sent for issuing *this specific LCID* to both requester and GRT
             for (const email of emailsSentToMultipleRecipients) {
               cy.request(
                 `http://localhost:1080/messages/${email.id}.html`
               ).then(emailBodyResponse => {
                 expect(emailBodyResponse.status).to.eq(200);
                 if (emailBodyResponse.body.includes(scope)) {
-                  cy.wrap(email.id).as('specificEmailId');
+                  const specificEmailMetadata = mailcatcherResponse.body.find(
+                    emailMetadata => emailMetadata.id === email.id
+                  );
+                  cy.wrap(specificEmailMetadata).as('specificEmailMetadata');
                 }
               });
             }
-            cy.get('@specificEmailId').then(specificEmailId => {
-              expect(specificEmailId).not.to.be.undefined;
+
+            cy.get('@specificEmailMetadata').then(specificEmailMetadata => {
+              expect(specificEmailMetadata).not.to.be.undefined;
+              expect(specificEmailMetadata.recipients).to.have.length(2);
+              expect(specificEmailMetadata.recipients).to.include(
+                requesterEmail
+              );
+              expect(specificEmailMetadata.recipients).to.include(grtEmail);
             });
           }
         );
@@ -330,7 +347,10 @@ describe('Email notifications', () => {
       it("Doesn't send emails when no recipients are specified", () => {
         createIntake();
 
-        // issue LCID, then extend it through GQL
+        // use for uniquely identifying any emails for extending this LCID
+        const scope = `scope-${uuidv4()}`;
+
+        // issue LCID and extend it through GQL
         // TODO - EASI-2019 - go through UI instead of making GQL calls
         cy.get('@intakeId').then(intakeId => {
           cy.task('issueLCID', {
@@ -341,9 +361,6 @@ describe('Email notifications', () => {
             scope: 'scope',
             lcid: generateNewLCID()
           });
-
-          // use for uniquely identifying any emails for extending this LCID
-          const scope = `scope-${uuidv4()}`;
 
           cy.task('extendLCID', {
             euaId: euaIDFeatureFlagSet,
@@ -378,7 +395,68 @@ describe('Email notifications', () => {
     });
 
     describe('Without feature flag for multiple notifications set', () => {
-      it("Notifies requester and CC's GRT when shouldSendEmail is selected", () => {});
+      // doesn't notify GRT, because the "extend" action doesn't take the Feedback field for the email body
+      // see Slack thread: https://cmsgov.slack.com/archives/C0305U1014Y/p1655388030813539?thread_ts=1655386769.035379&cid=C0305U1014Y
+      it('Notifies requester (but not GRT) when shouldSendEmail is selected', () => {
+        createIntake();
+
+        // set scope message based on UUID so we can uniquely identify message
+        const scope = `scope-${uuidv4()}`;
+
+        // issue LCID and extend it through GQL
+        cy.get('@intakeId').then(intakeId => {
+          cy.task('issueLCID', {
+            euaId: euaIDFeatureFlagUnset,
+            intakeId,
+            shouldSendEmail: true,
+            recipientEmails: [],
+            scope: 'scope', // *don't* use UUID
+            lcid: generateNewLCID()
+          });
+
+          cy.task('extendLCID', {
+            euaId: euaIDFeatureFlagSet,
+            intakeId,
+            shouldSendEmail: true,
+            recipientEmails: [],
+            scope
+          });
+        });
+
+        // check mailcatcher API for what emails have been sent
+        cy.request('http://localhost:1080/messages').then(
+          mailcatcherResponse => {
+            expect(mailcatcherResponse.status).to.eq(200);
+
+            const lcidExtensionEmails = mailcatcherResponse.body.filter(
+              email => email.subject === 'Lifecycle ID Extended'
+            );
+
+            // make sure a notification was sent for extending *this specific LCID*
+            for (const email of lcidExtensionEmails) {
+              cy.request(
+                `http://localhost:1080/messages/${email.id}.html`
+              ).then(emailBodyResponse => {
+                expect(emailBodyResponse.status).to.eq(200);
+                if (emailBodyResponse.body.includes(scope)) {
+                  const specificEmailMetadata = mailcatcherResponse.body.find(
+                    emailMetadata => emailMetadata.id === email.id
+                  );
+                  cy.wrap(specificEmailMetadata).as('specificEmailMetadata');
+                }
+              });
+            }
+
+            cy.get('@specificEmailMetadata').then(specificEmailMetadata => {
+              expect(specificEmailMetadata).not.to.be.undefined;
+              expect(specificEmailMetadata.recipients).to.have.length(1);
+              expect(specificEmailMetadata.recipients).to.include(
+                requesterEmail
+              );
+            });
+          }
+        );
+      });
 
       it("Doesn't send emails when shouldSendEmail isn't selected", () => {});
     });
