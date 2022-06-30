@@ -2,12 +2,12 @@
 
 ## How to update a certificate
 
-There are a few SSL certificates that we import for our server to use. These certificates are located in the [config/tls](../../config/tls) directory.
+There are a few SSL certificates that we import for our server to use. These certificates are located in the [config/tls](/config/tls) directory.
 
 In order to trust a new certificate, take the following steps:
 
-1. Place a copy of the certificate in the [config/tls](../../config/tls) directory.
-2. Edit the [Dockerfile](../../Dockerfile) to contain a line that copies the certificate from this directory into the `/usr/local/share/ca-certificates/` directory.
+1. Place a copy of the certificate in the [config/tls](/config/tls) directory.
+2. Edit the [Dockerfile](/Dockerfile) to contain a line that copies the certificate from this directory into the `/usr/local/share/ca-certificates/` directory.
    - **NOTE:** The file should always be copied so that it has the `.crt` extension. The `update-ca-certificates` utility that is used will only look for files with this extension in this directory.
 
 ```docker
