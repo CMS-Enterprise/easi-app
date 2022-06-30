@@ -35,25 +35,20 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 			if fundingSource.CreatedAt == nil {
 				fundingSource.CreatedAt = &now
 			}
-			if fundingSource.UpdatedAt == nil {
-				fundingSource.UpdatedAt = &now
-			}
 			const createFundingSourceSQL = `
 				INSERT INTO system_intake_funding_sources (
 					id,
 					system_intake_id,
 					source,
 					funding_number,
-					created_at,
-					updated_at
+					created_at
 				)
 				VALUES (
 					:id,
 					:system_intake_id,
 					:source,
 					:funding_number,
-					:created_at,
-					:updated_at
+					:created_at
 				)`
 
 			_, err = tx.NamedExec(

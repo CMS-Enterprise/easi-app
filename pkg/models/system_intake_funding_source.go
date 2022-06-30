@@ -13,6 +13,5 @@ type SystemIntakeFundingSource struct {
 	SystemIntakeID uuid.UUID   `json:"systemIntakeId" db:"system_intake_id"`
 	Source         null.String `json:"source" db:"source"`
 	FundingNumber  null.String `json:"fundingNumber" db:"funding_number"`
-	UpdatedAt      *time.Time  `db:"updated_at"`
 	CreatedAt      *time.Time  `db:"created_at"`
 }
