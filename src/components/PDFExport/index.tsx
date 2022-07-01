@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import axios from 'axios';
+import classNames from 'classnames';
 import { Base64 } from 'js-base64';
 import escape from 'lodash';
 
@@ -100,7 +101,11 @@ const PDFExport = ({
     <div className="easi-pdf-export" ref={divEl}>
       {linkPosition === 'bottom' && children}
 
-      <div className="easi-pdf-export__controls">
+      <div
+        className={classNames('easi-pdf-export__controls', {
+          'margin-top-6': linkPosition === 'bottom'
+        })}
+      >
         <button
           className="usa-button usa-button--unstyled easi-no-print"
           type="button"
