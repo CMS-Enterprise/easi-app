@@ -1,7 +1,7 @@
 package models
 
 // NOTE: this type is used to create a schema used by the CEDAR Intake API
-// When changing this type, add a new version for it in pkg/cedar/intake/translation/constants.go
+// When changing this type, update the version for it in pkg/cedar/intake/translation/constants.go (IntakeInputSchemaEASIIntakeVersion)
 
 // NOTE: Optional fields are marked with omitempty JSON tag
 
