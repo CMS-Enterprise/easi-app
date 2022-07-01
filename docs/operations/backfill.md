@@ -18,7 +18,7 @@ BACKFILL_AUTH # JWT
    deploy this change.
 
 2. Make sure the CSV to be imported is available on the local filesystem.
-   You will need to make sure that it contains 25 columns. We have typically
+   You will need to make sure that it contains 23 columns. We have typically
    needed to manually fill some of the missing values (specifically contract
    dates) in the XLS files that are exported from Sharepoint before then saving
    the data as a CSV.

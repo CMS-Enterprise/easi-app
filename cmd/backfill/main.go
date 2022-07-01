@@ -169,16 +169,16 @@ const (
 	colBizOwn     = 14 // O
 	colPrjNum     = 15 // P
 
-	colFundSrc    = 16 // Q
-	colCostFree   = 17 // R
-	colContractor = 18 // S
-	colVehicle    = 19 // T
-	colPeriod     = 20 // U
+	// colFundSrc    =  // Q
+	// colCostFree   =  // R
+	colContractor = 16 // S
+	colVehicle    = 17 // T
+	colPeriod     = 18 // U
 
-	colCStartM = 21 // V
-	colCStartY = 22 // W
-	colCEndM   = 23 // X
-	colCEndY   = 24 // Y
+	colCStartM = 19 // V
+	colCStartY = 20 // W
+	colCEndM   = 21 // X
+	colCEndY   = 22 // Y
 )
 
 type entry struct {
@@ -265,22 +265,7 @@ func convert(row []string) (*entry, error) {
 	// is "#435" representative of their "component?"
 	data.Intake.BusinessOwner = null.StringFrom(row[colBizOwn])
 
-	// TODO - labelled "Project #" - what does this map to?
-	// usually: "000120"; occaisonally: "001595, 000102, 002014", "FY20-000792,  FY-2021: 000787 and 000924"
-
-	if row[colPrjNum] != "" || row[colFundSrc] != "" {
-		data.Intake.ExistingFunding = null.BoolFrom(true)
-		data.Intake.FundingSources = []*models.SystemIntakeFundingSource{
-			{
-				Source:        null.StringFrom(row[colFundSrc]),
-				FundingNumber: null.StringFrom(row[colPrjNum]),
-			},
-		}
-	} else {
-		data.Intake.ExistingFunding = null.BoolFrom(false)
-		data.Intake.FundingSources = make([]*models.SystemIntakeFundingSource, 0)
-	}
-
+	data.Intake.ExistingFunding = null.BoolFrom(false)
 	data.Intake.Contractor = null.StringFrom(row[colContractor])
 	data.Intake.ContractVehicle = null.StringFrom(row[colVehicle])
 	data.Intake.ContractStartMonth = null.StringFrom(row[colCStartM])
@@ -308,13 +293,6 @@ func convert(row []string) (*entry, error) {
 	if row[colPeriod] != "" {
 		data.Notes = append(data.Notes, models.Note{
 			Content:    null.StringFrom(fmt.Sprintf("Period of Performance - %s", row[colPeriod])),
-			AuthorName: null.StringFrom(row[colAdminLead]),
-		})
-	}
-
-	if row[colCostFree] != "" {
-		data.Notes = append(data.Notes, models.Note{
-			Content:    null.StringFrom(fmt.Sprintf("Anticipated Cost Increase - %s", row[colCostFree])),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}
