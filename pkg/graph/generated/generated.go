@@ -5572,7 +5572,7 @@ Input data for updating contract details related to a system request
 """
 input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
-  fundingSource: SystemIntakeFundingSourcesInput
+  fundingSources: SystemIntakeFundingSourcesInput
   costs: SystemIntakeCostsInput
   contract: SystemIntakeContractInput
 }
@@ -25528,11 +25528,11 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput
 			if err != nil {
 				return it, err
 			}
-		case "fundingSource":
+		case "fundingSources":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fundingSource"))
-			it.FundingSource, err = ec.unmarshalOSystemIntakeFundingSourcesInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourcesInput(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fundingSources"))
+			it.FundingSources, err = ec.unmarshalOSystemIntakeFundingSourcesInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourcesInput(ctx, v)
 			if err != nil {
 				return it, err
 			}

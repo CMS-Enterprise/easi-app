@@ -435,7 +435,7 @@ export interface UpdateSystemIntakeContactDetailsInput {
  */
 export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
-  fundingSource?: SystemIntakeFundingSourcesInput | null;
+  fundingSources?: SystemIntakeFundingSourcesInput | null;
   costs?: SystemIntakeCostsInput | null;
   contract?: SystemIntakeContractInput | null;
 }

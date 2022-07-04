@@ -594,10 +594,10 @@ type UpdateSystemIntakeContactInput struct {
 
 // Input data for updating contract details related to a system request
 type UpdateSystemIntakeContractDetailsInput struct {
-	ID            uuid.UUID                        `json:"id"`
-	FundingSource *SystemIntakeFundingSourcesInput `json:"fundingSource"`
-	Costs         *SystemIntakeCostsInput          `json:"costs"`
-	Contract      *SystemIntakeContractInput       `json:"contract"`
+	ID             uuid.UUID                        `json:"id"`
+	FundingSources *SystemIntakeFundingSourcesInput `json:"fundingSources"`
+	Costs          *SystemIntakeCostsInput          `json:"costs"`
+	Contract       *SystemIntakeContractInput       `json:"contract"`
 }
 
 // The payload for updating a system's IT governance request

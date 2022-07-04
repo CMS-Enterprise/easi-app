@@ -1073,7 +1073,7 @@ Input data for updating contract details related to a system request
 """
 input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
-  fundingSource: SystemIntakeFundingSourcesInput
+  fundingSources: SystemIntakeFundingSourcesInput
   costs: SystemIntakeCostsInput
   contract: SystemIntakeContractInput
 }
