@@ -167,18 +167,14 @@ const (
 	colCreatedBy  = 12 // M
 	colProjectMgr = 13 // N
 	colBizOwn     = 14 // O
-	colPrjNum     = 15 // P
+	colContractor = 15 // S
+	colVehicle    = 16 // T
+	colPeriod     = 17 // U
 
-	// colFundSrc    =  // Q
-	// colCostFree   =  // R
-	colContractor = 16 // S
-	colVehicle    = 17 // T
-	colPeriod     = 18 // U
-
-	colCStartM = 19 // V
-	colCStartY = 20 // W
-	colCEndM   = 21 // X
-	colCEndY   = 22 // Y
+	colCStartM = 18 // V
+	colCStartY = 19 // W
+	colCEndM   = 20 // X
+	colCEndY   = 21 // Y
 )
 
 type entry struct {
