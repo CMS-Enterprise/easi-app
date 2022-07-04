@@ -164,6 +164,17 @@ func main() {
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 
+	fundingSources := []*models.SystemIntakeFundingSource{
+		{
+			FundingNumber: null.StringFrom("123456"),
+			Source:        null.StringFrom("Research"),
+		},
+		{
+			FundingNumber: null.StringFrom("789012"),
+			Source:        null.StringFrom("DARPA"),
+		},
+	}
+
 	intake := models.SystemIntake{
 		EUAUserID: null.StringFrom("ABCD"),
 		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
@@ -182,12 +193,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 
 		ProjectName:     null.StringFrom(name),
 		ExistingFunding: null.BoolFrom(true),
-		FundingSources: []*models.SystemIntakeFundingSource{
-			{
-				FundingNumber: null.StringFrom("123456"),
-				Source:        null.StringFrom("Research"),
-			},
-		},
+		FundingSources:  fundingSources,
 
 		BusinessNeed: null.StringFrom("A business need. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
 		Solution:     null.StringFrom("A solution. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
@@ -238,6 +244,8 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 		Content:        null.StringFrom("a clever remark"),
 		CreatedAt:      &fiveMinutesAgo,
 	}))
+
+	must(store.UpdateSystemIntakeFundingSources(ctx, intake.ID, fundingSources))
 
 	return &intake
 }
