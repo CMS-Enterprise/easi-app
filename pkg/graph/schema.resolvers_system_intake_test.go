@@ -1211,7 +1211,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 		`mutation {
 			updateSystemIntakeContractDetails(input: {
 				id: "%s",
-				fundingSource: {
+				fundingSources: {
 					existingFunding: true
 					fundingSources: [
 						{
@@ -1329,7 +1329,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 		`mutation {
 			updateSystemIntakeContractDetails(input: {
 				id: "%s",
-				fundingSource: {
+				fundingSources: {
 					existingFunding: false
 					fundingSources: []
 				}
