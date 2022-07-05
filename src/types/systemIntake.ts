@@ -165,7 +165,7 @@ export type SubmitDatesForm = {
 export type CedarContactProps = {
   euaUserId: string;
   commonName: string;
-  email: string;
+  email?: string;
 };
 
 // System intake contacts

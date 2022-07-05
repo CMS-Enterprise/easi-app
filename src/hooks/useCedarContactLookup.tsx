@@ -1,13 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
 
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import { CedarContactProps } from 'types/systemIntake';
 
-// Custom hook for live fetching users based on text input
-function useCedarContactLookup(query: string) {
+function useCedarContactLookup(
+  query: string
+): { [id: string]: CedarContactProps };
+
+// eslint-disable-next-line no-redeclare
+function useCedarContactLookup(
+  query: string,
+  euaUserId: string
+): CedarContactProps | undefined;
+
+// eslint-disable-next-line no-redeclare
+function useCedarContactLookup(
+  query: string,
+  euaUserId?: string
+): { [id: string]: CedarContactProps } | CedarContactProps | undefined {
   const client = useApolloClient();
   const [cedarContacts, setCedarContacts] = useState<CedarContactProps[]>([]);
+  const contactByEuaUserId = useMemo(() => {
+    return cedarContacts.find(contact => contact.euaUserId === euaUserId);
+  }, [euaUserId, cedarContacts]);
 
   useEffect(() => {
     fetchCedarContacts(client, query).then((contacts: CedarContactProps[]) => {
@@ -15,7 +31,7 @@ function useCedarContactLookup(query: string) {
     });
   }, [query, client]);
 
-  return formatCedarContacts(cedarContacts);
+  return euaUserId ? contactByEuaUserId : formatCedarContacts(cedarContacts);
 }
 
 // GQL CEDAR API fetch of users based on first/last name text search

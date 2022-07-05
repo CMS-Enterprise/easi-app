@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -22,6 +22,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import useCedarContactLookup from 'hooks/useCedarContactLookup';
 import useCedarContacts from 'hooks/useCedarContacts';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -89,10 +90,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     { createContact, updateContact, deleteContact }
   ] = useSystemIntakeContacts(id);
 
-  const { getContactByEua } = useCedarContacts();
-  const requesterContact = useMemo(
-    () => getContactByEua(systemIntake.euaUserId),
-    [systemIntake.euaUserId, getContactByEua]
+  const requesterContact = useCedarContactLookup(
+    requester.name,
+    systemIntake.euaUserId
   );
 
   const initialValues = {
@@ -205,7 +205,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             governanceTeams: values.governanceTeams || []
           }
         }
-      }).then(response => console.log(response));
+      });
     }
   };
 
@@ -234,6 +234,20 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           setFieldValue(`${role}.euaUserId`, contact?.euaUserId || '');
           setFieldValue(`${role}.email`, contact?.email || '');
         };
+
+        const businessOwnerObject = isReqAndBusOwnerSame
+          ? requesterContact
+          : {
+              commonName: values.businessOwner.commonName,
+              euaUserId: values.businessOwner.euaUserId
+            };
+
+        const productManagerObject = isReqAndProductManagerSame
+          ? requesterContact
+          : {
+              commonName: values.productManager.commonName,
+              euaUserId: values.productManager.euaUserId
+            };
 
         return (
           <>
@@ -338,10 +352,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       if (e.target.checked) {
                         setReqAndBusOwnerSame(true);
-                        setContactFieldsFromName(
-                          requesterContact,
-                          'businessOwner'
-                        );
                         setFieldValue(
                           'businessOwner.component',
                           values.requester.component
@@ -369,7 +379,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       if (contact !== null)
                         setContactFieldsFromName(contact, 'businessOwner');
                     }}
-                    defaultValue={values?.businessOwner?.euaUserId}
+                    value={
+                      businessOwnerObject?.euaUserId
+                        ? businessOwnerObject
+                        : undefined
+                    }
                     disabled={isReqAndBusOwnerSame}
                   />
                 </FieldGroup>
@@ -436,10 +450,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       if (e.target.checked) {
                         setReqAndProductManagerSame(true);
-                        setContactFieldsFromName(
-                          requesterContact,
-                          'productManager'
-                        );
                         setFieldValue(
                           'productManager.component',
                           values.requester.component
@@ -467,7 +477,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       if (contact !== null)
                         setContactFieldsFromName(contact, 'productManager');
                     }}
-                    defaultValue={values?.productManager?.euaUserId}
+                    value={
+                      productManagerObject?.euaUserId
+                        ? productManagerObject
+                        : undefined
+                    }
                     disabled={isReqAndProductManagerSame}
                   />
                 </FieldGroup>
@@ -571,7 +585,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             onChange={contact =>
                               setContactFieldsFromName(contact, 'isso')
                             }
-                            defaultValue={values?.isso?.euaUserId}
+                            value={
+                              values?.isso?.euaUserId
+                                ? {
+                                    commonName: values?.isso?.commonName,
+                                    euaUserId: values?.isso?.euaUserId
+                                  }
+                                : undefined
+                            }
                           />
                         </FieldGroup>
                         {/* ISSO Component */}
