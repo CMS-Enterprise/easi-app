@@ -431,7 +431,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
           <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
-                <dt>{t('singleSystem.teamAndContract.totalEmployees')}</dt>
+                <dt>{t('singleSystem.team.totalEmployees')}</dt>
               </Grid>
             </Grid>
           </CardHeader>
@@ -444,9 +444,9 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 </h3>
                 <UswdsReactLink
                   className="link-header"
-                  to={`/systems/${system.id}/team-and-contract`}
+                  to={`/systems/${system.id}/team`}
                 >
-                  {t('singleSystem.teamAndContract.viewMoreInfo')}
+                  {t('singleSystem.team.viewMoreInfo')}
                   <span aria-hidden>&nbsp;</span>
                   <span aria-hidden>&rarr; </span>
                 </UswdsReactLink>
@@ -457,18 +457,14 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
           <CardFooter className="padding-0">
             <Grid row>
               <Grid desktop={{ col: 6 }} className="padding-2">
-                <DescriptionTerm
-                  term={t('singleSystem.teamAndContract.federalFTE')}
-                />
+                <DescriptionTerm term={t('singleSystem.team.federalFTE')} />
                 <DescriptionDefinition
                   className="line-height-body-3"
                   definition={system.numberOfFederalFte}
                 />
               </Grid>
               <Grid desktop={{ col: 6 }} className="padding-2">
-                <DescriptionTerm
-                  term={t('singleSystem.teamAndContract.contractorFTE')}
-                />
+                <DescriptionTerm term={t('singleSystem.team.contractorFTE')} />
                 <DescriptionDefinition
                   className="line-height-body-3"
                   definition={system.numberOfContractorFte}

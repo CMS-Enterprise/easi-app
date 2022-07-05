@@ -42,11 +42,12 @@ import {
   /* eslint-enable camelcase */
   GetSystemProfileVariables
 } from 'queries/types/GetSystemProfile';
-// eslint-disable-next-line camelcase
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import {
   AtoStatus,
+  CedarRoleAssigneePerson,
   DevelopmentTag,
+  PersonUsernameWithRoles,
   SystemProfileData,
   UrlLocation,
   UrlLocationTag
@@ -175,6 +176,34 @@ export function getPersonFullName(
 }
 
 /**
+ * Get a list of people by their usernames with of a nested list of their Cedar Roles.
+ * Assignees appear to be listed in order. The returned list keeps that order.
+ */
+export function getPeopleUsernamesWithRoles(
+  data: SystemProfileData
+): PersonUsernameWithRoles[] {
+  const people: PersonUsernameWithRoles[] = [];
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const role of data.personRoles) {
+    const { assigneeUsername } = role;
+    if (assigneeUsername) {
+      let person = people.find(
+        p => p.assigneeUsername === role.assigneeUsername
+      );
+      if (!person) {
+        person = { assigneeUsername, roles: [] };
+        people.push(person);
+      }
+
+      person.roles.push(role);
+    }
+  }
+
+  return people;
+}
+
+/**
  * `SystemProfileData` is a merge of request data and parsed data
  * required by SystemHome and at least one other subpage.
  * It is passed to all SystemProfile subpage components.
@@ -193,7 +222,7 @@ export function getSystemProfileData(
   // Save CedarAssigneeType.PERSON roles for convenience
   const personRoles = cedarSystemDetails.roles.filter(
     role => role.assigneeType === CedarAssigneeType.PERSON
-  );
+  ) as CedarRoleAssigneePerson[];
 
   // Business Owners
   const businessOwners = personRoles.filter(
@@ -598,7 +627,7 @@ const SystemProfile = () => {
                               <UswdsReactLink
                                 aria-label={t('singleSystem.moreContact')}
                                 className="line-height-body-5"
-                                to={`/systems/${systemId}/team-and-contract`}
+                                to={`/systems/${systemId}/team`}
                               >
                                 {t('singleSystem.moreContact')}
                                 <span aria-hidden>&nbsp;</span>

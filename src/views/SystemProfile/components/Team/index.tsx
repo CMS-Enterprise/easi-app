@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Card,
@@ -19,30 +19,124 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
-import { CedarAssigneeType } from 'types/graphql-global-types';
-import { SystemProfileSubviewProps } from 'types/systemProfile';
+import { RoleTypeId, teamSectionKeys } from 'constants/systemProfile';
+import {
+  PersonUsernameWithRoles,
+  SystemProfileData,
+  SystemProfileSubviewProps
+} from 'types/systemProfile';
 import formatNumber from 'utils/formatNumber';
 import { mockVendors } from 'views/Sandbox/mockSystemData';
-import { getPersonFullName, showVal } from 'views/SystemProfile';
+import {
+  getPeopleUsernamesWithRoles,
+  getPersonFullName,
+  showVal
+} from 'views/SystemProfile';
 
 import './index.scss';
 
-const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
+/**
+ * Get team members in sections of Cedar Role Types:
+ * Business Owners, Project Leads, Additional.
+ */
+export function getTeam(data: SystemProfileData) {
+  // Team list in sections
+  const businessOwners: PersonUsernameWithRoles[] = [];
+  const projectLeads: PersonUsernameWithRoles[] = [];
+  const additional: PersonUsernameWithRoles[] = [];
+
+  const people = getPeopleUsernamesWithRoles(data);
+
+  // Match person roles to sections
+  // eslint-disable-next-line no-restricted-syntax
+  for (const person of people) {
+    const { roles } = person;
+
+    // Members in Business Owner and Project Lead roles appear in both sections
+    if (
+      roles.some(({ roleTypeID }) => roleTypeID === RoleTypeId.BUSINESS_OWNER)
+    ) {
+      businessOwners.push(person);
+    }
+
+    if (
+      roles.some(({ roleTypeID }) => roleTypeID === RoleTypeId.PROJECT_LEAD)
+    ) {
+      projectLeads.push(person);
+    }
+
+    // Additional Points of Contact
+    // Anyone else not a business owner or project lead appears here
+    if (
+      roles.every(
+        ({ roleTypeID }) =>
+          roleTypeID !== RoleTypeId.BUSINESS_OWNER &&
+          roleTypeID !== RoleTypeId.PROJECT_LEAD
+      )
+    ) {
+      additional.push(person);
+    }
+  }
+
+  return {
+    businessOwners,
+    projectLeads,
+    additional
+  };
+}
+
+const TeamContactCard = ({ pr }: { pr: PersonUsernameWithRoles }) => {
+  const { roles } = pr;
+  if (roles.length === 0) return null;
+
+  const person = roles[0]; // Get assignee info from the first role
+
+  return (
+    <Card key={person.roleID} className="grid-col-12 margin-bottom-2">
+      <CardHeader className="padding-2 padding-bottom-0">
+        <h3 className="margin-y-0">{getPersonFullName(person)}</h3>
+        {person.assigneeEmail !== null && (
+          <div>
+            <Link
+              className="line-height-body-5"
+              href={`mailto:${person.assigneeEmail}`}
+              target="_blank"
+            >
+              {person.assigneeEmail}
+              <IconMailOutline className="margin-left-05 margin-bottom-2px text-tbottom" />
+            </Link>
+          </div>
+        )}
+      </CardHeader>
+      <CardBody className="padding-x-2 padding-top-0">
+        {roles.map(role => (
+          <h5
+            key={role.roleTypeID}
+            className="margin-y-0 font-sans-2xs text-normal"
+          >
+            {role.roleTypeName}
+          </h5>
+        ))}
+      </CardBody>
+    </Card>
+  );
+};
+
+const Team = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const flags = useFlags();
+  const team = useMemo(() => getTeam(system), [system]);
   return (
     <>
-      <SectionWrapper borderBottom className="padding-bottom-4">
+      <SectionWrapper className="padding-bottom-4">
         <h2 className="margin-top-0 margin-bottom-4">
-          {t('singleSystem.teamAndContract.header.teamAndContract')}
+          {t('singleSystem.team.header.team')}
         </h2>
         <GridContainer className="padding-x-0">
           <Grid row>
             <Grid tablet={{ col: true }}>
               <DescriptionTerm
-                term={t(
-                  'singleSystem.teamAndContract.federalFullTimeEmployees'
-                )}
+                term={t('singleSystem.team.federalFullTimeEmployees')}
               />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
@@ -53,9 +147,7 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
             </Grid>
             <Grid tablet={{ col: true }}>
               <DescriptionTerm
-                term={t(
-                  'singleSystem.teamAndContract.contractorFullTimeEmployees'
-                )}
+                term={t('singleSystem.team.contractorFullTimeEmployees')}
               />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
@@ -70,7 +162,7 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
       {flags.systemProfileHiddenFields && (
         <SectionWrapper borderBottom className="padding-bottom-5">
           <h2 className="margin-top-5 margin-top-4">
-            {t('singleSystem.teamAndContract.header.contractInformation')}
+            {t('singleSystem.team.header.contractInformation')}
           </h2>
           <CardGroup className="margin-0">
             {mockVendors.map(vendor => {
@@ -78,7 +170,7 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
                 <Card className="grid-col-12 margin-bottom-2">
                   <CardHeader className="padding-2 padding-bottom-0">
                     <h5 className="margin-y-0 font-sans-2xs text-normal">
-                      {t('singleSystem.teamAndContract.vendors')}
+                      {t('singleSystem.team.vendors')}
                     </h5>
                     <h3 className="margin-y-0 line-height-body-3">
                       {vendor.vendors.map(name => (
@@ -87,7 +179,7 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
                     </h3>
                     <DescriptionTerm
                       className="padding-top-2"
-                      term={t('singleSystem.teamAndContract.contractAwardDate')}
+                      term={t('singleSystem.team.contractAwardDate')}
                     />
                     <DescriptionDefinition
                       className="font-body-md line-height-body-3"
@@ -97,13 +189,13 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
                   </CardHeader>
                   <CardBody className="padding-2 padding-top-0">
                     <h5 className="margin-top-2 margin-bottom-1 font-sans-2xs text-normal">
-                      {t('singleSystem.teamAndContract.periodOfPerformance')}
+                      {t('singleSystem.team.periodOfPerformance')}
                     </h5>
                     <GridContainer className="padding-x-0">
                       <Grid row>
                         <Grid col>
                           <DescriptionTerm
-                            term={t('singleSystem.teamAndContract.startDate')}
+                            term={t('singleSystem.team.startDate')}
                           />
                           <DescriptionDefinition
                             className="font-body-md line-height-body-3"
@@ -112,7 +204,7 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
                         </Grid>
                         <Grid col>
                           <DescriptionTerm
-                            term={t('singleSystem.teamAndContract.endDate')}
+                            term={t('singleSystem.team.endDate')}
                           />
                           <DescriptionDefinition
                             className="font-body-md line-height-body-3"
@@ -123,11 +215,11 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
                     </GridContainer>
                     <Divider className="margin-y-2" />
                     <h5 className="margin-y-0 font-sans-2xs text-normal">
-                      {t('singleSystem.teamAndContract.contractNumber')}
+                      {t('singleSystem.team.contractNumber')}
                     </h5>
                     <h3 className="margin-y-0">{vendor.contractNumber}</h3>
                     <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
-                      {t('singleSystem.teamAndContract.technologyFunctions')}
+                      {t('singleSystem.team.technologyFunctions')}
                     </h5>
                     <div>
                       {vendor.technologyFunctions.map(name => (
@@ -140,7 +232,7 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
                       ))}
                     </div>
                     <h5 className="margin-bottom-0 margin-top-2 font-sans-2xs text-normal">
-                      {t('singleSystem.teamAndContract.assetsOrServices')}
+                      {t('singleSystem.team.assetsOrServices')}
                     </h5>
                     <div>
                       {vendor.assetsOrServices.map(name => (
@@ -159,45 +251,26 @@ const SystemTeamAndContract = ({ system }: SystemProfileSubviewProps) => {
           </CardGroup>
         </SectionWrapper>
       )}
-      <h2 className="margin-top-5 margin-bottom-4">
-        {t('singleSystem.teamAndContract.header.pointsOfContact')}
-      </h2>
-      <CardGroup className="margin-0">
-        {system.cedarSystemDetails?.roles
-          .filter(role => role.assigneeType === CedarAssigneeType.PERSON)
-          .map(contact => (
-            <Card key={contact.roleID} className="grid-col-12 margin-bottom-2">
-              <CardHeader className="padding-2 padding-bottom-0">
-                <h5 className="margin-y-0 font-sans-2xs text-normal">
-                  {contact.roleTypeName}
-                </h5>
-                <h3 className="margin-y-0">{getPersonFullName(contact)}</h3>
-                {contact.assigneeEmail !== null && (
-                  <div>
-                    <Link
-                      className="line-height-body-5"
-                      href={`mailto:${contact.assigneeEmail}`}
-                      target="_blank"
-                    >
-                      {contact.assigneeEmail}
-                      <IconMailOutline className="margin-left-05 margin-bottom-2px text-tbottom" />
-                    </Link>
-                  </div>
-                )}
-              </CardHeader>
-              <CardBody className="padding-x-2 padding-top-0">
-                {contact.assigneeOrgName !== null && (
-                  <>
-                    <Divider className="margin-y-2" />
-                    {contact.assigneeOrgName}
-                  </>
-                )}
-              </CardBody>
-            </Card>
-          ))}
-      </CardGroup>
+      {teamSectionKeys.map(section => {
+        const people = team[section];
+
+        if (!people.length) return null;
+
+        return (
+          <SectionWrapper key={section} borderTop>
+            <h2 className="margin-y-4">
+              {t(`singleSystem.team.header.${section}`)}
+            </h2>
+            <CardGroup className="margin-x-0 margin-bottom-4">
+              {people.map(pr => (
+                <TeamContactCard key={pr.assigneeUsername} pr={pr} />
+              ))}
+            </CardGroup>
+          </SectionWrapper>
+        );
+      })}
     </>
   );
 };
 
-export default SystemTeamAndContract;
+export default Team;

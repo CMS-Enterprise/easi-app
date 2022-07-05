@@ -1,5 +1,6 @@
 import {
   securityFindingKeys,
+  teamSectionKeys,
   threatLevelGrades
 } from 'constants/systemProfile';
 import {
@@ -19,6 +20,23 @@ import {
   tempSubSystemProp,
   tempSystemDataProp
 } from 'views/Sandbox/mockSystemData';
+
+import { CedarAssigneeType } from './graphql-global-types';
+
+// Team
+
+export type TeamSectionKey = typeof teamSectionKeys[number];
+
+export interface CedarRoleAssigneePerson
+  // eslint-disable-next-line camelcase
+  extends GetSystemProfile_cedarSystemDetails_roles {
+  assigneeType: CedarAssigneeType.PERSON;
+}
+
+export interface PersonUsernameWithRoles {
+  assigneeUsername: string;
+  roles: CedarRoleAssigneePerson[];
+}
 
 // ATO
 
@@ -54,6 +72,8 @@ export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
   tags: UrlLocationTag[];
 }
 
+// General
+
 export interface SystemProfileData extends GetSystemProfile {
   // The original id type can be null, in which case this object is not created
   id: string;
@@ -67,11 +87,9 @@ export interface SystemProfileData extends GetSystemProfile {
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
-  // eslint-disable-next-line camelcase
-  personRoles: GetSystemProfile_cedarSystemDetails_roles[];
+  personRoles: CedarRoleAssigneePerson[];
   // eslint-disable-next-line camelcase
   pointOfContact?: GetSystemProfile_cedarSystemDetails_roles;
-  // eslint-disable-next-line camelcase
   productionLocation?: UrlLocation;
   // eslint-disable-next-line camelcase
   status: GetSystemProfile_cedarSystemDetails_cedarSystem['status'];

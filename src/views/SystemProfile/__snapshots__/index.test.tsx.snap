@@ -267,7 +267,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                 >
                   <a
                     class="nav-group-border"
-                    href="/systems/000-100-0/team-and-contract"
+                    href="/systems/000-100-0/team"
                   >
                     Team
                   </a>
@@ -551,7 +551,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                                     </h3>
                                     <a
                                       class="usa-link link-header"
-                                      href="/systems/000-100-0/team-and-contract"
+                                      href="/systems/000-100-0/team"
                                     >
                                       View more Team and Contract information
                                       <span
@@ -644,7 +644,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                         <p>
                           <a
                             class="usa-link line-height-body-5"
-                            href="/systems/000-100-0/team-and-contract"
+                            href="/systems/000-100-0/team"
                           >
                             More points of contact
                             <span

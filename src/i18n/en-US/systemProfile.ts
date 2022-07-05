@@ -8,7 +8,7 @@ const systemProfile = {
   navigation: {
     home: 'System Home',
     details: 'System Details',
-    'team-and-contract': 'Team',
+    team: 'Team',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
@@ -96,11 +96,12 @@ const systemProfile = {
       systemFiscalYear: 'System fiscal year (FY) cost',
       viewMoreFunding: 'View more funding and budget information'
     },
-    teamAndContract: {
+    team: {
       header: {
-        teamAndContract: 'Team and Contract',
-        contractInformation: 'Contract Information',
-        pointsOfContact: 'Points of Contact'
+        team: 'Team',
+        businessOwners: 'Business Owners',
+        projectLeads: 'Project Leads',
+        additional: 'Additional Points of Contact'
       },
       federalFullTimeEmployees: 'Federal Full Time Employees',
       contractorFullTimeEmployees: 'Contractor Full Time Employees',
