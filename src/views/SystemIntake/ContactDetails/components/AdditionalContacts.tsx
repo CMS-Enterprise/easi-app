@@ -104,7 +104,7 @@ const ContactForm = ({
           id="systemIntakeContact.commonName"
           name="systemIntakeContact.commonName"
           ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
-          defaultValue={activeContact.euaUserId}
+          value={activeContact.euaUserId ? activeContact : undefined}
           onChange={cedarContact =>
             setActiveContact({ ...activeContact, ...cedarContact })
           }
