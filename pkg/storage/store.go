@@ -32,7 +32,12 @@ type DBConfig struct {
 	MaxConnections int
 }
 
-// NewStore is a constructor for a store
+// NewStore creates a new Store struct
+// The `db` property on the Store will always be a *sqlx.DB, but a notable difference in the DB is that if
+// config.UseIAM is true, that DB instance will be backed by a custom connector in iam_db.go that generates
+// IAM auth tokens when making new connections to the database.
+// If config.UseIAM is false, it will connect using the "postgres" driver that SQLx registers in its init() function
+// https://github.com/jmoiron/sqlx/blob/75a7ebf246fd757c9c7742da7dc4d26c6fdb6b5b/bind.go#L33-L40
 func NewStore(
 	logger *zap.Logger,
 	config DBConfig,
