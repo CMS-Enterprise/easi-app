@@ -22,10 +22,9 @@ export const UpdateSystemIntakeContractDetails = gql`
       systemIntake {
         id
         currentStage
-        fundingSource {
-          fundingNumber
-          isFunded
+        fundingSources {
           source
+          fundingNumber
         }
         costs {
           expectedIncreaseAmount
