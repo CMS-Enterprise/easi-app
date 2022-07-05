@@ -26,19 +26,29 @@ func (s Server) NewDBConfig() storage.DBConfig {
 	s.checkRequiredConfig(appconfig.DBHostConfigKey)
 	s.checkRequiredConfig(appconfig.DBPortConfigKey)
 	s.checkRequiredConfig(appconfig.DBNameConfigKey)
-	s.checkRequiredConfig(appconfig.DBUsernameConfigKey)
 	s.checkRequiredConfig(appconfig.DBMaxConnections)
-	if s.environment.Deployed() {
-		s.checkRequiredConfig(appconfig.DBPasswordConfigKey)
-	}
+
+	// Populate username dynamically
+	var username string
 	s.checkRequiredConfig(appconfig.DBSSLModeConfigKey)
+	if s.environment.Deployed() {
+		// TEMPORARY: Included to allow a clean cutover from app_user to iam_app_user in DBUsernameConfigKey
+		s.checkRequiredConfig(appconfig.DBIAMUsernameKey)
+		username = s.Config.GetString(appconfig.DBIAMUsernameKey)
+	} else {
+		s.checkRequiredConfig(appconfig.DBUsernameConfigKey)
+		s.checkRequiredConfig(appconfig.DBPasswordConfigKey)
+		username = s.Config.GetString(appconfig.DBUsernameConfigKey)
+	}
+
 	return storage.DBConfig{
 		Host:           s.Config.GetString(appconfig.DBHostConfigKey),
 		Port:           s.Config.GetString(appconfig.DBPortConfigKey),
 		Database:       s.Config.GetString(appconfig.DBNameConfigKey),
-		Username:       s.Config.GetString(appconfig.DBUsernameConfigKey),
+		Username:       username,
 		Password:       s.Config.GetString(appconfig.DBPasswordConfigKey),
 		SSLMode:        s.Config.GetString(appconfig.DBSSLModeConfigKey),
+		UseIAM:         s.environment.Deployed(),
 		MaxConnections: s.Config.GetInt(appconfig.DBMaxConnections),
 	}
 }
