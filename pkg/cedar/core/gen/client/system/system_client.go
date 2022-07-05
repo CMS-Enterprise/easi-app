@@ -30,58 +30,15 @@ type ClientOption func(*runtime.ClientOperation)
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	SystemDetailAdd(params *SystemDetailAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemDetailAddOK, error)
-
 	SystemDetailFindByID(params *SystemDetailFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemDetailFindByIDOK, error)
-
-	SystemDetailUpdate(params *SystemDetailUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemDetailUpdateOK, error)
 
 	SystemSummaryFindByID(params *SystemSummaryFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemSummaryFindByIDOK, error)
 
 	SystemSummaryFindList(params *SystemSummaryFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemSummaryFindListOK, error)
 
+	SystemVersionFindByID(params *SystemVersionFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemVersionFindByIDOK, error)
+
 	SetTransport(transport runtime.ClientTransport)
-}
-
-/*
-  SystemDetailAdd adds a new system to alfabet this interface takes id name description acronym and status
-
-  Add a new system to Alfabet. This interface takes id, name, description, acronym and status.
-*/
-func (a *Client) SystemDetailAdd(params *SystemDetailAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemDetailAddOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewSystemDetailAddParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "systemDetailAdd",
-		Method:             "POST",
-		PathPattern:        "/system/detail",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
-		Params:             params,
-		Reader:             &SystemDetailAddReader{formats: a.formats},
-		AuthInfo:           authInfo,
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*SystemDetailAddOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for systemDetailAdd: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
 }
 
 /*
@@ -122,47 +79,6 @@ func (a *Client) SystemDetailFindByID(params *SystemDetailFindByIDParams, authIn
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for systemDetailFindById: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  SystemDetailUpdate updates an existing system within alfabet this interface takes id name description acronym and status
-
-  Update an existing system within Alfabet. This interface takes id, name, description, acronym and status.
-*/
-func (a *Client) SystemDetailUpdate(params *SystemDetailUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemDetailUpdateOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewSystemDetailUpdateParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "systemDetailUpdate",
-		Method:             "PUT",
-		PathPattern:        "/system/detail",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
-		Params:             params,
-		Reader:             &SystemDetailUpdateReader{formats: a.formats},
-		AuthInfo:           authInfo,
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*SystemDetailUpdateOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for systemDetailUpdate: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -245,6 +161,47 @@ func (a *Client) SystemSummaryFindList(params *SystemSummaryFindListParams, auth
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for systemSummaryFindList: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  SystemVersionFindByID retrieves all versions of a system based on the i c t object ID
+
+  Retrieve all versions of a system based on the ICT Object ID.
+*/
+func (a *Client) SystemVersionFindByID(params *SystemVersionFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemVersionFindByIDOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewSystemVersionFindByIDParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "systemVersionFindById",
+		Method:             "GET",
+		PathPattern:        "/system/version",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &SystemVersionFindByIDReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*SystemVersionFindByIDOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for systemVersionFindById: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

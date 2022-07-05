@@ -1,20 +1,6 @@
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
 // Temporary extension of CEDAR types under BE integration complete
-export type tempLocationProp = {
-  id: string;
-  environment:
-    | 'Production environment'
-    | 'Development environment'
-    | 'Code Repository';
-  url?: string;
-  tags: string[];
-  location: string;
-  cloudProvider: string;
-  firewall: boolean;
-};
-
-// Temporary extension of CEDAR types under BE integration complete
 export type tempBudgetProp = {
   id: string;
   title: string;
@@ -64,18 +50,6 @@ export type tempSystemDataProp = {
   dataPartner: string;
   tags: string[];
 };
-
-// Temporary extension of CEDAR types under BE integration complete
-export interface tempCedarSystemProps extends CedarSystemProps {
-  locations?: tempLocationProp[];
-  developmentTags?: string[];
-  budgets?: tempBudgetProp[];
-  activities?: tempATOProp[];
-  atoStatus?: string;
-  products?: tempProductsProp[];
-  systemData?: tempSystemDataProp[];
-  subSystems?: tempSubSystemProp[];
-}
 
 export const systemData: tempSystemDataProp[] = [
   {
@@ -150,43 +124,6 @@ export const budgetsInfo: tempBudgetProp[] = [
     id: '1234567',
     title: 'HAM Project funding',
     comment: 'Most of this funding is directly and only for this system (80%)'
-  }
-];
-
-export const developmentTags: string[] = [
-  'Agile Methodology',
-  'AI Technologies',
-  'Healthcare Quality',
-  'Health Insurance Program'
-];
-
-export const locationsInfo: tempLocationProp[] = [
-  {
-    id: '1',
-    environment: 'Production environment',
-    url: 'ham.cms.gov',
-    tags: ['API endpoint', 'URL endpoint'],
-    location: 'AWS East',
-    cloudProvider: 'Amazon Web Services',
-    firewall: true
-  },
-  {
-    id: '2',
-    environment: 'Development environment',
-    url: 'dev.ham.cms.gov',
-    tags: [],
-    location: 'AWS East',
-    cloudProvider: 'Amazon Web Services',
-    firewall: true
-  },
-  {
-    id: '3',
-    environment: 'Code Repository',
-    url: 'github.com/ham',
-    tags: ['Versioned code repository'],
-    location: 'AWS East',
-    cloudProvider: 'Amazon Web Services',
-    firewall: true
   }
 ];
 
@@ -328,5 +265,33 @@ export const subSystems: tempSubSystemProp[] = [
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.',
     retirementDate: 'Planned retirement: Q2 2023'
+  }
+];
+
+export const mockVendors = [
+  {
+    vendors: ['TechSystems, Inc', 'Massive Dynamic'],
+    contractAwardDate: 'March 19, 2021',
+    popStartDate: 'March 20, 2021',
+    popEndDate: 'March 21, 2021',
+    contractNumber: 'GS1234567890BA-987654321',
+    technologyFunctions: [
+      'Application',
+      'Delivery',
+      'End User',
+      'IT Management',
+      'Platform',
+      'Security & Compliance'
+    ],
+    assetsOrServices: ['External Labor', 'Software']
+  },
+  {
+    vendors: ['SkyNet'],
+    contractAwardDate: 'April 19, 2021',
+    popStartDate: 'April 20, 2021',
+    popEndDate: 'April 21, 2021',
+    contractNumber: 'GS1234567890BA-123456789',
+    technologyFunctions: ['Network', 'Storage'],
+    assetsOrServices: ['Outside Services']
   }
 ];

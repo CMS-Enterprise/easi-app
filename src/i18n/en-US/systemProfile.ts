@@ -8,7 +8,7 @@ const systemProfile = {
   navigation: {
     home: 'System Home',
     details: 'System Details',
-    'team-and-contract': 'Team and Contract',
+    'team-and-contract': 'Team',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
@@ -57,9 +57,11 @@ const systemProfile = {
       viewPOAMs: 'View POAMs in CFACTS',
       securityFindings: 'Security Findings',
       totalFindings: 'Total findings',
+      criticalFindings: 'Critical findings',
       highFindings: 'High findings',
-      mediumFindings: 'Medium findings',
+      moderateFindings: 'Medium findings',
       lowFindings: 'Low findings',
+      notRatedFindings: 'Not Rated findings',
       viewFindings: 'View findings in CFACTS',
       datesAndTests: 'Dates and Tests',
       lastTest: 'Last penetration test',
@@ -74,10 +76,11 @@ const systemProfile = {
       activityOwner: 'Activity owner',
       completed: 'Completed on ',
       due: 'Due ',
+      noEmailContact: "Please contact this system's business owner.",
       noATO:
-        'There is no ATO on file for this system. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+        'There is no ATO on file for this system. If you believe this to be an error, please contact',
       noATOPOAM:
-        'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact aaa@hhs.cms.gov',
+        'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact',
       noATODates:
         'There is no information about previous tests or assessments available for this system',
       viewATOInfo: 'View ATO information'
@@ -145,16 +148,22 @@ const systemProfile = {
     systemDetails: {
       header: 'System Details',
       ownership: 'System ownership',
+      ownershipValues: {
+        cmsOwned: 'CMS owned',
+        contractorOwned: 'Contractor owned'
+      },
       usersPerMonth: 'Users per month',
       access: 'Internal or public access',
       fismaID: 'FISMA Sytem ID',
       tagHeader1: 'CMS Programs and Mission Essential Functions',
       tagHeader2: 'CMS Innovation Center (CMMI) Models',
       urlsAndLocations: 'URLs and Locations',
+      webApplicationFirewall: 'Web Application Firewall',
       migrationDate: 'Cloud migration date',
       noMigrationDate: 'No clould migration planned yet',
+      environment: 'environment',
+      provider: 'Data Center/Cloud Service Provider name',
       location: 'Location',
-      cloudProvider: 'Cloud Service Provider',
       development: 'Development',
       customDevelopment: 'Custom Development',
       workCompleted: 'Development work completed',
@@ -171,13 +180,42 @@ const systemProfile = {
       ipv6Transition: 'IPv6 transition',
       percentTransitioned: 'Percent transitioned to IPv6',
       hardCodedIP: 'Hard-coded IP addresses',
-      view: 'View',
-      moreURLs: 'more URLs'
+      moreURLs_nocount: 'View URLs',
+      moreURLs: 'View {{count}} more URL',
+      moreURLs_plural: 'View {{count}} more URLs'
     },
     subSystems: {
       header: 'Sub-systems',
       retirementDate: 'Retirement date',
       viewInfo: 'View sub-system information'
+    },
+    section508: {
+      section508RequestName: '508 request name',
+      viewMoreRequestInformation: 'View more 508 request information',
+      openRequests: 'Open 508 testing requests',
+      closedRequests: 'Closed testing requests',
+      testingDocuments: '508 testing documents',
+      requestName: 'Request name',
+      currentStatus: 'Current status',
+      statusChanged: 'Request status changed',
+      test: 'test',
+      latestTest: 'Latest test',
+      initialTest: 'Initial Test:',
+      score: 'Score:',
+      businessOwner: 'Business owner',
+      submissionDate: 'Submission date',
+      uploadedDocuments: 'uploaded documents',
+      viewUploadedDocuments: 'View uploaded documents',
+      startNewRequest: 'Start a new 508 testing request',
+      viewMostRecent: 'View most recent',
+      uploaded: 'Uploaded',
+      additional: 'Additional',
+      table: {
+        document: 'Document',
+        uploadDate: 'Upload Date',
+        actions: 'Actions',
+        view: 'View'
+      }
     }
   },
   systemTable: {

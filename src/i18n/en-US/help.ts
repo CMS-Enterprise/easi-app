@@ -74,6 +74,12 @@ const help = {
         email: 'NavigatorInquiries@cms.hhs.gov'
       }
     }
+  },
+  footer: {
+    wantToHelp: 'Want to help improve EASi?',
+    reportProblem: 'Report a problem',
+    sendFeedback: 'Send feedback',
+    chatOnSlack: 'Chat with us on Slack'
   }
 };
 

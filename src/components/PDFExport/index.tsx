@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import axios from 'axios';
+import classNames from 'classnames';
 import { Base64 } from 'js-base64';
 import escape from 'lodash';
 
@@ -12,6 +13,7 @@ type PDFExportProps = {
   title: string;
   children: React.ReactNode;
   label?: string;
+  linkPosition?: 'top' | 'bottom';
 };
 
 function generatePDF(filename: string, content: string) {
@@ -86,14 +88,24 @@ const downloadRefAsPDF = (
 // PDFExport adds a "Download PDF" button to the screen. When this button is clicked,
 // the HTML content of child elements is sent to the server and converted
 // to PDF format.
-const PDFExport = ({ title, filename, children, label }: PDFExportProps) => {
+const PDFExport = ({
+  title,
+  filename,
+  children,
+  label,
+  linkPosition = 'bottom'
+}: PDFExportProps) => {
   const divEl = useRef<HTMLDivElement>(null);
 
   return (
     <div className="easi-pdf-export" ref={divEl}>
-      {children}
+      {linkPosition === 'bottom' && children}
 
-      <div className="easi-pdf-export__controls">
+      <div
+        className={classNames('easi-pdf-export__controls', {
+          'margin-top-6': linkPosition === 'bottom'
+        })}
+      >
         <button
           className="usa-button usa-button--unstyled easi-no-print"
           type="button"
@@ -108,6 +120,8 @@ const PDFExport = ({ title, filename, children, label }: PDFExportProps) => {
           {label || 'Download PDF'}
         </button>
       </div>
+
+      {linkPosition === 'top' && children}
     </div>
   );
 };

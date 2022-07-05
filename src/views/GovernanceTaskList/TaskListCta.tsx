@@ -5,11 +5,11 @@ import { Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { isIntakeStarted } from 'data/systemIntake';
-import { attendGrbMeetingTag } from 'data/taskList';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 // CTA for Task List Intake Draft
 export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
+  const { t } = useTranslation('taskList');
   const { id, status } = intake || {};
   switch (status) {
     case 'INTAKE_SUBMITTED':
@@ -18,7 +18,7 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
           data-testid="intake-view-link"
           to={`/system/${id}/view`}
         >
-          View Submitted Request Form
+          {t('cta.viewSubmittedRequest')}
         </UswdsReactLink>
       );
     case 'INTAKE_DRAFT':
@@ -29,7 +29,7 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
             variant="unstyled"
             to={`/system/${id}/contact-details`}
           >
-            Continue
+            {t('cta.continue')}
           </UswdsReactLink>
         );
       }
@@ -40,7 +40,7 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
           variant="unstyled"
           to={`/system/${id || 'new'}/contact-details`}
         >
-          Start
+          {t('cta.start')}
         </UswdsReactLink>
       );
     default:
@@ -49,7 +49,7 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {
           data-testid="intake-view-link"
           to={`/system/${id}/view`}
         >
-          View Submitted Request Form
+          {t('cta.viewSubmittedRequest')}
         </UswdsReactLink>
       );
   }
@@ -61,6 +61,7 @@ export const BusinessCaseDraftCta = ({
 }: {
   systemIntake: SystemIntake;
 }) => {
+  const { t } = useTranslation('taskList');
   const { id, status, businessCaseId } = systemIntake || {};
   const history = useHistory();
   switch (status) {
@@ -76,21 +77,21 @@ export const BusinessCaseDraftCta = ({
               }
             });
           }}
-          className="usa-button"
+          className="usa-button margin-top-2"
           data-testid="start-biz-case-btn"
         >
-          Start
+          {t('cta.start')}
         </Button>
       );
     case 'BIZ_CASE_DRAFT':
       return (
         <UswdsReactLink
           data-testid="continue-biz-case-btn"
-          className="usa-button"
+          className="usa-button margin-top-2"
           variant="unstyled"
           to={`/business/${businessCaseId}/general-request-info`}
         >
-          Continue
+          {t('cta.continue')}
         </UswdsReactLink>
       );
     case 'BIZ_CASE_DRAFT_SUBMITTED':
@@ -104,10 +105,11 @@ export const BusinessCaseDraftCta = ({
       if (businessCaseId) {
         return (
           <UswdsReactLink
+            className="display-block margin-top-2"
             data-testid="view-biz-case-link"
             to={`/business/${businessCaseId}/view`}
           >
-            View submitted business case
+            {t('cta.viewSubmittedBusinessCase')}
           </UswdsReactLink>
         );
       }
@@ -116,32 +118,22 @@ export const BusinessCaseDraftCta = ({
       return (
         <UswdsReactLink
           data-testid="update-biz-case-draft-btn"
-          className="usa-button"
+          className="usa-button margin-top-2"
           variant="unstyled"
           to={`/business/${businessCaseId}/general-request-info`}
         >
-          Update draft business case
+          {t('cta.updateDraftBusinessCase')}
         </UswdsReactLink>
       );
     case 'READY_FOR_GRT':
       return (
-        <>
-          <UswdsReactLink
-            data-testid="prepare-for-grt-cta"
-            className="display-table margin-bottom-3 usa-button"
-            variant="unstyled"
-            to={`/governance-task-list/${id}/prepare-for-grt`}
-          >
-            Prepare for review team meeting
-          </UswdsReactLink>
-
-          <UswdsReactLink
-            data-testid="view-biz-case-cta"
-            to={`/business/${businessCaseId}/general-request-info`}
-          >
-            Update submitted draft business case
-          </UswdsReactLink>
-        </>
+        <UswdsReactLink
+          className="display-block margin-top-2"
+          data-testid="view-biz-case-cta"
+          to={`/business/${businessCaseId}/general-request-info`}
+        >
+          {t('cta.updateSubmittedBusinessCase')}
+        </UswdsReactLink>
       );
     default:
       return <></>;
@@ -150,37 +142,29 @@ export const BusinessCaseDraftCta = ({
 
 // CTA for Task List GRB Meeting
 export const AttendGrbMeetingCta = ({ intake }: { intake: SystemIntake }) => {
-  const { id, status } = intake || {};
-  if (status === 'READY_FOR_GRB') {
-    return (
-      <UswdsReactLink
-        data-testid="prepare-for-grb-btn"
-        className="usa-button"
-        variant="unstyled"
-        to={`/governance-task-list/${id}/prepare-for-grb`}
-      >
-        Prepare for the Review Board meeting
-      </UswdsReactLink>
-    );
-  }
-
-  if (attendGrbMeetingTag(intake) === 'COMPLETED') {
-    return (
-      <UswdsReactLink
-        data-testid="prepare-for-grb-link"
-        to={`/governance-task-list/${id}/prepare-for-grb`}
-      >
-        Prepare for the Review Board meeting
-      </UswdsReactLink>
-    );
-  }
-
-  return <></>;
+  const { t } = useTranslation('taskList');
+  return (
+    <UswdsReactLink
+      className={`display-inline-block ${
+        intake.status === 'READY_FOR_GRB' ? 'usa-button' : ''
+      }`}
+      target="_blank"
+      variant="unstyled"
+      data-testid={
+        intake.status === 'READY_FOR_GRB'
+          ? 'prepare-for-grb-btn'
+          : 'prepare-for-grb-link'
+      }
+      to="/help/it-governance/prepare-for-grb"
+    >
+      {t('cta.prepareGRB')}
+    </UswdsReactLink>
+  );
 };
 
 // CTA for Task List Decision
 export const DecisionCta = ({ id, status }: { id: string; status: string }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('taskList');
   if (['LCID_ISSUED', 'NOT_APPROVED'].includes(status)) {
     return (
       <UswdsReactLink
@@ -189,7 +173,7 @@ export const DecisionCta = ({ id, status }: { id: string; status: string }) => {
         variant="unstyled"
         to={`/governance-task-list/${id}/request-decision`}
       >
-        Read decision from board
+        {t('cta.readDecision')}
       </UswdsReactLink>
     );
   }
@@ -197,8 +181,8 @@ export const DecisionCta = ({ id, status }: { id: string; status: string }) => {
   if (status === 'NOT_IT_REQUEST') {
     return (
       <span data-testid="plain-text-not-it-request-decision">
-        <b>Decision:&nbsp;</b>
-        {t('taskList:decision.notItRequest')}
+        <b>{t('decision.decision')}&nbsp;</b>
+        {t('decision.notItRequest')}
       </span>
     );
   }
@@ -206,7 +190,7 @@ export const DecisionCta = ({ id, status }: { id: string; status: string }) => {
   if (status === 'NO_GOVERNANCE') {
     return (
       <span data-testid="plain-text-no-governance-decision">
-        <b>Decision:&nbsp;</b>
+        <b>{t('decision.decision')}&nbsp;</b>
         {t('taskList:decision.noGovernanceNeeded')}
       </span>
     );

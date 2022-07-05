@@ -47,6 +47,13 @@
         text-underline-offset: 0.25rem;
     }
 
+  .url-card-link {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
     .usa-sidenav, .usa-nav__primary-item {
         border: none;
 
@@ -71,6 +78,10 @@
     .nav-group-border {
         border-bottom: .5px solid color($theme-color-disabled-light);
     }
+
+  dd.description-definition {
+    overflow-wrap: break-word;
+  }
 }
 
 .top-divider {

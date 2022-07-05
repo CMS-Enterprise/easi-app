@@ -24,6 +24,7 @@ func (fb *TranslatableFeedback) ObjectType() string {
 // CreateIntakeModel translates a GRTFeedback into an IntakeInput
 func (fb *TranslatableFeedback) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := intakemodels.EASIGrtFeedback{
+		FeedbackID:   fb.ID.String(),
 		IntakeID:     fb.IntakeID.String(),
 		Feedback:     fb.Feedback,
 		FeedbackType: string(fb.FeedbackType),

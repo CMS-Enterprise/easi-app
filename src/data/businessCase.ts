@@ -2,32 +2,67 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import {
   BusinessCaseModel,
-  EstimatedLifecycleCostLines,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import { LifecycleCosts } from 'types/estimatedLifecycle';
+import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
 
-const emptyPhaseValues = {
-  development: {
-    isPresent: false,
-    cost: ''
-  },
-  operationsMaintenance: {
-    isPresent: false,
-    cost: ''
-  },
-  other: {
-    isPresent: false,
-    cost: ''
-  }
+const yearsObject = {
+  year1: '',
+  year2: '',
+  year3: '',
+  year4: '',
+  year5: ''
 };
 
-export const defaultEstimatedLifecycle = {
-  year1: cloneDeep(emptyPhaseValues),
-  year2: cloneDeep(emptyPhaseValues),
-  year3: cloneDeep(emptyPhaseValues),
-  year4: cloneDeep(emptyPhaseValues),
-  year5: cloneDeep(emptyPhaseValues)
+export const defaultEstimatedLifecycle: LifecycleCosts = {
+  development: {
+    label: 'Development',
+    isPresent: false,
+    type: 'primary',
+    years: cloneDeep(yearsObject)
+  },
+  operationsMaintenance: {
+    label: 'Operations and Maintenance',
+    isPresent: false,
+    type: 'primary',
+    years: cloneDeep(yearsObject)
+  },
+  helpDesk: {
+    label: 'Help desk/call center',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  software: {
+    label: 'Software licenses',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  planning: {
+    label: 'Planning, support, and professional services',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  infrastructure: {
+    label: 'Infrastructure',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  oit: {
+    label: 'OIT services, tools, and pilots',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  },
+  other: {
+    label: 'Other services, tools, and pilots',
+    isPresent: false,
+    type: 'related',
+    years: cloneDeep(yearsObject)
+  }
 };
 
 export const defaultProposedSolution = {
@@ -74,9 +109,9 @@ export const businessCaseInitialData: BusinessCaseModel = {
 };
 
 type lifecycleCostLinesType = {
-  Preferred: EstimatedLifecycleCostLines;
-  A: EstimatedLifecycleCostLines;
-  B: EstimatedLifecycleCostLines;
+  Preferred: LifecycleCosts;
+  A: LifecycleCosts;
+  B: LifecycleCosts;
 };
 
 /**
@@ -103,16 +138,9 @@ export const alternativeSolutionHasFilledFields = (
     estimatedLifecycleCost
   } = alternativeSolution;
 
-  let hasLineItem;
-  Object.values(estimatedLifecycleCost).forEach(phase => {
-    if (
-      phase.development.isPresent ||
-      phase.operationsMaintenance.isPresent ||
-      phase.other.isPresent
-    ) {
-      hasLineItem = true;
-    }
-  });
+  const hasLineItem = !!Object.values(estimatedLifecycleCost).find(
+    phase => phase.isPresent
+  );
 
   return (
     title ||
@@ -137,6 +165,11 @@ export const prepareBusinessCaseForApp = (
   const phaseTypeMap: any = {
     Development: 'development',
     'Operations and Maintenance': 'operationsMaintenance',
+    'Help desk/call center': 'helpDesk',
+    'Software licenses': 'software',
+    'Planning, support, and professional services': 'planning',
+    Infrastructure: 'infrastructure',
+    'OIT services, tools, and pilots': 'oit',
     Other: 'other'
   };
 
@@ -148,21 +181,31 @@ export const prepareBusinessCaseForApp = (
 
   let doesAltBHaveLifecycleCostLines = false;
 
-  businessCase.lifecycleCostLines.forEach((line: any) => {
-    const phaseType: 'development' | 'operationsMaintenance' | 'other' =
-      phaseTypeMap[`${line.phase}`];
+  businessCase.lifecycleCostLines
+    .filter((line: any) => !!line.cost)
+    .forEach((line: any) => {
+      const phaseType:
+        | 'development'
+        | 'operationsMaintenance'
+        | 'helpDesk'
+        | 'software'
+        | 'planning'
+        | 'infrastructure'
+        | 'oit'
+        | 'other' = phaseTypeMap[`${line.phase}`];
 
-    if (line.solution === 'B') {
-      doesAltBHaveLifecycleCostLines = true;
-    }
-
-    lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
-      `year${line.year}` as keyof EstimatedLifecycleCostLines
-    ][phaseType] = {
-      isPresent: !!line.cost,
-      cost: line.cost ? line.cost.toString() : ''
-    };
-  });
+      if (line.solution === 'B') {
+        doesAltBHaveLifecycleCostLines = true;
+      }
+      const phase =
+        lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
+          phaseType
+        ];
+      phase.isPresent = true;
+      phase.years[`year${line.year}` as keyof LifecycleYears] = line.cost
+        ? line.cost.toString()
+        : '';
+    });
 
   if (!doesAltBHaveLifecycleCostLines) {
     lifecycleCostLines.B = cloneDeep(defaultEstimatedLifecycle);
@@ -188,13 +231,13 @@ export const prepareBusinessCaseForApp = (
     priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
     preferredSolution: {
-      title: businessCase.preferredTitle,
-      summary: businessCase.preferredSummary,
-      acquisitionApproach: businessCase.preferredAcquisitionApproach,
-      pros: businessCase.preferredPros,
-      cons: businessCase.preferredCons,
-      costSavings: businessCase.preferredCostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.Preferred,
+      title: businessCase.preferredTitle || '',
+      summary: businessCase.preferredSummary || '',
+      acquisitionApproach: businessCase.preferredAcquisitionApproach || '',
+      pros: businessCase.preferredPros || '',
+      cons: businessCase.preferredCons || '',
+      costSavings: businessCase.preferredCostSavings || '',
+      estimatedLifecycleCost: lifecycleCostLines.Preferred || '',
       security: {
         isApproved: businessCase.preferredSecurityIsApproved,
         isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
@@ -207,13 +250,13 @@ export const prepareBusinessCaseForApp = (
       hasUserInterface: businessCase.preferredHasUI
     },
     alternativeA: {
-      title: businessCase.alternativeATitle,
-      summary: businessCase.alternativeASummary,
-      acquisitionApproach: businessCase.alternativeAAcquisitionApproach,
-      pros: businessCase.alternativeAPros,
-      cons: businessCase.alternativeACons,
-      costSavings: businessCase.alternativeACostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.A,
+      title: businessCase.alternativeATitle || '',
+      summary: businessCase.alternativeASummary || '',
+      acquisitionApproach: businessCase.alternativeAAcquisitionApproach || '',
+      pros: businessCase.alternativeAPros || '',
+      cons: businessCase.alternativeACons || '',
+      costSavings: businessCase.alternativeACostSavings || '',
+      estimatedLifecycleCost: lifecycleCostLines.A || '',
       security: {
         isApproved: businessCase.alternativeASecurityIsApproved,
         isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
@@ -244,9 +287,7 @@ export const prepareBusinessCaseForApp = (
       },
       hasUserInterface: businessCase.alternativeBHasUI || ''
     },
-    createdAt: businessCase.createdAt,
-    initialSubmittedAt: businessCase.initialSubmittedAt,
-    lastSubmittedAt: businessCase.lastSubmittedAt
+    createdAt: businessCase.createdAt
   };
 };
 
@@ -257,7 +298,7 @@ export const prepareBusinessCaseForApi = (
     businessCase.alternativeB
   );
   const solutionNameMap: {
-    solutionLifecycleCostLines: EstimatedLifecycleCostLines;
+    solutionLifecycleCostLines: LifecycleCosts;
     solutionApiName: string;
   }[] = [
     {
@@ -281,46 +322,25 @@ export const prepareBusinessCaseForApi = (
       : [])
   ];
 
-  const yearMap = (
-    lifecycleCostLines: EstimatedLifecycleCostLines
-  ): { phases: LifecycleCosts; year: string }[] => {
-    return [
-      { phases: lifecycleCostLines.year1, year: '1' },
-      { phases: lifecycleCostLines.year2, year: '2' },
-      { phases: lifecycleCostLines.year3, year: '3' },
-      { phases: lifecycleCostLines.year4, year: '4' },
-      { phases: lifecycleCostLines.year5, year: '5' }
-    ];
-  };
-
   const lifecycleCostLines = solutionNameMap
     .map(({ solutionLifecycleCostLines, solutionApiName }) => {
-      return yearMap(solutionLifecycleCostLines)
-        .map(({ phases, year }) => {
-          const { development, operationsMaintenance, other } = phases;
-          const developmentCost = {
-            solution: solutionApiName,
-            phase: 'Development',
-            cost: development.isPresent ? parseFloat(development.cost) : null,
-            year
-          };
-          const omCost = {
-            solution: solutionApiName,
-            phase: 'Operations and Maintenance',
-            cost: operationsMaintenance.isPresent
-              ? parseFloat(phases.operationsMaintenance.cost)
-              : null,
-            year
-          };
-          const otherCost = {
-            solution: solutionApiName,
-            phase: 'Other',
-            cost: other.isPresent ? parseFloat(phases.other.cost) : null,
-            year
-          };
-          return [developmentCost, omCost, otherCost];
-        })
-        .flat();
+      return Object.values(solutionLifecycleCostLines).reduce(
+        (acc: any, phase) => {
+          const { label, years } = phase;
+          const phaseObject = Object.keys(years).map((year: string) => {
+            const cost = years[year as keyof LifecycleYears];
+            return {
+              solution: solutionApiName,
+              phase:
+                label === 'Other services, tools, and pilots' ? 'Other' : label,
+              cost: cost ? parseFloat(cost) : null,
+              year: year.slice(-1)
+            };
+          });
+          return [...acc, ...phaseObject];
+        },
+        []
+      );
     })
     .flat();
 

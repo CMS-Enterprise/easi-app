@@ -44,6 +44,9 @@ func makeTestData() *testData {
 	systemIntake := &models.SystemIntake{
 		ID: uuid.New(),
 
+		CreatedAt: &tenMinutesAgo,
+		UpdatedAt: &fiveMinutesAgo,
+
 		EUAUserID: null.StringFrom("ABCD"),
 		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
 
@@ -76,6 +79,8 @@ func makeTestData() *testData {
 		ContractEndDate:   date(2023, 12, 31),
 		ContractVehicle:   null.StringFrom("Sole source"),
 		Contractor:        null.StringFrom("Contractor Name"),
+
+		LifecycleCostBaseline: null.StringFrom("100 BILLION DOLLARS!"),
 	}
 
 	// borrowed from cmd/devdata/main.go makeSystemIntake()
@@ -105,6 +110,8 @@ func makeTestData() *testData {
 	noCost := 0
 	businessCase := &models.BusinessCase{
 		ID:                   uuid.New(),
+		CreatedAt:            &fiveMinutesAgo,
+		UpdatedAt:            &now,
 		SystemIntakeID:       systemIntake.ID,
 		EUAUserID:            "ABCD",
 		Requester:            null.StringFrom("Shane Clark"),

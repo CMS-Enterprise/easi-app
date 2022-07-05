@@ -16,6 +16,15 @@ const (
 	systemSummaryCacheKey = "system-summary-all"
 )
 
+func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.CedarSystem {
+	cachedStruct, found := c.cache.Get(systemSummaryCacheKey)
+	if found {
+		cachedSystemMap := cachedStruct.(map[string]*models.CedarSystem)
+		return cachedSystemMap
+	}
+	return nil
+}
+
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If tryCache is true, it will try and retrieve the data from the cache first and make an API call if the cache is empty
 func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models.CedarSystem, error) {
@@ -26,9 +35,17 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 
 	// Check and use cache before making API call
 	if tryCache {
-		cachedSystems, found := c.cache.Get(systemSummaryCacheKey)
-		if found {
-			return cachedSystems.([]*models.CedarSystem), nil
+		cachedSystemMap := c.getCachedSystemMap(ctx)
+		if cachedSystemMap != nil {
+			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
+
+			i := 0
+			for _, sys := range cachedSystemMap {
+				cachedSystems[i] = sys
+				i++
+			}
+
+			return cachedSystems, nil
 		}
 	}
 
@@ -50,22 +67,32 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 		return []*models.CedarSystem{}, fmt.Errorf("no body received")
 	}
 
+	// This may look like an odd block of code, but should never expect an empty response from CEDAR with the
+	// hard-coded parameters we have set.
+	// This is defensive programming against this case.
+	if len(resp.Payload.SystemSummary) == 0 {
+		return []*models.CedarSystem{}, fmt.Errorf("empty response array received")
+	}
+
 	// Convert the auto-generated struct to our own pkg/models struct
 	retVal := []*models.CedarSystem{}
-
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
-		retVal = append(retVal, &models.CedarSystem{
-			ID:                      *sys.ID,
-			Name:                    *sys.Name,
-			Description:             sys.Description,
-			Acronym:                 sys.Acronym,
-			Status:                  sys.Status,
-			BusinessOwnerOrg:        sys.BusinessOwnerOrg,
-			BusinessOwnerOrgComp:    sys.BusinessOwnerOrgComp,
-			SystemMaintainerOrg:     sys.SystemMaintainerOrg,
-			SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
-		})
+		if sys.IctObjectID != nil {
+			cedarSys := &models.CedarSystem{
+				VersionID:               *sys.ID,
+				Name:                    *sys.Name,
+				Description:             sys.Description,
+				Acronym:                 sys.Acronym,
+				Status:                  sys.Status,
+				BusinessOwnerOrg:        sys.BusinessOwnerOrg,
+				BusinessOwnerOrgComp:    sys.BusinessOwnerOrgComp,
+				SystemMaintainerOrg:     sys.SystemMaintainerOrg,
+				SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
+				ID:                      *sys.IctObjectID,
+			}
+			retVal = append(retVal, cedarSys)
+		}
 	}
 
 	return retVal, nil
@@ -89,52 +116,56 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 		return err
 	}
 
-	appcontext.ZLogger(ctx).Info("Refreshed System Summary cache")
+	systemSummaryMap := make(map[string]*models.CedarSystem)
+	for _, sys := range systemSummary {
+		if sys != nil {
+			systemSummaryMap[sys.ID] = sys
+		}
+	}
 
 	// Set in cache
-	c.cache.SetDefault(systemSummaryCacheKey, systemSummary)
+	c.cache.SetDefault(systemSummaryCacheKey, systemSummaryMap)
+
+	appcontext.ZLogger(ctx).Info("Refreshed System Summary cache")
 
 	return nil
 }
 
-// GetSystem makes a GET call to the /system/summary/{id} endpoint
-func (c *Client) GetSystem(ctx context.Context, id string) (*models.CedarSystem, error) {
+func (c *Client) getSystemFromCache(ctx context.Context, systemID string) *models.CedarSystem {
+	// Check if the system ID is cached in the map
+	cachedSystemMap := c.getCachedSystemMap(ctx)
+	if sys, found := cachedSystemMap[systemID]; found && sys != nil {
+		return sys
+	}
+	return nil
+}
+
+// GetSystem retrieves a CEDAR system by ID (IctObjectID), by first checking the cache, then
+// if it is not found, repopulating the cache and checking one more time.
+func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return &models.CedarSystem{}, nil
 	}
 
-	// Construct the parameters
-	params := apisystems.NewSystemSummaryFindByIDParams()
-	params.SetID(id)
-	params.HTTPClient = c.hc
+	// Try the cache first
+	cachedSystem := c.getSystemFromCache(ctx, systemID)
+	if cachedSystem != nil {
+		return cachedSystem, nil
+	}
 
-	// Make the API call
-	resp, err := c.sdk.System.SystemSummaryFindByID(params, c.auth)
+	// If it's not cached, populate the cache, and try the cache again
+	err := c.populateSystemSummaryCache(ctx)
 	if err != nil {
-		return &models.CedarSystem{}, err
+		return nil, err
 	}
 
-	if resp.Payload == nil {
-		return &models.CedarSystem{}, fmt.Errorf("no body received")
+	// Try the cache again now that we know it is fresh
+	cachedSystem = c.getSystemFromCache(ctx, systemID)
+	if cachedSystem != nil {
+		return cachedSystem, nil
 	}
 
-	responseArray := resp.Payload.SystemSummary
-
-	if len(responseArray) == 0 {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
-	}
-
-	// Convert the auto-generated struct to our own pkg/models struct
-	return &models.CedarSystem{
-		ID:                      *responseArray[0].ID,
-		Name:                    *responseArray[0].Name,
-		Description:             responseArray[0].Description,
-		Acronym:                 responseArray[0].Acronym,
-		Status:                  responseArray[0].Status,
-		BusinessOwnerOrg:        responseArray[0].BusinessOwnerOrg,
-		BusinessOwnerOrgComp:    responseArray[0].BusinessOwnerOrgComp,
-		SystemMaintainerOrg:     responseArray[0].SystemMaintainerOrg,
-		SystemMaintainerOrgComp: responseArray[0].SystemMaintainerOrgComp,
-	}, nil
+	// If we still haven't found it after repopulating the cache, then it doesn't exist in CEDAR
+	return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
 }

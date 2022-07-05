@@ -1,39 +1,18 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 
-import {
-  activities,
-  budgetsInfo,
-  developmentTags,
-  locationsInfo,
-  mockSystemInfo,
-  products,
-  subSystems,
-  systemData
-} from 'views/Sandbox/mockSystemData';
+import { getSystemProfileMockData } from 'data/mock/systemProfile';
 
 import SystemHome from './index';
 
-describe('The making a request page', () => {
+const systemProfileData = getSystemProfileMockData();
+
+describe('SystemHome subpage for System Profile', () => {
   it('matches snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter initialEntries={['/systems/326-9-0/details']}>
-        <Route path="/systems/:systemId/:subinfo">
-          <SystemHome
-            system={{
-              ...mockSystemInfo[3],
-              locations: locationsInfo,
-              developmentTags,
-              budgets: budgetsInfo,
-              subSystems,
-              activities,
-              atoStatus: 'In Progress',
-              products,
-              systemData
-            }}
-          />
-        </Route>
+      <MemoryRouter>
+        <SystemHome system={systemProfileData} />
       </MemoryRouter>
     );
     await waitFor(() => {

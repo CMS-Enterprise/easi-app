@@ -1,679 +1,199 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ATO sub page for System Profile matches snapshot 1`] = `
+exports[`ATO subpage for System Profile matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    id="ato"
+    class="easi-section easi-section__border-bottom margin-bottom-4 padding-bottom-4"
+    data-testid="section-wrapper"
   >
-    <div
-      class="grid-container padding-left-0 padding-right-0"
-      data-testid="gridContainer"
+    <h2
+      class="margin-top-0 margin-bottom-4"
     >
+      Authority to Operate (ATO)
+    </h2>
+    <ul
+      class="usa-card-group margin-0"
+      data-testid="CardGroup"
+    >
+      <li
+        class="usa-card grid-col-12 bg-warning"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header padding-2 padding-bottom-0 text-top text-base-darkest"
+            data-testid="CardHeader"
+          >
+            <dt
+              class="text-bold margin-bottom-05"
+            >
+              Status
+            </dt>
+            <dd
+              class="description-definition margin-0 line-height-body-3 font-body-lg text-bold margin-bottom-2"
+            >
+              Due Soon
+            </dd>
+            <div
+              class="easi-divider grid-col-12 border-warning-dark"
+            />
+          </header>
+          <div
+            class="usa-card__footer padding-2 text-base-darkest"
+            data-testid="CardFooter"
+          >
+            <dt
+              class="text-bold margin-bottom-05"
+            >
+              Expiration Date
+            </dt>
+            <dd
+              class="description-definition margin-0 line-height-body-3 font-body-md"
+            >
+              July 30, 2022
+            </dd>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div
+    class="easi-section easi-section__border-bottom margin-bottom-4"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-0"
+    >
+      Plan of Action and Milestones (POAMs)
+    </h2>
+    <div>
+      <div
+        class="grid-row grid-gap margin-top-2"
+        data-testid="grid"
+      >
+        <div
+          class="tablet:grid-col-6 padding-right-2"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold margin-bottom-05"
+          >
+            Total POAMs
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+          >
+            7
+          </dd>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="easi-section easi-section__border-bottom margin-bottom-4"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-0"
+    >
+      Security Findings
+    </h2>
+    <div
+      class="grid-row grid-gap margin-top-2 margin-bottom-2"
+      data-testid="grid"
+    >
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Total findings
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          66
+        </dd>
+      </div>
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          High findings
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          18
+        </dd>
+      </div>
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Medium findings
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          27
+        </dd>
+      </div>
+      <div
+        class="padding-right-2 grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Low findings
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          21
+        </dd>
+      </div>
+    </div>
+  </div>
+  <div
+    class="easi-section margin-bottom-4 padding-bottom-6"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-0 margin-bottom-2"
+    >
+      Dates and Tests
+    </h2>
+    <div>
       <div
         class="grid-row grid-gap"
         data-testid="grid"
       >
         <div
-          class="desktop:grid-col-8"
+          class="tablet:grid-col-6"
           data-testid="grid"
         >
-          <div
-            class="easi-section easi-section__border-bottom margin-bottom-4 padding-bottom-4"
-            data-testid="section-wrapper"
+          <dt
+            class="text-bold margin-bottom-05"
           >
-            <h2
-              class="margin-top-0 margin-bottom-4"
-            >
-              Authority to Operate (ATO)
-            </h2>
-            <ul
-              class="usa-card-group margin-0"
-              data-testid="CardGroup"
-            >
-              <li
-                class="usa-card grid-col-12 bg-warning"
-                data-testid="Card"
-              >
-                <div
-                  class="usa-card__container"
-                >
-                  <header
-                    class="usa-card__header padding-2 padding-bottom-0 text-top text-base-darkest"
-                    data-testid="CardHeader"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Status
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 line-height-body-3 font-body-lg text-bold margin-bottom-2"
-                    >
-                      In Progress
-                    </dd>
-                    <div
-                      class="easi-divider grid-col-12 border-warning-dark"
-                    />
-                  </header>
-                  <div
-                    class="usa-card__footer padding-2 text-base-darkest"
-                    data-testid="CardFooter"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Expiration Date
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 line-height-body-3 font-body-md"
-                    >
-                      September 15, 2022
-                    </dd>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <ol
-              class="usa-process-list"
-            >
-              <li
-                class="usa-process-list__item"
-              >
-                <h4
-                  class="usa-process-list__heading easi-header__basic flex-align-start"
-                  data-testid="processListHeading"
-                >
-                  <div
-                    class="margin-0 font-body-lg"
-                  >
-                    Start a process
-                  </div>
-                  <div
-                    class="text-right margin-bottom-0"
-                  >
-                    <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
-                      data-testid="tag"
-                    >
-                      Completed
-                    </span>
-                    <h5
-                      class="text-normal margin-y-0 text-base-dark"
-                    >
-                      Completed on 11/2/2021
-                    </h5>
-                  </div>
-                </h4>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Activity owner
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 font-body-md margin-bottom-0"
-                >
-                  Jane Doe
-                </dd>
-              </li>
-              <li
-                class="usa-process-list__item"
-              >
-                <h4
-                  class="usa-process-list__heading easi-header__basic flex-align-start"
-                  data-testid="processListHeading"
-                >
-                  <div
-                    class="margin-0 font-body-lg"
-                  >
-                    Start a process
-                  </div>
-                  <div
-                    class="text-right margin-bottom-0"
-                  >
-                    <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
-                      data-testid="tag"
-                    >
-                      Completed
-                    </span>
-                    <h5
-                      class="text-normal margin-y-0 text-base-dark"
-                    >
-                      Completed on 11/23/2021
-                    </h5>
-                  </div>
-                </h4>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Activity owner
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 font-body-md margin-bottom-0"
-                >
-                  Jane Doe
-                </dd>
-              </li>
-              <li
-                class="usa-process-list__item"
-              >
-                <h4
-                  class="usa-process-list__heading easi-header__basic flex-align-start"
-                  data-testid="processListHeading"
-                >
-                  <div
-                    class="margin-0 font-body-lg"
-                  >
-                    Start a process
-                  </div>
-                  <div
-                    class="text-right margin-bottom-0"
-                  >
-                    <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-warning"
-                      data-testid="tag"
-                    >
-                      In progress
-                    </span>
-                    <h5
-                      class="text-normal margin-y-0 text-base-dark"
-                    >
-                      Due 12/2/2021
-                    </h5>
-                  </div>
-                </h4>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Activity owner
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 font-body-md margin-bottom-0"
-                >
-                  Jane Doe
-                </dd>
-              </li>
-              <li
-                class="usa-process-list__item"
-              >
-                <h4
-                  class="usa-process-list__heading easi-header__basic flex-align-start"
-                  data-testid="processListHeading"
-                >
-                  <div
-                    class="margin-0 font-body-lg"
-                  >
-                    Start a process
-                  </div>
-                  <div
-                    class="text-right margin-bottom-0"
-                  >
-                    <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-white text-base border-base border-2px"
-                      data-testid="tag"
-                    >
-                      Not started
-                    </span>
-                    <h5
-                      class="text-normal margin-y-0 text-base-dark"
-                    >
-                      Due 2/2/2022
-                    </h5>
-                  </div>
-                </h4>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Activity owner
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 font-body-md margin-bottom-0"
-                >
-                  Jane Doe
-                </dd>
-              </li>
-              <li
-                class="usa-process-list__item"
-              >
-                <h4
-                  class="usa-process-list__heading easi-header__basic flex-align-start"
-                  data-testid="processListHeading"
-                >
-                  <div
-                    class="margin-0 font-body-lg"
-                  >
-                    Start a process
-                  </div>
-                  <div
-                    class="text-right margin-bottom-0"
-                  >
-                    <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-white text-base border-base border-2px"
-                      data-testid="tag"
-                    >
-                      Not started
-                    </span>
-                    <h5
-                      class="text-normal margin-y-0 text-base-dark"
-                    >
-                      Due 2/22/2022
-                    </h5>
-                  </div>
-                </h4>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Activity owner
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 font-body-md margin-bottom-0"
-                >
-                  Jane Doe
-                </dd>
-              </li>
-            </ol>
-            <h3
-              class="margin-top-2 margin-bottom-1"
-            >
-              Methodologies and Programs
-            </h3>
-          </div>
-          <div
-            class="easi-section easi-section__border-bottom margin-bottom-4 padding-bottom-5"
-            data-testid="section-wrapper"
+            Last assessment
+          </dt>
+          <dd
+            class="description-definition margin-0 line-height-body-3 margin-bottom-4"
           >
-            <h2
-              class="margin-top-0"
-            >
-              Plan of Action and Milestones (POAMs)
-            </h2>
-            <div>
-              <div
-                class="grid-row grid-gap margin-top-2"
-                data-testid="grid"
-              >
-                <div
-                  class="tablet:grid-col-6 padding-right-2"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Total POAMs
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    12
-                  </dd>
-                </div>
-                <div
-                  class="tablet:grid-col-6 padding-right-2"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    High POAMs
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    4
-                  </dd>
-                </div>
-              </div>
-              <div
-                class="grid-row grid-gap margin-top-2 margin-bottom-2"
-                data-testid="grid"
-              >
-                <div
-                  class="tablet:grid-col-12"
-                  data-testid="grid"
-                >
-                  <div
-                    class="usa-alert usa-alert--info"
-                    data-testid="alert"
-                  >
-                    <div
-                      class="usa-alert__body"
-                    >
-                      <p
-                        class="usa-alert__text"
-                      >
-                        CFACTS is the CMS system that stores and manages security information for systems. If you have access to CFACTS, you can view additional information about POAMs and security findings for you system.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <a
-              class="usa-link"
-              href="/"
-              target="_blank"
-            >
-              <button
-                class="usa-button usa-button--outline"
-                data-testid="button"
-                type="button"
-              >
-                View POAMs in CFACTS
-              </button>
-            </a>
-          </div>
-          <div
-            class="easi-section easi-section__border-bottom margin-bottom-4 padding-bottom-5"
-            data-testid="section-wrapper"
-          >
-            <h2
-              class="margin-top-0"
-            >
-              Security Findings
-            </h2>
-            <div
-              class="grid-row grid-gap margin-top-2 margin-bottom-2"
-              data-testid="grid"
-            >
-              <div
-                class="padding-right-2 grid-col-6"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Total findings
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  12
-                </dd>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Medium findings
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  2
-                </dd>
-              </div>
-              <div
-                class="padding-right-2 grid-col-6"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  High findings
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  4
-                </dd>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Low findings
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  6
-                </dd>
-              </div>
-            </div>
-            <a
-              class="usa-link"
-              href="/"
-              target="_blank"
-            >
-              <button
-                class="usa-button usa-button--outline"
-                data-testid="button"
-                type="button"
-              >
-                View findings in CFACTS
-              </button>
-            </a>
-          </div>
-          <div
-            class="easi-section margin-bottom-4 padding-bottom-6"
-            data-testid="section-wrapper"
-          >
-            <h2
-              class="margin-top-0 margin-bottom-2"
-            >
-              Dates and Tests
-            </h2>
-            <div>
-              <div
-                class="grid-row grid-gap"
-                data-testid="grid"
-              >
-                <div
-                  class="tablet:grid-col-6"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Last penetration test
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    Oct 12, 2021
-                  </dd>
-                </div>
-                <div
-                  class="tablet:grid-col-6"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Last assessment
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    September 24, 2021
-                  </dd>
-                </div>
-              </div>
-              <div
-                class="grid-row grid-gap"
-                data-testid="grid"
-              >
-                <div
-                  class="tablet:grid-col-6"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Contengency Plan completion
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    March 18, 2022
-                  </dd>
-                </div>
-                <div
-                  class="tablet:grid-col-6"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Contengency Plan test
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    January 7, 2022
-                  </dd>
-                </div>
-              </div>
-              <div
-                class="grid-row grid-gap"
-                data-testid="grid"
-              >
-                <div
-                  class="tablet:grid-col-6"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    System Security Plan review
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    Dec 2, 2021
-                  </dd>
-                </div>
-                <div
-                  class="tablet:grid-col-6"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Authorization memo expiration
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    April 14, 2022
-                  </dd>
-                </div>
-              </div>
-              <div
-                class="grid-row grid-gap"
-                data-testid="grid"
-              >
-                <div
-                  class="tablet:grid-col-6"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    PIA completion
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    Oct 14, 2021
-                  </dd>
-                </div>
-                <div
-                  class="tablet:grid-col-6"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    SORN completion
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    September 2, 2021
-                  </dd>
-                </div>
-              </div>
-              <div
-                class="grid-row grid-gap"
-                data-testid="grid"
-              >
-                <div
-                  class="tablet:grid-col-6"
-                  data-testid="grid"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Last SCA/CDM
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                  >
-                    September 2, 2021
-                  </dd>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="tablet:grid-col-4 sticky-nav"
-          data-testid="grid"
-        >
-          <div
-            class="side-divider"
-          >
-            <div
-              class="top-divider"
-            />
-            <p
-              class="font-body-xs margin-top-1 margin-bottom-3"
-            >
-              Point of contact
-            </p>
-            <h3
-              class="system-profile__subheader margin-bottom-1"
-            >
-              Geraldine Hobbs
-            </h3>
-            <dd
-              class="description-definition margin-0"
-            >
-              Business Owner
-            </dd>
-            <p>
-              <a
-                aria-label="Send an email"
-                class="usa-link usa-link--external line-height-body-5"
-                href="mailto:patrick.segura@oddball.io"
-                target="_blank"
-              >
-                Send an email
-                <span
-                  aria-hidden="true"
-                >
-                   
-                </span>
-              </a>
-            </p>
-            <p>
-              <a
-                aria-label="More points of contact"
-                class="usa-link line-height-body-5"
-                href="mailto:patrick.segura@oddball.io"
-                target="_blank"
-              >
-                More points of contact
-                <span
-                  aria-hidden="true"
-                >
-                   
-                </span>
-                <span
-                  aria-hidden="true"
-                >
-                  → 
-                </span>
-              </a>
-            </p>
-          </div>
+            November 15, 2021
+          </dd>
         </div>
       </div>
     </div>

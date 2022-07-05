@@ -31,7 +31,7 @@ export const DescriptionTerm = ({ className, term }: DescriptionTermProps) => (
 
 type DescriptionDefinitionProps = {
   className?: string;
-  definition?: string | null;
+  definition?: React.ReactNode;
 };
 
 export const DescriptionDefinition = React.forwardRef<

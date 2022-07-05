@@ -1,0 +1,1 @@
+TRUNCATE TABLE cedar_system_bookmarks;

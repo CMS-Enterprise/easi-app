@@ -44,7 +44,7 @@ export const navLinks = (flags: Flags) => [
   {
     link: '/help',
     label: 'help',
-    isEnabled: flags.help
+    isEnabled: true
   }
 ];
 

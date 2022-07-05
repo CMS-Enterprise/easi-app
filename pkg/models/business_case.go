@@ -30,6 +30,16 @@ const (
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
 	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operations and Maintenance"
 	LifecycleCostPhaseOPERATIONMAINTENANCE LifecycleCostPhase = "Operations and Maintenance"
+	// LifecycleCostPhaseHELPDESK captures enum value "Help desk/call center"
+	LifecycleCostPhaseHELPDESK LifecycleCostPhase = "Help desk/call center"
+	// LifecycleCostPhaseSOFTWARE captures enum value "Software licenses"
+	LifecycleCostPhaseSOFTWARE LifecycleCostPhase = "Software licenses"
+	// LifecycleCostPhasePLANNING captures enum value "Planning, support, and professional services"
+	LifecycleCostPhasePLANNING LifecycleCostPhase = "Planning, support, and professional services"
+	// LifecycleCostPhaseINFRASTRUCTURE captures enum value "Infrastructure"
+	LifecycleCostPhaseINFRASTRUCTURE LifecycleCostPhase = "Infrastructure"
+	// LifecycleCostPhaseOIT captures enum value "OIT Services, tools, and pilots"
+	LifecycleCostPhaseOIT LifecycleCostPhase = "OIT Services, tools, and pilots"
 	// LifecycleCostPhaseOTHER captures enum value "Other"
 	LifecycleCostPhaseOTHER LifecycleCostPhase = "Other"
 
@@ -125,10 +135,14 @@ type BusinessCase struct {
 	LifecycleCostLines                  EstimatedLifecycleCosts `json:"lifecycleCostLines" db:"lifecycle_cost_lines"`
 	CreatedAt                           *time.Time              `json:"createdAt" db:"created_at"`
 	UpdatedAt                           *time.Time              `json:"updatedAt" db:"updated_at"`
-	SubmittedAt                         *time.Time              `json:"submittedAt" db:"submitted_at"`
 	ArchivedAt                          *time.Time              `db:"archived_at"`
-	InitialSubmittedAt                  *time.Time              `json:"initialSubmittedAt" db:"initial_submitted_at"`
-	LastSubmittedAt                     *time.Time              `json:"lastSubmittedAt" db:"last_submitted_at"`
+
+	// these fields were removed from this model/the GQL schema as part of https://jiraent.cms.gov/browse/EASI-1693
+	// currently, they still exist in the database schema, in order to preserve any existing data in Prod
+	// to future maintainers: if you're removing these fields for good, also remove the db.Unsafe() calls in pkg/storage/business_case.go
+
+	// InitialSubmittedAt                  *time.Time              `json:"initialSubmittedAt" db:"initial_submitted_at"`
+	// LastSubmittedAt                     *time.Time              `json:"lastSubmittedAt" db:"last_submitted_at"`
 }
 
 // BusinessCases is the model for a list of business cases

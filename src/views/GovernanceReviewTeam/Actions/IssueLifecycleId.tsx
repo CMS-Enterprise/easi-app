@@ -53,7 +53,8 @@ const IssueLifecycleId = () => {
     expirationDateDay: '',
     expirationDateMonth: '',
     expirationDateYear: '',
-    newLifecycleId: undefined
+    newLifecycleId: undefined,
+    feedback: ''
   };
 
   const onSubmit = (values: SubmitLifecycleIdForm) => {

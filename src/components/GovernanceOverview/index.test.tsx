@@ -6,7 +6,11 @@ import GovernanceOverviewContent from './index';
 
 describe('Governance Overview Content', () => {
   it('renders default version without crashing', () => {
-    const { asFragment } = render(<GovernanceOverviewContent />);
+    const { asFragment } = render(
+      <MemoryRouter>
+        <GovernanceOverviewContent />
+      </MemoryRouter>
+    );
     expect(asFragment()).toMatchSnapshot();
   });
   it('renders help section version without crashing', () => {

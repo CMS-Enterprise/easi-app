@@ -1,444 +1,244 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The making a request page matches snapshot 1`] = `
+exports[`SystemDetails subpage for System Profile matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    id="system-detail"
+    class="easi-section easi-section__border-bottom padding-bottom-4"
+    data-testid="section-wrapper"
   >
+    <h2
+      class="margin-top-0 margin-bottom-4"
+    >
+      System Details
+    </h2>
     <div
-      class="grid-container padding-left-0 padding-right-0"
-      data-testid="gridContainer"
+      class="grid-row margin-top-3"
+      data-testid="grid"
     >
       <div
-        class="grid-row grid-gap"
+        class="tablet:grid-col-6 margin-bottom-5"
         data-testid="grid"
       >
-        <div
-          class="desktop:grid-col-8"
-          data-testid="grid"
+        <dt
+          class="text-bold margin-bottom-05"
         >
-          <div
-            class="easi-section easi-section__border-bottom padding-bottom-4"
-            data-testid="section-wrapper"
+          System ownership
+        </dt>
+        <dd
+          class="description-definition margin-0 font-body-md line-height-body-3"
+        >
+          CMS owned
+        </dd>
+      </div>
+      <div
+        class="tablet:grid-col-6 margin-bottom-5"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Users per month
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 font-body-md"
+        >
+          2,750,000
+        </dd>
+      </div>
+      <div
+        class="tablet:grid-col-6 margin-bottom-5"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Internal or public access
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3"
+        >
+          Accessible to both public internet and to CMS-internal network
+        </dd>
+      </div>
+    </div>
+  </div>
+  <div
+    class="easi-section easi-section__border-bottom padding-bottom-3 margin-bottom-3"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-3"
+    >
+      URLs and Locations
+    </h2>
+    <ul
+      class="usa-card-group margin-0"
+      data-testid="CardGroup"
+    >
+      <li
+        class="usa-card grid-col-12"
+        data-testid="system-card"
+      >
+        <div
+          class="usa-card__container"
+        >
+          <header
+            class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
+            data-testid="CardHeader"
           >
-            <h2
-              class="margin-top-0 margin-bottom-4"
-            >
-              System Details
-            </h2>
-            <div
-              class="grid-row margin-top-3"
-              data-testid="grid"
-            >
-              <div
-                class="tablet:grid-col-6 margin-bottom-5"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  System ownership
-                </dt>
-                <dd
-                  class="description-definition margin-0 font-body-md line-height-body-3"
-                >
-                  CMS owned
-                </dd>
-              </div>
-              <div
-                class="tablet:grid-col-6 margin-bottom-5"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Users per month
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 font-body-md"
-                >
-                  2,345
-                </dd>
-              </div>
-              <div
-                class="tablet:grid-col-6 margin-bottom-5"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Internal or public access
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3"
-                >
-                  Both public and internal access
-                </dd>
-              </div>
-              <div
-                class="tablet:grid-col-6 margin-bottom-5"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  FISMA Sytem ID
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3"
-                >
-                  123-456-789-0
-                </dd>
-              </div>
-            </div>
-            <h3
-              class="margin-top-0 margin-bottom-1"
-            >
-              CMS Programs and Mission Essential Functions
-            </h3>
-            <span
-              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-              data-testid="tag"
-            >
-              Fee for Service (FFS)
-            </span>
-            <span
-              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-              data-testid="tag"
-            >
-              Million Hearts
-            </span>
-            <h3
-              class="margin-top-3 margin-bottom-1"
-            >
-              CMS Innovation Center (CMMI) Models
-            </h3>
-            <span
-              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-              data-testid="tag"
-            >
-              Next Generation ACO Model
-            </span>
-            <span
-              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-              data-testid="tag"
-            >
-              Comprehensive Primary Care Plus
-            </span>
-            <span
-              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-              data-testid="tag"
-            >
-              Independence at Home Demonstration
-            </span>
-          </div>
-          <div
-            class="easi-section easi-section__border-bottom padding-bottom-3 margin-bottom-3"
-            data-testid="section-wrapper"
-          >
-            <h2
-              class="margin-top-3"
-            >
-              URLs and Locations
-            </h2>
-            <dt
-              class="text-bold margin-bottom-05"
-            >
-              Cloud migration date
+            <dt>
+              Production environment
             </dt>
-            <dd
-              class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-            >
-              December 12, 2017
-            </dd>
-            <ul
-              class="usa-card-group margin-0"
-              data-testid="CardGroup"
-            />
-          </div>
-          <div
-            class="easi-section easi-section__border-bottom padding-bottom-5 margin-bottom-4"
-            data-testid="section-wrapper"
-          >
-            <h2
-              class="margin-top-4 margin-bottom-1"
-            >
-              Development
-            </h2>
-            <div
-              class="grid-row margin-top-3"
-              data-testid="grid"
-            >
-              <div
-                class="desktop:grid-col-6"
-                data-testid="grid"
+            <div>
+              <dd
+                class="text-right text-base-dark system-profile__icon-container"
               >
-                <dt
-                  class="text-bold margin-bottom-05"
+                <svg
+                  aria-label="verified"
+                  class="margin-right-1"
+                  fill="#00a91c"
+                  height="1rem"
+                  width="1rem"
                 >
-                  Custom Development
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  85%
-                </dd>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Development work completed
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  Every two weeks
-                </dd>
-              </div>
-              <div
-                class="desktop:grid-col-6"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Planned release frequency
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  92%
-                </dd>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Planned retirement
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  No planned retirement or replacement
-                </dd>
-              </div>
-              <div
-                class="desktop:grid-col-12"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Description of development work to be completed
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat elementum nibh feugiat donec. Ultricies at libero nullam egestas ipsum, sed.
-                </dd>
-              </div>
-              <div
-                class="desktop:grid-col-12"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  AI technology status
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  Approved
-                </dd>
-              </div>
-              <div
-                class="desktop:grid-col-12"
-                data-testid="grid"
-              >
-                <h3
-                  class="margin-top-0 margin-bottom-1"
-                >
-                  AI Technology types
-                </h3>
+                  verified_user.svg
+                </svg>
                 <span
-                  class="easi-tag system-profile__tag text-base-darker bg-base-lighter"
-                  data-testid="tag"
+                  class="text-tbottom line-height-body-3"
                 >
-                  Natural Language Processing
+                  Web Application Firewall
                 </span>
-                <span
-                  class="easi-tag system-profile__tag text-base-darker bg-base-lighter"
-                  data-testid="tag"
-                >
-                  Chat Bots
-                </span>
-              </div>
+              </dd>
             </div>
-          </div>
+          </header>
           <div
-            class="easi-section margin-bottom-5"
-            data-testid="section-wrapper"
+            class="usa-card__body padding-left-2 padding-right-2 padding-top-0 padding-bottom-0"
+            data-testid="CardBody"
           >
-            <h2
-              class="margin-top-3 margin-bottom-1"
-            >
-              IP Information
-            </h2>
-            <span
-              class="easi-tag system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
-              data-testid="tag"
-            >
-              <svg
-                class="usa-icon system-profile__icon text-primary-dark margin-right-1"
-                focusable="false"
-                height="1em"
-                role="img"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                />
-              </svg>
-              E-CAP Initiative
-            </span>
-            <div
-              class="grid-row margin-top-2"
-              data-testid="grid"
-            >
-              <div
-                class="desktop:grid-col-6 padding-right-2"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Current IP access
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  IPv4 only
-                </dd>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Number of IP-enabled assets
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  This system will be transitioned to IPv6
-                </dd>
-              </div>
-              <div
-                class="desktop:grid-col-6 padding-right-2"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  IPv6 transition
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  21
-                </dd>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Percent transitioned to IPv6
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  25%
-                </dd>
-              </div>
-              <div
-                class="desktop:grid-col-6 padding-right-2"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Hard-coded IP addresses
-                </dt>
-                <dd
-                  class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-                >
-                  This system has hard-coded IP addresses
-                </dd>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="desktop:grid-col-4 sticky-nav"
-          data-testid="grid"
-        >
-          <div
-            class="side-divider"
-          >
-            <div
-              class="top-divider"
-            />
-            <p
-              class="font-body-xs margin-top-1 margin-bottom-3"
-            >
-              Point of contact
-            </p>
             <h3
-              class="system-profile__subheader margin-bottom-1"
+              class="link-header margin-top-0 margin-bottom-2"
             >
-              Geraldine Hobbs
+              <a
+                class="usa-link usa-link--external link-header url-card-link"
+                href="https://cms.gov"
+                target="_blank"
+              >
+                https://cms.gov
+              </a>
             </h3>
-            <dd
-              class="description-definition margin-0"
+            <div />
+          </div>
+          <div
+            class="usa-card__footer padding-0"
+            data-testid="CardFooter"
+          >
+            <div
+              class="grid-row"
+              data-testid="grid"
             >
-              Business Owner
-            </dd>
-            <p>
-              <a
-                aria-label="Send an email"
-                class="usa-link usa-link--external line-height-body-5"
-                href="mailto:patrick.segura@oddball.io"
-                target="_blank"
+              <div
+                class="easi-divider margin-x-2"
+              />
+              <div
+                class="desktop:grid-col-12 padding-2"
+                data-testid="grid"
               >
-                Send an email
-                <span
-                  aria-hidden="true"
+                <dt
+                  class="text-bold margin-bottom-05"
                 >
-                   
-                </span>
-              </a>
-            </p>
-            <p>
-              <a
-                aria-label="More points of contact"
-                class="usa-link line-height-body-5"
-                href="mailto:patrick.segura@oddball.io"
-                target="_blank"
-              >
-                More points of contact
-                <span
-                  aria-hidden="true"
+                  Data Center/Cloud Service Provider name
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3"
                 >
-                   
-                </span>
-                <span
-                  aria-hidden="true"
-                >
-                  → 
-                </span>
-              </a>
-            </p>
+                  AWS US East/West
+                </dd>
+              </div>
+            </div>
           </div>
         </div>
+      </li>
+    </ul>
+  </div>
+  <div
+    class="easi-section margin-bottom-5"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-4 margin-bottom-1"
+    >
+      Development
+    </h2>
+    <span
+      class="easi-tag system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
+      data-testid="tag"
+    >
+      <svg
+        class="usa-icon system-profile__icon text-primary-dark margin-right-1"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+        />
+      </svg>
+      Agile Methodology
+    </span>
+    <div
+      class="grid-row margin-top-3"
+      data-testid="grid"
+    >
+      <div
+        class="desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Development work completed
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          75% - 99%
+        </dd>
+      </div>
+      <div
+        class="desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Planned release frequency
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          Bi-weekly
+        </dd>
+      </div>
+      <div
+        class="desktop:grid-col-12"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05"
+        >
+          Description of development work to be completed
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-4"
+        >
+          Continued enhancements and improvements and alignment with legislative changes.  Also, working on an upcoming redesign effort for the website.
+        </dd>
       </div>
     </div>
   </div>

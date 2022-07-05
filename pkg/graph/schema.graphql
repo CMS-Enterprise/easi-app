@@ -38,6 +38,40 @@ type RequestEdge {
 }
 
 """
+CedarAuthorityToOperate represents the response from the /authorityToOperate endpoint from the CEDAR Core API.
+"""
+type CedarAuthorityToOperate {
+  cedarId: String!
+  uuid: String!
+  actualDispositionDate: Time
+  containsPersonallyIdentifiableInformation: Boolean
+  countOfTotalNonPrivilegedUserPopulation: Int!
+  countOfOpenPoams: Int!
+  countOfTotalPrivilegedUserPopulation: Int!
+  dateAuthorizationMemoExpires: Time
+  dateAuthorizationMemoSigned: Time
+  eAuthenticationLevel: String
+  fips199OverallImpactRating: Int
+  fismaSystemAcronym: String
+  fismaSystemName: String
+  isAccessedByNonOrganizationalUsers: Boolean
+  isPiiLimitedToUserNameAndPass: Boolean
+  isProtectedHealthInformation: Boolean
+  lastActScaDate: Time
+  lastAssessmentDate: Time
+  lastContingencyPlanCompletionDate: Time
+  lastPenTestDate: Time
+  piaCompletionDate: Time
+  primaryCyberRiskAdvisor: String
+  privacySubjectMatterExpert: String
+  recoveryPointObjective: Float
+  recoveryTimeObjective: Float
+  systemOfRecordsNotice: [String!]!
+  tlcPhase: String
+  xlcPhase: String
+}
+
+"""
 CedarSystem represents the response from the /system/detail endpoint from the CEDAR Core API.
 Right now, this does not tie in with any other types defined here, and is a root node until that changes.
 """
@@ -51,15 +85,82 @@ type CedarSystem {
 	businessOwnerOrgComp: String
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
+  versionId: String
+}
+
+"""
+CedarThreat represents the response from the /threat endpoint from the CEDAR Core API.
+"""
+type CedarThreat {
+  alternativeId: String
+  controlFamily: String
+  daysOpen: Int
+  id: String
+  parentId: String
+  type: String
+  weaknessRiskLevel: String
+}
+
+"""
+BusinessOwnerInformation contains information about the business owner for a CEDAR system
+"""
+type CedarBusinessOwnerInformation {
+	beneficiaryAddressPurpose: [String!]!
+	beneficiaryAddressPurposeOther: String
+	beneficiaryAddressSource: [String!]!
+	beneficiaryAddressSourceOther: String
+	costPerYear: String
+	isCmsOwned: Boolean
+	numberOfContractorFte: String
+	numberOfFederalFte: String
+	numberOfSupportedUsersPerMonth: String
+	storesBankingData: Boolean
+	storesBeneficiaryAddress: Boolean
+}
+
+"""
+SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
+"""
+type CedarSystemMaintainerInformation {
+	agileUsed: Boolean
+	businessArtifactsOnDemand: Boolean
+	deploymentFrequency: String
+	devCompletionPercent: String
+	devWorkDescription: String
+	ecapParticipation: Boolean
+	frontendAccessType: String
+	hardCodedIPAddress: Boolean
+	ip6EnabledAssetPercent: String
+	ip6TransitionPlan: String
+	ipEnabledAssetCount: Int
+	majorRefreshDate: String
+	netAccessibility: String
+	omDocumentationOnDemand: Boolean
+	plansToRetireReplace: String
+	quarterToRetireReplace: String
+	recordsManagementBucket: [String!]!
+	sourceCodeOnDemand: Boolean
+	systemCustomization: String
+	systemDesignOnDemand: Boolean
+	systemProductionDate: String
+	systemRequirementsOnDemand: Boolean
+	testPlanOnDemand: Boolean
+	testReportsOnDemand: Boolean
+	testScriptsOnDemand: Boolean
+	yearToRetireReplace: String
 }
 
 """
 This is the Representation of Cedar system with additional related information
 """
-type DetailedCedarSystem {
+type CedarSystemDetails {
  cedarSystem: CedarSystem!
+ systemMaintainerInformation: CedarSystemMaintainerInformation!
+ businessOwnerInformation: CedarBusinessOwnerInformation!
  roles: [CedarRole!]!
  deployments: [CedarDeployment!]!
+ threats: [CedarThreat!]!
+ urls: [CedarURL!]!
 }
 
 """
@@ -171,6 +272,18 @@ type CedarRole {
   roleTypeDesc: String
   roleID: String
   objectType: String
+}
+
+"""
+CedarURL represents info about a URL associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+"""
+type CedarURL {
+  id: String!
+  address: String
+  isBehindWebApplicationFirewall: Boolean
+  isAPIEndpoint: Boolean
+  isVersionCodeRepository: Boolean
+  urlHostingEnv: String
 }
 
 """
@@ -604,8 +717,6 @@ type BusinessCase {
   currentSolutionSummary: String
   euaUserId: String!
   id: UUID!
-  initialSubmittedAt: Time
-  lastSubmittedAt: Time
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
@@ -613,7 +724,6 @@ type BusinessCase {
   requester: String
   requesterPhoneNumber: String
   status: BusinessCaseStatus!
-  submittedAt: Time
   successIndicators: String
   systemIntake: SystemIntake!
   updatedAt: Time!
@@ -1116,7 +1226,7 @@ Feedback from the GRT to a business owner or GRB
 """
 type GRTFeedback {
   id: UUID
-  createdAt: Time
+  createdAt: Time!
   feedback: String
   feedbackType: GRTFeedbackType
 }
@@ -1182,8 +1292,24 @@ type CurrentUser {
 Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
+  id: UUID!
   euaUserId: String!
   systemIntakeId: UUID!
+  component: String!
+  role: String!
+}
+
+"""
+Represents a contact associated with a system intake, including additional fields from CEDAR
+"""
+type AugmentedSystemIntakeContact {
+  id: UUID!
+  euaUserId: String!
+  systemIntakeId: UUID!
+  component: String!
+  role: String!
+  commonName: String
+  email: String
 }
 
 """
@@ -1192,14 +1318,26 @@ The data needed to associate a contact with a system intake
 input CreateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
+  component: String!
+  role: String!
+}
+
+"""
+The data needed to update a contact associated with a system intake
+"""
+input UpdateSystemIntakeContactInput {
+  id: UUID!
+  euaUserId: String!
+  systemIntakeId: UUID!
+  component: String!
+  role: String!
 }
 
 """
 The data needed to delete a system intake contact
 """
 input DeleteSystemIntakeContactInput {
-  euaUserId: String!
-  systemIntakeId: UUID!
+  id: UUID!
 }
 
 """
@@ -1215,6 +1353,15 @@ The payload when deleting a system intake contact
 type DeleteSystemIntakeContactPayload {
   systemIntakeContact: SystemIntakeContact
 }
+
+"""
+The payload when retrieving system intake contacts
+"""
+type SystemIntakeContactsPayload {
+  systemIntakeContacts: [AugmentedSystemIntakeContact!]!
+  invalidEUAIDs: [String!]!
+}
+
 
 """
 Defines the mutations for the schema
@@ -1316,6 +1463,7 @@ type Mutation {
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
+  updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
 }
 
@@ -1332,14 +1480,17 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
   currentUser: CurrentUser
+  cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
-  cedarSystem(id: String!): CedarSystem
+  cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  deployments(systemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
-  roles(systemId: String!, roleTypeID: String): [CedarRole!]!
-  detailedCedarSystemInfo(id: String!): DetailedCedarSystem
-  systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
+  cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
+  deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
+  roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
+  urls(cedarSystemId: String!): [CedarURL!]!
+  cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
+  systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
 }
 
 """

@@ -232,9 +232,7 @@ func NewBusinessCase() models.BusinessCase {
 			),
 			NewEstimatedLifecycleCost(EstimatedLifecycleCostOptions{}),
 		},
-		InitialSubmittedAt: nil,
-		LastSubmittedAt:    nil,
-		CreatedAt:          &now,
-		UpdatedAt:          &now,
+		CreatedAt: &now,
+		UpdatedAt: &now,
 	}
 }

@@ -1,12 +1,11 @@
 package models
 
 // NOTE: these types are used to create a schema used by the CEDAR Intake API
-// When changing any of these types, add a new version for BizCase in pkg/cedar/intake/translation/constants.go
-// and update the associated version in cmd/gen_intake_schema/main.go
+// When changing any of these types, update the biz case version in pkg/cedar/intake/translation/constants.go (IntakeInputSchemaEASIBizCaseVersion)
 
 // NOTE: Optional fields are marked with omitempty JSON tag
-// All fields are optional for draft business cases (all are required in final business case) and we are not making
-// the distinction between draft and final business cases in CEDAR
+// All fields are optional for draft business cases (all are required in final business case);
+// we are not making any distinction between draft and final business cases in CEDAR
 
 // EASIBizCase represents a business case for a system
 type EASIBizCase struct {
@@ -17,14 +16,11 @@ type EASIBizCase struct {
 	BusinessSolutions      []*EASIBusinessSolution `json:"businessSolutions,omitempty" jsonschema:"description=Array Business Solutions (preferred and alternatives),example=N/A"`
 	CmsBenefit             *string                 `json:"cmsBenefit,omitempty" jsonschema:"description=How CMS will benefit from this effort,example=Reduce FTE hours and generate better end products"`
 	CurrentSolutionSummary *string                 `json:"currentSolutionSummary,omitempty" jsonschema:"description=Summary of the current solution,example=Managed through spreadsheets and email"`
-	InitialSubmittedAt     *string                 `json:"initialSubmittedAt,omitempty" jsonschema:"description=Timestamp of when request was initially submitted,example=2022-02-17T07:34:43Z"`
 	IntakeID               *string                 `json:"intakeId,omitempty" jsonschema:"description=Unique ID of the intake associated with this business case,example=36b85781-169a-4539-aa66-916663d8118c"`
-	LastSubmittedAt        *string                 `json:"lastSubmittedAt,omitempty" jsonschema:"description=Timestamp of when request was last submitted,example=2022-02-11T16:34:43Z"`
 	PriorityAlignment      *string                 `json:"priorityAlignment,omitempty" jsonschema:"description=The ways this effort align with organizational priorities,example=Aligns with CMS' automation push"`
 	ProjectName            *string                 `json:"projectName,omitempty" jsonschema:"description=Name of the project,example=Easy Access to System"`
 	Requester              *string                 `json:"requester,omitempty" jsonschema:"description=Name of the requester,example=John Doe"`
 	RequesterPhoneNumber   *string                 `json:"requesterPhoneNumber,omitempty" jsonschema:"description=Phone number of requester,example=410-123-4567,example=4431234567"`
-	SubmittedAt            *string                 `json:"submittedAt,omitempty" jsonschema:"description=Timestamp of when request was submitted,example=2022-02-10T19:34:43Z"`
 	SuccessIndicators      *string                 `json:"successIndicators,omitempty" jsonschema:"description=How this effort will be determined as successful,example=Workflows are streamlined"`
 	UserEUA                string                  `json:"userEUA" jsonschema:"description=EUA id of the requester,example=J8YN"`
 }

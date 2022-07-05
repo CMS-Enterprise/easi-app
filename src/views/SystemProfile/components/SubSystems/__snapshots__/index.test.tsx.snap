@@ -2,342 +2,252 @@
 
 exports[`System Sub-systems subpage matches snapshot 1`] = `
 <DocumentFragment>
-  <div
-    id="system-sub-systems"
+  <h2
+    class="margin-top-0 margin-bottom-4"
   >
-    <div
-      class="grid-container padding-left-0 padding-right-0"
-      data-testid="gridContainer"
+    Sub-systems
+  </h2>
+  <ul
+    class="usa-card-group margin-0"
+    data-testid="CardGroup"
+  >
+    <li
+      class="usa-card grid-col-12 margin-bottom-2"
+      data-testid="Card"
     >
       <div
-        class="grid-row grid-gap"
-        data-testid="grid"
+        class="usa-card__container"
       >
-        <div
-          class="desktop:grid-col-8"
-          data-testid="grid"
-        >
-          <h2
-            class="margin-top-0 margin-bottom-4"
-          >
-            Sub-systems
-          </h2>
-          <ul
-            class="usa-card-group margin-0"
-            data-testid="CardGroup"
-          >
-            <li
-              class="usa-card grid-col-12 margin-bottom-2"
-              data-testid="Card"
-            >
-              <div
-                class="usa-card__container"
-              >
-                <header
-                  class="usa-card__header padding-2 padding-bottom-0"
-                  data-testid="CardHeader"
-                >
-                  <div
-                    class="display-flex margin-bottom-105"
-                  >
-                    <div
-                      class="flex-fill"
-                    >
-                      <h3
-                        class="margin-y-0 line-height-body-2"
-                      >
-                        <a
-                          class="usa-link"
-                          href="/systems/326-9-0/todo"
-                        >
-                          Test Ocular Fiction Utensil
-                        </a>
-                      </h3>
-                    </div>
-                    <div
-                      class="flex-auto"
-                    >
-                      <svg
-                        class="usa-icon usa-icon--size-4 bookmark__icon"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div
-                    class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
-                  >
-                    TOFU
-                  </div>
-                </header>
-                <div
-                  class="usa-card__body padding-2"
-                  data-testid="CardBody"
-                >
-                  <div>
-                    Lorem ipsum description
-                  </div>
-                  <div
-                    class="easi-divider margin-y-2"
-                  />
-                  <dt
-                    class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
-                  >
-                    Retirement date
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
-                  >
-                    No planned retirement or replacement
-                  </dd>
-                </div>
-              </div>
-            </li>
-            <li
-              class="usa-card grid-col-12 margin-bottom-2"
-              data-testid="Card"
-            >
-              <div
-                class="usa-card__container"
-              >
-                <header
-                  class="usa-card__header padding-2 padding-bottom-0"
-                  data-testid="CardHeader"
-                >
-                  <div
-                    class="display-flex margin-bottom-105"
-                  >
-                    <div
-                      class="flex-fill"
-                    >
-                      <h3
-                        class="margin-y-0 line-height-body-2"
-                      >
-                        <a
-                          class="usa-link"
-                          href="/systems/326-9-0/todo"
-                        >
-                          Bio-Energy Engagement File
-                        </a>
-                      </h3>
-                    </div>
-                    <div
-                      class="flex-auto"
-                    >
-                      <svg
-                        class="usa-icon usa-icon--size-4 bookmark__icon"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div
-                    class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
-                  >
-                    BEEF
-                  </div>
-                </header>
-                <div
-                  class="usa-card__body padding-2"
-                  data-testid="CardBody"
-                >
-                  <div>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.
-                  </div>
-                  <div
-                    class="easi-divider margin-y-2"
-                  />
-                  <dt
-                    class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
-                  >
-                    Retirement date
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
-                  >
-                    Planned retirement: Q4 2022
-                  </dd>
-                </div>
-              </div>
-            </li>
-            <li
-              class="usa-card grid-col-12 margin-bottom-2"
-              data-testid="Card"
-            >
-              <div
-                class="usa-card__container"
-              >
-                <header
-                  class="usa-card__header padding-2 padding-bottom-0"
-                  data-testid="CardHeader"
-                >
-                  <div
-                    class="display-flex margin-bottom-105"
-                  >
-                    <div
-                      class="flex-fill"
-                    >
-                      <h3
-                        class="margin-y-0 line-height-body-2"
-                      >
-                        <a
-                          class="usa-link"
-                          href="/systems/326-9-0/todo"
-                        >
-                          Beneficiary Information in the Cloud
-                        </a>
-                      </h3>
-                    </div>
-                    <div
-                      class="flex-auto"
-                    >
-                      <svg
-                        class="usa-icon usa-icon--size-4 bookmark__icon"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div
-                    class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
-                  >
-                    BIC
-                  </div>
-                </header>
-                <div
-                  class="usa-card__body padding-2"
-                  data-testid="CardBody"
-                >
-                  <div>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.
-                  </div>
-                  <div
-                    class="easi-divider margin-y-2"
-                  />
-                  <dt
-                    class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
-                  >
-                    Retirement date
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
-                  >
-                    Planned retirement: Q2 2023
-                  </dd>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div
-          class="desktop:grid-col-4 sticky-nav"
-          data-testid="grid"
+        <header
+          class="usa-card__header padding-2 padding-bottom-0"
+          data-testid="CardHeader"
         >
           <div
-            class="easi-section"
-            data-testid="section-wrapper"
+            class="display-flex margin-bottom-105"
           >
             <div
-              class="side-divider"
+              class="flex-fill"
             >
-              <div
-                class="top-divider"
-              />
-              <div
-                class="font-body-xs padding-top-1 margin-bottom-3"
-              >
-                Point of contact
-              </div>
               <h3
-                class="margin-top-0 margin-bottom-1"
+                class="margin-y-0 line-height-body-2"
               >
-                Geraldine Hobbs
+                <a
+                  class="usa-link"
+                  href="/"
+                >
+                  Test Ocular Fiction Utensil
+                </a>
               </h3>
-              <div
-                class="margin-bottom-1 line-height-body-5"
+            </div>
+            <div
+              class="flex-auto"
+            >
+              <svg
+                class="usa-icon usa-icon--size-4 bookmark__icon"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Business Owner
-              </div>
-              <div
-                class="padding-bottom-3"
-              >
-                <a
-                  aria-label="Send an email"
-                  class="usa-link usa-link--external line-height-body-5"
-                  href="mailto:todo"
-                  target="_blank"
-                >
-                  Send an email
-                  <span
-                    aria-hidden="true"
-                  >
-                     
-                  </span>
-                </a>
-              </div>
-              <div
-                class="padding-bottom-2"
-              >
-                <a
-                  aria-label="More points of contact"
-                  class="usa-link line-height-body-5"
-                  href="mailto:todo"
-                  target="_blank"
-                >
-                  More points of contact
-                  <span
-                    aria-hidden="true"
-                  >
-                     
-                  </span>
-                  <span
-                    aria-hidden="true"
-                  >
-                    → 
-                  </span>
-                </a>
-              </div>
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
             </div>
           </div>
+          <div
+            class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
+          >
+            TOFU
+          </div>
+        </header>
+        <div
+          class="usa-card__body padding-2"
+          data-testid="CardBody"
+        >
+          <div>
+            Lorem ipsum description
+          </div>
+          <div
+            class="easi-divider margin-y-2"
+          />
+          <dt
+            class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
+          >
+            Retirement date
+          </dt>
+          <dd
+            class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
+          >
+            No planned retirement or replacement
+          </dd>
         </div>
       </div>
-    </div>
-  </div>
+    </li>
+    <li
+      class="usa-card grid-col-12 margin-bottom-2"
+      data-testid="Card"
+    >
+      <div
+        class="usa-card__container"
+      >
+        <header
+          class="usa-card__header padding-2 padding-bottom-0"
+          data-testid="CardHeader"
+        >
+          <div
+            class="display-flex margin-bottom-105"
+          >
+            <div
+              class="flex-fill"
+            >
+              <h3
+                class="margin-y-0 line-height-body-2"
+              >
+                <a
+                  class="usa-link"
+                  href="/"
+                >
+                  Bio-Energy Engagement File
+                </a>
+              </h3>
+            </div>
+            <div
+              class="flex-auto"
+            >
+              <svg
+                class="usa-icon usa-icon--size-4 bookmark__icon"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
+          >
+            BEEF
+          </div>
+        </header>
+        <div
+          class="usa-card__body padding-2"
+          data-testid="CardBody"
+        >
+          <div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.
+          </div>
+          <div
+            class="easi-divider margin-y-2"
+          />
+          <dt
+            class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
+          >
+            Retirement date
+          </dt>
+          <dd
+            class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
+          >
+            Planned retirement: Q4 2022
+          </dd>
+        </div>
+      </div>
+    </li>
+    <li
+      class="usa-card grid-col-12 margin-bottom-2"
+      data-testid="Card"
+    >
+      <div
+        class="usa-card__container"
+      >
+        <header
+          class="usa-card__header padding-2 padding-bottom-0"
+          data-testid="CardHeader"
+        >
+          <div
+            class="display-flex margin-bottom-105"
+          >
+            <div
+              class="flex-fill"
+            >
+              <h3
+                class="margin-y-0 line-height-body-2"
+              >
+                <a
+                  class="usa-link"
+                  href="/"
+                >
+                  Beneficiary Information in the Cloud
+                </a>
+              </h3>
+            </div>
+            <div
+              class="flex-auto"
+            >
+              <svg
+                class="usa-icon usa-icon--size-4 bookmark__icon"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="margin-top-0 margin-bottom-2 font-sans-xs line-height-body-1"
+          >
+            BIC
+          </div>
+        </header>
+        <div
+          class="usa-card__body padding-2"
+          data-testid="CardBody"
+        >
+          <div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae, ut in pellentesque eget elementum malesuada velit magna.
+          </div>
+          <div
+            class="easi-divider margin-y-2"
+          />
+          <dt
+            class="text-bold margin-bottom-05 margin-bottom-05 font-body-xs line-height-body-1 text-normal"
+          >
+            Retirement date
+          </dt>
+          <dd
+            class="description-definition margin-0 font-body-md line-height-body-4 text-bold"
+          >
+            Planned retirement: Q2 2023
+          </dd>
+        </div>
+      </div>
+    </li>
+  </ul>
 </DocumentFragment>
 `;

@@ -1,61 +1,35 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  waitFor,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
+import { clone } from 'lodash';
+import { DateTime } from 'luxon';
 
-import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
-import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
+import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
+import { query, result } from 'data/mock/systemProfile';
 
-import SystemProfile from './index';
+import SystemProfile, { getAtoStatus } from './index';
 
-const mocks = [
-  {
-    request: {
-      query: GetCedarSystemQuery,
-      variables: {
-        id: '326-9-0'
-      }
-    },
-    result: {
-      data: {
-        cedarSystem: mockSystemInfo[3]
-      }
-    }
-  }
-];
-
-describe('The making a request page', () => {
-  it('renders without errors', async () => {
-    render(
-      <MemoryRouter initialEntries={['/systems/326-9-0/tools-and-software']}>
-        <Route path="/systems/:systemId/:subinfo">
-          <MockedProvider mocks={mocks} addTypename={false}>
-            <SystemProfile />
-          </MockedProvider>
-        </Route>
-      </MemoryRouter>
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Medicare Beneficiary Contact Center')
-      ).toBeInTheDocument();
-    });
-  });
-
+describe('System Profile parent request', () => {
   it('matches snapshot', async () => {
-    const { asFragment } = render(
-      <MemoryRouter initialEntries={['/systems/326-9-0/tools-and-software']}>
+    const { asFragment, getByText, getAllByText, getByTestId } = render(
+      <MemoryRouter initialEntries={['/systems/000-100-0/home']}>
         <Route path="/systems/:systemId/:subinfo">
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={[query]} addTypename={false}>
             <SystemProfile />
           </MockedProvider>
         </Route>
       </MemoryRouter>
     );
-    await waitFor(() => {
-      expect(asFragment()).toMatchSnapshot();
-    });
+    await waitForElementToBeRemoved(() => getByTestId('page-loading'));
+    expect(asFragment()).toMatchSnapshot();
+    expect(getByText('CMS.gov')).toBeInTheDocument();
+    expect(getAllByText('Jane Doe')[0]).toBeInTheDocument();
   });
 });
 
@@ -75,31 +49,8 @@ describe('System profile description is expandable', () => {
   });
 
   it('shows read more & less', async () => {
-    const query = {
-      request: {
-        query: GetCedarSystemQuery,
-        variables: {
-          id: '000-0000-1'
-        }
-      },
-      result: {
-        data: {
-          cedarSystem: {
-            id: '000-0000-1',
-            name: 'Application Programming Interface Gateway',
-            description: '',
-            acronym: '',
-            status: '',
-            businessOwnerOrg: '',
-            businessOwnerOrgComp: '',
-            systemMaintainerOrg: '',
-            systemMaintainerOrgComp: ''
-          }
-        }
-      }
-    };
     const { getByText, findByTestId } = render(
-      <MemoryRouter initialEntries={['/systems/000-0000-1/home']}>
+      <MemoryRouter initialEntries={['/systems/000-100-0/home']}>
         <Route path="/systems/:systemId/:subinfo">
           <MockedProvider mocks={[query]} addTypename={false}>
             <SystemProfile />
@@ -123,5 +74,37 @@ describe('System profile description is expandable', () => {
     await waitFor(() => {
       expect(getByText(/read less/i)).toBeInTheDocument();
     });
+  });
+});
+
+describe('System Profile ATO Status', () => {
+  test('output "No ATO" on missing cedarAuthorityToOperate', () => {
+    expect(getAtoStatus(undefined)).toBe('No ATO');
+  });
+
+  test('output "No ATO" on missing cedarAuthorityToOperate.dateAuthorizationMemoExpires', () => {
+    const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
+
+    cedarAto.dateAuthorizationMemoExpires = '';
+    expect(getAtoStatus(cedarAto)).toBe('No ATO');
+
+    cedarAto.dateAuthorizationMemoExpires = null;
+    expect(getAtoStatus(cedarAto)).toBe('No ATO');
+  });
+
+  test.each([
+    { status: 'Expired', dt: DateTime.utc().minus({ days: 1 }) },
+    {
+      status: 'Due Soon',
+      dt: DateTime.utc().plus({ days: ATO_STATUS_DUE_SOON_DAYS })
+    },
+    {
+      status: 'Active',
+      dt: DateTime.utc().plus({ days: ATO_STATUS_DUE_SOON_DAYS + 1 })
+    }
+  ])('output based on current date %j', ({ status, dt }) => {
+    const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
+    cedarAto.dateAuthorizationMemoExpires = dt.toString();
+    expect(getAtoStatus(cedarAto)).toBe(status);
   });
 });

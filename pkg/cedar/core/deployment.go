@@ -22,15 +22,20 @@ type GetDeploymentsOptionalParams struct {
 }
 
 // GetDeployments makes a GET call to the /deployment endpoint
-func (c *Client) GetDeployments(ctx context.Context, systemID string, optionalParams *GetDeploymentsOptionalParams) ([]*models.CedarDeployment, error) {
+func (c *Client) GetDeployments(ctx context.Context, cedarSystemID string, optionalParams *GetDeploymentsOptionalParams) ([]*models.CedarDeployment, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarDeployment{}, nil
 	}
 
+	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
 	// Construct the parameters
 	params := apideployments.NewDeploymentFindListParams()
-	params.SetSystemID(systemID)
+	params.SetSystemID(cedarSystem.VersionID)
 	params.HTTPClient = c.hc
 
 	if optionalParams != nil {
@@ -64,17 +69,17 @@ func (c *Client) GetDeployments(ctx context.Context, systemID string, optionalPa
 	// generated swagger client turns JSON nulls into Go zero values, so use null/zero package to convert them back to nullable values
 	for _, deployment := range resp.Payload.Deployments {
 		if deployment.ID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment ID was null", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment ID was null", zap.String("systemID", cedarSystemID))
 			continue
 		}
 
 		if deployment.Name == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment name was null", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment name was null", zap.String("systemID", cedarSystemID))
 			continue
 		}
 
 		if deployment.SystemID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment system ID was null", zap.String("systemID", systemID))
+			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment system ID was null", zap.String("systemID", cedarSystemID))
 			continue
 		}
 

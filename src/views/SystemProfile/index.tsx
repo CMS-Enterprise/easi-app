@@ -1,6 +1,6 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink, useParams } from 'react-router-dom';
+import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
@@ -11,10 +11,14 @@ import {
   GridContainer,
   IconBookmark,
   IconExpandMore,
+  Link,
   SideNav,
   SummaryBox
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
+import { startCase } from 'lodash';
+import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -26,22 +30,37 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import useCheckResponsiveScreen from 'hooks/checkMobile';
-import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import {
-  GetCedarSystem
-  // GetCedarSystem_cedarSystem as CedarSystem
-} from 'queries/types/GetCedarSystem';
+  ATO_STATUS_DUE_SOON_DAYS,
+  BUSINESS_OWNER_ROLE_TYPE_ID
+} from 'constants/systemProfile';
+import useCheckResponsiveScreen from 'hooks/checkMobile';
+import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
+import {
+  GetSystemProfile,
+  /* eslint-disable camelcase */
+  GetSystemProfile_cedarAuthorityToOperate,
+  GetSystemProfile_cedarSystemDetails,
+  GetSystemProfile_cedarSystemDetails_roles,
+  /* eslint-enable camelcase */
+  GetSystemProfileVariables
+} from 'queries/types/GetSystemProfile';
+// eslint-disable-next-line camelcase
+import { CedarAssigneeType } from 'types/graphql-global-types';
+import {
+  AtoStatus,
+  DevelopmentTag,
+  SystemProfileData,
+  UrlLocation,
+  UrlLocationTag
+} from 'types/systemProfile';
 import NotFound from 'views/NotFound';
 import {
-  activities,
-  budgetsInfo,
-  developmentTags,
-  locationsInfo,
-  products,
-  subSystems,
-  systemData,
-  tempCedarSystemProps
+  activities as mockActivies,
+  budgetsInfo as mockBudgets,
+  products as mockProducts,
+  subSystems as mockSubSystems,
+  systemData as mockSystemData
 } from 'views/Sandbox/mockSystemData';
 
 // components/index contains all the sideNavItems components, routes, labels and translations
@@ -51,9 +70,223 @@ import SystemSubNav from './components/SystemSubNav/index';
 
 import './index.scss';
 
+export function formatDate(v: string) {
+  return DateTime.fromISO(v).toLocaleString(DateTime.DATE_FULL);
+}
+
+function httpsUrl(url: string): string {
+  if (/^https?/.test(url)) {
+    return url;
+  }
+  return `https://${url}`;
+}
+
+/**
+ * Get the ATO Status from certain date properties and flags.
+ */
+export function getAtoStatus(
+  // eslint-disable-next-line camelcase
+  cedarAuthorityToOperate?: GetSystemProfile_cedarAuthorityToOperate
+): AtoStatus {
+  // `ato.dateAuthorizationMemoExpires` will be null if tlcPhase is Initiate|Develop
+
+  // No ato if it doesn't exist
+  if (!cedarAuthorityToOperate) return 'No ATO';
+
+  // return 'In Progress'; // tbd
+
+  const { dateAuthorizationMemoExpires } = cedarAuthorityToOperate;
+
+  if (!dateAuthorizationMemoExpires) return 'No ATO';
+
+  const expiry = DateTime.fromISO(dateAuthorizationMemoExpires)
+    .toUTC()
+    .toString();
+
+  const date = new Date().toISOString();
+
+  if (date >= expiry) return 'Expired';
+
+  const soon = DateTime.fromISO(expiry)
+    .minus({ days: ATO_STATUS_DUE_SOON_DAYS })
+    .toString();
+  if (date >= soon) return 'Due Soon';
+
+  return 'Active';
+}
+
+/**
+ * Get Development Tags which are derived from various other properties.
+ */
+function getDevelopmentTags(
+  // eslint-disable-next-line camelcase
+  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+): DevelopmentTag[] {
+  const tags: DevelopmentTag[] = [];
+  if (cedarSystemDetails.systemMaintainerInformation.agileUsed === true) {
+    tags.push('Agile Methodology');
+  }
+  return tags;
+}
+
+/**
+ * Get a list of UrlLocations found from Cedar system Urls and Deployments.
+ * A `UrlLocation` is extended from a Cedar Url with some additional parsing
+ * and Deployment assignments.
+ */
+function getLocations(
+  // eslint-disable-next-line camelcase
+  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+): UrlLocation[] {
+  return cedarSystemDetails.urls.map(url => {
+    // Find a deployment from matching its type with the url host env
+    const { urlHostingEnv } = url;
+    const deployment = cedarSystemDetails.deployments.find(
+      dpl => urlHostingEnv && dpl.deploymentType === urlHostingEnv
+    );
+
+    // Location tags derived from certain properties
+    const tags: UrlLocationTag[] = [];
+    if (url.isAPIEndpoint) tags.push('API endpoint');
+    if (url.isVersionCodeRepository) tags.push('Versioned code respository');
+
+    // Fix address urls without a protocol
+    // and reassign it to the original address property
+    const address = url.address && httpsUrl(url.address);
+
+    return {
+      ...url,
+      address,
+      deploymentDataCenterName: deployment?.dataCenter?.name,
+      tags
+    };
+  });
+}
+
+/**
+ * Get a person's full name from a Cedar Role.
+ * Format the name in title case if the full name is in all caps.
+ */
+export function getPersonFullName(
+  // eslint-disable-next-line camelcase
+  role: GetSystemProfile_cedarSystemDetails_roles
+): string {
+  const fullname = `${role.assigneeFirstName} ${role.assigneeLastName}`;
+  return fullname === fullname.toUpperCase()
+    ? startCase(fullname.toLowerCase())
+    : fullname;
+}
+
+/**
+ * `SystemProfileData` is a merge of request data and parsed data
+ * required by SystemHome and at least one other subpage.
+ * It is passed to all SystemProfile subpage components.
+ */
+export function getSystemProfileData(
+  data?: GetSystemProfile
+): SystemProfileData | undefined {
+  // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
+  if (!data) return undefined;
+
+  const { cedarSystemDetails } = data;
+  const cedarSystem = cedarSystemDetails?.cedarSystem;
+
+  if (!cedarSystemDetails || !cedarSystem) return undefined;
+
+  // Business Owner
+  // Select the first found Business Owner
+  const businessOwner = cedarSystemDetails.roles.find(
+    role =>
+      role.assigneeType === CedarAssigneeType.PERSON &&
+      role.roleTypeID === BUSINESS_OWNER_ROLE_TYPE_ID
+  );
+
+  // Point of Contact is the business owner for now
+  // Contextualized poc will be determined later
+  const pointOfContact = businessOwner;
+
+  const locations = getLocations(cedarSystemDetails);
+
+  const productionLocation = locations.find(
+    location => location.urlHostingEnv === 'Production'
+  );
+
+  const cedarAuthorityToOperate = data.cedarAuthorityToOperate[0];
+
+  const numberOfContractorFte = parseFloat(
+    cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte || '0'
+  );
+
+  const numberOfFederalFte = parseFloat(
+    cedarSystemDetails.businessOwnerInformation?.numberOfFederalFte || '0'
+  );
+
+  const numberOfFte = Number(
+    (numberOfContractorFte + numberOfFederalFte).toFixed(2)
+  );
+
+  return {
+    ...data,
+    id: cedarSystem.id,
+    ato: cedarAuthorityToOperate,
+    atoStatus: getAtoStatus(cedarAuthorityToOperate),
+    businessOwner,
+    developmentTags: getDevelopmentTags(cedarSystemDetails),
+    locations,
+    numberOfContractorFte,
+    numberOfFederalFte,
+    numberOfFte,
+    pointOfContact,
+    productionLocation,
+    status: cedarSystem.status,
+
+    // Remaining mock data stubs
+    activities: mockActivies,
+    budgets: mockBudgets,
+    products: mockProducts,
+    subSystems: mockSubSystems,
+    systemData: mockSystemData
+  };
+}
+
+export function showAtoExpirationDate(
+  // eslint-disable-next-line camelcase
+  systemProfileAto?: GetSystemProfile_cedarAuthorityToOperate
+): React.ReactNode {
+  return showVal(
+    systemProfileAto?.dateAuthorizationMemoExpires &&
+      formatDate(systemProfileAto.dateAuthorizationMemoExpires)
+  );
+}
+
+/**
+ * Show the value if it's not `null`, `undefined`, or `''`,
+ * otherwise render `defaultVal`.
+ * Use a `format` function on the value if provided.
+ */
+export function showVal(
+  val: string | number | null | undefined,
+  {
+    defaultVal = 'No information to display',
+    format
+  }: {
+    defaultVal?: string;
+    format?: (v: any) => string;
+  } = {}
+): React.ReactNode {
+  if (val === null || val === undefined || val === '') {
+    return <span className="text-italic">{defaultVal}</span>;
+  }
+
+  if (format) return format(val);
+
+  return val;
+}
+
 const SystemProfile = () => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
+  const flags = useFlags();
 
   const { systemId, subinfo, top } = useParams<{
     subinfo: string;
@@ -68,46 +301,16 @@ const SystemProfile = () => {
     }
   }, [top]);
 
-  const { loading, error, data } = useQuery<GetCedarSystem>(
-    GetCedarSystemQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  const { loading, error, data } = useQuery<
+    GetSystemProfile,
+    GetSystemProfileVariables
+  >(GetSystemProfileQuery, {
+    variables: {
+      cedarSystemId: systemId
     }
-  );
+  });
 
-  const cedarData = (data?.cedarSystem ?? null) as tempCedarSystemProps; // Temp props for locations
-
-  // Mocking additional location info on payload until CEDAR location type is defined
-  const systemInfo = {
-    ...cedarData,
-    locations: locationsInfo,
-    developmentTags,
-    budgets: budgetsInfo,
-    subSystems,
-    activities,
-    atoStatus: 'In Progress',
-    products,
-    systemData
-  };
-
-  // Mapping of all sub navigation links
-  const subNavigationLinks: React.ReactNode[] = Object.keys(
-    sideNavItems(systemInfo)
-  ).map((key: string) => (
-    <NavLink
-      to={sideNavItems(systemInfo)[key].route}
-      key={key}
-      activeClassName="usa-current"
-      className={classnames({
-        'nav-group-border': sideNavItems(systemInfo)[key].groupEnd
-      })}
-    >
-      {t(`navigation.${key}`)}
-    </NavLink>
-  ));
-
+  // Header description expand toggle
   const descriptionRef = React.createRef<HTMLElement>();
   const [
     isDescriptionExpandable,
@@ -117,6 +320,7 @@ const SystemProfile = () => {
     false
   );
 
+  // Enable the description toggle if it overflows
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const { current: el } = descriptionRef;
@@ -126,14 +330,61 @@ const SystemProfile = () => {
     }
   });
 
+  const systemProfileData: SystemProfileData | undefined = useMemo(
+    () => getSystemProfileData(data),
+    [data]
+  );
+
+  const fields = useMemo(() => {
+    if (!data) return {};
+
+    const { cedarSystemDetails } = data!;
+    if (!cedarSystemDetails) return {};
+
+    return {
+      cedarSystem: cedarSystemDetails.cedarSystem,
+      cmsComponent: cedarSystemDetails.cedarSystem.businessOwnerOrg
+    };
+  }, [data]);
+
+  const { cedarSystem, cmsComponent } = fields;
+
   if (loading) {
     return <PageLoading />;
   }
 
-  // TODO: Handle errors and loading
-  if (error || !systemInfo || (subinfo && !sideNavItems(systemInfo)[subinfo])) {
+  if (error || !systemProfileData || !cedarSystem) {
     return <NotFound />;
   }
+
+  const {
+    businessOwner,
+    pointOfContact,
+    productionLocation
+  } = systemProfileData;
+
+  const subComponents = sideNavItems(
+    systemProfileData,
+    flags.systemProfileHiddenFields
+  );
+
+  // Mapping of all sub navigation links
+  const subNavigationLinks: React.ReactNode[] = Object.keys(subComponents).map(
+    (key: string) => (
+      <NavLink
+        to={subComponents[key].route}
+        key={key}
+        activeClassName="usa-current"
+        className={classnames({
+          'nav-group-border': subComponents[key].groupEnd
+        })}
+      >
+        {t(`navigation.${key}`)}
+      </NavLink>
+    )
+  );
+
+  const subComponent = subComponents[subinfo || 'home'];
 
   return (
     <MainContent>
@@ -150,7 +401,7 @@ const SystemProfile = () => {
               >
                 <Breadcrumb>
                   <span>&larr; </span>
-                  <BreadcrumbLink asCustom={Link} to="/systems">
+                  <BreadcrumbLink asCustom={RouterLink} to="/systems">
                     <span>{t('singleSystem.summary.back')}</span>
                   </BreadcrumbLink>
                 </Breadcrumb>
@@ -158,9 +409,9 @@ const SystemProfile = () => {
 
               <PageHeading className="margin-top-2">
                 <IconBookmark size={4} className="text-primary" />{' '}
-                <span>{systemInfo.name} </span>
+                <span>{cedarSystem.name} </span>
                 <span className="text-normal font-body-sm">
-                  ({systemInfo.acronym})
+                  ({cedarSystem.acronym})
                 </span>
                 <div className="text-normal font-body-md">
                   <CollapsableLink
@@ -183,7 +434,7 @@ const SystemProfile = () => {
                       )}
                     >
                       <DescriptionDefinition
-                        definition={systemInfo.description}
+                        definition={cedarSystem.description}
                         ref={descriptionRef}
                         className="font-body-lg line-height-body-5 text-light"
                       />
@@ -207,55 +458,71 @@ const SystemProfile = () => {
                         </div>
                       )}
                     </div>
-                    <UswdsReactLink
-                      aria-label={t('singleSystem.summary.label')}
-                      className="line-height-body-5"
-                      to="/" // TODO: Get link from CEDAR?
-                      variant="external"
-                      target="_blank"
-                    >
-                      {t('singleSystem.summary.view')} {systemInfo.name}
-                      <span aria-hidden>&nbsp;</span>
-                    </UswdsReactLink>
-
-                    {/* TODO: Map <DescriptionTerm /> to CEDAR data */}
+                    {productionLocation && productionLocation.address && (
+                      <Link
+                        aria-label={t('singleSystem.summary.label')}
+                        className="line-height-body-5"
+                        href={productionLocation.address}
+                        variant="external"
+                        target="_blank"
+                      >
+                        {t('singleSystem.summary.view')} {cedarSystem.name}
+                        <span aria-hidden>&nbsp;</span>
+                      </Link>
+                    )}
                     <Grid row className="margin-top-3">
-                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                        <DescriptionDefinition
-                          definition={t('singleSystem.summary.subheader1')}
-                        />
-                        <DescriptionTerm
-                          className="font-body-md"
-                          term={systemInfo.businessOwnerOrg || ''}
-                        />
-                      </Grid>
-                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                        <DescriptionDefinition
-                          definition={t('singleSystem.summary.subheader2')}
-                        />
-                        <DescriptionTerm
-                          className="font-body-md"
-                          term="Geraldine Hobbs"
-                        />
-                      </Grid>
-                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                        <DescriptionDefinition
-                          definition={t('singleSystem.summary.subheader3')}
-                        />
-                        <DescriptionTerm
-                          className="font-body-md"
-                          term="July 27, 2015"
-                        />
-                      </Grid>
-                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                        <DescriptionDefinition
-                          definition={t('singleSystem.summary.subheader4')}
-                        />
-                        <DescriptionTerm
-                          className="font-body-md"
-                          term="December 4, 2021"
-                        />
-                      </Grid>
+                      {cmsComponent && (
+                        <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                          <DescriptionDefinition
+                            definition={t('singleSystem.summary.subheader1')}
+                          />
+                          <DescriptionTerm
+                            className="font-body-md"
+                            term={cmsComponent}
+                          />
+                        </Grid>
+                      )}
+                      {businessOwner && (
+                        <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                          <DescriptionDefinition
+                            definition={t('singleSystem.summary.subheader2')}
+                          />
+                          <DescriptionTerm
+                            className="font-body-md"
+                            term={getPersonFullName(businessOwner)}
+                          />
+                        </Grid>
+                      )}
+                      {flags.systemProfileHiddenFields && (
+                        <>
+                          {/* Go live date */}
+                          <Grid
+                            desktop={{ col: 6 }}
+                            className="margin-bottom-2"
+                          >
+                            <DescriptionDefinition
+                              definition={t('singleSystem.summary.subheader3')}
+                            />
+                            <DescriptionTerm
+                              className="font-body-md"
+                              term="July 27, 2015"
+                            />
+                          </Grid>
+                          {/* Most recent major change */}
+                          <Grid
+                            desktop={{ col: 6 }}
+                            className="margin-bottom-2"
+                          >
+                            <DescriptionDefinition
+                              definition={t('singleSystem.summary.subheader4')}
+                            />
+                            <DescriptionTerm
+                              className="font-body-md"
+                              term="December 4, 2021"
+                            />
+                          </Grid>
+                        </>
+                      )}
                     </Grid>
                   </CollapsableLink>
                 </div>
@@ -263,7 +530,13 @@ const SystemProfile = () => {
             </Grid>
           </div>
         </SummaryBox>
-        <SystemSubNav subinfo={subinfo} systemInfo={systemInfo} />
+
+        <SystemSubNav
+          subinfo={subinfo}
+          system={systemProfileData}
+          systemProfileHiddenFields={flags.systemProfileHiddenFields}
+        />
+
         <SectionWrapper className="margin-top-5 margin-bottom-5">
           <GridContainer>
             <Grid row gap>
@@ -278,8 +551,64 @@ const SystemProfile = () => {
               )}
 
               <Grid desktop={{ col: 9 }}>
-                {/* This renders the selected sidenav central component */}
-                {sideNavItems(systemInfo)[subinfo || 'home'].component}
+                <div id={subComponent.componentId ?? ''}>
+                  <GridContainer className="padding-left-0 padding-right-0">
+                    <Grid row gap>
+                      {/* Central component */}
+                      <Grid desktop={{ col: 8 }}>{subComponent.component}</Grid>
+
+                      {/* Contact info sidebar */}
+                      <Grid
+                        desktop={{ col: 4 }}
+                        className={classnames({
+                          'sticky-nav': !isMobile
+                        })}
+                      >
+                        {/* Setting a ref here to reference the grid width for the fixed side nav */}
+                        {pointOfContact && (
+                          <div className="side-divider">
+                            <div className="top-divider" />
+                            <p className="font-body-xs margin-top-1 margin-bottom-3">
+                              {t('singleSystem.pointOfContact')}
+                            </p>
+                            <h3 className="system-profile__subheader margin-bottom-1">
+                              {getPersonFullName(pointOfContact)}
+                            </h3>
+                            {pointOfContact.roleTypeName && (
+                              <DescriptionDefinition
+                                definition={pointOfContact.roleTypeName}
+                              />
+                            )}
+                            {pointOfContact.assigneeEmail && (
+                              <p>
+                                <Link
+                                  aria-label={t('singleSystem.sendEmail')}
+                                  className="line-height-body-5"
+                                  href={`mailto:${pointOfContact.assigneeEmail}`}
+                                  target="_blank"
+                                >
+                                  {t('singleSystem.sendEmail')}
+                                  <span aria-hidden>&nbsp;</span>
+                                </Link>
+                              </p>
+                            )}
+                            <p>
+                              <UswdsReactLink
+                                aria-label={t('singleSystem.moreContact')}
+                                className="line-height-body-5"
+                                to={`/systems/${systemId}/team-and-contract`}
+                              >
+                                {t('singleSystem.moreContact')}
+                                <span aria-hidden>&nbsp;</span>
+                                <span aria-hidden>&rarr; </span>
+                              </UswdsReactLink>
+                            </p>
+                          </div>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </GridContainer>
+                </div>
               </Grid>
             </Grid>
           </GridContainer>

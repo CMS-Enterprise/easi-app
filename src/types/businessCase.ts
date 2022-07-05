@@ -3,21 +3,13 @@ import { DateTime } from 'luxon';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
 import { SystemIntakeStatus } from 'types/systemIntake';
 
-export type EstimatedLifecycleCostLines = {
-  year1: LifecycleCosts;
-  year2: LifecycleCosts;
-  year3: LifecycleCosts;
-  year4: LifecycleCosts;
-  year5: LifecycleCosts;
-};
-
 // Base Solution
 export type BusinessCaseSolution = {
   title: string;
   summary: string;
   pros: string;
   cons: string;
-  estimatedLifecycleCost: EstimatedLifecycleCostLines;
+  estimatedLifecycleCost: LifecycleCosts;
   costSavings: string;
 };
 
@@ -80,8 +72,6 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
     status: BusinessCaseStatus;
     systemIntakeId: string;
     systemIntakeStatus: SystemIntakeStatus;
-    initialSubmittedAt?: string;
-    lastSubmittedAt?: string;
     createdAt: string;
   };
 
