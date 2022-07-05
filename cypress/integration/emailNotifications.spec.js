@@ -16,6 +16,12 @@ const requesterEmail = `<${euaIDRequester}@local.fake>`;
 // when running locally, pkg/server/routes.go hardcodes the address in emailConfig for clarity
 const grtEmail = `<${Cypress.env('grtEmail') || 'grt_email@cms.gov'}>`;
 
+// must match subject set in pkg/email/issue_lcid.go
+const issueLCIDEmailSubject = 'Your request has been approved';
+
+// must match subject set in pkg/email/extend_lcid.go
+const extendLCIDEmailSubject = 'Lifecycle ID Extended';
+
 // generate our own LCIDs to avoid issues if >9 LCIDs are generated on the same day (see EASI-2037)
 let nextLCID = 0;
 const generateNewLCID = () => {
@@ -158,7 +164,7 @@ describe('Email notifications', () => {
             expect(mailcatcherResponse.status).to.eq(200);
 
             const lcidIssuingEmails = mailcatcherResponse.body.filter(
-              email => email.subject === 'Your request has been approved'
+              email => email.subject === issueLCIDEmailSubject
             );
 
             // make sure of all the notifications sent for issuing LCIDs, none were sent for *this specific LCID* (indicated by scope)
@@ -257,7 +263,7 @@ describe('Email notifications', () => {
             expect(mailcatcherResponse.status).to.eq(200);
 
             const lcidIssuingEmails = mailcatcherResponse.body.filter(
-              email => email.subject === 'Your request has been approved'
+              email => email.subject === issueLCIDEmailSubject
             );
 
             // make sure of all the notifications sent for issuing LCIDs, none were sent for *this specific LCID* (indicated by scope)
@@ -377,7 +383,7 @@ describe('Email notifications', () => {
             expect(mailcatcherResponse.status).to.eq(200);
 
             const lcidExtensionEmails = mailcatcherResponse.body.filter(
-              email => email.subject === 'Lifecycle ID Extended'
+              email => email.subject === extendLCIDEmailSubject
             );
 
             // make sure of all the notifications sent for extending LCIDs, none were sent for *this specific LCID* (indicated by scope)
@@ -429,7 +435,7 @@ describe('Email notifications', () => {
             expect(mailcatcherResponse.status).to.eq(200);
 
             const lcidExtensionEmails = mailcatcherResponse.body.filter(
-              email => email.subject === 'Lifecycle ID Extended'
+              email => email.subject === extendLCIDEmailSubject
             );
 
             // make sure a notification was sent for extending *this specific LCID*
@@ -458,7 +464,53 @@ describe('Email notifications', () => {
         );
       });
 
-      it("Doesn't send emails when shouldSendEmail isn't selected", () => {});
+      it("Doesn't send emails when shouldSendEmail isn't selected", () => {
+        createIntake();
+
+        // set scope message based on UUID so we can uniquely identify message
+        const scope = `scope-${uuidv4()}`;
+
+        // issue LCID and extend it through GQL
+        cy.get('@intakeId').then(intakeId => {
+          cy.task('issueLCID', {
+            euaId: euaIDFeatureFlagUnset,
+            intakeId,
+            shouldSendEmail: false,
+            recipientEmails: [],
+            scope,
+            lcid: generateNewLCID()
+          });
+
+          cy.task('extendLCID', {
+            euaId: euaIDFeatureFlagSet,
+            intakeId,
+            shouldSendEmail: false,
+            recipientEmails: [],
+            scope
+          });
+        });
+
+        // check mailcatcher API for what emails have been sent
+        cy.request('http://localhost:1080/messages').then(
+          mailcatcherResponse => {
+            expect(mailcatcherResponse.status).to.eq(200);
+
+            const lcidExtensionEmails = mailcatcherResponse.body.filter(
+              email => email.subject === extendLCIDEmailSubject
+            );
+
+            // make sure of all the notifications sent for extending LCIDs, none were sent for *this specific LCID* (indicated by scope)
+            for (const email of lcidExtensionEmails) {
+              cy.request(
+                `http://localhost:1080/messages/${email.id}.html`
+              ).then(emailBodyResponse => {
+                expect(emailBodyResponse.status).to.eq(200);
+                expect(emailBodyResponse.body).not.to.include(scope);
+              });
+            }
+          }
+        );
+      });
     });
   });
 });
