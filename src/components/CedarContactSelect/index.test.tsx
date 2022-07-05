@@ -12,6 +12,7 @@ describe('CedarContactSelect', () => {
           id="cedarContactSelect"
           name="cedarContactSelect"
           onChange={() => null}
+          value={{ commonName: 'Jane Doe', euaUserId: 'ABCD' }}
         />
       </MockedProvider>
     );
