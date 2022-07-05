@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash';
+
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
 import { GetSystemProfile } from 'queries/types/GetSystemProfile';
 import { CedarAssigneeType } from 'types/graphql-global-types';
@@ -608,6 +610,8 @@ export const query = {
   result
 };
 
-export function getSystemProfileMockData(): SystemProfileData {
-  return getSystemProfileData(result.data)!;
+export function getMockSystemProfileData(
+  data?: GetSystemProfile
+): SystemProfileData {
+  return getSystemProfileData(data ?? cloneDeep(result.data))!;
 }
