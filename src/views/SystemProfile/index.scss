@@ -78,6 +78,10 @@
     .nav-group-border {
         border-bottom: .5px solid color($theme-color-disabled-light);
     }
+
+  dd.description-definition {
+    overflow-wrap: break-word;
+  }
 }
 
 .top-divider {

@@ -29,13 +29,13 @@ const sideNavItems = (
   system: SystemProfileData,
   systemProfileHiddenFields: boolean
 ): sideNavProps => {
-  // return systemProfileHiddenFields
   return !systemProfileHiddenFields
     ? {
         home: {
           groupEnd: true,
           component: <SystemHome system={system} />,
           route: `/systems/${system.id}/home`,
+          // Use styles from ./SystemDetails/index.scss#system-detail
           componentId: 'system-detail'
         },
         details: {
@@ -60,6 +60,7 @@ const sideNavItems = (
           groupEnd: true,
           component: <SystemHome system={system} />,
           route: `/systems/${system.id}/home`,
+          // Use styles from ./SystemDetails/index.scss#system-detail
           componentId: 'system-detail'
         },
         details: {

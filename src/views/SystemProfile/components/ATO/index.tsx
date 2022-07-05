@@ -25,7 +25,7 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
-import { threatLevelGrades } from 'constants/systemProfile';
+import { securityFindingKeys } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 // eslint-disable-next-line camelcase
 import { GetSystemProfile_cedarThreat } from 'queries/types/GetSystemProfile';
@@ -45,22 +45,24 @@ import './index.scss';
 /**
  * Get counts of Security Findings from Cedar threat levels.
  */
-// eslint-disable-next-line camelcase
-function getSecurityFindings(cedarThreat: GetSystemProfile_cedarThreat[]) {
-  return cedarThreat.reduce<SecurityFindings>(
-    (prev: SecurityFindings, curr) => {
-      const acc = prev;
-      const level = curr!.weaknessRiskLevel as ThreatLevel;
-      // Ignore nulls for non-prod environments, but should always exist on prod
-      if (level === null) return acc;
-      if (!(level in acc)) {
-        acc[level] = 0;
-      }
-      acc[level]! += 1;
-      return acc;
-    },
-    { total: cedarThreat.length }
-  );
+function getSecurityFindings(
+  // eslint-disable-next-line camelcase
+  cedarThreat: GetSystemProfile_cedarThreat[]
+): SecurityFindings {
+  // Init finding props with 0 count
+  const findings = Object.fromEntries(
+    securityFindingKeys.map(k => [k, 0])
+  ) as SecurityFindings;
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const threat of cedarThreat) {
+    const riskLevel = threat.weaknessRiskLevel as ThreatLevel;
+    if (riskLevel !== null) {
+      findings[riskLevel] += 1;
+      findings.total += 1;
+    }
+  }
+  return findings;
 }
 
 const ATO = ({ system }: SystemProfileSubviewProps) => {
@@ -164,45 +166,50 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         )}
 
-        {flags.systemProfileHiddenFields && atoStatus === 'In Progress' && (
-          // @ts-expect-error
-          <ProcessList>
-            {system.activities?.map(act => (
-              <ProcessListItem key={act.id}>
-                <ProcessListHeading
-                  type="h4"
-                  className="easi-header__basic flex-align-start"
-                >
-                  <div className="margin-0 font-body-lg">Start a process</div>
-                  <div className="text-right margin-bottom-0">
-                    <Tag
-                      className={classnames('font-body-md', 'margin-bottom-1', {
-                        'bg-success-dark text-white':
-                          act.status === 'Completed',
-                        'bg-warning': act.status === 'In progress',
-                        'bg-white text-base border-base border-2px':
-                          act.status === 'Not started'
-                      })}
-                    >
-                      {act.status}
-                    </Tag>
-                    <h5 className="text-normal margin-y-0 text-base-dark">
-                      {act.status === 'Completed'
-                        ? t('singleSystem.ato.completed')
-                        : t('singleSystem.ato.due')}
-                      {act.dueDate}
-                    </h5>
-                  </div>
-                </ProcessListHeading>
-                <DescriptionTerm term={t('singleSystem.ato.activityOwner')} />
-                <DescriptionDefinition
-                  className="line-height-body-3 font-body-md margin-bottom-0"
-                  definition={act.activityOwner}
-                />
-              </ProcessListItem>
-            ))}
-          </ProcessList>
-        )}
+        {flags.systemProfileHiddenFields &&
+          atoStatus === 'In Progress' &&
+          system.activities !== undefined && (
+            <ProcessList>
+              {system.activities.map(act => (
+                <ProcessListItem key={act.id}>
+                  <ProcessListHeading
+                    type="h4"
+                    className="easi-header__basic flex-align-start"
+                  >
+                    <div className="margin-0 font-body-lg">Start a process</div>
+                    <div className="text-right margin-bottom-0">
+                      <Tag
+                        className={classnames(
+                          'font-body-md',
+                          'margin-bottom-1',
+                          {
+                            'bg-success-dark text-white':
+                              act.status === 'Completed',
+                            'bg-warning': act.status === 'In progress',
+                            'bg-white text-base border-base border-2px':
+                              act.status === 'Not started'
+                          }
+                        )}
+                      >
+                        {act.status}
+                      </Tag>
+                      <h5 className="text-normal margin-y-0 text-base-dark">
+                        {act.status === 'Completed'
+                          ? t('singleSystem.ato.completed')
+                          : t('singleSystem.ato.due')}
+                        {act.dueDate}
+                      </h5>
+                    </div>
+                  </ProcessListHeading>
+                  <DescriptionTerm term={t('singleSystem.ato.activityOwner')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 font-body-md margin-bottom-0"
+                    definition={act.activityOwner}
+                  />
+                </ProcessListItem>
+              ))}
+            </ProcessList>
+          )}
 
         {flags.systemProfileHiddenFields && (
           <>
@@ -296,8 +303,12 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
 
           {atoStatus !== 'No ATO' && (
             <Grid row gap className="margin-top-2 margin-bottom-2">
-              {['total', ...threatLevelGrades]
-                .filter(k => k in securityFindings)
+              {securityFindingKeys
+                .filter(
+                  k =>
+                    k === 'total' || // always show total
+                    securityFindings[k] !== 0 // otherwise hide 0 count
+                )
                 .map(k => {
                   const camelKey = camelCase(k);
                   return (
@@ -307,9 +318,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                       />
                       <DescriptionDefinition
                         className="line-height-body-3 margin-bottom-4"
-                        definition={
-                          securityFindings[k as keyof SecurityFindings]
-                        }
+                        definition={securityFindings[k]}
                       />
                     </Grid>
                   );
@@ -446,7 +455,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                     className="line-height-body-3 margin-bottom-4"
                     definition={showVal(
                       ato?.lastAssessmentDate &&
-                        formatDate(ato!.lastAssessmentDate)
+                        formatDate(ato.lastAssessmentDate)
                     )}
                   />
                 </Grid>

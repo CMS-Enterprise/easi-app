@@ -1,10 +1,12 @@
-import { threatLevelGrades } from 'constants/systemProfile';
+import {
+  securityFindingKeys,
+  threatLevelGrades
+} from 'constants/systemProfile';
 import {
   GetSystemProfile,
   /* eslint-disable camelcase */
   GetSystemProfile_cedarAuthorityToOperate,
   GetSystemProfile_cedarSystemDetails_cedarSystem,
-  GetSystemProfile_cedarSystemDetails_deployments,
   GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
   GetSystemProfile_cedarSystemDetails_roles,
   GetSystemProfile_cedarSystemDetails_urls
@@ -29,7 +31,10 @@ export type AtoStatus =
 
 export type ThreatLevel = typeof threatLevelGrades[number];
 
-export type SecurityFindings = Partial<Record<ThreatLevel | 'total', number>>;
+export type SecurityFindings = Record<
+  typeof securityFindingKeys[number],
+  number
+>;
 
 // Development Tags
 
@@ -45,9 +50,7 @@ export type UrlLocationTag = 'API endpoint' | 'Versioned code respository';
 // eslint-disable-next-line camelcase
 export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
   // eslint-disable-next-line camelcase
-  environment?: GetSystemProfile_cedarSystemDetails_deployments['deploymentType'];
-  // eslint-disable-next-line camelcase
-  provider?: GetSystemProfile_cedarSystemDetails_deployments_dataCenter['name'];
+  deploymentDataCenterName?: GetSystemProfile_cedarSystemDetails_deployments_dataCenter['name'];
   tags: UrlLocationTag[];
 }
 

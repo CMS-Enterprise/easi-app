@@ -170,6 +170,7 @@
         "lines": 60,
         "statements": 60
       }
-    }
+    },
+    "globalSetup": "<rootDir>/jest-global-setup.js"
   }
 }
