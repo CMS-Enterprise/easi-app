@@ -10,6 +10,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/guregu/null"
+	"github.com/vektah/gqlparser/v2/gqlerror"
+	"golang.org/x/sync/errgroup"
+
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
@@ -18,10 +23,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
-	"github.com/google/uuid"
-	"github.com/guregu/null"
-	"github.com/vektah/gqlparser/v2/gqlerror"
-	"golang.org/x/sync/errgroup"
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
@@ -1429,7 +1430,7 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 		return nil, err
 	}
 
-	if input.FundingSources.FundingSources != nil {
+	if input.FundingSources != nil && input.FundingSources.FundingSources != nil {
 		intake.ExistingFunding = null.BoolFromPtr(input.FundingSources.ExistingFunding)
 		if intake.ExistingFunding.ValueOrZero() {
 			fundingSources := make([]*models.SystemIntakeFundingSource, 0, len(input.FundingSources.FundingSources))
