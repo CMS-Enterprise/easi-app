@@ -421,7 +421,7 @@ describe('Email notifications', () => {
           });
 
           cy.task('extendLCID', {
-            euaId: euaIDFeatureFlagSet,
+            euaId: euaIDFeatureFlagUnset,
             intakeId,
             shouldSendEmail: true,
             recipientEmails: [],
@@ -482,7 +482,7 @@ describe('Email notifications', () => {
           });
 
           cy.task('extendLCID', {
-            euaId: euaIDFeatureFlagSet,
+            euaId: euaIDFeatureFlagUnset,
             intakeId,
             shouldSendEmail: false,
             recipientEmails: [],
