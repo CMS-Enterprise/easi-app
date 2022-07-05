@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/hashicorp/go-multierror"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -44,7 +45,8 @@ func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requestName string, new
 	return b.String(), nil
 }
 
-// SendExtendLCIDEmail sends an email for extending an LCID
+// SendExtendLCIDEmail sends an email to a single recipient for extending an LCID
+// TODO - EASI-2021 - remove
 func (c Client) SendExtendLCIDEmail(
 	ctx context.Context,
 	recipient models.EmailAddress,
@@ -71,4 +73,69 @@ func (c Client) SendExtendLCIDEmail(
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 	return nil
+}
+
+// SendExtendLCIDEmailToMultipleRecipients sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for extending an LCID
+//  TODO - EASI-2021 - rename to SendExtendLCIDEmails
+func (c Client) SendExtendLCIDEmailToMultipleRecipients(
+	ctx context.Context,
+	recipients models.EmailNotificationRecipients,
+	systemIntakeID uuid.UUID,
+	requestName string,
+	newExpiresAt *time.Time,
+	newScope string,
+	newNextSteps string,
+	newCostBaseline string,
+) error {
+	subject := "Lifecycle ID Extended"
+	body, err := c.extendLCIDBody(systemIntakeID, requestName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
+	var errors *multierror.Error
+
+	for _, recipient := range recipients.RegularRecipientEmails {
+		err = c.sender.Send(
+			ctx,
+			recipient,
+			nil,
+			subject,
+			body,
+		)
+		if err != nil {
+			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+			errors = multierror.Append(errors, notificationErr)
+		}
+	}
+
+	if recipients.ShouldNotifyITGovernance {
+		err = c.sender.Send(
+			ctx,
+			c.config.GRTEmail,
+			nil,
+			subject,
+			body,
+		)
+		if err != nil {
+			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+			errors = multierror.Append(errors, notificationErr)
+		}
+	}
+
+	if recipients.ShouldNotifyITInvestment {
+		err = c.sender.Send(
+			ctx,
+			"", // TODO - get IT investment mailbox address
+			nil,
+			subject,
+			body,
+		)
+		if err != nil {
+			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+			errors = multierror.Append(errors, notificationErr)
+		}
+	}
+
+	return errors.ErrorOrNil()
 }

@@ -1139,6 +1139,7 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		input.Scope,
 		input.CostBaseline,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 
 	if err != nil {

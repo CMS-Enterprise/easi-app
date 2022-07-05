@@ -413,9 +413,10 @@ func NewCreateActionExtendLifecycleID(
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	sendExtendLCIDEmail func(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
+	sendExtendLCIDEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
-) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, shouldSendEmail bool) (*models.SystemIntake, error) {
+) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
 		action *models.Action,
@@ -425,6 +426,7 @@ func NewCreateActionExtendLifecycleID(
 		scope string,
 		costBaseline *string,
 		shouldSendEmail bool,
+		recipients *models.EmailNotificationRecipients,
 	) (*models.SystemIntake, error) {
 		intake, err := fetchSystemIntake(ctx, id)
 		if err != nil {
@@ -459,67 +461,88 @@ func NewCreateActionExtendLifecycleID(
 			return nil, updateErr
 		}
 
-		if !shouldSendEmail {
-			return intake, nil
-		}
+		// TODO - EASI-2021 - don't need this check with feature flag removed
+		notifyMultipleRecipients := config.checkBoolFeatureFlag(ctx, notifyMultipleRecipientsFlagName, notifyMultipleRecipientsFlagDefault)
 
-		euaID := intake.EUAUserID.ValueOrZero()
-		requesterHasEUAID := euaID != ""
-		requesterHasValidEUAID := requesterHasEUAID
-
-		var requesterInfo *models.UserInfo
-		if requesterHasEUAID {
-			requesterInfo, err = fetchUserInfo(ctx, euaID)
-
-			if err != nil {
-				if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
-					appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
-						zap.String("intakeID", intake.ID.String()),
-						zap.String("euaID", euaID))
-					err = sendIntakeInvalidEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), euaID, intake.ID)
-					if err != nil {
-						return nil, err
-					}
-
-					requesterHasValidEUAID = false
-				} else {
-					return nil, err
-				}
-			} else if requesterInfo == nil || requesterInfo.Email == "" {
-				appcontext.ZLogger(ctx).Error(fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when submitting an action"),
-					zap.String("intakeID", intake.ID.String()),
-					zap.String("euaID", euaID))
-				return nil, &apperrors.ExternalAPIError{
-					Err:       errors.New("requester info fetch was not successful when submitting an action"),
-					Model:     intake,
-					ModelID:   intake.ID.String(),
-					Operation: apperrors.Fetch,
-					Source:    "CEDAR LDAP",
-				}
-			}
-		} else {
-			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
-				zap.String("intakeID", intake.ID.String()))
-			err = sendIntakeNoEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), intake.ID)
-			if err != nil {
-				return nil, err
-			}
-		}
-
-		if requesterHasValidEUAID {
-			err = sendExtendLCIDEmail(
+		// TODO - EASI-2021 - remove notifyMultipleRecipients check (but *not* recipients != nil check)
+		if notifyMultipleRecipients && recipients != nil {
+			err = sendExtendLCIDEmailToMultipleRecipients(
 				ctx,
-				requesterInfo.Email,
+				*recipients,
 				id,
-				intake.ProjectName.String,
+				intake.ProjectName.ValueOrZero(),
 				expirationDate,
-				scope,
+				intake.LifecycleScope.ValueOrZero(),
 				intake.DecisionNextSteps.ValueOrZero(),
 				intake.LifecycleCostBaseline.ValueOrZero(),
 			)
-
 			if err != nil {
 				return nil, err
+			}
+
+			return intake, nil
+		}
+
+		// TODO - EASI-2021 - can remove this whole block
+		if shouldSendEmail {
+			euaID := intake.EUAUserID.ValueOrZero()
+			requesterHasEUAID := euaID != ""
+			requesterHasValidEUAID := requesterHasEUAID
+
+			var requesterInfo *models.UserInfo
+			if requesterHasEUAID {
+				requesterInfo, err = fetchUserInfo(ctx, euaID)
+
+				if err != nil {
+					if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+						appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
+							zap.String("intakeID", intake.ID.String()),
+							zap.String("euaID", euaID))
+						err = sendIntakeInvalidEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), euaID, intake.ID)
+						if err != nil {
+							return nil, err
+						}
+
+						requesterHasValidEUAID = false
+					} else {
+						return nil, err
+					}
+				} else if requesterInfo == nil || requesterInfo.Email == "" {
+					appcontext.ZLogger(ctx).Error(fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when submitting an action"),
+						zap.String("intakeID", intake.ID.String()),
+						zap.String("euaID", euaID))
+					return nil, &apperrors.ExternalAPIError{
+						Err:       errors.New("requester info fetch was not successful when submitting an action"),
+						Model:     intake,
+						ModelID:   intake.ID.String(),
+						Operation: apperrors.Fetch,
+						Source:    "CEDAR LDAP",
+					}
+				}
+			} else {
+				appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+					zap.String("intakeID", intake.ID.String()))
+				err = sendIntakeNoEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), intake.ID)
+				if err != nil {
+					return nil, err
+				}
+			}
+
+			if requesterHasValidEUAID {
+				err = sendExtendLCIDEmail(
+					ctx,
+					requesterInfo.Email,
+					id,
+					intake.ProjectName.String,
+					expirationDate,
+					scope,
+					intake.DecisionNextSteps.ValueOrZero(),
+					intake.LifecycleCostBaseline.ValueOrZero(),
+				)
+
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 

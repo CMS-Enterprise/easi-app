@@ -194,6 +194,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 		store.FetchSystemIntakeByID,
 		store.UpdateSystemIntake,
 		emailClient.SendExtendLCIDEmail,
+		emailClient.SendExtendLCIDEmailToMultipleRecipients,
 		emailClient.SendIntakeInvalidEUAIDEmail,
 		emailClient.SendIntakeNoEUAIDEmail,
 	)

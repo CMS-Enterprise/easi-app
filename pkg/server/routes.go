@@ -232,6 +232,7 @@ func (s *Server) routes(
 				store.FetchSystemIntakeByID,
 				store.UpdateSystemIntake,
 				emailClient.SendExtendLCIDEmail,
+				emailClient.SendExtendLCIDEmailToMultipleRecipients,
 				emailClient.SendIntakeInvalidEUAIDEmail,
 				emailClient.SendIntakeNoEUAIDEmail,
 			),
