@@ -30,10 +30,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import {
-  ATO_STATUS_DUE_SOON_DAYS,
-  BUSINESS_OWNER_ROLE_TYPE_ID
-} from 'constants/systemProfile';
+import { ATO_STATUS_DUE_SOON_DAYS, RoleTypeId } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
 import {
@@ -193,17 +190,19 @@ export function getSystemProfileData(
 
   if (!cedarSystemDetails || !cedarSystem) return undefined;
 
-  // Business Owner
-  // Select the first found Business Owner
-  const businessOwner = cedarSystemDetails.roles.find(
-    role =>
-      role.assigneeType === CedarAssigneeType.PERSON &&
-      role.roleTypeID === BUSINESS_OWNER_ROLE_TYPE_ID
+  // Save CedarAssigneeType.PERSON roles for convenience
+  const personRoles = cedarSystemDetails.roles.filter(
+    role => role.assigneeType === CedarAssigneeType.PERSON
+  );
+
+  // Business Owners
+  const businessOwners = personRoles.filter(
+    role => role.roleTypeID === RoleTypeId.BUSINESS_OWNER
   );
 
   // Point of Contact is the business owner for now
   // Contextualized poc will be determined later
-  const pointOfContact = businessOwner;
+  const pointOfContact = businessOwners[0];
 
   const locations = getLocations(cedarSystemDetails);
 
@@ -230,12 +229,13 @@ export function getSystemProfileData(
     id: cedarSystem.id,
     ato: cedarAuthorityToOperate,
     atoStatus: getAtoStatus(cedarAuthorityToOperate),
-    businessOwner,
+    businessOwners,
     developmentTags: getDevelopmentTags(cedarSystemDetails),
     locations,
     numberOfContractorFte,
     numberOfFederalFte,
     numberOfFte,
+    personRoles,
     pointOfContact,
     productionLocation,
     status: cedarSystem.status,
@@ -358,7 +358,7 @@ const SystemProfile = () => {
   }
 
   const {
-    businessOwner,
+    businessOwners,
     pointOfContact,
     productionLocation
   } = systemProfileData;
@@ -482,14 +482,16 @@ const SystemProfile = () => {
                           />
                         </Grid>
                       )}
-                      {businessOwner && (
+                      {businessOwners.length && (
                         <Grid desktop={{ col: 6 }} className="margin-bottom-2">
                           <DescriptionDefinition
                             definition={t('singleSystem.summary.subheader2')}
                           />
                           <DescriptionTerm
                             className="font-body-md"
-                            term={getPersonFullName(businessOwner)}
+                            term={businessOwners
+                              .map(bo => getPersonFullName(bo))
+                              .join(', ')}
                           />
                         </Grid>
                       )}

@@ -62,11 +62,13 @@ export interface SystemProfileData extends GetSystemProfile {
   atoStatus?: AtoStatus;
   locations?: UrlLocation[];
   // eslint-disable-next-line camelcase
-  businessOwner?: GetSystemProfile_cedarSystemDetails_roles;
+  businessOwners: GetSystemProfile_cedarSystemDetails_roles[];
   developmentTags?: DevelopmentTag[];
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
+  // eslint-disable-next-line camelcase
+  personRoles: GetSystemProfile_cedarSystemDetails_roles[];
   // eslint-disable-next-line camelcase
   pointOfContact?: GetSystemProfile_cedarSystemDetails_roles;
   // eslint-disable-next-line camelcase

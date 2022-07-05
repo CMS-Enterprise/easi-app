@@ -1,6 +1,20 @@
-export const BUSINESS_OWNER_ROLE_TYPE_ID = '238-17-0';
-export const ISSO_ROLE_TYPE_ID = '238-29-0';
-export const SURVEY_POINT_OF_CONTACT_ROLE_TYPE_ID = '238-53-0';
+/**
+ * A set of some Cedar Role Type Ids used in the client.
+ * So far it is certain team members and points of contact.
+ * This is a borrowed set from `API/role/type/alfabet`.
+ */
+// eslint-disable-next-line no-shadow
+export enum RoleTypeId {
+  API_CONTACT = '238-58-0',
+  BUSINESS_OWNER = '238-17-0',
+  COR = '238-35-0',
+  ISSO = '238-29-0',
+  PROJECT_LEAD = '238-32-0',
+  SYSTEM_BUSINESS_QUESTION_CONTACT = '238-51-0',
+  SYSTEM_DATA_CENTER_CONTACT = '238-52-0',
+  SYSTEM_ISSUES_CONTACT = '238-50-0',
+  SYSTEM_MAINTAINER = '238-28-0'
+}
 
 export const ATO_STATUS_DUE_SOON_DAYS = 90;
 
