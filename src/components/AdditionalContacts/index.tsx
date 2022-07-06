@@ -241,7 +241,7 @@ export default function AdditionalContacts({
               // Show form if editing contact
               if (activeContact && activeContact?.id === contact.id) {
                 return (
-                  <div>
+                  <div key={contact.euaUserId}>
                     <ContactForm
                       key={contact.euaUserId}
                       activeContact={activeContact}
