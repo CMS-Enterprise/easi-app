@@ -5,7 +5,6 @@ import { IconLaunch, Link } from '@trussworks/react-uswds';
 import UswdsReactLink from 'components/LinkWrapper';
 import { DescriptionDefinition } from 'components/shared/DescriptionGroup';
 import {
-  RoleTypeId,
   SubpageKey,
   SystemProfileSubviewProps,
   UsernameWithRoles
@@ -16,20 +15,27 @@ import { getPersonFullName } from '.';
 
 /**
  * Get a list of subpage contacts defined by `pointsOfContactIds`.
+ * Return all members of the first matching Role Type Id found in the priority list.
  */
 export function getSubpagePoc(
   subpageKey: SubpageKey,
   usernamesWithRoles: UsernameWithRoles[]
-) {
+): UsernameWithRoles[] {
   const subPocIds = pointsOfContactIds[subpageKey];
+  let contacts: UsernameWithRoles[] = [];
 
-  // Check people for matching poc role ids
-  // Add that person once if some ids match
-  return usernamesWithRoles.filter(person =>
-    person.roles.some(({ roleTypeID }) =>
-      subPocIds.includes(roleTypeID as RoleTypeId)
-    )
-  );
+  // eslint-disable-next-line no-restricted-syntax
+  for (const pocid of subPocIds) {
+    const found = usernamesWithRoles.filter(user =>
+      user.roles.find(r => r.roleTypeID === pocid)
+    );
+    if (found.length) {
+      contacts = found;
+      break;
+    }
+  }
+
+  return contacts;
 }
 
 interface PointsOfContactSidebarProps extends SystemProfileSubviewProps {
@@ -59,9 +65,14 @@ const PointsOfContactSidebar = ({
             <h3 className="system-profile__subheader margin-bottom-1">
               {getPersonFullName(role)}
             </h3>
-            {role.roleTypeName && (
-              <DescriptionDefinition definition={role.roleTypeName} />
-            )}
+            <div>
+              {contact.roles.map(r => (
+                <DescriptionDefinition
+                  key={r.roleID}
+                  definition={r.roleTypeName}
+                />
+              ))}
+            </div>
             {role.assigneeEmail && (
               <p>
                 <Link

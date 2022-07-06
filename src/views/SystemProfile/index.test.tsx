@@ -137,13 +137,20 @@ describe('System Profile Points of Contact by subpage', () => {
 
   test.each(
     Object.keys(pointsOfContactIds).map(subpage => subpage as SubpageKey)
-  )('poc set equals the expected set for %s', subpage => {
-    const expectedSubpagePocIds = pointsOfContactIds[subpage];
+  )('poc set is of the first matching role type for %s', subpage => {
+    const allowedSubpagePocIds = pointsOfContactIds[subpage];
     const contacts = getSubpagePoc(subpage, data.usernamesWithRoles);
 
-    // Every subpage poc role type id matches every contact's 1 role
-    expect([...expectedSubpagePocIds].sort()).toEqual(
-      contacts.flatMap(c => c.roles.map(r => r.roleTypeID)).sort()
-    );
+    // Collect all contacts matching all poc ids for the subpage
+    const received = allowedSubpagePocIds.filter(pocid => {
+      return contacts.every(contact =>
+        contact.roles.some(r => r.roleTypeID === pocid)
+      );
+    });
+
+    // The set of contacts are all of the same role type as allowed in the poc list
+    expect(received).toHaveLength(1);
+    // It is the first from the priority list
+    expect(received[0]).toEqual(allowedSubpagePocIds[0]);
   });
 });

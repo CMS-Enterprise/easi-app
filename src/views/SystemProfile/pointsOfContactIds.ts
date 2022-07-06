@@ -3,6 +3,7 @@ import { RoleTypeId, SubpageKey } from 'types/systemProfile';
 /**
  * Point of Contact Cedar Role Type Ids by System Profile subpage.
  * The contact list is contextualized by subpage.
+ * Lists are in order of priority.
  */
 const pointOfContactIds: Record<SubpageKey, RoleTypeId[]> = {
   home: [RoleTypeId.PROJECT_LEAD],

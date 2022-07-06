@@ -636,11 +636,68 @@ exports[`System Profile parent request matches snapshot 1`] = `
                         >
                           Jane Doe
                         </h3>
-                        <dd
-                          class="description-definition margin-0"
-                        >
-                          Business Owner
-                        </dd>
+                        <div>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            Business Owner
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            ISSO
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            Project Lead
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            Survey Point of Contact
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            System Business Question Contact
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            System Data Center Contact
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            System Issues Contact
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            System Issues Contact
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            System Maintainer
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            Contracting Officer's Representative (COR)
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            QA Reviewer
+                          </dd>
+                          <dd
+                            class="description-definition margin-0"
+                          >
+                            DA Reviewer
+                          </dd>
+                        </div>
                         <p>
                           <a
                             class="usa-link line-height-body-5"
