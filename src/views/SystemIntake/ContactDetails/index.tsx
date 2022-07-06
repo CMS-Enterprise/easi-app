@@ -12,7 +12,10 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import AdditionalContacts from 'components/AdditionalContacts';
+import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -38,9 +41,7 @@ import {
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
-import AdditionalContacts from './components/AdditionalContacts';
-import GovernanceTeamOptions from './components/GovernanceTeamOptions';
-import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
+import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 import './index.scss';
 
@@ -73,6 +74,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
+
+  const flags = useFlags();
 
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
   const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState(
@@ -273,7 +276,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     disabled
                   />
                 </FieldGroup>
-
                 {/* Requester Component */}
                 <FieldGroup
                   scrollElement="requester.component"
@@ -311,7 +313,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {cmsDivisionsAndOfficesOptions('RequesterComponent')}
                   </Field>
                 </FieldGroup>
-
                 {/* Business Owner Name */}
                 <FieldGroup
                   scrollElement="businessOwner.commonName"
@@ -366,7 +367,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     disabled={isReqAndBusOwnerSame}
                   />
                 </FieldGroup>
-
                 {/* Business Owner Component */}
                 <FieldGroup
                   scrollElement="businessOwner.component"
@@ -390,26 +390,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {cmsDivisionsAndOfficesOptions('BusinessOwnerComponent')}
                   </Field>
                 </FieldGroup>
-
                 {/* Business Owner Email */}
-                <FieldGroup
-                  scrollElement="businessOwner.email"
-                  error={!!flatErrors['businessOwner.email']}
-                >
-                  <Label htmlFor="IntakeForm-BusinessOwnerEmail">
-                    {t('contactDetails.businessOwner.email')}
-                  </Label>
-                  <FieldErrorMsg>
-                    {flatErrors['businessOwner.email']}
-                  </FieldErrorMsg>
-                  <Field
-                    disabled
-                    as={TextInput}
-                    id="IntakeForm-BusinessOwnerEmail"
-                    name="businessOwner.email"
-                  />
-                </FieldGroup>
-
+                {flags.notifyMultipleRecipients && (
+                  <FieldGroup
+                    scrollElement="businessOwner.email"
+                    error={!!flatErrors['businessOwner.email']}
+                  >
+                    <Label htmlFor="IntakeForm-BusinessOwnerEmail">
+                      {t('contactDetails.businessOwner.email')}
+                    </Label>
+                    <FieldErrorMsg>
+                      {flatErrors['businessOwner.email']}
+                    </FieldErrorMsg>
+                    <Field
+                      disabled
+                      as={TextInput}
+                      id="IntakeForm-BusinessOwnerEmail"
+                      name="businessOwner.email"
+                    />
+                  </FieldGroup>
+                )}
                 {/* Product Manager Name */}
                 <FieldGroup
                   scrollElement="productManager.commonName"
@@ -464,7 +464,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     disabled={isReqAndProductManagerSame}
                   />
                 </FieldGroup>
-
                 {/* Product Manager Component */}
                 <FieldGroup
                   scrollElement="productManager.component"
@@ -489,26 +488,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {cmsDivisionsAndOfficesOptions('ProductManagerComponent')}
                   </Field>
                 </FieldGroup>
-
                 {/* Product Manager Email */}
-                <FieldGroup
-                  scrollElement="productManager.email"
-                  error={!!flatErrors['productManager.email']}
-                >
-                  <Label htmlFor="IntakeForm-ProductManagerEmail">
-                    {t('contactDetails.productManager.email')}
-                  </Label>
-                  <FieldErrorMsg>
-                    {flatErrors['productManager.email']}
-                  </FieldErrorMsg>
-                  <Field
-                    disabled
-                    as={TextInput}
-                    id="IntakeForm-ProductManagerEmail"
-                    name="productManager.email"
-                  />
-                </FieldGroup>
-
+                {flags.notifyMultipleRecipients && (
+                  <FieldGroup
+                    scrollElement="productManager.email"
+                    error={!!flatErrors['productManager.email']}
+                  >
+                    <Label htmlFor="IntakeForm-ProductManagerEmail">
+                      {t('contactDetails.productManager.email')}
+                    </Label>
+                    <FieldErrorMsg>
+                      {flatErrors['productManager.email']}
+                    </FieldErrorMsg>
+                    <Field
+                      disabled
+                      as={TextInput}
+                      id="IntakeForm-ProductManagerEmail"
+                      name="productManager.email"
+                    />
+                  </FieldGroup>
+                )}
                 {/* ISSO */}
                 <FieldGroup
                   scrollElement="isso.isPresent"
@@ -598,23 +597,25 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           </Field>
                         </FieldGroup>
                         {/* ISSO Email */}
-                        <FieldGroup
-                          scrollElement="isso.email"
-                          error={!!flatErrors['isso.email']}
-                        >
-                          <Label htmlFor="IntakeForm-IssoEmail">
-                            {t('contactDetails.isso.email')}
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['isso.email']}
-                          </FieldErrorMsg>
-                          <Field
-                            disabled
-                            as={TextInput}
-                            id="IntakeForm-IssoEmail"
-                            name="isso.email"
-                          />
-                        </FieldGroup>
+                        {flags.notifyMultipleRecipients && (
+                          <FieldGroup
+                            scrollElement="isso.email"
+                            error={!!flatErrors['isso.email']}
+                          >
+                            <Label htmlFor="IntakeForm-IssoEmail">
+                              {t('contactDetails.isso.email')}
+                            </Label>
+                            <FieldErrorMsg>
+                              {flatErrors['isso.email']}
+                            </FieldErrorMsg>
+                            <Field
+                              disabled
+                              as={TextInput}
+                              id="IntakeForm-IssoEmail"
+                              name="isso.email"
+                            />
+                          </FieldGroup>
+                        )}
                       </div>
                     )}
                     <Field
@@ -635,18 +636,18 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     />
                   </fieldset>
                 </FieldGroup>
-
                 {/* Add new contacts */}
-                <AdditionalContacts
-                  systemIntakeId={id}
-                  activeContact={activeContact}
-                  setActiveContact={setActiveContact}
-                  contacts={contacts.additionalContacts}
-                  createContact={createContact}
-                  updateContact={updateContact}
-                  deleteContact={deleteContact}
-                />
-
+                {flags.notifyMultipleRecipients && (
+                  <AdditionalContacts
+                    systemIntakeId={id}
+                    activeContact={activeContact}
+                    setActiveContact={setActiveContact}
+                    contacts={contacts.additionalContacts}
+                    createContact={createContact}
+                    updateContact={updateContact}
+                    deleteContact={deleteContact}
+                  />
+                )}
                 {/* Governance Teams */}
                 <FieldGroup
                   scrollElement="governanceTeams.isPresent"

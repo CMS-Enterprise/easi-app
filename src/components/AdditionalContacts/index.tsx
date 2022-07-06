@@ -6,7 +6,7 @@ import CedarContactSelect from 'components/CedarContactSelect';
 import FieldGroup from 'components/shared/FieldGroup';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
-import cmsDivisionsAndOfficesOptions from '../cmsDivisionsAndOfficesOptions';
+import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 
 const contactRoleOptions = [
   'Product Owner',
