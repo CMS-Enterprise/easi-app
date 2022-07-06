@@ -41,11 +41,22 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
 
   const urlLocationCard = useMemo(() => {
     if (!productionLocation) return undefined;
+
+    const urlcount = locations?.length;
+    const urlsleft = urlcount ? urlcount - 1 : 0;
+    const topts: any = {
+      count: urlsleft
+    };
+    // https://github.com/i18next/i18next/issues/1220#issuecomment-654161038
+    if (urlsleft === 0) topts.context = 'nocount';
+
+    const moreUrls = t('singleSystem.systemDetails.moreURLs', topts);
+
     return {
       ...productionLocation,
-      count: locations?.length
+      moreUrls
     };
-  }, [locations, productionLocation]);
+  }, [locations, productionLocation, t]);
 
   return (
     <SectionWrapper
@@ -59,7 +70,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Grid row>
                 <Grid desktop={{ col: 12 }} className="padding-0">
                   <dt>
-                    {urlLocationCard.environment}{' '}
+                    {urlLocationCard.urlHostingEnv}{' '}
                     {t('singleSystem.systemDetails.environment')}
                   </dt>
                 </Grid>
@@ -83,9 +94,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                       className="link-header"
                       to={`/systems/${system.id}/details`}
                     >
-                      {t('singleSystem.systemDetails.view')}{' '}
-                      {urlLocationCard.count}{' '}
-                      {t('singleSystem.systemDetails.moreURLs')}
+                      {urlLocationCard.moreUrls}
                       <span aria-hidden>&nbsp;</span>
                       <span aria-hidden>&rarr; </span>
                     </UswdsReactLink>
@@ -102,7 +111,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                   />
                   <DescriptionDefinition
                     className="line-height-body-3"
-                    definition={urlLocationCard.provider}
+                    definition={urlLocationCard.deploymentDataCenterName}
                   />
                 </Grid>
               </Grid>
@@ -142,7 +151,6 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                     className="link-header"
                     to={`/systems/${system.id}/ato`}
                   >
-                    {/* TODO: Get from CEDAR */}
                     {t('singleSystem.ato.viewATOInfo')}
                     <span aria-hidden>&nbsp;</span>
                     <span aria-hidden>&rarr; </span>

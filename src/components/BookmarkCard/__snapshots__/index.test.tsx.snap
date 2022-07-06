@@ -15,7 +15,7 @@ exports[`BookmarkCard matches the snapshot 1`] = `
         <div
           class="bookmark__header easi-header__basic"
         >
-          <h2
+          <h3
             class="bookmark__title margin-top-0 margin-bottom-1"
           >
             <a
@@ -24,7 +24,7 @@ exports[`BookmarkCard matches the snapshot 1`] = `
             >
               Happiness Achievement Module
             </a>
-          </h2>
+          </h3>
           <button
             class="usa-button usa-button--unstyled"
             data-testid="button"

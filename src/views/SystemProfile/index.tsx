@@ -84,7 +84,7 @@ function httpsUrl(url: string): string {
 /**
  * Get the ATO Status from certain date properties and flags.
  */
-function getAtoStatus(
+export function getAtoStatus(
   // eslint-disable-next-line camelcase
   cedarAuthorityToOperate?: GetSystemProfile_cedarAuthorityToOperate
 ): AtoStatus {
@@ -140,17 +140,15 @@ function getLocations(
 ): UrlLocation[] {
   return cedarSystemDetails.urls.map(url => {
     // Find a deployment from matching its type with the url host env
-    const hostenv = url.urlHostingEnv;
+    const { urlHostingEnv } = url;
     const deployment = cedarSystemDetails.deployments.find(
-      dpl => hostenv !== null && dpl.deploymentType === hostenv
+      dpl => urlHostingEnv && dpl.deploymentType === urlHostingEnv
     );
 
     // Location tags derived from certain properties
     const tags: UrlLocationTag[] = [];
     if (url.isAPIEndpoint) tags.push('API endpoint');
     if (url.isVersionCodeRepository) tags.push('Versioned code respository');
-
-    const provider: UrlLocation['provider'] = deployment?.dataCenter?.name;
 
     // Fix address urls without a protocol
     // and reassign it to the original address property
@@ -159,8 +157,7 @@ function getLocations(
     return {
       ...url,
       address,
-      environment: deployment?.deploymentType,
-      provider,
+      deploymentDataCenterName: deployment?.dataCenter?.name,
       tags
     };
   });
@@ -180,6 +177,78 @@ export function getPersonFullName(
     : fullname;
 }
 
+/**
+ * `SystemProfileData` is a merge of request data and parsed data
+ * required by SystemHome and at least one other subpage.
+ * It is passed to all SystemProfile subpage components.
+ */
+export function getSystemProfileData(
+  data?: GetSystemProfile
+): SystemProfileData | undefined {
+  // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
+  if (!data) return undefined;
+
+  const { cedarSystemDetails } = data;
+  const cedarSystem = cedarSystemDetails?.cedarSystem;
+
+  if (!cedarSystemDetails || !cedarSystem) return undefined;
+
+  // Business Owner
+  // Select the first found Business Owner
+  const businessOwner = cedarSystemDetails.roles.find(
+    role =>
+      role.assigneeType === CedarAssigneeType.PERSON &&
+      role.roleTypeID === BUSINESS_OWNER_ROLE_TYPE_ID
+  );
+
+  // Point of Contact is the business owner for now
+  // Contextualized poc will be determined later
+  const pointOfContact = businessOwner;
+
+  const locations = getLocations(cedarSystemDetails);
+
+  const productionLocation = locations.find(
+    location => location.urlHostingEnv === 'Production'
+  );
+
+  const cedarAuthorityToOperate = data.cedarAuthorityToOperate[0];
+
+  const numberOfContractorFte = parseFloat(
+    cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte || '0'
+  );
+
+  const numberOfFederalFte = parseFloat(
+    cedarSystemDetails.businessOwnerInformation?.numberOfFederalFte || '0'
+  );
+
+  const numberOfFte = Number(
+    (numberOfContractorFte + numberOfFederalFte).toFixed(2)
+  );
+
+  return {
+    ...data,
+    id: cedarSystem.id,
+    ato: cedarAuthorityToOperate,
+    atoStatus: getAtoStatus(cedarAuthorityToOperate),
+    businessOwner,
+    developmentTags: getDevelopmentTags(cedarSystemDetails),
+    locations,
+    numberOfContractorFte,
+    numberOfFederalFte,
+    numberOfFte,
+    pointOfContact,
+    productionLocation,
+    status: cedarSystem.status,
+
+    // Remaining mock data stubs
+    activities: mockActivies,
+    budgets: mockBudgets,
+    products: mockProducts,
+    subSystems: mockSubSystems,
+    systemData: mockSystemData
+  };
+}
+
 export function showAtoExpirationDate(
   // eslint-disable-next-line camelcase
   systemProfileAto?: GetSystemProfile_cedarAuthorityToOperate
@@ -193,15 +262,24 @@ export function showAtoExpirationDate(
 /**
  * Show the value if it's not `null`, `undefined`, or `''`,
  * otherwise render `defaultVal`.
+ * Use a `format` function on the value if provided.
  */
 export function showVal(
   val: string | number | null | undefined,
-  defaultVal: string = 'No information to display',
-  classNames?: string
+  {
+    defaultVal = 'No information to display',
+    format
+  }: {
+    defaultVal?: string;
+    format?: (v: any) => string;
+  } = {}
 ): React.ReactNode {
   if (val === null || val === undefined || val === '') {
     return <span className="text-italic">{defaultVal}</span>;
   }
+
+  if (format) return format(val);
+
   return val;
 }
 
@@ -232,8 +310,6 @@ const SystemProfile = () => {
     }
   });
 
-  // Data is generally unavailable if `data.cedarSystemDetails` is empty
-
   // Header description expand toggle
   const descriptionRef = React.createRef<HTMLElement>();
   const [
@@ -254,105 +330,38 @@ const SystemProfile = () => {
     }
   });
 
+  const systemProfileData: SystemProfileData | undefined = useMemo(
+    () => getSystemProfileData(data),
+    [data]
+  );
+
   const fields = useMemo(() => {
     if (!data) return {};
 
     const { cedarSystemDetails } = data!;
     if (!cedarSystemDetails) return {};
 
-    // Business Owner
-    // Select the first found Business Owner
-    const businessOwner = cedarSystemDetails.roles.find(
-      role =>
-        role.assigneeType === CedarAssigneeType.PERSON &&
-        role.roleTypeID === BUSINESS_OWNER_ROLE_TYPE_ID
-    );
-
-    // Point of Contact is the business owner for now
-    // Contextualized poc will be determined later
-    const pointOfContact = businessOwner;
-
-    const locations = getLocations(cedarSystemDetails);
-
-    const productionLocation = locations.find(
-      location => location.environment === 'Production'
-    );
-
     return {
-      businessOwner,
       cedarSystem: cedarSystemDetails.cedarSystem,
-      cmsComponent: cedarSystemDetails.cedarSystem.businessOwnerOrg,
-      locations,
-      pointOfContact,
-      productionLocation
+      cmsComponent: cedarSystemDetails.cedarSystem.businessOwnerOrg
     };
   }, [data]);
 
-  const {
-    businessOwner,
-    cedarSystem,
-    cmsComponent,
-    pointOfContact,
-    productionLocation
-  } = fields;
-
-  /**
-   * SystemProfile data is a merge of request data and parsed data
-   * required by SystemHome and at least one other subpage.
-   * It is passed to all SystemProfile subpage components.
-   */
-  const systemProfileData: SystemProfileData | undefined = useMemo(() => {
-    if (!data) return undefined;
-
-    const { cedarSystemDetails } = data;
-
-    if (!cedarSystemDetails || !cedarSystem) return undefined;
-
-    const cedarAuthorityToOperate = data.cedarAuthorityToOperate[0];
-
-    const numberOfContractorFte = parseFloat(
-      cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte || '0'
-    );
-
-    const numberOfFederalFte = parseFloat(
-      cedarSystemDetails.businessOwnerInformation?.numberOfFederalFte || '0'
-    );
-
-    const numberOfFte = Number(
-      (numberOfContractorFte + numberOfFederalFte).toFixed(2)
-    );
-
-    return {
-      ...data,
-      id: cedarSystem.id,
-      ato: cedarAuthorityToOperate,
-      atoStatus: getAtoStatus(cedarAuthorityToOperate),
-      businessOwner: fields.businessOwner,
-      developmentTags: getDevelopmentTags(cedarSystemDetails),
-      locations: fields.locations,
-      numberOfContractorFte,
-      numberOfFederalFte,
-      numberOfFte,
-      pointOfContact: fields.pointOfContact,
-      productionLocation: fields.productionLocation,
-      status: cedarSystem.status,
-
-      // Remaining mock data stubs
-      activities: mockActivies,
-      budgets: mockBudgets,
-      products: mockProducts,
-      subSystems: mockSubSystems,
-      systemData: mockSystemData
-    };
-  }, [data, cedarSystem, fields]);
+  const { cedarSystem, cmsComponent } = fields;
 
   if (loading) {
     return <PageLoading />;
   }
 
-  if (error || !cedarSystem || !systemProfileData) {
+  if (error || !systemProfileData || !cedarSystem) {
     return <NotFound />;
   }
+
+  const {
+    businessOwner,
+    pointOfContact,
+    productionLocation
+  } = systemProfileData;
 
   const subComponents = sideNavItems(
     systemProfileData,
@@ -588,7 +597,6 @@ const SystemProfile = () => {
                                 aria-label={t('singleSystem.moreContact')}
                                 className="line-height-body-5"
                                 to={`/systems/${systemId}/team-and-contract`}
-                                target="_blank"
                               >
                                 {t('singleSystem.moreContact')}
                                 <span aria-hidden>&nbsp;</span>

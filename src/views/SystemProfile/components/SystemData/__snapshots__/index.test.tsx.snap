@@ -16,6 +16,12 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
     >
       Records management categories
     </h3>
+    <span
+      class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+      data-testid="tag"
+    >
+      Agile Methodology
+    </span>
     <div
       class="grid-row margin-top-4"
       data-testid="grid"
@@ -136,7 +142,7 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
         </dd>
         <a
           class="usa-link"
-          href="/systems/326-9-0/tools-and-software"
+          href="/systems/000-100-0/tools-and-software"
         >
           View gateway information
         </a>
@@ -162,6 +168,12 @@ exports[`System Data sub page for System Profile matches snapshot 1`] = `
     >
       Data content categories
     </h3>
+    <span
+      class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+      data-testid="tag"
+    >
+      Agile Methodology
+    </span>
   </div>
   <div
     class="easi-section margin-bottom-4 padding-bottom-5"

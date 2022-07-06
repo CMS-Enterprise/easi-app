@@ -1,20 +1,6 @@
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
 // Temporary extension of CEDAR types under BE integration complete
-export type tempLocationProp = {
-  id: string;
-  environment:
-    | 'Production environment'
-    | 'Development environment'
-    | 'Code Repository';
-  url?: string;
-  tags: string[];
-  location: string;
-  cloudProvider: string;
-  firewall: boolean;
-};
-
-// Temporary extension of CEDAR types under BE integration complete
 export type tempBudgetProp = {
   id: string;
   title: string;
@@ -64,19 +50,6 @@ export type tempSystemDataProp = {
   dataPartner: string;
   tags: string[];
 };
-
-// Temporary extension of CEDAR types under BE integration complete
-// See src/types/systemProfile SystemProfileData for the integrating object
-export interface tempCedarSystemProps extends CedarSystemProps {
-  locations?: tempLocationProp[];
-  developmentTags?: string[];
-  budgets?: tempBudgetProp[];
-  activities?: tempATOProp[];
-  atoStatus?: string;
-  products?: tempProductsProp[];
-  systemData?: tempSystemDataProp[];
-  subSystems?: tempSubSystemProp[];
-}
 
 export const systemData: tempSystemDataProp[] = [
   {
@@ -153,49 +126,6 @@ export const budgetsInfo: tempBudgetProp[] = [
     comment: 'Most of this funding is directly and only for this system (80%)'
   }
 ];
-
-const systemProfileHiddenFields = false;
-
-export const developmentTags: string[] = ['Agile Methodology'];
-
-const locationsInfo: tempLocationProp[] = [
-  {
-    id: '1',
-    environment: 'Production environment',
-    url: 'ham.cms.gov',
-    tags: ['API endpoint', 'URL endpoint'],
-    location: 'AWS East',
-    cloudProvider: 'Amazon Web Services',
-    firewall: true
-  },
-  {
-    id: '2',
-    environment: 'Development environment',
-    url: 'dev.ham.cms.gov',
-    tags: [],
-    location: 'AWS East',
-    cloudProvider: 'Amazon Web Services',
-    firewall: true
-  }
-];
-if (systemProfileHiddenFields) {
-  locationsInfo.push({
-    id: '3',
-    environment: 'Code Repository',
-    url: 'github.com/ham',
-    tags: ['Versioned code repository'],
-    location: 'AWS East',
-    cloudProvider: 'Amazon Web Services',
-    firewall: true
-  });
-
-  developmentTags.push(
-    'AI Technologies',
-    'Healthcare Quality',
-    'Health Insurance Program'
-  );
-}
-export { locationsInfo };
 
 export const mockSystemInfo: CedarSystemProps[] = [
   {
