@@ -108,7 +108,7 @@ export default function useSystemIntakeContacts(
     callback?: () => any
   ) => {
     const { euaUserId, component, role } = contact;
-    createSystemIntakeContact({
+    return createSystemIntakeContact({
       variables: {
         input: {
           euaUserId,
@@ -127,7 +127,7 @@ export default function useSystemIntakeContacts(
     callback?: () => any
   ) => {
     const { id, euaUserId, component, role } = contact;
-    updateSystemIntakeContact({
+    return updateSystemIntakeContact({
       variables: {
         input: {
           id,

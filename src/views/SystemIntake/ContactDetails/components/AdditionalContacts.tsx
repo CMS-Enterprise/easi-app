@@ -101,7 +101,7 @@ const ContactForm = ({
           {t('contactDetails.additionalContacts.name')}
         </Label>
         <CedarContactSelect
-          id="systemIntakeContact.commonName"
+          id="IntakeForm-ContactCommonName"
           name="systemIntakeContact.commonName"
           ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
           value={activeContact.euaUserId ? activeContact : undefined}
@@ -117,7 +117,7 @@ const ContactForm = ({
           {t('contactDetails.additionalContacts.component')}
         </Label>
         <Dropdown
-          id="systemIntakeContact.component"
+          id="IntakeForm-ContactComponent"
           name="systemIntakeContact.component"
           value={activeContact.component}
           onChange={e =>
@@ -140,7 +140,7 @@ const ContactForm = ({
           {t('contactDetails.additionalContacts.role')}
         </Label>
         <Dropdown
-          id="systemIntakeContact.role"
+          id="IntakeForm-ContactRole"
           name="systemIntakeContact.role"
           value={activeContact.role}
           onChange={e =>

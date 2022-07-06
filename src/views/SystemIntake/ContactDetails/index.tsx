@@ -23,7 +23,6 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import useCedarContactLookup from 'hooks/useCedarContactLookup';
-import useCedarContacts from 'hooks/useCedarContacts';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -141,72 +140,52 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     return link;
   })();
 
-  const onSubmit = (values?: ContactDetailsForm) => {
-    if (values) {
-      // Update business owner
+  const onSubmit = async (values?: ContactDetailsForm) => {
+    if (!values) return null;
+    const updateSystemIntakeContact = async (
+      type: 'businessOwner' | 'productManager' | 'isso'
+    ) => {
       if (
-        values.businessOwner.euaUserId &&
-        values.businessOwner.component &&
-        values.businessOwner !== initialValues.businessOwner
+        values[type].euaUserId &&
+        values[type].component &&
+        values[type] !== initialValues[type]
       ) {
-        if (!contacts?.businessOwner?.id) {
-          createContact(values.businessOwner);
-        } else {
-          updateContact(values.businessOwner);
+        if (contacts?.[type].id) {
+          return updateContact({ ...values[type], id: contacts[type].id });
+        }
+        return createContact(values[type]);
+      }
+      return null;
+    };
+
+    await updateSystemIntakeContact('businessOwner');
+    await updateSystemIntakeContact('productManager');
+    await updateSystemIntakeContact('isso');
+
+    return mutate({
+      variables: {
+        input: {
+          id,
+          requester: {
+            name: values.requester.name,
+            component: values.requester.component
+          },
+          businessOwner: {
+            name: values.businessOwner.commonName,
+            component: values.businessOwner.component
+          },
+          productManager: {
+            name: values.productManager.commonName,
+            component: values.productManager.component
+          },
+          isso: {
+            isPresent: values.isso.isPresent,
+            name: values.isso.commonName
+          },
+          governanceTeams: values.governanceTeams || []
         }
       }
-
-      // Update product manager
-      if (
-        values.productManager.euaUserId &&
-        values.productManager.component &&
-        values.productManager !== initialValues.productManager
-      ) {
-        if (!contacts?.productManager?.id) {
-          createContact(values.productManager);
-        } else {
-          updateContact(values.productManager);
-        }
-      }
-
-      // Update isso
-      if (
-        values.isso.isPresent &&
-        values.isso.euaUserId &&
-        values.isso !== initialValues.isso
-      ) {
-        if (!contacts?.isso?.id) {
-          createContact(values.isso);
-        } else {
-          updateContact(values.isso);
-        }
-      }
-
-      mutate({
-        variables: {
-          input: {
-            id,
-            requester: {
-              name: values.requester.name,
-              component: values.requester.component
-            },
-            businessOwner: {
-              name: values.businessOwner.commonName,
-              component: values.businessOwner.component
-            },
-            productManager: {
-              name: values.productManager.commonName,
-              component: values.productManager.component
-            },
-            isso: {
-              isPresent: values.isso.isPresent,
-              name: values.isso.commonName
-            },
-            governanceTeams: values.governanceTeams || []
-          }
-        }
-      });
-    }
+    });
   };
 
   // Wait until contacts are loaded to return form
@@ -732,14 +711,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
-                        mutate({
-                          variables: {
-                            input: { id, ...values }
-                          }
-                        }).then(response => {
-                          if (!response.errors) {
-                            const newUrl = 'request-details';
-                            history.push(newUrl);
+                        onSubmit(values).then(response => {
+                          if (!response?.errors) {
+                            history.push('request-details');
                           }
                         });
                       } else {
@@ -756,19 +730,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     type="button"
                     unstyled
                     onClick={() => {
-                      mutate({
-                        variables: {
-                          input: { id, ...values }
-                        }
-                      }).then(response => {
-                        if (!response.errors) {
+                      onSubmit(values).then(response => {
+                        if (!response?.errors) {
                           history.push(saveExitLink);
                         }
                       });
                     }}
                   >
                     <span className="display-flex flex-align-center">
-                      <IconNavigateBefore /> Save & Exit
+                      <IconNavigateBefore /> {t('Save & Exit')}
                     </span>
                   </Button>
                 </div>

@@ -81,14 +81,39 @@ describe('The System Intake Form', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
+    // ISSO
     cy.get('#IntakeForm-HasIssoYes')
       .check({ force: true })
       .should('be.checked');
 
-    cy.get('#IntakeForm-IssoName')
-      .type('Taylor Smith')
-      .should('have.value', 'Taylor Smith');
+    cy.get('#IntakeForm-IssoCommonName input')
+      .type('Jerry{downArrow}{enter}')
+      .should('have.value', 'Jerry Seinfeld, SF13');
 
+    cy.get('#IntakeForm-IssoComponent')
+      .select('Center for Medicare')
+      .should('have.value', 'Center for Medicare');
+
+    // Add another contact
+    cy.contains('button', 'Add another contact').click();
+
+    cy.get('#IntakeForm-ContactCommonName input')
+      .type('Jerry{downArrow}{enter}')
+      .should('have.value', 'Jerry Seinfeld, SF13');
+
+    cy.get('#IntakeForm-ContactComponent')
+      .select('Center for Medicare')
+      .should('have.value', 'Center for Medicare');
+
+    cy.get('#IntakeForm-ContactRole')
+      .select('Product Owner')
+      .should('have.value', 'Product Owner');
+
+    cy.contains('button', 'Add contact').click();
+
+    cy.contains('p', 'SF13');
+
+    // Governance teams
     cy.get('#IntakeForm-YesGovernanceTeams')
       .check({ force: true })
       .should('be.checked');
