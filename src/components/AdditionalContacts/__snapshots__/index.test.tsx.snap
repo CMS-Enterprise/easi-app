@@ -38,6 +38,7 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
             class="usa-select"
             data-reach-combobox-input=""
             data-state="idle"
+            name="systemIntakeContact.commonName"
             role="combobox"
             value="Jane Doe, ABCD"
           />

@@ -185,7 +185,12 @@ const intake = {
       select: 'Select an option',
       role: 'New contact role',
       save: 'Save',
-      addContact: 'Add contact'
+      addContact: 'Add contact',
+      errors: {
+        commonName: "Enter the contact's name",
+        component: "Select the contact's component",
+        role: "Select the contact's role"
+      }
     },
     governanceTeam: {
       helpText:

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Dropdown, Label } from '@trussworks/react-uswds';
 
 import CedarContactSelect from 'components/CedarContactSelect';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
@@ -85,6 +86,33 @@ const ContactForm = ({
 }) => {
   const { t } = useTranslation('intake');
 
+  const [errors, setErrors] = useState({
+    commonName: '',
+    component: '',
+    role: ''
+  });
+  const handleSubmit = () => {
+    const submitErrors = {
+      commonName: activeContact.commonName
+        ? ''
+        : t('contactDetails.additionalContacts.errors.commonName'),
+      component: activeContact.component
+        ? ''
+        : t('contactDetails.additionalContacts.errors.component'),
+      role: activeContact.role
+        ? ''
+        : t('contactDetails.additionalContacts.errors.role')
+    };
+    setErrors(submitErrors);
+    if (
+      !submitErrors.commonName &&
+      !submitErrors.component &&
+      !submitErrors.role
+    ) {
+      onSubmit(activeContact, () => setActiveContact(null));
+    }
+  };
+
   return (
     <div className="systemIntakeContactForm">
       <h4 className="margin-bottom-2">
@@ -96,10 +124,11 @@ const ContactForm = ({
       </h4>
 
       {/* Contact Name */}
-      <FieldGroup className="margin-top-2">
+      <FieldGroup className="margin-top-2" error={!!errors.commonName}>
         <Label className="text-normal" htmlFor="systemIntakeContact.commonName">
           {t('contactDetails.additionalContacts.name')}
         </Label>
+        <FieldErrorMsg>{errors.commonName}</FieldErrorMsg>
         <CedarContactSelect
           id="IntakeForm-ContactCommonName"
           name="systemIntakeContact.commonName"
@@ -112,10 +141,11 @@ const ContactForm = ({
       </FieldGroup>
 
       {/* Contact Component */}
-      <FieldGroup className="margin-top-2">
+      <FieldGroup className="margin-top-2" error={!!errors.component}>
         <Label className="text-normal" htmlFor="systemIntakeContact.component">
           {t('contactDetails.additionalContacts.component')}
         </Label>
+        <FieldErrorMsg>{errors.component}</FieldErrorMsg>
         <Dropdown
           id="IntakeForm-ContactComponent"
           name="systemIntakeContact.component"
@@ -135,10 +165,11 @@ const ContactForm = ({
       </FieldGroup>
 
       {/* Contact Role */}
-      <FieldGroup className="margin-top-2">
+      <FieldGroup className="margin-top-2" error={!!errors.role}>
         <Label className="text-normal" htmlFor="systemIntakeContact.role">
           {t('contactDetails.additionalContacts.role')}
         </Label>
+        <FieldErrorMsg>{errors.role}</FieldErrorMsg>
         <Dropdown
           id="IntakeForm-ContactRole"
           name="systemIntakeContact.role"
@@ -163,10 +194,7 @@ const ContactForm = ({
         <Button type="button" outline onClick={() => setActiveContact(null)}>
           Cancel
         </Button>
-        <Button
-          type="button"
-          onClick={() => onSubmit(activeContact, () => setActiveContact(null))}
-        >
+        <Button type="button" onClick={() => handleSubmit()}>
           {t(
             activeContact?.id
               ? 'contactDetails.additionalContacts.save'
@@ -202,6 +230,7 @@ export default function AdditionalContacts({
   deleteContact: (id: string, callback?: () => any) => void;
 }) {
   const { t } = useTranslation('intake');
+
   return (
     <div className="system-intake-contacts margin-top-4">
       {contacts.length > 0 && (
