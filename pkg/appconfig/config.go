@@ -108,6 +108,9 @@ const DBNameConfigKey = "PGDATABASE"
 // DBUsernameConfigKey is the Postgres username config key
 const DBUsernameConfigKey = "PGUSER"
 
+// DBIAMUsernameKey is the IAM username config key
+const DBIAMUsernameKey = "DB_IAM_USER"
+
 // DBPasswordConfigKey is the Postgres password config key
 const DBPasswordConfigKey = "PGPASS"
 
