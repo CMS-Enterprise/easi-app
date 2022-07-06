@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -483,7 +483,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     disabled={isReqAndProductManagerSame}
                   >
                     <option value="" disabled>
-                      Select an option
+                      {t('Select an option')}
                     </option>
                     {cmsDivisionsAndOfficesOptions('ProductManagerComponent')}
                   </Field>
@@ -723,7 +723,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     });
                   }}
                 >
-                  Next
+                  {t('Next')}
                 </Button>
                 <div className="margin-y-3">
                   <Button

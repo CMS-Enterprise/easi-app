@@ -63,6 +63,7 @@ export default function CedarContactSelect({
       onSelect={item => updateContact(contacts[item])}
     >
       <ComboboxInput
+        name={name}
         disabled={disabled}
         className="usa-select"
         selectOnClick
