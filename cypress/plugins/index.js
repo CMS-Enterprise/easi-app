@@ -24,12 +24,16 @@ const extendLCIDQuery = require('../../src/queries/CreateSystemIntakeActionExten
 
 const cache = new apollo.InMemoryCache();
 
-// TODO - EASI-2021 - should no longer be needed
+// TODO - EASI-2021 - should no longer be needed, once all actions can be done through the UI
 function createApolloClient(euaId) {
+  const gqlURL =
+    process.env.REACT_APP_GRAPHQL_ADDRESS ||
+    'http://localhost:8080/api/graph/query';
+
   return new apollo.ApolloClient({
     cache,
     link: new apollo.HttpLink({
-      uri: 'http://localhost:8080/api/graph/query', // TODO make this generalizable?
+      uri: gqlURL,
       fetch,
       headers: {
         // need job code to be able to issue LCID

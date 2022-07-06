@@ -47,8 +47,10 @@ func NewPostfixSender(serverAddress string) PostfixSender {
 	}
 }
 
-// Send sends an email
+// Send sends and logs an email
 func (sender PostfixSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
+	ccAddresses := ""
+
 	e := email.Email{
 		From:    "testsender@oddball.dev",
 		To:      []string{toAddress.String()},
@@ -57,7 +59,15 @@ func (sender PostfixSender) Send(ctx context.Context, toAddress models.EmailAddr
 	}
 	if ccAddress != nil {
 		e.Cc = []string{ccAddress.String()}
+		ccAddresses = ccAddress.String()
 	}
+
+	appcontext.ZLogger(ctx).Info("Sending email using Postfix server",
+		zap.String("To", toAddress.String()),
+		zap.String("CC", ccAddresses),
+		zap.String("Subject", subject),
+		zap.String("Body", body),
+	)
 
 	err := e.Send(sender.serverAddress, nil)
 	return err

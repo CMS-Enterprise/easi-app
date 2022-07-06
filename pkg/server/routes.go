@@ -138,8 +138,11 @@ func (s *Server) routes(
 
 	// override email client with dummy client that logs output when running tests
 	if s.environment.Test() {
-		localSender := local.NewSender()
-		emailClient, err = email.NewClient(emailConfig, localSender)
+		// localSender := local.NewSender()
+		// emailClient, err = email.NewClient(emailConfig, localSender)
+		postfixSender := local.NewPostfixSender("email:1025") // TODO - get from environment variable?
+		emailClient, err = email.NewClient(emailConfig, postfixSender)
+
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
 		}
