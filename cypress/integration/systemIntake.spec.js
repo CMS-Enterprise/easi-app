@@ -218,7 +218,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', "CMS Business Owner's Name")
       .siblings('dd')
-      .contains('Casey Doe');
+      .contains('Jerry Seinfeld');
 
     cy.contains('.easi-review-row dt', 'CMS Business Owner Component')
       .siblings('dd')
@@ -226,7 +226,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', 'CMS Project/Product Manager or lead')
       .siblings('dd')
-      .contains('Casey Doe');
+      .contains('Jerry Seinfeld');
 
     cy.contains(
       '.easi-review-row dt',
@@ -240,7 +240,7 @@ describe('The System Intake Form', () => {
       'Does your project have an Information System Security Officer (ISSO)?'
     )
       .siblings('dd')
-      .contains('Yes, Taylor Smith');
+      .contains('Yes, Jerry Seinfeld');
 
     cy.contains('.easi-review-row dt', 'I have started collaborating with')
       .siblings('dd')
