@@ -19,19 +19,15 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
-import { RoleTypeId, teamSectionKeys } from 'constants/systemProfile';
+import { teamSectionKeys } from 'constants/systemProfile';
 import {
-  PersonUsernameWithRoles,
-  SystemProfileData,
-  SystemProfileSubviewProps
+  RoleTypeId,
+  SystemProfileSubviewProps,
+  UsernameWithRoles
 } from 'types/systemProfile';
 import formatNumber from 'utils/formatNumber';
 import { mockVendors } from 'views/Sandbox/mockSystemData';
-import {
-  getPeopleUsernamesWithRoles,
-  getPersonFullName,
-  showVal
-} from 'views/SystemProfile';
+import { getPersonFullName, showVal } from 'views/SystemProfile';
 
 import './index.scss';
 
@@ -39,17 +35,15 @@ import './index.scss';
  * Get team members in sections of Cedar Role Types:
  * Business Owners, Project Leads, Additional.
  */
-export function getTeam(data: SystemProfileData) {
+export function getTeam(usernamesWithRoles: UsernameWithRoles[]) {
   // Team list in sections
-  const businessOwners: PersonUsernameWithRoles[] = [];
-  const projectLeads: PersonUsernameWithRoles[] = [];
-  const additional: PersonUsernameWithRoles[] = [];
-
-  const people = getPeopleUsernamesWithRoles(data);
+  const businessOwners: UsernameWithRoles[] = [];
+  const projectLeads: UsernameWithRoles[] = [];
+  const additional: UsernameWithRoles[] = [];
 
   // Match person roles to sections
   // eslint-disable-next-line no-restricted-syntax
-  for (const person of people) {
+  for (const person of usernamesWithRoles) {
     const { roles } = person;
 
     // Members in Business Owner and Project Lead roles appear in both sections
@@ -85,8 +79,8 @@ export function getTeam(data: SystemProfileData) {
   };
 }
 
-const TeamContactCard = ({ pr }: { pr: PersonUsernameWithRoles }) => {
-  const { roles } = pr;
+const TeamContactCard = ({ user }: { user: UsernameWithRoles }) => {
+  const { roles } = user;
   if (roles.length === 0) return null;
 
   const person = roles[0]; // Get assignee info from the first role
@@ -125,7 +119,7 @@ const TeamContactCard = ({ pr }: { pr: PersonUsernameWithRoles }) => {
 const Team = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const flags = useFlags();
-  const team = useMemo(() => getTeam(system), [system]);
+  const team = useMemo(() => getTeam(system.usernamesWithRoles), [system]);
   return (
     <>
       <SectionWrapper className="padding-bottom-4">
@@ -263,7 +257,7 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
             </h2>
             <CardGroup className="margin-x-0 margin-bottom-4">
               {people.map(pr => (
-                <TeamContactCard key={pr.assigneeUsername} pr={pr} />
+                <TeamContactCard key={pr.assigneeUsername} user={pr} />
               ))}
             </CardGroup>
           </SectionWrapper>

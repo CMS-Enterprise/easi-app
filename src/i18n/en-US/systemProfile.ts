@@ -24,7 +24,8 @@ const systemProfile = {
   singleSystem: {
     id: 'single-system-profile',
     mainNavigation: 'Main Navigation',
-    pointOfContact: 'Point of contact',
+    pointsOfContact: 'Point of contact',
+    pointsOfContact_plural: 'Points of contact',
     sendEmail: 'Send an email',
     moreContact: 'More points of contact',
     description: {

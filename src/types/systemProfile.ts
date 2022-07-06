@@ -23,6 +23,8 @@ import {
 
 import { CedarAssigneeType } from './graphql-global-types';
 
+// Loosely grouped by System Subpages
+
 // Team
 
 export type TeamSectionKey = typeof teamSectionKeys[number];
@@ -33,7 +35,7 @@ export interface CedarRoleAssigneePerson
   assigneeType: CedarAssigneeType.PERSON;
 }
 
-export interface PersonUsernameWithRoles {
+export interface UsernameWithRoles {
   assigneeUsername: string;
   roles: CedarRoleAssigneePerson[];
 }
@@ -54,6 +56,39 @@ export type SecurityFindings = Record<
   number
 >;
 
+// General
+
+export type SubpageKey =
+  | 'home'
+  | 'details'
+  | 'team'
+  | 'funding-and-budget'
+  | 'tools-and-software'
+  | 'ato'
+  | 'lifecycle-id'
+  | 'section-508'
+  | 'sub-systems'
+  | 'system-data'
+  | 'documents';
+
+/**
+ * A set of some Cedar Role Type Ids used in the client.
+ * So far it is certain team members and points of contact.
+ * This is a borrowed set from `API/role/type/alfabet`.
+ */
+// eslint-disable-next-line no-shadow
+export enum RoleTypeId {
+  API_CONTACT = '238-58-0',
+  BUSINESS_OWNER = '238-17-0',
+  COR = '238-35-0',
+  ISSO = '238-29-0',
+  PROJECT_LEAD = '238-32-0',
+  SYSTEM_BUSINESS_QUESTION_CONTACT = '238-51-0',
+  SYSTEM_DATA_CENTER_CONTACT = '238-52-0',
+  SYSTEM_ISSUES_CONTACT = '238-50-0',
+  SYSTEM_MAINTAINER = '238-28-0'
+}
+
 // Development Tags
 
 export type DevelopmentTag = 'Agile Methodology';
@@ -72,8 +107,6 @@ export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
   tags: UrlLocationTag[];
 }
 
-// General
-
 export interface SystemProfileData extends GetSystemProfile {
   // The original id type can be null, in which case this object is not created
   id: string;
@@ -88,11 +121,10 @@ export interface SystemProfileData extends GetSystemProfile {
   numberOfFederalFte?: number;
   numberOfFte?: number;
   personRoles: CedarRoleAssigneePerson[];
-  // eslint-disable-next-line camelcase
-  pointOfContact?: GetSystemProfile_cedarSystemDetails_roles;
   productionLocation?: UrlLocation;
   // eslint-disable-next-line camelcase
   status: GetSystemProfile_cedarSystemDetails_cedarSystem['status'];
+  usernamesWithRoles: UsernameWithRoles[];
 
   // Remaining mock data stubs
   activities?: tempATOProp[];

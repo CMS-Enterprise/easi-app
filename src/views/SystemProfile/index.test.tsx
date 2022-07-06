@@ -7,13 +7,23 @@ import {
   waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import { clone } from 'lodash';
+import { clone, cloneDeep } from 'lodash';
 import { DateTime } from 'luxon';
 
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
-import { query, result } from 'data/mock/systemProfile';
+import {
+  getMockPersonRole,
+  getMockSystemProfileData,
+  query,
+  result
+} from 'data/mock/systemProfile';
+// eslint-disable-next-line camelcase
+import { GetSystemProfile_cedarSystemDetails_roles } from 'queries/types/GetSystemProfile';
+import { RoleTypeId, SubpageKey } from 'types/systemProfile';
 
 import SystemProfile, { getAtoStatus } from './index';
+import pointsOfContactIds from './pointsOfContactIds';
+import { getSubpagePoc } from './PointsOfContactSidebar';
 
 describe('System Profile parent request', () => {
   it('matches snapshot', async () => {
@@ -106,5 +116,34 @@ describe('System Profile ATO Status', () => {
     const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
     cedarAto.dateAuthorizationMemoExpires = dt.toString();
     expect(getAtoStatus(cedarAto)).toBe(status);
+  });
+});
+
+describe('System Profile Points of Contact by subpage', () => {
+  const resultdata = cloneDeep(result.data);
+
+  // Reassign 1 person per Cedar Role Type
+  resultdata.cedarSystemDetails!.roles = Object.values(
+    RoleTypeId
+    // eslint-disable-next-line camelcase
+  ).map<GetSystemProfile_cedarSystemDetails_roles>((roleTypeID, idx) =>
+    getMockPersonRole({
+      assigneeUsername: `ABC${idx}`,
+      roleTypeID
+    })
+  );
+
+  const data = getMockSystemProfileData(resultdata);
+
+  test.each(
+    Object.keys(pointsOfContactIds).map(subpage => subpage as SubpageKey)
+  )('poc set equals the expected set for %s', subpage => {
+    const expectedSubpagePocIds = pointsOfContactIds[subpage];
+    const contacts = getSubpagePoc(subpage, data.usernamesWithRoles);
+
+    // Every subpage poc role type id matches every contact's 1 role
+    expect([...expectedSubpagePocIds].sort()).toEqual(
+      contacts.flatMap(c => c.roles.map(r => r.roleTypeID)).sort()
+    );
   });
 });

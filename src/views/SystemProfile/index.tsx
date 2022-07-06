@@ -20,7 +20,6 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import { startCase } from 'lodash';
 import { DateTime } from 'luxon';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -30,7 +29,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import { ATO_STATUS_DUE_SOON_DAYS, RoleTypeId } from 'constants/systemProfile';
+import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
 import {
@@ -47,10 +46,12 @@ import {
   AtoStatus,
   CedarRoleAssigneePerson,
   DevelopmentTag,
-  PersonUsernameWithRoles,
+  RoleTypeId,
+  SubpageKey,
   SystemProfileData,
   UrlLocation,
-  UrlLocationTag
+  UrlLocationTag,
+  UsernameWithRoles
 } from 'types/systemProfile';
 import NotFound from 'views/NotFound';
 import {
@@ -65,6 +66,7 @@ import {
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
 import sideNavItems from './components/index';
 import SystemSubNav from './components/SystemSubNav/index';
+import PointsOfContactSidebar from './PointsOfContactSidebar';
 
 import './index.scss';
 
@@ -179,13 +181,13 @@ export function getPersonFullName(
  * Get a list of people by their usernames with of a nested list of their Cedar Roles.
  * Assignees appear to be listed in order. The returned list keeps that order.
  */
-export function getPeopleUsernamesWithRoles(
-  data: SystemProfileData
-): PersonUsernameWithRoles[] {
-  const people: PersonUsernameWithRoles[] = [];
+export function getUsernamesWithRoles(
+  personRoles: CedarRoleAssigneePerson[]
+): UsernameWithRoles[] {
+  const people: UsernameWithRoles[] = [];
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const role of data.personRoles) {
+  for (const role of personRoles) {
     const { assigneeUsername } = role;
     if (assigneeUsername) {
       let person = people.find(
@@ -224,14 +226,11 @@ export function getSystemProfileData(
     role => role.assigneeType === CedarAssigneeType.PERSON
   ) as CedarRoleAssigneePerson[];
 
-  // Business Owners
   const businessOwners = personRoles.filter(
     role => role.roleTypeID === RoleTypeId.BUSINESS_OWNER
   );
 
-  // Point of Contact is the business owner for now
-  // Contextualized poc will be determined later
-  const pointOfContact = businessOwners[0];
+  const usernamesWithRoles = getUsernamesWithRoles(personRoles);
 
   const locations = getLocations(cedarSystemDetails);
 
@@ -265,9 +264,9 @@ export function getSystemProfileData(
     numberOfFederalFte,
     numberOfFte,
     personRoles,
-    pointOfContact,
     productionLocation,
     status: cedarSystem.status,
+    usernamesWithRoles,
 
     // Remaining mock data stubs
     activities: mockActivies,
@@ -318,7 +317,7 @@ const SystemProfile = () => {
   const flags = useFlags();
 
   const { systemId, subinfo, top } = useParams<{
-    subinfo: string;
+    subinfo: SubpageKey;
     systemId: string;
     top: string;
   }>();
@@ -386,11 +385,7 @@ const SystemProfile = () => {
     return <NotFound />;
   }
 
-  const {
-    businessOwners,
-    pointOfContact,
-    productionLocation
-  } = systemProfileData;
+  const { businessOwners, productionLocation } = systemProfileData;
 
   const subComponents = sideNavItems(
     systemProfileData,
@@ -413,7 +408,9 @@ const SystemProfile = () => {
     )
   );
 
-  const subComponent = subComponents[subinfo || 'home'];
+  const subpageKey: SubpageKey = subinfo || 'home';
+
+  const subComponent = subComponents[subpageKey];
 
   return (
     <MainContent>
@@ -596,46 +593,14 @@ const SystemProfile = () => {
                         })}
                       >
                         {/* Setting a ref here to reference the grid width for the fixed side nav */}
-                        {pointOfContact && (
-                          <div className="side-divider">
-                            <div className="top-divider" />
-                            <p className="font-body-xs margin-top-1 margin-bottom-3">
-                              {t('singleSystem.pointOfContact')}
-                            </p>
-                            <h3 className="system-profile__subheader margin-bottom-1">
-                              {getPersonFullName(pointOfContact)}
-                            </h3>
-                            {pointOfContact.roleTypeName && (
-                              <DescriptionDefinition
-                                definition={pointOfContact.roleTypeName}
-                              />
-                            )}
-                            {pointOfContact.assigneeEmail && (
-                              <p>
-                                <Link
-                                  aria-label={t('singleSystem.sendEmail')}
-                                  className="line-height-body-5"
-                                  href={`mailto:${pointOfContact.assigneeEmail}`}
-                                  target="_blank"
-                                >
-                                  {t('singleSystem.sendEmail')}
-                                  <span aria-hidden>&nbsp;</span>
-                                </Link>
-                              </p>
-                            )}
-                            <p>
-                              <UswdsReactLink
-                                aria-label={t('singleSystem.moreContact')}
-                                className="line-height-body-5"
-                                to={`/systems/${systemId}/team`}
-                              >
-                                {t('singleSystem.moreContact')}
-                                <span aria-hidden>&nbsp;</span>
-                                <span aria-hidden>&rarr; </span>
-                              </UswdsReactLink>
-                            </p>
-                          </div>
-                        )}
+                        <div className="side-divider">
+                          <div className="top-divider" />
+                          <PointsOfContactSidebar
+                            subpageKey={subpageKey}
+                            system={systemProfileData}
+                            systemId={systemId}
+                          />
+                        </div>
                       </Grid>
                     </Grid>
                   </GridContainer>

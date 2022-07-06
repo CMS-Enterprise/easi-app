@@ -2,12 +2,12 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { cloneDeep } from 'lodash';
 
-import { RoleTypeId } from 'constants/systemProfile';
 import {
   getMockPersonRole,
   getMockSystemProfileData,
   result
 } from 'data/mock/systemProfile';
+import { RoleTypeId } from 'types/systemProfile';
 
 import Team, { getTeam } from '.';
 
@@ -82,7 +82,7 @@ describe('System Profile Team subpage', () => {
       ]
     };
 
-    const team = getTeam(systemProfileData);
+    const team = getTeam(systemProfileData.usernamesWithRoles);
     expect(team).toEqual(expected);
   });
 });
