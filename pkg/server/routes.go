@@ -127,6 +127,7 @@ func (s *Server) routes(
 	if s.environment.Local() {
 		// change these values so it's clear who emails are being sent to
 		emailConfig.GRTEmail = models.NewEmailAddress("grt_email@cms.gov")
+		emailConfig.GRTEmail = models.NewEmailAddress("it_investment_email@cms.gov")
 		emailConfig.AccessibilityTeamEmail = models.NewEmailAddress("508_team@cms.gov")
 
 		postfixSender := local.NewPostfixSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility

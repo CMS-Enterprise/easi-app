@@ -31,6 +31,7 @@ func noErr(err error) {
 func createEmailClient() email.Client {
 	emailConfig := email.Config{
 		GRTEmail:               models.NewEmailAddress("grt_email@cms.gov"),
+		ITInvestmentEmail:      models.NewEmailAddress("it_investment_email@cms.gov"),
 		AccessibilityTeamEmail: models.NewEmailAddress("508_team@cms.gov"),
 		URLHost:                os.Getenv("CLIENT_HOSTNAME"),
 		URLScheme:              os.Getenv("CLIENT_PROTOCOL"),
