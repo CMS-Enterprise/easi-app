@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IconLaunch, Link } from '@trussworks/react-uswds';
+import { Alert, IconLaunch, Link } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import {
@@ -57,39 +57,46 @@ const PointsOfContactSidebar = ({
       <p className="font-body-xs margin-top-1 margin-bottom-3">
         {t('singleSystem.pointsOfContact', { count: contactsWithRoles.length })}
       </p>
-      {contactsWithRoles.map(contact => {
-        const role = contact.roles[0];
-        return (
-          <React.Fragment key={role.roleID}>
-            <h3 className="system-profile__subheader margin-bottom-1">
-              {getPersonFullName(role)}
-            </h3>
-            <div>
-              {contact.roles.map(r => (
-                <h5
-                  key={r.roleID}
-                  className="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
-                >
-                  {r.roleTypeName}
-                </h5>
-              ))}
-            </div>
-            {role.assigneeEmail && (
-              <p>
-                <Link
-                  aria-label={t('singleSystem.sendEmail')}
-                  className="line-height-body-5"
-                  href={`mailto:${role.assigneeEmail}`}
-                  target="_blank"
-                >
-                  {t('singleSystem.sendEmail')}
-                  <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
-                </Link>
-              </p>
-            )}
-          </React.Fragment>
-        );
-      })}
+      {contactsWithRoles.length ? (
+        contactsWithRoles.map(contact => {
+          const role = contact.roles[0];
+          return (
+            <React.Fragment key={role.roleID}>
+              <h3 className="system-profile__subheader margin-bottom-1">
+                {getPersonFullName(role)}
+              </h3>
+              <div>
+                {contact.roles.map(r => (
+                  <h5
+                    key={r.roleID}
+                    className="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                  >
+                    {r.roleTypeName}
+                  </h5>
+                ))}
+              </div>
+              {role.assigneeEmail && (
+                <p>
+                  <Link
+                    aria-label={t('singleSystem.sendEmail')}
+                    className="line-height-body-5"
+                    href={`mailto:${role.assigneeEmail}`}
+                    target="_blank"
+                  >
+                    {t('singleSystem.sendEmail')}
+                    <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
+                  </Link>
+                </p>
+              )}
+            </React.Fragment>
+          );
+        })
+      ) : (
+        // No contacts
+        <Alert type="info" slim className="margin-bottom-6">
+          {t(`singleSystem.noPointsOfContact`)}
+        </Alert>
+      )}
       {subpageKey !== 'team' && (
         <p>
           <UswdsReactLink

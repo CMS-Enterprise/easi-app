@@ -26,6 +26,8 @@ const systemProfile = {
     mainNavigation: 'Main Navigation',
     pointsOfContact: 'Point of contact',
     pointsOfContact_plural: 'Points of contact',
+    noPointsOfContact:
+      'This system does not have any points of contact identified.',
     sendEmail: 'Send an email',
     moreContact: 'More points of contact',
     description: {
@@ -103,6 +105,12 @@ const systemProfile = {
         businessOwners: 'Business Owners',
         projectLeads: 'Project Leads',
         additional: 'Additional Points of Contact'
+      },
+      noData: {
+        businessOwners:
+          'This system does not have any Business Owners identified.',
+        projectLeads: 'This system does not have any Project Leads identified.',
+        additional: 'This system has no additional points of contact.'
       },
       federalFullTimeEmployees: 'Federal Full Time Employees',
       contractorFullTimeEmployees: 'Contractor Full Time Employees',

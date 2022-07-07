@@ -24,14 +24,14 @@ describe('System Profile Team subpage', () => {
     getMockPersonRole({assigneeUsername: 'D', roleTypeID: '9'})
   ];
 
-  const systemProfileData = getMockSystemProfileData(resultdata);
+  const systemProfileDataWithTeam = getMockSystemProfileData(resultdata);
 
-  it('matches snapshot', async () => {
-    const { asFragment } = render(<Team system={systemProfileData} />);
+  it('matches snapshot', () => {
+    const { asFragment } = render(<Team system={systemProfileDataWithTeam} />);
     expect(asFragment()).toMatchSnapshot();
   });
 
-  test('team grouped by sections', () => {
+  it('groups by section', () => {
     // prettier-ignore
     const expected = {
       /*
@@ -82,7 +82,15 @@ describe('System Profile Team subpage', () => {
       ]
     };
 
-    const team = getTeam(systemProfileData.usernamesWithRoles);
+    const team = getTeam(systemProfileDataWithTeam.usernamesWithRoles);
     expect(team).toEqual(expected);
+  });
+
+  it('displays alert on no members in all 3 team sections', () => {
+    const res = cloneDeep(result.data);
+    res.cedarSystemDetails!.roles = [];
+    const dataWithoutTeam = getMockSystemProfileData(res);
+    const { getAllByTestId } = render(<Team system={dataWithoutTeam} />);
+    expect(getAllByTestId('alert')).toHaveLength(3);
   });
 });

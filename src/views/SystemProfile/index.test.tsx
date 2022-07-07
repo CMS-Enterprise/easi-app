@@ -23,7 +23,9 @@ import { RoleTypeId, SubpageKey } from 'types/systemProfile';
 
 import SystemProfile, { getAtoStatus } from './index';
 import pointsOfContactIds from './pointsOfContactIds';
-import { getSubpagePoc } from './PointsOfContactSidebar';
+import PointsOfContactSidebar, {
+  getSubpagePoc
+} from './PointsOfContactSidebar';
 
 describe('System Profile parent request', () => {
   it('matches snapshot', async () => {
@@ -88,11 +90,11 @@ describe('System profile description is expandable', () => {
 });
 
 describe('System Profile ATO Status', () => {
-  test('output "No ATO" on missing cedarAuthorityToOperate', () => {
+  it('output "No ATO" on missing cedarAuthorityToOperate', () => {
     expect(getAtoStatus(undefined)).toBe('No ATO');
   });
 
-  test('output "No ATO" on missing cedarAuthorityToOperate.dateAuthorizationMemoExpires', () => {
+  it('output "No ATO" on missing cedarAuthorityToOperate.dateAuthorizationMemoExpires', () => {
     const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
 
     cedarAto.dateAuthorizationMemoExpires = '';
@@ -102,7 +104,7 @@ describe('System Profile ATO Status', () => {
     expect(getAtoStatus(cedarAto)).toBe('No ATO');
   });
 
-  test.each([
+  it.each([
     { status: 'Expired', dt: DateTime.utc().minus({ days: 1 }) },
     {
       status: 'Due Soon',
@@ -135,7 +137,7 @@ describe('System Profile Points of Contact by subpage', () => {
 
   const data = getMockSystemProfileData(resultdata);
 
-  test.each(
+  it.each(
     Object.keys(pointsOfContactIds).map(subpage => subpage as SubpageKey)
   )('poc set is of the first matching role type for %s', subpage => {
     const allowedSubpagePocIds = pointsOfContactIds[subpage];
@@ -152,5 +154,21 @@ describe('System Profile Points of Contact by subpage', () => {
     expect(received).toHaveLength(1);
     // It is the first from the priority list
     expect(received[0]).toEqual(allowedSubpagePocIds[0]);
+  });
+
+  it('displays alert on no poc memebers', () => {
+    const res = cloneDeep(result.data);
+    res.cedarSystemDetails!.roles = [];
+    const dataWithoutTeam = getMockSystemProfileData(res);
+    const { getByTestId } = render(
+      <MemoryRouter>
+        <PointsOfContactSidebar
+          subpageKey="home"
+          systemId=""
+          system={dataWithoutTeam}
+        />
+      </MemoryRouter>
+    );
+    expect(getByTestId('alert')).toBeDefined();
   });
 });

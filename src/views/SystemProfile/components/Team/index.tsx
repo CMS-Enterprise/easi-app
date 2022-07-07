@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Alert,
   Card,
   CardBody,
   CardGroup,
@@ -153,6 +154,7 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         </GridContainer>
       </SectionWrapper>
+
       {flags.systemProfileHiddenFields && (
         <SectionWrapper borderBottom className="padding-bottom-5">
           <h2 className="margin-top-5 margin-top-4">
@@ -245,21 +247,27 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
           </CardGroup>
         </SectionWrapper>
       )}
+
+      {/* Team Sections */}
       {teamSectionKeys.map(section => {
         const people = team[section];
-
-        if (!people.length) return null;
-
         return (
           <SectionWrapper key={section} borderTop>
             <h2 className="margin-y-4">
               {t(`singleSystem.team.header.${section}`)}
             </h2>
-            <CardGroup className="margin-x-0 margin-bottom-4">
-              {people.map(pr => (
-                <TeamContactCard key={pr.assigneeUsername} user={pr} />
-              ))}
-            </CardGroup>
+            {people.length ? (
+              <CardGroup className="margin-x-0 margin-bottom-4">
+                {people.map(pr => (
+                  <TeamContactCard key={pr.assigneeUsername} user={pr} />
+                ))}
+              </CardGroup>
+            ) : (
+              // No people in the section
+              <Alert type="info" slim className="margin-bottom-6">
+                {t(`singleSystem.team.noData.${section}`)}
+              </Alert>
+            )}
           </SectionWrapper>
         );
       })}
