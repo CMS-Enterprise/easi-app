@@ -24,6 +24,7 @@ import TextField from 'components/shared/TextField';
 import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
 import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 import { SubmitLifecycleIdForm } from 'types/action';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
@@ -44,6 +45,11 @@ const IssueLifecycleId = () => {
       errorPolicy: 'all'
     }
   );
+
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -366,7 +372,11 @@ const IssueLifecycleId = () => {
                   error={!!flatErrors.feedback}
                   className="margin-top-5"
                 >
-                  <EmailRecipientsFields />
+                  <EmailRecipientsFields
+                    systemIntakeId={systemId}
+                    activeContact={activeContact}
+                    setActiveContact={setActiveContact}
+                  />
                   <Label
                     htmlFor="IssueLifecycleIdForm-Feedback"
                     className="margin-top-0 line-height-body-2 text-normal"
@@ -387,11 +397,11 @@ const IssueLifecycleId = () => {
                   <Button
                     className="margin-top-2"
                     type="submit"
-                    // disabled={isSubmitting}
                     onClick={() => {
                       setShouldSendEmail(true);
                       setFieldValue('skipEmail', false);
                     }}
+                    disabled={!!activeContact}
                   >
                     {t('submitAction.submit')}
                   </Button>
@@ -403,6 +413,7 @@ const IssueLifecycleId = () => {
                       setFieldValue('skipEmail', true);
                       setTimeout(submitForm);
                     }}
+                    disabled={!!activeContact}
                   />
                 </div>
               </Form>

@@ -8,15 +8,25 @@ type EmailRecipientsFieldsProps = {
   className?: string;
   headerClassName?: string;
   alertClassName?: string;
+  systemIntakeId: string;
+  activeContact: SystemIntakeContactProps | null;
+  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
 };
 
 export default ({
   optional = true,
   className,
   headerClassName,
-  alertClassName
+  alertClassName,
+  systemIntakeId,
+  activeContact,
+  setActiveContact
 }: EmailRecipientsFieldsProps) => {
   const { t } = useTranslation('action');
+  const [
+    contacts,
+    { createContact, updateContact, deleteContact }
+  ] = useSystemIntakeContacts(systemIntakeId);
 
   return (
     <div className={classnames(className)}>

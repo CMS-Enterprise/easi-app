@@ -18,6 +18,7 @@ import {
   RejectIntakeVariables
 } from 'queries/types/RejectIntake';
 import { RejectIntakeForm } from 'types/action';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import { rejectIntakeSchema } from 'validations/actionSchema';
 
@@ -36,6 +37,11 @@ const RejectIntake = () => {
   >(RejectIntakeQuery, {
     errorPolicy: 'all'
   });
+
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -172,7 +178,11 @@ const RejectIntake = () => {
                   error={!!flatErrors.feedback}
                   className="margin-top-5"
                 >
-                  <EmailRecipientsFields />
+                  <EmailRecipientsFields
+                    systemIntakeId={systemId}
+                    activeContact={activeContact}
+                    setActiveContact={setActiveContact}
+                  />
                   <Label
                     htmlFor="RejectIntakeForm-Feedback"
                     className="margin-top-0 line-height-body-2 text-normal"
@@ -204,6 +214,7 @@ const RejectIntake = () => {
                       setShouldSendEmail(true);
                       setFieldValue('skipEmail', false);
                     }}
+                    disabled={!!activeContact}
                   >
                     {t('rejectIntake.submit')}
                   </Button>
@@ -216,6 +227,7 @@ const RejectIntake = () => {
                       setFieldValue('skipEmail', true);
                       setTimeout(submitForm);
                     }}
+                    disabled={!!activeContact}
                   />
                 </div>
               </Form>
