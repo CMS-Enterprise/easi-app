@@ -38,6 +38,14 @@ export default ({
           {t('emailRecipients.emailRequired')}
         </Alert>
       )}
+      <AdditionalContacts
+        systemIntakeId={systemIntakeId}
+        activeContact={activeContact}
+        setActiveContact={setActiveContact}
+        createContact={createContact}
+        updateContact={updateContact}
+        deleteContact={deleteContact}
+      />
     </div>
   );
 };

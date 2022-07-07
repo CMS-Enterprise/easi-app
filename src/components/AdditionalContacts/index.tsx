@@ -244,6 +244,7 @@ export default function AdditionalContacts({
                   contact={contact as SystemIntakeContactProps}
                   deleteContact={deleteContact}
                   setActiveContact={setActiveContact}
+                  type={type}
                 />
               );
             })}
