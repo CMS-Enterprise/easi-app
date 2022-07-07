@@ -96,12 +96,14 @@ export type SystemIntakeForm = {
   } | null;
 } & ContractDetailsForm;
 
+export type FundingSource = {
+  source: string | null;
+  fundingNumber: string | null;
+};
+
 export type ContractDetailsForm = {
-  fundingSource: {
-    isFunded: boolean | null;
-    fundingNumber: string;
-    source: string;
-  };
+  existingFunding: boolean | null;
+  fundingSources: FundingSource[] | [];
   costs: {
     isExpectingIncrease: string;
     expectedIncreaseAmount: string;
