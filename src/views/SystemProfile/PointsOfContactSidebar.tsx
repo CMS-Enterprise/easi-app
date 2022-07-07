@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { IconLaunch, Link } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import { DescriptionDefinition } from 'components/shared/DescriptionGroup';
 import {
   SubpageKey,
   SystemProfileSubviewProps,
@@ -67,10 +66,12 @@ const PointsOfContactSidebar = ({
             </h3>
             <div>
               {contact.roles.map(r => (
-                <DescriptionDefinition
+                <h5
                   key={r.roleID}
-                  definition={r.roleTypeName}
-                />
+                  className="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                >
+                  {r.roleTypeName}
+                </h5>
               ))}
             </div>
             {role.assigneeEmail && (

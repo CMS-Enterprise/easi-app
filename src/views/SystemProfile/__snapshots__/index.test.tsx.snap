@@ -637,66 +637,66 @@ exports[`System Profile parent request matches snapshot 1`] = `
                           Jane Doe
                         </h3>
                         <div>
-                          <dd
-                            class="description-definition margin-0"
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             Business Owner
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             ISSO
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             Project Lead
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             Survey Point of Contact
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             System Business Question Contact
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             System Data Center Contact
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             System Issues Contact
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             System Issues Contact
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             System Maintainer
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             Contracting Officer's Representative (COR)
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             QA Reviewer
-                          </dd>
-                          <dd
-                            class="description-definition margin-0"
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
                           >
                             DA Reviewer
-                          </dd>
+                          </h5>
                         </div>
                         <p>
                           <a
