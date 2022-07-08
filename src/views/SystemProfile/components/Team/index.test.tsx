@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import { cloneDeep } from 'lodash';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import { cloneDeep, uniqueId } from 'lodash';
 
+import { TEAM_SECTION_MEMBER_COUNT_CAP } from 'constants/systemProfile';
 import {
   getMockPersonRole,
   getMockSystemProfileData,
@@ -9,7 +10,7 @@ import {
 } from 'data/mock/systemProfile';
 import { RoleTypeId } from 'types/systemProfile';
 
-import Team, { getTeam } from '.';
+import Team, { getTeam, TeamSection } from '.';
 
 describe('System Profile Team subpage', () => {
   const resultdata = cloneDeep(result.data);
@@ -92,5 +93,68 @@ describe('System Profile Team subpage', () => {
     const dataWithoutTeam = getMockSystemProfileData(res);
     const { getAllByTestId } = render(<Team system={dataWithoutTeam} />);
     expect(getAllByTestId('alert')).toHaveLength(3);
+  });
+});
+
+describe(`System Profile Team section collapse/expand toggle at ${TEAM_SECTION_MEMBER_COUNT_CAP}`, () => {
+  const buttonExpandToggleMatchOpt = { name: /view \d+ more contact/i };
+
+  function fillRolesUniqueWithType(roleTypeID: string, count: number) {
+    return Array(count)
+      .fill(0)
+      .map(_ =>
+        getMockPersonRole({ assigneeUsername: uniqueId(), roleTypeID })
+      );
+  }
+
+  it(`doesn't show toggles for all sections`, () => {
+    const res = cloneDeep(result.data);
+
+    // Doesn't show the button expand toggle at cap
+    res.cedarSystemDetails!.roles = [
+      ...fillRolesUniqueWithType(
+        RoleTypeId.BUSINESS_OWNER,
+        TEAM_SECTION_MEMBER_COUNT_CAP
+      ),
+      ...fillRolesUniqueWithType(
+        RoleTypeId.PROJECT_LEAD,
+        TEAM_SECTION_MEMBER_COUNT_CAP
+      ),
+      ...fillRolesUniqueWithType('0', TEAM_SECTION_MEMBER_COUNT_CAP)
+    ];
+    const data = getMockSystemProfileData(res);
+    const { queryAllByRole } = render(<Team system={data} />);
+    expect(queryAllByRole('button', buttonExpandToggleMatchOpt)).toHaveLength(
+      0
+    );
+  });
+
+  it(`section init collapsed & expands`, async () => {
+    const res = cloneDeep(result.data);
+
+    // Fill more members than the cap
+    const total = TEAM_SECTION_MEMBER_COUNT_CAP + 10;
+    res.cedarSystemDetails!.roles = fillRolesUniqueWithType('0', total);
+    const data = getMockSystemProfileData(res);
+    const { getByRole, getAllByTestId } = render(
+      <TeamSection
+        usernamesWithRoles={data.usernamesWithRoles}
+        section="additional"
+      />
+    );
+
+    // Check count when collapsed
+    expect(getAllByTestId('Card')).toHaveLength(TEAM_SECTION_MEMBER_COUNT_CAP);
+
+    // Toggle expand
+    fireEvent.click(getByRole('button', buttonExpandToggleMatchOpt));
+    await waitFor(() => {
+      expect(
+        getByRole('button', { name: /view fewer contacts/i })
+      ).toBeInTheDocument();
+    });
+
+    // Expanded count
+    expect(getAllByTestId('Card')).toHaveLength(total);
   });
 });

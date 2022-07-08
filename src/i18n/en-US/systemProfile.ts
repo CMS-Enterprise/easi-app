@@ -112,6 +112,9 @@ const systemProfile = {
         projectLeads: 'This system does not have any Project Leads identified.',
         additional: 'This system has no additional points of contact.'
       },
+      viewMore: 'View {{count}} more contact',
+      viewMore_plural: 'View {{count}} more contacts',
+      viewLess: 'View fewer contacts',
       federalFullTimeEmployees: 'Federal Full Time Employees',
       contractorFullTimeEmployees: 'Contractor Full Time Employees',
       vendors: 'Vendors',

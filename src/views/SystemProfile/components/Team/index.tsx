@@ -1,13 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
+  Button,
   Card,
   CardBody,
   CardGroup,
   CardHeader,
   Grid,
   GridContainer,
+  IconExpandMore,
   IconMailOutline,
   Link
 } from '@trussworks/react-uswds';
@@ -20,10 +22,14 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
-import { teamSectionKeys } from 'constants/systemProfile';
+import {
+  TEAM_SECTION_MEMBER_COUNT_CAP,
+  teamSectionKeys
+} from 'constants/systemProfile';
 import {
   RoleTypeId,
   SystemProfileSubviewProps,
+  TeamSectionKey,
   UsernameWithRoles
 } from 'types/systemProfile';
 import formatNumber from 'utils/formatNumber';
@@ -36,7 +42,9 @@ import './index.scss';
  * Get team members in sections of Cedar Role Types:
  * Business Owners, Project Leads, Additional.
  */
-export function getTeam(usernamesWithRoles: UsernameWithRoles[]) {
+export function getTeam(
+  usernamesWithRoles: UsernameWithRoles[]
+): Record<TeamSectionKey, UsernameWithRoles[]> {
   // Team list in sections
   const businessOwners: UsernameWithRoles[] = [];
   const projectLeads: UsernameWithRoles[] = [];
@@ -80,6 +88,9 @@ export function getTeam(usernamesWithRoles: UsernameWithRoles[]) {
   };
 }
 
+/**
+ * A card with team member info and a list of their roles.
+ */
 const TeamContactCard = ({ user }: { user: UsernameWithRoles }) => {
   const { roles } = user;
   if (roles.length === 0) return null;
@@ -114,6 +125,67 @@ const TeamContactCard = ({ user }: { user: UsernameWithRoles }) => {
         ))}
       </CardBody>
     </Card>
+  );
+};
+
+/**
+ * Team members under `TeamSectionKey`.
+ * The list is capped at `TEAM_SECTION_MEMBER_COUNT_CAP`
+ * and expands to all members.
+ */
+export const TeamSection = ({
+  usernamesWithRoles,
+  section
+}: {
+  usernamesWithRoles: UsernameWithRoles[];
+  section: TeamSectionKey;
+}) => {
+  const { t } = useTranslation('systemProfile');
+
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  const membersLeft = usernamesWithRoles.length - TEAM_SECTION_MEMBER_COUNT_CAP;
+  const capEnd = isExpanded ? undefined : TEAM_SECTION_MEMBER_COUNT_CAP;
+
+  return (
+    <SectionWrapper borderTop>
+      <h2 className="margin-y-4">{t(`singleSystem.team.header.${section}`)}</h2>
+      {usernamesWithRoles.length ? (
+        <div>
+          <CardGroup className="margin-x-0">
+            {usernamesWithRoles.slice(0, capEnd).map(user => (
+              <TeamContactCard key={user.assigneeUsername} user={user} />
+            ))}
+          </CardGroup>
+
+          {membersLeft > 0 && (
+            <Button
+              unstyled
+              type="button"
+              className="line-height-body-5"
+              onClick={() => {
+                setIsExpanded(!isExpanded);
+              }}
+            >
+              {t(`singleSystem.team.view${isExpanded ? 'Less' : 'More'}`, {
+                count: membersLeft
+              })}
+              <IconExpandMore
+                className="margin-left-05 margin-bottom-2px text-tbottom"
+                style={{
+                  transform: isExpanded ? 'rotate(180deg)' : ''
+                }}
+              />
+            </Button>
+          )}
+        </div>
+      ) : (
+        // No people in the section
+        <Alert type="info" slim className="margin-bottom-6">
+          {t(`singleSystem.team.noData.${section}`)}
+        </Alert>
+      )}
+    </SectionWrapper>
   );
 };
 
@@ -249,28 +321,13 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
       )}
 
       {/* Team Sections */}
-      {teamSectionKeys.map(section => {
-        const people = team[section];
-        return (
-          <SectionWrapper key={section} borderTop>
-            <h2 className="margin-y-4">
-              {t(`singleSystem.team.header.${section}`)}
-            </h2>
-            {people.length ? (
-              <CardGroup className="margin-x-0 margin-bottom-4">
-                {people.map(pr => (
-                  <TeamContactCard key={pr.assigneeUsername} user={pr} />
-                ))}
-              </CardGroup>
-            ) : (
-              // No people in the section
-              <Alert type="info" slim className="margin-bottom-6">
-                {t(`singleSystem.team.noData.${section}`)}
-              </Alert>
-            )}
-          </SectionWrapper>
-        );
-      })}
+      {teamSectionKeys.map(section => (
+        <TeamSection
+          key={section}
+          section={section}
+          usernamesWithRoles={team[section]}
+        />
+      ))}
     </>
   );
 };

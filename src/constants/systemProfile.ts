@@ -8,6 +8,8 @@ export const teamSectionKeys = [
   'additional'
 ] as const;
 
+export const TEAM_SECTION_MEMBER_COUNT_CAP = 5;
+
 // ATO
 
 export const ATO_STATUS_DUE_SOON_DAYS = 90;
