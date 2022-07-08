@@ -21,7 +21,7 @@ jobs:
   #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   Run_Tests:
     uses: ./.github/workflows/run_tests.yml
-    needs: Build_Application_Images
+    # needs: Build_Application_Images
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
