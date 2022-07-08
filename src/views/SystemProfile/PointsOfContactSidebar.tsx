@@ -16,7 +16,7 @@ import { getPersonFullName } from '.';
  * Get a list of subpage contacts defined by `pointsOfContactIds`.
  * Return all members of the first matching Role Type Id found in the priority list.
  */
-export function getSubpagePoc(
+export function getPointsOfContact(
   subpageKey: SubpageKey,
   usernamesWithRoles: UsernameWithRoles[]
 ): UsernameWithRoles[] {
@@ -48,7 +48,7 @@ const PointsOfContactSidebar = ({
   systemId
 }: PointsOfContactSidebarProps) => {
   const { t } = useTranslation('systemProfile');
-  const contactsWithRoles = getSubpagePoc(
+  const contactsWithRoles = getPointsOfContact(
     subpageKey,
     system.usernamesWithRoles
   );
