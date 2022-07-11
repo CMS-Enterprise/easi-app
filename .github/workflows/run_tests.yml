@@ -89,8 +89,8 @@ jobs:
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
-          PGUSER: app_user
-          PGPASS: supersecretapp
+          PGUSER: postgres
+          PGPASS: mysecretpassword
           PGSSLMODE: disable
           DB_MAX_CONNECTIONS: 20
           FLAG_SOURCE: LOCAL
