@@ -8,13 +8,11 @@ function useCedarContactLookup(
   query: string
 ): { [id: string]: CedarContactProps };
 
-// eslint-disable-next-line no-redeclare
 function useCedarContactLookup(
   query: string,
   euaUserId: string
 ): CedarContactProps | undefined;
 
-// eslint-disable-next-line no-redeclare
 function useCedarContactLookup(
   query: string,
   euaUserId?: string

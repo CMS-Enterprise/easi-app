@@ -253,7 +253,7 @@ export default function AdditionalContacts({
                       unstyled
                       className="text-error margin-top-2"
                       onClick={() =>
-                        deleteContact(activeContact.id as string, () =>
+                        deleteContact(activeContact.id!, () =>
                           setActiveContact(null)
                         )
                       }
