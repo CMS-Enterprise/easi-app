@@ -149,7 +149,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   scrollElement="requestName"
                   error={!!flatErrors.requestName}
                 >
-                  <Label htmlFor="IntakeForm-RequestName">Project Name</Label>
+                  <Label htmlFor="IntakeForm-RequestName">
+                    Contract/Request Name
+                  </Label>
                   <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                   <Field
                     as={TextInput}
