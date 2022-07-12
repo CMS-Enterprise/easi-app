@@ -26,12 +26,16 @@ func (s Server) NewDBConfig() storage.DBConfig {
 	s.checkRequiredConfig(appconfig.DBHostConfigKey)
 	s.checkRequiredConfig(appconfig.DBPortConfigKey)
 	s.checkRequiredConfig(appconfig.DBNameConfigKey)
-	s.checkRequiredConfig(appconfig.DBUsernameConfigKey)
 	s.checkRequiredConfig(appconfig.DBMaxConnections)
-	if s.environment.Deployed() {
+	s.checkRequiredConfig(appconfig.DBSSLModeConfigKey)
+	s.checkRequiredConfig(appconfig.DBUsernameConfigKey)
+
+	// Check for password if we're not using IAM authentication
+	useIAM := s.environment.Deployed() // use IAM authentication in deployed environments
+	if !useIAM {
 		s.checkRequiredConfig(appconfig.DBPasswordConfigKey)
 	}
-	s.checkRequiredConfig(appconfig.DBSSLModeConfigKey)
+
 	return storage.DBConfig{
 		Host:           s.Config.GetString(appconfig.DBHostConfigKey),
 		Port:           s.Config.GetString(appconfig.DBPortConfigKey),
@@ -39,6 +43,7 @@ func (s Server) NewDBConfig() storage.DBConfig {
 		Username:       s.Config.GetString(appconfig.DBUsernameConfigKey),
 		Password:       s.Config.GetString(appconfig.DBPasswordConfigKey),
 		SSLMode:        s.Config.GetString(appconfig.DBSSLModeConfigKey),
+		UseIAM:         useIAM,
 		MaxConnections: s.Config.GetInt(appconfig.DBMaxConnections),
 	}
 }

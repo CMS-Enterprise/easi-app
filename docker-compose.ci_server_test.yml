@@ -13,6 +13,6 @@ services:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=mysecretpassword
       - FLYWAY_URL=jdbc:postgresql://db/postgres
-      - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp
+      - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp # Keep this around for legacy migration V88__Add_app_user.sql
     depends_on:
       - db

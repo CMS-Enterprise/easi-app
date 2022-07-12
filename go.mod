@@ -12,13 +12,12 @@ require (
 	github.com/go-openapi/strfmt v0.21.2
 	github.com/go-openapi/swag v0.21.1
 	github.com/go-openapi/validate v0.21.0
-	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.7.4
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/jmoiron/sqlx v1.2.0
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/lib/pq v1.10.3
 	github.com/okta/okta-jwt-verifier-golang v1.3.1
