@@ -129,8 +129,8 @@ func (s *Server) routes(
 		emailConfig.GRTEmail = models.NewEmailAddress("grt_email@cms.gov")
 		emailConfig.AccessibilityTeamEmail = models.NewEmailAddress("508_team@cms.gov")
 
-		postfixSender := local.NewPostfixSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
-		emailClient, err = email.NewClient(emailConfig, postfixSender)
+		smtpSender := local.NewSMTPSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
+		emailClient, err = email.NewClient(emailConfig, smtpSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
 		}
@@ -138,10 +138,8 @@ func (s *Server) routes(
 
 	// override email client with dummy client that logs output when running tests
 	if s.environment.Test() {
-		// localSender := local.NewSender()
-		// emailClient, err = email.NewClient(emailConfig, localSender)
-		postfixSender := local.NewPostfixSender("email:1025") // TODO - get from environment variable?
-		emailClient, err = email.NewClient(emailConfig, postfixSender)
+		smtpSender := local.NewSMTPSender("email:1025") // TODO - get from environment variable?
+		emailClient, err = email.NewClient(emailConfig, smtpSender)
 
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
