@@ -1,1 +1,13 @@
-<p></p>
+<p><strong>User Name</strong></p>
+{{if .Name}} <p>{{.Name}}</p> {{end}}
+{{if !.Name}} <p>-</p> {{end}}
+
+
+<p><strong>User Email</strong></p>
+{{if .Email}} <p>{{.Email}}</p> {{end}}
+{{if !.Email}} <p>-</p> {{end}}
+
+
+<p><strong>What do you need help with?</strong></p>
+{{if .Body}} <p>{{.Body}}</p> {{end}}
+{{if !.Body}} <p>-</p> {{end}}
