@@ -1561,12 +1561,17 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	}, nil
 }
 
-func (r *mutationResolver) SendFeedback(ctx context.Context, input model.SendFeedbackInput) (*string, error) {
+func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.SendFeedbackEmailInput) (*string, error) {
 	msg := "Thanks for the feedback!"
 	return &msg, nil
 }
 
-func (r *mutationResolver) SendCandFindSomething(ctx context.Context, input model.SendCandFindSomethingInput) (*string, error) {
+func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input model.SendCantFindSomethingEmailInput) (*string, error) {
+	msg := "Thanks for the feedback!"
+	return &msg, nil
+}
+
+func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input model.SendReportAProblemEmailInput) (*string, error) {
 	msg := "Thanks for the feedback!"
 	return &msg, nil
 }

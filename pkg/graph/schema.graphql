@@ -1365,22 +1365,31 @@ type SystemIntakeContactsPayload {
 """
 The inputs to the user feedback form
 """
-input SendFeedbackInput {
-  isAnonymous: Boolean! = false
+input SendFeedbackEmailInput {
+  isAnonymous: Boolean
   easiServicesUsed: [String!]
   cmsRole: String
-  easeOfUse: String
-  didntNeedHelp: String
-  questionsRelevant: String
-  hadAccess: String
-  satisfaction: String
+  systemEasyToUse: String
+  didntNeedHelpAnswering: String
+  questionsWereRelevant: String
+  hadAccessToInformation: String
+  howSatisfied: String
   howCanWeImprove: String
 }
 
-input SendCandFindSomethingInput {
+input SendCantFindSomethingEmailInput {
   name: String!
   email: String!
   body: String!
+}
+
+input SendReportAProblemEmailInput {
+  isAnonymous: Boolean
+  canBeContacted: Boolean
+  easiService: String
+  whatWereYouDoing: String
+  whatWentWrong: String
+  howSevereWasTheProblem: String
 }
 
 """
@@ -1485,8 +1494,9 @@ type Mutation {
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
-  sendFeedback(input: SendFeedbackInput!): String
-  sendCandFindSomething(input: SendCandFindSomethingInput!): String
+  sendFeedbackEmail(input: SendFeedbackEmailInput!): String
+  sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
+  sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
 }
 
 """

@@ -15,6 +15,7 @@ import (
 type Config struct {
 	GRTEmail               models.EmailAddress
 	AccessibilityTeamEmail models.EmailAddress
+	EASIHelpEmail          models.EmailAddress
 	URLHost                string
 	URLScheme              string
 	TemplateDirectory      string
@@ -44,6 +45,9 @@ type templates struct {
 	intakeNoEUAIDTemplate                      templateCaller
 	changeAccessibilityRequestStatus           templateCaller
 	newAccessibilityRequestNote                templateCaller
+	helpSendFeedback                           templateCaller
+	helpCantFindSomething                      templateCaller
+	helpReportAProblem                         templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -182,6 +186,27 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(newAccessibilityRequestNoteTemplateName)
 	}
 	appTemplates.newAccessibilityRequestNote = newAccessibilityRequestNoteTemplate
+
+	helpSendFeedbackTemplateName := "help_.gohtml"
+	helpSendFeedbackTemplate := rawTemplates.Lookup(helpSendFeedbackTemplateName)
+	if helpSendFeedbackTemplate == nil {
+		return Client{}, templateError(helpSendFeedbackTemplateName)
+	}
+	appTemplates.helpSendFeedback = helpSendFeedbackTemplate
+
+	helpCantFindSomethingTemplateName := "help_.gohtml"
+	helpCantFindSomethingTemplate := rawTemplates.Lookup(helpCantFindSomethingTemplateName)
+	if helpCantFindSomethingTemplate == nil {
+		return Client{}, templateError(helpCantFindSomethingTemplateName)
+	}
+	appTemplates.helpCantFindSomething = helpCantFindSomethingTemplate
+
+	helpReportAProblemTemplateName := "help_.gohtml"
+	helpReportAProblemTemplate := rawTemplates.Lookup(helpReportAProblemTemplateName)
+	if helpReportAProblemTemplate == nil {
+		return Client{}, templateError(helpReportAProblemTemplateName)
+	}
+	appTemplates.helpReportAProblem = helpReportAProblemTemplate
 
 	client := Client{
 		config:    config,

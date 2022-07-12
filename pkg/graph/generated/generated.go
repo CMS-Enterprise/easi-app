@@ -475,8 +475,9 @@ type ComplexityRoot struct {
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
-		SendCandFindSomething                            func(childComplexity int, input model.SendCandFindSomethingInput) int
-		SendFeedback                                     func(childComplexity int, input model.SendFeedbackInput) int
+		SendCantFindSomethingEmail                       func(childComplexity int, input model.SendCantFindSomethingEmailInput) int
+		SendFeedbackEmail                                func(childComplexity int, input model.SendFeedbackEmailInput) int
+		SendReportAProblemEmail                          func(childComplexity int, input model.SendReportAProblemEmailInput) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
 		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
@@ -908,8 +909,9 @@ type MutationResolver interface {
 	CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error)
 	UpdateSystemIntakeContact(ctx context.Context, input model.UpdateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error)
 	DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error)
-	SendFeedback(ctx context.Context, input model.SendFeedbackInput) (*string, error)
-	SendCandFindSomething(ctx context.Context, input model.SendCandFindSomethingInput) (*string, error)
+	SendFeedbackEmail(ctx context.Context, input model.SendFeedbackEmailInput) (*string, error)
+	SendCantFindSomethingEmail(ctx context.Context, input model.SendCantFindSomethingEmailInput) (*string, error)
+	SendReportAProblemEmail(ctx context.Context, input model.SendReportAProblemEmailInput) (*string, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -3148,29 +3150,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RejectIntake(childComplexity, args["input"].(model.RejectIntakeInput)), true
 
-	case "Mutation.sendCandFindSomething":
-		if e.complexity.Mutation.SendCandFindSomething == nil {
+	case "Mutation.sendCantFindSomethingEmail":
+		if e.complexity.Mutation.SendCantFindSomethingEmail == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_sendCandFindSomething_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_sendCantFindSomethingEmail_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.SendCandFindSomething(childComplexity, args["input"].(model.SendCandFindSomethingInput)), true
+		return e.complexity.Mutation.SendCantFindSomethingEmail(childComplexity, args["input"].(model.SendCantFindSomethingEmailInput)), true
 
-	case "Mutation.sendFeedback":
-		if e.complexity.Mutation.SendFeedback == nil {
+	case "Mutation.sendFeedbackEmail":
+		if e.complexity.Mutation.SendFeedbackEmail == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_sendFeedback_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_sendFeedbackEmail_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.SendFeedback(childComplexity, args["input"].(model.SendFeedbackInput)), true
+		return e.complexity.Mutation.SendFeedbackEmail(childComplexity, args["input"].(model.SendFeedbackEmailInput)), true
+
+	case "Mutation.sendReportAProblemEmail":
+		if e.complexity.Mutation.SendReportAProblemEmail == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_sendReportAProblemEmail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SendReportAProblemEmail(childComplexity, args["input"].(model.SendReportAProblemEmailInput)), true
 
 	case "Mutation.submitIntake":
 		if e.complexity.Mutation.SubmitIntake == nil {
@@ -5878,22 +5892,31 @@ type SystemIntakeContactsPayload {
 """
 The inputs to the user feedback form
 """
-input SendFeedbackInput {
-  isAnonymous: Boolean! = false
+input SendFeedbackEmailInput {
+  isAnonymous: Boolean
   easiServicesUsed: [String!]
   cmsRole: String
-  easeOfUse: String
-  didntNeedHelp: String
-  questionsRelevant: String
-  hadAccess: String
-  satisfaction: String
+  systemEasyToUse: String
+  didntNeedHelpAnswering: String
+  questionsWereRelevant: String
+  hadAccessToInformation: String
+  howSatisfied: String
   howCanWeImprove: String
 }
 
-input SendCandFindSomethingInput {
+input SendCantFindSomethingEmailInput {
   name: String!
   email: String!
   body: String!
+}
+
+input SendReportAProblemEmailInput {
+  isAnonymous: Boolean
+  canBeContacted: Boolean
+  easiService: String
+  whatWereYouDoing: String
+  whatWentWrong: String
+  howSevereWasTheProblem: String
 }
 
 """
@@ -5998,8 +6021,9 @@ type Mutation {
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
-  sendFeedback(input: SendFeedbackInput!): String
-  sendCandFindSomething(input: SendCandFindSomethingInput!): String
+  sendFeedbackEmail(input: SendFeedbackEmailInput!): String
+  sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
+  sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
 }
 
 """
@@ -6527,13 +6551,13 @@ func (ec *executionContext) field_Mutation_rejectIntake_args(ctx context.Context
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_sendCandFindSomething_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_sendCantFindSomethingEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.SendCandFindSomethingInput
+	var arg0 model.SendCantFindSomethingEmailInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNSendCandFindSomethingInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendCandFindSomethingInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSendCantFindSomethingEmailInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendCantFindSomethingEmailInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -6542,13 +6566,28 @@ func (ec *executionContext) field_Mutation_sendCandFindSomething_args(ctx contex
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_sendFeedback_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_sendFeedbackEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.SendFeedbackInput
+	var arg0 model.SendFeedbackEmailInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNSendFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendFeedbackInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSendFeedbackEmailInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendFeedbackEmailInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_sendReportAProblemEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.SendReportAProblemEmailInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNSendReportAProblemEmailInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendReportAProblemEmailInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -17662,7 +17701,7 @@ func (ec *executionContext) _Mutation_deleteSystemIntakeContact(ctx context.Cont
 	return ec.marshalODeleteSystemIntakeContactPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteSystemIntakeContactPayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_sendFeedback(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_sendFeedbackEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -17679,7 +17718,7 @@ func (ec *executionContext) _Mutation_sendFeedback(ctx context.Context, field gr
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_sendFeedback_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_sendFeedbackEmail_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -17687,7 +17726,7 @@ func (ec *executionContext) _Mutation_sendFeedback(ctx context.Context, field gr
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SendFeedback(rctx, args["input"].(model.SendFeedbackInput))
+		return ec.resolvers.Mutation().SendFeedbackEmail(rctx, args["input"].(model.SendFeedbackEmailInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -17701,7 +17740,7 @@ func (ec *executionContext) _Mutation_sendFeedback(ctx context.Context, field gr
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_sendCandFindSomething(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_sendCantFindSomethingEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -17718,7 +17757,7 @@ func (ec *executionContext) _Mutation_sendCandFindSomething(ctx context.Context,
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_sendCandFindSomething_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_sendCantFindSomethingEmail_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -17726,7 +17765,46 @@ func (ec *executionContext) _Mutation_sendCandFindSomething(ctx context.Context,
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SendCandFindSomething(rctx, args["input"].(model.SendCandFindSomethingInput))
+		return ec.resolvers.Mutation().SendCantFindSomethingEmail(rctx, args["input"].(model.SendCantFindSomethingEmailInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_sendReportAProblemEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_sendReportAProblemEmail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SendReportAProblemEmail(rctx, args["input"].(model.SendReportAProblemEmailInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -25013,8 +25091,8 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputSendCandFindSomethingInput(ctx context.Context, obj interface{}) (model.SendCandFindSomethingInput, error) {
-	var it model.SendCandFindSomethingInput
+func (ec *executionContext) unmarshalInputSendCantFindSomethingEmailInput(ctx context.Context, obj interface{}) (model.SendCantFindSomethingEmailInput, error) {
+	var it model.SendCantFindSomethingEmailInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -25052,15 +25130,11 @@ func (ec *executionContext) unmarshalInputSendCandFindSomethingInput(ctx context
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputSendFeedbackInput(ctx context.Context, obj interface{}) (model.SendFeedbackInput, error) {
-	var it model.SendFeedbackInput
+func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Context, obj interface{}) (model.SendFeedbackEmailInput, error) {
+	var it model.SendFeedbackEmailInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
-	}
-
-	if _, present := asMap["isAnonymous"]; !present {
-		asMap["isAnonymous"] = false
 	}
 
 	for k, v := range asMap {
@@ -25069,7 +25143,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isAnonymous"))
-			it.IsAnonymous, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.IsAnonymous, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25089,43 +25163,43 @@ func (ec *executionContext) unmarshalInputSendFeedbackInput(ctx context.Context,
 			if err != nil {
 				return it, err
 			}
-		case "easeOfUse":
+		case "systemEasyToUse":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("easeOfUse"))
-			it.EaseOfUse, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemEasyToUse"))
+			it.SystemEasyToUse, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "didntNeedHelp":
+		case "didntNeedHelpAnswering":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("didntNeedHelp"))
-			it.DidntNeedHelp, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("didntNeedHelpAnswering"))
+			it.DidntNeedHelpAnswering, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "questionsRelevant":
+		case "questionsWereRelevant":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("questionsRelevant"))
-			it.QuestionsRelevant, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("questionsWereRelevant"))
+			it.QuestionsWereRelevant, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "hadAccess":
+		case "hadAccessToInformation":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hadAccess"))
-			it.HadAccess, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hadAccessToInformation"))
+			it.HadAccessToInformation, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "satisfaction":
+		case "howSatisfied":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("satisfaction"))
-			it.Satisfaction, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howSatisfied"))
+			it.HowSatisfied, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25134,6 +25208,69 @@ func (ec *executionContext) unmarshalInputSendFeedbackInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howCanWeImprove"))
 			it.HowCanWeImprove, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSendReportAProblemEmailInput(ctx context.Context, obj interface{}) (model.SendReportAProblemEmailInput, error) {
+	var it model.SendReportAProblemEmailInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "isAnonymous":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isAnonymous"))
+			it.IsAnonymous, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "canBeContacted":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("canBeContacted"))
+			it.CanBeContacted, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "easiService":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("easiService"))
+			it.EasiService, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "whatWereYouDoing":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("whatWereYouDoing"))
+			it.WhatWereYouDoing, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "whatWentWrong":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("whatWentWrong"))
+			it.WhatWentWrong, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "howSevereWasTheProblem":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howSevereWasTheProblem"))
+			it.HowSevereWasTheProblem, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -30128,16 +30265,23 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
-		case "sendFeedback":
+		case "sendFeedbackEmail":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_sendFeedback(ctx, field)
+				return ec._Mutation_sendFeedbackEmail(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
-		case "sendCandFindSomething":
+		case "sendCantFindSomethingEmail":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_sendCandFindSomething(ctx, field)
+				return ec._Mutation_sendCantFindSomethingEmail(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "sendReportAProblemEmail":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_sendReportAProblemEmail(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -34125,13 +34269,18 @@ func (ec *executionContext) marshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpk
 	return v
 }
 
-func (ec *executionContext) unmarshalNSendCandFindSomethingInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendCandFindSomethingInput(ctx context.Context, v interface{}) (model.SendCandFindSomethingInput, error) {
-	res, err := ec.unmarshalInputSendCandFindSomethingInput(ctx, v)
+func (ec *executionContext) unmarshalNSendCantFindSomethingEmailInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendCantFindSomethingEmailInput(ctx context.Context, v interface{}) (model.SendCantFindSomethingEmailInput, error) {
+	res, err := ec.unmarshalInputSendCantFindSomethingEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNSendFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendFeedbackInput(ctx context.Context, v interface{}) (model.SendFeedbackInput, error) {
-	res, err := ec.unmarshalInputSendFeedbackInput(ctx, v)
+func (ec *executionContext) unmarshalNSendFeedbackEmailInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendFeedbackEmailInput(ctx context.Context, v interface{}) (model.SendFeedbackEmailInput, error) {
+	res, err := ec.unmarshalInputSendFeedbackEmailInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSendReportAProblemEmailInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendReportAProblemEmailInput(ctx context.Context, v interface{}) (model.SendReportAProblemEmailInput, error) {
+	res, err := ec.unmarshalInputSendReportAProblemEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
