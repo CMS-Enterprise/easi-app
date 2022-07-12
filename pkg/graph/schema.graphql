@@ -1377,6 +1377,12 @@ input SendFeedbackInput {
   howCanWeImprove: String
 }
 
+input SendCandFindSomethingInput {
+  name: String!
+  email: String!
+  body: String!
+}
+
 """
 Defines the mutations for the schema
 """
@@ -1480,6 +1486,7 @@ type Mutation {
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
   sendFeedback(input: SendFeedbackInput!): String
+  sendCandFindSomething(input: SendCandFindSomethingInput!): String
 }
 
 """

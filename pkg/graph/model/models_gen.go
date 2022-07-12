@@ -348,6 +348,12 @@ type RequestsConnection struct {
 	Edges []*RequestEdge `json:"edges"`
 }
 
+type SendCandFindSomethingInput struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Body  string `json:"body"`
+}
+
 // The inputs to the user feedback form
 type SendFeedbackInput struct {
 	IsAnonymous       bool     `json:"isAnonymous"`

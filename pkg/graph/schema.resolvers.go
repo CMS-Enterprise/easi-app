@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1564,6 +1565,10 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 func (r *mutationResolver) SendFeedback(ctx context.Context, input model.SendFeedbackInput) (*string, error) {
 	msg := "Thanks for the feedback!"
 	return &msg, nil
+}
+
+func (r *mutationResolver) SendCandFindSomething(ctx context.Context, input model.SendCandFindSomethingInput) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
