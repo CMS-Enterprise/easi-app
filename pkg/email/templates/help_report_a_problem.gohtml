@@ -1,1 +1,25 @@
-<p></p>
+<p><strong>Reporter</strong></p>
+{{if .IsAnonymous}} <p>Anonymous</p> {{end}}
+{{if !.IsAnonymous}} <p>{{.ReporterName}}, {{.ReporterEmail}}</p> {{end}}
+{{if .CanBeContacted}}<p>Yes, the EASi team may contact me for additional information</p>
+{{if !.CanBeContacted}}<p>No, the EASi team may not contact me for additional information</p>
+
+
+<p><strong>Which EASi service were you using?</strong></p>
+{{if .EasiService}} <p>{{.EasiService}}</p> {{end}}
+{{if !.EasiService}} <p>-</p> {{end}}
+
+
+<p><strong>What were you doing?</strong></p>
+{{if .WhatWereYouDoing}} <p>{{.WhatWereYouDoing}}</p> {{end}}
+{{if !.WhatWereYouDoing}} <p>-</p> {{end}}
+
+
+<p><strong>What went wrong?</strong></p>
+{{if .WhatWentWrong}} <p>{{.WhatWentWrong}}</p> {{end}}
+{{if !.WhatWentWrong}} <p>-</p> {{end}}
+
+
+<p><strong>How severe was this problem?</strong></p>
+{{if .HowSevereWasTheProblem}} <p>{{.HowSevereWasTheProblem}}</p> {{end}}
+{{if !.HowSevereWasTheProblem}} <p>-</p> {{end}}
