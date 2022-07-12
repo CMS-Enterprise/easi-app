@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1568,7 +1567,8 @@ func (r *mutationResolver) SendFeedback(ctx context.Context, input model.SendFee
 }
 
 func (r *mutationResolver) SendCandFindSomething(ctx context.Context, input model.SendCandFindSomethingInput) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	msg := "Thanks for the feedback!"
+	return &msg, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
