@@ -10,6 +10,8 @@ import (
 // SendFeedbackEmailInput contains the data submitted by the user to send feedback
 type SendFeedbackEmailInput struct {
 	IsAnonymous            bool
+	ReporterName           string
+	ReporterEmail          string
 	EasiServicesUsed       []string
 	CmsRole                string
 	SystemEasyToUse        string
