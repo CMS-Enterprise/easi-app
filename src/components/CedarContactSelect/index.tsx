@@ -72,7 +72,7 @@ export default function CedarContactSelect({
           setSearchTerm(e.target.value);
         }}
       />
-      {searchTerm && (
+      {searchTerm && searchTerm.length > 1 && (
         <ComboboxPopover>
           {Object.values(contacts).length > 0 ? (
             <ComboboxList>
