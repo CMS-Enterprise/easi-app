@@ -475,6 +475,7 @@ type ComplexityRoot struct {
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
+		SendFeedback                                     func(childComplexity int, input model.SendFeedbackInput) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
 		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
@@ -906,6 +907,7 @@ type MutationResolver interface {
 	CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error)
 	UpdateSystemIntakeContact(ctx context.Context, input model.UpdateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error)
 	DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error)
+	SendFeedback(ctx context.Context, input model.SendFeedbackInput) (*string, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -3143,6 +3145,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.RejectIntake(childComplexity, args["input"].(model.RejectIntakeInput)), true
+
+	case "Mutation.sendFeedback":
+		if e.complexity.Mutation.SendFeedback == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_sendFeedback_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SendFeedback(childComplexity, args["input"].(model.SendFeedbackInput)), true
 
 	case "Mutation.submitIntake":
 		if e.complexity.Mutation.SubmitIntake == nil {
@@ -5847,6 +5861,20 @@ type SystemIntakeContactsPayload {
   invalidEUAIDs: [String!]!
 }
 
+"""
+The inputs to the user feedback form
+"""
+input SendFeedbackInput {
+  isAnonymous: Boolean! = false
+  easiServicesUsed: [String!]
+  cmsRole: String
+  easeOfUse: String
+  didntNeedHelp: String
+  questionsRelevant: String
+  hadAccess: String
+  satisfaction: String
+  howCanWeImprove: String
+}
 
 """
 Defines the mutations for the schema
@@ -5950,6 +5978,7 @@ type Mutation {
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
+  sendFeedback(input: SendFeedbackInput!): String
 }
 
 """
@@ -6469,6 +6498,21 @@ func (ec *executionContext) field_Mutation_rejectIntake_args(ctx context.Context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNRejectIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRejectIntakeInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_sendFeedback_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.SendFeedbackInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNSendFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendFeedbackInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -17582,6 +17626,45 @@ func (ec *executionContext) _Mutation_deleteSystemIntakeContact(ctx context.Cont
 	return ec.marshalODeleteSystemIntakeContactPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteSystemIntakeContactPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_sendFeedback(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_sendFeedback_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SendFeedback(rctx, args["input"].(model.SendFeedbackInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -24855,6 +24938,97 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputSendFeedbackInput(ctx context.Context, obj interface{}) (model.SendFeedbackInput, error) {
+	var it model.SendFeedbackInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["isAnonymous"]; !present {
+		asMap["isAnonymous"] = false
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "isAnonymous":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isAnonymous"))
+			it.IsAnonymous, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "easiServicesUsed":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("easiServicesUsed"))
+			it.EasiServicesUsed, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "cmsRole":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cmsRole"))
+			it.CmsRole, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "easeOfUse":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("easeOfUse"))
+			it.EaseOfUse, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "didntNeedHelp":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("didntNeedHelp"))
+			it.DidntNeedHelp, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "questionsRelevant":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("questionsRelevant"))
+			it.QuestionsRelevant, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "hadAccess":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hadAccess"))
+			it.HadAccess, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "satisfaction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("satisfaction"))
+			it.Satisfaction, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "howCanWeImprove":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howCanWeImprove"))
+			it.HowCanWeImprove, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSubmitIntakeInput(ctx context.Context, obj interface{}) (model.SubmitIntakeInput, error) {
 	var it model.SubmitIntakeInput
 	asMap := map[string]interface{}{}
@@ -29840,6 +30014,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
+		case "sendFeedback":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_sendFeedback(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -33823,6 +34004,11 @@ func (ec *executionContext) marshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpk
 	return v
 }
 
+func (ec *executionContext) unmarshalNSendFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendFeedbackInput(ctx context.Context, v interface{}) (model.SendFeedbackInput, error) {
+	res, err := ec.unmarshalInputSendFeedbackInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -35158,6 +35344,44 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	res := graphql.MarshalString(v)
 	return res
+}
+
+func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

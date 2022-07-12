@@ -1561,6 +1561,11 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	}, nil
 }
 
+func (r *mutationResolver) SendFeedback(ctx context.Context, input model.SendFeedbackInput) (*string, error) {
+	msg := "Thanks for the feedback!"
+	return &msg, nil
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
 	accessibilityRequest, err := r.store.FetchAccessibilityRequestByIDIncludingDeleted(ctx, id)

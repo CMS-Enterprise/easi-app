@@ -348,6 +348,19 @@ type RequestsConnection struct {
 	Edges []*RequestEdge `json:"edges"`
 }
 
+// The inputs to the user feedback form
+type SendFeedbackInput struct {
+	IsAnonymous       bool     `json:"isAnonymous"`
+	EasiServicesUsed  []string `json:"easiServicesUsed"`
+	CmsRole           *string  `json:"cmsRole"`
+	EaseOfUse         *string  `json:"easeOfUse"`
+	DidntNeedHelp     *string  `json:"didntNeedHelp"`
+	QuestionsRelevant *string  `json:"questionsRelevant"`
+	HadAccess         *string  `json:"hadAccess"`
+	Satisfaction      *string  `json:"satisfaction"`
+	HowCanWeImprove   *string  `json:"howCanWeImprove"`
+}
+
 // Input to submit an intake for review
 type SubmitIntakeInput struct {
 	ID uuid.UUID `json:"id"`
