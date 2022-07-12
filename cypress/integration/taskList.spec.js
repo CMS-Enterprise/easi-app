@@ -32,7 +32,7 @@ describe('The Task List', () => {
 
     cy.contains('h1', 'Request details');
 
-    cy.get('#IntakeForm-RequestName').type('Test Request Name');
+    cy.get('#IntakeForm-ContractName').type('Test Request Name');
 
     // User should be redirected to /system/:uuid/contact-details
     cy.go('back');
