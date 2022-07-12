@@ -35,9 +35,8 @@ services:
       - LOCAL_AUTH_ENABLED=true
     ports:
       - 8080:8080
-    # Mounted so that the backend container can access the file with LaunchDarkly flag values
     volumes:
-      - ./cypress:/cypress
+      - ./cypress:/cypress # Mounted so that the backend container can access the file with LaunchDarkly flag values
   easi_client:
     build:
       context: .
