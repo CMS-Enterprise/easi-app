@@ -1,0 +1,42 @@
+{
+  "flags": {
+    "notifyMultipleRecipients": {
+      "key": "notifyMultipleRecipients",
+      "on": true,
+      "prerequisites": [],
+      "targets": [
+        {
+          "variation": 0,
+          "values": [
+            "68942a05a8732638e45824ff0d8869b576b4144704581e8ff6acee9548aa28e6"
+          ]
+        },
+        {
+          "variation": 1,
+          "values": [
+            "43b37aa4275b9bbf177b9f5302db1acf45480b9a2a4fedd7cebebfc11276fe76"
+          ]
+        }
+      ],
+      "rules": [],
+      "fallthrough": { "variation": 1 },
+      "offVariation": 1,
+      "variations": [true, false],
+      "clientSideAvailability": {
+        "usingMobileKey": true,
+        "usingEnvironmentId": true
+      },
+      "clientSide": true,
+      "salt": "701ea0f8fa6945c49baad905e7aba3b7",
+      "trackEvents": false,
+      "trackEventsFallthrough": false,
+      "debugEventsUntilDate": null,
+      "version": 10,
+      "deleted": false
+    }
+  },
+  "flagValues": {
+    "cedarCoreEnabled": false,
+    "emit-to-cedar": false
+  }
+}

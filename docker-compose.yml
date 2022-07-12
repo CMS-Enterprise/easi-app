@@ -50,6 +50,7 @@ services:
       - PGSSLMODE=disable
       - DB_MAX_CONNECTIONS=20
       - FLAG_SOURCE
+      - FLAGDATA_FILE
       - LD_SDK_KEY
       - LD_TIMEOUT_SECONDS=30
       - LD_ENV_USER

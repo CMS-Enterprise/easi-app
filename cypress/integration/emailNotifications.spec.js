@@ -5,7 +5,10 @@
 /// <reference types="cypress" />
 import { v4 as uuidv4 } from 'uuid';
 
+// SHA-256 hash (used as key in LaunchDarkly flagdata.json) - 68942a05a8732638e45824ff0d8869b576b4144704581e8ff6acee9548aa28e6
 const euaIDFeatureFlagSet = 'CYPT';
+
+// SHA-256 hash (used as key in LaunchDarkly flagdata.json) - 43b37aa4275b9bbf177b9f5302db1acf45480b9a2a4fedd7cebebfc11276fe76
 const euaIDFeatureFlagUnset = 'CYPF';
 
 // mailcatcher API returns email addresses surrounded by angle brackets, i.e. <abcd@local.fake> (applies to requesterEmail and grtEmail)
