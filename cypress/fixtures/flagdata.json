@@ -3,7 +3,6 @@
     "notifyMultipleRecipients": {
       "key": "notifyMultipleRecipients",
       "on": true,
-      "prerequisites": [],
       "targets": [
         {
           "variation": 0,
@@ -18,21 +17,9 @@
           ]
         }
       ],
-      "rules": [],
       "fallthrough": { "variation": 1 },
       "offVariation": 1,
-      "variations": [true, false],
-      "clientSideAvailability": {
-        "usingMobileKey": true,
-        "usingEnvironmentId": true
-      },
-      "clientSide": true,
-      "salt": "701ea0f8fa6945c49baad905e7aba3b7",
-      "trackEvents": false,
-      "trackEventsFallthrough": false,
-      "debugEventsUntilDate": null,
-      "version": 10,
-      "deleted": false
+      "variations": [true, false]
     }
   },
   "flagValues": {
