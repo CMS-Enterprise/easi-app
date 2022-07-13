@@ -4,9 +4,7 @@ import { useApolloClient } from '@apollo/client';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import { CedarContactProps } from 'types/systemIntake';
 
-function useCedarContactLookup(
-  query: string
-): { [id: string]: CedarContactProps };
+function useCedarContactLookup(query: string): CedarContactProps[];
 
 function useCedarContactLookup(
   query: string,
@@ -16,7 +14,7 @@ function useCedarContactLookup(
 function useCedarContactLookup(
   query: string,
   euaUserId?: string
-): { [id: string]: CedarContactProps } | CedarContactProps | undefined {
+): CedarContactProps[] | CedarContactProps | undefined {
   const client = useApolloClient();
   const [cedarContacts, setCedarContacts] = useState<CedarContactProps[]>([]);
   const contactByEuaUserId = useMemo(() => {
@@ -29,7 +27,7 @@ function useCedarContactLookup(
     });
   }, [query, client]);
 
-  return euaUserId ? contactByEuaUserId : formatCedarContacts(cedarContacts);
+  return euaUserId ? contactByEuaUserId : cedarContacts;
 }
 
 // GQL CEDAR API fetch of users based on first/last name text search
@@ -40,22 +38,22 @@ const fetchCedarContacts = (client: any, value: string) => {
       variables: { commonName: value }
     })
     .then((result: any) => {
-      return result.data.cedarPersonsByCommonName;
+      return sortCedarContacts(result.data.cedarPersonsByCommonName, value);
     })
     .catch((err: any) => {
       return [];
     });
 };
 
-// Formatting of user obj to reference when selecting user from dropdown
-const formatCedarContacts = (contacts: CedarContactProps[]) => {
-  const contactObj: { [id: string]: CedarContactProps } = {};
-
-  contacts.forEach((contact: CedarContactProps) => {
-    contactObj[`${contact.commonName}, ${contact.euaUserId}`] = contact;
+const sortCedarContacts = (contacts: CedarContactProps[], query: string) => {
+  return [...contacts].sort((a, b) => {
+    const result =
+      a.commonName.toLowerCase().search(query) -
+      b.commonName.toLowerCase().search(query);
+    if (result > 0) return 1;
+    if (result < 0) return -1;
+    return 0;
   });
-
-  return contactObj;
 };
 
 export default useCedarContactLookup;

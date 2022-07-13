@@ -60,7 +60,10 @@ export default function CedarContactSelect({
       aria-describedby={ariaDescribedBy}
       aria-disabled={disabled}
       aria-label="Cedar-Users"
-      onSelect={item => updateContact(contacts[item])}
+      onSelect={(item: string) => {
+        const contact = contacts.find(obj => obj.euaUserId === item.slice(-4));
+        if (contact) updateContact(contact);
+      }}
     >
       <ComboboxInput
         name={name}
@@ -74,10 +77,11 @@ export default function CedarContactSelect({
       />
       {searchTerm && searchTerm.length > 1 && (
         <ComboboxPopover>
-          {Object.values(contacts).length > 0 ? (
+          {contacts.length > 0 ? (
             <ComboboxList>
-              {Object.values(contacts).map(contact => (
+              {contacts.map((contact, index) => (
                 <ComboboxOption
+                  index={index}
                   key={contact.euaUserId}
                   value={`${contact.commonName}, ${contact.euaUserId}`}
                 />
