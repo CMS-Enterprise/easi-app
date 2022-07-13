@@ -5893,15 +5893,15 @@ type SystemIntakeContactsPayload {
 The inputs to the user feedback form
 """
 input SendFeedbackEmailInput {
-  isAnonymous: Boolean
+  isAnonymous: Boolean!
   easiServicesUsed: [String!]
-  cmsRole: String
-  systemEasyToUse: String
-  didntNeedHelpAnswering: String
-  questionsWereRelevant: String
-  hadAccessToInformation: String
-  howSatisfied: String
-  howCanWeImprove: String
+  cmsRole: String!
+  systemEasyToUse: String!
+  didntNeedHelpAnswering: String!
+  questionsWereRelevant: String!
+  hadAccessToInformation: String!
+  howSatisfied: String!
+  howCanWeImprove: String!
 }
 
 input SendCantFindSomethingEmailInput {
@@ -5911,12 +5911,12 @@ input SendCantFindSomethingEmailInput {
 }
 
 input SendReportAProblemEmailInput {
-  isAnonymous: Boolean
-  canBeContacted: Boolean
-  easiService: String
-  whatWereYouDoing: String
-  whatWentWrong: String
-  howSevereWasTheProblem: String
+  isAnonymous: Boolean!
+  canBeContacted: Boolean!
+  easiService: String!
+  whatWereYouDoing: String!
+  whatWentWrong: String!
+  howSevereWasTheProblem: String!
 }
 
 """
@@ -25143,7 +25143,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isAnonymous"))
-			it.IsAnonymous, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			it.IsAnonymous, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25159,7 +25159,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cmsRole"))
-			it.CmsRole, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.CmsRole, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25167,7 +25167,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemEasyToUse"))
-			it.SystemEasyToUse, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.SystemEasyToUse, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25175,7 +25175,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("didntNeedHelpAnswering"))
-			it.DidntNeedHelpAnswering, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.DidntNeedHelpAnswering, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25183,7 +25183,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("questionsWereRelevant"))
-			it.QuestionsWereRelevant, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.QuestionsWereRelevant, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25191,7 +25191,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hadAccessToInformation"))
-			it.HadAccessToInformation, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.HadAccessToInformation, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25199,7 +25199,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howSatisfied"))
-			it.HowSatisfied, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.HowSatisfied, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25207,7 +25207,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howCanWeImprove"))
-			it.HowCanWeImprove, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.HowCanWeImprove, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25230,7 +25230,7 @@ func (ec *executionContext) unmarshalInputSendReportAProblemEmailInput(ctx conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isAnonymous"))
-			it.IsAnonymous, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			it.IsAnonymous, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25238,7 +25238,7 @@ func (ec *executionContext) unmarshalInputSendReportAProblemEmailInput(ctx conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("canBeContacted"))
-			it.CanBeContacted, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			it.CanBeContacted, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25246,7 +25246,7 @@ func (ec *executionContext) unmarshalInputSendReportAProblemEmailInput(ctx conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("easiService"))
-			it.EasiService, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.EasiService, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25254,7 +25254,7 @@ func (ec *executionContext) unmarshalInputSendReportAProblemEmailInput(ctx conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("whatWereYouDoing"))
-			it.WhatWereYouDoing, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.WhatWereYouDoing, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25262,7 +25262,7 @@ func (ec *executionContext) unmarshalInputSendReportAProblemEmailInput(ctx conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("whatWentWrong"))
-			it.WhatWentWrong, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.WhatWentWrong, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25270,7 +25270,7 @@ func (ec *executionContext) unmarshalInputSendReportAProblemEmailInput(ctx conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howSevereWasTheProblem"))
-			it.HowSevereWasTheProblem, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.HowSevereWasTheProblem, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}

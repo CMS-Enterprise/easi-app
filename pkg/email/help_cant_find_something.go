@@ -3,7 +3,6 @@ package email
 import (
 	"bytes"
 	"context"
-	"fmt"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 )
@@ -26,8 +25,7 @@ func (c Client) SendCantFindSomethingEmail(ctx context.Context, input SendCantFi
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
-	fmt.Println("Email:")
-	fmt.Println(b.String())
+
 	err = c.sender.Send(ctx, c.config.EASIHelpEmail, nil, subject, b.String())
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}

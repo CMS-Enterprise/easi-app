@@ -356,24 +356,24 @@ type SendCantFindSomethingEmailInput struct {
 
 // The inputs to the user feedback form
 type SendFeedbackEmailInput struct {
-	IsAnonymous            *bool    `json:"isAnonymous"`
+	IsAnonymous            bool     `json:"isAnonymous"`
 	EasiServicesUsed       []string `json:"easiServicesUsed"`
-	CmsRole                *string  `json:"cmsRole"`
-	SystemEasyToUse        *string  `json:"systemEasyToUse"`
-	DidntNeedHelpAnswering *string  `json:"didntNeedHelpAnswering"`
-	QuestionsWereRelevant  *string  `json:"questionsWereRelevant"`
-	HadAccessToInformation *string  `json:"hadAccessToInformation"`
-	HowSatisfied           *string  `json:"howSatisfied"`
-	HowCanWeImprove        *string  `json:"howCanWeImprove"`
+	CmsRole                string   `json:"cmsRole"`
+	SystemEasyToUse        string   `json:"systemEasyToUse"`
+	DidntNeedHelpAnswering string   `json:"didntNeedHelpAnswering"`
+	QuestionsWereRelevant  string   `json:"questionsWereRelevant"`
+	HadAccessToInformation string   `json:"hadAccessToInformation"`
+	HowSatisfied           string   `json:"howSatisfied"`
+	HowCanWeImprove        string   `json:"howCanWeImprove"`
 }
 
 type SendReportAProblemEmailInput struct {
-	IsAnonymous            *bool   `json:"isAnonymous"`
-	CanBeContacted         *bool   `json:"canBeContacted"`
-	EasiService            *string `json:"easiService"`
-	WhatWereYouDoing       *string `json:"whatWereYouDoing"`
-	WhatWentWrong          *string `json:"whatWentWrong"`
-	HowSevereWasTheProblem *string `json:"howSevereWasTheProblem"`
+	IsAnonymous            bool   `json:"isAnonymous"`
+	CanBeContacted         bool   `json:"canBeContacted"`
+	EasiService            string `json:"easiService"`
+	WhatWereYouDoing       string `json:"whatWereYouDoing"`
+	WhatWentWrong          string `json:"whatWentWrong"`
+	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
 }
 
 // Input to submit an intake for review

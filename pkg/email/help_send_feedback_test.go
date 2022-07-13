@@ -2,7 +2,6 @@ package email
 
 import (
 	"context"
-	"fmt"
 )
 
 func (s *EmailTestSuite) TestSendFeedbackEmail() {
@@ -68,9 +67,6 @@ func (s *EmailTestSuite) TestSendFeedbackEmail() {
 
 		err = client.SendFeedbackEmail(ctx, input)
 		s.NoError(err)
-		fmt.Println("---")
-		fmt.Println(sender.body)
-		fmt.Println("---")
 		s.Equal(s.config.EASIHelpEmail, sender.toAddress)
 		s.Equal(expectedBody, sender.body)
 	})

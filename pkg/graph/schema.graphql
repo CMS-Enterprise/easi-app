@@ -1366,15 +1366,15 @@ type SystemIntakeContactsPayload {
 The inputs to the user feedback form
 """
 input SendFeedbackEmailInput {
-  isAnonymous: Boolean
+  isAnonymous: Boolean!
   easiServicesUsed: [String!]
-  cmsRole: String
-  systemEasyToUse: String
-  didntNeedHelpAnswering: String
-  questionsWereRelevant: String
-  hadAccessToInformation: String
-  howSatisfied: String
-  howCanWeImprove: String
+  cmsRole: String!
+  systemEasyToUse: String!
+  didntNeedHelpAnswering: String!
+  questionsWereRelevant: String!
+  hadAccessToInformation: String!
+  howSatisfied: String!
+  howCanWeImprove: String!
 }
 
 input SendCantFindSomethingEmailInput {
@@ -1384,12 +1384,12 @@ input SendCantFindSomethingEmailInput {
 }
 
 input SendReportAProblemEmailInput {
-  isAnonymous: Boolean
-  canBeContacted: Boolean
-  easiService: String
-  whatWereYouDoing: String
-  whatWentWrong: String
-  howSevereWasTheProblem: String
+  isAnonymous: Boolean!
+  canBeContacted: Boolean!
+  easiService: String!
+  whatWereYouDoing: String!
+  whatWentWrong: String!
+  howSevereWasTheProblem: String!
 }
 
 """
