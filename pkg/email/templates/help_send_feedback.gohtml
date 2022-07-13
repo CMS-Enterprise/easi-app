@@ -1,47 +1,32 @@
 <p><strong>Reporter</strong></p>
-{{if .IsAnonymous}} <p>Anonymous</p> {{end}}
-{{if !.IsAnonymous}} <p>{{.ReporterName}}, {{.ReporterEmail}}</p> {{end}}
+<p>{{if .IsAnonymous}} Anonymous {{else}} {{.ReporterName}}, {{.ReporterEmail}} {{end}}</p>
 
 <p><strong>Which EASi services have you used?</strong></p>
-{{if .EasiServicesUsed}}
-    <p>
-        {{$services := .EasiServicesUsed}}
-        {{ range $index, $service := .EasiServicesUsed}}
-            {{if $index}},{{end}}
-            {{$service}}
-        {{end}}
-    </p>
+<p>{{range .Emails}} {{.}}, {{end}}</p>
 
 <p><strong>Role</strong></p>
-{{if .Role}} <p>{{.Role}}</p> {{end}}
-{{if !.Role}} <p>-</p> {{end}}
+<p>{{if .Role}} {{.Role}} {{else}}-{{end}}</p> 
 
 
 <p><strong>The system was easy to use.</strong></p>
-{{if .SystemEasyToUse}} <p>{{.SystemEasyToUse}}</p> {{end}}
-{{if !.SystemEasyToUse}} <p>-</p> {{end}}
+<p>{{if .SystemEasyToUse}} {{.SystemEasyToUse}} {{else}}-{{end}}</p> 
 
 
 <p><strong>I didn’t need help answering any questions.</strong></p>
-{{if .DidntNeedHelpAnswering}} <p>{{.DidntNeedHelpAnswering}}</p> {{end}}
-{{if !.DidntNeedHelpAnswering}} <p>-</p> {{end}}
+<p>{{if .DidntNeedHelpAnswering}} {{.DidntNeedHelpAnswering}} {{else}}-{{end}}</p> 
 
 
 <p><strong>All the questions on the form were relevant to my use case.</strong></p>
-{{if .QuestionsWereRelevant}} <p>{{.QuestionsWereRelevant}}</p> {{end}}
-{{if !.QuestionsWereRelevant}} <p>-</p> {{end}}
+<p>{{if .QuestionsWereRelevant}} {{.QuestionsWereRelevant}} {{else}}-{{end}}</p> 
 
 
 <p><strong>I had access to all the information the form asked for.</strong></p>
-{{if .HadAccessToInformation}} <p>{{.HadAccessToInformation}}</p> {{end}}
-{{if !.HadAccessToInformation}} <p>-</p> {{end}}
+<p>{{if .HadAccessToInformation}} {{.HadAccessToInformation}} {{else}}-{{end}}</p> 
 
 
 <p><strong>Overall, how satisfied were you with the service?</strong></p>
-{{if .HowSatisfied}} <p>{{.HowSatisfied}}</p> {{end}}
-{{if !.HowSatisfied}} <p>-</p> {{end}}
+<p>{{if .HowSatisfied}} {{.HowSatisfied}} {{else}}-{{end}}</p> 
 
 
 <p><strong>How can we improve EASi?</strong></p>
-{{if .HowCanWeImprove}} <p>{{.HowCanWeImprove}}</p> {{end}}
-{{if !.HowCanWeImprove}} <p>-</p> {{end}}
+<p>{{if .HowCanWeImprove}} {{.HowCanWeImprove}} {{else}}-{{end}}</p> 

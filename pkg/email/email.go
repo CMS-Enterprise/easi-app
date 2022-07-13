@@ -187,21 +187,21 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.newAccessibilityRequestNote = newAccessibilityRequestNoteTemplate
 
-	helpSendFeedbackTemplateName := "help_.gohtml"
+	helpSendFeedbackTemplateName := "help_send_feedback.gohtml"
 	helpSendFeedbackTemplate := rawTemplates.Lookup(helpSendFeedbackTemplateName)
 	if helpSendFeedbackTemplate == nil {
 		return Client{}, templateError(helpSendFeedbackTemplateName)
 	}
 	appTemplates.helpSendFeedback = helpSendFeedbackTemplate
 
-	helpCantFindSomethingTemplateName := "help_.gohtml"
+	helpCantFindSomethingTemplateName := "help_cant_find_something.gohtml"
 	helpCantFindSomethingTemplate := rawTemplates.Lookup(helpCantFindSomethingTemplateName)
 	if helpCantFindSomethingTemplate == nil {
 		return Client{}, templateError(helpCantFindSomethingTemplateName)
 	}
 	appTemplates.helpCantFindSomething = helpCantFindSomethingTemplate
 
-	helpReportAProblemTemplateName := "help_.gohtml"
+	helpReportAProblemTemplateName := "help_report_a_problem.gohtml"
 	helpReportAProblemTemplate := rawTemplates.Lookup(helpReportAProblemTemplateName)
 	if helpReportAProblemTemplate == nil {
 		return Client{}, templateError(helpReportAProblemTemplateName)

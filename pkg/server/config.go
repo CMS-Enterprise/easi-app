@@ -59,6 +59,7 @@ func (s Server) NewEmailConfig() email.Config {
 	return email.Config{
 		GRTEmail:               models.NewEmailAddress(s.Config.GetString(appconfig.GRTEmailKey)),
 		AccessibilityTeamEmail: models.NewEmailAddress(s.Config.GetString(appconfig.AccessibilityTeamEmailKey)),
+		EASIHelpEmail:          models.NewEmailAddress(s.Config.GetString(appconfig.EASIHelpEmailKey)),
 		URLHost:                s.Config.GetString(appconfig.ClientHostKey),
 		URLScheme:              s.Config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory:      s.Config.GetString(appconfig.EmailTemplateDirectoryKey),

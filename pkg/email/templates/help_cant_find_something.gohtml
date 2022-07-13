@@ -1,13 +1,10 @@
 <p><strong>User Name</strong></p>
-{{if .Name}} <p>{{.Name}}</p> {{end}}
-{{if !.Name}} <p>-</p> {{end}}
+<p>{{if .Name}}{{.Name}}{{else}}-{{end}}</p> 
 
 
 <p><strong>User Email</strong></p>
-{{if .Email}} <p>{{.Email}}</p> {{end}}
-{{if !.Email}} <p>-</p> {{end}}
+<p>{{if .Email}}{{.Email}}{{else}}-{{end}}</p> 
 
 
 <p><strong>What do you need help with?</strong></p>
-{{if .Body}} <p>{{.Body}}</p> {{end}}
-{{if !.Body}} <p>-</p> {{end}}
+<p>{{if .Body}}{{.Body}}{{else}}-{{end}}</p>
