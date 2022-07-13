@@ -22,9 +22,11 @@ import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
-import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
+import {
+  IssueLifecycleId as IssueLifecycleIdType,
+  IssueLifecycleIdVariables
+} from 'queries/types/IssueLifecycleId';
 import { SubmitLifecycleIdForm } from 'types/action';
-import { IssueLifecycleIdInput } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
@@ -39,12 +41,12 @@ const IssueLifecycleId = () => {
   const { t } = useTranslation('action');
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
-  const [mutate, mutationResult] = useMutation<IssueLifecycleIdType>(
-    IssueLifecycleIdQuery,
-    {
-      errorPolicy: 'all'
-    }
-  );
+  const [mutate, mutationResult] = useMutation<
+    IssueLifecycleIdType,
+    IssueLifecycleIdVariables
+  >(IssueLifecycleIdQuery, {
+    errorPolicy: 'all'
+  });
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -74,7 +76,7 @@ const IssueLifecycleId = () => {
       parseInt(expirationDateMonth, RADIX),
       parseInt(expirationDateDay, RADIX)
     );
-    const input: IssueLifecycleIdInput = {
+    const input = {
       intakeId: systemId,
       expiresAt: expiresAt.toISO(),
       nextSteps,
@@ -82,13 +84,7 @@ const IssueLifecycleId = () => {
       costBaseline,
       lcid: lifecycleId,
       feedback,
-      shouldSendEmail,
-      // TODO - remove before merging EASI-1955 work
-      notificationRecipients: {
-        regularRecipientEmails: ['abcd@local.fake', 'efgh@local.fake'],
-        shouldNotifyITGovernance: true,
-        shouldNotifyITInvestment: false
-      }
+      shouldSendEmail
     };
 
     mutate({
