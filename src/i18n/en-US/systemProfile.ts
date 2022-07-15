@@ -42,6 +42,7 @@ const systemProfile = {
       view: 'View',
       subheader1: 'CMS Component',
       subheader2: 'Business Owner',
+      subheader2_plural: 'Business Owners',
       subheader3: 'Go Live Date',
       subheader4: 'Most recent major change release'
     },

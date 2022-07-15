@@ -511,7 +511,9 @@ const SystemProfile = () => {
                       {businessOwners.length && (
                         <Grid desktop={{ col: 6 }} className="margin-bottom-2">
                           <DescriptionDefinition
-                            definition={t('singleSystem.summary.subheader2')}
+                            definition={t('singleSystem.summary.subheader2', {
+                              count: businessOwners.length
+                            })}
                           />
                           <DescriptionTerm
                             className="font-body-md"
