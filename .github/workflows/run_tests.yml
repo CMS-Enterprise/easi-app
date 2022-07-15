@@ -64,7 +64,7 @@ jobs:
           aws-region: us-west-2
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+        uses: aws-actions/amazon-ecr-login@b874a33292cc9887d2e80bc63f6f1a11fccb4a7b
       - name: Run backend server tests
         env:
           APP_ENV: test
@@ -89,8 +89,8 @@ jobs:
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
-          PGUSER: app_user
-          PGPASS: supersecretapp
+          PGUSER: postgres
+          PGPASS: mysecretpassword
           PGSSLMODE: disable
           DB_MAX_CONNECTIONS: 20
           FLAG_SOURCE: LOCAL
@@ -160,7 +160,7 @@ jobs:
           aws-region: us-west-2
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+        uses: aws-actions/amazon-ecr-login@b874a33292cc9887d2e80bc63f6f1a11fccb4a7b
       - name: Run e2e cypress tests
         env:
           APP_ENV: test
