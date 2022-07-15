@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, IconLaunch, Link } from '@trussworks/react-uswds';
+import { Alert, IconMailOutline, Link } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import {
@@ -84,7 +84,7 @@ const PointsOfContactSidebar = ({
                     target="_blank"
                   >
                     {t('singleSystem.sendEmail')}
-                    <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
+                    <IconMailOutline className="margin-left-05 margin-bottom-2px text-tbottom" />
                   </Link>
                 </p>
               )}
