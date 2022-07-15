@@ -1,11 +1,11 @@
 import { RoleTypeId, SubpageKey } from 'types/systemProfile';
 
 /**
- * Point of Contact Cedar Role Type Ids by System Profile subpage.
+ * Points of Contact Cedar Role Type Ids by System Profile subpage.
  * The Contact Role Type Id lists are contextualized by subpage.
  * Lists are in order of priority.
  */
-const pointOfContactIds: Record<SubpageKey, RoleTypeId[]> = {
+const pointsOfContactIds: Record<SubpageKey, RoleTypeId[]> = {
   home: [RoleTypeId.PROJECT_LEAD],
   details: [
     RoleTypeId.PROJECT_LEAD,
@@ -60,8 +60,8 @@ const pointOfContactIds: Record<SubpageKey, RoleTypeId[]> = {
 };
 
 // All lists are followed by `RoleTypeId.BUSINESS_OWNER`
-Object.values(pointOfContactIds).forEach(ids => {
+Object.values(pointsOfContactIds).forEach(ids => {
   ids.push(RoleTypeId.BUSINESS_OWNER);
 });
 
-export default pointOfContactIds;
+export default pointsOfContactIds;
