@@ -1362,6 +1362,35 @@ type SystemIntakeContactsPayload {
   invalidEUAIDs: [String!]!
 }
 
+"""
+The inputs to the user feedback form
+"""
+input SendFeedbackEmailInput {
+  isAnonymous: Boolean!
+  easiServicesUsed: [String!]
+  cmsRole: String!
+  systemEasyToUse: String!
+  didntNeedHelpAnswering: String!
+  questionsWereRelevant: String!
+  hadAccessToInformation: String!
+  howSatisfied: String!
+  howCanWeImprove: String!
+}
+
+input SendCantFindSomethingEmailInput {
+  name: String!
+  email: String!
+  body: String!
+}
+
+input SendReportAProblemEmailInput {
+  isAnonymous: Boolean!
+  canBeContacted: Boolean!
+  easiService: String!
+  whatWereYouDoing: String!
+  whatWentWrong: String!
+  howSevereWasTheProblem: String!
+}
 
 """
 Defines the mutations for the schema
@@ -1465,6 +1494,9 @@ type Mutation {
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
+  sendFeedbackEmail(input: SendFeedbackEmailInput!): String
+  sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
+  sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
 }
 
 """
