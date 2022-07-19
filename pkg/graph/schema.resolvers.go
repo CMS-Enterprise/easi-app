@@ -1707,9 +1707,10 @@ func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.Se
 		euaUserID := appcontext.Principal(ctx).ID()
 		userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
 		if err != nil {
-			reporterName = userInfo.CommonName
-			reporterEmail = userInfo.Email.String()
+			return nil, err
 		}
+		reporterName = userInfo.CommonName
+		reporterEmail = userInfo.Email.String()
 	}
 
 	err := r.emailClient.SendFeedbackEmail(ctx, email.SendFeedbackEmailInput{
@@ -1758,9 +1759,10 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 		euaUserID := appcontext.Principal(ctx).ID()
 		userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
 		if err != nil {
-			reporterName = userInfo.CommonName
-			reporterEmail = userInfo.Email.String()
+			return nil, err
 		}
+		reporterName = userInfo.CommonName
+		reporterEmail = userInfo.Email.String()
 	}
 
 	err := r.emailClient.SendReportAProblemEmail(ctx, email.SendReportAProblemEmailInput{

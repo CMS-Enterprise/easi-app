@@ -1367,7 +1367,7 @@ The inputs to the user feedback form
 """
 input SendFeedbackEmailInput {
   isAnonymous: Boolean!
-  easiServicesUsed: [String!]
+  easiServicesUsed: [String!]!
   cmsRole: String!
   systemEasyToUse: String!
   didntNeedHelpAnswering: String!
