@@ -7,13 +7,25 @@ import {
   waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import { clone } from 'lodash';
+import { clone, cloneDeep } from 'lodash';
 import { DateTime } from 'luxon';
 
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
-import { query, result } from 'data/mock/systemProfile';
+import {
+  getMockPersonRole,
+  getMockSystemProfileData,
+  query,
+  result
+} from 'data/mock/systemProfile';
+// eslint-disable-next-line camelcase
+import { GetSystemProfile_cedarSystemDetails_roles } from 'queries/types/GetSystemProfile';
+import { RoleTypeId, SubpageKey } from 'types/systemProfile';
 
 import SystemProfile, { getAtoStatus } from './index';
+import pointsOfContactIds from './pointsOfContactIds';
+import PointsOfContactSidebar, {
+  getPointsOfContact
+} from './PointsOfContactSidebar';
 
 describe('System Profile parent request', () => {
   it('matches snapshot', async () => {
@@ -78,11 +90,11 @@ describe('System profile description is expandable', () => {
 });
 
 describe('System Profile ATO Status', () => {
-  test('output "No ATO" on missing cedarAuthorityToOperate', () => {
+  it('output "No ATO" on missing cedarAuthorityToOperate', () => {
     expect(getAtoStatus(undefined)).toBe('No ATO');
   });
 
-  test('output "No ATO" on missing cedarAuthorityToOperate.dateAuthorizationMemoExpires', () => {
+  it('output "No ATO" on missing cedarAuthorityToOperate.dateAuthorizationMemoExpires', () => {
     const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
 
     cedarAto.dateAuthorizationMemoExpires = '';
@@ -92,7 +104,7 @@ describe('System Profile ATO Status', () => {
     expect(getAtoStatus(cedarAto)).toBe('No ATO');
   });
 
-  test.each([
+  it.each([
     { status: 'Expired', dt: DateTime.utc().minus({ days: 1 }) },
     {
       status: 'Due Soon',
@@ -106,5 +118,57 @@ describe('System Profile ATO Status', () => {
     const cedarAto = clone(result.data.cedarAuthorityToOperate[0]);
     cedarAto.dateAuthorizationMemoExpires = dt.toString();
     expect(getAtoStatus(cedarAto)).toBe(status);
+  });
+});
+
+describe('System Profile Points of Contact by subpage', () => {
+  const resultdata = cloneDeep(result.data);
+
+  // Reassign 1 person per Cedar Role Type
+  resultdata.cedarSystemDetails!.roles = Object.values(
+    RoleTypeId
+    // eslint-disable-next-line camelcase
+  ).map<GetSystemProfile_cedarSystemDetails_roles>((roleTypeID, idx) =>
+    getMockPersonRole({
+      assigneeUsername: `ABC${idx}`,
+      roleTypeID
+    })
+  );
+
+  const data = getMockSystemProfileData(resultdata);
+
+  it.each(
+    Object.keys(pointsOfContactIds).map(subpage => subpage as SubpageKey)
+  )('poc set is of the first matching role type for %s', subpage => {
+    const allowedSubpagePocIds = pointsOfContactIds[subpage];
+    const contacts = getPointsOfContact(subpage, data.usernamesWithRoles);
+
+    // Collect all contacts matching all poc ids for the subpage
+    const received = allowedSubpagePocIds.filter(pocid => {
+      return contacts.every(contact =>
+        contact.roles.some(r => r.roleTypeID === pocid)
+      );
+    });
+
+    // The set of contacts are all of the same role type as allowed in the poc list
+    expect(received).toHaveLength(1);
+    // It is the first from the priority list
+    expect(received[0]).toEqual(allowedSubpagePocIds[0]);
+  });
+
+  it('displays alert on no poc memebers', () => {
+    const res = cloneDeep(result.data);
+    res.cedarSystemDetails!.roles = [];
+    const dataWithoutTeam = getMockSystemProfileData(res);
+    const { getByTestId } = render(
+      <MemoryRouter>
+        <PointsOfContactSidebar
+          subpageKey="home"
+          systemId=""
+          system={dataWithoutTeam}
+        />
+      </MemoryRouter>
+    );
+    expect(getByTestId('alert')).toBeDefined();
   });
 });

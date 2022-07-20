@@ -9,7 +9,7 @@ import SubSystems from './SubSystems';
 import SystemData from './SystemData';
 import SystemDetails from './SystemDetails';
 import SystemHome from './SystemHome';
-import TeamAndContract from './TeamAndContract';
+import Team from './Team';
 import ToolsAndSoftware from './ToolsAndSoftware';
 
 type sideNavItemProps = {
@@ -43,11 +43,11 @@ const sideNavItems = (
           route: `/systems/${system.id}/details`,
           componentId: 'system-detail'
         },
-        'team-and-contract': {
+        team: {
           groupEnd: true,
-          component: <TeamAndContract system={system} />,
-          route: `/systems/${system.id}/team-and-contract`,
-          componentId: 'system-team-and-contract'
+          component: <Team system={system} />,
+          route: `/systems/${system.id}/team`,
+          componentId: 'system-team'
         },
         ato: {
           component: <ATO system={system} />,
@@ -68,10 +68,10 @@ const sideNavItems = (
           route: `/systems/${system.id}/details`,
           componentId: 'system-detail'
         },
-        'team-and-contract': {
-          component: <TeamAndContract system={system} />,
-          route: `/systems/${system.id}/team-and-contract`,
-          componentId: 'system-team-and-contract'
+        team: {
+          component: <Team system={system} />,
+          route: `/systems/${system.id}/team`,
+          componentId: 'system-team'
         },
         'funding-and-budget': {
           component: <FundingAndBudget system={system} />,

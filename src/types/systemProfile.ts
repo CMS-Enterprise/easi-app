@@ -1,5 +1,6 @@
 import {
   securityFindingKeys,
+  teamSectionKeys,
   threatLevelGrades
 } from 'constants/systemProfile';
 import {
@@ -20,6 +21,25 @@ import {
   tempSystemDataProp
 } from 'views/Sandbox/mockSystemData';
 
+import { CedarAssigneeType } from './graphql-global-types';
+
+// Loosely grouped by System Subpages
+
+// Team
+
+export type TeamSectionKey = typeof teamSectionKeys[number];
+
+export interface CedarRoleAssigneePerson
+  // eslint-disable-next-line camelcase
+  extends GetSystemProfile_cedarSystemDetails_roles {
+  assigneeType: CedarAssigneeType.PERSON;
+}
+
+export interface UsernameWithRoles {
+  assigneeUsername: string;
+  roles: CedarRoleAssigneePerson[];
+}
+
 // ATO
 
 export type AtoStatus =
@@ -35,6 +55,39 @@ export type SecurityFindings = Record<
   typeof securityFindingKeys[number],
   number
 >;
+
+// General
+
+export type SubpageKey =
+  | 'home'
+  | 'details'
+  | 'team'
+  | 'funding-and-budget'
+  | 'tools-and-software'
+  | 'ato'
+  | 'lifecycle-id'
+  | 'section-508'
+  | 'sub-systems'
+  | 'system-data'
+  | 'documents';
+
+/**
+ * A set of some Cedar Role Type Ids used in the client.
+ * So far it is certain team members and points of contact.
+ * This is a borrowed set from `API/role/type/alfabet`.
+ */
+// eslint-disable-next-line no-shadow
+export enum RoleTypeId {
+  API_CONTACT = '238-58-0',
+  BUSINESS_OWNER = '238-17-0',
+  COR = '238-35-0',
+  ISSO = '238-29-0',
+  PROJECT_LEAD = '238-32-0',
+  SYSTEM_BUSINESS_QUESTION_CONTACT = '238-51-0',
+  SYSTEM_DATA_CENTER_CONTACT = '238-52-0',
+  SYSTEM_ISSUES_CONTACT = '238-50-0',
+  SYSTEM_MAINTAINER = '238-28-0'
+}
 
 // Development Tags
 
@@ -62,17 +115,16 @@ export interface SystemProfileData extends GetSystemProfile {
   atoStatus?: AtoStatus;
   locations?: UrlLocation[];
   // eslint-disable-next-line camelcase
-  businessOwner?: GetSystemProfile_cedarSystemDetails_roles;
+  businessOwners: GetSystemProfile_cedarSystemDetails_roles[];
   developmentTags?: DevelopmentTag[];
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
-  // eslint-disable-next-line camelcase
-  pointOfContact?: GetSystemProfile_cedarSystemDetails_roles;
-  // eslint-disable-next-line camelcase
+  personRoles: CedarRoleAssigneePerson[];
   productionLocation?: UrlLocation;
   // eslint-disable-next-line camelcase
   status: GetSystemProfile_cedarSystemDetails_cedarSystem['status'];
+  usernamesWithRoles: UsernameWithRoles[];
 
   // Remaining mock data stubs
   activities?: tempATOProp[];

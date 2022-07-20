@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { getSystemProfileMockData } from 'data/mock/systemProfile';
+import { getMockSystemProfileData } from 'data/mock/systemProfile';
 
 import ATO from './index';
 
-const systemProfileData = getSystemProfileMockData();
+const systemProfileData = getMockSystemProfileData();
 
 describe('ATO subpage for System Profile', () => {
   it('matches snapshot', async () => {
