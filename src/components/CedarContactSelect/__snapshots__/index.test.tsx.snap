@@ -3,6 +3,7 @@
 exports[`CedarContactSelect matches the snapshot 1`] = `
 <DocumentFragment>
   <div
+    class="cedar-contact-select"
     data-reach-combobox=""
     data-state="idle"
     id="cedarContactSelect"
