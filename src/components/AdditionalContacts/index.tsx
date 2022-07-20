@@ -5,6 +5,12 @@ import { Button, Dropdown, Label } from '@trussworks/react-uswds';
 import CedarContactSelect from 'components/CedarContactSelect';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import {
+  CreateContactType,
+  DeleteContactType,
+  UpdateContactType,
+  useSystemIntakeContacts
+} from 'hooks/useSystemIntakeContacts';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
 import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
@@ -27,7 +33,7 @@ const Contact = ({
   setActiveContact
 }: {
   contact: SystemIntakeContactProps;
-  deleteContact: (id: string, callback?: () => any) => void;
+  deleteContact: DeleteContactType;
   setActiveContact: (activeContact: SystemIntakeContactProps | null) => void;
 }) => {
   const { commonName, component, role, id } = contact;
@@ -52,9 +58,7 @@ const Contact = ({
           type="button"
           unstyled
           className="text-error margin-left-2"
-          onClick={() =>
-            deleteContact(id as string, () => setActiveContact(null))
-          }
+          onClick={() => deleteContact(id!).then(() => setActiveContact(null))}
         >
           {t('contactDetails.additionalContacts.delete')}
         </Button>
@@ -79,10 +83,7 @@ const ContactForm = ({
 }: {
   activeContact: SystemIntakeContactProps;
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
-  onSubmit: (
-    contact: SystemIntakeContactProps,
-    callback?: (() => any) | undefined
-  ) => void;
+  onSubmit: CreateContactType | UpdateContactType;
 }) => {
   const { t } = useTranslation('intake');
 
@@ -109,7 +110,8 @@ const ContactForm = ({
       !submitErrors.component &&
       !submitErrors.role
     ) {
-      onSubmit(activeContact, () => setActiveContact(null));
+      onSubmit(activeContact);
+      setActiveContact(null);
     }
   };
 
@@ -209,35 +211,27 @@ const ContactForm = ({
 export default function AdditionalContacts({
   systemIntakeId,
   activeContact,
-  setActiveContact,
-  contacts,
-  createContact,
-  updateContact,
-  deleteContact
+  setActiveContact
 }: {
   systemIntakeId: string;
   activeContact: SystemIntakeContactProps | null;
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
-  contacts: SystemIntakeContactProps[] | [];
-  createContact: (
-    contact: SystemIntakeContactProps,
-    callback?: () => any
-  ) => void;
-  updateContact: (
-    contact: SystemIntakeContactProps,
-    callback?: () => any
-  ) => void;
-  deleteContact: (id: string, callback?: () => any) => void;
 }) {
   const { t } = useTranslation('intake');
+  const [
+    contacts,
+    { createContact, updateContact, deleteContact }
+  ] = useSystemIntakeContacts(systemIntakeId);
+
+  if (!contacts?.additionalContacts) return null;
 
   return (
     <div className="system-intake-contacts margin-top-4">
-      {contacts.length > 0 && (
+      {contacts.additionalContacts.length > 0 && (
         <>
           <h4>{t('contactDetails.additionalContacts.title')}</h4>
           <div className="system-intake-contacts__contacts-list">
-            {contacts.map(contact => {
+            {contacts.additionalContacts.map(contact => {
               // Show form if editing contact
               if (activeContact && activeContact?.id === contact.id) {
                 return (
@@ -253,7 +247,7 @@ export default function AdditionalContacts({
                       unstyled
                       className="text-error margin-top-2"
                       onClick={() =>
-                        deleteContact(activeContact.id!, () =>
+                        deleteContact(activeContact.id!).then(() =>
                           setActiveContact(null)
                         )
                       }

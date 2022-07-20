@@ -7,7 +7,10 @@ import {
   GetSystemIntakeContactsQuery,
   UpdateSystemIntakeContact
 } from 'queries/SystemIntakeContactsQueries';
-import { GetSystemIntakeContacts } from 'queries/types/GetSystemIntakeContacts';
+import {
+  GetSystemIntakeContacts,
+  GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact
+} from 'queries/types/GetSystemIntakeContacts';
 import {
   CreateSystemIntakeContactInput,
   DeleteSystemIntakeContactInput,
@@ -51,22 +54,30 @@ const rolesMap: Roles = {
   ISSO: 'isso'
 };
 
-export default function useSystemIntakeContacts(
-  systemIntakeId: string
-): [
+export type CreateContactType = (
+  contact: SystemIntakeContactProps
+) => Promise<AugmentedSystemIntakeContact | undefined>;
+
+export type UpdateContactType = (
+  contact: SystemIntakeContactProps
+) => Promise<AugmentedSystemIntakeContact[] | undefined>;
+
+export type DeleteContactType = (
+  id: string
+) => Promise<AugmentedSystemIntakeContact[] | undefined>;
+
+type UseSystemIntakeContactsType = [
   FormattedContacts | null,
   {
-    createContact: (
-      contact: SystemIntakeContactProps,
-      callback?: () => void
-    ) => void;
-    updateContact: (
-      contact: SystemIntakeContactProps,
-      callback?: () => void
-    ) => void;
-    deleteContact: (id: string, callback?: () => void) => void;
+    createContact: CreateContactType;
+    updateContact: UpdateContactType;
+    deleteContact: DeleteContactType;
   }
-] {
+];
+
+export function useSystemIntakeContacts(
+  systemIntakeId: string
+): UseSystemIntakeContactsType {
   const { data, refetch } = useQuery<GetSystemIntakeContacts>(
     GetSystemIntakeContactsQuery,
     {
@@ -77,7 +88,7 @@ export default function useSystemIntakeContacts(
   const contacts = useMemo(() => {
     const systemIntakeContacts =
       data?.systemIntakeContacts?.systemIntakeContacts;
-    return systemIntakeContacts
+    const contactsObject = systemIntakeContacts
       ? systemIntakeContacts.reduce((acc, contact: any) => {
           if (rolesMap[contact.role as keyof Roles]) {
             return {
@@ -91,6 +102,7 @@ export default function useSystemIntakeContacts(
           };
         }, initialContactsObject)
       : null;
+    return contactsObject;
   }, [data?.systemIntakeContacts?.systemIntakeContacts]);
 
   const [
@@ -103,10 +115,7 @@ export default function useSystemIntakeContacts(
     deleteSystemIntakeContact
   ] = useMutation<DeleteSystemIntakeContactInput>(DeleteSystemIntakeContact);
 
-  const createContact = (
-    contact: SystemIntakeContactProps,
-    callback?: () => any
-  ) => {
+  const createContact = async (contact: SystemIntakeContactProps) => {
     const { euaUserId, component, role } = contact;
     return createSystemIntakeContact({
       variables: {
@@ -119,13 +128,14 @@ export default function useSystemIntakeContacts(
       }
     })
       .then(refetch)
-      .then(callback || null);
+      .then(response =>
+        response?.data?.systemIntakeContacts?.systemIntakeContacts.find(
+          obj => obj.role === role
+        )
+      );
   };
 
-  const updateContact = (
-    contact: SystemIntakeContactProps,
-    callback?: () => any
-  ) => {
+  const updateContact = async (contact: SystemIntakeContactProps) => {
     const { id, euaUserId, component, role } = contact;
     return updateSystemIntakeContact({
       variables: {
@@ -139,11 +149,13 @@ export default function useSystemIntakeContacts(
       }
     })
       .then(refetch)
-      .then(callback || null);
+      .then(
+        response => response?.data?.systemIntakeContacts?.systemIntakeContacts
+      );
   };
 
-  const deleteContact = (id: string, callback?: () => any) => {
-    deleteSystemIntakeContact({
+  const deleteContact = async (id: string) => {
+    return deleteSystemIntakeContact({
       variables: {
         input: {
           id
@@ -151,7 +163,9 @@ export default function useSystemIntakeContacts(
       }
     })
       .then(refetch)
-      .then(callback || null);
+      .then(
+        response => response?.data?.systemIntakeContacts?.systemIntakeContacts
+      );
   };
 
   return [contacts, { createContact, updateContact, deleteContact }];

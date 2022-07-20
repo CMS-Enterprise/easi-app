@@ -7,11 +7,13 @@ import {
   ComboboxOption,
   ComboboxPopover
 } from '@reach/combobox';
+import classNames from 'classnames';
 
 import useCedarContactLookup from 'hooks/useCedarContactLookup';
 import { CedarContactProps } from 'types/systemIntake';
 
 import '@reach/combobox/styles.css';
+import './index.scss';
 
 type CedarContactSelectProps = {
   className?: string;
@@ -56,7 +58,7 @@ export default function CedarContactSelect({
   return (
     <Combobox
       id={id}
-      className={className}
+      className={classNames('cedar-contact-select', className)}
       aria-describedby={ariaDescribedBy}
       aria-disabled={disabled}
       aria-label="Cedar-Users"

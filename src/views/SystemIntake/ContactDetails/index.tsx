@@ -26,7 +26,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import useCedarContactLookup from 'hooks/useCedarContactLookup';
-import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
+import { useSystemIntakeContacts } from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -143,20 +143,25 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     return link;
   })();
 
-  const onSubmit = async (values?: ContactDetailsForm) => {
+  const onSubmit = async (
+    values?: ContactDetailsForm,
+    setFieldValue?: (
+      field: string,
+      value: any,
+      shouldValidate?: boolean | undefined
+    ) => void
+  ) => {
     if (!values) return null;
     const updateSystemIntakeContact = async (
       type: 'businessOwner' | 'productManager' | 'isso'
     ) => {
-      if (
-        values[type].euaUserId &&
-        values[type].component &&
-        values[type] !== initialValues[type]
-      ) {
-        if (contacts?.[type].id) {
-          return updateContact({ ...values[type], id: contacts[type].id });
+      if (values[type].euaUserId && values[type].component) {
+        if (values?.[type].id) {
+          return updateContact({ ...values[type] });
         }
-        return createContact(values[type]);
+        return createContact(values[type]).then(newContact => {
+          if (setFieldValue) setFieldValue(`${type}.id`, newContact.id);
+        });
       }
       return null;
     };
@@ -391,7 +396,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   </Field>
                 </FieldGroup>
                 {/* Business Owner Email */}
-                {flags.notifyMultipleRecipients && (
+                {!flags.notifyMultipleRecipients && (
                   <FieldGroup
                     scrollElement="businessOwner.email"
                     error={!!flatErrors['businessOwner.email']}
@@ -489,7 +494,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   </Field>
                 </FieldGroup>
                 {/* Product Manager Email */}
-                {flags.notifyMultipleRecipients && (
+                {!flags.notifyMultipleRecipients && (
                   <FieldGroup
                     scrollElement="productManager.email"
                     error={!!flatErrors['productManager.email']}
@@ -597,7 +602,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           </Field>
                         </FieldGroup>
                         {/* ISSO Email */}
-                        {flags.notifyMultipleRecipients && (
+                        {!flags.notifyMultipleRecipients && (
                           <FieldGroup
                             scrollElement="isso.email"
                             error={!!flatErrors['isso.email']}
@@ -637,15 +642,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   </fieldset>
                 </FieldGroup>
                 {/* Add new contacts */}
-                {flags.notifyMultipleRecipients && (
+                {!flags.notifyMultipleRecipients && (
                   <AdditionalContacts
                     systemIntakeId={id}
                     activeContact={activeContact}
                     setActiveContact={setActiveContact}
-                    contacts={contacts.additionalContacts}
-                    createContact={createContact}
-                    updateContact={updateContact}
-                    deleteContact={deleteContact}
                   />
                 )}
                 {/* Governance Teams */}
@@ -712,7 +713,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
-                        onSubmit(values).then(response => {
+                        onSubmit(values, setFieldValue).then(response => {
                           if (!response?.errors) {
                             history.push('request-details');
                           }
@@ -731,7 +732,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     type="button"
                     unstyled
                     onClick={() => {
-                      onSubmit(values).then(response => {
+                      onSubmit(values, setFieldValue).then(response => {
                         if (!response?.errors) {
                           history.push(saveExitLink);
                         }
@@ -747,9 +748,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             </div>
             <AutoSave
               values={values}
-              onSave={() => {
-                onSubmit(formikRef?.current?.values);
-              }}
+              onSave={() => onSubmit(formikRef?.current?.values, setFieldValue)}
               debounceDelay={3000}
             />
             <PageNumber currentPage={1} totalPages={3} />
