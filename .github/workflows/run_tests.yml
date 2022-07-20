@@ -48,7 +48,7 @@ jobs:
           restore-keys: |
             v1-go-
       - name: Set up go
-        uses: actions/setup-go@b22fbbc2921299758641fab08929b4ac52b32923
+        uses: actions/setup-go@84cbf8094393cdc5fe1fe1671ff2647332956b1a
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
       - name: Login to Docker Hub
@@ -102,7 +102,7 @@ jobs:
           ./scripts/testsuite
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
       - name: Upload backend test artifacts
-        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
         with:
           name: backend-tests
           path: results
@@ -174,14 +174,14 @@ jobs:
           ./scripts/run-cypress-test-docker
       - name: Upload cypress videos
         if: ${{ always() }}
-        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
         with:
           name: cypress-videos
           path: cypress/videos
           retention-days: 14
       - name: Upload cypress screenshots
         if: ${{ always() }}
-        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
         with:
           name: cypress-screenshots
           path: cypress/screenshots
@@ -204,7 +204,7 @@ jobs:
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Set up go
-        uses: actions/setup-go@b22fbbc2921299758641fab08929b4ac52b32923
+        uses: actions/setup-go@84cbf8094393cdc5fe1fe1671ff2647332956b1a
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
       - name: Configure go cache
