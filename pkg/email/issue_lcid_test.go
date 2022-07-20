@@ -187,9 +187,44 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 		unwrappedErr := multiErr.Unwrap()
 
 		s.Error(unwrappedErr)
-		s.IsType(unwrappedErr, &apperrors.NotificationError{})
+		s.IsType(&apperrors.NotificationError{}, unwrappedErr)
 		e := unwrappedErr.(*apperrors.NotificationError)
 		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
 		s.Equal("sender had an error", e.Err.Error())
+	})
+
+	s.Run("If no recipients are passed, no email is sent", func() {
+		sender := mockMultipleRecipientsSender{}
+
+		client, err := NewClient(s.config, &sender)
+		s.NoError(err)
+
+		emptyRecipients := models.EmailNotificationRecipients{}
+		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, emptyRecipients, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		s.NoError(err)
+
+		s.Assert().Len(sender.SentEmails, 0)
+	})
+
+	s.Run("If multiple recipients are passed, emails are sent to each of them", func() {
+		sender := mockMultipleRecipientsSender{}
+
+		client, err := NewClient(s.config, &sender)
+		s.NoError(err)
+
+		email1 := models.EmailAddress("abcd@local.fake")
+		email2 := models.EmailAddress("efgh@local.fake")
+		recipients := models.EmailNotificationRecipients{
+			RegularRecipientEmails: []models.EmailAddress{
+				email1,
+				email2,
+			},
+		}
+		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		s.NoError(err)
+
+		s.Assert().Len(sender.SentEmails, len(recipients.RegularRecipientEmails))
+		s.Assert().Contains(sender.AllToRecipients(), email1)
+		s.Assert().Contains(sender.AllToRecipients(), email2)
 	})
 }

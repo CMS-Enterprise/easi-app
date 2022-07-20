@@ -33,6 +33,41 @@ func (s *mockSender) Send(ctx context.Context, toAddress models.EmailAddress, cc
 	return nil
 }
 
+type sentEmail struct {
+	ToRecipients []models.EmailAddress
+	CCRecipients []models.EmailAddress
+	Subject      string
+	Body         string
+}
+
+type mockMultipleRecipientsSender struct {
+	SentEmails []sentEmail
+}
+
+func (s *mockMultipleRecipientsSender) AllToRecipients() []models.EmailAddress {
+	allToRecipients := []models.EmailAddress{}
+	for _, sentEmail := range s.SentEmails {
+		allToRecipients = append(allToRecipients, sentEmail.ToRecipients...)
+	}
+	return allToRecipients
+}
+
+func (s *mockMultipleRecipientsSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
+	email := sentEmail{
+		ToRecipients: []models.EmailAddress{toAddress},
+		Subject:      subject,
+		Body:         body,
+	}
+
+	if ccAddress != nil {
+		email.CCRecipients = []models.EmailAddress{*ccAddress}
+	}
+
+	s.SentEmails = append(s.SentEmails, email)
+
+	return nil
+}
+
 type mockFailedSender struct{}
 
 func (s *mockFailedSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {

@@ -74,7 +74,7 @@ func (c Client) SendIssueLCIDEmail(
 }
 
 // SendIssueLCIDEmailToMultipleRecipients sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for issuing an LCID
-//  TODO - EASI-2021 - rename to SendIssueLCIDEmails
+// TODO - EASI-2021 - rename to SendIssueLCIDEmails
 func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
@@ -136,5 +136,4 @@ func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 	}
 
 	return errors.ErrorOrNil()
-
 }
