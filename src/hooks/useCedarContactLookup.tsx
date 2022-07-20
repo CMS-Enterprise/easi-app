@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useApolloClient } from '@apollo/client';
+import { ApolloClient, useApolloClient } from '@apollo/client';
 
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import { CedarContactProps } from 'types/systemIntake';
@@ -31,18 +31,16 @@ function useCedarContactLookup(
 }
 
 // GQL CEDAR API fetch of users based on first/last name text search
-const fetchCedarContacts = (client: any, value: string) => {
-  return client
-    .query({
+const fetchCedarContacts = async (client: ApolloClient<{}>, value: string) => {
+  try {
+    const result = await client.query({
       query: GetCedarContactsQuery,
       variables: { commonName: value }
-    })
-    .then((result: any) => {
-      return sortCedarContacts(result.data.cedarPersonsByCommonName, value);
-    })
-    .catch((err: any) => {
-      return [];
     });
+    return sortCedarContacts(result.data.cedarPersonsByCommonName, value);
+  } catch (err) {
+    return [];
+  }
 };
 
 const sortCedarContacts = (contacts: CedarContactProps[], query: string) => {

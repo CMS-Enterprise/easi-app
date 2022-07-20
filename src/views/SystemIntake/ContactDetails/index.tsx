@@ -11,7 +11,7 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import AdditionalContacts from 'components/AdditionalContacts';
@@ -144,14 +144,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   })();
 
   const onSubmit = async (
-    values?: ContactDetailsForm,
-    setFieldValue?: (
-      field: string,
-      value: any,
-      shouldValidate?: boolean | undefined
-    ) => void
+    values: ContactDetailsForm,
+    { setFieldValue }: FormikHelpers<ContactDetailsForm>
   ) => {
-    if (!values) return null;
     const updateSystemIntakeContact = async (
       type: 'businessOwner' | 'productManager' | 'isso'
     ) => {
@@ -160,40 +155,42 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           return updateContact({ ...values[type] });
         }
         return createContact(values[type]).then(newContact => {
-          if (setFieldValue) setFieldValue(`${type}.id`, newContact.id);
+          setFieldValue(`${type}.id`, newContact?.id);
         });
       }
       return null;
     };
 
-    await updateSystemIntakeContact('businessOwner');
-    await updateSystemIntakeContact('productManager');
-    await updateSystemIntakeContact('isso');
-
-    return mutate({
-      variables: {
-        input: {
-          id,
-          requester: {
-            name: values.requester.name,
-            component: values.requester.component
-          },
-          businessOwner: {
-            name: values.businessOwner.commonName,
-            component: values.businessOwner.component
-          },
-          productManager: {
-            name: values.productManager.commonName,
-            component: values.productManager.component
-          },
-          isso: {
-            isPresent: values.isso.isPresent,
-            name: values.isso.commonName
-          },
-          governanceTeams: values.governanceTeams || []
+    return Promise.all([
+      updateSystemIntakeContact('businessOwner'),
+      updateSystemIntakeContact('productManager'),
+      updateSystemIntakeContact('isso')
+    ]).then(() =>
+      mutate({
+        variables: {
+          input: {
+            id,
+            requester: {
+              name: values.requester.name,
+              component: values.requester.component
+            },
+            businessOwner: {
+              name: values.businessOwner.commonName,
+              component: values.businessOwner.component
+            },
+            productManager: {
+              name: values.productManager.commonName,
+              component: values.productManager.component
+            },
+            isso: {
+              isPresent: values.isso.isPresent,
+              name: values.isso.commonName
+            },
+            governanceTeams: values.governanceTeams || []
+          }
         }
-      }
-    });
+      })
+    );
   };
 
   // Wait until contacts are loaded to return form
@@ -713,7 +710,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
-                        onSubmit(values, setFieldValue).then(response => {
+                        onSubmit(values, formikProps).then(response => {
                           if (!response?.errors) {
                             history.push('request-details');
                           }
@@ -732,7 +729,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     type="button"
                     unstyled
                     onClick={() => {
-                      onSubmit(values, setFieldValue).then(response => {
+                      onSubmit(values, formikProps).then(response => {
                         if (!response?.errors) {
                           history.push(saveExitLink);
                         }
@@ -748,7 +745,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             </div>
             <AutoSave
               values={values}
-              onSave={() => onSubmit(formikRef?.current?.values, setFieldValue)}
+              onSave={() => {
+                if (formikRef?.current?.values)
+                  onSubmit(formikRef.current.values, formikProps);
+              }}
               debounceDelay={3000}
             />
             <PageNumber currentPage={1} totalPages={3} />
