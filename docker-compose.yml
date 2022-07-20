@@ -12,7 +12,7 @@ services:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=mysecretpassword
       - FLYWAY_URL=jdbc:postgresql://db/postgres
-      - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp
+      - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp # Keep this around for legacy migration V88__Add_app_user.sql
     depends_on:
       - db
   easi:
@@ -34,6 +34,7 @@ services:
       - OKTA_CLIENT_ID=0oa2e913coDQeG19S297
       - OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
       - GRT_EMAIL=success@simulator.amazonses.com
+      - IT_INVESTMENT_EMAIL=success@simulator.amazonses.com
       - ACCESSIBILITY_TEAM_EMAIL=success@simluator.amazonses.com
       - EMAIL_TEMPLATE_DIR=./pkg/email/templates
       - AWS_REGION=us-west-2
@@ -45,8 +46,8 @@ services:
       - PGHOST=db
       - PGPORT=5432
       - PGDATABASE=postgres
-      - PGUSER=app_user
-      - PGPASS=supersecretapp
+      - PGUSER=postgres
+      - PGPASS=mysecretpassword
       - PGSSLMODE=disable
       - DB_MAX_CONNECTIONS=20
       - FLAG_SOURCE

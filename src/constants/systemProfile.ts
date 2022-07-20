@@ -1,6 +1,16 @@
-export const BUSINESS_OWNER_ROLE_TYPE_ID = '238-17-0';
-export const ISSO_ROLE_TYPE_ID = '238-29-0';
-export const SURVEY_POINT_OF_CONTACT_ROLE_TYPE_ID = '238-53-0';
+// Loosely grouped by System Subpages
+
+// Team
+
+export const teamSectionKeys = [
+  'businessOwners',
+  'projectLeads',
+  'additional'
+] as const;
+
+export const TEAM_SECTION_MEMBER_COUNT_CAP = 5;
+
+// ATO
 
 export const ATO_STATUS_DUE_SOON_DAYS = 90;
 

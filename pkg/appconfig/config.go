@@ -108,9 +108,6 @@ const DBNameConfigKey = "PGDATABASE"
 // DBUsernameConfigKey is the Postgres username config key
 const DBUsernameConfigKey = "PGUSER"
 
-// DBIAMUsernameKey is the IAM username config key
-const DBIAMUsernameKey = "DB_IAM_USER"
-
 // DBPasswordConfigKey is the Postgres password config key
 const DBPasswordConfigKey = "PGPASS"
 
@@ -128,6 +125,9 @@ const AWSSESSourceKey = "AWS_SES_SOURCE"
 
 // GRTEmailKey is the key for the receiving email for the GRT
 const GRTEmailKey = "GRT_EMAIL"
+
+// ITInvestmentEmailKey is the key for the receiving email for IT investment
+const ITInvestmentEmailKey = "IT_INVESTMENT_EMAIL"
 
 // AccessibilityTeamEmailKey is the key for the receiving email for the 508 team
 const AccessibilityTeamEmailKey = "ACCESSIBILITY_TEAM_EMAIL"

@@ -331,7 +331,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('h1', 'Request details');
 
-    cy.get('#IntakeForm-RequestName')
+    cy.get('#IntakeForm-ContractName')
       .type('Test Request Name')
       .should('have.value', 'Test Request Name');
 

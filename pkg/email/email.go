@@ -14,6 +14,7 @@ import (
 // Config holds EASi application specific configs for SES
 type Config struct {
 	GRTEmail               models.EmailAddress
+	ITInvestmentEmail      models.EmailAddress
 	AccessibilityTeamEmail models.EmailAddress
 	URLHost                string
 	URLScheme              string
