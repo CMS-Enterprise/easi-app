@@ -357,6 +357,7 @@ type SendCantFindSomethingEmailInput struct {
 // The inputs to the user feedback form
 type SendFeedbackEmailInput struct {
 	IsAnonymous            bool     `json:"isAnonymous"`
+	CanBeContacted         bool     `json:"canBeContacted"`
 	EasiServicesUsed       []string `json:"easiServicesUsed"`
 	CmsRole                string   `json:"cmsRole"`
 	SystemEasyToUse        string   `json:"systemEasyToUse"`

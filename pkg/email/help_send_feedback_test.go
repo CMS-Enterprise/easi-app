@@ -12,6 +12,7 @@ func (s *EmailTestSuite) TestSendFeedbackEmail() {
 		IsAnonymous:            false,
 		ReporterName:           "McLovin",
 		ReporterEmail:          "mclovin@example.com",
+		CanBeContacted:         true,
 		EasiServicesUsed:       []string{"System Profile", "508 Testing", "System Profile"},
 		CmsRole:                "Supreme Leader",
 		SystemEasyToUse:        "Agree",
@@ -27,6 +28,7 @@ func (s *EmailTestSuite) TestSendFeedbackEmail() {
 		s.NoError(err)
 		expectedBody := `<p><strong>Reporter</strong></p>
 <p>McLovin, mclovin@example.com</p>
+<p>Yes, the EASi team may contact me for additional information</p>
 
 <p><strong>Which EASi services have you used?</strong></p>
 <ul>

@@ -1717,6 +1717,7 @@ func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.Se
 		IsAnonymous:            input.IsAnonymous,
 		ReporterName:           reporterName,
 		ReporterEmail:          reporterEmail,
+		CanBeContacted:         input.CanBeContacted,
 		EasiServicesUsed:       input.EasiServicesUsed,
 		CmsRole:                input.CmsRole,
 		SystemEasyToUse:        input.SystemEasyToUse,

@@ -1367,6 +1367,7 @@ The inputs to the user feedback form
 """
 input SendFeedbackEmailInput {
   isAnonymous: Boolean!
+  canBeContacted: Boolean!
   easiServicesUsed: [String!]!
   cmsRole: String!
   systemEasyToUse: String!

@@ -5939,6 +5939,7 @@ The inputs to the user feedback form
 """
 input SendFeedbackEmailInput {
   isAnonymous: Boolean!
+  canBeContacted: Boolean!
   easiServicesUsed: [String!]!
   cmsRole: String!
   systemEasyToUse: String!
@@ -32243,7 +32244,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"isAnonymous", "easiServicesUsed", "cmsRole", "systemEasyToUse", "didntNeedHelpAnswering", "questionsWereRelevant", "hadAccessToInformation", "howSatisfied", "howCanWeImprove"}
+	fieldsInOrder := [...]string{"isAnonymous", "canBeContacted", "easiServicesUsed", "cmsRole", "systemEasyToUse", "didntNeedHelpAnswering", "questionsWereRelevant", "hadAccessToInformation", "howSatisfied", "howCanWeImprove"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -32255,6 +32256,14 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isAnonymous"))
 			it.IsAnonymous, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "canBeContacted":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("canBeContacted"))
+			it.CanBeContacted, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}

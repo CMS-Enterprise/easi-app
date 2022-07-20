@@ -1,5 +1,6 @@
 <p><strong>Reporter</strong></p>
 <p>{{if .IsAnonymous}}Anonymous{{else}}{{.ReporterName}}, {{.ReporterEmail}}{{end}}</p>
+<p>{{if .CanBeContacted}}Yes, the EASi team may contact me for additional information{{else}}No, the EASi team may not contact me for additional information{{end}}</p>
 
 <p><strong>Which EASi services have you used?</strong></p>
 <ul>{{range .EasiServicesUsed}}
