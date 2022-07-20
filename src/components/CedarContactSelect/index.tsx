@@ -36,7 +36,7 @@ export default function CedarContactSelect({
 }: CedarContactSelectProps) {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState<string | null>(null);
-  const contacts = useCedarContactLookup(searchTerm || '');
+  const [contacts, getCedarContacts] = useCedarContactLookup();
   const formattedContact = value
     ? `${value.commonName}, ${value.euaUserId}`
     : '';
@@ -48,6 +48,10 @@ export default function CedarContactSelect({
     selectedContact.current = contact.euaUserId;
     setSearchTerm(null);
   };
+
+  useEffect(() => {
+    if (searchTerm) getCedarContacts(searchTerm);
+  }, [searchTerm, getCedarContacts]);
 
   useEffect(() => {
     if (value && value?.euaUserId !== selectedContact.current) {

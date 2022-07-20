@@ -1,10 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
-import { ApolloClient, useApolloClient } from '@apollo/client';
+import { useMemo, useState } from 'react';
+import { useQuery } from '@apollo/client';
 
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
+import { GetCedarContacts } from 'queries/types/GetCedarContacts';
 import { CedarContactProps } from 'types/systemIntake';
 
-function useCedarContactLookup(query: string): CedarContactProps[];
+function useCedarContactLookup(): [
+  CedarContactProps[],
+  (commonName: string) => void
+];
 
 function useCedarContactLookup(
   query: string,
@@ -12,36 +16,41 @@ function useCedarContactLookup(
 ): CedarContactProps | undefined;
 
 function useCedarContactLookup(
-  query: string,
+  query?: string,
   euaUserId?: string
-): CedarContactProps[] | CedarContactProps | undefined {
-  const client = useApolloClient();
-  const [cedarContacts, setCedarContacts] = useState<CedarContactProps[]>([]);
+):
+  | [CedarContactProps[], (commonName: string) => void]
+  | CedarContactProps
+  | undefined {
+  const { data, refetch } = useQuery<GetCedarContacts>(GetCedarContactsQuery, {
+    variables: { commonName: query },
+    skip: !query
+  });
+  const [contacts, setContacts] = useState<CedarContactProps[]>(
+    data?.cedarPersonsByCommonName || []
+  );
+
   const contactByEuaUserId = useMemo(() => {
-    return cedarContacts.find(contact => contact.euaUserId === euaUserId);
-  }, [euaUserId, cedarContacts]);
+    return data?.cedarPersonsByCommonName.find(
+      contact => contact.euaUserId === euaUserId
+    );
+  }, [data?.cedarPersonsByCommonName, euaUserId]);
 
-  useEffect(() => {
-    fetchCedarContacts(client, query).then((contacts: CedarContactProps[]) => {
-      setCedarContacts(contacts);
-    });
-  }, [query, client]);
+  const queryCedarContacts = (commonName: string) => {
+    if (commonName.length > 1) {
+      refetch({ commonName }).then(response => {
+        setContacts(
+          sortCedarContacts(
+            response?.data?.cedarPersonsByCommonName,
+            commonName
+          )
+        );
+      });
+    }
+  };
 
-  return euaUserId ? contactByEuaUserId : cedarContacts;
+  return euaUserId ? contactByEuaUserId : [contacts, queryCedarContacts];
 }
-
-// GQL CEDAR API fetch of users based on first/last name text search
-const fetchCedarContacts = async (client: ApolloClient<{}>, value: string) => {
-  try {
-    const result = await client.query({
-      query: GetCedarContactsQuery,
-      variables: { commonName: value }
-    });
-    return sortCedarContacts(result.data.cedarPersonsByCommonName, value);
-  } catch (err) {
-    return [];
-  }
-};
 
 const sortCedarContacts = (contacts: CedarContactProps[], query: string) => {
   return [...contacts].sort((a, b) => {
