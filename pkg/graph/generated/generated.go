@@ -5951,8 +5951,6 @@ input SendFeedbackEmailInput {
 }
 
 input SendCantFindSomethingEmailInput {
-  name: String!
-  email: String!
   body: String!
 }
 
@@ -32200,29 +32198,13 @@ func (ec *executionContext) unmarshalInputSendCantFindSomethingEmailInput(ctx co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "email", "body"}
+	fieldsInOrder := [...]string{"body"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "email":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-			it.Email, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "body":
 			var err error
 

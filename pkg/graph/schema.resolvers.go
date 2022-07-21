@@ -1738,9 +1738,15 @@ func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.Se
 
 // SendCantFindSomethingEmail is the resolver for the sendCantFindSomethingEmail field.
 func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input model.SendCantFindSomethingEmailInput) (*string, error) {
-	err := r.emailClient.SendCantFindSomethingEmail(ctx, email.SendCantFindSomethingEmailInput{
-		Name:  input.Name,
-		Email: input.Email,
+	euaUserID := appcontext.Principal(ctx).ID()
+	userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendCantFindSomethingEmail(ctx, email.SendCantFindSomethingEmailInput{
+		Name:  userInfo.CommonName,
+		Email: userInfo.Email.String(),
 		Body:  input.Body,
 	})
 

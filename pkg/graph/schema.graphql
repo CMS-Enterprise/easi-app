@@ -1379,8 +1379,6 @@ input SendFeedbackEmailInput {
 }
 
 input SendCantFindSomethingEmailInput {
-  name: String!
-  email: String!
   body: String!
 }
 
