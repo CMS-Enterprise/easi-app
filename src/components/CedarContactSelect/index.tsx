@@ -51,7 +51,7 @@ export default function CedarContactSelect({
 
   useEffect(() => {
     if (searchTerm) getCedarContacts(searchTerm);
-  }, [searchTerm, getCedarContacts]);
+  }, [searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (value && value?.euaUserId !== selectedContact.current) {
