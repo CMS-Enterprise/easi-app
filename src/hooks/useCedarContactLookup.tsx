@@ -37,15 +37,23 @@ function useCedarContactLookup(
   }, [data?.cedarPersonsByCommonName, euaUserId]);
 
   const queryCedarContacts = (commonName: string) => {
-    if (commonName.length > 1) {
-      refetch({ commonName }).then(response => {
-        setContacts(
-          sortCedarContacts(
-            response?.data?.cedarPersonsByCommonName,
-            commonName
-          )
-        );
-      });
+    // Removes eua id from "John Doe, ABCD" format when querying
+    const commonNameQuery = commonName.trim().split(',')[0];
+
+    if (commonNameQuery.length > 1) {
+      refetch({ commonName: commonNameQuery })
+        .then(response => {
+          setContacts(
+            sortCedarContacts(
+              response?.data?.cedarPersonsByCommonName,
+              commonNameQuery
+            )
+          );
+        })
+        .catch(() => {
+          // If error, set contacts to empty array
+          setContacts([]);
+        });
     }
   };
 
