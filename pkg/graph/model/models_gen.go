@@ -349,14 +349,13 @@ type RequestsConnection struct {
 }
 
 type SendCantFindSomethingEmailInput struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	Body  string `json:"body"`
+	Body string `json:"body"`
 }
 
 // The inputs to the user feedback form
 type SendFeedbackEmailInput struct {
 	IsAnonymous            bool     `json:"isAnonymous"`
+	CanBeContacted         bool     `json:"canBeContacted"`
 	EasiServicesUsed       []string `json:"easiServicesUsed"`
 	CmsRole                string   `json:"cmsRole"`
 	SystemEasyToUse        string   `json:"systemEasyToUse"`

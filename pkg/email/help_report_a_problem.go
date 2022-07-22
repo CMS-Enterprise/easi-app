@@ -21,7 +21,7 @@ type SendReportAProblemEmailInput struct {
 
 // SendReportAProblemEmail sends an email to the EASI team containing a user's request for help
 func (c Client) SendReportAProblemEmail(ctx context.Context, input SendReportAProblemEmailInput) error {
-	subject := "Feedback for EASi System"
+	subject := "EASi Problem Report"
 
 	var b bytes.Buffer
 	err := c.templates.helpReportAProblem.Execute(&b, input)

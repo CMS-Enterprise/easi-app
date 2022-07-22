@@ -5226,7 +5226,7 @@ type BusinessCaseSolution {
 }
 
 """
-The cost phase of a 
+The cost phase of a
 """
 enum LifecycleCostPhase {
   DEVELOPMENT
@@ -5276,7 +5276,7 @@ enum BusinessCaseStatus {
 }
 
 """
-A business case associated with an system IT governence request; contains 
+A business case associated with an system IT governence request; contains
 equester's justification for their system request
 """
 type BusinessCase {
@@ -5839,7 +5839,7 @@ input BasicActionInput {
 }
 
 """
-Input to submit an intake for review 
+Input to submit an intake for review
 """
 input SubmitIntakeInput {
   id: UUID!
@@ -5939,7 +5939,8 @@ The inputs to the user feedback form
 """
 input SendFeedbackEmailInput {
   isAnonymous: Boolean!
-  easiServicesUsed: [String!]
+  canBeContacted: Boolean!
+  easiServicesUsed: [String!]!
   cmsRole: String!
   systemEasyToUse: String!
   didntNeedHelpAnswering: String!
@@ -5950,8 +5951,6 @@ input SendFeedbackEmailInput {
 }
 
 input SendCantFindSomethingEmailInput {
-  name: String!
-  email: String!
   body: String!
 }
 
@@ -6089,7 +6088,7 @@ type Query {
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
+  cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   urls(cedarSystemId: String!): [CedarURL!]!
@@ -32199,29 +32198,13 @@ func (ec *executionContext) unmarshalInputSendCantFindSomethingEmailInput(ctx co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "email", "body"}
+	fieldsInOrder := [...]string{"body"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "email":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-			it.Email, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "body":
 			var err error
 
@@ -32243,7 +32226,7 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"isAnonymous", "easiServicesUsed", "cmsRole", "systemEasyToUse", "didntNeedHelpAnswering", "questionsWereRelevant", "hadAccessToInformation", "howSatisfied", "howCanWeImprove"}
+	fieldsInOrder := [...]string{"isAnonymous", "canBeContacted", "easiServicesUsed", "cmsRole", "systemEasyToUse", "didntNeedHelpAnswering", "questionsWereRelevant", "hadAccessToInformation", "howSatisfied", "howCanWeImprove"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -32258,11 +32241,19 @@ func (ec *executionContext) unmarshalInputSendFeedbackEmailInput(ctx context.Con
 			if err != nil {
 				return it, err
 			}
+		case "canBeContacted":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("canBeContacted"))
+			it.CanBeContacted, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "easiServicesUsed":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("easiServicesUsed"))
-			it.EasiServicesUsed, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			it.EasiServicesUsed, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}

@@ -12,6 +12,7 @@ type SendFeedbackEmailInput struct {
 	IsAnonymous            bool
 	ReporterName           string
 	ReporterEmail          string
+	CanBeContacted         bool
 	EasiServicesUsed       []string
 	CmsRole                string
 	SystemEasyToUse        string

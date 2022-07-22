@@ -267,7 +267,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                 >
                   <a
                     class="nav-group-border"
-                    href="/systems/000-100-0/team-and-contract"
+                    href="/systems/000-100-0/team"
                   >
                     Team
                   </a>
@@ -551,7 +551,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                                     </h3>
                                     <a
                                       class="usa-link link-header"
-                                      href="/systems/000-100-0/team-and-contract"
+                                      href="/systems/000-100-0/team"
                                     >
                                       View more Team and Contract information
                                       <span
@@ -636,15 +636,72 @@ exports[`System Profile parent request matches snapshot 1`] = `
                         >
                           Jane Doe
                         </h3>
-                        <dd
-                          class="description-definition margin-0"
-                        >
-                          Business Owner
-                        </dd>
+                        <div>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            Business Owner
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            ISSO
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            Project Lead
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            Survey Point of Contact
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            System Business Question Contact
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            System Data Center Contact
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            System Issues Contact
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            System Issues Contact
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            System Maintainer
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            Contracting Officer's Representative (COR)
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            QA Reviewer
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            DA Reviewer
+                          </h5>
+                        </div>
                         <p>
                           <a
                             class="usa-link line-height-body-5"
-                            href="/systems/000-100-0/team-and-contract"
+                            href="/systems/000-100-0/team"
                           >
                             More points of contact
                             <span

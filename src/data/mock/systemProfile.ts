@@ -1,5 +1,11 @@
+import { cloneDeep } from 'lodash';
+
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
-import { GetSystemProfile } from 'queries/types/GetSystemProfile';
+import {
+  GetSystemProfile,
+  // eslint-disable-next-line camelcase
+  GetSystemProfile_cedarSystemDetails_roles
+} from 'queries/types/GetSystemProfile';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import { SystemProfileData } from 'types/systemProfile';
 import { getSystemProfileData } from 'views/SystemProfile';
@@ -608,6 +614,31 @@ export const query = {
   result
 };
 
-export function getSystemProfileMockData(): SystemProfileData {
-  return getSystemProfileData(result.data)!;
+export function getMockSystemProfileData(
+  data?: GetSystemProfile
+): SystemProfileData {
+  return getSystemProfileData(data ?? cloneDeep(result.data))!;
+}
+
+export function getMockPersonRole(
+  // eslint-disable-next-line camelcase
+  data?: Partial<GetSystemProfile_cedarSystemDetails_roles>
+  // eslint-disable-next-line camelcase
+): GetSystemProfile_cedarSystemDetails_roles {
+  return {
+    application: 'alfabet',
+    objectID: '',
+    roleTypeID: '',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: null,
+    roleID: null,
+    __typename: 'CedarRole',
+    ...data
+  };
 }

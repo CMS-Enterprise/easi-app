@@ -17,7 +17,7 @@ type SendCantFindSomethingEmailInput struct {
 
 // SendCantFindSomethingEmail sends an email to the EASI team containing a user's request for help
 func (c Client) SendCantFindSomethingEmail(ctx context.Context, input SendCantFindSomethingEmailInput) error {
-	subject := "Feedback for EASi System"
+	subject := "EASi Help Required"
 
 	var b bytes.Buffer
 	err := c.templates.helpCantFindSomething.Execute(&b, input)

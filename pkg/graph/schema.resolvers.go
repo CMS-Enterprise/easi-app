@@ -1707,15 +1707,17 @@ func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.Se
 		euaUserID := appcontext.Principal(ctx).ID()
 		userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
 		if err != nil {
-			reporterName = userInfo.CommonName
-			reporterEmail = userInfo.Email.String()
+			return nil, err
 		}
+		reporterName = userInfo.CommonName
+		reporterEmail = userInfo.Email.String()
 	}
 
 	err := r.emailClient.SendFeedbackEmail(ctx, email.SendFeedbackEmailInput{
 		IsAnonymous:            input.IsAnonymous,
 		ReporterName:           reporterName,
 		ReporterEmail:          reporterEmail,
+		CanBeContacted:         input.CanBeContacted,
 		EasiServicesUsed:       input.EasiServicesUsed,
 		CmsRole:                input.CmsRole,
 		SystemEasyToUse:        input.SystemEasyToUse,
@@ -1736,9 +1738,15 @@ func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.Se
 
 // SendCantFindSomethingEmail is the resolver for the sendCantFindSomethingEmail field.
 func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input model.SendCantFindSomethingEmailInput) (*string, error) {
-	err := r.emailClient.SendCantFindSomethingEmail(ctx, email.SendCantFindSomethingEmailInput{
-		Name:  input.Name,
-		Email: input.Email,
+	euaUserID := appcontext.Principal(ctx).ID()
+	userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendCantFindSomethingEmail(ctx, email.SendCantFindSomethingEmailInput{
+		Name:  userInfo.CommonName,
+		Email: userInfo.Email.String(),
 		Body:  input.Body,
 	})
 
@@ -1758,9 +1766,10 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 		euaUserID := appcontext.Principal(ctx).ID()
 		userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
 		if err != nil {
-			reporterName = userInfo.CommonName
-			reporterEmail = userInfo.Email.String()
+			return nil, err
 		}
+		reporterName = userInfo.CommonName
+		reporterEmail = userInfo.Email.String()
 	}
 
 	err := r.emailClient.SendReportAProblemEmail(ctx, email.SendReportAProblemEmailInput{
