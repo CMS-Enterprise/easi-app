@@ -87,7 +87,9 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     cy.get('#IntakeForm-IssoCommonName input')
-      .type('Jerry{downArrow}{enter}')
+      .type('Jerry')
+      .wait(1000)
+      .type('{downArrow}{enter}')
       .should('have.value', 'Jerry Seinfeld, SF13');
 
     cy.get('#IntakeForm-IssoComponent')
@@ -98,7 +100,9 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Add another contact').click();
 
     cy.get('#IntakeForm-ContactCommonName input')
-      .type('Jerry{downArrow}{enter}')
+      .type('Jerry')
+      .wait(1000)
+      .type('{downArrow}{enter}')
       .should('have.value', 'Jerry Seinfeld, SF13');
 
     cy.get('#IntakeForm-ContactComponent')
