@@ -51,7 +51,9 @@ func (s Server) NewDBConfig() storage.DBConfig {
 // NewEmailConfig returns a new email.Config and checks required fields
 func (s Server) NewEmailConfig() email.Config {
 	s.checkRequiredConfig(appconfig.GRTEmailKey)
+	s.checkRequiredConfig(appconfig.ITInvestmentEmailKey)
 	s.checkRequiredConfig(appconfig.AccessibilityTeamEmailKey)
+	s.checkRequiredConfig(appconfig.EASIHelpEmailKey)
 	s.checkRequiredConfig(appconfig.ClientHostKey)
 	s.checkRequiredConfig(appconfig.ClientProtocolKey)
 	s.checkRequiredConfig(appconfig.EmailTemplateDirectoryKey)

@@ -124,7 +124,7 @@ func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 	if recipients.ShouldNotifyITInvestment {
 		err = c.sender.Send(
 			ctx,
-			"", // TODO - get IT investment mailbox address
+			c.config.ITInvestmentEmail,
 			nil,
 			subject,
 			body,
