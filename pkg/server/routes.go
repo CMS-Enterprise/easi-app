@@ -125,10 +125,6 @@ func (s *Server) routes(
 
 	// override email client to use MailCatcher when running locally
 	if s.environment.Local() {
-		// change these values so it's clear who emails are being sent to
-		emailConfig.GRTEmail = models.NewEmailAddress("grt_email@cms.gov")
-		emailConfig.AccessibilityTeamEmail = models.NewEmailAddress("508_team@cms.gov")
-
 		smtpSender := local.NewSMTPSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
 		emailClient, err = email.NewClient(emailConfig, smtpSender)
 		if err != nil {

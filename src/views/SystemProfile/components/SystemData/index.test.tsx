@@ -2,11 +2,11 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
 
-import { getSystemProfileMockData } from 'data/mock/systemProfile';
+import { getMockSystemProfileData } from 'data/mock/systemProfile';
 
 import SystemData from './index';
 
-const systemProfileData = getSystemProfileMockData();
+const systemProfileData = getMockSystemProfileData();
 
 describe('System Data sub page for System Profile', () => {
   it('matches snapshot', async () => {

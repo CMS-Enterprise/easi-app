@@ -250,7 +250,7 @@ exports[`SystemHome subpage for System Profile matches snapshot 1`] = `
                 </h3>
                 <a
                   class="usa-link link-header"
-                  href="/systems/000-100-0/team-and-contract"
+                  href="/systems/000-100-0/team"
                 >
                   View more Team and Contract information
                   <span

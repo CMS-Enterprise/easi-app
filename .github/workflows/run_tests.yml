@@ -64,7 +64,7 @@ jobs:
           aws-region: us-west-2
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+        uses: aws-actions/amazon-ecr-login@b874a33292cc9887d2e80bc63f6f1a11fccb4a7b
       - name: Run backend server tests
         env:
           APP_ENV: test
@@ -79,6 +79,7 @@ jobs:
           ECR_REPOSITORY: easi-db-migrate
           GRT_EMAIL: success@simulator.amazonses.com
           CYPRESS_GRT_EMAIL: success@simulator.amazonses.com # Used for Cypress tests; should be the same value as GRT_EMAIL
+          IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
           ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
           OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
           OKTA_DOMAIN: https://test.idp.idm.cms.gov
@@ -102,7 +103,7 @@ jobs:
           ./scripts/testsuite
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
       - name: Upload backend test artifacts
-        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
         with:
           name: backend-tests
           path: results
@@ -161,7 +162,7 @@ jobs:
           aws-region: us-west-2
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+        uses: aws-actions/amazon-ecr-login@b874a33292cc9887d2e80bc63f6f1a11fccb4a7b
       - name: Run e2e cypress tests
         env:
           APP_ENV: test
@@ -174,14 +175,14 @@ jobs:
           ./scripts/run-cypress-test-docker
       - name: Upload cypress videos
         if: ${{ always() }}
-        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
         with:
           name: cypress-videos
           path: cypress/videos
           retention-days: 14
       - name: Upload cypress screenshots
         if: ${{ always() }}
-        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
         with:
           name: cypress-screenshots
           path: cypress/screenshots

@@ -1,0 +1,35 @@
+<p><strong>Reporter</strong></p>
+<p>{{if .IsAnonymous}}Anonymous{{else}}{{.ReporterName}}, {{.ReporterEmail}}{{end}}</p>
+<p>{{if .CanBeContacted}}Yes, the EASi team may contact me for additional information{{else}}No, the EASi team may not contact me for additional information{{end}}</p>
+
+<p><strong>Which EASi services have you used?</strong></p>
+<ul>{{range .EasiServicesUsed}}
+<li>{{.}}</li>
+{{end}}</ul>
+
+<p><strong>Role</strong></p>
+<p>{{if .CmsRole}}{{.CmsRole}}{{else}}-{{end}}</p> 
+
+
+<p><strong>The system was easy to use.</strong></p>
+<p>{{if .SystemEasyToUse}}{{.SystemEasyToUse}}{{else}}-{{end}}</p> 
+
+
+<p><strong>I didn’t need help answering any questions.</strong></p>
+<p>{{if .DidntNeedHelpAnswering}}{{.DidntNeedHelpAnswering}}{{else}}-{{end}}</p> 
+
+
+<p><strong>All the questions on the form were relevant to my use case.</strong></p>
+<p>{{if .QuestionsWereRelevant}}{{.QuestionsWereRelevant}}{{else}}-{{end}}</p> 
+
+
+<p><strong>I had access to all the information the form asked for.</strong></p>
+<p>{{if .HadAccessToInformation}}{{.HadAccessToInformation}}{{else}}-{{end}}</p> 
+
+
+<p><strong>Overall, how satisfied were you with the service?</strong></p>
+<p>{{if .HowSatisfied}}{{.HowSatisfied}}{{else}}-{{end}}</p> 
+
+
+<p><strong>How can we improve EASi?</strong></p>
+<p>{{if .HowCanWeImprove}}{{.HowCanWeImprove}}{{else}}-{{end}}</p>
