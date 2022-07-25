@@ -28,7 +28,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import fundingSources from 'constants/enums/fundingSources';
+import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import { yesNoMap } from 'data/common';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -49,13 +49,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
   const formikRef = useRef<FormikProps<ContractDetailsForm>>(null);
 
-  const { id, fundingSource, costs, contract } = systemIntake;
+  const { id, fundingSources, costs, contract } = systemIntake;
   const initialValues: ContractDetailsForm = {
-    fundingSource: {
-      isFunded: fundingSource.isFunded,
-      fundingNumber: fundingSource.fundingNumber || '',
-      source: fundingSource.source || ''
-    },
+    existingFunding: true, // TODO: remove default after testing
+    fundingSources,
     costs: {
       expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
       isExpectingIncrease: costs.isExpectingIncrease || ''
@@ -176,8 +173,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               </div>
               <Form>
                 <FieldGroup
-                  scrollElement="fundingSource.isFunded"
-                  error={!!flatErrors['fundingSource.isFunded']}
+                  scrollElement="existingFunding"
+                  error={!!flatErrors.existingFunding}
                 >
                   <fieldset
                     className="usa-fieldset margin-top-4"
@@ -191,24 +188,22 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       If you are unsure, please get in touch with your
                       Contracting Officer Representative
                     </HelpText>
-                    <FieldErrorMsg>
-                      {flatErrors['fundingSource.isFunded']}
-                    </FieldErrorMsg>
+                    <FieldErrorMsg>{flatErrors.existingFunding}</FieldErrorMsg>
                     <Field
                       as={Radio}
-                      checked={values.fundingSource.isFunded === true}
+                      checked={values.existingFunding === true}
                       id="IntakeForm-HasFundingSourceYes"
-                      name="fundingSource.isFunded"
+                      name="existingFunding"
                       label="Yes"
                       onChange={() => {
-                        setFieldValue('fundingSource.isFunded', true);
+                        setFieldValue('existingFunding', true);
                       }}
                       aria-describedby="Intake-Form-ExistingFundingHelp"
-                      aria-expanded={values.fundingSource.isFunded === true}
+                      aria-expanded={values.existingFunding === true}
                       aria-controls="funding-source-container"
                       value
                     />
-                    {values.fundingSource.isFunded && (
+                    {values.existingFunding && (
                       <div
                         id="funding-source-container"
                         className="margin-top-neg-2 margin-left-4 margin-bottom-1"
@@ -223,7 +218,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           <FieldErrorMsg>
                             {flatErrors['fundingSource.source']}
                           </FieldErrorMsg>
-                          <Field
+                          {/* <Field
                             as={Dropdown}
                             id="IntakeForm-FundingSource"
                             name="fundingSource.source"
@@ -231,7 +226,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             <option value="" disabled>
                               Select an option
                             </option>
-                            {fundingSources.map(source => (
+                            {intakeFundingSources.map(source => (
                               <option
                                 key={source.split(' ').join('-')}
                                 value={source}
@@ -239,7 +234,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                                 {source}
                               </option>
                             ))}
-                          </Field>
+                          </Field> */}
                         </FieldGroup>
                         <FieldGroup
                           scrollElement="fundingSource.fundingNumber"
@@ -282,12 +277,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     )}
                     <Field
                       as={Radio}
-                      checked={values.fundingSource.isFunded === false}
+                      checked={values.existingFunding === false}
                       id="IntakeForm-HasFundingSourceNo"
-                      name="fundingSource.isFunded"
+                      name="existingFunding"
                       label="No"
                       onChange={() => {
-                        setFieldValue('fundingSource.isFunded', false);
+                        setFieldValue('existingFunding', false);
                         setFieldValue('fundingSource.fundingNumber', '');
                         setFieldValue('fundingSource.source', '');
                       }}
