@@ -710,6 +710,7 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 		},
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	if err != nil {
 		return nil, err
@@ -734,6 +735,7 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 		},
 		models.SystemIntakeStatusBIZCASEFINALNEEDED,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	if err != nil {
 		return nil, err
@@ -758,6 +760,7 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 		},
 		models.SystemIntakeStatusNEEDBIZCASE,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	if err != nil {
 		return nil, err
@@ -1390,6 +1393,7 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 		},
 		models.SystemIntakeStatusREADYFORGRB,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	if err != nil {
 		return nil, err

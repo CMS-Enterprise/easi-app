@@ -33,7 +33,7 @@ type Resolver struct {
 // ResolverService holds service methods for use in resolvers
 type ResolverService struct {
 	CreateTestDate                func(context.Context, *models.TestDate) (*models.TestDate, error)
-	AddGRTFeedback                func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus, bool) (*models.GRTFeedback, error)
+	AddGRTFeedback                func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus, bool, *models.EmailNotificationRecipients) (*models.GRTFeedback, error)
 	CreateActionUpdateStatus      func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool, bool) (*models.SystemIntake, error)
 	CreateActionExtendLifecycleID func(context.Context, *models.Action, uuid.UUID, *time.Time, *string, string, *string, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	IssueLifecycleID              func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)

@@ -7,6 +7,7 @@ import (
 	"path"
 
 	"github.com/google/uuid"
+	"github.com/hashicorp/go-multierror"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -52,4 +53,47 @@ func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText strin
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 	return nil
+}
+
+// SendSystemIntakeReviewEmailToMultipleRecipients sends emails to multiple recipients (possibly including the IT Governance and IT Investment teams) about GRT review on a submitted system intake
+// TODO - EASI-2021 - rename to SendSystemIntakeReviewEmails
+func (c Client) SendSystemIntakeReviewEmailToMultipleRecipients(
+	ctx context.Context,
+	emailText string,
+	recipients models.EmailNotificationRecipients,
+	intakeID uuid.UUID,
+) error {
+	subject := "Feedback on your intake request"
+	taskListPath := path.Join("governance-task-list", intakeID.String())
+	body, err := c.systemIntakeReviewBody(emailText, taskListPath)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
+	allRecipients := recipients.RegularRecipientEmails
+	if recipients.ShouldNotifyITGovernance {
+		allRecipients = append(allRecipients, c.config.GRTEmail)
+	}
+
+	if recipients.ShouldNotifyITInvestment {
+		allRecipients = append(allRecipients, c.config.ITInvestmentEmail)
+	}
+
+	var errors *multierror.Error
+
+	for _, recipient := range allRecipients {
+		err = c.sender.Send(
+			ctx,
+			recipient,
+			nil,
+			subject,
+			body,
+		)
+		if err != nil {
+			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+			errors = multierror.Append(errors, notificationErr)
+		}
+	}
+
+	return errors.ErrorOrNil()
 }

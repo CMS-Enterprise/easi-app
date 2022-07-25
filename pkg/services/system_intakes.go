@@ -510,59 +510,65 @@ func NewProvideGRTFeedback(
 	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
+	sendReviewEmailToMultipleRecipients func(ctx context.Context, emailText string, recipients models.EmailNotificationRecipients, intakeID uuid.UUID) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
-) func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, shouldSendEmail bool) (*models.GRTFeedback, error) {
-	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, shouldSendEmail bool) (*models.GRTFeedback, error) {
+) func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.GRTFeedback, error) {
+	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.GRTFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
 		if err != nil {
 			return nil, err
 		}
 
+		// TODO - EASI-2021 - don't need this check with feature flag removed
+		notifyMultipleRecipients := config.checkBoolFeatureFlag(ctx, notifyMultipleRecipientsFlagName, notifyMultipleRecipientsFlagDefault)
+
 		var requesterHasValidEUAID bool
 		var requesterInfo *models.UserInfo
 
-		if shouldSendEmail {
-			euaID := intake.EUAUserID.ValueOrZero()
-			requesterHasEUAID := euaID != ""
-			requesterHasValidEUAID = requesterHasEUAID
+		if !notifyMultipleRecipients {
+			if shouldSendEmail {
+				euaID := intake.EUAUserID.ValueOrZero()
+				requesterHasEUAID := euaID != ""
+				requesterHasValidEUAID = requesterHasEUAID
 
-			if requesterHasEUAID {
-				requesterInfo, err = fetchUserInfo(ctx, euaID)
+				if requesterHasEUAID {
+					requesterInfo, err = fetchUserInfo(ctx, euaID)
 
-				if err != nil {
-					if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
-						appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
-							zap.String("intakeID", intake.ID.String()),
-							zap.String("euaID", euaID))
-						err = sendIntakeInvalidEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), euaID, intake.ID)
-						if err != nil {
+					if err != nil {
+						if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+							appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
+								zap.String("intakeID", intake.ID.String()),
+								zap.String("euaID", euaID))
+							err = sendIntakeInvalidEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), euaID, intake.ID)
+							if err != nil {
+								return nil, err
+							}
+
+							requesterHasValidEUAID = false
+						} else {
 							return nil, err
 						}
-
-						requesterHasValidEUAID = false
-					} else {
+					} else if requesterInfo == nil || requesterInfo.Email == "" {
+						appcontext.ZLogger(ctx).Error(
+							fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when submitting GRT Feedback"),
+							zap.String("intakeID", intake.ID.String()),
+							zap.String("euaID", euaID))
+						return nil, &apperrors.ExternalAPIError{
+							Err:       errors.New("requester info fetch was not successful when submitting GRT Feedback"),
+							Model:     intake,
+							ModelID:   intake.ID.String(),
+							Operation: apperrors.Fetch,
+							Source:    "CEDAR LDAP",
+						}
+					}
+				} else {
+					appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+						zap.String("intakeID", intake.ID.String()))
+					err = sendIntakeNoEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), intake.ID)
+					if err != nil {
 						return nil, err
 					}
-				} else if requesterInfo == nil || requesterInfo.Email == "" {
-					appcontext.ZLogger(ctx).Error(
-						fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when submitting GRT Feedback"),
-						zap.String("intakeID", intake.ID.String()),
-						zap.String("euaID", euaID))
-					return nil, &apperrors.ExternalAPIError{
-						Err:       errors.New("requester info fetch was not successful when submitting GRT Feedback"),
-						Model:     intake,
-						ModelID:   intake.ID.String(),
-						Operation: apperrors.Fetch,
-						Source:    "CEDAR LDAP",
-					}
-				}
-			} else {
-				appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
-					zap.String("intakeID", intake.ID.String()))
-				err = sendIntakeNoEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), intake.ID)
-				if err != nil {
-					return nil, err
 				}
 			}
 		}
@@ -583,7 +589,18 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
-		if shouldSendEmail && requesterHasValidEUAID {
+		// TODO - EASI-2021 - remove notifyMultipleRecipients check (but *not* recipients != nil check)
+		if notifyMultipleRecipients && recipients != nil {
+			err = sendReviewEmailToMultipleRecipients(
+				ctx,
+				action.Feedback.String,
+				*recipients,
+				intake.ID,
+			)
+			if err != nil {
+				return nil, err
+			}
+		} else if shouldSendEmail && requesterHasValidEUAID { // TODO - EASI-2021 - remove this block
 			err = sendReviewEmail(
 				ctx,
 				action.Feedback.String,

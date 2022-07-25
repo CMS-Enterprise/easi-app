@@ -205,6 +205,7 @@ func (s *Server) routes(
 				store.CreateGRTFeedback,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+				emailClient.SendSystemIntakeReviewEmailToMultipleRecipients,
 				emailClient.SendIntakeInvalidEUAIDEmail,
 				emailClient.SendIntakeNoEUAIDEmail,
 			),

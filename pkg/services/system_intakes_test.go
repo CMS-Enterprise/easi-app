@@ -988,8 +988,8 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 }
 
 func (s ServicesTestSuite) TestProvideGRTFeedback() {
-	logger := zap.NewNop()
-	serviceConfig := NewConfig(logger, nil)
+	testDataSource := ldtestdata.DataSource()
+	serviceConfig := newTestServicesConfig(testDataSource)
 	ctx := context.Background()
 
 	s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP", func() {
@@ -1022,6 +1022,10 @@ func (s ServicesTestSuite) TestProvideGRTFeedback() {
 			return nil
 		}
 
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+			return nil
+		}
+
 		emailSentForInvalidEUAID := false
 		sendIntakeInvalidEUAIDEmailMock := func(c context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
 			emailSentForInvalidEUAID = true
@@ -1040,11 +1044,12 @@ func (s ServicesTestSuite) TestProvideGRTFeedback() {
 			saveGRTFeedback,
 			fetchEmptyUserInfo,
 			sendReviewEmail,
+			sendReviewEmailToMultipleRecipients,
 			sendIntakeInvalidEUAIDEmailMock,
 			sendIntakeNoEUAIDEmail,
 		)
 
-		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED, true)
+		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED, true, nil)
 		s.NoError(err)
 		s.True(emailSentForInvalidEUAID)
 	})
@@ -1079,6 +1084,10 @@ func (s ServicesTestSuite) TestProvideGRTFeedback() {
 			return nil
 		}
 
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+			return nil
+		}
+
 		emailSentForInvalidEUAID := false
 		sendIntakeInvalidEUAIDEmailMock := func(c context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
 			emailSentForInvalidEUAID = true
@@ -1097,11 +1106,12 @@ func (s ServicesTestSuite) TestProvideGRTFeedback() {
 			saveGRTFeedback,
 			fetchEmptyUserInfo,
 			sendReviewEmail,
+			sendReviewEmailToMultipleRecipients,
 			sendIntakeInvalidEUAIDEmailMock,
 			sendIntakeNoEUAIDEmail,
 		)
 
-		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED, false)
+		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED, false, nil)
 		s.NoError(err)
 		s.False(emailSentForInvalidEUAID)
 	})
@@ -1134,6 +1144,10 @@ func (s ServicesTestSuite) TestProvideGRTFeedback() {
 			return nil
 		}
 
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+			return nil
+		}
+
 		sendIntakeInvalidEUAIDEmail := func(c context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
 			return nil
 		}
@@ -1152,11 +1166,12 @@ func (s ServicesTestSuite) TestProvideGRTFeedback() {
 			saveGRTFeedback,
 			fetchEmptyUserInfo,
 			sendReviewEmail,
+			sendReviewEmailToMultipleRecipients,
 			sendIntakeInvalidEUAIDEmail,
 			sendIntakeNoEUAIDEmailMock,
 		)
 
-		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED, true)
+		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED, true, nil)
 		s.NoError(err)
 		s.True(emailSentForNoEUAID)
 	})
@@ -1189,6 +1204,10 @@ func (s ServicesTestSuite) TestProvideGRTFeedback() {
 			return nil
 		}
 
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+			return nil
+		}
+
 		sendIntakeInvalidEUAIDEmail := func(c context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error {
 			return nil
 		}
@@ -1207,11 +1226,12 @@ func (s ServicesTestSuite) TestProvideGRTFeedback() {
 			saveGRTFeedback,
 			fetchEmptyUserInfo,
 			sendReviewEmail,
+			sendReviewEmailToMultipleRecipients,
 			sendIntakeInvalidEUAIDEmail,
 			sendIntakeNoEUAIDEmailMock,
 		)
 
-		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED, true)
+		_, err := provideGRTFeedback(ctx, &models.GRTFeedback{}, &models.Action{}, models.SystemIntakeStatusAPPROVED, true, nil)
 		s.NoError(err)
 		s.True(emailSentForNoEUAID)
 	})
