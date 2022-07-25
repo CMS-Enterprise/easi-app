@@ -37,7 +37,7 @@ type ResolverService struct {
 	CreateActionUpdateStatus      func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool, bool) (*models.SystemIntake, error)
 	CreateActionExtendLifecycleID func(context.Context, *models.Action, uuid.UUID, *time.Time, *string, string, *string, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	IssueLifecycleID              func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
-	RejectIntake                  func(context.Context, *models.SystemIntake, *models.Action, bool) (*models.SystemIntake, error)
+	RejectIntake                  func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	FetchUserInfo                 func(context.Context, string) (*models.UserInfo, error)
 	FetchUserInfos                func(context.Context, []string) ([]*models.UserInfo, error)
 	SearchCommonNameContains      func(context.Context, string) ([]*models.UserInfo, error)

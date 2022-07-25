@@ -1408,7 +1408,7 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 		ctx,
 		&models.SystemIntake{
 			ID:                input.IntakeID,
-			DecisionNextSteps: null.StringFrom(*input.NextSteps),
+			DecisionNextSteps: null.StringFromPtr(input.NextSteps),
 			RejectionReason:   null.StringFrom(input.Reason),
 		},
 		&models.Action{
@@ -1416,6 +1416,7 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 			Feedback: null.StringFrom(input.Feedback),
 		},
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,

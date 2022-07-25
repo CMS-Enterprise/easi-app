@@ -402,10 +402,11 @@ func NewUpdateRejectionFields(
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendRejectRequestEmail func(ctx context.Context, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, reason string, nextSteps string, feedback string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
-) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool) (*models.SystemIntake, error) {
-	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool) (*models.SystemIntake, error) {
+) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
 			return nil, err
@@ -419,49 +420,55 @@ func NewUpdateRejectionFields(
 			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
+		// TODO - EASI-2021 - don't need this check with feature flag removed
+		notifyMultipleRecipients := config.checkBoolFeatureFlag(ctx, notifyMultipleRecipientsFlagName, notifyMultipleRecipientsFlagDefault)
+
 		var requesterHasValidEUAID bool
 		var requesterInfo *models.UserInfo
-		if shouldSendEmail {
-			euaID := existing.EUAUserID.ValueOrZero()
-			requesterHasEUAID := euaID != ""
-			requesterHasValidEUAID = requesterHasEUAID
 
-			if requesterHasEUAID {
-				requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+		if !notifyMultipleRecipients {
+			if shouldSendEmail {
+				euaID := existing.EUAUserID.ValueOrZero()
+				requesterHasEUAID := euaID != ""
+				requesterHasValidEUAID = requesterHasEUAID
 
-				if err != nil {
-					if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
-						appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
-							zap.String("intakeID", existing.ID.String()),
-							zap.String("euaID", euaID))
-						err = sendIntakeInvalidEUAIDEmail(ctx, existing.ProjectName.ValueOrZero(), euaID, existing.ID)
-						if err != nil {
+				if requesterHasEUAID {
+					requesterInfo, err = fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+
+					if err != nil {
+						if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+							appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
+								zap.String("intakeID", existing.ID.String()),
+								zap.String("euaID", euaID))
+							err = sendIntakeInvalidEUAIDEmail(ctx, existing.ProjectName.ValueOrZero(), euaID, existing.ID)
+							if err != nil {
+								return nil, err
+							}
+
+							requesterHasValidEUAID = false
+						} else {
 							return nil, err
 						}
-
-						requesterHasValidEUAID = false
-					} else {
+					} else if requesterInfo == nil || requesterInfo.Email == "" {
+						appcontext.ZLogger(ctx).Error(
+							fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when rejecting an intake request"),
+							zap.String("intakeID", existing.ID.String()),
+							zap.String("euaID", euaID))
+						return nil, &apperrors.ExternalAPIError{
+							Err:       errors.New("requester info fetch was not successful when submitting an action"),
+							Model:     existing,
+							ModelID:   existing.ID.String(),
+							Operation: apperrors.Fetch,
+							Source:    "CEDAR LDAP",
+						}
+					}
+				} else {
+					appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+						zap.String("intakeID", existing.ID.String()))
+					err = sendIntakeNoEUAIDEmail(ctx, existing.ProjectName.ValueOrZero(), existing.ID)
+					if err != nil {
 						return nil, err
 					}
-				} else if requesterInfo == nil || requesterInfo.Email == "" {
-					appcontext.ZLogger(ctx).Error(
-						fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when rejecting an intake request"),
-						zap.String("intakeID", existing.ID.String()),
-						zap.String("euaID", euaID))
-					return nil, &apperrors.ExternalAPIError{
-						Err:       errors.New("requester info fetch was not successful when submitting an action"),
-						Model:     existing,
-						ModelID:   existing.ID.String(),
-						Operation: apperrors.Fetch,
-						Source:    "CEDAR LDAP",
-					}
-				}
-			} else {
-				appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", existing.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
-					zap.String("intakeID", existing.ID.String()))
-				err = sendIntakeNoEUAIDEmail(ctx, existing.ProjectName.ValueOrZero(), existing.ID)
-				if err != nil {
-					return nil, err
 				}
 			}
 		}
@@ -484,7 +491,19 @@ func NewUpdateRejectionFields(
 			return nil, err
 		}
 
-		if shouldSendEmail && requesterHasValidEUAID {
+		// TODO - EASI-2021 - remove notifyMultipleRecipients check (but *not* recipients != nil check)
+		if notifyMultipleRecipients && recipients != nil {
+			err = sendRejectRequestEmailToMultipleRecipients(
+				ctx,
+				*recipients,
+				existing.RejectionReason.String,
+				existing.DecisionNextSteps.String,
+				action.Feedback.String,
+			)
+			if err != nil {
+				return nil, err
+			}
+		} else if shouldSendEmail && requesterHasValidEUAID { // TODO - EASI-2021 - remove this block
 			err = sendRejectRequestEmail(
 				ctx,
 				requesterInfo.Email,

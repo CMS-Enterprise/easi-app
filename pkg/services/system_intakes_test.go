@@ -752,47 +752,100 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		}, nil
 	}
 
-	reviewEmailSent := false
+	singleReviewEmailSent := false
 
 	feedbackForEmailText := ""
 	fnSendRejectRequestEmail := func(ctx context.Context, recipientAddress models.EmailAddress, reason string, nextSteps string, feedback string) error {
 		feedbackForEmailText = feedback
-		reviewEmailSent = true
+		singleReviewEmailSent = true
 		return nil
 	}
+
+	multipleReviewEmailsSent := false
+	fnSendRejectRequestEmailToMulipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ string, feedback string) error {
+		feedbackForEmailText = feedback
+		multipleReviewEmailsSent = true
+		return nil
+	}
+
 	fnSendIntakeInvalidEUAIDEmail := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
 		return nil
 	}
 	fnSendIntakeNoEUAIDEmail := func(_ context.Context, _ string, _ uuid.UUID) error {
 		return nil
 	}
-	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail)
+	testDataSource := ldtestdata.DataSource()
+	cfg := newTestServicesConfig(testDataSource)
 
-	s.Run("happy path", func() {
-		reviewEmailSent = false // clear before running test
+	recipients := models.EmailNotificationRecipients{} // just needs to be non-nil for testing
 
-		intake, err := happy(context.Background(), input, action, true)
+	happy := NewUpdateRejectionFields(
+		cfg,
+		fnAuthorize,
+		fnFetch,
+		fnUpdate,
+		fnSaveAction,
+		fnFetchUserInfo,
+		fnSendRejectRequestEmail,
+		fnSendRejectRequestEmailToMulipleRecipients,
+		fnSendIntakeInvalidEUAIDEmail,
+		fnSendIntakeNoEUAIDEmail,
+	)
+
+	//  TODO - EASI-2021 - remove
+	s.Run("happy path, notifying single recipient", func() {
+		singleReviewEmailSent = false // clear before running test
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
+
+		intake, err := happy(context.Background(), input, action, true, nil)
 		s.NoError(err)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.RejectionReason, reason)
-		s.True(reviewEmailSent)
+		s.True(singleReviewEmailSent)
 		s.Equal("Feedback", feedbackForEmailText)
 	})
 
-	s.Run("happy path without sending emails", func() {
-		reviewEmailSent = false // clear before running test
+	s.Run("happy path, notifying multiple recipients", func() {
+		multipleReviewEmailsSent = false // clear before running test
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, true)
 
-		intake, err := happy(context.Background(), input, action, false)
+		intake, err := happy(context.Background(), input, action, false, &recipients)
 		s.NoError(err)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.RejectionReason, reason)
-		s.False(reviewEmailSent)
+		s.True(multipleReviewEmailsSent)
+		s.Equal("Feedback", feedbackForEmailText)
+	})
+
+	//  TODO - EASI-2021 - remove
+	s.Run("happy path without sending email (to single recipient)", func() {
+		singleReviewEmailSent = false // clear before running test
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
+
+		intake, err := happy(context.Background(), input, action, false, &recipients)
+		s.NoError(err)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.RejectionReason, reason)
+		s.False(singleReviewEmailSent)
+	})
+
+	s.Run("happy path without sending email (to multiple recipients)", func() {
+		multipleReviewEmailsSent = false // clear before running test
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, true)
+
+		intake, err := happy(context.Background(), input, action, false, nil)
+		s.NoError(err)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.RejectionReason, reason)
+		s.False(multipleReviewEmailsSent)
 	})
 
 	// test cases for invalid or missing EUA ID
+	// TODO - EASI-2021 - remove these test cases
 
 	s.Run("should send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP", func() {
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
+
 		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
 			return nil, &apperrors.InvalidEUAIDError{
 				EUAID: euaID,
@@ -813,15 +866,18 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 			fnSaveAction,
 			fetchEmptyUserInfo,
 			fnSendRejectRequestEmail,
+			fnSendRejectRequestEmailToMulipleRecipients,
 			sendIntakeInvalidEUAIDEmailMock,
 			fnSendIntakeNoEUAIDEmail,
 		)
-		_, err := updateRejectionFields(context.Background(), input, action, true)
+		_, err := updateRejectionFields(context.Background(), input, action, true, nil)
 		s.NoError(err)
 		s.True(emailSentForInvalidEUAID)
 	})
 
 	s.Run("should *not* send notification of invalid EUA ID when fetchUserInfo returns empty data from CEDAR LDAP, but shouldSendEmail is set to false", func() {
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
+
 		fetchEmptyUserInfo := func(context.Context, string) (*models.UserInfo, error) {
 			return nil, &apperrors.InvalidEUAIDError{
 				EUAID: euaID,
@@ -842,15 +898,18 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 			fnSaveAction,
 			fetchEmptyUserInfo,
 			fnSendRejectRequestEmail,
+			fnSendRejectRequestEmailToMulipleRecipients,
 			sendIntakeInvalidEUAIDEmailMock,
 			fnSendIntakeNoEUAIDEmail,
 		)
-		_, err := updateRejectionFields(context.Background(), input, action, false)
+		_, err := updateRejectionFields(context.Background(), input, action, false, nil)
 		s.NoError(err)
 		s.False(emailSentForInvalidEUAID)
 	})
 
 	s.Run("should send notification of empty EUA ID when intake has no associated EUA ID", func() {
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
+
 		fetchIntakeWithoutEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{
 				ID: id,
@@ -871,15 +930,18 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 			fnSaveAction,
 			fnFetchUserInfo,
 			fnSendRejectRequestEmail,
+			fnSendRejectRequestEmailToMulipleRecipients,
 			fnSendIntakeInvalidEUAIDEmail,
 			sendIntakeForNoEUAIDEmailMock,
 		)
-		_, err := updateRejectionFields(context.Background(), input, action, true)
+		_, err := updateRejectionFields(context.Background(), input, action, true, nil)
 		s.NoError(err)
 		s.True(emailSentForNoEUAID)
 	})
 
 	s.Run("should *not* send notification of empty EUA ID when intake has no associated EUA ID, but shouldSendEmail is set to false", func() {
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
+
 		fetchIntakeWithoutEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{
 				ID: id,
@@ -900,13 +962,16 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 			fnSaveAction,
 			fnFetchUserInfo,
 			fnSendRejectRequestEmail,
+			fnSendRejectRequestEmailToMulipleRecipients,
 			fnSendIntakeInvalidEUAIDEmail,
 			sendIntakeForNoEUAIDEmailMock,
 		)
-		_, err := updateRejectionFields(context.Background(), input, action, false)
+		_, err := updateRejectionFields(context.Background(), input, action, false, nil)
 		s.NoError(err)
 		s.False(emailSentForNoEUAID)
 	})
+
+	// error-handling test cases
 
 	// build the error-generating pieces
 	fnFetchReturnsNoEUAID := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -939,6 +1004,9 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	fnSendRejectRequestEmailErr := func(ctx context.Context, recipientAddress models.EmailAddress, reason string, nextSteps string, feedback string) error {
 		return errors.New("send email error")
 	}
+	fnSendRejectRequestEmailToMulipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ string, _ string) error {
+		return errors.New("send email to multiple recipients error")
+	}
 	fnSendIntakeInvalidEUAIDEmailErr := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
 		return errors.New("send intake invalid EUA ID email error")
 	}
@@ -947,41 +1015,73 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	}
 
 	// build the table-driven test of error cases for unhappy path
-	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake, *models.Action, bool) (*models.SystemIntake, error)
+	regularTestCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestEmailToMulipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path auth": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestEmailToMulipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path auth fail": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestEmailToMulipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path update": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestEmailToMulipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path fetch user info": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendRejectRequestEmail, fnSendRejectRequestEmailToMulipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 		"error path save action": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
-		},
-		"error path send email": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmailErr, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
-		},
-		"error path send invalid EUA ID email": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoReturnsInvalidEUAID, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmailErr, fnSendIntakeNoEUAIDEmail),
-		},
-		"error path send no EUA ID email": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchReturnsNoEUAID, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmailErr),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestEmailToMulipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
 		},
 	}
 
-	for expectedErr, tc := range testCases {
+	for expectedErr, tc := range regularTestCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input, action, true)
+			_, err := tc.fn(context.Background(), input, action, true, &recipients)
+			s.Error(err)
+		})
+	}
+
+	// TODO - EASI-2021 - remove these test cases
+	singleRecipientTestCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
+	}{
+		"error path send email to single recipient": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmailErr, fnSendRejectRequestEmailToMulipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
+		},
+		"error path send invalid EUA ID email": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoReturnsInvalidEUAID, fnSendRejectRequestEmail, fnSendRejectRequestEmailToMulipleRecipients, fnSendIntakeInvalidEUAIDEmailErr, fnSendIntakeNoEUAIDEmail),
+		},
+		"error path send no EUA ID email": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchReturnsNoEUAID, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestEmailToMulipleRecipients, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmailErr),
+		},
+	}
+
+	for expectedErr, tc := range singleRecipientTestCases {
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, false)
+		s.Run(expectedErr, func() {
+			_, err := tc.fn(context.Background(), input, action, true, nil)
+			s.Error(err)
+		})
+	}
+
+	// TODO - EASI-2021 - add to regularTestCases
+	multipleRecipientTestCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
+	}{
+		"error path sending email to multiple recipients": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail, fnSendRejectRequestEmailToMulipleRecipientsErr, fnSendIntakeInvalidEUAIDEmail, fnSendIntakeNoEUAIDEmail),
+		},
+	}
+
+	for expectedErr, tc := range multipleRecipientTestCases {
+		// TODO - EASI-2021 - don't need to set this flag
+		setBoolFeatureFlag(testDataSource, notifyMultipleRecipientsFlagName, true)
+		s.Run(expectedErr, func() {
+			_, err := tc.fn(context.Background(), input, action, false, &recipients)
 			s.Error(err)
 		})
 	}

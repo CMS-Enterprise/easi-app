@@ -35,6 +35,7 @@ func (c Client) systemIntakeReviewBody(emailText string, taskListPath string) (s
 }
 
 // SendSystemIntakeReviewEmail sends an email for a submitted system intake
+// TODO - EASI-2021 - remove
 func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
 	subject := "Feedback on your intake request"
 	taskListPath := path.Join("governance-task-list", intakeID.String())
