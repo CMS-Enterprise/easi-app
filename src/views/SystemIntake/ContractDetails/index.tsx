@@ -243,7 +243,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             ))}
                           </Field> */}
                           <FundingSources
-                            fundingSources={fundingSources}
+                            initialValues={fundingSources}
                             setFieldValue={setFieldValue}
                             fundingSourceOptions={intakeFundingSources}
                           />

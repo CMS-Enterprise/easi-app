@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Label, Tag } from '@trussworks/react-uswds';
 
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -20,9 +20,13 @@ type FundingSourcesObject = {
 };
 
 const FundingSourcesList = ({
-  fundingSources
+  fundingSources,
+  handleDelete,
+  handleEdit
 }: {
   fundingSources: FundingSourcesType[];
+  handleDelete: (fundingNumber: string) => void;
+  handleEdit: () => null; // TODO: Fix handleEdit
 }) => {
   const fundingSourcesObject = useMemo(() => {
     return fundingSources.reduce<FundingSourcesObject>(
@@ -59,7 +63,7 @@ const FundingSourcesList = ({
             <Button
               unstyled
               small
-              onClick={() => null}
+              onClick={() => handleEdit()} // TODO: Fix handleEdit
               type="button"
               className="margin-right-1"
             >
@@ -68,7 +72,7 @@ const FundingSourcesList = ({
             <Button
               unstyled
               small
-              onClick={() => null}
+              onClick={() => handleDelete(fundingNumber!)}
               type="button"
               className="text-error"
             >
@@ -82,7 +86,7 @@ const FundingSourcesList = ({
 };
 
 type FundingSourcesProps = {
-  fundingSources: FundingSourcesType[];
+  initialValues: FundingSourcesType[];
   fundingSourceOptions: string[];
   setFieldValue: (
     field: string,
@@ -92,10 +96,11 @@ type FundingSourcesProps = {
 };
 
 const FundingSources = ({
-  fundingSources,
+  initialValues,
   fundingSourceOptions,
   setFieldValue
 }: FundingSourcesProps) => {
+  const [fundingSources, setFundingSources] = useState(initialValues || []);
   const [
     activeFundingSource,
     setActiveFundingSource
@@ -105,6 +110,16 @@ const FundingSources = ({
     fundingNumber: '',
     sources: ''
   });
+
+  const updateFundingSources = (sources: FundingSourcesType[]) => {
+    // setFieldValue('fundingSources', sources);
+    setFundingSources(sources);
+    setActiveFundingSource(null);
+  };
+
+  useEffect(() => {
+    setFieldValue('fundingSources', fundingSources);
+  }, [fundingSources]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSubmit = () => {
     const { sources, fundingNumber } = activeFundingSource as FundingSource;
@@ -124,25 +139,37 @@ const FundingSources = ({
         fundingNumber: activeFundingSource.fundingNumber,
         source
       }));
-      setFieldValue('fundingSources', [
-        ...fundingSources,
+      updateFundingSources([
+        ...initialValues,
         ...(updatedValues as FundingSourcesType[])
       ]);
-      setActiveFundingSource(null);
     }
   };
 
   return (
     <div className="margin-bottom-2">
-      <FundingSourcesList fundingSources={fundingSources} />
+      <FundingSourcesList
+        fundingSources={initialValues}
+        handleDelete={fundingNumber =>
+          updateFundingSources(
+            initialValues.filter(
+              source => source.fundingNumber !== fundingNumber
+            )
+          )
+        }
+        handleEdit={() => null} // TODO: Fix handleEdit
+      />
       {activeFundingSource && (
         <>
-          <h4>Add new funding source</h4>
+          <h4 className="margin-bottom-1">New funding source</h4>
           <FieldGroup
+            className="margin-top-1"
             scrollElement="fundingSource.fundingNumber"
             error={!!errors.fundingNumber}
           >
-            <Label htmlFor="fundingNumber">Funding Number</Label>
+            <Label htmlFor="fundingNumber" className="text-normal">
+              Funding Number
+            </Label>
             <HelpText id="IntakeForm-FundingNumberRestrictions">
               Funding number must be 6 digits long
             </HelpText>
@@ -162,7 +189,7 @@ const FundingSources = ({
             />
           </FieldGroup>
           <FieldGroup error={!!errors.sources}>
-            <Label htmlFor="fundingSources">
+            <Label htmlFor="fundingSources" className="text-normal">
               Which existing models does your proposed track/model most closely
               resemble?
             </Label>

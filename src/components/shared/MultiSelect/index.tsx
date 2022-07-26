@@ -8,6 +8,8 @@ import Select, {
 import { IconClose, Tag } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import './index.scss';
+
 type MultiSelectOptionProps = {
   value: string;
   label: string;
@@ -37,7 +39,7 @@ export const MultiSelectTag = ({
   return (
     <Tag
       className={classNames(
-        'padding-x-1 padding-y-05 bg-primary-lighter text-ink display-inline-flex text-no-uppercase flex-align-center',
+        'easi-multiselect--tag padding-x-1 padding-y-05 bg-primary-lighter text-ink display-inline-flex text-no-uppercase flex-align-center',
         className
       )}
     >
@@ -45,7 +47,11 @@ export const MultiSelectTag = ({
       {handleRemove && (
         <IconClose
           onClick={() => handleRemove(label)}
+          onKeyDown={() => handleRemove(label)}
           className="margin-left-05"
+          tabIndex={0}
+          role="button"
+          aria-label={`Remove ${label}`}
         />
       )}
     </Tag>
@@ -80,7 +86,7 @@ const MultiSelect = ({
       <Select
         id={id}
         name={name}
-        className={classNames('usa-combo-box', className)}
+        className={classNames('easi-multiselect usa-combo-box', className)}
         options={options}
         components={{ Option }}
         isMulti
@@ -95,22 +101,30 @@ const MultiSelect = ({
         controlShouldRenderValue={false}
         placeholder={`${selected.length} selected`}
       />
-      <h4 className="text-normal margin-bottom-1">
-        {selectedLabel || 'Selected options'}
-      </h4>
-      {selected.map(({ value, label }) => (
-        <MultiSelectTag
-          key={value}
-          label={label}
-          handleRemove={() => {
-            const updatedValues = selected.filter(
-              option => option.value !== value
-            );
-            setSelected(updatedValues);
-            onChange(updatedValues.map(option => option.value));
-          }}
-        />
-      ))}
+      {selected.length > 0 && (
+        <div className="easi-multiselect--selected">
+          <h4 className="text-normal margin-bottom-1">
+            {selectedLabel || 'Selected options'}
+          </h4>
+          <ul className="usa-list--unstyled">
+            {selected.map(({ value, label }) => (
+              <li className="margin-bottom-05">
+                <MultiSelectTag
+                  key={value}
+                  label={label}
+                  handleRemove={() => {
+                    const updatedValues = selected.filter(
+                      option => option.value !== value
+                    );
+                    setSelected(updatedValues);
+                    onChange(updatedValues.map(option => option.value));
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
