@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
+  Dropdown,
   IconNavigateBefore,
   Label,
   Link,
@@ -40,6 +41,8 @@ import {
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
+
+import FundingSources from './FundingSources';
 
 type ContractDetailsProps = {
   systemIntake: SystemIntake;
@@ -222,26 +225,30 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           <FieldErrorMsg>
                             {flatErrors['fundingSource.source']}
                           </FieldErrorMsg>
-                          <MultiSelect
-                            options={intakeFundingSources.map(option => ({
-                              value: option,
-                              label: option
-                            }))}
-                            onChange={sources =>
-                              setFieldValue(
-                                'fundingSources',
-                                sources.map(source => ({
-                                  source,
-                                  fundingNumber: '123456'
-                                }))
-                              )
-                            }
-                            initialValues={fundingSources.map(
-                              source => source.source!
-                            )}
+                          {/* <Field
+                            as={Dropdown}
+                            id="IntakeForm-FundingSource"
+                            name="fundingSource.source"
+                          >
+                            <option value="" disabled>
+                              Select an option
+                            </option>
+                            {intakeFundingSources.map(source => (
+                              <option
+                                key={source.split(' ').join('-')}
+                                value={source}
+                              >
+                                {source}
+                              </option>
+                            ))}
+                          </Field> */}
+                          <FundingSources
+                            fundingSources={fundingSources}
+                            setFieldValue={setFieldValue}
+                            fundingSourceOptions={intakeFundingSources}
                           />
                         </FieldGroup>
-                        <FieldGroup
+                        {/* <FieldGroup
                           scrollElement="fundingSource.fundingNumber"
                           error={!!flatErrors['fundingSource.fundingNumber']}
                         >
@@ -277,7 +284,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                               Operating Plan page (opens in a new tab)
                             </Link>
                           </HelpText>
-                        </FieldGroup>
+                        </FieldGroup> */}
                       </div>
                     )}
                     <Field
