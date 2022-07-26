@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select, { MultiValue, OptionProps } from 'react-select';
 import { Tag } from '@trussworks/react-uswds';
 
@@ -19,10 +19,21 @@ const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
   );
 };
 
-const MultiSelect = ({ options }: { options: MultiSelectOptionProps[] }) => {
+const MultiSelect = ({
+  options,
+  onChange,
+  initialValues
+}: {
+  options: MultiSelectOptionProps[];
+  onChange: (values: string[]) => void;
+  initialValues?: string[];
+}) => {
   const [selected, setSelected] = useState<MultiValue<MultiSelectOptionProps>>(
-    []
+    initialValues
+      ? options.filter(option => initialValues.includes(option.value))
+      : []
   );
+
   return (
     <div>
       <Select
@@ -32,7 +43,10 @@ const MultiSelect = ({ options }: { options: MultiSelectOptionProps[] }) => {
         closeMenuOnSelect={false}
         blurInputOnSelect={false}
         hideSelectedOptions={false}
-        onChange={selectedOptions => setSelected(selectedOptions)}
+        onChange={selectedOptions => {
+          setSelected(selectedOptions);
+          onChange(selectedOptions.map(option => option.value));
+        }}
         value={selected}
         controlShouldRenderValue={false}
         placeholder={`${selected.length} selected`}

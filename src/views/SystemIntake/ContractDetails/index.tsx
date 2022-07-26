@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
-  Dropdown,
   IconNavigateBefore,
   Label,
   Link,
@@ -28,6 +27,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import MultiSelect from 'components/shared/MultiSelect';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import { yesNoMap } from 'data/common';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -115,7 +115,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
     return {
       id,
-      ...values,
+      fundingSources: {
+        existingFunding: values.existingFunding,
+        fundingSources: values.fundingSources
+      },
+      costs: values.costs,
       contract: {
         ...values.contract,
         startDate,
@@ -218,23 +222,24 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           <FieldErrorMsg>
                             {flatErrors['fundingSource.source']}
                           </FieldErrorMsg>
-                          {/* <Field
-                            as={Dropdown}
-                            id="IntakeForm-FundingSource"
-                            name="fundingSource.source"
-                          >
-                            <option value="" disabled>
-                              Select an option
-                            </option>
-                            {intakeFundingSources.map(source => (
-                              <option
-                                key={source.split(' ').join('-')}
-                                value={source}
-                              >
-                                {source}
-                              </option>
-                            ))}
-                          </Field> */}
+                          <MultiSelect
+                            options={intakeFundingSources.map(option => ({
+                              value: option,
+                              label: option
+                            }))}
+                            onChange={sources =>
+                              setFieldValue(
+                                'fundingSources',
+                                sources.map(source => ({
+                                  source,
+                                  fundingNumber: '123456'
+                                }))
+                              )
+                            }
+                            initialValues={fundingSources.map(
+                              source => source.source!
+                            )}
+                          />
                         </FieldGroup>
                         <FieldGroup
                           scrollElement="fundingSource.fundingNumber"
