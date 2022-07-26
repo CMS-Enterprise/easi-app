@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { useOktaAuth } from '@okta/okta-react';
 import {
   Button,
   Checkbox,
@@ -25,7 +26,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import useCedarContactLookup from 'hooks/useCedarContactLookup';
 import { useSystemIntakeContacts } from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -74,6 +74,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
+  const { authState, oktaAuth } = useOktaAuth();
+  const [intakeRequester, setIntakeRequester] = useState<CedarContactProps>({
+    commonName: '',
+    euaUserId: '',
+    email: ''
+  });
 
   const flags = useFlags();
 
@@ -91,11 +97,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     contacts,
     { createContact, updateContact, deleteContact }
   ] = useSystemIntakeContacts(id);
-
-  const requesterContact = useCedarContactLookup(
-    requester.name,
-    systemIntake.euaUserId
-  );
 
   const initialValues = {
     requester: {
@@ -193,6 +194,24 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     );
   };
 
+  useEffect(() => {
+    let isMounted = true;
+    if (authState?.isAuthenticated) {
+      oktaAuth.getUser().then((info: any) => {
+        if (isMounted) {
+          setIntakeRequester({
+            commonName: info.name,
+            euaUserId: info.preferred_username,
+            email: info.email
+          });
+        }
+      });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [authState, oktaAuth]);
+
   // Wait until contacts are loaded to return form
   if (!contacts) return null;
 
@@ -220,14 +239,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         };
 
         const businessOwnerObject = isReqAndBusOwnerSame
-          ? requesterContact
+          ? intakeRequester
           : {
               commonName: values.businessOwner.commonName,
               euaUserId: values.businessOwner.euaUserId
             };
 
         const productManagerObject = isReqAndProductManagerSame
-          ? requesterContact
+          ? intakeRequester
           : {
               commonName: values.productManager.commonName,
               euaUserId: values.productManager.euaUserId

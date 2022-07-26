@@ -62,7 +62,11 @@ export default function CedarContactSelect({
   return (
     <Combobox
       id={id}
-      className={classNames('cedar-contact-select', className)}
+      className={classNames(
+        'cedar-contact-select',
+        { 'opacity-70': disabled },
+        className
+      )}
       aria-describedby={ariaDescribedBy}
       aria-disabled={disabled}
       aria-label="Cedar-Users"
