@@ -47,6 +47,7 @@ type ResolverRoot interface {
 	CedarAuthorityToOperate() CedarAuthorityToOperateResolver
 	CedarDataCenter() CedarDataCenterResolver
 	CedarDeployment() CedarDeploymentResolver
+	CedarExchange() CedarExchangeResolver
 	CedarRole() CedarRoleResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
 	CedarThreat() CedarThreatResolver
@@ -252,6 +253,45 @@ type ComplexityRoot struct {
 		SystemName               func(childComplexity int) int
 		SystemVersion            func(childComplexity int) int
 		WanType                  func(childComplexity int) int
+	}
+
+	CedarExchange struct {
+		ConnectionFrequency        func(childComplexity int) int
+		ContainsBankingData        func(childComplexity int) int
+		ContainsBeneficiaryAddress func(childComplexity int) int
+		ContainsPhi                func(childComplexity int) int
+		ContainsPii                func(childComplexity int) int
+		DataExchangeAgreement      func(childComplexity int) int
+		DataFormat                 func(childComplexity int) int
+		DataFormatOther            func(childComplexity int) int
+		ExchangeDescription        func(childComplexity int) int
+		ExchangeEndDate            func(childComplexity int) int
+		ExchangeID                 func(childComplexity int) int
+		ExchangeName               func(childComplexity int) int
+		ExchangeRetiredDate        func(childComplexity int) int
+		ExchangeStartDate          func(childComplexity int) int
+		ExchangeState              func(childComplexity int) int
+		ExchangeVersion            func(childComplexity int) int
+		FromOwnerID                func(childComplexity int) int
+		FromOwnerName              func(childComplexity int) int
+		FromOwnerType              func(childComplexity int) int
+		IsBeneficiaryMailingFile   func(childComplexity int) int
+		NumOfRecords               func(childComplexity int) int
+		SharedViaAPI               func(childComplexity int) int
+		ToOwnerID                  func(childComplexity int) int
+		ToOwnerName                func(childComplexity int) int
+		ToOwnerType                func(childComplexity int) int
+		TypeOfData                 func(childComplexity int) int
+	}
+
+	CedarExchangeTypeOfDataItem struct {
+		ID   func(childComplexity int) int
+		Name func(childComplexity int) int
+	}
+
+	CedarExchanges struct {
+		ReceiverExchanges func(childComplexity int) int
+		SenderExchanges   func(childComplexity int) int
 	}
 
 	CedarRole struct {
@@ -502,6 +542,7 @@ type ComplexityRoot struct {
 		CedarThreat              func(childComplexity int, cedarSystemID string) int
 		CurrentUser              func(childComplexity int) int
 		Deployments              func(childComplexity int, cedarSystemID string, deploymentType *string, state *string, status *string) int
+		Exchanges                func(childComplexity int, cedarSystemID string) int
 		Requests                 func(childComplexity int, after *string, first int) int
 		Roles                    func(childComplexity int, cedarSystemID string, roleTypeID *string) int
 		SystemIntake             func(childComplexity int, id uuid.UUID) int
@@ -842,6 +883,12 @@ type CedarDeploymentResolver interface {
 	Status(ctx context.Context, obj *models.CedarDeployment) (*string, error)
 	WanType(ctx context.Context, obj *models.CedarDeployment) (*string, error)
 }
+type CedarExchangeResolver interface {
+	ExchangeEndDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error)
+
+	ExchangeRetiredDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error)
+	ExchangeStartDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error)
+}
 type CedarRoleResolver interface {
 	AssigneeUsername(ctx context.Context, obj *models.CedarRole) (*string, error)
 	AssigneeEmail(ctx context.Context, obj *models.CedarRole) (*string, error)
@@ -928,6 +975,7 @@ type QueryResolver interface {
 	CedarThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error)
 	Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
 	Roles(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error)
+	Exchanges(ctx context.Context, cedarSystemID string) (*model.CedarExchanges, error)
 	Urls(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error)
 	CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error)
 	SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*model.SystemIntakeContactsPayload, error)
@@ -2010,6 +2058,216 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarDeployment.WanType(childComplexity), true
+
+	case "CedarExchange.connectionFrequency":
+		if e.complexity.CedarExchange.ConnectionFrequency == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ConnectionFrequency(childComplexity), true
+
+	case "CedarExchange.containsBankingData":
+		if e.complexity.CedarExchange.ContainsBankingData == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ContainsBankingData(childComplexity), true
+
+	case "CedarExchange.containsBeneficiaryAddress":
+		if e.complexity.CedarExchange.ContainsBeneficiaryAddress == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ContainsBeneficiaryAddress(childComplexity), true
+
+	case "CedarExchange.containsPhi":
+		if e.complexity.CedarExchange.ContainsPhi == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ContainsPhi(childComplexity), true
+
+	case "CedarExchange.containsPii":
+		if e.complexity.CedarExchange.ContainsPii == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ContainsPii(childComplexity), true
+
+	case "CedarExchange.dataExchangeAgreement":
+		if e.complexity.CedarExchange.DataExchangeAgreement == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.DataExchangeAgreement(childComplexity), true
+
+	case "CedarExchange.dataFormat":
+		if e.complexity.CedarExchange.DataFormat == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.DataFormat(childComplexity), true
+
+	case "CedarExchange.dataFormatOther":
+		if e.complexity.CedarExchange.DataFormatOther == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.DataFormatOther(childComplexity), true
+
+	case "CedarExchange.exchangeDescription":
+		if e.complexity.CedarExchange.ExchangeDescription == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ExchangeDescription(childComplexity), true
+
+	case "CedarExchange.exchangeEndDate":
+		if e.complexity.CedarExchange.ExchangeEndDate == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ExchangeEndDate(childComplexity), true
+
+	case "CedarExchange.exchangeId":
+		if e.complexity.CedarExchange.ExchangeID == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ExchangeID(childComplexity), true
+
+	case "CedarExchange.exchangeName":
+		if e.complexity.CedarExchange.ExchangeName == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ExchangeName(childComplexity), true
+
+	case "CedarExchange.exchangeRetiredDate":
+		if e.complexity.CedarExchange.ExchangeRetiredDate == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ExchangeRetiredDate(childComplexity), true
+
+	case "CedarExchange.exchangeStartDate":
+		if e.complexity.CedarExchange.ExchangeStartDate == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ExchangeStartDate(childComplexity), true
+
+	case "CedarExchange.exchangeState":
+		if e.complexity.CedarExchange.ExchangeState == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ExchangeState(childComplexity), true
+
+	case "CedarExchange.exchangeVersion":
+		if e.complexity.CedarExchange.ExchangeVersion == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ExchangeVersion(childComplexity), true
+
+	case "CedarExchange.fromOwnerId":
+		if e.complexity.CedarExchange.FromOwnerID == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.FromOwnerID(childComplexity), true
+
+	case "CedarExchange.fromOwnerName":
+		if e.complexity.CedarExchange.FromOwnerName == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.FromOwnerName(childComplexity), true
+
+	case "CedarExchange.fromOwnerType":
+		if e.complexity.CedarExchange.FromOwnerType == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.FromOwnerType(childComplexity), true
+
+	case "CedarExchange.isBeneficiaryMailingFile":
+		if e.complexity.CedarExchange.IsBeneficiaryMailingFile == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.IsBeneficiaryMailingFile(childComplexity), true
+
+	case "CedarExchange.numOfRecords":
+		if e.complexity.CedarExchange.NumOfRecords == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.NumOfRecords(childComplexity), true
+
+	case "CedarExchange.sharedViaApi":
+		if e.complexity.CedarExchange.SharedViaAPI == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.SharedViaAPI(childComplexity), true
+
+	case "CedarExchange.toOwnerId":
+		if e.complexity.CedarExchange.ToOwnerID == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ToOwnerID(childComplexity), true
+
+	case "CedarExchange.toOwnerName":
+		if e.complexity.CedarExchange.ToOwnerName == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ToOwnerName(childComplexity), true
+
+	case "CedarExchange.toOwnerType":
+		if e.complexity.CedarExchange.ToOwnerType == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ToOwnerType(childComplexity), true
+
+	case "CedarExchange.typeOfData":
+		if e.complexity.CedarExchange.TypeOfData == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.TypeOfData(childComplexity), true
+
+	case "CedarExchangeTypeOfDataItem.id":
+		if e.complexity.CedarExchangeTypeOfDataItem.ID == nil {
+			break
+		}
+
+		return e.complexity.CedarExchangeTypeOfDataItem.ID(childComplexity), true
+
+	case "CedarExchangeTypeOfDataItem.name":
+		if e.complexity.CedarExchangeTypeOfDataItem.Name == nil {
+			break
+		}
+
+		return e.complexity.CedarExchangeTypeOfDataItem.Name(childComplexity), true
+
+	case "CedarExchanges.receiverExchanges":
+		if e.complexity.CedarExchanges.ReceiverExchanges == nil {
+			break
+		}
+
+		return e.complexity.CedarExchanges.ReceiverExchanges(childComplexity), true
+
+	case "CedarExchanges.senderExchanges":
+		if e.complexity.CedarExchanges.SenderExchanges == nil {
+			break
+		}
+
+		return e.complexity.CedarExchanges.SenderExchanges(childComplexity), true
 
 	case "CedarRole.application":
 		if e.complexity.CedarRole.Application == nil {
@@ -3422,6 +3680,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Deployments(childComplexity, args["cedarSystemId"].(string), args["deploymentType"].(*string), args["state"].(*string), args["status"].(*string)), true
+
+	case "Query.exchanges":
+		if e.complexity.Query.Exchanges == nil {
+			break
+		}
+
+		args, err := ec.field_Query_exchanges_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Exchanges(childComplexity, args["cedarSystemId"].(string)), true
 
 	case "Query.requests":
 		if e.complexity.Query.Requests == nil {
@@ -4859,6 +5129,51 @@ type CedarURL {
 }
 
 """
+CedarExchangeTypeOfDataItem is one item of the TypeofData slice in a CedarExchange
+"""
+type CedarExchangeTypeOfDataItem {
+  id: String
+  name: String
+}
+
+"""
+CedarExchange represents info about how data is exchanged between a CEDAR system and another system
+"""
+type CedarExchange {
+	connectionFrequency: [String!]!
+	containsBankingData: Boolean
+	containsBeneficiaryAddress: Boolean
+	containsPhi: Boolean
+	containsPii: Boolean
+	dataExchangeAgreement: String
+	dataFormat: String
+	dataFormatOther: String
+	exchangeDescription: String
+	exchangeEndDate: Time
+	exchangeId: String
+	exchangeName: String
+	exchangeRetiredDate: Time
+	exchangeStartDate: Time
+	exchangeState: String
+	exchangeVersion: String
+	fromOwnerId: String
+	fromOwnerName: String
+	fromOwnerType: String
+	isBeneficiaryMailingFile: Boolean
+	numOfRecords: String
+	sharedViaApi: Boolean
+	toOwnerId: String
+	toOwnerName: String
+	toOwnerType: String
+	typeOfData: [CedarExchangeTypeOfDataItem!]!
+}
+
+type CedarExchanges {
+  senderExchanges: [CedarExchange!]!
+  receiverExchanges: [CedarExchange!]!
+}
+
+"""
 An accessibility request represents a system that needs to go through
 the 508 process
 """
@@ -6091,6 +6406,7 @@ type Query {
   cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
+  exchanges(cedarSystemId: String!): CedarExchanges!
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
@@ -6958,6 +7274,21 @@ func (ec *executionContext) field_Query_deployments_args(ctx context.Context, ra
 		}
 	}
 	args["status"] = arg3
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_exchanges_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["cedarSystemId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["cedarSystemId"] = arg0
 	return args, nil
 }
 
@@ -13567,6 +13898,1362 @@ func (ec *executionContext) fieldContext_CedarDeployment_dataCenter(ctx context.
 				return ec.fieldContext_CedarDataCenter_zip(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarDataCenter", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_connectionFrequency(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_connectionFrequency(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ConnectionFrequency, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_connectionFrequency(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_containsBankingData(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_containsBankingData(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContainsBankingData, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_containsBankingData(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_containsBeneficiaryAddress(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_containsBeneficiaryAddress(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContainsBeneficiaryAddress, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_containsBeneficiaryAddress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_containsPhi(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_containsPhi(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContainsPhi, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_containsPhi(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_containsPii(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_containsPii(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContainsPii, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_containsPii(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_dataExchangeAgreement(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_dataExchangeAgreement(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DataExchangeAgreement, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_dataExchangeAgreement(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_dataFormat(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_dataFormat(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DataFormat, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_dataFormat(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_dataFormatOther(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_dataFormatOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DataFormatOther, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_dataFormatOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_exchangeDescription(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_exchangeDescription(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExchangeDescription, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_exchangeDescription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_exchangeEndDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_exchangeEndDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarExchange().ExchangeEndDate(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_exchangeEndDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_exchangeId(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_exchangeId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExchangeID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_exchangeId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_exchangeName(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_exchangeName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExchangeName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_exchangeName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_exchangeRetiredDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_exchangeRetiredDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarExchange().ExchangeRetiredDate(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_exchangeRetiredDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_exchangeStartDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_exchangeStartDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarExchange().ExchangeStartDate(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_exchangeStartDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_exchangeState(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_exchangeState(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExchangeState, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_exchangeState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_exchangeVersion(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_exchangeVersion(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExchangeVersion, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_exchangeVersion(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_fromOwnerId(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_fromOwnerId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FromOwnerID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_fromOwnerId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_fromOwnerName(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_fromOwnerName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FromOwnerName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_fromOwnerName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_fromOwnerType(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_fromOwnerType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FromOwnerType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_fromOwnerType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_isBeneficiaryMailingFile(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_isBeneficiaryMailingFile(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsBeneficiaryMailingFile, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_isBeneficiaryMailingFile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_numOfRecords(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_numOfRecords(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NumOfRecords, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_numOfRecords(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_sharedViaApi(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_sharedViaApi(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SharedViaAPI, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_sharedViaApi(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_toOwnerId(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_toOwnerId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ToOwnerID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_toOwnerId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_toOwnerName(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_toOwnerName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ToOwnerName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_toOwnerName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_toOwnerType(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_toOwnerType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ToOwnerType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_toOwnerType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_typeOfData(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_typeOfData(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TypeOfData, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarExchangeTypeOfDataItem)
+	fc.Result = res
+	return ec.marshalNCedarExchangeTypeOfDataItem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeTypeOfDataItemᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_typeOfData(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_CedarExchangeTypeOfDataItem_id(ctx, field)
+			case "name":
+				return ec.fieldContext_CedarExchangeTypeOfDataItem_name(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarExchangeTypeOfDataItem", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchangeTypeOfDataItem_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchangeTypeOfDataItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchangeTypeOfDataItem_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchangeTypeOfDataItem_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchangeTypeOfDataItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchangeTypeOfDataItem_name(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchangeTypeOfDataItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchangeTypeOfDataItem_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchangeTypeOfDataItem_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchangeTypeOfDataItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchanges_senderExchanges(ctx context.Context, field graphql.CollectedField, obj *model.CedarExchanges) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchanges_senderExchanges(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SenderExchanges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarExchange)
+	fc.Result = res
+	return ec.marshalNCedarExchange2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchanges_senderExchanges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchanges",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "connectionFrequency":
+				return ec.fieldContext_CedarExchange_connectionFrequency(ctx, field)
+			case "containsBankingData":
+				return ec.fieldContext_CedarExchange_containsBankingData(ctx, field)
+			case "containsBeneficiaryAddress":
+				return ec.fieldContext_CedarExchange_containsBeneficiaryAddress(ctx, field)
+			case "containsPhi":
+				return ec.fieldContext_CedarExchange_containsPhi(ctx, field)
+			case "containsPii":
+				return ec.fieldContext_CedarExchange_containsPii(ctx, field)
+			case "dataExchangeAgreement":
+				return ec.fieldContext_CedarExchange_dataExchangeAgreement(ctx, field)
+			case "dataFormat":
+				return ec.fieldContext_CedarExchange_dataFormat(ctx, field)
+			case "dataFormatOther":
+				return ec.fieldContext_CedarExchange_dataFormatOther(ctx, field)
+			case "exchangeDescription":
+				return ec.fieldContext_CedarExchange_exchangeDescription(ctx, field)
+			case "exchangeEndDate":
+				return ec.fieldContext_CedarExchange_exchangeEndDate(ctx, field)
+			case "exchangeId":
+				return ec.fieldContext_CedarExchange_exchangeId(ctx, field)
+			case "exchangeName":
+				return ec.fieldContext_CedarExchange_exchangeName(ctx, field)
+			case "exchangeRetiredDate":
+				return ec.fieldContext_CedarExchange_exchangeRetiredDate(ctx, field)
+			case "exchangeStartDate":
+				return ec.fieldContext_CedarExchange_exchangeStartDate(ctx, field)
+			case "exchangeState":
+				return ec.fieldContext_CedarExchange_exchangeState(ctx, field)
+			case "exchangeVersion":
+				return ec.fieldContext_CedarExchange_exchangeVersion(ctx, field)
+			case "fromOwnerId":
+				return ec.fieldContext_CedarExchange_fromOwnerId(ctx, field)
+			case "fromOwnerName":
+				return ec.fieldContext_CedarExchange_fromOwnerName(ctx, field)
+			case "fromOwnerType":
+				return ec.fieldContext_CedarExchange_fromOwnerType(ctx, field)
+			case "isBeneficiaryMailingFile":
+				return ec.fieldContext_CedarExchange_isBeneficiaryMailingFile(ctx, field)
+			case "numOfRecords":
+				return ec.fieldContext_CedarExchange_numOfRecords(ctx, field)
+			case "sharedViaApi":
+				return ec.fieldContext_CedarExchange_sharedViaApi(ctx, field)
+			case "toOwnerId":
+				return ec.fieldContext_CedarExchange_toOwnerId(ctx, field)
+			case "toOwnerName":
+				return ec.fieldContext_CedarExchange_toOwnerName(ctx, field)
+			case "toOwnerType":
+				return ec.fieldContext_CedarExchange_toOwnerType(ctx, field)
+			case "typeOfData":
+				return ec.fieldContext_CedarExchange_typeOfData(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarExchange", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchanges_receiverExchanges(ctx context.Context, field graphql.CollectedField, obj *model.CedarExchanges) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchanges_receiverExchanges(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ReceiverExchanges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarExchange)
+	fc.Result = res
+	return ec.marshalNCedarExchange2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchanges_receiverExchanges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchanges",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "connectionFrequency":
+				return ec.fieldContext_CedarExchange_connectionFrequency(ctx, field)
+			case "containsBankingData":
+				return ec.fieldContext_CedarExchange_containsBankingData(ctx, field)
+			case "containsBeneficiaryAddress":
+				return ec.fieldContext_CedarExchange_containsBeneficiaryAddress(ctx, field)
+			case "containsPhi":
+				return ec.fieldContext_CedarExchange_containsPhi(ctx, field)
+			case "containsPii":
+				return ec.fieldContext_CedarExchange_containsPii(ctx, field)
+			case "dataExchangeAgreement":
+				return ec.fieldContext_CedarExchange_dataExchangeAgreement(ctx, field)
+			case "dataFormat":
+				return ec.fieldContext_CedarExchange_dataFormat(ctx, field)
+			case "dataFormatOther":
+				return ec.fieldContext_CedarExchange_dataFormatOther(ctx, field)
+			case "exchangeDescription":
+				return ec.fieldContext_CedarExchange_exchangeDescription(ctx, field)
+			case "exchangeEndDate":
+				return ec.fieldContext_CedarExchange_exchangeEndDate(ctx, field)
+			case "exchangeId":
+				return ec.fieldContext_CedarExchange_exchangeId(ctx, field)
+			case "exchangeName":
+				return ec.fieldContext_CedarExchange_exchangeName(ctx, field)
+			case "exchangeRetiredDate":
+				return ec.fieldContext_CedarExchange_exchangeRetiredDate(ctx, field)
+			case "exchangeStartDate":
+				return ec.fieldContext_CedarExchange_exchangeStartDate(ctx, field)
+			case "exchangeState":
+				return ec.fieldContext_CedarExchange_exchangeState(ctx, field)
+			case "exchangeVersion":
+				return ec.fieldContext_CedarExchange_exchangeVersion(ctx, field)
+			case "fromOwnerId":
+				return ec.fieldContext_CedarExchange_fromOwnerId(ctx, field)
+			case "fromOwnerName":
+				return ec.fieldContext_CedarExchange_fromOwnerName(ctx, field)
+			case "fromOwnerType":
+				return ec.fieldContext_CedarExchange_fromOwnerType(ctx, field)
+			case "isBeneficiaryMailingFile":
+				return ec.fieldContext_CedarExchange_isBeneficiaryMailingFile(ctx, field)
+			case "numOfRecords":
+				return ec.fieldContext_CedarExchange_numOfRecords(ctx, field)
+			case "sharedViaApi":
+				return ec.fieldContext_CedarExchange_sharedViaApi(ctx, field)
+			case "toOwnerId":
+				return ec.fieldContext_CedarExchange_toOwnerId(ctx, field)
+			case "toOwnerName":
+				return ec.fieldContext_CedarExchange_toOwnerName(ctx, field)
+			case "toOwnerType":
+				return ec.fieldContext_CedarExchange_toOwnerType(ctx, field)
+			case "typeOfData":
+				return ec.fieldContext_CedarExchange_typeOfData(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarExchange", field.Name)
 		},
 	}
 	return fc, nil
@@ -22850,6 +24537,67 @@ func (ec *executionContext) fieldContext_Query_roles(ctx context.Context, field 
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_roles_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_exchanges(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_exchanges(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Exchanges(rctx, fc.Args["cedarSystemId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CedarExchanges)
+	fc.Result = res
+	return ec.marshalNCedarExchanges2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarExchanges(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_exchanges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "senderExchanges":
+				return ec.fieldContext_CedarExchanges_senderExchanges(ctx, field)
+			case "receiverExchanges":
+				return ec.fieldContext_CedarExchanges_receiverExchanges(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarExchanges", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_exchanges_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -35357,6 +37105,240 @@ func (ec *executionContext) _CedarDeployment(ctx context.Context, sel ast.Select
 	return out
 }
 
+var cedarExchangeImplementors = []string{"CedarExchange"}
+
+func (ec *executionContext) _CedarExchange(ctx context.Context, sel ast.SelectionSet, obj *models.CedarExchange) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarExchangeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarExchange")
+		case "connectionFrequency":
+
+			out.Values[i] = ec._CedarExchange_connectionFrequency(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "containsBankingData":
+
+			out.Values[i] = ec._CedarExchange_containsBankingData(ctx, field, obj)
+
+		case "containsBeneficiaryAddress":
+
+			out.Values[i] = ec._CedarExchange_containsBeneficiaryAddress(ctx, field, obj)
+
+		case "containsPhi":
+
+			out.Values[i] = ec._CedarExchange_containsPhi(ctx, field, obj)
+
+		case "containsPii":
+
+			out.Values[i] = ec._CedarExchange_containsPii(ctx, field, obj)
+
+		case "dataExchangeAgreement":
+
+			out.Values[i] = ec._CedarExchange_dataExchangeAgreement(ctx, field, obj)
+
+		case "dataFormat":
+
+			out.Values[i] = ec._CedarExchange_dataFormat(ctx, field, obj)
+
+		case "dataFormatOther":
+
+			out.Values[i] = ec._CedarExchange_dataFormatOther(ctx, field, obj)
+
+		case "exchangeDescription":
+
+			out.Values[i] = ec._CedarExchange_exchangeDescription(ctx, field, obj)
+
+		case "exchangeEndDate":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarExchange_exchangeEndDate(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "exchangeId":
+
+			out.Values[i] = ec._CedarExchange_exchangeId(ctx, field, obj)
+
+		case "exchangeName":
+
+			out.Values[i] = ec._CedarExchange_exchangeName(ctx, field, obj)
+
+		case "exchangeRetiredDate":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarExchange_exchangeRetiredDate(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "exchangeStartDate":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarExchange_exchangeStartDate(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "exchangeState":
+
+			out.Values[i] = ec._CedarExchange_exchangeState(ctx, field, obj)
+
+		case "exchangeVersion":
+
+			out.Values[i] = ec._CedarExchange_exchangeVersion(ctx, field, obj)
+
+		case "fromOwnerId":
+
+			out.Values[i] = ec._CedarExchange_fromOwnerId(ctx, field, obj)
+
+		case "fromOwnerName":
+
+			out.Values[i] = ec._CedarExchange_fromOwnerName(ctx, field, obj)
+
+		case "fromOwnerType":
+
+			out.Values[i] = ec._CedarExchange_fromOwnerType(ctx, field, obj)
+
+		case "isBeneficiaryMailingFile":
+
+			out.Values[i] = ec._CedarExchange_isBeneficiaryMailingFile(ctx, field, obj)
+
+		case "numOfRecords":
+
+			out.Values[i] = ec._CedarExchange_numOfRecords(ctx, field, obj)
+
+		case "sharedViaApi":
+
+			out.Values[i] = ec._CedarExchange_sharedViaApi(ctx, field, obj)
+
+		case "toOwnerId":
+
+			out.Values[i] = ec._CedarExchange_toOwnerId(ctx, field, obj)
+
+		case "toOwnerName":
+
+			out.Values[i] = ec._CedarExchange_toOwnerName(ctx, field, obj)
+
+		case "toOwnerType":
+
+			out.Values[i] = ec._CedarExchange_toOwnerType(ctx, field, obj)
+
+		case "typeOfData":
+
+			out.Values[i] = ec._CedarExchange_typeOfData(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var cedarExchangeTypeOfDataItemImplementors = []string{"CedarExchangeTypeOfDataItem"}
+
+func (ec *executionContext) _CedarExchangeTypeOfDataItem(ctx context.Context, sel ast.SelectionSet, obj *models.CedarExchangeTypeOfDataItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarExchangeTypeOfDataItemImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarExchangeTypeOfDataItem")
+		case "id":
+
+			out.Values[i] = ec._CedarExchangeTypeOfDataItem_id(ctx, field, obj)
+
+		case "name":
+
+			out.Values[i] = ec._CedarExchangeTypeOfDataItem_name(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var cedarExchangesImplementors = []string{"CedarExchanges"}
+
+func (ec *executionContext) _CedarExchanges(ctx context.Context, sel ast.SelectionSet, obj *model.CedarExchanges) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarExchangesImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarExchanges")
+		case "senderExchanges":
+
+			out.Values[i] = ec._CedarExchanges_senderExchanges(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "receiverExchanges":
+
+			out.Values[i] = ec._CedarExchanges_receiverExchanges(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var cedarRoleImplementors = []string{"CedarRole"}
 
 func (ec *executionContext) _CedarRole(ctx context.Context, sel ast.SelectionSet, obj *models.CedarRole) graphql.Marshaler {
@@ -37286,6 +39268,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_roles(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "exchanges":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_exchanges(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -40033,6 +42038,128 @@ func (ec *executionContext) marshalNCedarDeployment2ᚖgithubᚗcomᚋcmsgovᚋe
 		return graphql.Null
 	}
 	return ec._CedarDeployment(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCedarExchange2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarExchange) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarExchange2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchange(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCedarExchange2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchange(ctx context.Context, sel ast.SelectionSet, v *models.CedarExchange) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarExchange(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCedarExchangeTypeOfDataItem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeTypeOfDataItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarExchangeTypeOfDataItem) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarExchangeTypeOfDataItem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeTypeOfDataItem(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCedarExchangeTypeOfDataItem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeTypeOfDataItem(ctx context.Context, sel ast.SelectionSet, v *models.CedarExchangeTypeOfDataItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarExchangeTypeOfDataItem(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCedarExchanges2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarExchanges(ctx context.Context, sel ast.SelectionSet, v model.CedarExchanges) graphql.Marshaler {
+	return ec._CedarExchanges(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCedarExchanges2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarExchanges(ctx context.Context, sel ast.SelectionSet, v *model.CedarExchanges) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarExchanges(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarRole) graphql.Marshaler {

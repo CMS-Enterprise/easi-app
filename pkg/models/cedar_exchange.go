@@ -1,6 +1,6 @@
 package models
 
-import "github.com/go-openapi/strfmt"
+import "github.com/guregu/null/zero"
 
 // CedarExchangeTypeOfDataItem is one item of the TypeofData slice in a CedarExchange
 type CedarExchangeTypeOfDataItem struct {
@@ -8,7 +8,7 @@ type CedarExchangeTypeOfDataItem struct {
 	Name string `json:"name,omitempty"`
 }
 
-// CedarExchange contains information about how data is exchanged between CEDAR systems
+// CedarExchange contains information about how data is exchanged between a CEDAR system and another system
 type CedarExchange struct {
 	ConnectionFrequency        []string                       `json:"connectionFrequency"`
 	ContainsBankingData        bool                           `json:"containsBankingData,omitempty"`
@@ -19,11 +19,11 @@ type CedarExchange struct {
 	DataFormat                 string                         `json:"dataFormat,omitempty"`
 	DataFormatOther            string                         `json:"dataFormatOther,omitempty"`
 	ExchangeDescription        string                         `json:"exchangeDescription,omitempty"`
-	ExchangeEndDate            strfmt.Date                    `json:"exchangeEndDate,omitempty"`
+	ExchangeEndDate            zero.Time                      `json:"exchangeEndDate,omitempty"`
 	ExchangeID                 string                         `json:"exchangeId,omitempty"`
 	ExchangeName               string                         `json:"exchangeName,omitempty"`
-	ExchangeRetiredDate        strfmt.Date                    `json:"exchangeRetiredDate,omitempty"`
-	ExchangeStartDate          strfmt.Date                    `json:"exchangeStartDate,omitempty"`
+	ExchangeRetiredDate        zero.Time                      `json:"exchangeRetiredDate,omitempty"`
+	ExchangeStartDate          zero.Time                      `json:"exchangeStartDate,omitempty"`
 	ExchangeState              string                         `json:"exchangeState,omitempty"`
 	ExchangeVersion            string                         `json:"exchangeVersion,omitempty"`
 	FromOwnerID                string                         `json:"fromOwnerId,omitempty"`

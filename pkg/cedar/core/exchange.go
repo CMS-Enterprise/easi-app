@@ -2,6 +2,9 @@ package cedarcore
 
 import (
 	"context"
+	"time"
+
+	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/exchange"
@@ -12,12 +15,12 @@ import (
 type ExchangeDirection string
 
 const (
-	// Sender requests only exchanges where the system is the sender
-	Sender ExchangeDirection = "sender"
-	// Receiver requests only exchanges where the system is the receiver
-	Receiver = "receiver"
-	// Both requests both exchanges where the system is either the sender or the receiver
-	Both = "both"
+	// ExchangeDirectionSender requests only exchanges where the system is the sender
+	ExchangeDirectionSender ExchangeDirection = "sender"
+	// ExchangeDirectionReceiver requests only exchanges where the system is the receiver
+	ExchangeDirectionReceiver = "receiver"
+	// ExchangeDirectionBoth requests both exchanges where the system is either the sender or the receiver
+	ExchangeDirectionBoth = "both"
 )
 
 // GetExchangesBySystemAndDirection gets a list of exchanges from the CEDAR API by system and direction
@@ -61,11 +64,11 @@ func (c *Client) GetExchangesBySystemAndDirection(ctx context.Context, cedarSyst
 			DataFormat:                 exch.DataFormat,
 			DataFormatOther:            exch.DataFormatOther,
 			ExchangeDescription:        exch.ExchangeDescription,
-			ExchangeEndDate:            exch.ExchangeEndDate,
+			ExchangeEndDate:            zero.TimeFrom(time.Time(exch.ExchangeEndDate)),
 			ExchangeID:                 exch.ExchangeID,
 			ExchangeName:               exch.ExchangeName,
-			ExchangeRetiredDate:        exch.ExchangeRetiredDate,
-			ExchangeStartDate:          exch.ExchangeStartDate,
+			ExchangeRetiredDate:        zero.TimeFrom(time.Time(exch.ExchangeRetiredDate)),
+			ExchangeStartDate:          zero.TimeFrom(time.Time(exch.ExchangeStartDate)),
 			ExchangeState:              exch.ExchangeState,
 			ExchangeVersion:            exch.ExchangeVersion,
 			FromOwnerID:                exch.FromOwnerID,
