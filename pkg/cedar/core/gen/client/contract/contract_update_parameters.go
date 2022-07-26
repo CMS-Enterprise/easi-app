@@ -62,7 +62,10 @@ func NewContractUpdateParamsWithHTTPClient(client *http.Client) *ContractUpdateP
 */
 type ContractUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   An array of contracts to be updated in Alfabet.
+	*/
 	Body *models.ContractUpdateRequest
 
 	/* BudgetsOnly.

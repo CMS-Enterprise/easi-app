@@ -23,6 +23,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/organization"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/person"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
+	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/software_products"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/stakeholder"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/support_contact"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
@@ -37,14 +38,14 @@ var Default = NewHTTPClient(nil)
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "webmethods-apigw.cedarimpl.cms.gov"
+	DefaultHost string = "webmethods-apigw.cedardev.cms.gov"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
 	DefaultBasePath string = "/gateway/CEDAR Core API/1.0.0"
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
-var DefaultSchemes = []string{"https"}
+var DefaultSchemes = []string{"http"}
 
 // NewHTTPClient creates a new c e d a r core API HTTP client.
 func NewHTTPClient(formats strfmt.Registry) *CEDARCoreAPI {
@@ -86,6 +87,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CEDARCoreA
 	cli.Organization = organization.New(transport, formats)
 	cli.Person = person.New(transport, formats)
 	cli.Role = role.New(transport, formats)
+	cli.SoftwareProducts = software_products.New(transport, formats)
 	cli.Stakeholder = stakeholder.New(transport, formats)
 	cli.SupportContact = support_contact.New(transport, formats)
 	cli.System = system.New(transport, formats)
@@ -162,6 +164,8 @@ type CEDARCoreAPI struct {
 
 	Role role.ClientService
 
+	SoftwareProducts software_products.ClientService
+
 	Stakeholder stakeholder.ClientService
 
 	SupportContact support_contact.ClientService
@@ -193,6 +197,7 @@ func (c *CEDARCoreAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Organization.SetTransport(transport)
 	c.Person.SetTransport(transport)
 	c.Role.SetTransport(transport)
+	c.SoftwareProducts.SetTransport(transport)
 	c.Stakeholder.SetTransport(transport)
 	c.SupportContact.SetTransport(transport)
 	c.System.SetTransport(transport)
