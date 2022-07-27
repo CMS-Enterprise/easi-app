@@ -76,17 +76,19 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const history = useHistory();
   const { authState, oktaAuth } = useOktaAuth();
   const [intakeRequester, setIntakeRequester] = useState<CedarContactProps>({
-    commonName: '',
-    euaUserId: '',
+    commonName: requester.name,
+    euaUserId: systemIntake.euaUserId,
     email: ''
   });
 
   const flags = useFlags();
 
-  const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
-  const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState(
-    false
-  );
+  const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState<
+    boolean | null
+  >(null);
+  const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState<
+    boolean | null
+  >(null);
 
   const [
     activeContact,
@@ -212,6 +214,21 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     };
   }, [authState, oktaAuth]);
 
+  useEffect(() => {
+    if (
+      isReqAndBusOwnerSame === null &&
+      intakeRequester.euaUserId === contacts?.businessOwner.euaUserId
+    ) {
+      setReqAndBusOwnerSame(true);
+    }
+    if (
+      isReqAndProductManagerSame === null &&
+      intakeRequester.euaUserId === contacts?.productManager.euaUserId
+    ) {
+      setReqAndProductManagerSame(true);
+    }
+  }, [contacts, intakeRequester]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Wait until contacts are loaded to return form
   if (!contacts) return null;
 
@@ -238,19 +255,37 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           setFieldValue(`${role}.email`, contact?.email || '');
         };
 
-        const businessOwnerObject = isReqAndBusOwnerSame
-          ? intakeRequester
-          : {
-              commonName: values.businessOwner.commonName,
-              euaUserId: values.businessOwner.euaUserId
-            };
+        const clearContact = (
+          role: 'businessOwner' | 'productManager' | 'isso'
+        ) => {
+          setFieldValue(role, {
+            ...values[role],
+            euaUserId: '',
+            commonName: '',
+            component: '',
+            email: ''
+          });
+          if (values[role].id) {
+            deleteContact(values[role].id!);
+          }
+        };
 
-        const productManagerObject = isReqAndProductManagerSame
-          ? intakeRequester
-          : {
-              commonName: values.productManager.commonName,
-              euaUserId: values.productManager.euaUserId
-            };
+        const setContactFromCheckbox = (
+          role: 'businessOwner' | 'productManager',
+          sameAsRequester: boolean
+        ) => {
+          if (sameAsRequester) {
+            setContactFieldsFromName(intakeRequester, role);
+            setFieldValue(`${role}.component`, values.requester.component);
+          } else {
+            clearContact(role);
+          }
+          if (role === 'businessOwner') {
+            setReqAndBusOwnerSame(!!sameAsRequester);
+          } else {
+            setReqAndProductManagerSame(!!sameAsRequester);
+          }
+        };
 
         return (
           <>
@@ -350,17 +385,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     id="IntakeForm-IsBusinessOwnerSameAsRequester"
                     label="CMS Business Owner is same as requester"
                     name="isBusinessOwnerSameAsRequester"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      if (e.target.checked) {
-                        setReqAndBusOwnerSame(true);
-                        setFieldValue(
-                          'businessOwner.component',
-                          values.requester.component
-                        );
-                      } else {
-                        setReqAndBusOwnerSame(false);
-                      }
-                    }}
+                    checked={!!isReqAndBusOwnerSame}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setContactFromCheckbox(
+                        'businessOwner',
+                        !!e.target.checked
+                      )
+                    }
                     value=""
                   />
                   <Label
@@ -381,11 +412,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                         setContactFieldsFromName(contact, 'businessOwner');
                     }}
                     value={
-                      businessOwnerObject?.euaUserId
-                        ? businessOwnerObject
+                      values.businessOwner?.euaUserId
+                        ? values.businessOwner
                         : undefined
                     }
-                    disabled={isReqAndBusOwnerSame}
+                    disabled={!!isReqAndBusOwnerSame}
                   />
                 </FieldGroup>
                 {/* Business Owner Component */}
@@ -447,17 +478,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     id="IntakeForm-IsProductManagerSameAsRequester"
                     label="CMS Project/Product Manager, or lead is same as requester"
                     name="isProductManagerSameAsRequester"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      if (e.target.checked) {
-                        setReqAndProductManagerSame(true);
-                        setFieldValue(
-                          'productManager.component',
-                          values.requester.component
-                        );
-                      } else {
-                        setReqAndProductManagerSame(false);
-                      }
-                    }}
+                    checked={!!isReqAndProductManagerSame}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setContactFromCheckbox(
+                        'productManager',
+                        !!e.target.checked
+                      )
+                    }
                     value=""
                   />
                   <Label
@@ -478,11 +505,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                         setContactFieldsFromName(contact, 'productManager');
                     }}
                     value={
-                      productManagerObject?.euaUserId
-                        ? productManagerObject
+                      values.productManager?.euaUserId
+                        ? values.productManager
                         : undefined
                     }
-                    disabled={isReqAndProductManagerSame}
+                    disabled={!!isReqAndProductManagerSame}
                   />
                 </FieldGroup>
                 {/* Product Manager Component */}
@@ -647,11 +674,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       label="No"
                       onChange={() => {
                         setFieldValue('isso.isPresent', false);
-                        if (values.isso.id) deleteContact(values.isso.id);
-                        setFieldValue('isso.commonName', '');
-                        setFieldValue('isso.euaUserId', '');
-                        setFieldValue('isso.component', '');
-                        setFieldValue('isso.email', '');
+                        clearContact('isso');
                       }}
                       value={false}
                     />
