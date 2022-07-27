@@ -1095,6 +1095,7 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx contex
 		models.SystemIntakeStatusNEEDBIZCASE,
 		false,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1114,6 +1115,7 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx 
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
 		false,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1133,6 +1135,7 @@ func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx conte
 		models.SystemIntakeStatusSHUTDOWNCOMPLETE,
 		false,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1152,6 +1155,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx contex
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1171,6 +1175,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Cont
 		models.SystemIntakeStatusNOTITREQUEST,
 		false,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1190,6 +1195,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx contex
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1209,6 +1215,7 @@ func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Conte
 		models.SystemIntakeStatusREADYFORGRT,
 		false,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1228,6 +1235,7 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 		models.SystemIntakeStatusSHUTDOWNINPROGRESS,
 		false,
 		input.ShouldSendEmail,
+		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,

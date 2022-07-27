@@ -215,6 +215,7 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+				emailClient.SendSystemIntakeReviewEmailToMultipleRecipients,
 				emailClient.SendIntakeInvalidEUAIDEmail,
 				emailClient.SendIntakeNoEUAIDEmail,
 				services.NewCloseBusinessCase(

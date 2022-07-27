@@ -314,10 +314,19 @@ func NewCreateActionUpdateStatus(
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
+	sendReviewEmailToMultipleRecipients func(ctx context.Context, emailText string, recipients models.EmailNotificationRecipients, intakeID uuid.UUID) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
-) func(ctx context.Context, newAction *models.Action, intakeID uuid.UUID, newStatus models.SystemIntakeStatus, shouldCloseBusinessCase bool, shouldSendEmail bool) (*models.SystemIntake, error) {
+) func(
+	ctx context.Context,
+	newAction *models.Action,
+	intakeID uuid.UUID,
+	newStatus models.SystemIntakeStatus,
+	shouldCloseBusinessCase bool,
+	shouldSendEmail bool,
+	recipients *models.EmailNotificationRecipients,
+) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
 		action *models.Action,
@@ -325,6 +334,7 @@ func NewCreateActionUpdateStatus(
 		newStatus models.SystemIntakeStatus,
 		shouldCloseBusinessCase bool,
 		shouldSendEmail bool,
+		recipients *models.EmailNotificationRecipients,
 	) (*models.SystemIntake, error) {
 		err := saveAction(ctx, action)
 		if err != nil {
@@ -346,57 +356,70 @@ func NewCreateActionUpdateStatus(
 			}
 		}
 
-		if !shouldSendEmail {
+		// TODO - EASI-2021 - don't need this check with feature flag removed
+		notifyMultipleRecipients := config.checkBoolFeatureFlag(ctx, notifyMultipleRecipientsFlagName, notifyMultipleRecipientsFlagDefault)
+
+		// early return if we're not sending any emails
+		// TODO - EASI-2021 - don't need this check with feature flag removed - shouldn't need this check
+		if !shouldSendEmail && (!notifyMultipleRecipients || recipients == nil) {
 			return intake, nil
 		}
 
-		euaID := intake.EUAUserID.ValueOrZero()
-		requesterHasEUAID := euaID != ""
-		requesterHasValidEUAID := requesterHasEUAID
-
-		var requesterInfo *models.UserInfo
-		if requesterHasEUAID {
-			requesterInfo, err = fetchUserInfo(ctx, euaID)
-
+		// TODO - EASI-2021 - remove notifyMultipleRecipients check (but *not* recipients != nil check)
+		if notifyMultipleRecipients && recipients != nil {
+			err = sendReviewEmailToMultipleRecipients(ctx, action.Feedback.String, *recipients, intake.ID)
 			if err != nil {
-				if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
-					appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
-						zap.String("intakeID", intake.ID.String()),
-						zap.String("euaID", euaID))
-					err = sendIntakeInvalidEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), euaID, intake.ID)
-					if err != nil {
+				return nil, err
+			}
+		} else { // TODO - EASI-2021 - remove this block
+			euaID := intake.EUAUserID.ValueOrZero()
+			requesterHasEUAID := euaID != ""
+			requesterHasValidEUAID := requesterHasEUAID
+
+			var requesterInfo *models.UserInfo
+			if requesterHasEUAID {
+				requesterInfo, err = fetchUserInfo(ctx, euaID)
+
+				if err != nil {
+					if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+						appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has an invalid associated EUA ID; sending fallback email to governance team"),
+							zap.String("intakeID", intake.ID.String()),
+							zap.String("euaID", euaID))
+						err = sendIntakeInvalidEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), euaID, intake.ID)
+						if err != nil {
+							return nil, err
+						}
+
+						requesterHasValidEUAID = false
+					} else {
 						return nil, err
 					}
-
-					requesterHasValidEUAID = false
-				} else {
+				} else if requesterInfo == nil || requesterInfo.Email == "" {
+					appcontext.ZLogger(ctx).Error(fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when submitting an action"),
+						zap.String("intakeID", intake.ID.String()),
+						zap.String("euaID", euaID))
+					return nil, &apperrors.ExternalAPIError{
+						Err:       errors.New("requester info fetch was not successful when submitting an action"),
+						Model:     intake,
+						ModelID:   intake.ID.String(),
+						Operation: apperrors.Fetch,
+						Source:    "CEDAR LDAP",
+					}
+				}
+			} else {
+				appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
+					zap.String("intakeID", intake.ID.String()))
+				err = sendIntakeNoEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), intake.ID)
+				if err != nil {
 					return nil, err
 				}
-			} else if requesterInfo == nil || requesterInfo.Email == "" {
-				appcontext.ZLogger(ctx).Error(fmt.Sprint("Requester info fetch for EUA ID ", euaID, " was not successful when submitting an action"),
-					zap.String("intakeID", intake.ID.String()),
-					zap.String("euaID", euaID))
-				return nil, &apperrors.ExternalAPIError{
-					Err:       errors.New("requester info fetch was not successful when submitting an action"),
-					Model:     intake,
-					ModelID:   intake.ID.String(),
-					Operation: apperrors.Fetch,
-					Source:    "CEDAR LDAP",
-				}
 			}
-		} else {
-			appcontext.ZLogger(ctx).Info(fmt.Sprint("Intake ", intake.ID.String(), " has no associated EUA ID; sending fallback email to governance team"),
-				zap.String("intakeID", intake.ID.String()))
-			err = sendIntakeNoEUAIDEmail(ctx, intake.ProjectName.ValueOrZero(), intake.ID)
-			if err != nil {
-				return nil, err
-			}
-		}
 
-		if requesterHasValidEUAID {
-			err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
-			if err != nil {
-				return nil, err
+			if requesterHasValidEUAID {
+				err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 
