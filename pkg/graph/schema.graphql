@@ -326,11 +326,6 @@ type CedarExchange {
 	typeOfData: [CedarExchangeTypeOfDataItem!]!
 }
 
-type CedarExchanges {
-  senderExchanges: [CedarExchange!]!
-  receiverExchanges: [CedarExchange!]!
-}
-
 """
 An accessibility request represents a system that needs to go through
 the 508 process
@@ -1564,7 +1559,7 @@ type Query {
   cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
-  exchanges(cedarSystemId: String!): CedarExchanges!
+  exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!

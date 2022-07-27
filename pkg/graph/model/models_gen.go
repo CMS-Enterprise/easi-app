@@ -80,11 +80,6 @@ type CedarBusinessOwnerInformation struct {
 	StoresBeneficiaryAddress       *bool    `json:"storesBeneficiaryAddress"`
 }
 
-type CedarExchanges struct {
-	SenderExchanges   []*models.CedarExchange `json:"senderExchanges"`
-	ReceiverExchanges []*models.CedarExchange `json:"receiverExchanges"`
-}
-
 // SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 type CedarSystemMaintainerInformation struct {
 	AgileUsed                  *bool    `json:"agileUsed"`

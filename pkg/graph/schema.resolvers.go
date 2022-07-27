@@ -2017,31 +2017,14 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 }
 
 // Exchanges is the resolver for the exchanges field.
-func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID string) (*model.CedarExchanges, error) {
-	g := new(errgroup.Group)
+func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error) {
+	exchanges, err := r.cedarCoreClient.GetExchangesBySystem(ctx, cedarSystemID)
 
-	var senderExchanges []*models.CedarExchange
-	var errS error
-	g.Go(func() error {
-		senderExchanges, errS = r.cedarCoreClient.GetExchangesBySystemAndDirection(ctx, cedarSystemID, cedarcore.ExchangeDirectionSender)
-		return errS
-	})
-
-	var receiverExchanges []*models.CedarExchange
-	var errR error
-	g.Go(func() error {
-		receiverExchanges, errR = r.cedarCoreClient.GetExchangesBySystemAndDirection(ctx, cedarSystemID, cedarcore.ExchangeDirectionReceiver)
-		return errR
-	})
-
-	if err := g.Wait(); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	return &model.CedarExchanges{
-		SenderExchanges:   senderExchanges,
-		ReceiverExchanges: receiverExchanges,
-	}, nil
+	return exchanges, nil
 }
 
 // Urls is the resolver for the urls field.

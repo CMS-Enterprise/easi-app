@@ -11,20 +11,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// ExchangeDirection is an enumeration of possible values for the direction parameter in the /exchange API
-type ExchangeDirection string
-
-const (
-	// ExchangeDirectionSender requests only exchanges where the system is the sender
-	ExchangeDirectionSender ExchangeDirection = "sender"
-	// ExchangeDirectionReceiver requests only exchanges where the system is the receiver
-	ExchangeDirectionReceiver = "receiver"
-	// ExchangeDirectionBoth requests both exchanges where the system is either the sender or the receiver
-	ExchangeDirectionBoth = "both"
-)
-
-// GetExchangesBySystemAndDirection gets a list of exchanges from the CEDAR API by system and direction
-func (c *Client) GetExchangesBySystemAndDirection(ctx context.Context, cedarSystemID string, direction ExchangeDirection) ([]*models.CedarExchange, error) {
+// GetExchangesBySystem gets a list of exchanges from the CEDAR API by system
+func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarExchange{}, nil
@@ -33,7 +21,7 @@ func (c *Client) GetExchangesBySystemAndDirection(ctx context.Context, cedarSyst
 	// Construct the parameters
 	params := exchange.NewExchangeFindListParams()
 	params.SetSystemID(cedarSystemID)
-	params.SetDirection(string(direction))
+	params.SetDirection("both")
 	params.HTTPClient = c.hc
 
 	// Make the API call
