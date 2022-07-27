@@ -81,7 +81,7 @@ const help = {
     title: 'Send feedback',
     description:
       'Have a suggestion for how to improve EASi? Let us know using the form below.',
-    closeTab: 'Close tab without sending report',
+    closeTab: 'Close tab without sending feedback',
     labels: {
       isAnonymous: 'Would you like your feedback to remain anonymous?',
       canBeContacted:
