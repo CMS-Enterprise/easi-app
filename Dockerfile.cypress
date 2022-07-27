@@ -29,4 +29,4 @@ COPY scripts/seed_database /scripts/seed_database
 COPY --from=build /easi/bin/seed /build/seed
 
 ENTRYPOINT ["/node_modules/.bin/cypress"]
-CMD ["run", "--spec /cypress/integration/emailNotifications.spec.js"]
+CMD ["run", "--spec", "/cypress/integration/emailNotifications.spec.js"]
