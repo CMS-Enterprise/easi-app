@@ -202,8 +202,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       oktaAuth.getUser().then((info: any) => {
         if (isMounted) {
           setIntakeRequester({
-            commonName: info.name,
-            euaUserId: info.preferred_username,
+            commonName: requester.name,
+            euaUserId: systemIntake.euaUserId,
             email: info.email
           });
         }
@@ -212,7 +212,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     return () => {
       isMounted = false;
     };
-  }, [authState, oktaAuth]);
+  }, [authState, oktaAuth, requester.name, systemIntake.euaUserId]);
 
   useEffect(() => {
     if (
