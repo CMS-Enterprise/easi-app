@@ -111,7 +111,7 @@ const CanBeContactedField = () => {
 /**
  * A radio group of options, with an optional additional related text field.
  * A group typically has a set a values where one option
- * can toggle additional input text, as set by `optionTextField`.
+ * can toggle additional input text, as set by `optionForTextInput`.
  */
 const RadioOptionGroupWithAdditionalText = ({
   name,
@@ -139,6 +139,7 @@ const RadioOptionGroupWithAdditionalText = ({
         {options.map(option => {
           const optionText = t(`sendFeedback.options.${option}`);
           const optionValue = sendFeedbackOptions[option];
+          const checked = values[name] === optionValue;
           return (
             <React.Fragment key={option}>
               <Field
@@ -147,21 +148,20 @@ const RadioOptionGroupWithAdditionalText = ({
                 name={name}
                 label={optionText}
                 value={optionValue}
+                checked={checked}
               />
               {
                 // Toggle the additional text field when the option is selected
                 // Matches option name and value
-                optionForTextInput === option &&
-                  values[name] === optionValue &&
-                  textField && (
-                    <div className="margin-left-4">
-                      <Label htmlFor={textField}>
-                        {t('sendFeedback.labels.pleaseExplain')}
-                      </Label>
-                      <ErrorMessage name={textField} />
-                      <Field as={TextInput} id={textField} name={textField} />
-                    </div>
-                  )
+                optionForTextInput === option && checked && textField && (
+                  <div className="margin-left-4">
+                    <Label htmlFor={textField}>
+                      {t('sendFeedback.labels.pleaseExplain')}
+                    </Label>
+                    <ErrorMessage name={textField} />
+                    <Field as={TextInput} id={textField} name={textField} />
+                  </div>
+                )
               }
             </React.Fragment>
           );
@@ -171,6 +171,11 @@ const RadioOptionGroupWithAdditionalText = ({
   );
 };
 
+/**
+ * This component for the `easiServicesUsed` field is similar to
+ * `RadioOptionGroupWithAdditionalText` except that group elements
+ * can be radios or checkboxes depending on mode.
+ */
 const EasiServicesUsedField = ({ mode }: { mode: FormMode }) => {
   const { t } = useTranslation('help');
   const { values } = useFormikContext<SendFeedbackEmailForm>();
@@ -199,10 +204,11 @@ const EasiServicesUsedField = ({ mode }: { mode: FormMode }) => {
               name={name}
               label={t(`sendFeedback.options.${option}`)}
               value={sendFeedbackOptions[option]}
+              checked={values[name].includes(sendFeedbackOptions[option])}
             />
           );
         })}
-        {values[name]?.includes(sendFeedbackOptions.other) && (
+        {values[name].includes(sendFeedbackOptions.other) && (
           <div className="margin-left-4">
             <ErrorMessage name={optionTextFieldName} />
             <Field
@@ -305,8 +311,6 @@ const SendFeedback = () => {
     await send({ variables: { input } });
   };
 
-  // const submitAndRestart = async () => {};
-
   return (
     <MainContent className="grid-container help-send-feedback">
       <HelpBreadcrumb type={t('sendFeedback.closeTab')} />
@@ -324,15 +328,26 @@ const SendFeedback = () => {
             }
             validationSchema={sendFeedbackEmailFormSchema}
             validateOnBlur={false}
+            validateOnChange={false}
             onSubmit={onSubmit}
           >
-            {({ values, errors, submitCount, isSubmitting }) => {
-              // console.log('errors', JSON.stringify(errors));
+            {({
+              // touched,
+              errors,
+              isSubmitting,
+              resetForm,
+              setErrors,
+              submitCount,
+              submitForm,
+              validateForm,
+              values
+            }) => {
+              // console.log('errors', JSON.stringify(errors, null, 2));
               // console.log('form values', JSON.stringify(values, null, 2));
               // console.log('submitting', isSubmitting, submitCount);
               return (
                 <Form>
-                  <FormGroup>
+                  <FormGroup /* error={'isAnonymous' in errors} */>
                     <Fieldset
                       legend={
                         <>
@@ -350,6 +365,7 @@ const SendFeedback = () => {
                         name="isAnonymous"
                         label={t('sendFeedback.options.yes')}
                         value
+                        checked={String(values.isAnonymous) === 'true'}
                       />
                       <Field
                         as={Radio}
@@ -357,12 +373,13 @@ const SendFeedback = () => {
                         name="isAnonymous"
                         label={t('sendFeedback.options.no')}
                         value={false}
+                        checked={String(values.isAnonymous) === 'false'}
                       />
                     </Fieldset>
                   </FormGroup>
                   <CanBeContactedField />
                   <EasiServicesUsedField mode="sendFeedback" />
-                  <FormGroup>
+                  <FormGroup /* error={'cmsRole' in errors} */>
                     <Label htmlFor="cmsRole">
                       {t('sendFeedback.labels.cmsRole')}
                     </Label>
@@ -411,7 +428,7 @@ const SendFeedback = () => {
                     name="howSatisfied"
                     options={sendFeedbackOptionFields.howSatisfied.options}
                   />
-                  <FormGroup>
+                  <FormGroup /* error={'howCanWeImprove' in errors} */>
                     <Label htmlFor="howCanWeImprove">
                       {t('sendFeedback.labels.howCanWeImprove')}
                     </Label>
@@ -426,7 +443,21 @@ const SendFeedback = () => {
                     <Button type="submit" inverse disabled={isSubmitting}>
                       {t('sendFeedback.submit')}
                     </Button>
-                    <Button type="button" outline disabled={isSubmitting}>
+                    <Button
+                      type="button"
+                      outline
+                      disabled={isSubmitting}
+                      onClick={async () => {
+                        // Manually validate and submit before reset
+                        await submitForm();
+                        const errs = await validateForm();
+                        if (Object.keys(errs).length > 0) {
+                          setErrors(errs);
+                        } else {
+                          resetForm();
+                        }
+                      }}
+                    >
                       {t('sendFeedback.submitAndRestart')}
                     </Button>
                     {Object.keys(errors).length > 0 && submitCount > 0 && (
