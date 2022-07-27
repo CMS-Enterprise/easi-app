@@ -90,7 +90,7 @@ const createIntake = () => {
   });
 };
 
-describe('Email notifications', () => {
+describe.skip('Email notifications', () => {
   describe('Issuing lifecycle IDs', () => {
     describe('With feature flag set to allow multiple notifications', () => {
       it("Sends multiple emails to multiple recipients, without CC'ing GRT team", () => {
