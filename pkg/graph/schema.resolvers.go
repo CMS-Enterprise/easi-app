@@ -18,6 +18,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -1696,6 +1697,98 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	return &model.DeleteSystemIntakeContactPayload{
 		SystemIntakeContact: contact,
 	}, nil
+}
+
+// SendFeedbackEmail is the resolver for the sendFeedbackEmail field.
+func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.SendFeedbackEmailInput) (*string, error) {
+	var reporterName, reporterEmail string
+
+	if !input.IsAnonymous {
+		euaUserID := appcontext.Principal(ctx).ID()
+		userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
+		if err != nil {
+			return nil, err
+		}
+		reporterName = userInfo.CommonName
+		reporterEmail = userInfo.Email.String()
+	}
+
+	err := r.emailClient.SendFeedbackEmail(ctx, email.SendFeedbackEmailInput{
+		IsAnonymous:            input.IsAnonymous,
+		ReporterName:           reporterName,
+		ReporterEmail:          reporterEmail,
+		CanBeContacted:         input.CanBeContacted,
+		EasiServicesUsed:       input.EasiServicesUsed,
+		CmsRole:                input.CmsRole,
+		SystemEasyToUse:        input.SystemEasyToUse,
+		DidntNeedHelpAnswering: input.DidntNeedHelpAnswering,
+		QuestionsWereRelevant:  input.QuestionsWereRelevant,
+		HadAccessToInformation: input.HadAccessToInformation,
+		HowSatisfied:           input.HowSatisfied,
+		HowCanWeImprove:        input.HowCanWeImprove,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	msg := "Feedback sent successfully"
+	return &msg, nil
+}
+
+// SendCantFindSomethingEmail is the resolver for the sendCantFindSomethingEmail field.
+func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input model.SendCantFindSomethingEmailInput) (*string, error) {
+	euaUserID := appcontext.Principal(ctx).ID()
+	userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.emailClient.SendCantFindSomethingEmail(ctx, email.SendCantFindSomethingEmailInput{
+		Name:  userInfo.CommonName,
+		Email: userInfo.Email.String(),
+		Body:  input.Body,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	msg := "Feedback sent successfully"
+	return &msg, nil
+}
+
+// SendReportAProblemEmail is the resolver for the sendReportAProblemEmail field.
+func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input model.SendReportAProblemEmailInput) (*string, error) {
+	var reporterName, reporterEmail string
+
+	if !input.IsAnonymous {
+		euaUserID := appcontext.Principal(ctx).ID()
+		userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
+		if err != nil {
+			return nil, err
+		}
+		reporterName = userInfo.CommonName
+		reporterEmail = userInfo.Email.String()
+	}
+
+	err := r.emailClient.SendReportAProblemEmail(ctx, email.SendReportAProblemEmailInput{
+		IsAnonymous:            input.IsAnonymous,
+		ReporterName:           reporterName,
+		ReporterEmail:          reporterEmail,
+		CanBeContacted:         input.CanBeContacted,
+		EasiService:            input.EasiService,
+		WhatWereYouDoing:       input.WhatWereYouDoing,
+		WhatWentWrong:          input.WhatWentWrong,
+		HowSevereWasTheProblem: input.HowSevereWasTheProblem,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	msg := "Feedback sent successfully"
+	return &msg, nil
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
