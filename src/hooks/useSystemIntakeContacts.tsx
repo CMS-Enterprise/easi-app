@@ -1,3 +1,5 @@
+// Custom hook for creating, updating, and deleting system intake contacts
+
 import { useMemo } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 
@@ -18,7 +20,7 @@ import {
 } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
-const contactDetails: SystemIntakeContactProps = {
+const contactDetails = {
   id: '',
   euaUserId: '',
   systemIntakeId: '',
@@ -26,13 +28,13 @@ const contactDetails: SystemIntakeContactProps = {
   role: '',
   commonName: '',
   email: ''
-};
+} as AugmentedSystemIntakeContact;
 
 type FormattedContacts = {
-  businessOwner: SystemIntakeContactProps;
-  productManager: SystemIntakeContactProps;
-  isso: SystemIntakeContactProps;
-  additionalContacts: SystemIntakeContactProps[];
+  businessOwner: AugmentedSystemIntakeContact;
+  productManager: AugmentedSystemIntakeContact;
+  isso: AugmentedSystemIntakeContact;
+  additionalContacts: AugmentedSystemIntakeContact[];
 };
 
 const initialContactsObject: FormattedContacts = {
@@ -42,17 +44,12 @@ const initialContactsObject: FormattedContacts = {
   additionalContacts: []
 };
 
-type Roles = {
-  'Business Owner': 'businessOwner';
-  'Product Manager': 'productManager';
-  ISSO: 'isso';
-};
-
-const rolesMap: Roles = {
+const rolesMap = {
   'Business Owner': 'businessOwner',
   'Product Manager': 'productManager',
   ISSO: 'isso'
-};
+} as const;
+type Role = keyof typeof rolesMap;
 
 export type CreateContactType = (
   contact: SystemIntakeContactProps
@@ -78,6 +75,7 @@ type UseSystemIntakeContactsType = [
 export function useSystemIntakeContacts(
   systemIntakeId: string
 ): UseSystemIntakeContactsType {
+  // GQL query to get intake contacts
   const { data, refetch } = useQuery<GetSystemIntakeContacts>(
     GetSystemIntakeContactsQuery,
     {
@@ -85,24 +83,31 @@ export function useSystemIntakeContacts(
     }
   );
 
-  const contacts = useMemo(() => {
-    const systemIntakeContacts =
+  // Reformats contacts object for use in intake form
+  const contacts = useMemo<FormattedContacts | null>(() => {
+    // Get systemIntakeContacts
+    const systemIntakeContacts: AugmentedSystemIntakeContact[] | undefined =
       data?.systemIntakeContacts?.systemIntakeContacts;
-    const contactsObject = systemIntakeContacts
-      ? systemIntakeContacts.reduce((acc, contact: any) => {
-          if (rolesMap[contact.role as keyof Roles]) {
-            return {
-              ...acc,
-              [rolesMap[contact.role as keyof Roles]]: contact
-            };
-          }
+
+    // Return null if no systemIntakeContacts
+    if (!systemIntakeContacts) return null;
+
+    // Return formatted contacts
+    return systemIntakeContacts.reduce<FormattedContacts>(
+      (contactsObject, contact) => {
+        if (rolesMap[contact.role as Role]) {
           return {
-            ...acc,
-            additionalContacts: [...acc.additionalContacts, contact]
+            ...contactsObject,
+            [rolesMap[contact.role as Role]]: contact
           };
-        }, initialContactsObject)
-      : null;
-    return contactsObject;
+        }
+        return {
+          ...contactsObject,
+          additionalContacts: [...contactsObject.additionalContacts, contact]
+        };
+      },
+      initialContactsObject
+    );
   }, [data?.systemIntakeContacts?.systemIntakeContacts]);
 
   const [
@@ -115,6 +120,7 @@ export function useSystemIntakeContacts(
     deleteSystemIntakeContact
   ] = useMutation<DeleteSystemIntakeContactInput>(DeleteSystemIntakeContact);
 
+  // Create system intake contact
   const createContact = async (contact: SystemIntakeContactProps) => {
     const { euaUserId, component, role } = contact;
     return createSystemIntakeContact({
@@ -135,6 +141,7 @@ export function useSystemIntakeContacts(
       );
   };
 
+  // Update system intake contact
   const updateContact = async (contact: SystemIntakeContactProps) => {
     const { id, euaUserId, component, role } = contact;
     return updateSystemIntakeContact({
@@ -154,6 +161,7 @@ export function useSystemIntakeContacts(
       );
   };
 
+  // Delete system intake contact
   const deleteContact = async (id: string) => {
     return deleteSystemIntakeContact({
       variables: {

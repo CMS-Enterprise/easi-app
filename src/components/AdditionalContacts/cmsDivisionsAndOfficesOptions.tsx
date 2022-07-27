@@ -2,14 +2,13 @@ import React from 'react';
 
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 
+// Creates CMS Divisions and Offices options for intake select fields
 const cmsDivisionsAndOfficesOptions = (fieldId: string) => {
-  return cmsDivisionsAndOffices.map(
-    (office: { acronym: string; name: string }) => (
-      <option key={`${fieldId}-${office.acronym}`} value={office.name}>
-        {office.acronym ? `${office.name} (${office.acronym})` : office.name}
-      </option>
-    )
-  );
+  return cmsDivisionsAndOffices.map(({ acronym, name }) => (
+    <option key={`${fieldId}-${acronym}`} value={name}>
+      {acronym ? `${name} (${acronym})` : name}
+    </option>
+  ));
 };
 
 export default cmsDivisionsAndOfficesOptions;

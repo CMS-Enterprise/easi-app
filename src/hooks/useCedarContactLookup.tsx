@@ -1,3 +1,5 @@
+// Custom hook for retrieving contacts from Cedar by common name
+
 import { useMemo, useState } from 'react';
 import { useQuery } from '@apollo/client';
 
