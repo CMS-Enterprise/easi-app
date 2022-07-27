@@ -294,7 +294,23 @@ export interface RejectIntakeInput {
 }
 
 /**
- * Input to submit an intake for review 
+ * The inputs to the user feedback form
+ */
+export interface SendFeedbackEmailInput {
+  isAnonymous: boolean;
+  canBeContacted: boolean;
+  easiServicesUsed: string[];
+  cmsRole: string;
+  systemEasyToUse: string;
+  didntNeedHelpAnswering: string;
+  questionsWereRelevant: string;
+  hadAccessToInformation: string;
+  howSatisfied: string;
+  howCanWeImprove: string;
+}
+
+/**
+ * Input to submit an intake for review
  */
 export interface SubmitIntakeInput {
   id: UUID;
