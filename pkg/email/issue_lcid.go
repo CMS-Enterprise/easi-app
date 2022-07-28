@@ -91,40 +91,21 @@ func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	var errors *multierror.Error
-
-	for _, recipient := range recipients.RegularRecipientEmails {
-		err = c.sender.Send(
-			ctx,
-			recipient,
-			nil,
-			subject,
-			body,
-		)
-		if err != nil {
-			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-			errors = multierror.Append(errors, notificationErr)
-		}
-	}
-
+	allRecipients := recipients.RegularRecipientEmails
 	if recipients.ShouldNotifyITGovernance {
-		err = c.sender.Send(
-			ctx,
-			c.config.GRTEmail,
-			nil,
-			subject,
-			body,
-		)
-		if err != nil {
-			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-			errors = multierror.Append(errors, notificationErr)
-		}
+		allRecipients = append(allRecipients, c.config.GRTEmail)
 	}
 
 	if recipients.ShouldNotifyITInvestment {
+		allRecipients = append(allRecipients, c.config.ITInvestmentEmail)
+	}
+
+	var errors *multierror.Error
+
+	for _, recipient := range allRecipients {
 		err = c.sender.Send(
 			ctx,
-			c.config.ITInvestmentEmail,
+			recipient,
 			nil,
 			subject,
 			body,
