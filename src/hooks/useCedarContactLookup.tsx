@@ -1,7 +1,7 @@
 // Custom hook for retrieving contacts from Cedar by common name
 
 import { useMemo, useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { ApolloQueryResult, useQuery } from '@apollo/client';
 
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import { GetCedarContacts } from 'queries/types/GetCedarContacts';
@@ -32,7 +32,7 @@ function useCedarContactLookup(
     data?.cedarPersonsByCommonName || []
   );
 
-  const contactByEuaUserId = useMemo(() => {
+  const contactByEuaUserId = useMemo<CedarContactProps | undefined>(() => {
     return data?.cedarPersonsByCommonName.find(
       contact => contact.euaUserId === euaUserId
     );
@@ -44,7 +44,7 @@ function useCedarContactLookup(
 
     if (commonNameQuery.length > 1) {
       refetch({ commonName: commonNameQuery })
-        .then(response => {
+        .then((response: ApolloQueryResult<GetCedarContacts>) => {
           setContacts(
             sortCedarContacts(
               response?.data?.cedarPersonsByCommonName,
@@ -62,7 +62,10 @@ function useCedarContactLookup(
   return euaUserId ? contactByEuaUserId : [contacts, queryCedarContacts];
 }
 
-const sortCedarContacts = (contacts: CedarContactProps[], query: string) => {
+const sortCedarContacts = (
+  contacts: CedarContactProps[],
+  query: string
+): CedarContactProps[] => {
   return [...contacts].sort((a, b) => {
     const result =
       a.commonName.toLowerCase().search(query) -

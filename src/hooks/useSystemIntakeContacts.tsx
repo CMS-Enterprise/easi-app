@@ -1,8 +1,9 @@
 // Custom hook for creating, updating, and deleting system intake contacts
 
 import { useMemo } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { ApolloQueryResult, useMutation, useQuery } from '@apollo/client';
 
+import { initialContactsObject } from 'constants/systemIntake';
 import {
   CreateSystemIntakeContact,
   DeleteSystemIntakeContact,
@@ -18,31 +19,11 @@ import {
   DeleteSystemIntakeContactInput,
   UpdateSystemIntakeContactInput
 } from 'types/graphql-global-types';
-import { SystemIntakeContactProps } from 'types/systemIntake';
-
-const contactDetails = {
-  id: '',
-  euaUserId: '',
-  systemIntakeId: '',
-  component: '',
-  role: '',
-  commonName: '',
-  email: ''
-} as AugmentedSystemIntakeContact;
-
-type FormattedContacts = {
-  businessOwner: AugmentedSystemIntakeContact;
-  productManager: AugmentedSystemIntakeContact;
-  isso: AugmentedSystemIntakeContact;
-  additionalContacts: AugmentedSystemIntakeContact[];
-};
-
-const initialContactsObject: FormattedContacts = {
-  businessOwner: { ...contactDetails, role: 'Business Owner' },
-  productManager: { ...contactDetails, role: 'Product Manager' },
-  isso: { ...contactDetails, role: 'ISSO' },
-  additionalContacts: []
-};
+import {
+  FormattedContacts,
+  SystemIntakeContactProps,
+  UseSystemIntakeContactsType
+} from 'types/systemIntake';
 
 const rolesMap = {
   'Business Owner': 'businessOwner',
@@ -51,28 +32,7 @@ const rolesMap = {
 } as const;
 type Role = keyof typeof rolesMap;
 
-export type CreateContactType = (
-  contact: SystemIntakeContactProps
-) => Promise<AugmentedSystemIntakeContact | undefined>;
-
-export type UpdateContactType = (
-  contact: SystemIntakeContactProps
-) => Promise<AugmentedSystemIntakeContact[] | undefined>;
-
-export type DeleteContactType = (
-  id: string
-) => Promise<AugmentedSystemIntakeContact[] | undefined>;
-
-type UseSystemIntakeContactsType = [
-  FormattedContacts | null,
-  {
-    createContact: CreateContactType;
-    updateContact: UpdateContactType;
-    deleteContact: DeleteContactType;
-  }
-];
-
-export function useSystemIntakeContacts(
+function useSystemIntakeContacts(
   systemIntakeId: string
 ): UseSystemIntakeContactsType {
   // GQL query to get intake contacts
@@ -134,7 +94,7 @@ export function useSystemIntakeContacts(
       }
     })
       .then(refetch)
-      .then(response =>
+      .then((response: ApolloQueryResult<GetSystemIntakeContacts>) =>
         response?.data?.systemIntakeContacts?.systemIntakeContacts.find(
           obj => obj.role === role
         )
@@ -157,7 +117,8 @@ export function useSystemIntakeContacts(
     })
       .then(refetch)
       .then(
-        response => response?.data?.systemIntakeContacts?.systemIntakeContacts
+        (response: ApolloQueryResult<GetSystemIntakeContacts>) =>
+          response?.data?.systemIntakeContacts?.systemIntakeContacts
       );
   };
 
@@ -172,9 +133,12 @@ export function useSystemIntakeContacts(
     })
       .then(refetch)
       .then(
-        response => response?.data?.systemIntakeContacts?.systemIntakeContacts
+        (response: ApolloQueryResult<GetSystemIntakeContacts>) =>
+          response?.data?.systemIntakeContacts?.systemIntakeContacts
       );
   };
 
   return [contacts, { createContact, updateContact, deleteContact }];
 }
+
+export default useSystemIntakeContacts;

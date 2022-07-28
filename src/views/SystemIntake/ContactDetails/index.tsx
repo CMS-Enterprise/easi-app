@@ -26,7 +26,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import { useSystemIntakeContacts } from 'hooks/useSystemIntakeContacts';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -36,7 +36,9 @@ import {
 } from 'queries/types/UpdateSystemIntakeContactDetails';
 import {
   CedarContactProps,
-  SystemIntakeContactProps
+  ContactDetailsForm,
+  SystemIntakeContactProps,
+  SystemIntakeRoleKeys
 } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -44,26 +46,6 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 import './index.scss';
-
-export type ContactDetailsForm = {
-  requester: {
-    name: string;
-    component: string;
-  };
-  businessOwner: SystemIntakeContactProps;
-  productManager: SystemIntakeContactProps;
-  isso: SystemIntakeContactProps & { isPresent: boolean };
-  governanceTeams: {
-    isPresent: boolean | null;
-    teams:
-      | {
-          collaborator: string;
-          key: string;
-          name: string;
-        }[]
-      | null;
-  };
-};
 
 type ContactDetailsProps = {
   systemIntake: SystemIntake;
@@ -150,9 +132,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     values: ContactDetailsForm,
     { setFieldValue }: FormikHelpers<ContactDetailsForm>
   ) => {
-    const updateSystemIntakeContact = async (
-      type: 'businessOwner' | 'productManager' | 'isso'
-    ) => {
+    const updateSystemIntakeContact = async (type: SystemIntakeRoleKeys) => {
       if (values[type].euaUserId && values[type].component) {
         if (values?.[type].id) {
           return updateContact({ ...values[type] });
@@ -248,16 +228,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         const setContactFieldsFromName = (
           contact: CedarContactProps | null,
-          role: 'businessOwner' | 'productManager' | 'isso'
+          role: SystemIntakeRoleKeys
         ) => {
           setFieldValue(`${role}.commonName`, contact?.commonName || '');
           setFieldValue(`${role}.euaUserId`, contact?.euaUserId || '');
           setFieldValue(`${role}.email`, contact?.email || '');
         };
 
-        const clearContact = (
-          role: 'businessOwner' | 'productManager' | 'isso'
-        ) => {
+        const clearContact = (role: SystemIntakeRoleKeys) => {
           setFieldValue(role, {
             ...values[role],
             euaUserId: '',
@@ -364,7 +342,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     }}
                   >
                     <option value="" disabled>
-                      Select an option
+                      {t('Select an option')}
                     </option>
                     {cmsDivisionsAndOfficesOptions('RequesterComponent')}
                   </Field>
@@ -437,7 +415,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     name="businessOwner.component"
                   >
                     <option value="" disabled>
-                      Select an option
+                      {t('Select an option')}
                     </option>
                     {cmsDivisionsAndOfficesOptions('BusinessOwnerComponent')}
                   </Field>
@@ -639,7 +617,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             name="isso.component"
                           >
                             <option value="" disabled>
-                              Select an option
+                              {t('Select an option')}
                             </option>
                             {cmsDivisionsAndOfficesOptions('IssoComponent')}
                           </Field>

@@ -5,27 +5,17 @@ import { Button, Dropdown, Label } from '@trussworks/react-uswds';
 import CedarContactSelect from 'components/CedarContactSelect';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import contactRoles from 'constants/enums/contactRoles';
+import { initialContactDetails } from 'constants/systemIntake';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import {
   CreateContactType,
   DeleteContactType,
-  UpdateContactType,
-  useSystemIntakeContacts
-} from 'hooks/useSystemIntakeContacts';
-import { SystemIntakeContactProps } from 'types/systemIntake';
+  SystemIntakeContactProps,
+  UpdateContactType
+} from 'types/systemIntake';
 
 import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
-
-const contactRoleOptions = [
-  'Product Owner',
-  'System Owner',
-  'System Maintainer',
-  "Contracting Officer's Representative (COR)",
-  'Cloud Navigator',
-  'Privacy Advisor',
-  'CRA',
-  'Other',
-  'Unknown'
-];
 
 const Contact = ({
   contact,
@@ -65,15 +55,6 @@ const Contact = ({
       </div>
     </div>
   );
-};
-
-const initialContact = {
-  euaUserId: '',
-  commonName: '',
-  email: '',
-  component: '',
-  role: '',
-  id: ''
 };
 
 const ContactForm = ({
@@ -183,7 +164,7 @@ const ContactForm = ({
           <option value="" disabled>
             {t('contactDetails.additionalContacts.select')}
           </option>
-          {contactRoleOptions.map(option => (
+          {contactRoles.map(option => (
             <option key={option} value={option}>
               {t(option)}
             </option>
@@ -260,7 +241,7 @@ export default function AdditionalContacts({
               return (
                 <Contact
                   key={contact.euaUserId}
-                  contact={contact}
+                  contact={contact as SystemIntakeContactProps}
                   deleteContact={deleteContact}
                   setActiveContact={setActiveContact}
                 />
@@ -283,7 +264,10 @@ export default function AdditionalContacts({
           type="button"
           outline
           onClick={() =>
-            setActiveContact({ ...initialContact, systemIntakeId })
+            setActiveContact({
+              ...(initialContactDetails as SystemIntakeContactProps),
+              systemIntakeId
+            })
           }
           disabled={!!activeContact?.id}
         >
