@@ -102,21 +102,27 @@ func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 		allRecipients = append(allRecipients, c.config.ITInvestmentEmail)
 	}
 
-	var errors *multierror.Error
-
+	errorGroup := multierror.Group{}
 	for _, recipient := range allRecipients {
-		err = c.sender.Send(
-			ctx,
-			recipient,
-			nil,
-			subject,
-			body,
-		)
-		if err != nil {
-			notificationErr := &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-			errors = multierror.Append(errors, notificationErr)
-		}
+		// make a copy of recipient for the closure passed in to errorGroup.Go(); this copy won't change as we iterate over allRecipients
+		// see https://go.dev/doc/faq#closures_and_goroutines
+		recipient := recipient
+
+		errorGroup.Go(func() error {
+			// make sure to use := here to create a new (local) err, instead of reusing the same err across goroutines
+			err := c.sender.Send(
+				ctx,
+				recipient,
+				nil,
+				subject,
+				body,
+			)
+			if err != nil {
+				return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+			}
+			return nil
+		})
 	}
 
-	return errors.ErrorOrNil()
+	return errorGroup.Wait().ErrorOrNil()
 }

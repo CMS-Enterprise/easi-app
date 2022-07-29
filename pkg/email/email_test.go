@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"io"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -42,7 +43,8 @@ type sentEmail struct {
 }
 
 type mockMultipleRecipientsSender struct {
-	SentEmails []sentEmail
+	SentEmails      []sentEmail
+	sentEmailsMutex sync.Mutex // needed to guard access to sentEmails when client methods send emails concurrently
 }
 
 func (s *mockMultipleRecipientsSender) AllToRecipients() []models.EmailAddress {
@@ -64,7 +66,9 @@ func (s *mockMultipleRecipientsSender) Send(ctx context.Context, toAddress model
 		email.CCRecipients = []models.EmailAddress{*ccAddress}
 	}
 
+	s.sentEmailsMutex.Lock()
 	s.SentEmails = append(s.SentEmails, email)
+	s.sentEmailsMutex.Unlock()
 
 	return nil
 }
