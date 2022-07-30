@@ -58,8 +58,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const history = useHistory();
   const { authState, oktaAuth } = useOktaAuth();
   const [intakeRequester, setIntakeRequester] = useState<CedarContactProps>({
-    commonName: requester.name,
-    euaUserId: systemIntake.euaUserId,
+    commonName: '',
+    euaUserId: '',
     email: ''
   });
 
@@ -177,22 +177,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   };
 
   useEffect(() => {
-    let isMounted = true;
-    if (authState?.isAuthenticated) {
+    if (authState?.isAuthenticated && !intakeRequester.euaUserId) {
       oktaAuth.getUser().then((info: any) => {
-        if (isMounted) {
-          setIntakeRequester({
-            commonName: requester.name,
-            euaUserId: systemIntake.euaUserId,
-            email: info.email
-          });
-        }
+        setIntakeRequester({
+          commonName: info.name,
+          euaUserId: systemIntake.euaUserId,
+          email: info?.email
+        });
       });
     }
-    return () => {
-      isMounted = false;
-    };
-  }, [authState, oktaAuth, requester.name, systemIntake.euaUserId]);
+  }, [authState, oktaAuth, systemIntake.euaUserId, intakeRequester]);
 
   useEffect(() => {
     if (
