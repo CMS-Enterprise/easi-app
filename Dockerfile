@@ -26,8 +26,8 @@ RUN update-ca-certificates
 FROM modules AS dev
 
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
-RUN go intstall golang.org/x/tools/gopls@latest
-RUN go intstall github.com/cosmtrek/air@4612c12f1ed7c899314b8430bc1d841ca2cb061a
+RUN go install golang.org/x/tools/gopls@latest
+RUN go install github.com/cosmtrek/air@4612c12f1ed7c899314b8430bc1d841ca2cb061a
 
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs
 
