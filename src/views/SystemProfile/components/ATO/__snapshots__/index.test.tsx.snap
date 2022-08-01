@@ -16,14 +16,14 @@ exports[`ATO subpage for System Profile matches snapshot 1`] = `
       data-testid="CardGroup"
     >
       <li
-        class="usa-card grid-col-12 bg-warning"
+        class="usa-card grid-col-12 bg-error-dark"
         data-testid="Card"
       >
         <div
           class="usa-card__container"
         >
           <header
-            class="usa-card__header padding-2 padding-bottom-0 text-top text-base-darkest"
+            class="usa-card__header padding-2 padding-bottom-0 text-top text-white"
             data-testid="CardHeader"
           >
             <dt
@@ -34,14 +34,14 @@ exports[`ATO subpage for System Profile matches snapshot 1`] = `
             <dd
               class="description-definition margin-0 line-height-body-3 font-body-lg text-bold margin-bottom-2"
             >
-              Due Soon
+              Expired
             </dd>
             <div
-              class="easi-divider grid-col-12 border-warning-dark"
+              class="easi-divider grid-col-12 border-error-darker"
             />
           </header>
           <div
-            class="usa-card__footer padding-2 text-base-darkest"
+            class="usa-card__footer padding-2 text-white"
             data-testid="CardFooter"
           >
             <dt
