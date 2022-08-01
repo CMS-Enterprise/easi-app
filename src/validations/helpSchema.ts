@@ -6,12 +6,12 @@ import {
   SendFeedbackOptionKey,
   sendFeedbackOptions
 } from 'constants/helpFeedback';
+import helpText from 'i18n/en-US/help';
 import { SendFeedbackEmailInput } from 'types/graphql-global-types';
 import { SendFeedbackEmailForm } from 'types/helpFeedback';
 
-// todo consider using exports from i18
-export const msgSelect = 'Please make a selection';
-export const msgExplain = 'Please include an explanation';
+const msgSelect = helpText.sendFeedback.errorMessage.select;
+const msgExplain = helpText.sendFeedback.errorMessage.explain;
 
 function getFeedbackOptionValues(
   options: Readonly<SendFeedbackOptionKey[]>

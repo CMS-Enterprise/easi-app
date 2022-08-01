@@ -6,6 +6,7 @@ import {
   SendFeedbackOptionKey,
   sendFeedbackOptions
 } from 'constants/helpFeedback';
+import helpText from 'i18n/en-US/help';
 import {
   SendFeedbackEmailForm,
   SendFeedbackOptionFieldForTextInputKey
@@ -13,7 +14,6 @@ import {
 import { parseForm } from 'views/Help/SendFeedback';
 
 import {
-  msgExplain,
   sendFeedbackEmailFormSchema,
   sendFeedbackEmailInputSchema
 } from './helpSchema';
@@ -65,7 +65,7 @@ describe('Help forms schema validation', () => {
           [`${inputKey}${ADDITIONAL_TEXT_INPUT_SUFFIX}`]: ''
         };
         return sendFeedbackEmailFormSchema.validate(form);
-      }).rejects.toThrow(msgExplain);
+      }).rejects.toThrow(helpText.sendFeedback.errorMessage.explain);
     }
   );
 
