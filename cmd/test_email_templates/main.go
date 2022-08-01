@@ -33,6 +33,7 @@ func createEmailClient() email.Client {
 		GRTEmail:               models.NewEmailAddress("grt_email@cms.gov"),
 		ITInvestmentEmail:      models.NewEmailAddress("it_investment_email@cms.gov"),
 		AccessibilityTeamEmail: models.NewEmailAddress("508_team@cms.gov"),
+		EASIHelpEmail:          models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
 		URLHost:                os.Getenv("CLIENT_HOSTNAME"),
 		URLScheme:              os.Getenv("CLIENT_PROTOCOL"),
 		TemplateDirectory:      os.Getenv("EMAIL_TEMPLATE_DIR"),
