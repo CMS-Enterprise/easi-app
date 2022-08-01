@@ -1,6 +1,7 @@
 import { SendFeedbackEmailInput } from './graphql-global-types';
 
-export type SendFeedbackOptionsFieldKey = Extract<
+/** All option selection fields  */
+export type SendFeedbackOptionFieldKey = Extract<
   keyof SendFeedbackEmailInput,
   | 'isAnonymous'
   | 'canBeContacted'
@@ -12,8 +13,8 @@ export type SendFeedbackOptionsFieldKey = Extract<
   | 'howSatisfied'
 >;
 
-// todo rename, named with text but doesn't actually have it
-export type SendFeedbackOptionsWithTextFieldKey = Extract<
+/** Selection field keys for associated text fields only */
+export type SendFeedbackOptionFieldForTextInputKey = Extract<
   keyof SendFeedbackEmailInput,
   | 'easiServicesUsed'
   | 'systemEasyToUse'
@@ -22,8 +23,9 @@ export type SendFeedbackOptionsWithTextFieldKey = Extract<
   | 'hadAccessToInformation'
 >;
 
-export interface SendFeedbackOptionsWithTextFields
-  extends Pick<SendFeedbackEmailInput, SendFeedbackOptionsWithTextFieldKey> {
+/** Form fields with associated additional text fields */
+export interface SendFeedbackOptionFieldsWithTextInput
+  extends Pick<SendFeedbackEmailInput, SendFeedbackOptionFieldForTextInputKey> {
   easiServicesUsedAdditionalText: string;
   systemEasyToUseAdditionalText: string;
   didntNeedHelpAnsweringAdditionalText: string;
@@ -31,5 +33,6 @@ export interface SendFeedbackOptionsWithTextFields
   hadAccessToInformationAdditionalText: string;
 }
 
+/** The final form with all ui fields */
 export type SendFeedbackEmailForm = SendFeedbackEmailInput &
-  SendFeedbackOptionsWithTextFields;
+  SendFeedbackOptionFieldsWithTextInput;

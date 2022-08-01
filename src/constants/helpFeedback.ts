@@ -1,6 +1,6 @@
 import {
-  SendFeedbackOptionsFieldKey,
-  SendFeedbackOptionsWithTextFieldKey
+  SendFeedbackOptionFieldForTextInputKey,
+  SendFeedbackOptionFieldKey
 } from 'types/helpFeedback';
 
 /** Field names with this suffix are not part of the backend form input data. */
@@ -41,63 +41,37 @@ export const easiServiceOptionKeys: Readonly<SendFeedbackOptionKey[]> = [
 ] as const;
 
 export const sendFeedbackOptionFields: Record<
-  SendFeedbackOptionsFieldKey,
-  { options: Readonly<SendFeedbackOptionKey[]> }
+  SendFeedbackOptionFieldKey,
+  Readonly<SendFeedbackOptionKey[]>
 > = {
-  isAnonymous: {
-    options: ['yes', 'no']
-  },
-  canBeContacted: {
-    options: ['yes', 'no']
-  },
-  easiServicesUsed: {
-    options: ['itGovernance', 'section508', 'systems', 'help', 'other']
-  },
-  systemEasyToUse: {
-    options: ['agree', 'disagree', 'imNotSure']
-  },
-  didntNeedHelpAnswering: {
-    options: ['agree', 'disagree', 'didntFillForm', 'imNotSure']
-  },
-  questionsWereRelevant: {
-    options: ['agree', 'disagree', 'didntFillForm', 'imNotSure']
-  },
-  hadAccessToInformation: {
-    options: ['agree', 'disagree', 'didntFillForm', 'imNotSure']
-  },
-  howSatisfied: {
-    options: [
-      'verySatisfied',
-      'satisfied',
-      'neutral',
-      'dissatisfied',
-      'veryDissatisfied'
-    ]
-  }
+  isAnonymous: ['yes', 'no'],
+  canBeContacted: ['yes', 'no'],
+  easiServicesUsed: ['itGovernance', 'section508', 'systems', 'help', 'other'],
+  systemEasyToUse: ['agree', 'disagree', 'imNotSure'],
+  didntNeedHelpAnswering: ['agree', 'disagree', 'didntFillForm', 'imNotSure'],
+  questionsWereRelevant: ['agree', 'disagree', 'didntFillForm', 'imNotSure'],
+  hadAccessToInformation: ['agree', 'disagree', 'didntFillForm', 'imNotSure'],
+  howSatisfied: [
+    'verySatisfied',
+    'satisfied',
+    'neutral',
+    'dissatisfied',
+    'veryDissatisfied'
+  ]
 } as const;
 
 /**
  * Option group fields with associated optional text input fields.
- * `optionForTextInput` is the option value key of the original field.
+ * These are the option value keys associated to their original fields.
  * Selecting the option indicates the additional text input field is in use.
  */
-export const sendFeedbackOptionTextInputFields: Record<
-  SendFeedbackOptionsWithTextFieldKey,
-  { optionForTextInput: SendFeedbackOptionKey }
+export const sendFeedbackOptionFieldsForTextInput: Record<
+  SendFeedbackOptionFieldForTextInputKey,
+  SendFeedbackOptionKey
 > = {
-  easiServicesUsed: {
-    optionForTextInput: 'other'
-  },
-  systemEasyToUse: {
-    optionForTextInput: 'imNotSure'
-  },
-  didntNeedHelpAnswering: {
-    optionForTextInput: 'imNotSure'
-  },
-  questionsWereRelevant: {
-    optionForTextInput: 'imNotSure'
-  },
-  hadAccessToInformation: {
-    optionForTextInput: 'imNotSure'
-  }
+  easiServicesUsed: 'other',
+  systemEasyToUse: 'imNotSure',
+  didntNeedHelpAnswering: 'imNotSure',
+  questionsWereRelevant: 'imNotSure',
+  hadAccessToInformation: 'imNotSure'
 } as const;

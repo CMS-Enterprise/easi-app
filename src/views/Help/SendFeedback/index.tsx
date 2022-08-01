@@ -28,9 +28,9 @@ import {
   ADDITIONAL_TEXT_INPUT_SUFFIX,
   easiServiceOptionKeys,
   sendFeedbackOptionFields,
+  sendFeedbackOptionFieldsForTextInput,
   SendFeedbackOptionKey,
-  sendFeedbackOptions,
-  sendFeedbackOptionTextInputFields
+  sendFeedbackOptions
 } from 'constants/helpFeedback';
 import SendFeedbackEmailQuery from 'queries/SendFeedbackEmailQuery';
 import {
@@ -40,8 +40,8 @@ import {
 import { SendFeedbackEmailInput } from 'types/graphql-global-types';
 import {
   SendFeedbackEmailForm,
-  SendFeedbackOptionsWithTextFieldKey,
-  SendFeedbackOptionsWithTextFields
+  SendFeedbackOptionFieldForTextInputKey,
+  SendFeedbackOptionFieldsWithTextInput
 } from 'types/helpFeedback';
 import {
   sendFeedbackEmailFormSchema,
@@ -181,7 +181,7 @@ const EasiServicesUsedField = ({ mode }: { mode: FormMode }) => {
   const { values } = useFormikContext<SendFeedbackEmailForm>();
 
   const name: keyof SendFeedbackEmailInput = 'easiServicesUsed';
-  const optionTextFieldName: keyof SendFeedbackOptionsWithTextFields = `${name}${ADDITIONAL_TEXT_INPUT_SUFFIX}`;
+  const optionTextFieldName: keyof SendFeedbackOptionFieldsWithTextInput = `${name}${ADDITIONAL_TEXT_INPUT_SUFFIX}`;
 
   /**
    * Report a problem uses a radio group,
@@ -242,7 +242,7 @@ export async function parseForm(
 
       const easiServicesUsedOptionValue =
         sendFeedbackOptions[
-          sendFeedbackOptionTextInputFields.easiServicesUsed.optionForTextInput
+          sendFeedbackOptionFieldsForTextInput.easiServicesUsed
         ];
 
       // Check the selected options list to see if the additional text is enabled
@@ -258,14 +258,15 @@ export async function parseForm(
     }
 
     // Parse additional text fields for option groups with one selection
-    else if (field in sendFeedbackOptionTextInputFields) {
-      const additional: keyof SendFeedbackOptionsWithTextFields = `${
-        field as SendFeedbackOptionsWithTextFieldKey
+    else if (field in sendFeedbackOptionFieldsForTextInput) {
+      const additional: keyof SendFeedbackOptionFieldsWithTextInput = `${
+        field as SendFeedbackOptionFieldForTextInputKey
       }${ADDITIONAL_TEXT_INPUT_SUFFIX}`;
 
-      const { optionForTextInput } = sendFeedbackOptionTextInputFields[
-        field as SendFeedbackOptionsWithTextFieldKey
-      ];
+      const optionForTextInput =
+        sendFeedbackOptionFieldsForTextInput[
+          field as SendFeedbackOptionFieldForTextInputKey
+        ];
 
       // Combine the original option value with additional text if
       // the field group option for the additional text is selected
@@ -332,7 +333,6 @@ const SendFeedback = () => {
             onSubmit={onSubmit}
           >
             {({
-              // touched,
               errors,
               isSubmitting,
               resetForm,
@@ -347,7 +347,7 @@ const SendFeedback = () => {
               // console.log('submitting', isSubmitting, submitCount);
               return (
                 <Form>
-                  <FormGroup /* error={'isAnonymous' in errors} */>
+                  <FormGroup>
                     <Fieldset
                       legend={
                         <>
@@ -379,7 +379,7 @@ const SendFeedback = () => {
                   </FormGroup>
                   <CanBeContactedField />
                   <EasiServicesUsedField mode="sendFeedback" />
-                  <FormGroup /* error={'cmsRole' in errors} */>
+                  <FormGroup>
                     <Label htmlFor="cmsRole">
                       {t('sendFeedback.labels.cmsRole')}
                     </Label>
@@ -388,47 +388,37 @@ const SendFeedback = () => {
                   </FormGroup>
                   <RadioOptionGroupWithAdditionalText
                     name="systemEasyToUse"
-                    options={sendFeedbackOptionFields.systemEasyToUse.options}
+                    options={sendFeedbackOptionFields.systemEasyToUse}
                     optionForTextInput={
-                      sendFeedbackOptionTextInputFields.systemEasyToUse
-                        .optionForTextInput
+                      sendFeedbackOptionFieldsForTextInput.systemEasyToUse
                     }
                   />
                   <RadioOptionGroupWithAdditionalText
                     name="didntNeedHelpAnswering"
-                    options={
-                      sendFeedbackOptionFields.didntNeedHelpAnswering.options
-                    }
+                    options={sendFeedbackOptionFields.didntNeedHelpAnswering}
                     optionForTextInput={
-                      sendFeedbackOptionTextInputFields.didntNeedHelpAnswering
-                        .optionForTextInput
+                      sendFeedbackOptionFieldsForTextInput.didntNeedHelpAnswering
                     }
                   />
                   <RadioOptionGroupWithAdditionalText
                     name="questionsWereRelevant"
-                    options={
-                      sendFeedbackOptionFields.questionsWereRelevant.options
-                    }
+                    options={sendFeedbackOptionFields.questionsWereRelevant}
                     optionForTextInput={
-                      sendFeedbackOptionTextInputFields.questionsWereRelevant
-                        .optionForTextInput
+                      sendFeedbackOptionFieldsForTextInput.questionsWereRelevant
                     }
                   />
                   <RadioOptionGroupWithAdditionalText
                     name="hadAccessToInformation"
-                    options={
-                      sendFeedbackOptionFields.hadAccessToInformation.options
-                    }
+                    options={sendFeedbackOptionFields.hadAccessToInformation}
                     optionForTextInput={
-                      sendFeedbackOptionTextInputFields.hadAccessToInformation
-                        .optionForTextInput
+                      sendFeedbackOptionFieldsForTextInput.hadAccessToInformation
                     }
                   />
                   <RadioOptionGroupWithAdditionalText
                     name="howSatisfied"
-                    options={sendFeedbackOptionFields.howSatisfied.options}
+                    options={sendFeedbackOptionFields.howSatisfied}
                   />
-                  <FormGroup /* error={'howCanWeImprove' in errors} */>
+                  <FormGroup>
                     <Label htmlFor="howCanWeImprove">
                       {t('sendFeedback.labels.howCanWeImprove')}
                     </Label>

@@ -77,9 +77,7 @@ export const sendFeedbackEmailFormSchema: Yup.SchemaOf<SendFeedbackEmailForm> = 
     systemEasyToUse: Yup.string()
       .default('')
       .oneOf(
-        getFeedbackOptionValues(
-          sendFeedbackOptionFields.systemEasyToUse.options
-        ),
+        getFeedbackOptionValues(sendFeedbackOptionFields.systemEasyToUse),
         msgSelect
       )
       .required(),
@@ -94,7 +92,7 @@ export const sendFeedbackEmailFormSchema: Yup.SchemaOf<SendFeedbackEmailForm> = 
       .default('')
       .oneOf(
         getFeedbackOptionValues(
-          sendFeedbackOptionFields.didntNeedHelpAnswering.options
+          sendFeedbackOptionFields.didntNeedHelpAnswering
         ),
         msgSelect
       )
@@ -109,9 +107,7 @@ export const sendFeedbackEmailFormSchema: Yup.SchemaOf<SendFeedbackEmailForm> = 
     questionsWereRelevant: Yup.string()
       .default('')
       .oneOf(
-        getFeedbackOptionValues(
-          sendFeedbackOptionFields.questionsWereRelevant.options
-        ),
+        getFeedbackOptionValues(sendFeedbackOptionFields.questionsWereRelevant),
         msgSelect
       )
       .required(),
@@ -126,7 +122,7 @@ export const sendFeedbackEmailFormSchema: Yup.SchemaOf<SendFeedbackEmailForm> = 
       .default('')
       .oneOf(
         getFeedbackOptionValues(
-          sendFeedbackOptionFields.hadAccessToInformation.options
+          sendFeedbackOptionFields.hadAccessToInformation
         ),
         msgSelect
       )
@@ -141,7 +137,7 @@ export const sendFeedbackEmailFormSchema: Yup.SchemaOf<SendFeedbackEmailForm> = 
     howSatisfied: Yup.string()
       .default('')
       .oneOf(
-        getFeedbackOptionValues(sendFeedbackOptionFields.howSatisfied.options),
+        getFeedbackOptionValues(sendFeedbackOptionFields.howSatisfied),
         msgSelect
       )
       .required(),

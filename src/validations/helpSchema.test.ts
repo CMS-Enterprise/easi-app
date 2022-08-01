@@ -2,13 +2,13 @@ import { cloneDeep } from 'lodash';
 
 import {
   ADDITIONAL_TEXT_INPUT_SUFFIX,
+  sendFeedbackOptionFieldsForTextInput,
   SendFeedbackOptionKey,
-  sendFeedbackOptions,
-  sendFeedbackOptionTextInputFields
+  sendFeedbackOptions
 } from 'constants/helpFeedback';
 import {
   SendFeedbackEmailForm,
-  SendFeedbackOptionsWithTextFieldKey
+  SendFeedbackOptionFieldForTextInputKey
 } from 'types/helpFeedback';
 import { parseForm } from 'views/Help/SendFeedback';
 
@@ -43,14 +43,14 @@ describe('Help forms schema validation', () => {
     await expect(sendFeedbackEmailInputSchema.validate({})).rejects.toThrow();
   });
 
-  it.each(Object.keys(sendFeedbackOptionTextInputFields))(
+  it.each(Object.keys(sendFeedbackOptionFieldsForTextInput))(
     'errors on empty additional text field: %s',
     async inputKey => {
       let optionVal: any =
         sendFeedbackOptions[
-          sendFeedbackOptionTextInputFields[
-            inputKey as SendFeedbackOptionsWithTextFieldKey
-          ].optionForTextInput as SendFeedbackOptionKey
+          sendFeedbackOptionFieldsForTextInput[
+            inputKey as SendFeedbackOptionFieldForTextInputKey
+          ] as SendFeedbackOptionKey
         ];
 
       // `easiServicesUsed` option value is in a list
