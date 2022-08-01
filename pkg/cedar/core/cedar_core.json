@@ -1,7 +1,7 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API's. These reusable API's are mainly used in support of higher level API's. See the API resources section for a list of available interfaces and operations.\n",
+    "description" : "# Introduction\n \n    The CMS Enterprise Data and Analytics Repository (CEDAR) Core API provides the CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User objects.\n\n# Specification\n\nThis API is published in Swagger JSON 2.0 format and can be exported for consumption. For each of the resource, API provides **GET**, **POST**, **DELETE** operations. And to invoke, any of these methods, you can request for an `access-token`. In addition, POST & DELETE methods are not permitted in Production.\n",
     "version" : "1.0.0",
     "title" : "CEDAR Core API",
     "termsOfService" : "https://www.cedardev.cms.gov/",
@@ -9,65 +9,65 @@
       "email" : "EnterpriseArchitecture@cms.hhs.gov"
     }
   },
-  "host" : "webmethods-apigw.cedardev.cms.gov",
+  "host" : "webmethods-apigw.cedarimpl.cms.gov",
   "basePath" : "/gateway/CEDAR Core API/1.0.0",
   "tags" : [ {
-    "name" : "authority to operate",
-    "description" : ""
-  }, {
-    "name" : "cost type",
-    "description" : ""
-  }, {
-    "name" : "domain model",
-    "description" : ""
-  }, {
-    "name" : "organization",
-    "description" : ""
-  }, {
-    "name" : "support contact",
-    "description" : ""
-  }, {
-    "name" : "threat",
-    "description" : ""
-  }, {
     "name" : "url",
     "description" : ""
   }, {
+    "name" : "authority to operate",
+    "description" : "CMS authority to operate (ATO) data from CFACTS"
+  }, {
     "name" : "budget",
-    "description" : ""
+    "description" : "CMS budget projects funding a particular system"
   }, {
     "name" : "component",
-    "description" : ""
+    "description" : "CMS components"
   }, {
     "name" : "contract",
-    "description" : ""
+    "description" : "CMS contracts funded by budget projects"
+  }, {
+    "name" : "cost type",
+    "description" : "CMS cost types"
   }, {
     "name" : "data center",
-    "description" : ""
+    "description" : "Data centers hosting CMS systems"
   }, {
     "name" : "deployment",
-    "description" : ""
+    "description" : "CMS deployment of a system"
+  }, {
+    "name" : "domain model",
+    "description" : "Domain heirarchy areas that categorize CMS and Federal agencies' assets"
   }, {
     "name" : "enumeration",
-    "description" : ""
+    "description" : "CMS system enumerations"
   }, {
     "name" : "exchange",
-    "description" : ""
+    "description" : "CMS data exchanges"
   }, {
-    "name" : "stakeholder",
-    "description" : ""
-  }, {
-    "name" : "role",
-    "description" : ""
+    "name" : "organization",
+    "description" : "The official CMS organizational chart"
   }, {
     "name" : "person",
-    "description" : ""
+    "description" : "CMS people"
+  }, {
+    "name" : "role",
+    "description" : "CEDAR role assignments and types"
+  }, {
+    "name" : "stakeholder",
+    "description" : "CMS stakeholders"
+  }, {
+    "name" : "support contact",
+    "description" : "CMS suport contacts"
   }, {
     "name" : "system",
-    "description" : ""
+    "description" : "CMS system information"
+  }, {
+    "name" : "threat",
+    "description" : "Threats to CMS assets"
   }, {
     "name" : "user",
-    "description" : ""
+    "description" : "CEDAR system users"
   } ],
   "schemes" : [ "http" ],
   "security" : [ {
