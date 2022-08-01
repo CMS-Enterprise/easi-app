@@ -29,8 +29,9 @@ const FundingSourcesListItem = ({
   fundingNumber: string;
   fundingSources: (string | null)[];
   handleDelete: () => void;
-  handleEdit: () => void; // TODO: Fix handleEdit
+  handleEdit: () => void;
 }) => {
+  const { t } = useTranslation();
   return (
     <li key={fundingNumber}>
       <h4 className="margin-bottom-1">
@@ -39,7 +40,7 @@ const FundingSourcesListItem = ({
       {fundingSources.map(source => (
         <MultiSelectTag
           key={`${fundingNumber}-${source}`}
-          label={source!}
+          label={t(source!)}
           className="padding-x-1 padding-y-05"
         />
       ))}
@@ -51,7 +52,7 @@ const FundingSourcesListItem = ({
           type="button"
           className="margin-right-1"
         >
-          Edit
+          {t('Edit')}
         </Button>
         <Button
           unstyled
@@ -60,7 +61,7 @@ const FundingSourcesListItem = ({
           type="button"
           className="text-error"
         >
-          Delete
+          {t('Delete')}
         </Button>
       </div>
     </li>
@@ -87,7 +88,7 @@ const FundingSourceForm = ({
   updateFundingSources,
   fundingSourceOptions
 }: FundingSourceFormProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('intake');
   const initialFundingNumber = useRef(activeFundingSource.fundingNumber);
   const [errors, setErrors] = useState({
     fundingNumber: '',
@@ -100,12 +101,16 @@ const FundingSourceForm = ({
 
     // Check funding number is 6 digits
     if (fundingNumber.length !== 6) {
-      updatedErrors.fundingNumber = 'Funding number must be exactly 6 digits';
+      updatedErrors.fundingNumber = t(
+        'contractDetails.fundingSources.errors.fundingNumberMinDigits'
+      );
     }
 
     // Check if funding number is a number
     if (fundingNumber.length > 0 && !fundingNumber.match(/^\d+$/)) {
-      updatedErrors.fundingNumber = 'Funding number can only contain digits';
+      updatedErrors.fundingNumber = t(
+        'contractDetails.fundingSources.errors.fundingNumberDigits'
+      );
     }
 
     // Check if funding number is unique
@@ -116,12 +121,16 @@ const FundingSourceForm = ({
           source.fundingNumber !== initialFundingNumber.current
       )
     ) {
-      updatedErrors.fundingNumber = 'Please enter a unique funding number';
+      updatedErrors.fundingNumber = t(
+        'contractDetails.fundingSources.errors.fundingNumberUnique'
+      );
     }
 
     // Check if funding source is selected
     if (sources.length < 1) {
-      updatedErrors.sources = 'Please select a funding source';
+      updatedErrors.sources = t(
+        'contractDetails.fundingSources.errors.fundingSource'
+      );
     }
 
     // Set errors
@@ -164,10 +173,10 @@ const FundingSourceForm = ({
         error={!!errors.fundingNumber}
       >
         <Label htmlFor="fundingNumber" className="text-normal">
-          Funding Number
+          {t('contractDetails.fundingSources.fundingNumber')}
         </Label>
         <HelpText id="IntakeForm-FundingNumberRestrictions">
-          Funding number must be 6 digits long
+          {t('contractDetails.fundingSources.fundingNumberHelpText')}
         </HelpText>
         <FieldErrorMsg>{errors.fundingNumber}</FieldErrorMsg>
         <input
@@ -190,18 +199,16 @@ const FundingSourceForm = ({
             rel="noopener noreferrer"
             variant="external"
           >
-            You can find your funding number in the CMS Operating Plan page
-            (opens in a new tab)
+            {t('contractDetails.fundingSources.fundingNumberLink')}
           </Link>
         </HelpText>
       </FieldGroup>
       <FieldGroup error={!!errors.sources}>
         <Label htmlFor="fundingSources" className="text-normal">
-          Which existing models does your proposed track/model most closely
-          resemble?
+          {t('contractDetails.fundingSources.fundingSourceLabel')}
         </Label>
         <HelpText id="IntakeForm-FundingSourceHelpText">
-          Start typing the name of the model
+          {t('contractDetails.fundingSources.fundingSourceHelpText')}
         </HelpText>
         <FieldErrorMsg>{errors.sources}</FieldErrorMsg>
         <MultiSelect
@@ -211,7 +218,7 @@ const FundingSourceForm = ({
           className="margin-top-1"
           options={fundingSourceOptions.map(option => ({
             value: option,
-            label: option
+            label: t(option)
           }))}
           onChange={(sources: string[]) =>
             setActiveFundingSource({ ...activeFundingSource, sources })
@@ -233,7 +240,7 @@ const FundingSourceForm = ({
           className="display-inline-block margin-top-2"
           outline
         >
-          Cancel
+          {t('Cancel')}
         </Button>
       )}
     </>
@@ -260,6 +267,7 @@ const FundingSources = ({
   fundingSourceOptions,
   setFieldValue
 }: FundingSourcesProps) => {
+  const { t } = useTranslation('intake');
   const [fundingSources, setFundingSources] = useState(initialValues || []);
   const [
     activeFundingSource,
@@ -352,7 +360,7 @@ const FundingSources = ({
           onClick={() => setActiveFundingSource(emptyFundingSource)}
           className="display-block margin-top-2"
         >
-          Add new funding source
+          {t('contractDetails.fundingSources.addNewFundingSource')}
         </Button>
       )}
     </div>

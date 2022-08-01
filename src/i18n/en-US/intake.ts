@@ -175,6 +175,24 @@ const intake = {
       oneOrMore: '1 or more of the following in OIT (select all that apply)',
       none: 'No one in OIT'
     }
+  },
+  contractDetails: {
+    fundingSources: {
+      addNewFundingSource: 'Add new funding source',
+      fundingNumber: 'Funding number',
+      fundingNumberHelpText: 'Funding number must be 6 digits long',
+      fundingNumberLink:
+        'You can find your funding number in the CMS Operating Plan page (opens in a new tab)',
+      fundingSourceLabel:
+        'Which existing models does your proposed track/model most closely resemble?',
+      fundingSourceHelpText: 'Start typing the name of the model',
+      errors: {
+        fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
+        fundingNumberDigits: 'Funding number can only contain digits',
+        fundingNumberUnique: 'Funding number must be unique',
+        fundingSource: 'Select a funding source'
+      }
+    }
   }
 };
 
