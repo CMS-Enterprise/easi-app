@@ -3,10 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
-  Dropdown,
   IconNavigateBefore,
   Label,
-  Link,
   Radio,
   Textarea,
   TextInput
@@ -28,7 +26,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import MultiSelect from 'components/shared/MultiSelect';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import { yesNoMap } from 'data/common';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -52,9 +49,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
   const formikRef = useRef<FormikProps<ContractDetailsForm>>(null);
 
-  const { id, fundingSources, costs, contract } = systemIntake;
+  const { id, fundingSources, costs, contract, existingFunding } = systemIntake;
   const initialValues: ContractDetailsForm = {
-    existingFunding: true, // TODO: remove default after testing
+    existingFunding,
     fundingSources,
     costs: {
       expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
@@ -216,75 +213,21 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                         className="margin-top-neg-2 margin-left-4 margin-bottom-1"
                       >
                         <FieldGroup
-                          scrollElement="fundingSource.source"
-                          error={!!flatErrors['fundingSource.source']}
+                          scrollElement="fundingSources"
+                          error={!!flatErrors.fundingSources}
                         >
-                          <Label htmlFor="IntakeForm-FundingSource">
-                            Funding Source
-                          </Label>
                           <FieldErrorMsg>
-                            {flatErrors['fundingSource.source']}
+                            {flatErrors.fundingSources}
                           </FieldErrorMsg>
-                          {/* <Field
-                            as={Dropdown}
-                            id="IntakeForm-FundingSource"
-                            name="fundingSource.source"
-                          >
-                            <option value="" disabled>
-                              Select an option
-                            </option>
-                            {intakeFundingSources.map(source => (
-                              <option
-                                key={source.split(' ').join('-')}
-                                value={source}
-                              >
-                                {source}
-                              </option>
-                            ))}
-                          </Field> */}
-                          <FundingSources
+                          <Field
+                            as={FundingSources}
+                            id="IntakeForm-FundingSources"
+                            name="fundingSources"
                             initialValues={fundingSources}
                             setFieldValue={setFieldValue}
                             fundingSourceOptions={intakeFundingSources}
                           />
                         </FieldGroup>
-                        {/* <FieldGroup
-                          scrollElement="fundingSource.fundingNumber"
-                          error={!!flatErrors['fundingSource.fundingNumber']}
-                        >
-                          <Label htmlFor="IntakeForm-FundingNumber">
-                            Funding Number
-                          </Label>
-                          <HelpText id="IntakeForm-FundingNumberRestrictions">
-                            Funding number must be 6 digits long
-                          </HelpText>
-                          <FieldErrorMsg>
-                            {flatErrors['fundingSource.fundingNumber']}
-                          </FieldErrorMsg>
-                          <Field
-                            className="width-card-lg"
-                            as={TextInput}
-                            error={!!flatErrors['fundingSource.fundingNumber']}
-                            id="IntakeForm-FundingNumber"
-                            maxLength={6}
-                            name="fundingSource.fundingNumber"
-                            aria-describedby="IntakeForm-FundingNumberRestrictions IntakeForm-FundingNumberHelp"
-                          />
-                          <HelpText
-                            id="IntakeForm-FundingNumberHelp"
-                            className="margin-y-1"
-                          >
-                            <Link
-                              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              variant="external"
-                            >
-                              You can find your funding number in the CMS
-                              Operating Plan page (opens in a new tab)
-                            </Link>
-                          </HelpText>
-                        </FieldGroup> */}
                       </div>
                     )}
                     <Field

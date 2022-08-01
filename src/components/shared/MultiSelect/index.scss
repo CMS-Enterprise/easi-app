@@ -3,3 +3,19 @@
     cursor: pointer;
   }
 }
+
+.easi-multiselect .usa-combo-box__list-option {
+  
+  &--focused {
+    background-color: color('base-lightest');
+    outline: none;
+
+    .usa-checkbox {
+      background-color: transparent;
+    }
+  }
+
+  label {
+    margin-top: 0;
+  }
+}

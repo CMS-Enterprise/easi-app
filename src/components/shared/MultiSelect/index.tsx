@@ -5,8 +5,10 @@ import Select, {
   MultiValue,
   OptionProps
 } from 'react-select';
-import { IconClose, Tag } from '@trussworks/react-uswds';
+import { Checkbox, IconClose, Tag } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+
+import CheckboxField from '../CheckboxField';
 
 import './index.scss';
 
@@ -16,13 +18,25 @@ type MultiSelectOptionProps = {
 };
 
 const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
-  const { data, isSelected, innerProps, innerRef } = props;
+  const { data, isSelected, innerProps, innerRef, isFocused } = props;
+  // console.log(props);
   return (
-    <div {...innerProps} ref={innerRef}>
-      <label>
-        <input type="checkbox" checked={isSelected} onChange={() => null} />
-        {data.label}
-      </label>
+    <div
+      {...innerProps}
+      ref={innerRef}
+      className={classNames('usa-combo-box__list-option', {
+        'usa-combo-box__list-option--focused': isFocused
+      })}
+    >
+      <CheckboxField
+        label={data.label}
+        id={innerProps.id}
+        name={data.value}
+        checked={isSelected}
+        onChange={() => null}
+        onBlur={() => null}
+        value={data.value}
+      />
     </div>
   );
 };
@@ -92,7 +106,6 @@ const MultiSelect = ({
         isMulti
         hideSelectedOptions={false}
         closeMenuOnSelect={false}
-        blurInputOnSelect={false}
         onChange={selectedOptions => {
           setSelected(selectedOptions);
           onChange(selectedOptions.map(option => option.value));
@@ -100,6 +113,7 @@ const MultiSelect = ({
         value={selected}
         controlShouldRenderValue={false}
         placeholder={`${selected.length} selected`}
+        // menuIsOpen
       />
       {selected.length > 0 && (
         <div className="easi-multiselect--selected">
@@ -108,7 +122,7 @@ const MultiSelect = ({
           </h4>
           <ul className="usa-list--unstyled">
             {selected.map(({ value, label }) => (
-              <li className="margin-bottom-05">
+              <li className="margin-bottom-05" key={value}>
                 <MultiSelectTag
                   key={value}
                   label={label}
