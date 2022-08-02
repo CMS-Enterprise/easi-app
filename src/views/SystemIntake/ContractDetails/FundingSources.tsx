@@ -94,6 +94,7 @@ const FundingSourceForm = ({
     fundingNumber: '',
     sources: ''
   });
+
   // Submit funding source form
   const onSubmit = () => {
     const { sources, fundingNumber } = activeFundingSource as FundingSource;

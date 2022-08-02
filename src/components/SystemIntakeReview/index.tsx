@@ -17,25 +17,57 @@ type SystemIntakeReviewProps = {
   systemIntake: SystemIntake;
 };
 
+type FundingSourcesObject = {
+  [number: string]: {
+    fundingNumber: string | null;
+    sources: (string | null)[];
+  };
+};
+
 export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
   const { contract, status, submittedAt } = systemIntake;
 
   const fundingDefinition = () => {
-    const {
-      fundingSource: { isFunded, fundingNumber, source }
-    } = systemIntake;
-    const isFundedText = convertBoolToYesNo(isFunded);
+    const { existingFunding, fundingSources } = systemIntake;
+    const isFundedText = convertBoolToYesNo(existingFunding);
 
-    if (isFunded) {
-      if (source === 'Unknown') {
-        // Unknown funding sources have an optional number
-        return fundingNumber === null || ''
-          ? `${isFundedText}, but funding source and number are unknown`
-          : `${isFundedText}, ${fundingNumber}, but funding source is unknown`;
-      }
-      return `${isFundedText}, ${source}, ${fundingNumber}`;
+    // Format funding sources object
+    const fundingSourcesObject = fundingSources.reduce<FundingSourcesObject>(
+      (acc, { fundingNumber, source }) => {
+        const sourcesArray = acc[fundingNumber!]
+          ? [...acc[fundingNumber!].sources, source]
+          : [source];
+        // Return formatted object of funding sources
+        return {
+          ...acc,
+          [fundingNumber!]: {
+            fundingNumber,
+            sources: sourcesArray
+          }
+        };
+      },
+      {}
+    );
+
+    if (existingFunding) {
+      const sourcesList = Object.values(fundingSourcesObject).map(
+        ({ fundingNumber, sources }) => {
+          return <li>{`${fundingNumber} - ${sources.join(', ')}`}</li>;
+        }
+      );
+      // If not funded, return no
+      if (!existingFunding) return 'No';
+
+      // Return list of funding sources
+      return (
+        <>
+          Yes
+          <br />
+          <ul className="usa-list--unstyled">{sourcesList}</ul>
+        </>
+      );
     }
     return isFundedText;
   };
