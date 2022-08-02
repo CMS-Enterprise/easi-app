@@ -48,9 +48,9 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 		}
 
 		var direction models.ExchangeDirection
-		if exch.FromOwnerID == cedarSystemID {
+		if exch.FromOwnerID == cedarSystem.VersionID {
 			direction = models.ExchangeDirection(models.ExchangeDirectionSender)
-		} else if exch.ToOwnerID == cedarSystemID {
+		} else if exch.ToOwnerID == cedarSystem.VersionID {
 			direction = models.ExchangeDirection(models.ExchangeDirectionReceiver)
 		}
 
