@@ -129,10 +129,10 @@ exports[`SystemHome subpage for System Profile matches snapshot 1`] = `
               class="text-right margin-bottom-0"
             >
               <span
-                class="easi-tag grid-col-12 bg-warning"
+                class="easi-tag grid-col-12 bg-error-dark text-white"
                 data-testid="tag"
               >
-                Due Soon
+                Expired
               </span>
             </div>
           </header>

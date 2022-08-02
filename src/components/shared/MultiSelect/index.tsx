@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import Select, {
-  components,
-  InputProps,
-  MultiValue,
-  OptionProps
-} from 'react-select';
-import { Checkbox, IconClose, Tag } from '@trussworks/react-uswds';
+import Select, { MultiValue, OptionProps } from 'react-select';
+import { IconClose, Tag } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import CheckboxField from '../CheckboxField';
@@ -19,7 +14,6 @@ type MultiSelectOptionProps = {
 
 const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
   const { data, isSelected, innerProps, innerRef, isFocused } = props;
-  // console.log(props);
   return (
     <div
       {...innerProps}
@@ -30,7 +24,7 @@ const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
     >
       <CheckboxField
         label={data.label}
-        id={innerProps.id}
+        id={innerProps.id!}
         name={data.value}
         checked={isSelected}
         onChange={() => null}

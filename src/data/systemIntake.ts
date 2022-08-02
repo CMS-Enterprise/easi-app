@@ -36,7 +36,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     isPresent: null,
     teams: []
   },
-  existingFunding: false,
+  existingFunding: null,
   fundingSources: [],
   costs: {
     isExpectingIncrease: '',
