@@ -2,12 +2,12 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 
-import { getSystemProfileMockData } from 'data/mock/systemProfile';
+import { getMockSystemProfileData } from 'data/mock/systemProfile';
 
 import SubSystems from './index';
 
 describe('System Sub-systems subpage', () => {
-  const systemProfileData = getSystemProfileMockData();
+  const systemProfileData = getMockSystemProfileData();
 
   it('matches snapshot', async () => {
     const { asFragment, getByText } = render(

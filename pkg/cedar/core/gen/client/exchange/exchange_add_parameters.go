@@ -61,7 +61,10 @@ func NewExchangeAddParamsWithHTTPClient(client *http.Client) *ExchangeAddParams 
 */
 type ExchangeAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Data exchange array to be added to Alfabet.
+	*/
 	Body *models.ExchangeAddRequest
 
 	timeout    time.Duration

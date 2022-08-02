@@ -8,7 +8,7 @@ const systemProfile = {
   navigation: {
     home: 'System Home',
     details: 'System Details',
-    'team-and-contract': 'Team',
+    team: 'Team',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
@@ -24,7 +24,10 @@ const systemProfile = {
   singleSystem: {
     id: 'single-system-profile',
     mainNavigation: 'Main Navigation',
-    pointOfContact: 'Point of contact',
+    pointsOfContact: 'Point of contact',
+    pointsOfContact_plural: 'Points of contact',
+    noPointsOfContact:
+      'This system does not have any points of contact identified.',
     sendEmail: 'Send an email',
     moreContact: 'More points of contact',
     description: {
@@ -39,6 +42,7 @@ const systemProfile = {
       view: 'View',
       subheader1: 'CMS Component',
       subheader2: 'Business Owner',
+      subheader2_plural: 'Business Owners',
       subheader3: 'Go Live Date',
       subheader4: 'Most recent major change release'
     },
@@ -96,12 +100,22 @@ const systemProfile = {
       systemFiscalYear: 'System fiscal year (FY) cost',
       viewMoreFunding: 'View more funding and budget information'
     },
-    teamAndContract: {
+    team: {
       header: {
-        teamAndContract: 'Team and Contract',
-        contractInformation: 'Contract Information',
-        pointsOfContact: 'Points of Contact'
+        team: 'Team',
+        businessOwners: 'Business Owners',
+        projectLeads: 'Project Leads',
+        additional: 'Additional Points of Contact'
       },
+      noData: {
+        businessOwners:
+          'This system does not have any Business Owners identified.',
+        projectLeads: 'This system does not have any Project Leads identified.',
+        additional: 'This system has no additional points of contact.'
+      },
+      viewMore: 'View {{count}} more contact',
+      viewMore_plural: 'View {{count}} more contacts',
+      viewLess: 'View fewer contacts',
       federalFullTimeEmployees: 'Federal Full Time Employees',
       contractorFullTimeEmployees: 'Contractor Full Time Employees',
       vendors: 'Vendors',
