@@ -61,7 +61,10 @@ func NewDeploymentUpdateParamsWithHTTPClient(client *http.Client) *DeploymentUpd
 */
 type DeploymentUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   Deployment list to be updated in Alfabet.
+	*/
 	Body *models.DeploymentUpdateRequest
 
 	timeout    time.Duration
