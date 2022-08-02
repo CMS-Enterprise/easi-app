@@ -18,9 +18,14 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 		return []*models.CedarExchange{}, nil
 	}
 
+	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
 	// Construct the parameters
 	params := exchange.NewExchangeFindListParams()
-	params.SetSystemID(cedarSystemID)
+	params.SetSystemID(cedarSystem.ID)
 	params.SetDirection("both")
 	params.HTTPClient = c.hc
 
