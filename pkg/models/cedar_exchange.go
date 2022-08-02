@@ -2,6 +2,16 @@ package models
 
 import "github.com/guregu/null/zero"
 
+// ExchangeDirection indicates the direction of data flow in a CEDAR exchange
+type ExchangeDirection string
+
+const (
+	// ExchangeDirectionSender indicates that the system is the sender of data in the data exchange
+	ExchangeDirectionSender ExchangeDirection = "SENDER"
+	// ExchangeDirectionReceiver indicates that the system is the receiver of data in the data exchange
+	ExchangeDirectionReceiver = "RECEIVER"
+)
+
 // CedarExchangeTypeOfDataItem is one item of the TypeofData slice in a CedarExchange
 type CedarExchangeTypeOfDataItem struct {
 	ID   string `json:"id,omitempty"`
@@ -26,6 +36,7 @@ type CedarExchange struct {
 	ExchangeStartDate          zero.Time                      `json:"exchangeStartDate,omitempty"`
 	ExchangeState              string                         `json:"exchangeState,omitempty"`
 	ExchangeVersion            string                         `json:"exchangeVersion,omitempty"`
+	ExchangeDirection          ExchangeDirection              `json:"exchangeDirection,omitempty"`
 	FromOwnerID                string                         `json:"fromOwnerId,omitempty"`
 	FromOwnerName              string                         `json:"fromOwnerName,omitempty"`
 	FromOwnerType              string                         `json:"fromOwnerType,omitempty"`

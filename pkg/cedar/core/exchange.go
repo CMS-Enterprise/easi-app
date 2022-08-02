@@ -42,6 +42,11 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 			})
 		}
 
+		direction := models.ExchangeDirection(models.ExchangeDirectionReceiver)
+		if exch.FromOwnerID == cedarSystemID {
+			direction = models.ExchangeDirectionSender
+		}
+
 		retVal = append(retVal, &models.CedarExchange{
 			ConnectionFrequency:        exch.ConnectionFrequency,
 			ContainsBankingData:        exch.ContainsBankingData,
@@ -59,6 +64,7 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 			ExchangeStartDate:          zero.TimeFrom(time.Time(exch.ExchangeStartDate)),
 			ExchangeState:              exch.ExchangeState,
 			ExchangeVersion:            exch.ExchangeVersion,
+			ExchangeDirection:          direction,
 			FromOwnerID:                exch.FromOwnerID,
 			FromOwnerName:              exch.FromOwnerName,
 			FromOwnerType:              exch.FromOwnerType,

@@ -294,6 +294,11 @@ type CedarExchangeTypeOfDataItem {
   name: String
 }
 
+enum ExchangeDirection {
+  SENDER
+  RECEIVER
+}
+
 """
 CedarExchange represents info about how data is exchanged between a CEDAR system and another system
 """
@@ -314,6 +319,7 @@ type CedarExchange {
 	exchangeStartDate: Time
 	exchangeState: String
 	exchangeVersion: String
+  exchangeDirection: ExchangeDirection!
 	fromOwnerId: String
 	fromOwnerName: String
 	fromOwnerType: String
