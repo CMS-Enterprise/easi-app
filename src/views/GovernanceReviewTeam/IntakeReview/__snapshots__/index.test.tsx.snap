@@ -356,7 +356,7 @@ Array [
         </dl>
       </div>
       <div
-        className="easi-pdf-export__controls"
+        className="easi-pdf-export__controls margin-top-6"
       >
         <button
           className="usa-button usa-button--unstyled easi-no-print"

@@ -54,7 +54,11 @@ export const SystemIntakeReview = ({
     if (existingFunding) {
       const sourcesList = Object.values(fundingSourcesObject).map(
         ({ fundingNumber, sources }) => {
-          return <li>{`${fundingNumber} - ${sources.join(', ')}`}</li>;
+          return (
+            <li key={fundingNumber}>{`${fundingNumber} - ${sources.join(
+              ', '
+            )}`}</li>
+          );
         }
       );
       // If not funded, return no

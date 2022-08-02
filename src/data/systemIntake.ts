@@ -36,7 +36,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     isPresent: null,
     teams: []
   },
-  existingFunding: false,
+  existingFunding: null,
   fundingSources: [],
   costs: {
     isExpectingIncrease: '',
@@ -185,7 +185,7 @@ export const prepareSystemIntakeForApp = (
       teams: governanceTeams() || []
     },
     existingFunding: systemIntake.existingFunding,
-    fundingSources: systemIntake.fundingSources,
+    fundingSources: systemIntake.fundingSources || [],
     costs: {
       isExpectingIncrease: systemIntake.costIncrease || '',
       expectedIncreaseAmount: systemIntake.costIncreaseAmount || ''
