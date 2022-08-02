@@ -63,8 +63,9 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, ldClie
 		cache: c,
 	}
 
-	// Start cache refresh for systems
-	client.startCacheRefresh(ctx, time.Minute*5, client.populateSystemSummaryCache)
+	// Start cache refresh for systems. System Data is currently changed at most once Daily, so a 1 hour interval is sufficient
+	// for catching most updates at a reasonable frequency.
+	client.startCacheRefresh(ctx, time.Hour*1, client.populateSystemSummaryCache)
 
 	return client
 }
@@ -78,8 +79,9 @@ type Client struct {
 	cache            *cache.Cache
 }
 
-// startCacheRefresh starts a goroutine that will run `populateCache` based on cacheRefreshTime
-// This function returns no errors, and only logs when something goes wrong
+// startCacheRefresh starts a goroutine that will run `populateCache` based on cacheRefreshTime.
+// startCacheRefresh returns no errors, and only logs when something goes wrong.
+// Upon being called, startCacheRefresh will populate the cache once immediately, then again at an interval specificed by cacheRefreshTime.
 func (c *Client) startCacheRefresh(ctx context.Context, cacheRefreshTime time.Duration, populateCache func(context.Context) error) {
 	ticker := time.NewTicker(cacheRefreshTime)
 	go func(ctx context.Context) {
