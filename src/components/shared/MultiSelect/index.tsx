@@ -54,6 +54,8 @@ export const MultiSelectTag = ({
 }) => {
   return (
     <Tag
+      id={id}
+      data-testid={`multiselect-tag--${label}`}
       className={classNames(
         'easi-multiselect--tag padding-x-1 padding-y-05 bg-primary-lighter text-ink display-inline-flex text-no-uppercase flex-align-center',
         className
@@ -115,7 +117,6 @@ const MultiSelect = ({
         value={selected}
         controlShouldRenderValue={false}
         placeholder={`${selected.length} selected`}
-        // menuIsOpen
       />
       {selected.length > 0 && (
         <div className="easi-multiselect--selected">
@@ -126,7 +127,7 @@ const MultiSelect = ({
             {selected.map(({ value, label }) => (
               <li className="margin-bottom-05" key={value}>
                 <MultiSelectTag
-                  id={`fundingSource-${value}`}
+                  id={`selected-${value}`}
                   key={value}
                   label={label}
                   handleRemove={() => {
