@@ -7,9 +7,9 @@ type ExchangeDirection string
 
 const (
 	// ExchangeDirectionSender indicates that the system is the sender of data in the data exchange
-	ExchangeDirectionSender ExchangeDirection = "SENDER"
+	ExchangeDirectionSender ExchangeDirection = "sender"
 	// ExchangeDirectionReceiver indicates that the system is the receiver of data in the data exchange
-	ExchangeDirectionReceiver = "RECEIVER"
+	ExchangeDirectionReceiver = "receiver"
 )
 
 // CedarExchangeTypeOfDataItem is one item of the TypeofData slice in a CedarExchange

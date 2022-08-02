@@ -5125,6 +5125,7 @@ type CedarExchangeTypeOfDataItem {
   name: String
 }
 
+
 enum ExchangeDirection {
   SENDER
   RECEIVER
@@ -5150,7 +5151,7 @@ type CedarExchange {
 	exchangeStartDate: Time
 	exchangeState: String
 	exchangeVersion: String
-  exchangeDirection: ExchangeDirection!
+  exchangeDirection: ExchangeDirection
 	fromOwnerId: String
 	fromOwnerName: String
 	fromOwnerType: String
@@ -14573,14 +14574,11 @@ func (ec *executionContext) _CedarExchange_exchangeDirection(ctx context.Context
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(models.ExchangeDirection)
 	fc.Result = res
-	return ec.marshalNExchangeDirection2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐExchangeDirection(ctx, field.Selections, res)
+	return ec.marshalOExchangeDirection2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐExchangeDirection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_exchangeDirection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -37113,9 +37111,6 @@ func (ec *executionContext) _CedarExchange(ctx context.Context, sel ast.Selectio
 
 			out.Values[i] = ec._CedarExchange_exchangeDirection(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "fromOwnerId":
 
 			out.Values[i] = ec._CedarExchange_fromOwnerId(ctx, field, obj)
@@ -42333,22 +42328,6 @@ func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcms
 	return ec._EstimatedLifecycleCost(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNExchangeDirection2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐExchangeDirection(ctx context.Context, v interface{}) (models.ExchangeDirection, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.ExchangeDirection(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNExchangeDirection2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐExchangeDirection(ctx context.Context, sel ast.SelectionSet, v models.ExchangeDirection) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
 func (ec *executionContext) marshalNGRTFeedback2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedbackᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GRTFeedback) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -43785,6 +43764,17 @@ func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋ
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalOExchangeDirection2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐExchangeDirection(ctx context.Context, v interface{}) (models.ExchangeDirection, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.ExchangeDirection(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOExchangeDirection2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐExchangeDirection(ctx context.Context, sel ast.SelectionSet, v models.ExchangeDirection) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	return res
 }
 
 func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {
