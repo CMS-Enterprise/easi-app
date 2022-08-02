@@ -122,19 +122,17 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.get('#IntakeForm-FundingSource')
-      .select('Unknown')
-      .should('have.value', 'Unknown');
-
     cy.get('#IntakeForm-FundingNumber')
       .type('111111')
       .should('have.value', '111111');
 
-    cy.get('#IntakeForm-FundingSource')
-      .select('CLIA')
-      .should('have.value', 'CLIA');
+    cy.get('#IntakeForm-FundingSources')
+      .type('CLIA{enter}')
+      .type('fed{enter}{esc}');
 
-    cy.get('#IntakeForm-FundingNumber').should('have.value', '111111');
+    cy.contains('button', 'Add funding source').click();
+
+    cy.contains('li#fundingNumber-111111');
 
     cy.get('#IntakeForm-CostsExpectingIncreaseYes')
       .check({ force: true })

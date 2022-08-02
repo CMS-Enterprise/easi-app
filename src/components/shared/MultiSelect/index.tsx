@@ -42,10 +42,12 @@ const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
 };
 
 export const MultiSelectTag = ({
+  id,
   label,
   className,
   handleRemove
 }: {
+  id: string;
   label: string;
   className?: string;
   handleRemove?: (value: string) => void;
@@ -124,6 +126,7 @@ const MultiSelect = ({
             {selected.map(({ value, label }) => (
               <li className="margin-bottom-05" key={value}>
                 <MultiSelectTag
+                  id={`fundingSource-${value}`}
                   key={value}
                   label={label}
                   handleRemove={() => {

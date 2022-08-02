@@ -33,13 +33,14 @@ const FundingSourcesListItem = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <li key={fundingNumber}>
+    <li id={`fundingNumber-${fundingNumber}`} key={fundingNumber}>
       <h4 className="margin-bottom-1">
         Funding Number: <span className="text-normal">{fundingNumber}</span>
       </h4>
       {fundingSources.map(source => (
         <MultiSelectTag
           key={`${fundingNumber}-${source}`}
+          id={`fundingSource-${source}`}
           label={t(source!)}
           className="padding-x-1 padding-y-05"
         />
@@ -48,7 +49,7 @@ const FundingSourcesListItem = ({
         <Button
           unstyled
           small
-          onClick={() => handleEdit()} // TODO: Fix handleEdit
+          onClick={() => handleEdit()}
           type="button"
           className="margin-right-1"
         >
@@ -184,6 +185,7 @@ const FundingSourceForm = ({
           maxLength={6}
           type="text"
           className="usa-input"
+          id="IntakeForm-FundingNumber"
           name="fundingNumber"
           value={activeFundingSource.fundingNumber}
           onChange={e =>
@@ -213,7 +215,7 @@ const FundingSourceForm = ({
         </HelpText>
         <FieldErrorMsg>{errors.sources}</FieldErrorMsg>
         <MultiSelect
-          id="fundingSourcesMultiSelect"
+          id="IntakeForm-FundingSources"
           name="fundingSources"
           selectedLabel="Selected models"
           className="margin-top-1"
