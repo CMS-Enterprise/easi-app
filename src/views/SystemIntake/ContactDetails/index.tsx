@@ -190,7 +190,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   }, [authState, oktaAuth, systemIntake.euaUserId, intakeRequester]);
 
   useEffect(() => {
-    if (!checkboxDefaultsSet.current && contacts?.businessOwner) {
+    if (
+      !checkboxDefaultsSet.current &&
+      contacts?.businessOwner &&
+      intakeRequester.euaUserId
+    ) {
       if (intakeRequester.euaUserId === contacts?.businessOwner.euaUserId) {
         setReqAndBusOwnerSame(true);
       }
