@@ -431,7 +431,12 @@ const SendFeedback = () => {
                     />
                   </FormGroup>
                   <div className="margin-top-4 margin-bottom-9">
-                    <Button type="submit" inverse disabled={isSubmitting}>
+                    <Button
+                      type="submit"
+                      inverse
+                      disabled={isSubmitting}
+                      className="margin-bottom-1 tablet:margin-bottom-0"
+                    >
                       {t('sendFeedback.submit')}
                     </Button>
                     <Button
