@@ -149,7 +149,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<ContractDetailsForm>) => {
-        const { values, errors, setFieldValue } = formikProps;
+        const { values, errors, setFieldValue, validateField } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -226,6 +226,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             initialValues={fundingSources}
                             setFieldValue={setFieldValue}
                             fundingSourceOptions={intakeFundingSources}
+                            validateField={validateField}
                           />
                         </FieldGroup>
                       </div>

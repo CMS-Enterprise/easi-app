@@ -231,17 +231,20 @@ type FundingSourcesProps = {
     value: any,
     shouldValidate?: boolean | undefined
   ) => void;
+  validateField: (field: string) => void;
 };
 
 const FundingSources = ({
   initialValues,
   fundingSourceOptions,
-  setFieldValue
+  setFieldValue,
+  validateField
 }: FundingSourcesProps) => {
   // Get funding sources actions from useIntakeFundingSources custom hook
   const fundingSourcesData = useIntakeFundingSources(
     initialValues,
-    setFieldValue
+    setFieldValue,
+    validateField
   );
   const [fundingSources, setFundingSources] = fundingSourcesData.fundingSources;
   const [
