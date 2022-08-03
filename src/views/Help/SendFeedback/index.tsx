@@ -424,6 +424,7 @@ const SendFeedback = () => {
                     </Label>
                     <ErrorMessage name="howCanWeImprove" />
                     <Field
+                      className="height-card"
                       as={Textarea}
                       id="howCanWeImprove"
                       name="howCanWeImprove"
