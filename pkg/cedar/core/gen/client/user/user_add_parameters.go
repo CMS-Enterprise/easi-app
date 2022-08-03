@@ -61,10 +61,7 @@ func NewUserAddParamsWithHTTPClient(client *http.Client) *UserAddParams {
 */
 type UserAddParams struct {
 
-	/* Body.
-
-	   User information to be added to a CEDAR application.
-	*/
+	// Body.
 	Body *models.UserAddRequest
 
 	timeout    time.Duration
