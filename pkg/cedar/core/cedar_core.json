@@ -69,7 +69,7 @@
     "name" : "user",
     "description" : "CEDAR system users"
   } ],
-  "schemes" : [ "http" ],
+  "schemes" : [ "https" ],
   "security" : [ {
     "apiKey" : [ ]
   } ],

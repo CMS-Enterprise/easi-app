@@ -51,7 +51,7 @@ func (a *Client) ThreatFindList(params *ThreatFindListParams, authInfo runtime.C
 		PathPattern:        "/threat",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ThreatFindListReader{formats: a.formats},
 		AuthInfo:           authInfo,
