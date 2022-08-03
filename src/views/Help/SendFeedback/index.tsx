@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import {
@@ -296,12 +296,17 @@ export async function parseForm(
   return parsed;
 }
 
+const Done = () => {
+  return <>✨</>;
+};
+
 /**
  * This formik form uses type `SendFeedbackEmailForm`, which is an extension
  * of the original backend type `SendFeedbackEmailInput`.
  */
 const SendFeedback = () => {
   const { t } = useTranslation('help');
+  const [isDone, setIsDone] = useState<boolean>(false);
 
   const [send] = useMutation<SendFeedbackEmail, SendFeedbackEmailVariables>(
     SendFeedbackEmailQuery
@@ -310,6 +315,7 @@ const SendFeedback = () => {
   const onSubmit = async (values: SendFeedbackEmailForm) => {
     const input = await parseForm(values);
     await send({ variables: { input } });
+    setIsDone(true);
   };
 
   return (
@@ -321,153 +327,157 @@ const SendFeedback = () => {
       <div className="font-body-lg line-height-body-2 line-height-body-5 text-light">
         {t('sendFeedback.description')}
       </div>
-      <Grid row>
-        <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-          <Formik
-            initialValues={
-              (sendFeedbackEmailFormSchema.getDefaultFromShape() as unknown) as SendFeedbackEmailForm
-            }
-            validationSchema={sendFeedbackEmailFormSchema}
-            validateOnBlur={false}
-            validateOnChange={false}
-            onSubmit={onSubmit}
-          >
-            {({
-              errors,
-              isSubmitting,
-              resetForm,
-              setErrors,
-              submitCount,
-              submitForm,
-              validateForm,
-              values
-            }) => {
-              // console.log('errors', JSON.stringify(errors, null, 2));
-              // console.log('form values', JSON.stringify(values, null, 2));
-              // console.log('submitting', isSubmitting, submitCount);
-              return (
-                <Form>
-                  <FormGroup>
-                    <Fieldset
-                      legend={
-                        <>
-                          <div>{t('sendFeedback.labels.isAnonymous')}</div>
-                          <div className="line-height-body-5 text-base text-normal text-ls-neg-1">
-                            {t('sendFeedback.descriptions.isAnonymous')}
-                          </div>
-                        </>
-                      }
-                    >
-                      <ErrorMessage name="isAnonymous" />
-                      <Field
-                        as={Radio}
-                        id="isAnonymous-yes"
-                        name="isAnonymous"
-                        label={t('sendFeedback.options.yes')}
-                        value
-                        checked={String(values.isAnonymous) === 'true'}
-                      />
-                      <Field
-                        as={Radio}
-                        id="isAnonymous-no"
-                        name="isAnonymous"
-                        label={t('sendFeedback.options.no')}
-                        value={false}
-                        checked={String(values.isAnonymous) === 'false'}
-                      />
-                    </Fieldset>
-                  </FormGroup>
-                  <CanBeContactedField />
-                  <EasiServicesUsedField mode="sendFeedback" />
-                  <FormGroup>
-                    <Label htmlFor="cmsRole">
-                      {t('sendFeedback.labels.cmsRole')}
-                    </Label>
-                    <ErrorMessage name="cmsRole" />
-                    <Field as={TextInput} id="cmsRole" name="cmsRole" />
-                  </FormGroup>
-                  <RadioOptionGroupWithAdditionalText
-                    name="systemEasyToUse"
-                    options={sendFeedbackOptionFields.systemEasyToUse}
-                    optionForTextInput={
-                      sendFeedbackOptionFieldsForTextInput.systemEasyToUse
-                    }
-                  />
-                  <RadioOptionGroupWithAdditionalText
-                    name="didntNeedHelpAnswering"
-                    options={sendFeedbackOptionFields.didntNeedHelpAnswering}
-                    optionForTextInput={
-                      sendFeedbackOptionFieldsForTextInput.didntNeedHelpAnswering
-                    }
-                  />
-                  <RadioOptionGroupWithAdditionalText
-                    name="questionsWereRelevant"
-                    options={sendFeedbackOptionFields.questionsWereRelevant}
-                    optionForTextInput={
-                      sendFeedbackOptionFieldsForTextInput.questionsWereRelevant
-                    }
-                  />
-                  <RadioOptionGroupWithAdditionalText
-                    name="hadAccessToInformation"
-                    options={sendFeedbackOptionFields.hadAccessToInformation}
-                    optionForTextInput={
-                      sendFeedbackOptionFieldsForTextInput.hadAccessToInformation
-                    }
-                  />
-                  <RadioOptionGroupWithAdditionalText
-                    name="howSatisfied"
-                    options={sendFeedbackOptionFields.howSatisfied}
-                  />
-                  <FormGroup>
-                    <Label htmlFor="howCanWeImprove">
-                      {t('sendFeedback.labels.howCanWeImprove')}
-                    </Label>
-                    <ErrorMessage name="howCanWeImprove" />
-                    <Field
-                      className="height-card"
-                      as={Textarea}
-                      id="howCanWeImprove"
-                      name="howCanWeImprove"
-                    />
-                  </FormGroup>
-                  <div className="margin-top-4 margin-bottom-9">
-                    <Button
-                      type="submit"
-                      inverse
-                      disabled={isSubmitting}
-                      className="margin-bottom-1 tablet:margin-bottom-0"
-                    >
-                      {t('sendFeedback.submit')}
-                    </Button>
-                    <Button
-                      type="button"
-                      outline
-                      disabled={isSubmitting}
-                      onClick={async () => {
-                        // Manually validate and submit before reset
-                        await submitForm();
-                        const errs = await validateForm();
-                        if (Object.keys(errs).length > 0) {
-                          setErrors(errs);
-                        } else {
-                          resetForm();
+      {isDone ? (
+        <Done />
+      ) : (
+        <Grid row>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+            <Formik
+              initialValues={
+                (sendFeedbackEmailFormSchema.getDefaultFromShape() as unknown) as SendFeedbackEmailForm
+              }
+              validationSchema={sendFeedbackEmailFormSchema}
+              validateOnBlur={false}
+              validateOnChange={false}
+              onSubmit={onSubmit}
+            >
+              {({
+                errors,
+                isSubmitting,
+                resetForm,
+                setErrors,
+                submitCount,
+                submitForm,
+                validateForm,
+                values
+              }) => {
+                // console.log('errors', JSON.stringify(errors, null, 2));
+                // console.log('form values', JSON.stringify(values, null, 2));
+                // console.log('submitting', isSubmitting, submitCount);
+                return (
+                  <Form>
+                    <FormGroup>
+                      <Fieldset
+                        legend={
+                          <>
+                            <div>{t('sendFeedback.labels.isAnonymous')}</div>
+                            <div className="line-height-body-5 text-base text-normal text-ls-neg-1">
+                              {t('sendFeedback.descriptions.isAnonymous')}
+                            </div>
+                          </>
                         }
-                      }}
-                    >
-                      {t('sendFeedback.submitAndRestart')}
-                    </Button>
-                    {Object.keys(errors).length > 0 && submitCount > 0 && (
-                      <TrussErrorMessage className="padding-top-1">
-                        {t('sendFeedback.errorMessage.form')}
-                      </TrussErrorMessage>
-                    )}
-                  </div>
-                </Form>
-              );
-            }}
-          </Formik>
+                      >
+                        <ErrorMessage name="isAnonymous" />
+                        <Field
+                          as={Radio}
+                          id="isAnonymous-yes"
+                          name="isAnonymous"
+                          label={t('sendFeedback.options.yes')}
+                          value
+                          checked={String(values.isAnonymous) === 'true'}
+                        />
+                        <Field
+                          as={Radio}
+                          id="isAnonymous-no"
+                          name="isAnonymous"
+                          label={t('sendFeedback.options.no')}
+                          value={false}
+                          checked={String(values.isAnonymous) === 'false'}
+                        />
+                      </Fieldset>
+                    </FormGroup>
+                    <CanBeContactedField />
+                    <EasiServicesUsedField mode="sendFeedback" />
+                    <FormGroup>
+                      <Label htmlFor="cmsRole">
+                        {t('sendFeedback.labels.cmsRole')}
+                      </Label>
+                      <ErrorMessage name="cmsRole" />
+                      <Field as={TextInput} id="cmsRole" name="cmsRole" />
+                    </FormGroup>
+                    <RadioOptionGroupWithAdditionalText
+                      name="systemEasyToUse"
+                      options={sendFeedbackOptionFields.systemEasyToUse}
+                      optionForTextInput={
+                        sendFeedbackOptionFieldsForTextInput.systemEasyToUse
+                      }
+                    />
+                    <RadioOptionGroupWithAdditionalText
+                      name="didntNeedHelpAnswering"
+                      options={sendFeedbackOptionFields.didntNeedHelpAnswering}
+                      optionForTextInput={
+                        sendFeedbackOptionFieldsForTextInput.didntNeedHelpAnswering
+                      }
+                    />
+                    <RadioOptionGroupWithAdditionalText
+                      name="questionsWereRelevant"
+                      options={sendFeedbackOptionFields.questionsWereRelevant}
+                      optionForTextInput={
+                        sendFeedbackOptionFieldsForTextInput.questionsWereRelevant
+                      }
+                    />
+                    <RadioOptionGroupWithAdditionalText
+                      name="hadAccessToInformation"
+                      options={sendFeedbackOptionFields.hadAccessToInformation}
+                      optionForTextInput={
+                        sendFeedbackOptionFieldsForTextInput.hadAccessToInformation
+                      }
+                    />
+                    <RadioOptionGroupWithAdditionalText
+                      name="howSatisfied"
+                      options={sendFeedbackOptionFields.howSatisfied}
+                    />
+                    <FormGroup>
+                      <Label htmlFor="howCanWeImprove">
+                        {t('sendFeedback.labels.howCanWeImprove')}
+                      </Label>
+                      <ErrorMessage name="howCanWeImprove" />
+                      <Field
+                        className="height-card"
+                        as={Textarea}
+                        id="howCanWeImprove"
+                        name="howCanWeImprove"
+                      />
+                    </FormGroup>
+                    <div className="margin-top-4 margin-bottom-9">
+                      <Button
+                        type="submit"
+                        inverse
+                        disabled={isSubmitting}
+                        className="margin-bottom-1 tablet:margin-bottom-0"
+                      >
+                        {t('sendFeedback.submit')}
+                      </Button>
+                      <Button
+                        type="button"
+                        outline
+                        disabled={isSubmitting}
+                        onClick={async () => {
+                          // Manually validate and submit before reset
+                          await submitForm();
+                          const errs = await validateForm();
+                          if (Object.keys(errs).length > 0) {
+                            setErrors(errs);
+                          } else {
+                            resetForm();
+                          }
+                        }}
+                      >
+                        {t('sendFeedback.submitAndRestart')}
+                      </Button>
+                      {Object.keys(errors).length > 0 && submitCount > 0 && (
+                        <TrussErrorMessage className="padding-top-1">
+                          {t('sendFeedback.errorMessage.form')}
+                        </TrussErrorMessage>
+                      )}
+                    </div>
+                  </Form>
+                );
+              }}
+            </Formik>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </MainContent>
   );
 };
