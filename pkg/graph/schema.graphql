@@ -287,6 +287,53 @@ type CedarURL {
 }
 
 """
+CedarExchangeTypeOfDataItem is one item of the TypeofData slice in a CedarExchange
+"""
+type CedarExchangeTypeOfDataItem {
+  id: String
+  name: String
+}
+
+
+enum ExchangeDirection {
+  SENDER
+  RECEIVER
+}
+
+"""
+CedarExchange represents info about how data is exchanged between a CEDAR system and another system
+"""
+type CedarExchange {
+	connectionFrequency: [String!]!
+	containsBankingData: Boolean
+	containsBeneficiaryAddress: Boolean
+	containsPhi: Boolean
+	containsPii: Boolean
+	dataExchangeAgreement: String
+	dataFormat: String
+	dataFormatOther: String
+	exchangeDescription: String
+	exchangeEndDate: Time
+	exchangeId: String
+	exchangeName: String
+	exchangeRetiredDate: Time
+	exchangeStartDate: Time
+	exchangeState: String
+	exchangeVersion: String
+  exchangeDirection: ExchangeDirection
+	fromOwnerId: String
+	fromOwnerName: String
+	fromOwnerType: String
+	isBeneficiaryMailingFile: Boolean
+	numOfRecords: String
+	sharedViaApi: Boolean
+	toOwnerId: String
+	toOwnerName: String
+	toOwnerType: String
+	typeOfData: [CedarExchangeTypeOfDataItem!]!
+}
+
+"""
 An accessibility request represents a system that needs to go through
 the 508 process
 """
@@ -1519,6 +1566,7 @@ type Query {
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
+  exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
