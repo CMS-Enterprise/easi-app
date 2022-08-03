@@ -61,7 +61,10 @@ func NewUserIDUpdateParamsWithHTTPClient(client *http.Client) *UserIDUpdateParam
 */
 type UserIDUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   User information to be updated in CEDAR.
+	*/
 	Body *models.UserUpdateRequest
 
 	/* ID.

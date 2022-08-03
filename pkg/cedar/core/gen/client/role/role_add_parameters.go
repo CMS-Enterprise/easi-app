@@ -61,7 +61,10 @@ func NewRoleAddParamsWithHTTPClient(client *http.Client) *RoleAddParams {
 */
 type RoleAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Role assignment information to be added to a CEDAR application.
+	*/
 	Body *models.RoleAddRequest
 
 	timeout    time.Duration
