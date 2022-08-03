@@ -31,7 +31,7 @@ on:
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
-  EASI_APP_GO_VERSION: "1.16.6"
+  EASI_APP_GO_VERSION: "1.18.3"
   GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   ENV: ${{ inputs.env }}
@@ -48,7 +48,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Set up node
-        uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd
+        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path

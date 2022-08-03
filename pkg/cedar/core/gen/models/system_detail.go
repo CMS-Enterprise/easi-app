@@ -22,6 +22,12 @@ type SystemDetail struct {
 	// business owner information
 	BusinessOwnerInformation *BusinessOwnerInformation `json:"BusinessOwnerInformation,omitempty"`
 
+	// data center hosting
+	DataCenterHosting *DataCenterHosting `json:"DataCenterHosting,omitempty"`
+
+	// software product details
+	SoftwareProductDetails *SoftwareProductDetails `json:"SoftwareProductDetails,omitempty"`
+
 	// system maintainer information
 	SystemMaintainerInformation *SystemMaintainerInformation `json:"SystemMaintainerInformation,omitempty"`
 
@@ -102,6 +108,14 @@ func (m *SystemDetail) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDataCenterHosting(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSoftwareProductDetails(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSystemMaintainerInformation(formats); err != nil {
 		res = append(res, err)
 	}
@@ -139,6 +153,44 @@ func (m *SystemDetail) validateBusinessOwnerInformation(formats strfmt.Registry)
 				return ve.ValidateName("BusinessOwnerInformation")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("BusinessOwnerInformation")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *SystemDetail) validateDataCenterHosting(formats strfmt.Registry) error {
+	if swag.IsZero(m.DataCenterHosting) { // not required
+		return nil
+	}
+
+	if m.DataCenterHosting != nil {
+		if err := m.DataCenterHosting.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("DataCenterHosting")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("DataCenterHosting")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *SystemDetail) validateSoftwareProductDetails(formats strfmt.Registry) error {
+	if swag.IsZero(m.SoftwareProductDetails) { // not required
+		return nil
+	}
+
+	if m.SoftwareProductDetails != nil {
+		if err := m.SoftwareProductDetails.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("SoftwareProductDetails")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("SoftwareProductDetails")
 			}
 			return err
 		}
@@ -210,6 +262,14 @@ func (m *SystemDetail) ContextValidate(ctx context.Context, formats strfmt.Regis
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateDataCenterHosting(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSoftwareProductDetails(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateSystemMaintainerInformation(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -228,6 +288,38 @@ func (m *SystemDetail) contextValidateBusinessOwnerInformation(ctx context.Conte
 				return ve.ValidateName("BusinessOwnerInformation")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("BusinessOwnerInformation")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *SystemDetail) contextValidateDataCenterHosting(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.DataCenterHosting != nil {
+		if err := m.DataCenterHosting.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("DataCenterHosting")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("DataCenterHosting")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *SystemDetail) contextValidateSoftwareProductDetails(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.SoftwareProductDetails != nil {
+		if err := m.SoftwareProductDetails.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("SoftwareProductDetails")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("SoftwareProductDetails")
 			}
 			return err
 		}
