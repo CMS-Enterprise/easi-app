@@ -51,7 +51,7 @@ func (a *Client) SoftwareProductsFindList(params *SoftwareProductsFindListParams
 		PathPattern:        "/softwareProducts",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &SoftwareProductsFindListReader{formats: a.formats},
 		AuthInfo:           authInfo,

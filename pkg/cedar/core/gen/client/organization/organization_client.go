@@ -51,7 +51,7 @@ func (a *Client) OrganizationFindList(params *OrganizationFindListParams, authIn
 		PathPattern:        "/organization",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
+		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &OrganizationFindListReader{formats: a.formats},
 		AuthInfo:           authInfo,

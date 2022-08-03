@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+if ! command -v jq &> /dev/null
+then
+    echo "jq could not be found."
+    echo "Install jq from https://stedolan.github.io/jq/download/"
+    exit 1
+fi
+
+if ! command -v swagger &> /dev/null
+then
+    echo "go-swagger could not be found."
+    echo "Install go-swagger from https://goswagger.io/install.html"
+    exit 2
+fi
+
+# equivalent of set -e; exit on first error
+set -o errexit
+
+# set up common paths
+repoRootPath=$(git rev-parse --show-toplevel)
+
+# Intake API
+intakeSwaggerFile="cedar_intake.json"
+intakeFolderPath="${repoRootPath}/pkg/cedar/intake"
+intakeTempFile=$(mktemp /tmp/intake.XXXXXX)
+
+# Core API
+coreSwaggerFile="cedar_core.json"
+coreFolderPath="${repoRootPath}/pkg/cedar/core"
+coreTempFile=$(mktemp /tmp/core.XXXXXX)
+
+# Update intake and generate
+cd "$intakeFolderPath"
+
+# necessary for making the generated code for clientLastUpdatedDate use a *strfmt.DateTime pointer, instead of a non-pointer value (which has an invalid zero value)
+jq '.definitions.IntakeInput.properties.clientLastUpdatedDate += {"x-nullable": true}' "$intakeSwaggerFile" > "$intakeTempFile"
+mv "$intakeTempFile" "$intakeSwaggerFile"
+
+# regenerate code based on the updated Swagger file
+swagger generate client -f "$intakeSwaggerFile" -c ./gen/client -m ./gen/models
+
+# Update core and generate
+cd "$coreFolderPath"
+
+# necessary for making the generated code for clientLastUpdatedDate use a *strfmt.DateTime pointer, instead of a non-pointer value (which has an invalid zero value)
+jq '.schemes = ["https"]' "$coreSwaggerFile" > "$coreTempFile"
+mv "$coreTempFile" "$coreSwaggerFile"
+
+# regenerate code based on the updated Swagger file
+swagger generate client -f "$coreSwaggerFile" -c ./gen/client -m ./gen/models
