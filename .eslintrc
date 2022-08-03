@@ -71,7 +71,9 @@
         ]
       }
     ],
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "no-redeclare": "off",
+    "@typescript-eslint/no-redeclare": ["error"]
   },
   "settings": {
     "import/resolver": {

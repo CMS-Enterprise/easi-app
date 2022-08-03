@@ -101,6 +101,46 @@ export type FundingSource = {
   fundingNumber: string | null;
 };
 
+// funding sources formatted for form
+export type MultiFundingSource = {
+  fundingNumber: string;
+  sources: string[];
+};
+
+// funding sources object formatted for display
+export type FormattedFundingSourcesObject = {
+  [number: string]: {
+    fundingNumber: string;
+    sources: string[];
+  };
+};
+
+// useIntakeFundingSources hook types
+export type UpdateFundingSources =
+  | {
+      action: 'Update';
+      data: MultiFundingSource;
+    }
+  | { action: 'Delete'; data: string };
+
+export type UpdateActiveFundingSource = {
+  action: 'Add' | 'Edit' | 'Reset';
+  data?: MultiFundingSource;
+};
+
+export type UseIntakeFundingSources = {
+  fundingSources: [
+    fundingSources: FormattedFundingSourcesObject,
+    updateFundingSources: ({ action, data }: UpdateFundingSources) => void
+  ];
+  activeFundingSource: [
+    activeFundingSource: MultiFundingSource,
+    updateActiveFundingSource: (payload: UpdateActiveFundingSource) => void,
+    action: 'Add' | 'Edit' | 'Reset'
+  ];
+};
+
+// Contract details form
 export type ContractDetailsForm = {
   existingFunding: boolean | null;
   fundingSources: FundingSource[] | [];
