@@ -71,6 +71,7 @@ func Serve(config *viper.Viper) {
 		if err != nil {
 			s.logger.Fatal("Failed to parse key pair", zap.Error(err))
 		}
+		/* #nosec */
 		srv := http.Server{
 			Addr:    ":8443",
 			Handler: s,
@@ -85,6 +86,7 @@ func Serve(config *viper.Viper) {
 			s.logger.Fatal("Failed to start server on port 8443")
 		}
 	} else {
+		/* #nosec */
 		srv := http.Server{
 			Addr:    ":8080",
 			Handler: s,
