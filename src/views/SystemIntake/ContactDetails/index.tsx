@@ -62,15 +62,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     euaUserId: '',
     email: ''
   });
-
   const flags = useFlags();
 
-  const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState<
-    boolean | null
-  >(null);
-  const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState<
-    boolean | null
-  >(null);
+  const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState<boolean>(
+    false
+  );
+  const [
+    isReqAndProductManagerSame,
+    setReqAndProductManagerSame
+  ] = useState<boolean>(false);
+  const checkboxDefaultsSet = useRef(false);
 
   const [
     activeContact,
@@ -189,19 +190,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   }, [authState, oktaAuth, systemIntake.euaUserId, intakeRequester]);
 
   useEffect(() => {
-    if (
-      isReqAndBusOwnerSame === null &&
-      intakeRequester.euaUserId === contacts?.businessOwner.euaUserId
-    ) {
-      setReqAndBusOwnerSame(true);
+    if (!checkboxDefaultsSet.current && contacts?.businessOwner) {
+      if (intakeRequester.euaUserId === contacts?.businessOwner.euaUserId) {
+        setReqAndBusOwnerSame(true);
+      }
+      if (intakeRequester.euaUserId === contacts?.productManager.euaUserId) {
+        setReqAndProductManagerSame(true);
+      }
+      checkboxDefaultsSet.current = true;
     }
-    if (
-      isReqAndProductManagerSame === null &&
-      intakeRequester.euaUserId === contacts?.productManager.euaUserId
-    ) {
-      setReqAndProductManagerSame(true);
-    }
-  }, [contacts, intakeRequester]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [contacts, intakeRequester]);
 
   // Wait until contacts are loaded to return form
   if (!contacts) return null;
