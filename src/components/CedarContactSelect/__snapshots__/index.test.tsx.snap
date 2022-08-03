@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CedarContactSelect matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="cedar-contact-select"
+    data-reach-combobox=""
+    data-state="idle"
+    id="cedarContactSelect"
+  >
+    <input
+      aria-autocomplete="both"
+      aria-controls="listbox--cedarContactSelect"
+      aria-expanded="false"
+      aria-haspopup="listbox"
+      aria-label="Cedar-Users"
+      class="usa-select"
+      data-reach-combobox-input=""
+      data-state="idle"
+      name="cedarContactSelect"
+      role="combobox"
+      value="Jane Doe, ABCD"
+    />
+  </div>
+</DocumentFragment>
+`;

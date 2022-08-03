@@ -13,6 +13,24 @@ import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
 import { SystemIntake } from './index';
 
+jest.mock('@okta/okta-react', () => ({
+  useOktaAuth: () => {
+    return {
+      authState: {
+        isAuthenticated: true
+      },
+      oktaAuth: {
+        getAccessToken: () => Promise.resolve('test-access-token'),
+        getUser: async () => ({
+          name: 'Jerry Seinfeld',
+          preferred_usename: 'SF13',
+          email: 'jerry@local.fake'
+        })
+      }
+    };
+  }
+}));
+
 describe('The System Intake page', () => {
   const INTAKE_ID = 'ccdfdcf5-5085-4521-9f77-fa1ea324502b';
   const intakeQuery = {
@@ -26,7 +44,7 @@ describe('The System Intake page', () => {
       data: {
         systemIntake: {
           id: INTAKE_ID,
-          euaUserId: 'ABCD',
+          euaUserId: 'SF13',
           adminLead: null,
           businessNeed: null,
           businessSolution: null,
@@ -81,7 +99,7 @@ describe('The System Intake page', () => {
           requester: {
             component: null,
             email: null,
-            name: 'User ABCD'
+            name: 'Jerry Seinfeld'
           },
           requestName: '',
           requestType: 'NEW',

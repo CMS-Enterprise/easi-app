@@ -151,23 +151,50 @@ const intake = {
     requester: 'Requester',
     requesterComponent: 'Requester Component',
     businessOwner: {
-      name: 'CMS Business Owner Name',
+      name: 'CMS Business Owner',
       helpText:
         'This person owns a line of business related to this request and will champion the request moving forward',
-      component: 'CMS Business Owner Component'
+      nameField: 'CMS Business Owner name',
+      component: 'CMS Business Owner component',
+      email: 'CMS Business Owner email'
     },
     productManager: {
       name: 'CMS Project/Product Manager, or lead',
       helpText:
         'This person may be contacted for follow ups and to understand the state of the contract',
-      component: 'CMS Product Manager Component'
+      nameField: 'CMS Project/Product Manager, or lead name',
+      component: 'CMS Product Manager component',
+      email: 'CMS Product Manager email'
     },
     isso: {
       label:
         'Does your project have an Information System Security Officer (ISSO)?',
       helpText:
         'If yes, please tell us the name of your Information System Security Officer so we can get in touch with them',
-      name: 'ISSO Name'
+      name: 'ISSO Name',
+      component: 'ISSO Component',
+      email: 'ISSO email'
+    },
+    additionalContacts: {
+      title: 'Additional contacts',
+      delete: 'Delete contact',
+      add: 'Add another contact',
+      edit: 'Edit contact',
+      name: 'New contact name',
+      component: 'New contact component',
+      select: 'Select an option',
+      role: 'New contact role',
+      save: 'Save',
+      addContact: 'Add contact',
+      errors: {
+        commonName: "Enter the contact's name",
+        component: "Select the contact's component",
+        role: "Select the contact's role"
+      }
+    },
+    governanceTeam: {
+      helpText:
+        "For the checkboxes below, select all the teams you've collaborated with. Please disclose the name of the person on each team you've worked with."
     },
     collaboration: {
       label: 'For this request, I have started collaborating/consulting with:',
