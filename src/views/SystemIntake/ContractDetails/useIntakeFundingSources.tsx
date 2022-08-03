@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   FormattedFundingSourcesObject,
@@ -18,7 +18,7 @@ const emptyFundingSource: MultiFundingSource = {
 // Custom hook for system intake funding source actions
 export default function useIntakeFundingSources(
   initialFundingSources: FundingSource[],
-  setFieldValue: (field: string, value: any, validate: boolean) => void,
+  setFieldValue: (field: string, value: any) => void,
   validateField: (field: string) => void
 ): UseIntakeFundingSources {
   // Format initial funding sources
@@ -66,6 +66,7 @@ export default function useIntakeFundingSources(
     action,
     data
   }: UpdateActiveFundingSource) => {
+    // If no data provided, set to empty funding source
     setActiveFundingSource({
       data: data || emptyFundingSource,
       action
@@ -105,12 +106,7 @@ export default function useIntakeFundingSources(
     // Set funding sources with new values
     setFundingSources(updatedFundingSources);
     // Set funding sources field value
-    setFieldValue(
-      'fundingSources',
-      formatSourcesForApi(updatedFundingSources),
-      // !!(action === 'Update')
-      false
-    );
+    setFieldValue('fundingSources', formatSourcesForApi(updatedFundingSources));
   }
 
   // When funding source form is submitted, reset active funding source

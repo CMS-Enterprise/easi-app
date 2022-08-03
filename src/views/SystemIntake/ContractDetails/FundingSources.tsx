@@ -226,11 +226,7 @@ const FundingSourceForm = ({
 type FundingSourcesProps = {
   initialValues: FundingSourcesType[];
   fundingSourceOptions: string[];
-  setFieldValue: (
-    field: string,
-    value: any,
-    shouldValidate?: boolean | undefined
-  ) => void;
+  setFieldValue: (field: string, value: any) => void;
   validateField: (field: string) => void;
 };
 
