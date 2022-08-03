@@ -210,6 +210,16 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
 }
 
 /**
+ * The data needed to associate a contact with a system intake
+ */
+export interface CreateSystemIntakeContactInput {
+  euaUserId: string;
+  systemIntakeId: UUID;
+  component: string;
+  role: string;
+}
+
+/**
  * The input data used to initialize an IT governance request for a system
  */
 export interface CreateSystemIntakeInput {
@@ -249,6 +259,13 @@ export interface DeleteAccessibilityRequestDocumentInput {
 export interface DeleteAccessibilityRequestInput {
   id: UUID;
   reason: AccessibilityRequestDeletionReason;
+}
+
+/**
+ * The data needed to delete a system intake contact
+ */
+export interface DeleteSystemIntakeContactInput {
+  id: UUID;
 }
 
 /**
@@ -421,6 +438,17 @@ export interface UpdateSystemIntakeContactDetailsInput {
   productManager: SystemIntakeProductManagerInput;
   isso: SystemIntakeISSOInput;
   governanceTeams: SystemIntakeGovernanceTeamInput;
+}
+
+/**
+ * The data needed to update a contact associated with a system intake
+ */
+export interface UpdateSystemIntakeContactInput {
+  id: UUID;
+  euaUserId: string;
+  systemIntakeId: UUID;
+  component: string;
+  role: string;
 }
 
 /**

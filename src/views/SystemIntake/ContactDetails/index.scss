@@ -1,0 +1,13 @@
+.system-intake-contacts {
+  .system-intake-contacts__contacts-list {
+    > div {
+      margin-bottom: 1.5rem;
+      p {
+        margin: 0 0 .5rem;
+      }
+    }
+  }
+  .usa-button--outline-disabled, .usa-button--outline:disabled {
+    pointer-events: none;
+  }
+}
