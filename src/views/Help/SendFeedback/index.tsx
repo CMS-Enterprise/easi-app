@@ -314,7 +314,7 @@ const SendFeedback = () => {
 
   return (
     <MainContent className="grid-container help-send-feedback">
-      <HelpBreadcrumb type={t('sendFeedback.closeTab')} />
+      <HelpBreadcrumb type="Close tab" text={t('sendFeedback.closeTab')} />
       <h1 className="margin-top-2 margin-bottom-1">
         {t('sendFeedback.title')}
       </h1>
