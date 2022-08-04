@@ -77,7 +77,9 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Your Intake Request has been submitted');
   });
 
-  it('displays and fills conditional fields', () => {
+  // depends on the "notifyMultipleRecipients" feature flag being set;
+  // we currently can't guarantee this when running tests in CI
+  it.skip('displays and fills conditional fields', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
