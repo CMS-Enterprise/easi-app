@@ -140,10 +140,17 @@ export type FormattedFundingSourcesObject = {
 // useIntakeFundingSources hook types
 export type UpdateFundingSources =
   | {
-      action: 'Update';
+      action: 'Add' | 'Delete';
       data: MultiFundingSource;
     }
-  | { action: 'Delete'; data: string };
+  | {
+      action: 'Edit';
+      data: {
+        initialFundingNumber: string;
+        fundingNumber: string;
+        sources: string[];
+      };
+    };
 
 export type UpdateActiveFundingSource = {
   action: 'Add' | 'Edit' | 'Reset';

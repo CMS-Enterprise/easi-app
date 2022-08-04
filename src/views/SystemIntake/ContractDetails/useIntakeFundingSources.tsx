@@ -87,20 +87,22 @@ export default function useIntakeFundingSources(
 
   // Update funding sources in system intake form
   function updateFundingSources({ action, data }: UpdateFundingSources): void {
-    let updatedFundingSources = {};
-    // Update funding source
-    if (action === 'Update') {
-      const { fundingNumber, sources } = data;
-      updatedFundingSources = {
-        ...fundingSources,
-        [fundingNumber]: { fundingNumber, sources }
-      };
-    }
-    // Delete funding source
+    const { fundingNumber } = data;
+    let updatedFundingSources = { ...fundingSources };
+
+    // If deleting funding source, delete source
     if (action === 'Delete') {
-      const fundingSourcesCopy = { ...fundingSources };
-      delete fundingSourcesCopy[data];
-      updatedFundingSources = fundingSourcesCopy;
+      delete updatedFundingSources[fundingNumber];
+    } else {
+      // If editing funding source, delete initial source
+      if (action === 'Edit') {
+        delete updatedFundingSources[data.initialFundingNumber];
+      }
+      // If creating or editing funding source, add source
+      updatedFundingSources = {
+        ...updatedFundingSources,
+        [fundingNumber]: data
+      };
     }
 
     // Set funding sources with new values

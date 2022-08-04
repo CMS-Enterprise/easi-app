@@ -6,9 +6,9 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import MultiSelect, { MultiSelectTag } from 'components/shared/MultiSelect';
-import { GetSystemIntake_systemIntake_fundingSources as FundingSourcesType } from 'queries/types/GetSystemIntake';
 import {
   FormattedFundingSourcesObject,
+  FundingSource,
   MultiFundingSource,
   UpdateActiveFundingSource,
   UpdateFundingSources
@@ -130,10 +130,23 @@ const FundingSourceForm = ({
 
     // If no errors, update funding sources
     if (!updatedErrors.fundingNumber && !updatedErrors.sources) {
-      setFundingSources({
-        data: { fundingNumber, sources },
-        action: 'Update'
-      });
+      if (action === 'Add') {
+        // Add new funding source
+        setFundingSources({
+          data: { fundingNumber, sources },
+          action: 'Add'
+        });
+      } else {
+        // Edit funding source
+        setFundingSources({
+          data: {
+            initialFundingNumber: initialFundingNumber.current,
+            fundingNumber,
+            sources
+          },
+          action: 'Edit'
+        });
+      }
     }
   };
   return (
@@ -224,7 +237,7 @@ const FundingSourceForm = ({
 };
 
 type FundingSourcesProps = {
-  initialValues: FundingSourcesType[];
+  initialValues: FundingSource[];
   fundingSourceOptions: string[];
   setFieldValue: (field: string, value: any) => void;
   validateField: (field: string) => void;
@@ -249,13 +262,14 @@ const FundingSources = ({
     action
   ] = fundingSourcesData.activeFundingSource;
   const { t } = useTranslation('intake');
+  const editFundingSourceNumber = useRef('');
 
   return (
     <div className="margin-bottom-2">
       <ul className="systemIntake-fundingSources usa-list--unstyled">
         {Object.values(fundingSources).map(fundingSource => {
           const { fundingNumber, sources } = fundingSource;
-          return activeFundingSource?.fundingNumber === fundingNumber &&
+          return editFundingSourceNumber.current === fundingNumber &&
             action === 'Edit' ? (
             <FundingSourceForm
               key={fundingNumber}
@@ -272,11 +286,12 @@ const FundingSources = ({
               fundingNumber={fundingNumber!}
               fundingSources={sources}
               handleDelete={() =>
-                setFundingSources({ action: 'Delete', data: fundingNumber! })
+                setFundingSources({ action: 'Delete', data: fundingSource })
               }
-              handleEdit={() =>
-                setActiveFundingSource({ action: 'Edit', data: fundingSource })
-              }
+              handleEdit={() => {
+                editFundingSourceNumber.current = fundingNumber;
+                setActiveFundingSource({ action: 'Edit', data: fundingSource });
+              }}
             />
           );
         })}
