@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { useOktaAuth } from '@okta/okta-react';
 import {
   Button,
   Checkbox,
@@ -11,8 +12,12 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import AdditionalContacts from 'components/AdditionalContacts';
+import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
+import CedarContactSelect from 'components/CedarContactSelect';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
@@ -21,7 +26,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -29,78 +34,65 @@ import {
   UpdateSystemIntakeContactDetails,
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
+import {
+  CedarContactProps,
+  ContactDetailsForm,
+  SystemIntakeContactProps,
+  SystemIntakeRoleKeys
+} from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
-export type ContactDetailsForm = {
-  requester: {
-    name: string;
-    component: string;
-  };
-  businessOwner: {
-    name: string;
-    component: string;
-  };
-  productManager: {
-    name: string;
-    component: string;
-  };
-  isso: {
-    isPresent: boolean | null;
-    name: string;
-  };
-  governanceTeams: {
-    isPresent: boolean | null;
-    teams:
-      | {
-          collaborator: string;
-          key: string;
-          name: string;
-        }[]
-      | null;
-  };
-};
+import './index.scss';
 
 type ContactDetailsProps = {
   systemIntake: SystemIntake;
 };
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
-  const {
-    id,
-    requestType,
-    requester,
-    businessOwner,
-    productManager,
-    isso,
-    governanceTeams
-  } = systemIntake;
+  const { id, requestType, requester, governanceTeams } = systemIntake;
   const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
-  const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
-  const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState(
+  const { authState, oktaAuth } = useOktaAuth();
+  const [intakeRequester, setIntakeRequester] = useState<CedarContactProps>({
+    commonName: '',
+    euaUserId: '',
+    email: ''
+  });
+  const flags = useFlags();
+
+  const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState<boolean>(
     false
   );
+  const [
+    isReqAndProductManagerSame,
+    setReqAndProductManagerSame
+  ] = useState<boolean>(false);
+  const checkboxDefaultsSet = useRef(false);
+
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
+
+  const [
+    contacts,
+    { createContact, updateContact, deleteContact }
+  ] = useSystemIntakeContacts(id);
 
   const initialValues = {
     requester: {
       name: requester.name || '',
       component: requester.component || ''
     },
-    businessOwner: {
-      name: businessOwner.name || '',
-      component: businessOwner.component || ''
-    },
-    productManager: {
-      name: productManager.name || '',
-      component: productManager.component || ''
-    },
+    businessOwner: contacts?.businessOwner,
+    productManager: contacts?.productManager,
     isso: {
-      isPresent: isso.isPresent,
-      name: isso.name || ''
+      isPresent: !!contacts?.isso?.euaUserId,
+      ...contacts?.isso
     },
     governanceTeams: {
       isPresent: governanceTeams.isPresent,
@@ -127,13 +119,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     ]
   });
 
-  const cmsDivionsAndOfficesOptions = (fieldId: string) =>
-    cmsDivisionsAndOffices.map((office: any) => (
-      <option key={`${fieldId}-${office.acronym}`} value={office.name}>
-        {office.acronym ? `${office.name} (${office.acronym})` : office.name}
-      </option>
-    ));
-
   const saveExitLink = (() => {
     let link = '';
     if (requestType === 'SHUTDOWN') {
@@ -144,23 +129,88 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     return link;
   })();
 
-  const onSubmit = (values?: ContactDetailsForm) => {
-    if (values) {
+  const onSubmit = async (
+    values: ContactDetailsForm,
+    { setFieldValue }: FormikHelpers<ContactDetailsForm>
+  ) => {
+    const updateSystemIntakeContact = async (type: SystemIntakeRoleKeys) => {
+      if (values[type].euaUserId && values[type].component) {
+        if (values?.[type].id) {
+          return updateContact({ ...values[type] });
+        }
+        return createContact(values[type]).then(newContact => {
+          setFieldValue(`${type}.id`, newContact?.id);
+        });
+      }
+      return null;
+    };
+
+    return Promise.all([
+      updateSystemIntakeContact('businessOwner'),
+      updateSystemIntakeContact('productManager'),
+      updateSystemIntakeContact('isso')
+    ]).then(() =>
       mutate({
         variables: {
           input: {
             id,
-            ...values,
+            requester: {
+              name: values.requester.name,
+              component: values.requester.component
+            },
+            businessOwner: {
+              name: values.businessOwner.commonName,
+              component: values.businessOwner.component
+            },
+            productManager: {
+              name: values.productManager.commonName,
+              component: values.productManager.component
+            },
+            isso: {
+              isPresent: values.isso.isPresent,
+              name: values.isso.commonName
+            },
             governanceTeams: values.governanceTeams || []
           }
         }
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (authState?.isAuthenticated && !intakeRequester.euaUserId) {
+      oktaAuth.getUser().then((info: any) => {
+        setIntakeRequester({
+          commonName: info.name,
+          euaUserId: systemIntake.euaUserId,
+          email: info?.email
+        });
       });
     }
-  };
+  }, [authState, oktaAuth, systemIntake.euaUserId, intakeRequester]);
+
+  useEffect(() => {
+    if (
+      !checkboxDefaultsSet.current &&
+      contacts?.businessOwner &&
+      intakeRequester.euaUserId
+    ) {
+      if (intakeRequester.euaUserId === contacts?.businessOwner.euaUserId) {
+        setReqAndBusOwnerSame(true);
+      }
+      if (intakeRequester.euaUserId === contacts?.productManager.euaUserId) {
+        setReqAndProductManagerSame(true);
+      }
+      checkboxDefaultsSet.current = true;
+    }
+  }, [contacts, intakeRequester]);
+
+  // Wait until contacts are loaded to return form
+  if (!contacts) return null;
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={initialValues as ContactDetailsForm}
       onSubmit={onSubmit}
       validationSchema={SystemIntakeValidationSchema.contactDetails}
       validateOnBlur={false}
@@ -171,6 +221,46 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       {(formikProps: FormikProps<ContactDetailsForm>) => {
         const { values, setFieldValue, errors } = formikProps;
         const flatErrors = flattenErrors(errors);
+
+        const setContactFieldsFromName = (
+          contact: CedarContactProps | null,
+          role: SystemIntakeRoleKeys
+        ) => {
+          setFieldValue(`${role}.commonName`, contact?.commonName || '');
+          setFieldValue(`${role}.euaUserId`, contact?.euaUserId || '');
+          setFieldValue(`${role}.email`, contact?.email || '');
+        };
+
+        const clearContact = (role: SystemIntakeRoleKeys) => {
+          setFieldValue(role, {
+            ...values[role],
+            euaUserId: '',
+            commonName: '',
+            component: '',
+            email: ''
+          });
+          if (values[role].id) {
+            deleteContact(values[role].id!);
+          }
+        };
+
+        const setContactFromCheckbox = (
+          role: 'businessOwner' | 'productManager',
+          sameAsRequester: boolean
+        ) => {
+          if (sameAsRequester) {
+            setContactFieldsFromName(intakeRequester, role);
+            setFieldValue(`${role}.component`, values.requester.component);
+          } else {
+            clearContact(role);
+          }
+          if (role === 'businessOwner') {
+            setReqAndBusOwnerSame(!!sameAsRequester);
+          } else {
+            setReqAndProductManagerSame(!!sameAsRequester);
+          }
+        };
+
         return (
           <>
             {Object.keys(errors).length > 0 && (
@@ -216,7 +306,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     disabled
                   />
                 </FieldGroup>
-
                 {/* Requester Component */}
                 <FieldGroup
                   scrollElement="requester.component"
@@ -249,23 +338,19 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     }}
                   >
                     <option value="" disabled>
-                      Select an option
+                      {t('Select an option')}
                     </option>
-                    {cmsDivionsAndOfficesOptions('RequesterComponent')}
+                    {cmsDivisionsAndOfficesOptions('RequesterComponent')}
                   </Field>
                 </FieldGroup>
-
                 {/* Business Owner Name */}
                 <FieldGroup
-                  scrollElement="businessOwner.name"
-                  error={!!flatErrors['businessOwner.name']}
+                  scrollElement="businessOwner.commonName"
+                  error={!!flatErrors['businessOwner.commonName']}
                 >
-                  <Label
-                    className="margin-bottom-1"
-                    htmlFor="IntakeForm-BusinessOwner"
-                  >
+                  <h4 className="margin-bottom-1">
                     {t('contactDetails.businessOwner.name')}
-                  </Label>
+                  </h4>
                   <HelpText id="IntakeForm-BusinessOwnerHelp">
                     {t('contactDetails.businessOwner.helpText')}
                   </HelpText>
@@ -274,37 +359,40 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     id="IntakeForm-IsBusinessOwnerSameAsRequester"
                     label="CMS Business Owner is same as requester"
                     name="isBusinessOwnerSameAsRequester"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      if (e.target.checked) {
-                        setReqAndBusOwnerSame(true);
-                        setFieldValue(
-                          'businessOwner.name',
-                          values.requester.name
-                        );
-                        setFieldValue(
-                          'businessOwner.component',
-                          values.requester.component
-                        );
-                      } else {
-                        setReqAndBusOwnerSame(false);
-                      }
-                    }}
+                    checked={!!isReqAndBusOwnerSame}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setContactFromCheckbox(
+                        'businessOwner',
+                        !!e.target.checked
+                      )
+                    }
                     value=""
                   />
+                  <Label
+                    className="margin-bottom-1"
+                    htmlFor="IntakeForm-BusinessOwner"
+                  >
+                    {t('contactDetails.businessOwner.nameField')}
+                  </Label>
                   <FieldErrorMsg>
-                    {flatErrors['businessOwner.name']}
+                    {flatErrors['businessOwner.commonName']}
                   </FieldErrorMsg>
-                  <Field
-                    as={TextInput}
-                    error={!!flatErrors['businessOwner.name']}
-                    disabled={isReqAndBusOwnerSame}
+                  <CedarContactSelect
                     id="IntakeForm-BusinessOwner"
-                    maxLength={50}
-                    name="businessOwner.name"
-                    aria-describedby="IntakeForm-BusinessOwnerHelp"
+                    name="businessOwner.commonName"
+                    ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
+                    onChange={contact => {
+                      if (contact !== null)
+                        setContactFieldsFromName(contact, 'businessOwner');
+                    }}
+                    value={
+                      values.businessOwner?.euaUserId
+                        ? values.businessOwner
+                        : undefined
+                    }
+                    disabled={!!isReqAndBusOwnerSame}
                   />
                 </FieldGroup>
-
                 {/* Business Owner Component */}
                 <FieldGroup
                   scrollElement="businessOwner.component"
@@ -317,29 +405,45 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['businessOwner.component']}
                   </FieldErrorMsg>
                   <Field
-                    as={Dropdown}
                     disabled={isReqAndBusOwnerSame}
+                    as={Dropdown}
                     id="IntakeForm-BusinessOwnerComponent"
                     name="businessOwner.component"
                   >
                     <option value="" disabled>
-                      Select an option
+                      {t('Select an option')}
                     </option>
-                    {cmsDivionsAndOfficesOptions('BusinessOwnerComponent')}
+                    {cmsDivisionsAndOfficesOptions('BusinessOwnerComponent')}
                   </Field>
                 </FieldGroup>
-
+                {/* Business Owner Email */}
+                {!flags.notifyMultipleRecipients && (
+                  <FieldGroup
+                    scrollElement="businessOwner.email"
+                    error={!!flatErrors['businessOwner.email']}
+                  >
+                    <Label htmlFor="IntakeForm-BusinessOwnerEmail">
+                      {t('contactDetails.businessOwner.email')}
+                    </Label>
+                    <FieldErrorMsg>
+                      {flatErrors['businessOwner.email']}
+                    </FieldErrorMsg>
+                    <Field
+                      disabled
+                      as={TextInput}
+                      id="IntakeForm-BusinessOwnerEmail"
+                      name="businessOwner.email"
+                    />
+                  </FieldGroup>
+                )}
                 {/* Product Manager Name */}
                 <FieldGroup
-                  scrollElement="productManager.name"
-                  error={!!flatErrors['productManager.name']}
+                  scrollElement="productManager.commonName"
+                  error={!!flatErrors['productManager.commonName']}
                 >
-                  <Label
-                    htmlFor="IntakeForm-ProductManager"
-                    className="margin-bottom-1"
-                  >
+                  <h4 className="margin-bottom-1">
                     {t('contactDetails.productManager.name')}
-                  </Label>
+                  </h4>
                   <HelpText id="IntakeForm-ProductManagerHelp">
                     {t('contactDetails.productManager.helpText')}
                   </HelpText>
@@ -348,37 +452,40 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     id="IntakeForm-IsProductManagerSameAsRequester"
                     label="CMS Project/Product Manager, or lead is same as requester"
                     name="isProductManagerSameAsRequester"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      if (e.target.checked) {
-                        setReqAndProductManagerSame(true);
-                        setFieldValue(
-                          'productManager.name',
-                          values.requester.name
-                        );
-                        setFieldValue(
-                          'productManager.component',
-                          values.requester.component
-                        );
-                      } else {
-                        setReqAndProductManagerSame(false);
-                      }
-                    }}
+                    checked={!!isReqAndProductManagerSame}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setContactFromCheckbox(
+                        'productManager',
+                        !!e.target.checked
+                      )
+                    }
                     value=""
                   />
+                  <Label
+                    className="margin-bottom-1"
+                    htmlFor="IntakeForm-ProductManager"
+                  >
+                    {t('contactDetails.productManager.nameField')}
+                  </Label>
                   <FieldErrorMsg>
-                    {flatErrors['productManager.name']}
+                    {flatErrors['productManager.commonName']}
                   </FieldErrorMsg>
-                  <Field
-                    as={TextInput}
-                    error={!!flatErrors['productManager.name']}
+                  <CedarContactSelect
                     id="IntakeForm-ProductManager"
-                    maxLength={50}
-                    name="productManager.name"
-                    aria-describedby="IntakeForm-ProductManagerHelp"
-                    disabled={isReqAndProductManagerSame}
+                    name="productManager.commonName"
+                    ariaDescribedBy="IntakeForm-ProductManagerHelp"
+                    onChange={contact => {
+                      if (contact !== null)
+                        setContactFieldsFromName(contact, 'productManager');
+                    }}
+                    value={
+                      values.productManager?.euaUserId
+                        ? values.productManager
+                        : undefined
+                    }
+                    disabled={!!isReqAndProductManagerSame}
                   />
                 </FieldGroup>
-
                 {/* Product Manager Component */}
                 <FieldGroup
                   scrollElement="productManager.component"
@@ -398,12 +505,31 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     disabled={isReqAndProductManagerSame}
                   >
                     <option value="" disabled>
-                      Select an option
+                      {t('Select an option')}
                     </option>
-                    {cmsDivionsAndOfficesOptions('ProductManagerComponent')}
+                    {cmsDivisionsAndOfficesOptions('ProductManagerComponent')}
                   </Field>
                 </FieldGroup>
-
+                {/* Product Manager Email */}
+                {!flags.notifyMultipleRecipients && (
+                  <FieldGroup
+                    scrollElement="productManager.email"
+                    error={!!flatErrors['productManager.email']}
+                  >
+                    <Label htmlFor="IntakeForm-ProductManagerEmail">
+                      {t('contactDetails.productManager.email')}
+                    </Label>
+                    <FieldErrorMsg>
+                      {flatErrors['productManager.email']}
+                    </FieldErrorMsg>
+                    <Field
+                      disabled
+                      as={TextInput}
+                      id="IntakeForm-ProductManagerEmail"
+                      name="productManager.email"
+                    />
+                  </FieldGroup>
+                )}
                 {/* ISSO */}
                 <FieldGroup
                   scrollElement="isso.isPresent"
@@ -411,7 +537,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 >
                   <fieldset
                     data-testid="isso-fieldset"
-                    className="usa-fieldset margin-top-4"
+                    className="usa-fieldset margin-top-3"
                   >
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.isso.label')}
@@ -440,26 +566,78 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {values.isso.isPresent && (
                       <div
                         data-testid="isso-name-container"
-                        className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1"
+                        className="margin-left-4 margin-bottom-3"
                       >
                         <FieldGroup
-                          scrollElement="isso.name"
-                          error={!!flatErrors['isso.name']}
+                          scrollElement="isso.commonName"
+                          error={!!flatErrors['isso.commonName']}
+                          className="margin-top-2"
                         >
-                          <Label htmlFor="IntakeForm-IssoName">
+                          <Label htmlFor="IntakeForm-IssoCommonName">
                             {t('contactDetails.isso.name')}
                           </Label>
                           <FieldErrorMsg>
-                            {flatErrors['isso.name']}
+                            {flatErrors['isso.commonName']}
                           </FieldErrorMsg>
-                          <Field
-                            as={TextInput}
-                            error={!!flatErrors['isso.name']}
-                            id="IntakeForm-IssoName"
-                            maxLength={50}
-                            name="isso.name"
+                          <CedarContactSelect
+                            id="IntakeForm-IssoCommonName"
+                            name="isso.commonName"
+                            onChange={contact =>
+                              setContactFieldsFromName(contact, 'isso')
+                            }
+                            value={
+                              values?.isso?.euaUserId
+                                ? {
+                                    commonName: values?.isso?.commonName,
+                                    euaUserId: values?.isso?.euaUserId
+                                  }
+                                : undefined
+                            }
                           />
                         </FieldGroup>
+                        {/* ISSO Component */}
+                        <FieldGroup
+                          scrollElement="isso.component"
+                          error={!!flatErrors['isso.component']}
+                        >
+                          <Label htmlFor="IntakeForm-IssoComponent">
+                            {t('contactDetails.isso.component')}
+                          </Label>
+                          <FieldErrorMsg>
+                            {flatErrors['isso.component']}
+                          </FieldErrorMsg>
+                          <Field
+                            as={Dropdown}
+                            id="IntakeForm-IssoComponent"
+                            label="ISSO Component"
+                            name="isso.component"
+                          >
+                            <option value="" disabled>
+                              {t('Select an option')}
+                            </option>
+                            {cmsDivisionsAndOfficesOptions('IssoComponent')}
+                          </Field>
+                        </FieldGroup>
+                        {/* ISSO Email */}
+                        {!flags.notifyMultipleRecipients && (
+                          <FieldGroup
+                            scrollElement="isso.email"
+                            error={!!flatErrors['isso.email']}
+                          >
+                            <Label htmlFor="IntakeForm-IssoEmail">
+                              {t('contactDetails.isso.email')}
+                            </Label>
+                            <FieldErrorMsg>
+                              {flatErrors['isso.email']}
+                            </FieldErrorMsg>
+                            <Field
+                              disabled
+                              as={TextInput}
+                              id="IntakeForm-IssoEmail"
+                              name="isso.email"
+                            />
+                          </FieldGroup>
+                        )}
                       </div>
                     )}
                     <Field
@@ -470,13 +648,20 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       label="No"
                       onChange={() => {
                         setFieldValue('isso.isPresent', false);
-                        setFieldValue('isso.name', '');
+                        clearContact('isso');
                       }}
                       value={false}
                     />
                   </fieldset>
                 </FieldGroup>
-
+                {/* Add new contacts */}
+                {!flags.notifyMultipleRecipients && (
+                  <AdditionalContacts
+                    systemIntakeId={id}
+                    activeContact={activeContact}
+                    setActiveContact={setActiveContact}
+                  />
+                )}
                 {/* Governance Teams */}
                 <FieldGroup
                   scrollElement="governanceTeams.isPresent"
@@ -536,18 +721,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   </fieldset>
                 </FieldGroup>
                 <Button
+                  disabled={!!activeContact}
                   type="button"
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
-                        mutate({
-                          variables: {
-                            input: { id, ...values }
-                          }
-                        }).then(response => {
-                          if (!response.errors) {
-                            const newUrl = 'request-details';
-                            history.push(newUrl);
+                        onSubmit(values, formikProps).then(response => {
+                          if (!response?.errors) {
+                            history.push('request-details');
                           }
                         });
                       } else {
@@ -556,26 +737,23 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     });
                   }}
                 >
-                  Next
+                  {t('Next')}
                 </Button>
                 <div className="margin-y-3">
                   <Button
+                    disabled={!!activeContact}
                     type="button"
                     unstyled
                     onClick={() => {
-                      mutate({
-                        variables: {
-                          input: { id, ...values }
-                        }
-                      }).then(response => {
-                        if (!response.errors) {
+                      onSubmit(values, formikProps).then(response => {
+                        if (!response?.errors) {
                           history.push(saveExitLink);
                         }
                       });
                     }}
                   >
                     <span className="display-flex flex-align-center">
-                      <IconNavigateBefore /> Save & Exit
+                      <IconNavigateBefore /> {t('Save & Exit')}
                     </span>
                   </Button>
                 </div>
@@ -584,7 +762,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             <AutoSave
               values={values}
               onSave={() => {
-                onSubmit(formikRef?.current?.values);
+                if (formikRef?.current?.values)
+                  onSubmit(formikRef.current.values, formikProps);
               }}
               debounceDelay={3000}
             />

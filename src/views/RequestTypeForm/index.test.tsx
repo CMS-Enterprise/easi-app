@@ -25,7 +25,9 @@ jest.mock('@okta/okta-react', () => ({
         getAccessToken: () => Promise.resolve('test-access-token'),
         getUser: () =>
           Promise.resolve({
-            name: 'John Doe'
+            name: 'John Doe',
+            euaUserId: 'ASDF',
+            email: 'john@local.fake'
           })
       }
     };

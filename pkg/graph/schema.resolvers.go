@@ -549,6 +549,21 @@ func (r *cedarDeploymentResolver) WanType(ctx context.Context, obj *models.Cedar
 	return obj.WanType.Ptr(), nil
 }
 
+// ExchangeEndDate is the resolver for the exchangeEndDate field.
+func (r *cedarExchangeResolver) ExchangeEndDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error) {
+	return obj.ExchangeEndDate.Ptr(), nil
+}
+
+// ExchangeRetiredDate is the resolver for the exchangeRetiredDate field.
+func (r *cedarExchangeResolver) ExchangeRetiredDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error) {
+	return obj.ExchangeRetiredDate.Ptr(), nil
+}
+
+// ExchangeStartDate is the resolver for the exchangeStartDate field.
+func (r *cedarExchangeResolver) ExchangeStartDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error) {
+	return obj.ExchangeStartDate.Ptr(), nil
+}
+
 // AssigneeUsername is the resolver for the assigneeUsername field.
 func (r *cedarRoleResolver) AssigneeUsername(ctx context.Context, obj *models.CedarRole) (*string, error) {
 	return obj.AssigneeUsername.Ptr(), nil
@@ -2001,6 +2016,17 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 	return cedarRoles, nil
 }
 
+// Exchanges is the resolver for the exchanges field.
+func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error) {
+	exchanges, err := r.cedarCoreClient.GetExchangesBySystem(ctx, cedarSystemID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return exchanges, nil
+}
+
 // Urls is the resolver for the urls field.
 func (r *queryResolver) Urls(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error) {
 	cedarURLs, err := r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
@@ -2071,6 +2097,10 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
 	if err != nil {
 		return nil, err
+	}
+
+	if len(contacts) == 0 {
+		return &model.SystemIntakeContactsPayload{}, nil
 	}
 
 	euaIDs := make([]string, len(contacts))
@@ -2501,6 +2531,9 @@ func (r *Resolver) CedarDeployment() generated.CedarDeploymentResolver {
 	return &cedarDeploymentResolver{r}
 }
 
+// CedarExchange returns generated.CedarExchangeResolver implementation.
+func (r *Resolver) CedarExchange() generated.CedarExchangeResolver { return &cedarExchangeResolver{r} }
+
 // CedarRole returns generated.CedarRoleResolver implementation.
 func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleResolver{r} }
 
@@ -2532,6 +2565,7 @@ type businessCaseResolver struct{ *Resolver }
 type cedarAuthorityToOperateResolver struct{ *Resolver }
 type cedarDataCenterResolver struct{ *Resolver }
 type cedarDeploymentResolver struct{ *Resolver }
+type cedarExchangeResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
