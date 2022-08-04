@@ -63,9 +63,9 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, ldClie
 		cache: c,
 	}
 
-	// Start cache refresh for systems. System Data is currently changed at most once Daily, so a 1 hour interval is sufficient
+	// Start cache refresh for systems. System Data is currently changed at most once Daily, so a 6 hour interval is sufficient
 	// for catching most updates at a reasonable frequency.
-	client.startCacheRefresh(ctx, time.Hour*1, client.populateSystemSummaryCache)
+	client.startCacheRefresh(ctx, time.Hour*6, client.populateSystemSummaryCache)
 
 	return client
 }
