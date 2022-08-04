@@ -2309,6 +2309,7 @@ func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.System
 	return obj.EUAUserID.String, nil
 }
 
+// ExistingFunding is the resolver for the existingFunding field.
 func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
 	return obj.ExistingFunding.Ptr(), nil
 }
@@ -2496,10 +2497,12 @@ func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.Sy
 	return obj.CedarSystemID.Ptr(), nil
 }
 
+// FundingNumber is the resolver for the fundingNumber field.
 func (r *systemIntakeFundingSourceResolver) FundingNumber(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
 	return obj.FundingNumber.Ptr(), nil
 }
 
+// Source is the resolver for the source field.
 func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
 	return obj.Source.Ptr(), nil
 }
