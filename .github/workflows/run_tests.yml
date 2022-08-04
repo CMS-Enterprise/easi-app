@@ -56,15 +56,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@05b148adc31e091bafbaf404f745055d4d3bc9d2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@b874a33292cc9887d2e80bc63f6f1a11fccb4a7b
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@05b148adc31e091bafbaf404f745055d4d3bc9d2
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: us-west-2
+      # - name: Login to Amazon ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@b874a33292cc9887d2e80bc63f6f1a11fccb4a7b
       - name: Run backend server tests
         env:
           APP_ENV: test
@@ -96,217 +96,215 @@ jobs:
           DB_MAX_CONNECTIONS: 20
           FLAG_SOURCE: LOCAL
         run: |
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d db
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from db_migrate db_migrate
-          ./scripts/build_app
-          ./scripts/testsuite
-          docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
-      - name: Upload backend test artifacts
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
-        with:
-          name: backend-tests
-          path: results
-          retention-days: 14
+          scripts/dev up
+          scripts/dev test:go
+          scripts/dev down
+      # - name: Upload backend test artifacts
+      #   uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+      #   with:
+      #     name: backend-tests
+      #     path: results
+      #     retention-days: 14
       - name: Announce failure
         if: ${{ failure() }}
         run: |
           ./scripts/github-action-announce-broken-branch
 
-  e2e_tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
-        with:
-          ref: ${{ env.GIT_HASH }}
-      - name: Set up node
-        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
-        with:
-          node-version: ${{ env.EASI_APP_NODE_VERSION }}
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Configure yarn cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: |
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            ./node_modules
-          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            v1-yarn-
-      - name: Build frontend code
-        env:
-          REACT_APP_API_ADDRESS: http://easi:8080/api/v1
-          REACT_APP_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
-          REACT_APP_APP_ENV: test
-          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
-          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
-          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
-          REACT_APP_LOCAL_AUTH_ENABLED: true
-        run: yarn run build
-      - name: Login to Docker Hub
-        uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@05b148adc31e091bafbaf404f745055d4d3bc9d2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@b874a33292cc9887d2e80bc63f6f1a11fccb4a7b
-      - name: Run e2e cypress tests
-        env:
-          APP_ENV: test
-          AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
-          OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
-          OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
-        run: |
-          ./scripts/run-cypress-test-docker
-      - name: Upload cypress videos
-        if: ${{ always() }}
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
-        with:
-          name: cypress-videos
-          path: cypress/videos
-          retention-days: 14
-      - name: Upload cypress screenshots
-        if: ${{ always() }}
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
-        with:
-          name: cypress-screenshots
-          path: cypress/screenshots
-          if-no-files-found: ignore
-          retention-days: 14
-      - name: Announce failure
-        if: ${{ failure() }}
-        run: |
-          ./scripts/github-action-announce-broken-branch
+  # e2e_tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+  #       with:
+  #         ref: ${{ env.GIT_HASH }}
+  #     - name: Set up node
+  #       uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+  #       with:
+  #         node-version: ${{ env.EASI_APP_NODE_VERSION }}
+  #     - name: Get yarn cache directory path
+  #       id: yarn-cache-dir-path
+  #       run: echo "::set-output name=dir::$(yarn cache dir)"
+  #     - name: Configure yarn cache
+  #       uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
+  #       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+  #       with:
+  #         path: |
+  #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
+  #           ./node_modules
+  #         key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           v1-yarn-
+  #     - name: Build frontend code
+  #       env:
+  #         REACT_APP_API_ADDRESS: http://easi:8080/api/v1
+  #         REACT_APP_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
+  #         REACT_APP_APP_ENV: test
+  #         REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+  #         REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+  #         REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+  #         REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+  #         REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+  #         REACT_APP_LOCAL_AUTH_ENABLED: true
+  #       run: yarn run build
+  #     - name: Login to Docker Hub
+  #       uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@05b148adc31e091bafbaf404f745055d4d3bc9d2
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: us-west-2
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       uses: aws-actions/amazon-ecr-login@b874a33292cc9887d2e80bc63f6f1a11fccb4a7b
+  #     - name: Run e2e cypress tests
+  #       env:
+  #         APP_ENV: test
+  #         AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         OKTA_TEST_PASSWORD: ${{ secrets.OKTA_TEST_PASSWORD }}
+  #         OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
+  #         OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
+  #       run: |
+  #         ./scripts/run-cypress-test-docker
+  #     - name: Upload cypress videos
+  #       if: ${{ always() }}
+  #       uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+  #       with:
+  #         name: cypress-videos
+  #         path: cypress/videos
+  #         retention-days: 14
+  #     - name: Upload cypress screenshots
+  #       if: ${{ always() }}
+  #       uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+  #       with:
+  #         name: cypress-screenshots
+  #         path: cypress/screenshots
+  #         if-no-files-found: ignore
+  #         retention-days: 14
+  #     - name: Announce failure
+  #       if: ${{ failure() }}
+  #       run: |
+  #         ./scripts/github-action-announce-broken-branch
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
-        with:
-          ref: ${{ env.GIT_HASH }}
-      - name: Set up node
-        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
-        with:
-          node-version: ${{ env.EASI_APP_NODE_VERSION }}
-      - name: Set up go
-        uses: actions/setup-go@84cbf8094393cdc5fe1fe1671ff2647332956b1a
-        with:
-          go-version: ${{ env.EASI_APP_GO_VERSION }}
-      - name: Configure go cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
-        with:
-          path: |
-            ~/go/pkg/mod
-          key: v1-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            v1-go-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Configure yarn cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: |
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            ./node_modules
-          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            v1-yarn-
-      # go-swagger is used for pre-commit hooks
-      - name: Install go-swagger
-        id: install-go-swagger
-        run: |
-          cd /usr/local/bin
-          wget -O swagger https://github.com/go-swagger/go-swagger/releases/download/v0.28.0/swagger_linux_amd64
-          chmod +x swagger
-      - name: Pre-commit checks
-        uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe
-        with:
-          extra_args: --all-files
-      - name: Announce failure
-        if: ${{ failure() }}
-        run: |
-          ./scripts/github-action-announce-broken-branch
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+  #       with:
+  #         ref: ${{ env.GIT_HASH }}
+  #     - name: Set up node
+  #       uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+  #       with:
+  #         node-version: ${{ env.EASI_APP_NODE_VERSION }}
+  #     - name: Set up go
+  #       uses: actions/setup-go@84cbf8094393cdc5fe1fe1671ff2647332956b1a
+  #       with:
+  #         go-version: ${{ env.EASI_APP_GO_VERSION }}
+  #     - name: Configure go cache
+  #       uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
+  #       with:
+  #         path: |
+  #           ~/go/pkg/mod
+  #         key: v1-go-${{ hashFiles('**/go.sum') }}
+  #         restore-keys: |
+  #           v1-go-
+  #     - name: Get yarn cache directory path
+  #       id: yarn-cache-dir-path
+  #       run: echo "::set-output name=dir::$(yarn cache dir)"
+  #     - name: Configure yarn cache
+  #       uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
+  #       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+  #       with:
+  #         path: |
+  #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
+  #           ./node_modules
+  #         key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           v1-yarn-
+  #     # go-swagger is used for pre-commit hooks
+  #     - name: Install go-swagger
+  #       id: install-go-swagger
+  #       run: |
+  #         cd /usr/local/bin
+  #         wget -O swagger https://github.com/go-swagger/go-swagger/releases/download/v0.28.0/swagger_linux_amd64
+  #         chmod +x swagger
+  #     - name: Pre-commit checks
+  #       uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe
+  #       with:
+  #         extra_args: --all-files
+  #     - name: Announce failure
+  #       if: ${{ failure() }}
+  #       run: |
+  #         ./scripts/github-action-announce-broken-branch
 
-  client_test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
-        with:
-          ref: ${{ env.GIT_HASH }}
-      - name: Set up node
-        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
-        with:
-          node-version: ${{ env.EASI_APP_NODE_VERSION }}
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Configure yarn cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: |
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            ./node_modules
-          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            v1-yarn-
-      - run: yarn test:coverage
-      - name: Announce failure
-        if: ${{ failure() }}
-        run: |
-          ./scripts/github-action-announce-broken-branch
+  # client_test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+  #       with:
+  #         ref: ${{ env.GIT_HASH }}
+  #     - name: Set up node
+  #       uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+  #       with:
+  #         node-version: ${{ env.EASI_APP_NODE_VERSION }}
+  #     - name: Get yarn cache directory path
+  #       id: yarn-cache-dir-path
+  #       run: echo "::set-output name=dir::$(yarn cache dir)"
+  #     - name: Configure yarn cache
+  #       uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
+  #       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+  #       with:
+  #         path: |
+  #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
+  #           ./node_modules
+  #         key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           v1-yarn-
+  #     - run: yarn test:coverage
+  #     - name: Announce failure
+  #       if: ${{ failure() }}
+  #       run: |
+  #         ./scripts/github-action-announce-broken-branch
 
-  client_typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
-        with:
-          ref: ${{ env.GIT_HASH }}
-      - name: Set up node
-        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # v2.1.5
-        with:
-          node-version: ${{ env.EASI_APP_NODE_VERSION }}
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Configure yarn cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # v2.1.6
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: |
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            ./node_modules
-          key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            v1-yarn-
-      - name: Run typechecking
-        id: typechecker
-        # Uses GitHub environment files to store typechecker output and pass to next stage
-        # see https://github.com/actions/toolkit/blob/main/docs/commands.md#environment-files
-        run: |
-          yarn build:ts 2>&1 | tee test.log
-          result_code=${PIPESTATUS[0]}
-          echo 'TS_LOG<<EOF' >> $GITHUB_ENV
-          cat test.log >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-          exit $result_code
-        continue-on-error: true
+  # client_typecheck:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
+  #       with:
+  #         ref: ${{ env.GIT_HASH }}
+  #     - name: Set up node
+  #       uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # v2.1.5
+  #       with:
+  #         node-version: ${{ env.EASI_APP_NODE_VERSION }}
+  #     - name: Get yarn cache directory path
+  #       id: yarn-cache-dir-path
+  #       run: echo "::set-output name=dir::$(yarn cache dir)"
+  #     - name: Configure yarn cache
+  #       uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # v2.1.6
+  #       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+  #       with:
+  #         path: |
+  #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
+  #           ./node_modules
+  #         key: v1-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           v1-yarn-
+  #     - name: Run typechecking
+  #       id: typechecker
+  #       # Uses GitHub environment files to store typechecker output and pass to next stage
+  #       # see https://github.com/actions/toolkit/blob/main/docs/commands.md#environment-files
+  #       run: |
+  #         yarn build:ts 2>&1 | tee test.log
+  #         result_code=${PIPESTATUS[0]}
+  #         echo 'TS_LOG<<EOF' >> $GITHUB_ENV
+  #         cat test.log >> $GITHUB_ENV
+  #         echo 'EOF' >> $GITHUB_ENV
+  #         exit $result_code
+  #       continue-on-error: true
