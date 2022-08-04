@@ -98,7 +98,7 @@ jobs:
         #   DB_MAX_CONNECTIONS: 20
         #   FLAG_SOURCE: LOCAL
         run: |
-          scripts/dev up
+          scripts/dev up:backend
           scripts/dev test:go
           scripts/dev down
       # - name: Upload backend test artifacts
