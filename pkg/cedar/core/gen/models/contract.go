@@ -28,10 +28,6 @@ type Contract struct {
 	// budget ids
 	BudgetIds []*BudgetIds `json:"budgetIds"`
 
-	// Is ADO Parent Contract, Yes/No
-	// Example: yes
-	ContractADO string `json:"contractADO,omitempty"`
-
 	// contract deliverable Id
 	// Example: 11-22-333
 	ContractDeliverableID string `json:"contractDeliverableId,omitempty"`

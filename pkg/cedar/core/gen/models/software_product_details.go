@@ -21,7 +21,7 @@ type SoftwareProductDetails struct {
 	AiPlan string `json:"aiPlan,omitempty"`
 
 	// api data area
-	APIDataArea []string `json:"apiDataArea"`
+	APIDataArea string `json:"apiDataArea,omitempty"`
 
 	// api f h i r use
 	APIFHIRUse string `json:"apiFHIRUse,omitempty"`
@@ -36,7 +36,7 @@ type SoftwareProductDetails struct {
 	ApisDeveloped string `json:"apisDeveloped,omitempty"`
 
 	// system ai type
-	SystemAiType []string `json:"systemAiType"`
+	SystemAiType string `json:"systemAiType,omitempty"`
 
 	// system ai type other
 	SystemAiTypeOther string `json:"systemAiTypeOther,omitempty"`
