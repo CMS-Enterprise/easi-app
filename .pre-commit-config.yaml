@@ -91,6 +91,7 @@ repos:
         entry: scripts/gen_intake_schema
         language: script
         files: cmd/gen_intake_schema/main\.go|pkg/cedar/intake/models/.*\.go|pkg/cedar/intake/schemas/.*\.json|pkg/cedar/intake/translation/constants\.go
+        pass_filenames: false
 
   - repo: local
     hooks:
