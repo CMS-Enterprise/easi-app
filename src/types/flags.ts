@@ -7,6 +7,7 @@ export type Flags = {
   systemProfileHiddenFields: boolean;
   helpFooter: boolean;
   cedar508Requests: boolean;
+  notifyMultipleRecipients: boolean;
 };
 
 export type FlagsState = {

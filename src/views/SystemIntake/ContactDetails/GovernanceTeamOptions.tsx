@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Field, FieldArray, FormikProps, getIn } from 'formik';
 
 import CheckboxField from 'components/shared/CheckboxField';
@@ -17,18 +18,19 @@ type GovernanceTeamOptionsProps = {
 const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
   const { values, errors } = formikProps;
   const teams = values.governanceTeams.teams || [];
+  const { t } = useTranslation('intake');
 
   return (
     <FieldArray name="governanceTeams.teams">
       {arrayHelpers => (
         <fieldset className="margin-0 padding-0 border-0">
           <legend className="usa-sr-only">
-            For the checkboxes below, select all the teams you&apos;ve
-            collaborated with. Please disclose the name of the person on each
-            team you&apos;ve worked with.
+            {t('contactDetails.governanceTeam.helpText')}
           </legend>
           {cmsGovernanceTeams.map((team: any, index: number) => {
-            const isChecked = teams.map(t => t.name).includes(team.value);
+            const isChecked = teams
+              .map(govTeam => govTeam.name)
+              .includes(team.value);
             return (
               <Fragment key={team.key}>
                 <CheckboxField
@@ -47,7 +49,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                       });
                     } else {
                       const removeIndex = values.governanceTeams.teams
-                        ?.map(t => t.name)
+                        ?.map(govTeam => govTeam.name)
                         .indexOf(e.target.value);
                       if (typeof removeIndex === 'number' && removeIndex > -1) {
                         arrayHelpers.remove(removeIndex);
@@ -60,9 +62,9 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                     'aria-controls': `${team.key}-Collaborator`
                   }}
                 />
-                {teams.map((t, idx) => {
+                {teams.map((govTeam, idx) => {
                   const { key } = team;
-                  if (team.value === t.name) {
+                  if (team.value === govTeam.name) {
                     return (
                       <div
                         key={`${key}-Collaborator`}
@@ -75,9 +77,11 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                         >
                           <Label
                             htmlFor={`IntakeForm-${key}-Collaborator`}
-                            aria-label={`Enter ${team.acronym} Collaborator Name`}
+                            aria-label={t(
+                              `Enter ${team.acronym} Collaborator Name`
+                            )}
                           >
-                            {`${team.acronym} Collaborator Name`}
+                            {t(`${team.acronym} Collaborator Name`)}
                           </Label>
                           {errors.governanceTeams &&
                             errors.governanceTeams.teams &&

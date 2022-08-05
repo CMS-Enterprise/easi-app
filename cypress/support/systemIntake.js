@@ -5,17 +5,21 @@ cy.systemIntake = {
         .select('Center for Medicare')
         .should('have.value', 'Center for Medicare');
 
-      cy.get('#IntakeForm-BusinessOwner')
-        .type('Casey Doe')
-        .should('have.value', 'Casey Doe');
+      cy.get('#IntakeForm-BusinessOwner input')
+        .type('Jerry')
+        .wait(1000)
+        .type('{downArrow}{enter}')
+        .should('have.value', 'Jerry Seinfeld, SF13');
 
       cy.get('#IntakeForm-BusinessOwnerComponent')
         .select('Center for Medicare')
         .should('have.value', 'Center for Medicare');
 
-      cy.get('#IntakeForm-ProductManager')
-        .type('Casey Doe')
-        .should('have.value', 'Casey Doe');
+      cy.get('#IntakeForm-ProductManager input')
+        .type('Jerry')
+        .wait(1000)
+        .type('{downArrow}{enter}')
+        .should('have.value', 'Jerry Seinfeld, SF13');
 
       cy.get('#IntakeForm-ProductManagerComponent')
         .select('Center for Medicare')

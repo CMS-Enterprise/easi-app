@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon';
 
+import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
+
 export type GovernanceCollaborationTeam = {
   collaborator: string;
   name: string;
@@ -96,6 +98,26 @@ export type SystemIntakeForm = {
   } | null;
 } & ContractDetailsForm;
 
+export type ContactDetailsForm = {
+  requester: {
+    name: string;
+    component: string;
+  };
+  businessOwner: SystemIntakeContactProps;
+  productManager: SystemIntakeContactProps;
+  isso: SystemIntakeContactProps & { isPresent: boolean };
+  governanceTeams: {
+    isPresent: boolean | null;
+    teams:
+      | {
+          collaborator: string;
+          key: string;
+          name: string;
+        }[]
+      | null;
+  };
+};
+
 export type ContractDetailsForm = {
   fundingSource: {
     isFunded: boolean | null;
@@ -160,3 +182,56 @@ export type SubmitDatesForm = {
   grbDateMonth: string;
   grbDateYear: string;
 };
+
+// Cedar contacts
+export type CedarContactProps = {
+  euaUserId: string;
+  commonName: string;
+  email?: string;
+};
+
+// System intake contacts
+export type SystemIntakeContactProps = {
+  id?: string;
+  euaUserId: string;
+  systemIntakeId: string;
+  component: string;
+  role: string;
+  commonName: string;
+  email: string;
+};
+
+// Formatted system intake contacts
+export type FormattedContacts = {
+  businessOwner: AugmentedSystemIntakeContact;
+  productManager: AugmentedSystemIntakeContact;
+  isso: AugmentedSystemIntakeContact;
+  additionalContacts: AugmentedSystemIntakeContact[];
+};
+
+// Function to create system intake contact
+export type CreateContactType = (
+  contact: SystemIntakeContactProps
+) => Promise<AugmentedSystemIntakeContact | undefined>;
+
+// Function to update system intake contact
+export type UpdateContactType = (
+  contact: SystemIntakeContactProps
+) => Promise<AugmentedSystemIntakeContact[] | undefined>;
+
+// Function to delete system intake contact
+export type DeleteContactType = (
+  id: string
+) => Promise<AugmentedSystemIntakeContact[] | undefined>;
+
+// System intake contacts custom hook
+export type UseSystemIntakeContactsType = [
+  FormattedContacts | null,
+  {
+    createContact: CreateContactType;
+    updateContact: UpdateContactType;
+    deleteContact: DeleteContactType;
+  }
+];
+
+export type SystemIntakeRoleKeys = 'businessOwner' | 'productManager' | 'isso';

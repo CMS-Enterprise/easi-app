@@ -77,18 +77,49 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Your Intake Request has been submitted');
   });
 
-  it('displays and fills conditional fields', () => {
+  // depends on the "notifyMultipleRecipients" feature flag being set;
+  // we currently can't guarantee this when running tests in CI
+  it.skip('displays and fills conditional fields', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
+    // ISSO
     cy.get('#IntakeForm-HasIssoYes')
       .check({ force: true })
       .should('be.checked');
 
-    cy.get('#IntakeForm-IssoName')
-      .type('Taylor Smith')
-      .should('have.value', 'Taylor Smith');
+    cy.get('#IntakeForm-IssoCommonName input')
+      .type('Jerry')
+      .wait(1000)
+      .type('{downArrow}{enter}')
+      .should('have.value', 'Jerry Seinfeld, SF13');
 
+    cy.get('#IntakeForm-IssoComponent')
+      .select('Center for Medicare')
+      .should('have.value', 'Center for Medicare');
+
+    // Add another contact
+    cy.contains('button', 'Add another contact').click();
+
+    cy.get('#IntakeForm-ContactCommonName input')
+      .type('Jerry')
+      .wait(1000)
+      .type('{downArrow}{enter}')
+      .should('have.value', 'Jerry Seinfeld, SF13');
+
+    cy.get('#IntakeForm-ContactComponent')
+      .select('Center for Medicare')
+      .should('have.value', 'Center for Medicare');
+
+    cy.get('#IntakeForm-ContactRole')
+      .select('Product Owner')
+      .should('have.value', 'Product Owner');
+
+    cy.contains('button', 'Add contact').click();
+
+    cy.contains('p', 'SF13');
+
+    // Governance teams
     cy.get('#IntakeForm-YesGovernanceTeams')
       .check({ force: true })
       .should('be.checked');
@@ -193,7 +224,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', "CMS Business Owner's Name")
       .siblings('dd')
-      .contains('Casey Doe');
+      .contains('Jerry Seinfeld');
 
     cy.contains('.easi-review-row dt', 'CMS Business Owner Component')
       .siblings('dd')
@@ -201,7 +232,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', 'CMS Project/Product Manager or lead')
       .siblings('dd')
-      .contains('Casey Doe');
+      .contains('Jerry Seinfeld');
 
     cy.contains(
       '.easi-review-row dt',
@@ -215,7 +246,7 @@ describe('The System Intake Form', () => {
       'Does your project have an Information System Security Officer (ISSO)?'
     )
       .siblings('dd')
-      .contains('Yes, Taylor Smith');
+      .contains('Yes, Jerry Seinfeld');
 
     cy.contains('.easi-review-row dt', 'I have started collaborating with')
       .siblings('dd')
