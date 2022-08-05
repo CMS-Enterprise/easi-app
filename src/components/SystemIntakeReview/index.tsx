@@ -12,6 +12,7 @@ import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetS
 import { SystemIntakeStatus } from 'types/graphql-global-types';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDate } from 'utils/date';
+import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntake;
@@ -31,7 +32,6 @@ export const SystemIntakeReview = ({
 
   const fundingDefinition = () => {
     const { existingFunding, fundingSources } = systemIntake;
-    const isFundedText = convertBoolToYesNo(existingFunding);
 
     // Format funding sources object
     const fundingSourcesObject = fundingSources.reduce<FundingSourcesObject>(
@@ -51,29 +51,24 @@ export const SystemIntakeReview = ({
       {}
     );
 
-    if (existingFunding) {
-      const sourcesList = Object.values(fundingSourcesObject).map(
-        ({ fundingNumber, sources }) => {
-          return (
-            <li key={fundingNumber}>{`${fundingNumber} - ${sources.join(
-              ', '
-            )}`}</li>
-          );
-        }
-      );
-      // If not funded, return no
-      if (!existingFunding) return 'No';
+    // If no funding sources, return no
+    if (!existingFunding) return 'N/A';
 
-      // Return list of funding sources
-      return (
-        <>
-          Yes
-          <br />
-          <ul className="usa-list--unstyled">{sourcesList}</ul>
-        </>
-      );
-    }
-    return isFundedText;
+    return (
+      <ul className="usa-list--unstyled">
+        {Object.values(fundingSourcesObject).map(
+          ({ fundingNumber, sources }) => {
+            return (
+              <FundingSourcesListItem
+                key={fundingNumber}
+                fundingNumber={fundingNumber!}
+                sources={sources}
+              />
+            );
+          }
+        )}
+      </ul>
+    );
   };
   const issoDefinition = () => {
     const hasIsso = convertBoolToYesNo(systemIntake.isso.isPresent);
@@ -221,7 +216,7 @@ export const SystemIntakeReview = ({
       <DescriptionList title="Contract Details">
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Will this project be funded out of an existing funding source?" />
+            <DescriptionTerm term="Which existing funding sources will fund this project?" />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>

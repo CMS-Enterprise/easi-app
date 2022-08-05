@@ -18,36 +18,38 @@ import useIntakeFundingSources from './useIntakeFundingSources';
 
 type FundingSourcesListItemProps = {
   fundingNumber: string;
-  fundingSources: (string | null)[];
-  label?: boolean;
+  sources: (string | null)[];
   handleDelete?: () => void;
   handleEdit?: () => void;
+  className?: string;
 };
 
 export const FundingSourcesListItem = ({
   fundingNumber,
-  fundingSources,
-  label = true,
+  sources,
   handleDelete,
-  handleEdit
+  handleEdit,
+  className
 }: FundingSourcesListItemProps) => {
   const { t } = useTranslation('intake');
   return (
-    <li id={`fundingNumber-${fundingNumber}`} key={fundingNumber}>
-      {label && (
-        <h4 className="margin-bottom-0">
-          {t('contractDetails.fundingSources.fundingSource')}
-        </h4>
-      )}
+    <li
+      id={`fundingNumber-${fundingNumber}`}
+      key={fundingNumber}
+      className={className}
+    >
+      <h4 className="margin-bottom-0">
+        {t('contractDetails.fundingSources.fundingSource')}
+      </h4>
       <p className="margin-y-1">
         {`${t(
           'contractDetails.fundingSources.fundingNumber'
         )}: ${fundingNumber}`}
       </p>
       <p className="margin-y-1">
-        {`${t(
-          'contractDetails.fundingSources.fundingSources'
-        )}: ${fundingSources.join(', ')}`}
+        {`${t('contractDetails.fundingSources.fundingSources')}: ${sources.join(
+          ', '
+        )}`}
       </p>
       {handleEdit && (
         <Button
@@ -294,7 +296,7 @@ const FundingSources = ({
               <FundingSourcesListItem
                 key={fundingNumber}
                 fundingNumber={fundingNumber!}
-                fundingSources={sources}
+                sources={sources}
                 handleDelete={() =>
                   setFundingSources({ action: 'Delete', data: fundingSource })
                 }
