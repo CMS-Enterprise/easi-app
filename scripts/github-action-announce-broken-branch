@@ -2,9 +2,11 @@
 set -euo pipefail
 
 #####
-## Only alert on master branch
+## Only alert on main branch
 #####
-[[ $GITHUB_REF = 'refs/heads/master' ]] || exit 0
+if [ "$GITHUB_REF" != "refs/heads/master" ] && [ "$GITHUB_REF" != "refs/heads/main" ]; then
+    exit 0
+fi
 
 NOW=$(date '+%s')
 
