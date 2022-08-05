@@ -188,15 +188,13 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   <HelpText id="Intake-Form-ExistingFundingHelp">
                     {t('contractDetails.fundingSources.helpText')}
                   </HelpText>
-                  <FieldErrorMsg>{flatErrors.fundingSources}</FieldErrorMsg>
                   <Field
                     as={FundingSources}
                     id="IntakeForm-FundingSources"
                     name="fundingSources"
-                    initialValues={fundingSources}
+                    initialValues={values.fundingSources}
                     setFieldValue={setFieldValue}
                     fundingSourceOptions={intakeFundingSources}
-                    validateField={validateField}
                   />
                 </FieldGroup>
 

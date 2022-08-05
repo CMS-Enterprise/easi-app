@@ -18,11 +18,10 @@ const emptyFundingSource: MultiFundingSource = {
 // Custom hook for system intake funding source actions
 export default function useIntakeFundingSources(
   initialFundingSources: FundingSource[],
-  setFieldValue: (field: string, value: any) => void,
-  validateField: (field: string) => void
+  setFieldValue: (field: string, value: any) => void
 ): UseIntakeFundingSources {
   // Format initial funding sources
-  const initialFundingSourcesObject = useMemo(() => {
+  const fundingSources = useMemo(() => {
     // If no initial funding sources, return empty object
     if (!initialFundingSources) return {};
     // Return formatted initial funding sources object
@@ -48,12 +47,6 @@ export default function useIntakeFundingSources(
       {}
     );
   }, [initialFundingSources]);
-
-  // Funding sources state
-  const [
-    fundingSources,
-    setFundingSources
-  ] = useState<FormattedFundingSourcesObject>(initialFundingSourcesObject);
 
   // Active funding source - used in form
   const [activeFundingSource, setActiveFundingSource] = useState<{
@@ -105,21 +98,17 @@ export default function useIntakeFundingSources(
       };
     }
 
-    // Set funding sources with new values
-    setFundingSources(updatedFundingSources);
     // Set funding sources field value
     setFieldValue('fundingSources', formatSourcesForApi(updatedFundingSources));
   }
 
   // When funding source form is submitted, reset active funding source
   useEffect(() => {
-    const hasFundingSources = Object.keys(fundingSources).length > 0;
-    if (hasFundingSources) validateField('fundingSources');
     setActiveFundingSource({
       action: 'Reset',
       data: emptyFundingSource
     });
-  }, [fundingSources, validateField]);
+  }, [fundingSources]);
 
   return {
     fundingSources: [fundingSources, updateFundingSources],
