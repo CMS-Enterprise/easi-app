@@ -205,14 +205,17 @@ const intake = {
   },
   contractDetails: {
     fundingSources: {
-      addNewFundingSource: 'Add new funding source',
+      label: 'Which existing funding sources will fund this project?',
+      helpText:
+        'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.',
+      addFundingSource: 'Add a funding source',
+      addAnotherFundingSource: 'Add another funding source',
       fundingNumber: 'Funding number',
-      fundingNumberHelpText: 'Funding number must be 6 digits long',
+      fundingNumberHelpText: 'Must be 6 digits long',
       fundingNumberLink:
-        'You can find your funding number in the CMS Operating Plan page (opens in a new tab)',
-      fundingSourceLabel:
-        'Which existing models does your proposed track/model most closely resemble?',
-      fundingSourceHelpText: 'Start typing the name of the model',
+        'You can find your funding number in the CMS Operating Plan page',
+      fundingSource: 'Funding source',
+      fundingSources: 'Funding sources',
       errors: {
         fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
         fundingNumberDigits: 'Funding number can only contain digits',

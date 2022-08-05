@@ -36,7 +36,7 @@ const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
   );
 };
 
-export const MultiSelectTag = ({
+const MultiSelectTag = ({
   id,
   label,
   className,
@@ -120,7 +120,10 @@ const MultiSelect = ({
           </h4>
           <ul className="usa-list--unstyled">
             {selected.map(({ value, label }) => (
-              <li className="margin-bottom-05" key={value}>
+              <li
+                className="margin-bottom-05 margin-right-05 display-inline-block"
+                key={value}
+              >
                 <MultiSelectTag
                   id={`selected-${value}`}
                   key={value}

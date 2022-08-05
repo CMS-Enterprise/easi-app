@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
@@ -48,10 +49,11 @@ type ContractDetailsProps = {
 const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
   const formikRef = useRef<FormikProps<ContractDetailsForm>>(null);
+  const { t } = useTranslation('intake');
 
   const { id, fundingSources, costs, contract, existingFunding } = systemIntake;
   const initialValues: ContractDetailsForm = {
-    existingFunding,
+    existingFunding: false,
     fundingSources,
     costs: {
       expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
@@ -185,65 +187,33 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     data-testid="funding-source-fieldset"
                   >
                     <legend className="usa-label margin-bottom-1">
-                      Will this project be funded out of an existing funding
-                      source?
+                      {t('contractDetails.fundingSources.label')}
                     </legend>
                     <HelpText id="Intake-Form-ExistingFundingHelp">
-                      If you are unsure, please get in touch with your
-                      Contracting Officer Representative
+                      {t('contractDetails.fundingSources.helpText')}
                     </HelpText>
-                    <FieldErrorMsg>{flatErrors.existingFunding}</FieldErrorMsg>
-                    <Field
-                      as={Radio}
-                      checked={values.existingFunding === true}
-                      id="IntakeForm-HasFundingSourceYes"
-                      name="existingFunding"
-                      label="Yes"
-                      onChange={() => {
-                        setFieldValue('existingFunding', true);
-                      }}
-                      aria-describedby="Intake-Form-ExistingFundingHelp"
-                      aria-expanded={values.existingFunding === true}
-                      aria-controls="funding-source-container"
-                      value
-                    />
-                    {values.existingFunding && (
-                      <div
-                        id="funding-source-container"
-                        className="margin-top-neg-2 margin-left-4 margin-bottom-1"
+                    <FieldErrorMsg>
+                      {t(flatErrors.existingFunding)}
+                    </FieldErrorMsg>
+                    <div id="funding-source-container">
+                      <FieldGroup
+                        scrollElement="fundingSources"
+                        error={!!flatErrors.fundingSources}
                       >
-                        <FieldGroup
-                          scrollElement="fundingSources"
-                          error={!!flatErrors.fundingSources}
-                        >
-                          <FieldErrorMsg>
-                            {flatErrors.fundingSources}
-                          </FieldErrorMsg>
-                          <Field
-                            as={FundingSources}
-                            id="IntakeForm-FundingSources"
-                            name="fundingSources"
-                            initialValues={fundingSources}
-                            setFieldValue={setFieldValue}
-                            fundingSourceOptions={intakeFundingSources}
-                            validateField={validateField}
-                          />
-                        </FieldGroup>
-                      </div>
-                    )}
-                    <Field
-                      as={Radio}
-                      checked={values.existingFunding === false}
-                      id="IntakeForm-HasFundingSourceNo"
-                      name="existingFunding"
-                      label="No"
-                      onChange={() => {
-                        setFieldValue('existingFunding', false);
-                        setFieldValue('fundingSource.fundingNumber', '');
-                        setFieldValue('fundingSource.source', '');
-                      }}
-                      value={false}
-                    />
+                        <FieldErrorMsg>
+                          {flatErrors.fundingSources}
+                        </FieldErrorMsg>
+                        <Field
+                          as={FundingSources}
+                          id="IntakeForm-FundingSources"
+                          name="fundingSources"
+                          initialValues={fundingSources}
+                          setFieldValue={setFieldValue}
+                          fundingSourceOptions={intakeFundingSources}
+                          validateField={validateField}
+                        />
+                      </FieldGroup>
+                    </div>
                   </fieldset>
                 </FieldGroup>
 

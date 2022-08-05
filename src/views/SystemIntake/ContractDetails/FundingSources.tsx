@@ -5,7 +5,7 @@ import { Button, Label, Link } from '@trussworks/react-uswds';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import MultiSelect, { MultiSelectTag } from 'components/shared/MultiSelect';
+import MultiSelect from 'components/shared/MultiSelect';
 import {
   FormattedFundingSourcesObject,
   FundingSource,
@@ -16,32 +16,40 @@ import {
 
 import useIntakeFundingSources from './useIntakeFundingSources';
 
-const FundingSourcesListItem = ({
-  fundingNumber,
-  fundingSources,
-  handleDelete,
-  handleEdit
-}: {
+type FundingSourcesListItemProps = {
   fundingNumber: string;
   fundingSources: (string | null)[];
-  handleDelete: () => void;
-  handleEdit: () => void;
-}) => {
-  const { t } = useTranslation();
+  label?: boolean;
+  handleDelete?: () => void;
+  handleEdit?: () => void;
+};
+
+export const FundingSourcesListItem = ({
+  fundingNumber,
+  fundingSources,
+  label = true,
+  handleDelete,
+  handleEdit
+}: FundingSourcesListItemProps) => {
+  const { t } = useTranslation('intake');
   return (
     <li id={`fundingNumber-${fundingNumber}`} key={fundingNumber}>
-      <h4 className="margin-bottom-1">
-        Funding Number: <span className="text-normal">{fundingNumber}</span>
-      </h4>
-      {fundingSources.map(source => (
-        <MultiSelectTag
-          key={`${fundingNumber}-${source}`}
-          id={`fundingSource-${source}`}
-          label={t(source!)}
-          className="padding-x-1 padding-y-05"
-        />
-      ))}
-      <div className="margin-top-1">
+      {label && (
+        <h4 className="margin-bottom-0">
+          {t('contractDetails.fundingSources.fundingSource')}
+        </h4>
+      )}
+      <p className="margin-y-1">
+        {`${t(
+          'contractDetails.fundingSources.fundingNumber'
+        )}: ${fundingNumber}`}
+      </p>
+      <p className="margin-y-1">
+        {`${t(
+          'contractDetails.fundingSources.fundingSources'
+        )}: ${fundingSources.join(', ')}`}
+      </p>
+      {handleEdit && (
         <Button
           unstyled
           small
@@ -51,6 +59,8 @@ const FundingSourcesListItem = ({
         >
           {t('Edit')}
         </Button>
+      )}
+      {handleDelete && (
         <Button
           unstyled
           small
@@ -60,7 +70,7 @@ const FundingSourcesListItem = ({
         >
           {t('Delete')}
         </Button>
-      </div>
+      )}
     </li>
   );
 };
@@ -153,14 +163,17 @@ const FundingSourceForm = ({
     <>
       <h4 className="margin-bottom-1">{t(`${action} funding source`)}</h4>
       <FieldGroup
-        className="margin-top-1"
+        className="margin-top-2"
         scrollElement="fundingSource.fundingNumber"
         error={!!errors.fundingNumber}
       >
         <Label htmlFor="fundingNumber" className="text-normal">
           {t('contractDetails.fundingSources.fundingNumber')}
         </Label>
-        <HelpText id="IntakeForm-FundingNumberRestrictions">
+        <HelpText
+          id="IntakeForm-FundingNumberRestrictions"
+          className="margin-top-1"
+        >
           {t('contractDetails.fundingSources.fundingNumberHelpText')}
         </HelpText>
         <FieldErrorMsg>{errors.fundingNumber}</FieldErrorMsg>
@@ -189,18 +202,15 @@ const FundingSourceForm = ({
           </Link>
         </HelpText>
       </FieldGroup>
-      <FieldGroup error={!!errors.sources}>
+      <FieldGroup error={!!errors.sources} className="margin-y-2">
         <Label htmlFor="fundingSources" className="text-normal">
-          {t('contractDetails.fundingSources.fundingSourceLabel')}
+          {t('contractDetails.fundingSources.fundingSource')}
         </Label>
-        <HelpText id="IntakeForm-FundingSourceHelpText">
-          {t('contractDetails.fundingSources.fundingSourceHelpText')}
-        </HelpText>
         <FieldErrorMsg>{errors.sources}</FieldErrorMsg>
         <MultiSelect
           id="IntakeForm-FundingSources"
           name="fundingSources"
-          selectedLabel="Selected models"
+          selectedLabel={t('Funding sources')}
           className="margin-top-1"
           options={fundingSourceOptions.map(option => ({
             value: option,
@@ -217,10 +227,22 @@ const FundingSourceForm = ({
       </FieldGroup>
       <Button
         type="button"
+        onClick={() =>
+          setActiveFundingSource({
+            action: 'Reset'
+          })
+        }
+        className="display-inline-block margin-top-2"
+        outline
+      >
+        {t(`Cancel`)}
+      </Button>
+      <Button
+        type="button"
         onClick={() => onSubmit()}
         className="display-inline-block margin-top-2"
       >
-        {t(`${action} funding source`)}
+        {t(`Save`)}
       </Button>
       {Object.keys(fundingSources).length > 0 && (
         <Button
@@ -265,37 +287,42 @@ const FundingSources = ({
   const editFundingSourceNumber = useRef('');
 
   return (
-    <div className="margin-bottom-2">
-      <ul className="systemIntake-fundingSources usa-list--unstyled">
-        {Object.values(fundingSources).map(fundingSource => {
-          const { fundingNumber, sources } = fundingSource;
-          return editFundingSourceNumber.current === fundingNumber &&
-            action === 'Edit' ? (
-            <FundingSourceForm
-              key={fundingNumber}
-              activeFundingSource={activeFundingSource}
-              setActiveFundingSource={setActiveFundingSource}
-              fundingSources={fundingSources}
-              setFundingSources={setFundingSources}
-              fundingSourceOptions={fundingSourceOptions}
-              action={action}
-            />
-          ) : (
-            <FundingSourcesListItem
-              key={fundingNumber}
-              fundingNumber={fundingNumber!}
-              fundingSources={sources}
-              handleDelete={() =>
-                setFundingSources({ action: 'Delete', data: fundingSource })
-              }
-              handleEdit={() => {
-                editFundingSourceNumber.current = fundingNumber;
-                setActiveFundingSource({ action: 'Edit', data: fundingSource });
-              }}
-            />
-          );
-        })}
-      </ul>
+    <div className="systemIntake-fundingSources">
+      {Object.keys(fundingSources).length > 0 && (
+        <ul className="systemIntake-fundingSourcesList usa-list--unstyled margin-bottom-4">
+          {Object.values(fundingSources).map(fundingSource => {
+            const { fundingNumber, sources } = fundingSource;
+            return editFundingSourceNumber.current === fundingNumber &&
+              action === 'Edit' ? (
+              <FundingSourceForm
+                key={fundingNumber}
+                activeFundingSource={activeFundingSource}
+                setActiveFundingSource={setActiveFundingSource}
+                fundingSources={fundingSources}
+                setFundingSources={setFundingSources}
+                fundingSourceOptions={fundingSourceOptions}
+                action={action}
+              />
+            ) : (
+              <FundingSourcesListItem
+                key={fundingNumber}
+                fundingNumber={fundingNumber!}
+                fundingSources={sources}
+                handleDelete={() =>
+                  setFundingSources({ action: 'Delete', data: fundingSource })
+                }
+                handleEdit={() => {
+                  editFundingSourceNumber.current = fundingNumber;
+                  setActiveFundingSource({
+                    action: 'Edit',
+                    data: fundingSource
+                  });
+                }}
+              />
+            );
+          })}
+        </ul>
+      )}
       {action === 'Add' && (
         <FundingSourceForm
           activeFundingSource={activeFundingSource}
@@ -310,9 +337,12 @@ const FundingSources = ({
         <Button
           type="button"
           onClick={() => setActiveFundingSource({ action: 'Add' })}
-          className="display-block margin-top-2"
+          className="display-block margin-top-3"
+          outline
         >
-          {t('contractDetails.fundingSources.addNewFundingSource')}
+          {Object.keys(fundingSources).length > 0
+            ? t('contractDetails.fundingSources.addAnotherFundingSource')
+            : t('contractDetails.fundingSources.addFundingSource')}
         </Button>
       )}
     </div>

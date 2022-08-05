@@ -59,7 +59,7 @@ export default function useIntakeFundingSources(
   const [activeFundingSource, setActiveFundingSource] = useState<{
     data: MultiFundingSource;
     action: 'Add' | 'Edit' | 'Reset';
-  }>({ data: emptyFundingSource, action: 'Add' });
+  }>({ data: emptyFundingSource, action: 'Reset' });
 
   // Update active funding source - used in form
   const updateActiveFundingSource = ({
@@ -116,7 +116,7 @@ export default function useIntakeFundingSources(
     const hasFundingSources = Object.keys(fundingSources).length > 0;
     if (hasFundingSources) validateField('fundingSources');
     setActiveFundingSource({
-      action: hasFundingSources ? 'Reset' : 'Add',
+      action: 'Reset',
       data: emptyFundingSource
     });
   }, [fundingSources, validateField]);
