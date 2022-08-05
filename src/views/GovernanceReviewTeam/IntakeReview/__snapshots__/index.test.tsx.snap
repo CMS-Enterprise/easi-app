@@ -268,12 +268,12 @@ Array [
               <dt
                 className="text-bold margin-bottom-05"
               >
-                Will this project be funded out of an existing funding source?
+                Which existing funding sources will fund this project?
               </dt>
               <dd
                 className="description-definition margin-0"
               >
-                No
+                N/A
               </dd>
             </div>
           </div>
