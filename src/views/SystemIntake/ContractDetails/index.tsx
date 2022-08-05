@@ -53,7 +53,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
   const { id, fundingSources, costs, contract, existingFunding } = systemIntake;
   const initialValues: ContractDetailsForm = {
-    existingFunding: false,
+    existingFunding,
     fundingSources,
     costs: {
       expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
@@ -118,7 +118,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     return {
       id,
       fundingSources: {
-        existingFunding: values.existingFunding,
+        existingFunding: !!(values.fundingSources.length > 0),
         fundingSources: values.fundingSources
       },
       costs: values.costs,
@@ -179,42 +179,25 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               </div>
               <Form>
                 <FieldGroup
-                  scrollElement="existingFunding"
-                  error={!!flatErrors.existingFunding}
+                  scrollElement="fundingSources"
+                  error={!!flatErrors.fundingSources}
                 >
-                  <fieldset
-                    className="usa-fieldset margin-top-4"
-                    data-testid="funding-source-fieldset"
-                  >
-                    <legend className="usa-label margin-bottom-1">
-                      {t('contractDetails.fundingSources.label')}
-                    </legend>
-                    <HelpText id="Intake-Form-ExistingFundingHelp">
-                      {t('contractDetails.fundingSources.helpText')}
-                    </HelpText>
-                    <FieldErrorMsg>
-                      {t(flatErrors.existingFunding)}
-                    </FieldErrorMsg>
-                    <div id="funding-source-container">
-                      <FieldGroup
-                        scrollElement="fundingSources"
-                        error={!!flatErrors.fundingSources}
-                      >
-                        <FieldErrorMsg>
-                          {flatErrors.fundingSources}
-                        </FieldErrorMsg>
-                        <Field
-                          as={FundingSources}
-                          id="IntakeForm-FundingSources"
-                          name="fundingSources"
-                          initialValues={fundingSources}
-                          setFieldValue={setFieldValue}
-                          fundingSourceOptions={intakeFundingSources}
-                          validateField={validateField}
-                        />
-                      </FieldGroup>
-                    </div>
-                  </fieldset>
+                  <legend className="usa-label margin-bottom-1">
+                    {t('contractDetails.fundingSources.label')}
+                  </legend>
+                  <HelpText id="Intake-Form-ExistingFundingHelp">
+                    {t('contractDetails.fundingSources.helpText')}
+                  </HelpText>
+                  <FieldErrorMsg>{flatErrors.fundingSources}</FieldErrorMsg>
+                  <Field
+                    as={FundingSources}
+                    id="IntakeForm-FundingSources"
+                    name="fundingSources"
+                    initialValues={fundingSources}
+                    setFieldValue={setFieldValue}
+                    fundingSourceOptions={intakeFundingSources}
+                    validateField={validateField}
+                  />
                 </FieldGroup>
 
                 <FieldGroup

@@ -90,13 +90,6 @@ const SystemIntakeValidationSchema: any = {
       .required('Tell us if you need Enterprise Architecture (EA) support')
   }),
   contractDetails: Yup.object().shape({
-    existingFunding: Yup.boolean()
-      .nullable()
-      .required('Select Yes or No to indicate if you have funding'),
-    fundingSources: Yup.array().when('existingFunding', {
-      is: true,
-      then: Yup.array().min(1, 'Tell us your funding source')
-    }),
     costs: Yup.object().shape({
       isExpectingIncrease: Yup.string().required(
         'Tell us whether you are expecting costs for this request to increase'

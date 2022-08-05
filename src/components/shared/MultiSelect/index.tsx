@@ -14,7 +14,6 @@ type MultiSelectOptionProps = {
 
 const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
   const { data, isSelected, innerProps, innerRef, isFocused } = props;
-  // console.log(props);
   return (
     <div
       {...innerProps}

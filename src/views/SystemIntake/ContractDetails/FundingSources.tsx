@@ -244,16 +244,6 @@ const FundingSourceForm = ({
       >
         {t(`Save`)}
       </Button>
-      {Object.keys(fundingSources).length > 0 && (
-        <Button
-          type="button"
-          onClick={() => setActiveFundingSource({ action: 'Reset' })}
-          className="display-inline-block margin-top-2"
-          outline
-        >
-          {t('Cancel')}
-        </Button>
-      )}
     </>
   );
 };
