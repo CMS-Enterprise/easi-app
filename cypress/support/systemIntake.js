@@ -44,5 +44,26 @@ cy.systemIntake = {
         .check({ force: true })
         .should('be.checked');
     }
+  },
+  contractDetails: {
+    addFundingSource: ({ fundingNumber, sources, restart }) => {
+      if (restart) cy.get('[data-testid="fundingSourcesAction-add"').click();
+
+      if (fundingNumber) {
+        cy.get('#IntakeForm-FundingNumber')
+          .clear()
+          .type(fundingNumber)
+          .should('have.value', fundingNumber);
+      }
+
+      if (sources) {
+        sources.forEach(source => {
+          cy.get('#IntakeForm-FundingSources').type(`${source}{enter}{esc}`);
+          cy.get(`[data-testid="multiselect-tag--${source}"]`);
+        });
+      }
+
+      cy.get('[data-testid="fundingSourcesAction-save"').click();
+    }
   }
 };

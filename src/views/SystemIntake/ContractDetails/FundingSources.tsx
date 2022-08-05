@@ -58,6 +58,7 @@ export const FundingSourcesListItem = ({
           onClick={() => handleEdit()}
           type="button"
           className="margin-right-1"
+          data-testid="fundingSourcesAction-delete"
         >
           {t('Edit')}
         </Button>
@@ -69,6 +70,7 @@ export const FundingSourcesListItem = ({
           onClick={() => handleDelete()}
           type="button"
           className="text-error"
+          data-testid="fundingSourcesAction-delete"
         >
           {t('Delete')}
         </Button>
@@ -236,6 +238,7 @@ const FundingSourceForm = ({
         }
         className="display-inline-block margin-top-2"
         outline
+        data-testid="fundingSourcesAction-cancel"
       >
         {t(`Cancel`)}
       </Button>
@@ -243,6 +246,7 @@ const FundingSourceForm = ({
         type="button"
         onClick={() => onSubmit()}
         className="display-inline-block margin-top-2"
+        data-testid="fundingSourcesAction-save"
       >
         {t(`Save`)}
       </Button>
@@ -276,9 +280,9 @@ const FundingSources = ({
   const editFundingSourceNumber = useRef('');
 
   return (
-    <div className="systemIntake-fundingSources">
+    <>
       {Object.keys(fundingSources).length > 0 && (
-        <ul className="systemIntake-fundingSourcesList usa-list--unstyled margin-bottom-4">
+        <ul className="usa-list--unstyled margin-bottom-4">
           {Object.values(fundingSources).map(fundingSource => {
             const { fundingNumber, sources } = fundingSource;
             return editFundingSourceNumber.current === fundingNumber &&
@@ -325,6 +329,7 @@ const FundingSources = ({
       {action === 'Reset' && (
         <Button
           type="button"
+          data-testid="fundingSourcesAction-add"
           onClick={() => setActiveFundingSource({ action: 'Add' })}
           className="display-block margin-top-3"
           outline
@@ -334,7 +339,7 @@ const FundingSources = ({
             : t('contractDetails.fundingSources.addFundingSource')}
         </Button>
       )}
-    </div>
+    </>
   );
 };
 
