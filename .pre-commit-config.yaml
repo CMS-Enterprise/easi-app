@@ -5,10 +5,10 @@ repos:
     hooks:
       - id: no-commit-to-branch
         args: [
-          '--pattern', '^(?!((main|master)|(EASI-\d{0,5}|NOREF|dependabot|feat\/EASI-\d{0,5})\/[a-zA-Z0-9\-]+)$).*',
+          '--pattern', '^(?!((main)|(EASI-\d{0,5}|NOREF|dependabot|feat\/EASI-\d{0,5})\/[a-zA-Z0-9\-]+)$).*',
         ]
         name: Enforce branch naming pattern
-        description: Enforces branch naming policy. Allowed branch patterns are 'EASI-#/*', 'feature/EASI-#/*', and 'NOREF/*'. 'main', 'master', and 'dependabot/*' are also allowed for CI purposes.
+        description: Enforces branch naming policy. Allowed branch patterns are 'EASI-#/*', 'feature/EASI-#/*', and 'NOREF/*'. 'main', and 'dependabot/*' are also allowed for CI purposes.
   - repo: https://github.com/detailyang/pre-commit-shell
     rev: v1.0.6
     hooks:
