@@ -11,6 +11,9 @@ repos:
         description: Enforces branch naming policy. Allowed branch patterns are 'EASI-#/*', 'feature/EASI-#/*', and 'NOREF/*'. 'main', and 'dependabot/*' are also allowed for CI purposes.
       - id: check-yaml
       - id: detect-private-key
+      - id: end-of-file-fixer
+        name: Add newlines to end of files
+        files: \.(sql|scss|md|js|ts|tsx|go|yml|yaml)$
 
   - repo: https://github.com/detailyang/pre-commit-shell
     rev: v1.0.6
@@ -107,10 +110,3 @@ repos:
     hooks:
       - id: git-secrets
         entry: git-secrets --pre_commit_hook
-
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
-    hooks:
-      - id: end-of-file-fixer
-        name: Add newlines to end of files
-        files: \.(sql|scss|md|js|ts|tsx|go|yml|yaml)$
