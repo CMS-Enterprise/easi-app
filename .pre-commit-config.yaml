@@ -5,7 +5,7 @@ repos:
     hooks:
       - id: no-commit-to-branch
         args: [
-          '--pattern', '^(?!((main)|(EASI-\d{0,5}|NOREF|dependabot|feat\/EASI-\d{0,5})\/[a-zA-Z0-9\-_]+)$).*',
+          '--pattern', '^(?!((main)|(EASI-\d{0,5}|NOREF|dependabot|feat\/EASI-\d{0,5})\/[a-zA-Z0-9\-_\.]+)$).*',
         ]
         name: Enforce branch naming pattern
         description: Enforces branch naming policy. Allowed branch patterns are 'EASI-#/*', 'feature/EASI-#/*', and 'NOREF/*'. 'main', and 'dependabot/*' are also allowed for CI purposes.
