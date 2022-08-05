@@ -4,7 +4,7 @@ set -euo pipefail
 #####
 ## Only alert on main branch
 #####
-if [ "$GITHUB_REF" != "refs/heads/master" ] && [ "$GITHUB_REF" != "refs/heads/main" ]; then
+if [ "$GITHUB_REF" != "refs/heads/main" ]; then
     exit 0
 fi
 
