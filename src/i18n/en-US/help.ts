@@ -109,7 +109,14 @@ const help = {
       form: 'Please check and fix the form'
     },
     submit: 'Send feedback',
-    submitAndRestart: 'Send and start another form'
+    done: {
+      thankYou: 'Thank you for your feedback',
+      willReview: 'The EASi team has received your report and will review it.',
+      closeTab: 'Close tab and return to EASi',
+      sendAnother: 'Send another report',
+      reportProblem: 'Report a problem with EASi',
+      sendFeedback: 'Send feedback for the EASi team'
+    }
   },
   reportAProblem: {
     title: 'Report a problem',

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
@@ -296,17 +297,15 @@ export async function parseForm(
   return parsed;
 }
 
-const Done = () => {
-  return <>✨</>;
-};
-
 /**
  * This formik form uses type `SendFeedbackEmailForm`, which is an extension
  * of the original backend type `SendFeedbackEmailInput`.
+ * When the form successfully completes the user can choose to start over again.
  */
 const SendFeedback = () => {
   const { t } = useTranslation('help');
   const [isDone, setIsDone] = useState<boolean>(false);
+  const history = useHistory();
 
   const [send] = useMutation<SendFeedbackEmail, SendFeedbackEmailVariables>(
     SendFeedbackEmailQuery
@@ -320,41 +319,35 @@ const SendFeedback = () => {
 
   return (
     <MainContent className="grid-container help-send-feedback">
-      <HelpBreadcrumb type="Close tab" text={t('sendFeedback.closeTab')} />
+      <HelpBreadcrumb
+        type="Close tab"
+        text={!isDone ? t('sendFeedback.closeTab') : undefined}
+      />
       <h1 className="margin-top-2 margin-bottom-1">
-        {t('sendFeedback.title')}
+        {t(!isDone ? 'sendFeedback.title' : 'sendFeedback.done.thankYou')}
       </h1>
       <div className="font-body-lg line-height-body-2 line-height-body-5 text-light">
-        {t('sendFeedback.description')}
+        {t(
+          !isDone ? 'sendFeedback.description' : 'sendFeedback.done.willReview'
+        )}
       </div>
-      {isDone ? (
-        <Done />
-      ) : (
-        <Grid row>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <Formik
-              initialValues={
-                (sendFeedbackEmailFormSchema.getDefaultFromShape() as unknown) as SendFeedbackEmailForm
-              }
-              validationSchema={sendFeedbackEmailFormSchema}
-              validateOnBlur={false}
-              validateOnChange={false}
-              onSubmit={onSubmit}
-            >
-              {({
-                errors,
-                isSubmitting,
-                resetForm,
-                setErrors,
-                submitCount,
-                submitForm,
-                validateForm,
-                values
-              }) => {
-                // console.log('errors', JSON.stringify(errors, null, 2));
-                // console.log('form values', JSON.stringify(values, null, 2));
-                // console.log('submitting', isSubmitting, submitCount);
-                return (
+      <Formik
+        initialValues={
+          (sendFeedbackEmailFormSchema.getDefaultFromShape() as unknown) as SendFeedbackEmailForm
+        }
+        validationSchema={sendFeedbackEmailFormSchema}
+        validateOnBlur={false}
+        validateOnChange={false}
+        onSubmit={onSubmit}
+      >
+        {({ errors, isSubmitting, resetForm, submitCount, values }) => {
+          // console.log('errors', JSON.stringify(errors, null, 2));
+          // console.log('form values', JSON.stringify(values, null, 2));
+          // console.log('submitting', isSubmitting, submitCount);
+          if (!isDone) {
+            return (
+              <Grid row>
+                <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
                   <Form>
                     <FormGroup>
                       <Fieldset
@@ -448,23 +441,6 @@ const SendFeedback = () => {
                       >
                         {t('sendFeedback.submit')}
                       </Button>
-                      <Button
-                        type="button"
-                        outline
-                        disabled={isSubmitting}
-                        onClick={async () => {
-                          // Manually validate and submit before reset
-                          await submitForm();
-                          const errs = await validateForm();
-                          if (Object.keys(errs).length > 0) {
-                            setErrors(errs);
-                          } else {
-                            resetForm();
-                          }
-                        }}
-                      >
-                        {t('sendFeedback.submitAndRestart')}
-                      </Button>
                       {Object.keys(errors).length > 0 && submitCount > 0 && (
                         <TrussErrorMessage className="padding-top-1">
                           {t('sendFeedback.errorMessage.form')}
@@ -472,12 +448,50 @@ const SendFeedback = () => {
                       )}
                     </div>
                   </Form>
-                );
-              }}
-            </Formik>
-          </Grid>
-        </Grid>
-      )}
+                </Grid>
+              </Grid>
+            );
+          }
+
+          // Form submisson complete
+          return (
+            <div className="margin-top-3 height-card-lg">
+              <Button type="button" onClick={window.close}>
+                {t('sendFeedback.done.closeTab')}
+              </Button>
+              <div className="margin-top-5">
+                <div className="text-bold">
+                  {t('sendFeedback.done.sendAnother')}
+                </div>
+                <div className="margin-top-1">
+                  <Button
+                    type="button"
+                    unstyled
+                    onClick={() => {
+                      history.push('/help/report-a-problem');
+                    }}
+                  >
+                    {t('sendFeedback.done.reportProblem')}
+                  </Button>
+                </div>
+                <div className="margin-top-05">
+                  <Button
+                    type="button"
+                    unstyled
+                    onClick={() => {
+                      // Restart this form
+                      resetForm();
+                      setIsDone(false);
+                    }}
+                  >
+                    {t('sendFeedback.done.sendFeedback')}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        }}
+      </Formik>
     </MainContent>
   );
 };
