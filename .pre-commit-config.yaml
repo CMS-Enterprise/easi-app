@@ -5,25 +5,29 @@ repos:
     hooks:
       - id: no-commit-to-branch
         args: [
-          '--pattern', '^(?!((main)|(EASI-\d{0,5}|NOREF|dependabot|feat\/EASI-\d{0,5})\/[a-zA-Z0-9\-]+)$).*',
+          '--pattern', '^(?!((main)|(EASI-\d{0,5}|NOREF|dependabot|feat\/EASI-\d{0,5})\/[a-zA-Z0-9\-_]+)$).*',
         ]
         name: Enforce branch naming pattern
         description: Enforces branch naming policy. Allowed branch patterns are 'EASI-#/*', 'feature/EASI-#/*', and 'NOREF/*'. 'main', and 'dependabot/*' are also allowed for CI purposes.
       - id: check-yaml
+        name: Check YAML formatting
       - id: detect-private-key
+        name: Check for private keys
       - id: end-of-file-fixer
-        name: Add newlines to end of files
         files: \.(sql|scss|md|js|ts|tsx|go|yml|yaml)$
+        name: Add newlines to ends of files
 
   - repo: https://github.com/detailyang/pre-commit-shell
     rev: v1.0.6
     hooks:
       - id: shell-lint
+        name: Lint shell files
 
   - repo: https://github.com/trussworks/pre-commit-hooks
     rev: v1.1.1
     hooks:
       - id: mdspell
+        name: Spellcheck Markdown files
         exclude: >
           (?x)^(
             .github/PULL_REQUEST_TEMPLATE.md|
@@ -36,6 +40,7 @@ repos:
     rev: v1.0.1
     hooks:
       - id: go-fmt-import
+        name: Run "goimports" on go files
         args: ['-local', 'github.com/cmsgov/easi-app']
         files: .*\.go$
         exclude: >
@@ -49,12 +54,13 @@ repos:
     rev: v1.48.0
     hooks:
       - id: golangci-lint
+        name: Lint go files
         args: ['--concurrency', '-1'] # Run with all CPUs
 
   - repo: local
     hooks:
     - id: dockerfilelint
-      name: Dockerfile linter
+      name: Lint Dockerfile
       entry: dockerfilelint
       language: node
       additional_dependencies: [dockerfilelint]
@@ -63,7 +69,7 @@ repos:
   - repo: local
     hooks:
       - id: eslint
-        name: eslint
+        name: Run eslint
         entry: scripts/pre-commit-eslint
         language: script
         files: \.(js|jsx|ts|tsx)$
@@ -71,7 +77,7 @@ repos:
   - repo: local
     hooks:
       - id: graphql-schema
-        name: graphql-schema
+        name: Lint GraphQL schema
         entry: scripts/pre-commit-graphql-schema-lint
         language: script
         files: pkg/graph/schema.graphql
@@ -79,7 +85,7 @@ repos:
   - repo: local
     hooks:
       - id: check-code-generation
-        name: check-code-generation
+        name: Run GraphQL code generation
         entry: scripts/pre-commit-check-code-generation
         language: script
         files: "pkg/graph/schema\\.graphql|pkg/graph/schema\\.resolvers\\.go|src/queries/.*\\.ts"
@@ -90,7 +96,7 @@ repos:
   - repo: local
     hooks:
       - id: check-intake-schema-generation
-        name: check-intake-schema-generation
+        name: Generate CEDAR Intake schema
         entry: scripts/gen_intake_schema
         language: script
         files: cmd/gen_intake_schema/main\.go|pkg/cedar/intake/models/.*\.go|pkg/cedar/intake/schemas/.*\.json|pkg/cedar/intake/translation/constants\.go
@@ -99,7 +105,7 @@ repos:
   - repo: local
     hooks:
       - id: preprocess-intake-swagger
-        name: preprocess-intake-swagger
+        name: Generate CEDAR Intake client
         entry: scripts/generate_cedar_intake_client
         language: script
         files: pkg/cedar/intake/cedar_intake.json
@@ -109,4 +115,5 @@ repos:
     rev: b9e96b3212fa06aea65964ff0d5cda84ce935f38
     hooks:
       - id: git-secrets
+        name: Check for committed secrets
         entry: git-secrets --pre_commit_hook
