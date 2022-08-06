@@ -137,7 +137,7 @@ writing these tests in TypeScript, there is documentation in supporting that [he
 The project is now using [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
  It originally started with Enzyme, and the decision was made to switch to RTL,
  so there may still be tests that have not been converted.
- (See [ADR](https://github.com/CMSgov/easi-app/blob/master/docs/adr/0028-use-react-testing-library.md)
+ (See [ADR](https://github.com/CMSgov/easi-app/blob/main/docs/adr/0028-use-react-testing-library.md)
  for reasoning)
 
 ### Code coverage
@@ -146,7 +146,7 @@ The project is now using [React Testing Library](https://testing-library.com/doc
 `yarn test:coverage`
 
 To view current Go test coverage, go to Github Actions `Run_Tests`
-on the latest master build, and search for "total coverage is."
+on the latest main build, and search for "total coverage is."
 
 There are thresholds set such that the build in Github Actions
 will fail if minimum code coverage thresholds are not met.
