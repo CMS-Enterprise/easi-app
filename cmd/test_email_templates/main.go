@@ -39,7 +39,7 @@ func createEmailClient() email.Client {
 		TemplateDirectory:      os.Getenv("EMAIL_TEMPLATE_DIR"),
 	}
 
-	sender := local.NewPostfixSender("localhost:1025")
+	sender := local.NewSMTPSender("localhost:1025")
 	emailClient, err := email.NewClient(emailConfig, sender)
 	noErr(err)
 	return emailClient

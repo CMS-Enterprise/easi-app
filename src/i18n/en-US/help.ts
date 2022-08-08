@@ -1,3 +1,5 @@
+import { sendFeedbackOptions } from 'constants/helpFeedback';
+
 const help = {
   heading: "We're here to help.",
   subheading:
@@ -74,6 +76,52 @@ const help = {
         email: 'NavigatorInquiries@cms.hhs.gov'
       }
     }
+  },
+  sendFeedback: {
+    title: 'Send feedback',
+    description:
+      'Have a suggestion for how to improve EASi? Let us know using the form below.',
+    closeTab: 'Close tab without sending feedback',
+    labels: {
+      isAnonymous: 'Would you like your feedback to remain anonymous?',
+      canBeContacted:
+        'May the EASi team contact you for additional information?',
+      easiServicesUsed: 'Which EASi service were you using?',
+      cmsRole: 'What is your role at CMS?',
+      systemEasyToUse: 'The system was easy to use.',
+      didntNeedHelpAnswering: 'I didn’t need help answering any questions.',
+      questionsWereRelevant:
+        'All the questions on the form were relevant to my use case.',
+      hadAccessToInformation:
+        'I had access to all the information the form asked for.',
+      howSatisfied: 'Overall, how satisfied were you with the service?',
+      howCanWeImprove: 'How can we improve EASi?',
+      pleaseExplain: 'Please explain'
+    },
+    options: sendFeedbackOptions,
+    descriptions: {
+      isAnonymous:
+        'If you select yes, your name and email will not be recorded with your feedback.'
+    },
+    errorMessage: {
+      select: 'Please make a selection',
+      explain: 'Please include an explanation',
+      form: 'Please check and fix the form'
+    },
+    submit: 'Send feedback',
+    done: {
+      thankYou: 'Thank you for your feedback',
+      willReview: 'The EASi team has received your report and will review it.',
+      closeTab: 'Close tab and return to EASi',
+      sendAnother: 'Send another report',
+      reportProblem: 'Report a problem with EASi',
+      sendFeedback: 'Send feedback for the EASi team'
+    }
+  },
+  reportAProblem: {
+    title: 'Report a problem',
+    description:
+      'Did you notice something wrong with EASi? Let us know using the form below.'
   },
   footer: {
     wantToHelp: 'Want to help improve EASi?',

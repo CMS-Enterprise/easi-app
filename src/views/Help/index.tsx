@@ -13,6 +13,7 @@ import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
 import Section508 from './Section508';
+import SendFeedback from './SendFeedback';
 
 const Help = () => {
   return (
@@ -52,6 +53,9 @@ const Help = () => {
         path="/help/section-508/templates-for-508-testing"
         render={() => <TestingTemplates />}
       />
+
+      {/* Help feedback forms */}
+      <Route path="/help/send-feedback" render={() => <SendFeedback />} />
 
       {/* 404 */}
       <Route path="*" render={() => <NotFound />} />
