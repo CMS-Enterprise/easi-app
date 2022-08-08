@@ -5532,7 +5532,7 @@ type BusinessCaseSolution {
 }
 
 """
-The cost phase of a 
+The cost phase of a
 """
 enum LifecycleCostPhase {
   DEVELOPMENT
@@ -5582,7 +5582,7 @@ enum BusinessCaseStatus {
 }
 
 """
-A business case associated with an system IT governence request; contains 
+A business case associated with an system IT governence request; contains
 equester's justification for their system request
 """
 type BusinessCase {
@@ -6145,7 +6145,7 @@ input BasicActionInput {
 }
 
 """
-Input to submit an intake for review 
+Input to submit an intake for review
 """
 input SubmitIntakeInput {
   id: UUID!
@@ -6394,7 +6394,7 @@ type Query {
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
+  cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   exchanges(cedarSystemId: String!): [CedarExchange!]!
