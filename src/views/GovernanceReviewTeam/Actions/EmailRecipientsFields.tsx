@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import AdditionalContacts from 'components/AdditionalContacts';
+import { SystemIntakeContactProps } from 'types/systemIntake';
+
 type EmailRecipientsFieldsProps = {
   optional?: boolean;
   className?: string;
@@ -23,10 +26,6 @@ export default ({
   setActiveContact
 }: EmailRecipientsFieldsProps) => {
   const { t } = useTranslation('action');
-  const [
-    contacts,
-    { createContact, updateContact, deleteContact }
-  ] = useSystemIntakeContacts(systemIntakeId);
 
   return (
     <div className={classnames(className)}>
@@ -42,9 +41,8 @@ export default ({
         systemIntakeId={systemIntakeId}
         activeContact={activeContact}
         setActiveContact={setActiveContact}
-        createContact={createContact}
-        updateContact={updateContact}
-        deleteContact={deleteContact}
+        type="recipient"
+        className="margin-bottom-4"
       />
     </div>
   );

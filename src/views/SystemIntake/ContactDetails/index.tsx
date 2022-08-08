@@ -660,6 +660,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     systemIntakeId={id}
                     activeContact={activeContact}
                     setActiveContact={setActiveContact}
+                    className="margin-top-4"
                   />
                 )}
                 {/* Governance Teams */}

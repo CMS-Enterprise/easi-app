@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Dropdown, Label } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -20,11 +21,13 @@ import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 const Contact = ({
   contact,
   deleteContact,
-  setActiveContact
+  setActiveContact,
+  type
 }: {
   contact: SystemIntakeContactProps;
   deleteContact: DeleteContactType;
   setActiveContact: (activeContact: SystemIntakeContactProps | null) => void;
+  type: 'contact' | 'recipient';
 }) => {
   const { commonName, component, role, id } = contact;
   const { t } = useTranslation('intake');
@@ -42,7 +45,7 @@ const Contact = ({
           unstyled
           onClick={() => setActiveContact(contact)}
         >
-          {t('Edit')}
+          {t('Edit', { type })}
         </Button>
         <Button
           type="button"
@@ -50,7 +53,7 @@ const Contact = ({
           className="text-error margin-left-2"
           onClick={() => deleteContact(id!).then(() => setActiveContact(null))}
         >
-          {t('contactDetails.additionalContacts.delete')}
+          {t('contactDetails.additionalContacts.delete', { type })}
         </Button>
       </div>
     </div>
@@ -60,11 +63,13 @@ const Contact = ({
 const ContactForm = ({
   activeContact,
   setActiveContact,
-  onSubmit
+  onSubmit,
+  type
 }: {
   activeContact: SystemIntakeContactProps;
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
   onSubmit: CreateContactType | UpdateContactType;
+  type: 'contact' | 'recipient';
 }) => {
   const { t } = useTranslation('intake');
 
@@ -77,13 +82,13 @@ const ContactForm = ({
     const submitErrors = {
       commonName: activeContact.commonName
         ? ''
-        : t('contactDetails.additionalContacts.errors.commonName'),
+        : t('contactDetails.additionalContacts.errors.commonName', { type }),
       component: activeContact.component
         ? ''
-        : t('contactDetails.additionalContacts.errors.component'),
+        : t('contactDetails.additionalContacts.errors.component', { type }),
       role: activeContact.role
         ? ''
-        : t('contactDetails.additionalContacts.errors.role')
+        : t('contactDetails.additionalContacts.errors.role', { type })
     };
     setErrors(submitErrors);
     if (
@@ -102,14 +107,15 @@ const ContactForm = ({
         {t(
           activeContact?.id
             ? 'contactDetails.additionalContacts.edit'
-            : 'contactDetails.additionalContacts.add'
+            : 'contactDetails.additionalContacts.add',
+          { type }
         )}
       </h4>
 
       {/* Contact Name */}
       <FieldGroup className="margin-top-2" error={!!errors.commonName}>
         <Label className="text-normal" htmlFor="systemIntakeContact.commonName">
-          {t('contactDetails.additionalContacts.name')}
+          {t('contactDetails.additionalContacts.name', { type })}
         </Label>
         <FieldErrorMsg>{errors.commonName}</FieldErrorMsg>
         <CedarContactSelect
@@ -126,7 +132,7 @@ const ContactForm = ({
       {/* Contact Component */}
       <FieldGroup className="margin-top-2" error={!!errors.component}>
         <Label className="text-normal" htmlFor="systemIntakeContact.component">
-          {t('contactDetails.additionalContacts.component')}
+          {t('contactDetails.additionalContacts.component', { type })}
         </Label>
         <FieldErrorMsg>{errors.component}</FieldErrorMsg>
         <Dropdown
@@ -150,7 +156,7 @@ const ContactForm = ({
       {/* Contact Role */}
       <FieldGroup className="margin-top-2" error={!!errors.role}>
         <Label className="text-normal" htmlFor="systemIntakeContact.role">
-          {t('contactDetails.additionalContacts.role')}
+          {t('contactDetails.additionalContacts.role', { type })}
         </Label>
         <FieldErrorMsg>{errors.role}</FieldErrorMsg>
         <Dropdown
@@ -181,7 +187,8 @@ const ContactForm = ({
           {t(
             activeContact?.id
               ? 'contactDetails.additionalContacts.save'
-              : 'contactDetails.additionalContacts.addContact'
+              : 'contactDetails.additionalContacts.addContact',
+            { type }
           )}
         </Button>
       </div>
@@ -192,11 +199,15 @@ const ContactForm = ({
 export default function AdditionalContacts({
   systemIntakeId,
   activeContact,
-  setActiveContact
+  setActiveContact,
+  type = 'contact',
+  className
 }: {
   systemIntakeId: string;
   activeContact: SystemIntakeContactProps | null;
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  type?: 'recipient' | 'contact';
+  className?: string;
 }) {
   const { t } = useTranslation('intake');
   const [
@@ -207,10 +218,16 @@ export default function AdditionalContacts({
   if (!contacts?.additionalContacts) return null;
 
   return (
-    <div className="system-intake-contacts margin-top-4">
+    <div className={classNames('system-intake-contacts', className)}>
       {contacts.additionalContacts.length > 0 && (
         <>
-          <h4>{t('contactDetails.additionalContacts.title')}</h4>
+          <h4>
+            {t(
+              type === 'contact'
+                ? 'contactDetails.additionalContacts.titleContacts'
+                : 'contactDetails.additionalContacts.titleRecipients'
+            )}
+          </h4>
           <div className="system-intake-contacts__contacts-list">
             {contacts.additionalContacts.map(contact => {
               // Show form if editing contact
@@ -222,6 +239,7 @@ export default function AdditionalContacts({
                       activeContact={activeContact}
                       setActiveContact={setActiveContact}
                       onSubmit={updateContact}
+                      type={type}
                     />
                     <Button
                       type="button"
@@ -233,7 +251,7 @@ export default function AdditionalContacts({
                         )
                       }
                     >
-                      {t('contactDetails.additionalContacts.delete')}
+                      {t('contactDetails.additionalContacts.delete', { type })}
                     </Button>
                   </div>
                 );
@@ -257,6 +275,7 @@ export default function AdditionalContacts({
           activeContact={activeContact}
           setActiveContact={setActiveContact}
           onSubmit={createContact}
+          type={type}
         />
       )}
 
@@ -272,7 +291,7 @@ export default function AdditionalContacts({
           }
           disabled={!!activeContact?.id}
         >
-          {t('contactDetails.additionalContacts.add')}
+          {t('contactDetails.additionalContacts.add', { type })}
         </Button>
       )}
     </div>
