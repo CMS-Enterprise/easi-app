@@ -22,7 +22,10 @@ import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
-import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
+import {
+  IssueLifecycleId as IssueLifecycleIdType,
+  IssueLifecycleIdVariables
+} from 'queries/types/IssueLifecycleId';
 import { SubmitLifecycleIdForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
@@ -38,12 +41,12 @@ const IssueLifecycleId = () => {
   const { t } = useTranslation('action');
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
-  const [mutate, mutationResult] = useMutation<IssueLifecycleIdType>(
-    IssueLifecycleIdQuery,
-    {
-      errorPolicy: 'all'
-    }
-  );
+  const [mutate, mutationResult] = useMutation<
+    IssueLifecycleIdType,
+    IssueLifecycleIdVariables
+  >(IssueLifecycleIdQuery, {
+    errorPolicy: 'all'
+  });
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -77,7 +80,7 @@ const IssueLifecycleId = () => {
       intakeId: systemId,
       expiresAt: expiresAt.toISO(),
       nextSteps,
-      scope,
+      scope: scope ?? '',
       costBaseline,
       lcid: lifecycleId,
       feedback,

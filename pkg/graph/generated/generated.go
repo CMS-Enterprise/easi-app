@@ -4743,6 +4743,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputDeleteAccessibilityRequestInput,
 		ec.unmarshalInputDeleteSystemIntakeContactInput,
 		ec.unmarshalInputDeleteTestDateInput,
+		ec.unmarshalInputEmailNotificationRecipients,
 		ec.unmarshalInputGeneratePresignedUploadURLInput,
 		ec.unmarshalInputIssueLifecycleIdInput,
 		ec.unmarshalInputRejectIntakeInput,
@@ -5958,6 +5959,7 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -6038,6 +6040,7 @@ input AddGRTFeedbackInput {
   feedback: String!
   intakeID: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -6061,6 +6064,7 @@ input IssueLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -6072,6 +6076,7 @@ input RejectIntakeInput {
   nextSteps: String
   reason: String!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -6142,6 +6147,7 @@ input BasicActionInput {
   feedback: String!
   intakeId: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -6230,6 +6236,12 @@ The payload when deleting a system intake contact
 """
 type DeleteSystemIntakeContactPayload {
   systemIntakeContact: SystemIntakeContact
+}
+
+input EmailNotificationRecipients {
+  regularRecipientEmails: [EmailAddress!]!
+  shouldNotifyITGovernance: Boolean!
+  shouldNotifyITInvestment: Boolean!
 }
 
 """
@@ -6412,6 +6424,11 @@ scalar UUID
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
 """
 scalar Time
+
+"""
+Email addresses are represented as strings
+"""
+scalar EmailAddress
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
 
@@ -32968,7 +32985,7 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"emailBody", "feedback", "intakeID", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"emailBody", "feedback", "intakeID", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33007,6 +33024,14 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 			if err != nil {
 				return it, err
 			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -33024,7 +33049,7 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"feedback", "intakeId", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"feedback", "intakeId", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33052,6 +33077,14 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
 			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -33264,7 +33297,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"id", "expirationDate", "nextSteps", "scope", "costBaseline", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"id", "expirationDate", "nextSteps", "scope", "costBaseline", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33316,6 +33349,14 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
 			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -33629,6 +33670,50 @@ func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputEmailNotificationRecipients(ctx context.Context, obj interface{}) (models.EmailNotificationRecipients, error) {
+	var it models.EmailNotificationRecipients
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"regularRecipientEmails", "shouldNotifyITGovernance", "shouldNotifyITInvestment"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "regularRecipientEmails":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("regularRecipientEmails"))
+			it.RegularRecipientEmails, err = ec.unmarshalNEmailAddress2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddressᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldNotifyITGovernance":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldNotifyITGovernance"))
+			it.ShouldNotifyITGovernance, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldNotifyITInvestment":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldNotifyITInvestment"))
+			it.ShouldNotifyITInvestment, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	var it model.GeneratePresignedUploadURLInput
 	asMap := map[string]interface{}{}
@@ -33684,7 +33769,7 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"expiresAt", "feedback", "intakeId", "lcid", "nextSteps", "scope", "costBaseline", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"expiresAt", "feedback", "intakeId", "lcid", "nextSteps", "scope", "costBaseline", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33755,6 +33840,14 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			if err != nil {
 				return it, err
 			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -33772,7 +33865,7 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"feedback", "intakeId", "nextSteps", "reason", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"feedback", "intakeId", "nextSteps", "reason", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33816,6 +33909,14 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
 			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -42318,6 +42419,54 @@ func (ec *executionContext) unmarshalNDeleteTestDateInput2githubᚗcomᚋcmsgov�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNEmailAddress2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, v interface{}) (models.EmailAddress, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.EmailAddress(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNEmailAddress2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, sel ast.SelectionSet, v models.EmailAddress) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNEmailAddress2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddressᚄ(ctx context.Context, v interface{}) ([]models.EmailAddress, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]models.EmailAddress, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNEmailAddress2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNEmailAddress2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddressᚄ(ctx context.Context, sel ast.SelectionSet, v []models.EmailAddress) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNEmailAddress2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v *models.EstimatedLifecycleCost) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -43717,6 +43866,14 @@ func (ec *executionContext) marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._DeleteTestDatePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx context.Context, v interface{}) (*models.EmailNotificationRecipients, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputEmailNotificationRecipients(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {

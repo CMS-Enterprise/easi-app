@@ -1127,6 +1127,7 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1207,6 +1208,7 @@ input AddGRTFeedbackInput {
   feedback: String!
   intakeID: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1230,6 +1232,7 @@ input IssueLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1241,6 +1244,7 @@ input RejectIntakeInput {
   nextSteps: String
   reason: String!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1311,6 +1315,7 @@ input BasicActionInput {
   feedback: String!
   intakeId: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1399,6 +1404,12 @@ The payload when deleting a system intake contact
 """
 type DeleteSystemIntakeContactPayload {
   systemIntakeContact: SystemIntakeContact
+}
+
+input EmailNotificationRecipients {
+  regularRecipientEmails: [EmailAddress!]!
+  shouldNotifyITGovernance: Boolean!
+  shouldNotifyITInvestment: Boolean!
 }
 
 """
@@ -1581,6 +1592,11 @@ scalar UUID
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
 """
 scalar Time
+
+"""
+Email addresses are represented as strings
+"""
+scalar EmailAddress
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
 

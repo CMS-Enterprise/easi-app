@@ -148,6 +148,7 @@ export interface AddGRTFeedbackInput {
   feedback: string;
   intakeID: UUID;
   shouldSendEmail: boolean;
+  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**
@@ -157,6 +158,7 @@ export interface BasicActionInput {
   feedback: string;
   intakeId: UUID;
   shouldSendEmail: boolean;
+  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**
@@ -207,6 +209,7 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   scope: string;
   costBaseline?: string | null;
   shouldSendEmail: boolean;
+  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**
@@ -275,6 +278,12 @@ export interface DeleteTestDateInput {
   id: UUID;
 }
 
+export interface EmailNotificationRecipients {
+  regularRecipientEmails: EmailAddress[];
+  shouldNotifyITGovernance: boolean;
+  shouldNotifyITInvestment: boolean;
+}
+
 /**
  * Input associated with a document to be uploaded to a 508/accessibility request
  */
@@ -297,6 +306,7 @@ export interface IssueLifecycleIdInput {
   scope: string;
   costBaseline?: string | null;
   shouldSendEmail: boolean;
+  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**
@@ -308,6 +318,7 @@ export interface RejectIntakeInput {
   nextSteps?: string | null;
   reason: string;
   shouldSendEmail: boolean;
+  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**
