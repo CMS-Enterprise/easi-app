@@ -210,6 +210,39 @@ describe('Governance Review Team', () => {
     );
   });
 
+  // depends on the "notifyMultipleRecipients" feature flag being set;
+  // we currently can't guarantee this when running tests in CI
+  it.skip('can take an action', () => {
+    cy.contains('a', 'Ready for business case').should('be.visible').click();
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.contains('.usa-radio', 'Request a draft business case').click();
+
+    cy.contains('button', 'Continue').click();
+
+    cy.contains('button', 'Add another recipient').click();
+
+    // Fill contact form
+    cy.get('#IntakeForm-ContactCommonName input')
+      .type('Jerry')
+      .wait(1000)
+      .type('{downArrow}{enter}')
+      .should('have.value', 'Jerry Seinfeld, SF13');
+
+    cy.get('#IntakeForm-ContactComponent')
+      .select('Center for Medicare')
+      .should('have.value', 'Center for Medicare');
+
+    cy.get('#IntakeForm-ContactRole')
+      .select('Product Owner')
+      .should('have.value', 'Product Owner');
+
+    cy.contains('button', 'Add recipient').click();
+
+    // TODO: Update tests when select contact functionality is completed
+    cy.contains('p', 'SF13');
+  });
+
   it('can extend a Lifecycle ID', () => {
     cy.intercept('GET', '/api/v1/system_intakes?status=closed').as(
       'getClosedRequests'
