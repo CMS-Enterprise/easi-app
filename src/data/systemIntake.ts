@@ -270,7 +270,7 @@ export const prepareSystemIntakeForApp = (
 export const convertIntakeToCSV = (intake: any) => {
   const collaboratorTeams: any = {};
   if (intake.governanceTeams.isPresent) {
-    intake.governanceTeams.teams.forEach(team => {
+    intake.governanceTeams.teams.forEach((team: any) => {
       switch (team.name) {
         case 'Technical Review Board':
           collaboratorTeams.trbCollaborator = team.collaborator;
@@ -287,8 +287,6 @@ export const convertIntakeToCSV = (intake: any) => {
     });
   }
 
-  console.log('convertIntakeToCSV');
-  console.log(intake);
   return {
     ...intake,
     ...collaboratorTeams,

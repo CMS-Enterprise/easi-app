@@ -109,7 +109,7 @@ const RequestRepository = () => {
 
   const requesterNameAndComponentColumn = {
     Header: t('intake:contactDetails.requester'),
-    accessor: 'requesterDesc',
+    accessor: 'requesterNameAndComponent',
     Cell: ({ value }: any) => {
       return value;
     }
@@ -333,11 +333,7 @@ const RequestRepository = () => {
   const csvHeaders = csvHeaderMap(t);
 
   const convertIntakesToCSV = (intakes: any[]) => {
-    const csv = intakes.map(intake => convertIntakeToCSV(intake));
-    console.log('pickles');
-    console.log(csv);
-    console.log('^');
-    return csv;
+    return intakes.map(intake => convertIntakeToCSV(intake));
   };
 
   return (
