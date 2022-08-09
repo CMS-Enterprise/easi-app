@@ -24,7 +24,7 @@ const (
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
-func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Client {
+func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheRefreshTime time.Duration, ldClient *ld.LDClient) *Client {
 	fnEmit := func(ctx context.Context) bool {
 		lduser := flags.Principal(ctx)
 		result, err := ldClient.BoolVariation(cedarCoreEnabledKey, lduser, cedarCoreEnabledDefault)
@@ -63,9 +63,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, ldClie
 		cache: c,
 	}
 
-	// Start cache refresh for systems. System Data is currently changed at most once Daily, so a 6 hour interval is sufficient
-	// for catching most updates at a reasonable frequency.
-	client.startCacheRefresh(ctx, time.Hour*6, client.populateSystemSummaryCache)
+	client.startCacheRefresh(ctx, cacheRefreshTime, client.populateSystemSummaryCache)
 
 	return client
 }

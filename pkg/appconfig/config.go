@@ -165,6 +165,10 @@ const CEDARAPIURL = "CEDAR_API_URL"
 // CEDARAPIKey is the key for accessing CEDAR
 const CEDARAPIKey = "CEDAR_API_KEY" // #nosec
 
+// CEDARCacheIntervalKey is the key for the environment variable tracking how often to refresh the CEDAR System cache (i.e. "5m", "6h")
+// https://pkg.go.dev/time#ParseDuration
+const CEDARCacheIntervalKey = "CEDAR_CACHE_INTERVAL"
+
 // LDKey is the key for accessing LaunchDarkly
 const LDKey = "LD_SDK_KEY"
 
