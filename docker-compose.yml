@@ -19,6 +19,7 @@ services:
     environment:
       - CEDAR_API_KEY
       - CEDAR_API_URL
+      - CEDAR_CACHE_INTERVAL
       - HTTP_PROXY
       - HTTPS_PROXY
       - APP_ENV
