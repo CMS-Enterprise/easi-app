@@ -267,7 +267,9 @@ export const prepareSystemIntakeForApp = (
   };
 };
 
-export const convertIntakeToCSV = (intake: any) => {
+export const convertIntakeToCSV = (
+  intake: SystemIntakeForm & { requesterNameAndComponent: string }
+) => {
   const collaboratorTeams: any = {};
   if (intake.governanceTeams.isPresent) {
     intake.governanceTeams.teams.forEach((team: any) => {
