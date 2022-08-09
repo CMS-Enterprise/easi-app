@@ -19,7 +19,7 @@ func (s *EmailTestSuite) TestSendCantFindSomethingEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 		expectedBody := `<p><strong>Reporter</strong></p>
-<p>McLovin, McLovin@example.com</p> 
+<p>McLovin, McLovin@example.com</p>
 <br/>
 <hr>
 <br/>

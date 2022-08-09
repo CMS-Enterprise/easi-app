@@ -57,3 +57,6 @@ models:
   UUID:
     model:
       - github.com/cmsgov/easi-app/pkg/models.UUID
+  EmailAddress:
+    model:
+      - github.com/cmsgov/easi-app/pkg/models.EmailAddress

@@ -35,20 +35,22 @@ func (s Sender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddre
 	return nil
 }
 
-// PostfixSender is a basic email sender that connects to a Postfix server; use with MailCatcher for testing locally
-type PostfixSender struct {
+// SMTPSender is a basic email sender that connects to an SMTP server; use with MailCatcher for testing locally
+type SMTPSender struct {
 	serverAddress string
 }
 
-// NewPostfixSender configures and returns a PostfixSender for local testing
-func NewPostfixSender(serverAddress string) PostfixSender {
-	return PostfixSender{
+// NewSMTPSender configures and returns an SMTPSender for local testing
+func NewSMTPSender(serverAddress string) SMTPSender {
+	return SMTPSender{
 		serverAddress,
 	}
 }
 
-// Send sends an email
-func (sender PostfixSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
+// Send sends and logs an email
+func (sender SMTPSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
+	ccAddresses := ""
+
 	e := email.Email{
 		From:    "testsender@oddball.dev",
 		To:      []string{toAddress.String()},
@@ -57,7 +59,15 @@ func (sender PostfixSender) Send(ctx context.Context, toAddress models.EmailAddr
 	}
 	if ccAddress != nil {
 		e.Cc = []string{ccAddress.String()}
+		ccAddresses = ccAddress.String()
 	}
+
+	appcontext.ZLogger(ctx).Info("Sending email using SMTP server",
+		zap.String("To", toAddress.String()),
+		zap.String("CC", ccAddresses),
+		zap.String("Subject", subject),
+		zap.String("Body", body),
+	)
 
 	err := e.Send(sender.serverAddress, nil)
 	return err

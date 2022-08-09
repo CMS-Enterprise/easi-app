@@ -1,0 +1,26 @@
+.help-send-feedback {
+  .usa-form-group {
+    margin-top: 2rem;
+    legend {
+      font-weight: 700;
+    }
+    .usa-legend {
+      margin-bottom: 0;
+    }
+    .usa-input,
+    .usa-textarea {
+      max-width: 100%;
+    }
+    .usa-radio__label,
+    .usa-checkbox__label {
+      margin-top: .75rem;
+      letter-spacing: -.01em;
+    }
+    label[for$='AdditionalText'] {
+      margin-top: .5rem;
+    }
+  }
+  .usa-error-message {
+    padding-bottom: 0;
+  }
+}
