@@ -19,8 +19,9 @@ import (
 )
 
 const (
-	cedarCoreEnabledKey     = "cedarCoreEnabled"
-	cedarCoreEnabledDefault = false
+	cedarCoreEnabledKey           = "cedarCoreEnabled"
+	cedarCoreEnabledDefault       = false
+	cedarCoreCacheDurationDefault = time.Hour * 6
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
@@ -63,6 +64,14 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheR
 		cache: c,
 	}
 
+	if cacheRefreshTime <= 0 {
+		appcontext.ZLogger(ctx).Error(
+			"CEDAR cacheRefreshTime is not a valid value, falling back to default",
+			zap.Duration("cacheRefreshTime", cacheRefreshTime),
+			zap.Duration("defaultDuration", cedarCoreCacheDurationDefault),
+		)
+		cacheRefreshTime = cedarCoreCacheDurationDefault
+	}
 	client.startCacheRefresh(ctx, cacheRefreshTime, client.populateSystemSummaryCache)
 
 	return client
