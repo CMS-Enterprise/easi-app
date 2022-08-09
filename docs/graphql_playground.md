@@ -23,7 +23,7 @@ Additional job codes beyond/instead of `EASI_D_GOVTEAM` can be included in the `
 
 #### EUA ID
 
-An EUA ID is needed for some endpoints such as creating system intakes; this can be added with the `EUAID` field:
+An EUA ID is needed for some endpoints such as creating system intakes, or to pick up on user-targeted LaunchDarkly feature flags. This can be added with the `EUAID` field:
 
 ```
 { "Authorization":"Local {\"EUAID\":\"ABCD\",\"favorLocalAuth\":true, \"jobCodes\":[\"EASI_D_GOVTEAM\", \"EASI_D_508_USER\"]}"}

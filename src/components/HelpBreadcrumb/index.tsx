@@ -7,11 +7,13 @@ import classNames from 'classnames';
 type HelpBreadcrumbProps = {
   type: 'Back' | 'Close tab';
   className?: string;
+  text?: string;
 };
 
 export default function HelpBreadcrumb({
   type = 'Back',
-  className
+  className,
+  text
 }: HelpBreadcrumbProps) {
   const history = useHistory();
   const { t } = useTranslation();
@@ -34,7 +36,7 @@ export default function HelpBreadcrumb({
       ) : (
         <IconArrowBack className="margin-right-05 margin-top-3px text-tbottom" />
       )}
-      {t(type)}
+      {text ?? t(type)}
     </Button>
   );
 }

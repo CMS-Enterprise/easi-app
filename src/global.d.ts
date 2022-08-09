@@ -18,6 +18,7 @@ declare global {
   // Defining globally here for FE to recognize generated types.
    type UUID = string;
    type Time = string;
+   type EmailAddress = string;
 
    interface Window {
     Cypress: any;
