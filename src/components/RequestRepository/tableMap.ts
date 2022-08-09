@@ -27,14 +27,14 @@ const tableMap = (tableData: SystemIntakeForm[], t: TFunction) => {
 
     // Display both the requester name and the acronym of their component
     // TODO: might be better to just save the component's acronym in the intake?
-    const requester = `${intake.requester.name}, ${getAcronymForComponent(
+    const requesterDesc = `${intake.requester.name}, ${getAcronymForComponent(
       intake.requester.component
     )}`;
 
     // Override all applicable fields in intake to use i18n translations
     return {
       ...intake,
-      requester,
+      requesterDesc,
       status: statusTranslation,
       requestType: translateRequestType(intake.requestType)
     };

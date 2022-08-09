@@ -267,7 +267,7 @@ export const prepareSystemIntakeForApp = (
   };
 };
 
-export const convertIntakeToCSV = (intake: SystemIntakeForm) => {
+export const convertIntakeToCSV = (intake: any) => {
   const collaboratorTeams: any = {};
   if (intake.governanceTeams.isPresent) {
     intake.governanceTeams.teams.forEach(team => {
@@ -287,6 +287,8 @@ export const convertIntakeToCSV = (intake: SystemIntakeForm) => {
     });
   }
 
+  console.log('convertIntakeToCSV');
+  console.log(intake);
   return {
     ...intake,
     ...collaboratorTeams,
