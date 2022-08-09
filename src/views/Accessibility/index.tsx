@@ -11,6 +11,7 @@ import {
   REPORT_PROBLEM_BASIC_USER_SURVEY
 } from 'constants/externalUrls';
 import { AppState } from 'reducers/rootReducer';
+import { isLocalAuthEnabled } from 'utils/auth';
 import user from 'utils/user';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 import NewTestDateView from 'views/TestDate/NewTestDate';
