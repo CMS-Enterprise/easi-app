@@ -39,7 +39,7 @@ export default ({
           {t('emailRecipients.emailRequired')}
         </Alert>
       )}
-      {!flags.notifyMultipleRecipients && (
+      {flags.notifyMultipleRecipients && (
         <AdditionalContacts
           systemIntakeId={systemIntakeId}
           activeContact={activeContact}
