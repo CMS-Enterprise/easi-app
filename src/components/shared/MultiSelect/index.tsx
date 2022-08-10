@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import Select, { MultiValue, OptionProps } from 'react-select';
 import { IconClose, Tag } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+
+import color from 'utils/uswdsColor';
 
 import CheckboxField from '../CheckboxField';
 
@@ -93,6 +95,62 @@ const MultiSelect = ({
       : []
   );
 
+  const customStyles: {
+    [index: string]: (
+      provided: CSSProperties,
+      state: { isFocused: boolean }
+    ) => CSSProperties;
+  } = {
+    control: (provided, state) => ({
+      ...provided,
+      borderColor: color('base-dark'),
+      outline: state.isFocused ? `.25rem solid ${color('blue-vivid-40')}` : '',
+      borderRadius: 0,
+      transition: 'none',
+      '&:hover': {
+        borderColor: color('base-dark'),
+        cursor: 'text'
+      }
+    }),
+    dropdownIndicator: provided => ({
+      ...provided,
+      color: color('base'),
+      '&:hover': {
+        color: color('base'),
+        cursor: 'pointer'
+      },
+      '> svg': {
+        width: '26px',
+        height: '26px'
+      }
+    }),
+    clearIndicator: provided => ({
+      ...provided,
+      color: color('base'),
+      '&:hover': {
+        color: color('base'),
+        cursor: 'pointer'
+      },
+      '> svg': {
+        width: '26px',
+        height: '26px'
+      }
+    }),
+    indicatorSeparator: provided => ({
+      ...provided,
+      marginTop: '10px',
+      marginBottom: '10px'
+    }),
+    menu: provided => ({
+      ...provided,
+      marginTop: '0px',
+      borderRadius: 0,
+      border: `1px solid ${color('base-dark')}`,
+      borderTop: 'none',
+      boxShadow: 'none'
+    })
+  };
+
   return (
     <div>
       <Select
@@ -111,6 +169,7 @@ const MultiSelect = ({
         value={selected}
         controlShouldRenderValue={false}
         placeholder={`${selected.length} selected`}
+        styles={customStyles}
       />
       {selected.length > 0 && (
         <div className="easi-multiselect--selected">
