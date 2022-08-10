@@ -109,7 +109,7 @@ const RequestRepository = () => {
 
   const requesterNameAndComponentColumn = {
     Header: t('intake:contactDetails.requester'),
-    accessor: 'requester',
+    accessor: 'requesterNameAndComponent',
     Cell: ({ value }: any) => {
       return value;
     }
