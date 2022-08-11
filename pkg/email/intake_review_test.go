@@ -80,3 +80,15 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.Equal("sender had an error", e.Err.Error())
 	})
 }
+
+func (s *EmailTestSuite) TestSendIntakeReviewEmailToMultipleRecipients() {
+	ctx := context.Background()
+	emailBody := "Test Text\n\nTest"
+	intakeID := uuid.New()
+
+	s.Run("successful call sends to the correct recipients", func() {
+		s.runMultipleRecipientsTestAgainstAllTestCases(func(client Client, recipients models.EmailNotificationRecipients) error {
+			return client.SendSystemIntakeReviewEmailToMultipleRecipients(ctx, emailBody, recipients, intakeID)
+		})
+	})
+}

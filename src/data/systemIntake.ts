@@ -257,10 +257,12 @@ export const prepareSystemIntakeForApp = (
   };
 };
 
-export const convertIntakeToCSV = (intake: SystemIntakeForm) => {
+export const convertIntakeToCSV = (
+  intake: SystemIntakeForm & { requesterNameAndComponent: string }
+) => {
   const collaboratorTeams: any = {};
   if (intake.governanceTeams.isPresent) {
-    intake.governanceTeams.teams.forEach(team => {
+    intake.governanceTeams.teams.forEach((team: any) => {
       switch (team.name) {
         case 'Technical Review Board':
           collaboratorTeams.trbCollaborator = team.collaborator;

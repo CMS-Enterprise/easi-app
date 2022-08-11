@@ -18,6 +18,7 @@ if [[ -n "${CI+x}" ]]; then
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up -d minio
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up --exit-code-from minio_mc minio_mc
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up -d easi easi_client
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up -d email # MailCatcher - needed for email notifications tests
 
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up cypress
 
@@ -28,7 +29,10 @@ if [[ -n "${CI+x}" ]]; then
   exit "${CYPRESS_EXIT_CODE}"
 # Running locally
 else
-  # Clean up first
+  # Clean up any containers started through scripts/dev up
+  docker-compose --profile frontend down
+
+  # Clean up any containers started through this script
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml down
 
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml build --parallel
@@ -39,6 +43,7 @@ else
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up -d minio
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up --exit-code-from minio_mc minio_mc
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up -d easi easi_client
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up -d email # MailCatcher - needed for email notifications tests
 
   EASI_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${EASI_CONTAINER}")
 

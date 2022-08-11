@@ -111,6 +111,7 @@ func (s *Server) routes(
 		appcontext.WithLogger(context.Background(), s.logger),
 		s.Config.GetString(appconfig.CEDARAPIURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
+		s.Config.GetDuration(appconfig.CEDARCacheIntervalKey),
 		ldClient,
 	)
 
@@ -125,8 +126,8 @@ func (s *Server) routes(
 
 	// override email client to use MailCatcher when running locally
 	if s.environment.Local() {
-		postfixSender := local.NewPostfixSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
-		emailClient, err = email.NewClient(emailConfig, postfixSender)
+		smtpSender := local.NewSMTPSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
+		emailClient, err = email.NewClient(emailConfig, smtpSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
 		}
@@ -134,8 +135,9 @@ func (s *Server) routes(
 
 	// override email client with dummy client that logs output when running tests
 	if s.environment.Test() {
-		localSender := local.NewSender()
-		emailClient, err = email.NewClient(emailConfig, localSender)
+		smtpSender := local.NewSMTPSender("email:1025") // TODO - get from environment variable?
+		emailClient, err = email.NewClient(emailConfig, smtpSender)
+
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
 		}
@@ -204,6 +206,7 @@ func (s *Server) routes(
 				store.CreateGRTFeedback,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+				emailClient.SendSystemIntakeReviewEmailToMultipleRecipients,
 				emailClient.SendIntakeInvalidEUAIDEmail,
 				emailClient.SendIntakeNoEUAIDEmail,
 			),
@@ -213,6 +216,7 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+				emailClient.SendSystemIntakeReviewEmailToMultipleRecipients,
 				emailClient.SendIntakeInvalidEUAIDEmail,
 				emailClient.SendIntakeNoEUAIDEmail,
 				services.NewCloseBusinessCase(
@@ -228,6 +232,7 @@ func (s *Server) routes(
 				store.FetchSystemIntakeByID,
 				store.UpdateSystemIntake,
 				emailClient.SendExtendLCIDEmail,
+				emailClient.SendExtendLCIDEmailToMultipleRecipients,
 				emailClient.SendIntakeInvalidEUAIDEmail,
 				emailClient.SendIntakeNoEUAIDEmail,
 			),
@@ -239,6 +244,7 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendIssueLCIDEmail,
+				emailClient.SendIssueLCIDEmailToMultipleRecipients,
 				emailClient.SendIntakeInvalidEUAIDEmail,
 				emailClient.SendIntakeNoEUAIDEmail,
 				store.GenerateLifecycleID,
@@ -251,6 +257,7 @@ func (s *Server) routes(
 				saveAction,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendRejectRequestEmail,
+				emailClient.SendRejectRequestEmailToMultipleRecipients,
 				emailClient.SendIntakeInvalidEUAIDEmail,
 				emailClient.SendIntakeNoEUAIDEmail,
 			),

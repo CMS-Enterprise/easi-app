@@ -34,6 +34,7 @@ func (c Client) systemIntakeReviewBody(emailText string, taskListPath string) (s
 }
 
 // SendSystemIntakeReviewEmail sends an email for a submitted system intake
+// TODO - EASI-2021 - remove
 func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
 	subject := "Feedback on your intake request"
 	taskListPath := path.Join("governance-task-list", intakeID.String())
@@ -52,4 +53,22 @@ func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText strin
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 	return nil
+}
+
+// SendSystemIntakeReviewEmailToMultipleRecipients sends emails to multiple recipients (possibly including the IT Governance and IT Investment teams) about GRT review on a submitted system intake
+// TODO - EASI-2021 - rename to SendSystemIntakeReviewEmails
+func (c Client) SendSystemIntakeReviewEmailToMultipleRecipients(
+	ctx context.Context,
+	emailText string,
+	recipients models.EmailNotificationRecipients,
+	intakeID uuid.UUID,
+) error {
+	subject := "Feedback on your intake request"
+	taskListPath := path.Join("governance-task-list", intakeID.String())
+	body, err := c.systemIntakeReviewBody(emailText, taskListPath)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
+	return c.sendEmailToMultipleRecipients(ctx, recipients, subject, body)
 }
