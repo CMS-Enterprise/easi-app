@@ -225,7 +225,7 @@ const intake = {
     }
   },
   review: {
-    notSumbitted: 'Not yet submitted',
+    notSubmitted: 'Not yet submitted',
     systemRequest: 'System Request',
     submissionDate: 'Submission Date',
     contactDetails: 'Contact Details',
