@@ -799,6 +799,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 				Requester struct {
 					Name      string
 					Component string
+					Email     string
 				}
 				Isso struct {
 					IsPresent bool
@@ -814,7 +815,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 
 	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
 	// but it wasn't working for me.
-	err := s.client.Post(fmt.Sprintf(
+	s.client.MustPost(fmt.Sprintf(
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
@@ -852,6 +853,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 					requester {
 						name
 						component
+						email
 					}
 					isso {
 						name
@@ -867,7 +869,24 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 			}
 		}`, intake.ID), &resp)
 
-	s.Error(err)
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
+	s.Equal(respIntake.BusinessOwner.Name, "Iama Businessowner")
+	s.Equal(respIntake.BusinessOwner.Component, "CMS Office 1")
+
+	s.Equal(respIntake.ProductManager.Name, "Iama Productmanager")
+	s.Equal(respIntake.ProductManager.Component, "CMS Office 2")
+
+	s.Equal(respIntake.Requester.Name, "Iama Requester")
+	s.Equal(respIntake.Requester.Component, "CMS Office 3")
+	s.Equal(respIntake.Requester.Email, "")
+
+	s.Nil(respIntake.Isso.Name.Ptr())
+	s.False(respIntake.Isso.IsPresent)
+
+	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
+	s.False(respIntake.GovernanceTeams.IsPresent)
 }
 
 func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {

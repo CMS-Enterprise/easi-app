@@ -2468,16 +2468,19 @@ func (r *systemIntakeResolver) RequestName(ctx context.Context, obj *models.Syst
 
 // Requester is the resolver for the requester field.
 func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error) {
-	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
-	if err != nil {
-		return nil, err
+	// Only make a call to CEDAR LDAP if the EUA exists, otherwise return an empty string for the email field
+	var email string
+	if obj.EUAUserID.Valid {
+		user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		email = user.Email.String()
 	}
-
-	emailAsString := user.Email.String()
 
 	return &model.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
-		Email:     &emailAsString,
+		Email:     &email,
 		Name:      obj.Requester,
 	}, nil
 }
