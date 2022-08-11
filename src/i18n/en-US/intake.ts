@@ -237,7 +237,7 @@ const intake = {
     isso:
       'Does your project have an Information System Security Officer (ISSO)?',
     collaborating: 'I have started collaborating with',
-    requestDetails: 'Request details',
+    requestDetails: 'Request Details',
     projectName: 'Project Name',
     businessNeed: 'What is your business need?',
     solving: 'How are you thinking of solving it?',

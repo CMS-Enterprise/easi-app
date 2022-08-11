@@ -18,7 +18,7 @@ exports[`RelatedArticle matches the snapshot 1`] = `
         class="css-1f43avz-a11yText-A11yText"
       />
       <div
-        class=" css-1s2u09g-control"
+        class=" css-jvusj8-control"
       >
         <div
           class=" css-319lph-ValueContainer"
@@ -56,11 +56,11 @@ exports[`RelatedArticle matches the snapshot 1`] = `
           class=" css-1hb7zxy-IndicatorsContainer"
         >
           <span
-            class=" css-1okebmr-indicatorSeparator"
+            class=" css-1vtyy7d-indicatorSeparator"
           />
           <div
             aria-hidden="true"
-            class=" css-tlfecz-indicatorContainer"
+            class=" css-1232v1p-indicatorContainer"
           >
             <svg
               aria-hidden="true"
