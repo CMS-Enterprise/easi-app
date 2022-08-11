@@ -381,12 +381,19 @@ export interface SystemIntakeCostsInput {
 }
 
 /**
- * Input data detailing how a system is funded
+ * Represents the source of funding for a system
  */
 export interface SystemIntakeFundingSourceInput {
   fundingNumber?: string | null;
-  isFunded?: boolean | null;
   source?: string | null;
+}
+
+/**
+ * The input required to specify the funding source(s) for a system intake
+ */
+export interface SystemIntakeFundingSourcesInput {
+  existingFunding?: boolean | null;
+  fundingSources: SystemIntakeFundingSourceInput[];
 }
 
 /**
@@ -483,7 +490,7 @@ export interface UpdateSystemIntakeContactInput {
  */
 export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
-  fundingSource?: SystemIntakeFundingSourceInput | null;
+  fundingSources?: SystemIntakeFundingSourcesInput | null;
   costs?: SystemIntakeCostsInput | null;
   contract?: SystemIntakeContractInput | null;
 }

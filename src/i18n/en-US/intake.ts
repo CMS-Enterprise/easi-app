@@ -206,6 +206,55 @@ const intake = {
       oneOrMore: '1 or more of the following in OIT (select all that apply)',
       none: 'No one in OIT'
     }
+  },
+  contractDetails: {
+    fundingSources: {
+      label: 'Which existing funding sources will fund this project?',
+      helpText:
+        'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.',
+      addFundingSource: 'Add a funding source',
+      addAnotherFundingSource: 'Add another funding source',
+      fundingNumber: 'Funding number',
+      fundingNumberHelpText: 'Must be 6 digits long',
+      fundingNumberLink:
+        'You can find your funding number in the CMS Operating Plan page',
+      fundingSource: 'Funding source',
+      fundingSources: 'Funding sources',
+      errors: {
+        fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
+        fundingNumberDigits: 'Funding number can only contain digits',
+        fundingNumberUnique: 'Funding number must be unique',
+        fundingSource: 'Select a funding source'
+      }
+    }
+  },
+  review: {
+    notSubmitted: 'Not yet submitted',
+    systemRequest: 'System Request',
+    submissionDate: 'Submission Date',
+    contactDetails: 'Contact Details',
+    requesterComponent: 'Requester Component',
+    cmsBusinessOwnerName: "CMS Business Owner's Name",
+    cmsBusinessOwnerComponent: 'CMS Business Owner Component',
+    cmsProjectManagerName: 'CMS Project/Product Manager or lead',
+    cmsProjectManagerComponent: 'CMS Project/Product manager or lead Component',
+    isso:
+      'Does your project have an Information System Security Officer (ISSO)?',
+    collaborating: 'I have started collaborating with',
+    requestDetails: 'Request Details',
+    projectName: 'Project Name',
+    businessNeed: 'What is your business need?',
+    solving: 'How are you thinking of solving it?',
+    process: 'Where are you in the process?',
+    eaSupport: 'Do you need Enterprise Architecture (EA) support?',
+    contractDetails: 'Contract Details',
+    costs:
+      'Do the costs for this request exceed what you are currently spending to meet your business need?',
+    increase: 'Approximately how much do you expect the cost to increase?',
+    contract: 'Do you already have a contract in place to support this effort?',
+    contractors: 'Contractors',
+    contractVehicle: 'Contract vehicle',
+    performance: 'Period of performance'
   }
 };
 

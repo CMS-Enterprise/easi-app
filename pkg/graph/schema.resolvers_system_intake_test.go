@@ -1298,6 +1298,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 }
 
 func (s GraphQLTestSuite) TestUpdateContractDetails() {
+
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1310,11 +1311,11 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 	var resp struct {
 		UpdateSystemIntakeContractDetails struct {
 			SystemIntake struct {
-				ID            string
-				FundingSource struct {
-					FundingNumber string
-					IsFunded      bool
+				ID              string
+				ExistingFunding bool
+				FundingSources  []struct {
 					Source        string
+					FundingNumber string
 				}
 				Costs struct {
 					ExpectedIncreaseAmount string
@@ -1343,10 +1344,14 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 		`mutation {
 			updateSystemIntakeContractDetails(input: {
 				id: "%s",
-				fundingSource: {
-					fundingNumber: "123456"
-					isFunded: true
-					source: "Prog Ops"
+				fundingSources: {
+					existingFunding: true
+					fundingSources: [
+						{
+							source: "Prog Ops"
+							fundingNumber: "123456"
+						}
+					]
 				}
 				costs: {
 					expectedIncreaseAmount: "A little bit"
@@ -1362,9 +1367,9 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 			}) {
 				systemIntake {
 					id
-					fundingSource {
+					existingFunding
+					fundingSources {
 						fundingNumber
-						isFunded
 						source
 					}
 					costs {
@@ -1394,10 +1399,10 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 
 	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
 
-	fundingSource := respIntake.FundingSource
-	s.Equal(fundingSource.FundingNumber, "123456")
-	s.True(fundingSource.IsFunded)
-	s.Equal(fundingSource.Source, "Prog Ops")
+	fundingSources := respIntake.FundingSources
+	s.Equal(fundingSources[0].FundingNumber, "123456")
+	s.True(respIntake.ExistingFunding)
+	s.Equal(fundingSources[0].Source, "Prog Ops")
 
 	costs := respIntake.Costs
 	s.Equal(costs.ExpectedIncreaseAmount, "A little bit")
@@ -1420,6 +1425,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 }
 
 func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
+
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1427,19 +1433,27 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 		Status:          models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType:     models.SystemIntakeRequestTypeNEW,
 		ExistingFunding: null.BoolFrom(true),
-		FundingSource:   null.StringFrom("Prog Ops"),
-		FundingNumber:   null.StringFrom("123456"),
+		FundingSources: []*models.SystemIntakeFundingSource{
+			{
+				Source:        null.StringFrom("Prog Ops"),
+				FundingNumber: null.StringFrom("123456"),
+			},
+		},
 	})
 	s.NoError(intakeErr)
+
+	_, sourcesErr := s.store.UpdateSystemIntakeFundingSources(ctx, intake.ID, intake.FundingSources)
+	s.NoError(sourcesErr)
 
 	var resp struct {
 		UpdateSystemIntakeContractDetails struct {
 			SystemIntake struct {
-				ID            string
-				FundingSource struct {
-					FundingNumber *string
-					IsFunded      bool
-					Source        *string
+				ID              string
+				ExistingFunding bool
+				FundingSources  []struct {
+					SystemIntakeID string
+					Source         string
+					FundingNumber  string
 				}
 			}
 		}
@@ -1449,17 +1463,16 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 		`mutation {
 			updateSystemIntakeContractDetails(input: {
 				id: "%s",
-				fundingSource: {
-					fundingNumber: ""
-					isFunded: false
-					source: ""
+				fundingSources: {
+					existingFunding: false
+					fundingSources: []
 				}
 			}) {
 				systemIntake {
 					id
-					fundingSource {
+					existingFunding
+					fundingSources {
 						fundingNumber
-						isFunded
 						source
 					}
 				}
@@ -1469,10 +1482,8 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
-	fundingSource := respIntake.FundingSource
-	s.Nil(fundingSource.FundingNumber)
-	s.False(fundingSource.IsFunded)
-	s.Nil(fundingSource.Source)
+	fundingSources := respIntake.FundingSources
+	s.True(len(fundingSources) == 0)
 }
 
 func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {

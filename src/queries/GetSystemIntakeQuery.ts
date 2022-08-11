@@ -53,10 +53,10 @@ export default gql`
         isPresent
         name
       }
-      fundingSource {
-        fundingNumber
-        isFunded
+      existingFunding
+      fundingSources {
         source
+        fundingNumber
       }
       lcid
       lcidExpiresAt

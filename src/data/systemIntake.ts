@@ -36,11 +36,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     isPresent: null,
     teams: []
   },
-  fundingSource: {
-    isFunded: null,
-    fundingNumber: '',
-    source: ''
-  },
+  existingFunding: null,
+  fundingSources: [],
   costs: {
     isExpectingIncrease: '',
     expectedIncreaseAmount: ''
@@ -111,9 +108,8 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     ),
     eaCollaboratorName: getGovernanceCollaborator('Enterprise Architecture'),
     projectName: systemIntake.requestName,
-    existingFunding: systemIntake.fundingSource.isFunded,
-    fundingNumber: systemIntake.fundingSource.fundingNumber,
-    fundingSource: systemIntake.fundingSource.source,
+    existingFunding: systemIntake.existingFunding,
+    fundingSources: systemIntake.fundingSources,
     businessNeed: systemIntake.businessNeed,
     solution: systemIntake.businessSolution,
     processStatus: systemIntake.currentStage,
@@ -142,7 +138,7 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
 };
 
 export const prepareSystemIntakeForApp = (
-  systemIntake: any
+  systemIntake: any // TODO: Specify type
 ): SystemIntakeForm => {
   const governanceTeams = () => {
     const teams: GovernanceCollaborationTeam[] = [];
@@ -188,14 +184,8 @@ export const prepareSystemIntakeForApp = (
       isPresent: governanceTeams().length !== 0 || null,
       teams: governanceTeams() || []
     },
-    fundingSource: {
-      isFunded:
-        systemIntake.existingFunding === null
-          ? null
-          : systemIntake.existingFunding,
-      fundingNumber: systemIntake.fundingNumber || '',
-      source: systemIntake.fundingSource || ''
-    },
+    existingFunding: systemIntake.existingFunding,
+    fundingSources: systemIntake.fundingSources || [],
     costs: {
       isExpectingIncrease: systemIntake.costIncrease || '',
       expectedIncreaseAmount: systemIntake.costIncreaseAmount || ''
@@ -335,9 +325,7 @@ export const isIntakeStarted = (intake: SystemIntake | SystemIntakeForm) => {
     intake.isso.name ||
     intake.governanceTeams.isPresent ||
     (intake.governanceTeams.teams && intake.governanceTeams.teams.length > 0) ||
-    intake.fundingSource.isFunded ||
-    intake.fundingSource.fundingNumber ||
-    intake.fundingSource.source ||
+    intake.fundingSources.length > 0 ||
     intake.costs.isExpectingIncrease ||
     intake.costs.expectedIncreaseAmount ||
     intake.contract.hasContract ||

@@ -1,4 +1,4 @@
-const fundingSources = [
+const intakeFundingSources = [
   'Recovery Audit Contractors',
   'ACA 3021',
   'Fed Admin',
@@ -21,4 +21,4 @@ const fundingSources = [
   'Unknown'
 ];
 
-export default fundingSources;
+export default intakeFundingSources;
