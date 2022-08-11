@@ -176,20 +176,24 @@ const intake = {
       email: 'ISSO email'
     },
     additionalContacts: {
-      title: 'Additional contacts',
-      delete: 'Delete contact',
-      add: 'Add another contact',
-      edit: 'Edit contact',
-      name: 'New contact name',
-      component: 'New contact component',
+      titleContacts: 'Additional contacts',
+      titleRecipients: 'Choose recipients',
+      recipientsSelected: '{{count}} recipients selected',
+      showMore: 'Show {{count}} more recipients',
+      showFewer: 'Show {{count}} fewer recipients',
+      delete: 'Delete {{type}}',
+      add: 'Add another {{type}}',
+      edit: 'Edit {{type}}',
+      name: 'New {{type}} name',
+      component: 'New {{type}} component',
       select: 'Select an option',
-      role: 'New contact role',
+      role: 'New {{type}} role',
       save: 'Save',
-      addContact: 'Add contact',
+      addContact: 'Add {{type}}',
       errors: {
-        commonName: "Enter the contact's name",
-        component: "Select the contact's component",
-        role: "Select the contact's role"
+        commonName: "Enter the {{type}}'s name",
+        component: "Select the {{type}}'s component",
+        role: "Select the {{type}}'s role"
       }
     },
     governanceTeam: {

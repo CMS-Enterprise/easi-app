@@ -13,6 +13,7 @@ import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { ActionForm } from 'types/action';
 import { BasicActionInput } from 'types/graphql-global-types';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import { actionSchema } from 'validations/actionSchema';
 
@@ -33,6 +34,10 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
 
   const [mutate, mutationResult] = useMutation<ActionInput>(query);
 
@@ -127,7 +132,12 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                   window.scrollTo(0, 0);
                 }}
               >
-                <EmailRecipientsFields className="margin-top-3" />
+                <EmailRecipientsFields
+                  className="margin-top-3"
+                  systemIntakeId={systemId}
+                  activeContact={activeContact}
+                  setActiveContact={setActiveContact}
+                />
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
@@ -158,6 +168,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                       setShouldSendEmail(true);
                       setFieldValue('skipEmail', false);
                     }}
+                    disabled={!!activeContact}
                   >
                     {t('submitAction.submit')}
                   </Button>
@@ -171,6 +182,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                       // todo hack timeout to propagate skipEmail value to the validator before submission
                       setTimeout(submitForm);
                     }}
+                    disabled={!!activeContact}
                   />
                 </div>
               </Form>
