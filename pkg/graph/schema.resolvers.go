@@ -2468,9 +2468,16 @@ func (r *systemIntakeResolver) RequestName(ctx context.Context, obj *models.Syst
 
 // Requester is the resolver for the requester field.
 func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error) {
+	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
+	if err != nil {
+		return nil, err
+	}
+
+	emailAsString := user.Email.String()
+
 	return &model.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
-		Email:     obj.RequesterEmailAddress.Ptr(),
+		Email:     &emailAsString,
 		Name:      obj.Requester,
 	}, nil
 }
