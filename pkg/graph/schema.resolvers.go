@@ -2468,9 +2468,32 @@ func (r *systemIntakeResolver) RequestName(ctx context.Context, obj *models.Syst
 
 // Requester is the resolver for the requester field.
 func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error) {
+	requesterWithoutEmail := &model.SystemIntakeRequester{
+		Component: obj.Component.Ptr(),
+		Email:     nil,
+		Name:      obj.Requester,
+	}
+
+	// if the EUA doesn't exist (Sharepoint imports), don't bother calling CEDAR LDAP
+	if !obj.EUAUserID.Valid {
+		return requesterWithoutEmail, nil
+	}
+
+	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
+	if err != nil {
+		// check if the EUA ID is just invalid in CEDAR LDAP (i.e. the requester no longer has an active EUA account)
+		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+			return requesterWithoutEmail, nil
+		}
+
+		// error we can't handle, like being unable to communicate with CEDAR
+		return nil, err
+	}
+
+	email := user.Email.String()
 	return &model.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
-		Email:     obj.RequesterEmailAddress.Ptr(),
+		Email:     &email,
 		Name:      obj.Requester,
 	}, nil
 }
