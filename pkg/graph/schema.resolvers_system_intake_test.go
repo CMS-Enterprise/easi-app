@@ -684,6 +684,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetails() {
 				Requester struct {
 					Name      string
 					Component string
+					Email     string
 				}
 				Isso struct {
 					IsPresent bool
@@ -737,6 +738,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetails() {
 					requester {
 						name
 						component
+						email
 					}
 					isso {
 						name
@@ -763,6 +765,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetails() {
 
 	s.Equal(respIntake.Requester.Name, "Iama Requester")
 	s.Equal(respIntake.Requester.Component, "CMS Office 3")
+	s.Equal(respIntake.Requester.Email, "TEST@local.fake")
 
 	s.Nil(respIntake.Isso.Name.Ptr())
 	s.False(respIntake.Isso.IsPresent)
