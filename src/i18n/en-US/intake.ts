@@ -223,6 +223,34 @@ const intake = {
         fundingSource: 'Select a funding source'
       }
     }
+  },
+  review: {
+    notSumbitted: 'Not yet submitted',
+    systemRequest: 'System Request',
+    submissionDate: 'Submission Date',
+    contactDetails: 'Contact Details',
+    requesterComponent: 'Requester Component',
+    cmsBusinessOwnerName: "CMS Business Owner's Name",
+    cmsBusinessOwnerComponent: 'CMS Business Owner Component',
+    cmsProjectManagerName: 'CMS Project/Product Manager or lead',
+    cmsProjectManagerComponent: 'CMS Project/Product manager or lead Component',
+    isso:
+      'Does your project have an Information System Security Officer (ISSO)?',
+    collaborating: 'I have started collaborating with',
+    requestDetails: 'Request details',
+    projectName: 'Project Name',
+    businessNeed: 'What is your business need?',
+    solving: 'How are you thinking of solving it?',
+    process: 'Where are you in the process?',
+    eaSupport: 'Do you need Enterprise Architecture (EA) support?',
+    contractDetails: 'Contract Details',
+    costs:
+      'Do the costs for this request exceed what you are currently spending to meet your business need?',
+    increase: 'Approximately how much do you expect the cost to increase?',
+    contract: 'Do you already have a contract in place to support this effort?',
+    contractors: 'Contractors',
+    contractVehicle: 'Contract vehicle',
+    performance: 'Period of performance'
   }
 };
 
