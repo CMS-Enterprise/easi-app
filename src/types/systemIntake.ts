@@ -118,18 +118,19 @@ export type ContactDetailsForm = {
   };
 };
 
+/** Single funding source */
 export type FundingSource = {
   source: string | null;
   fundingNumber: string | null;
 };
 
-// funding sources formatted for form
+/** Funding sources formatted for form */
 export type MultiFundingSource = {
   fundingNumber: string;
   sources: string[];
 };
 
-// funding sources object formatted for display
+/** Funding sources object formatted for display */
 export type FormattedFundingSourcesObject = {
   [number: string]: {
     fundingNumber: string;
@@ -137,7 +138,7 @@ export type FormattedFundingSourcesObject = {
   };
 };
 
-// useIntakeFundingSources hook types
+/** Add, edit, or delete funding source */
 export type UpdateFundingSources =
   | {
       action: 'Add' | 'Delete';
@@ -152,11 +153,13 @@ export type UpdateFundingSources =
       };
     };
 
+/** Update active funding source in form */
 export type UpdateActiveFundingSource = {
   action: 'Add' | 'Edit' | 'Reset';
   data?: MultiFundingSource;
 };
 
+/** useIntakeFundingSources hook return type */
 export type UseIntakeFundingSources = {
   fundingSources: [
     fundingSources: FormattedFundingSourcesObject,
@@ -169,7 +172,7 @@ export type UseIntakeFundingSources = {
   ];
 };
 
-// Contract details form
+/** Contract details form */
 export type ContractDetailsForm = {
   existingFunding: boolean | null;
   fundingSources: FundingSource[] | [];
@@ -232,14 +235,14 @@ export type SubmitDatesForm = {
   grbDateYear: string;
 };
 
-// Cedar contacts
+/** Cedar contact properties */
 export type CedarContactProps = {
   euaUserId: string;
   commonName: string;
   email?: string;
 };
 
-// System intake contacts
+/** System intake contact properties */
 export type SystemIntakeContactProps = {
   id?: string;
   euaUserId: string;
@@ -250,7 +253,7 @@ export type SystemIntakeContactProps = {
   email: string;
 };
 
-// Formatted system intake contacts
+/** Formatted system intake contacts */
 export type FormattedContacts = {
   businessOwner: AugmentedSystemIntakeContact;
   productManager: AugmentedSystemIntakeContact;
@@ -258,22 +261,22 @@ export type FormattedContacts = {
   additionalContacts: AugmentedSystemIntakeContact[];
 };
 
-// Function to create system intake contact
+/** Function to create system intake contact */
 export type CreateContactType = (
   contact: SystemIntakeContactProps
 ) => Promise<AugmentedSystemIntakeContact | undefined>;
 
-// Function to update system intake contact
+/** Function to update system intake contact */
 export type UpdateContactType = (
   contact: SystemIntakeContactProps
 ) => Promise<AugmentedSystemIntakeContact[] | undefined>;
 
-// Function to delete system intake contact
+/** Function to delete system intake contact */
 export type DeleteContactType = (
   id: string
 ) => Promise<AugmentedSystemIntakeContact[] | undefined>;
 
-// System intake contacts custom hook
+/** useSystemIntakeContacts custom hook return type */
 export type UseSystemIntakeContactsType = [
   FormattedContacts | null,
   {
@@ -283,4 +286,5 @@ export type UseSystemIntakeContactsType = [
   }
 ];
 
+/** System intake contact role keys */
 export type SystemIntakeRoleKeys = 'businessOwner' | 'productManager' | 'isso';
