@@ -363,6 +363,7 @@ namespace :db do
       estimated_lifecycle_costs
       business_cases
       grt_feedback
+      system_intake_contacts
       system_intake_funding_sources
       system_intakes
     }
