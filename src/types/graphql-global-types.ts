@@ -337,6 +337,15 @@ export interface SendFeedbackEmailInput {
   howCanWeImprove: string;
 }
 
+export interface SendReportAProblemEmailInput {
+  isAnonymous: boolean;
+  canBeContacted: boolean;
+  easiService: string;
+  whatWereYouDoing: string;
+  whatWentWrong: string;
+  howSevereWasTheProblem: string;
+}
+
 /**
  * Input to submit an intake for review
  */

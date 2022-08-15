@@ -121,7 +121,13 @@ const help = {
   reportAProblem: {
     title: 'Report a problem',
     description:
-      'Did you notice something wrong with EASi? Let us know using the form below.'
+      'Did you notice something wrong with EASi? Let us know using the form below.',
+    labels: {
+      whatWereYouDoing: 'What were you doing?',
+      whatWentWrong: 'What went wrong?',
+      howSevereWasTheProblem: 'How severe was this problem?'
+    },
+    submit: 'Send report'
   },
   footer: {
     wantToHelp: 'Want to help improve EASi?',

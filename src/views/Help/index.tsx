@@ -9,6 +9,7 @@ import PrepareForGRT from './ITGovernance/PrepareForGRT';
 import SampleBusinessCase from './ITGovernance/SampleBusinessCase';
 import StepsInvolved from './Section508/StepsInvolved';
 import TestingTemplates from './Section508/TestingTemplate';
+import ReportAProblem from './SendFeedback/ReportAProblem';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
@@ -56,6 +57,7 @@ const Help = () => {
 
       {/* Help feedback forms */}
       <Route path="/help/send-feedback" render={() => <SendFeedback />} />
+      <Route path="/help/report-a-problem" render={() => <ReportAProblem />} />
 
       {/* 404 */}
       <Route path="*" render={() => <NotFound />} />

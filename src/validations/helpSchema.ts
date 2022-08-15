@@ -2,13 +2,18 @@ import * as Yup from 'yup';
 
 import {
   easiServiceOptionKeys,
+  reportOptionFields,
+  SendFeedbackEmailForm,
   sendFeedbackOptionFields,
   SendFeedbackOptionKey,
-  sendFeedbackOptions
+  sendFeedbackOptions,
+  SendReportAProblemEmailForm
 } from 'constants/helpFeedback';
 import helpText from 'i18n/en-US/help';
-import { SendFeedbackEmailInput } from 'types/graphql-global-types';
-import { SendFeedbackEmailForm } from 'types/helpFeedback';
+import {
+  SendFeedbackEmailInput,
+  SendReportAProblemEmailInput
+} from 'types/graphql-global-types';
 
 const msgSelect = helpText.sendFeedback.errorMessage.select;
 const msgExplain = helpText.sendFeedback.errorMessage.explain;
@@ -143,5 +148,57 @@ export const sendFeedbackEmailFormSchema: Yup.SchemaOf<SendFeedbackEmailForm> = 
       .required(),
 
     howCanWeImprove: Yup.string().default('').required(msgExplain)
+  })
+);
+
+export const sendReportAProblemEmailInputSchema: Yup.SchemaOf<SendReportAProblemEmailInput> = Yup.object(
+  {
+    isAnonymous: Yup.boolean().required(),
+    canBeContacted: Yup.boolean().required(),
+    easiService: Yup.string().required(),
+    whatWereYouDoing: Yup.string().required(),
+    whatWentWrong: Yup.string().required(),
+    howSevereWasTheProblem: Yup.string().required()
+  }
+);
+
+export const sendReportAProblemEmailFormSchema: Yup.SchemaOf<SendReportAProblemEmailForm> = sendReportAProblemEmailInputSchema.concat(
+  Yup.object({
+    isAnonymous: Yup.boolean().nullable().default(null).required(msgSelect),
+
+    canBeContacted: Yup.boolean()
+      .nullable()
+      .default(null)
+      .when('isAnonymous', {
+        is: false,
+        then: schema => schema.required(msgSelect)
+      }),
+
+    easiService: Yup.string()
+      .oneOf(getFeedbackOptionValues(easiServiceOptionKeys), msgSelect)
+      .required(msgSelect),
+    easiServiceAdditionalText: Yup.string()
+      .default('')
+      .when('easiService', {
+        is: sendFeedbackOptions.other,
+        then: schema => schema.required(msgExplain)
+      }),
+
+    whatWereYouDoing: Yup.string().default('').required(msgExplain),
+
+    whatWentWrong: Yup.string().default('').required(msgExplain),
+
+    howSevereWasTheProblem: Yup.string()
+      .oneOf(
+        getFeedbackOptionValues(reportOptionFields.howSevereWasTheProblem),
+        msgSelect
+      )
+      .required(msgSelect),
+    howSevereWasTheProblemAdditionalText: Yup.string()
+      .default('')
+      .when('howSevereWasTheProblem', {
+        is: sendFeedbackOptions.other,
+        then: schema => schema.required(msgExplain)
+      })
   })
 );

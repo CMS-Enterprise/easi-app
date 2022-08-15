@@ -1,6 +1,12 @@
-import React, { useMemo, useState } from 'react';
+/**
+ * @file "Send Feedback" help form.
+ * There is a similar form called "Report a Problem" (`./ReportAProblem.tsx`)
+ * which uses some functions and components from this file.
+ */
+
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
@@ -28,6 +34,8 @@ import MainContent from 'components/MainContent';
 import {
   ADDITIONAL_TEXT_INPUT_SUFFIX,
   easiServiceOptionKeys,
+  SendFeedbackEmailForm,
+  SendFeedbackOptionFieldForTextInputKey,
   sendFeedbackOptionFields,
   sendFeedbackOptionFieldsForTextInput,
   SendFeedbackOptionKey,
@@ -40,20 +48,13 @@ import {
 } from 'queries/types/SendFeedbackEmail';
 import { SendFeedbackEmailInput } from 'types/graphql-global-types';
 import {
-  SendFeedbackEmailForm,
-  SendFeedbackOptionFieldForTextInputKey,
-  SendFeedbackOptionFieldsWithTextInput
-} from 'types/helpFeedback';
-import {
   sendFeedbackEmailFormSchema,
   sendFeedbackEmailInputSchema
 } from 'validations/helpSchema';
 
 import './index.scss';
 
-type FormMode = 'sendFeedback' | 'reportAProblem';
-
-const ErrorMessage = ({ name }: ErrorMessageProps) => (
+export const ErrorMessage = ({ name }: ErrorMessageProps) => (
   <FormikErrorMessage
     name={name}
     component={TrussErrorMessage as React.ComponentType}
@@ -64,20 +65,20 @@ const ErrorMessage = ({ name }: ErrorMessageProps) => (
  * The `canBeContacted` field depends on `isAnonymous`.
  * Show the field if `isAnonymous` is false.
  */
-const CanBeContactedField = () => {
+export const CanBeContactedField = () => {
   const name = 'canBeContacted';
   const { t } = useTranslation('help');
   const {
     values: { isAnonymous },
     touched: { isAnonymous: isAnonymousTouched },
     setFieldValue
-  } = useFormikContext<SendFeedbackEmailForm>();
+  } = useFormikContext<any>();
 
   // Formik field attribute values are cast to strings
   // while the schema recognizes the boolean
   const isAnonymousString = String(isAnonymous);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAnonymousString !== null && isAnonymousTouched) {
       setFieldValue(name, isAnonymousString === 'true' ? false : null, false);
     }
@@ -91,6 +92,7 @@ const CanBeContactedField = () => {
           <Field
             as={Radio}
             id={`${name}-yes`}
+            data-testid={`${name}-yes`}
             name={name}
             label={t('sendFeedback.options.yes')}
             value
@@ -98,6 +100,7 @@ const CanBeContactedField = () => {
           <Field
             as={Radio}
             id={`${name}-no`}
+            data-testid={`${name}-no`}
             name={name}
             label={t('sendFeedback.options.no')}
             value={false}
@@ -113,58 +116,70 @@ const CanBeContactedField = () => {
  * A radio group of options, with an optional additional related text field.
  * A group typically has a set a values where one option
  * can toggle additional input text, as set by `optionForTextInput`.
+ * Uses `ADDITIONAL_TEXT_INPUT_SUFFIX`.
  */
-const RadioOptionGroupWithAdditionalText = ({
+export const RadioOptionGroupWithAdditionalText = ({
   name,
+  fieldsetLegend,
   options,
-  optionForTextInput
+  optionKeyForTextInput,
+  textInputLabel
 }: {
-  name: keyof SendFeedbackEmailInput;
-  options: Readonly<SendFeedbackOptionKey[]>;
-  optionForTextInput?: SendFeedbackOptionKey;
+  name: string;
+  fieldsetLegend: string;
+  options: { key: string; value: string; text: string }[];
+  optionKeyForTextInput?: string;
+  textInputLabel?: string;
 }) => {
-  const { t } = useTranslation('help');
-  const { values } = useFormikContext<SendFeedbackEmailForm>();
+  const { values } = useFormikContext<any>();
 
-  // Setup the additional text field
-  const textField: string | undefined = useMemo(
+  const additionalTextFieldName: string | undefined = useMemo(
     () =>
-      optionForTextInput ? `${name}${ADDITIONAL_TEXT_INPUT_SUFFIX}` : undefined,
-    [optionForTextInput, name]
+      optionKeyForTextInput
+        ? `${name}${ADDITIONAL_TEXT_INPUT_SUFFIX}`
+        : undefined,
+    [optionKeyForTextInput, name]
   );
 
   return (
     <FormGroup>
-      <Fieldset legend={t(`sendFeedback.labels.${name}`)}>
+      <Fieldset legend={fieldsetLegend}>
         <ErrorMessage name={name} />
-        {options.map(option => {
-          const optionText = t(`sendFeedback.options.${option}`);
-          const optionValue = sendFeedbackOptions[option];
-          const checked = values[name] === optionValue;
+        {options.map(({ key, value, text }) => {
+          const checked = values[name] === value;
           return (
-            <React.Fragment key={option}>
+            <Fragment key={key}>
               <Field
                 as={Radio}
-                id={`${name}-${option}`}
+                id={`${name}-${key}`}
+                data-testid={`${name}-${key}`}
                 name={name}
-                label={optionText}
-                value={optionValue}
+                label={text}
+                value={value}
                 checked={checked}
               />
               {
                 // Toggle the additional text field when the option is selected
                 // Matches option name and value
-                optionForTextInput === option && checked && textField && (
-                  <div className="margin-left-4">
-                    <Label htmlFor={textField}>
-                      {t('sendFeedback.labels.pleaseExplain')}
-                    </Label>
-                    <ErrorMessage name={textField} />
-                    <Field as={TextInput} id={textField} name={textField} />
-                  </div>
-                )
+                optionKeyForTextInput === key &&
+                  checked &&
+                  additionalTextFieldName && (
+                    <div className="margin-left-4">
+                      {textInputLabel && (
+                        <Label htmlFor={additionalTextFieldName}>
+                          {textInputLabel}
+                        </Label>
+                      )}
+                      <ErrorMessage name={additionalTextFieldName} />
+                      <Field
+                        as={TextInput}
+                        id={additionalTextFieldName}
+                        name={additionalTextFieldName}
+                      />
+                    </div>
+                  )
               }
-            </React.Fragment>
+            </Fragment>
           );
         })}
       </Fieldset>
@@ -176,40 +191,53 @@ const RadioOptionGroupWithAdditionalText = ({
  * This component for the `easiServicesUsed` field is similar to
  * `RadioOptionGroupWithAdditionalText` except that group elements
  * can be radios or checkboxes depending on mode.
+ * Uses `sendFeedbackOptions`, `easyServiceOptionKeys`, `ADDITIONAL_TEXT_INPUT_SUFFIX`.
  */
-const EasiServicesUsedField = ({ mode }: { mode: FormMode }) => {
+export const EasiServicesUsedField = ({
+  name,
+  label,
+  as
+}: {
+  name: string;
+  label: string;
+  as: typeof Radio | typeof Checkbox;
+}) => {
   const { t } = useTranslation('help');
-  const { values } = useFormikContext<SendFeedbackEmailForm>();
+  const { values } = useFormikContext<any>();
 
-  const name: keyof SendFeedbackEmailInput = 'easiServicesUsed';
-  const optionTextFieldName: keyof SendFeedbackOptionFieldsWithTextInput = `${name}${ADDITIONAL_TEXT_INPUT_SUFFIX}`;
+  const optionTextFieldName = `${name}${ADDITIONAL_TEXT_INPUT_SUFFIX}`;
 
-  /**
-   * Report a problem uses a radio group,
-   * Send feedback uses a checkbox group.
-   */
-  let fieldComponent: typeof Radio | typeof Checkbox;
-  if (mode === 'reportAProblem') fieldComponent = Radio;
-  else fieldComponent = Checkbox;
+  let optionTextFieldToggled = false;
+  if (as === Checkbox)
+    optionTextFieldToggled = values[name].includes(sendFeedbackOptions.other);
+  if (as === Radio)
+    optionTextFieldToggled = values[name] === sendFeedbackOptions.other;
 
   return (
     <FormGroup>
-      <Fieldset legend={t(`sendFeedback.labels.${name}`)}>
+      <Fieldset legend={label}>
         <ErrorMessage name={name} />
         {easiServiceOptionKeys.map(option => {
+          let checked = false;
+          if (as === Checkbox)
+            checked = values[name].includes(sendFeedbackOptions[option]);
+          else if (as === Radio)
+            checked = values[name] === sendFeedbackOptions[option];
+
           return (
             <Field
               key={option}
-              as={fieldComponent}
+              as={as}
               id={`${name}-${option}`}
+              data-testid={`${name}-${option}`}
               name={name}
               label={t(`sendFeedback.options.${option}`)}
               value={sendFeedbackOptions[option]}
-              checked={values[name].includes(sendFeedbackOptions[option])}
+              checked={checked}
             />
           );
         })}
-        {values[name].includes(sendFeedbackOptions.other) && (
+        {optionTextFieldToggled && (
           <div className="margin-left-4">
             <ErrorMessage name={optionTextFieldName} />
             <Field
@@ -230,14 +258,14 @@ const EasiServicesUsedField = ({ mode }: { mode: FormMode }) => {
  * Handles fields with `ADDITIONAL_TEXT_INPUT_SUFFIX`.
  * Ensures `canBeContacted` is false when `isAnonymous` is true.
  */
-export async function parseForm(
+export async function parseFeedbackForm(
   values: SendFeedbackEmailForm
 ): Promise<SendFeedbackEmailInput> {
   const parsedValues: any = {};
 
   // Map ui fields to backend fields
   Object.entries(values).forEach(([field, value]) => {
-    // Handle easiServicesUsed separate from the rest since it is a list of options
+    // Handle easiServicesUsed separate from the rest since it is a list of multiple options
     if (field === 'easiServicesUsed') {
       const easiServicesUsed = value as string[];
 
@@ -258,11 +286,9 @@ export async function parseForm(
       }
     }
 
-    // Parse additional text fields for option groups with one selection
+    // Parse fields of option groups with optional additional text
     else if (field in sendFeedbackOptionFieldsForTextInput) {
-      const additional: keyof SendFeedbackOptionFieldsWithTextInput = `${
-        field as SendFeedbackOptionFieldForTextInputKey
-      }${ADDITIONAL_TEXT_INPUT_SUFFIX}`;
+      const additional = `${field}${ADDITIONAL_TEXT_INPUT_SUFFIX}` as keyof SendFeedbackEmailForm;
 
       const optionForTextInput =
         sendFeedbackOptionFieldsForTextInput[
@@ -298,6 +324,114 @@ export async function parseForm(
 }
 
 /**
+ * Successful form submission notice.
+ * Link options to start a new form of the same kind, or start the other one.
+ */
+export const HelpFormDone = ({
+  setIsDone
+}: {
+  setIsDone: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const { t } = useTranslation('help');
+  const { resetForm } = useFormikContext<any>();
+  const history = useHistory();
+  const { pathname } = useLocation();
+
+  return (
+    <div className="margin-top-3 height-card-lg">
+      <Button type="button" onClick={window.close}>
+        {t('sendFeedback.done.closeTab')}
+      </Button>
+      <div className="margin-top-5">
+        <div className="text-bold">{t('sendFeedback.done.sendAnother')}</div>
+        <div className="margin-top-1">
+          <Button
+            type="button"
+            unstyled
+            onClick={() => {
+              if (pathname.endsWith('/help/report-a-problem')) {
+                // Restart Report form if already there
+                resetForm();
+                setIsDone(false);
+              } else history.push('/help/report-a-problem');
+            }}
+          >
+            {t('sendFeedback.done.reportProblem')}
+          </Button>
+        </div>
+        <div className="margin-top-05">
+          <Button
+            type="button"
+            unstyled
+            onClick={() => {
+              resetForm();
+              setIsDone(false);
+              if (pathname.endsWith('/help/send-feedback')) {
+                // Restart Feedback form if already there
+                resetForm();
+                setIsDone(false);
+              } else history.push('/help/send-feedback');
+            }}
+          >
+            {t('sendFeedback.done.sendFeedback')}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/** Shared Help form header */
+export const HelpFormHeading = ({
+  isDone,
+  title,
+  description
+}: {
+  isDone: boolean;
+  title: string;
+  description: string;
+}) => {
+  const { t } = useTranslation('help');
+  return (
+    <>
+      <HelpBreadcrumb
+        type="Close tab"
+        text={!isDone ? t('sendFeedback.closeTab') : undefined}
+      />
+      <h1 className="margin-top-2 margin-bottom-1">
+        {!isDone ? title : t('sendFeedback.done.thankYou')}
+      </h1>
+      <div className="font-body-lg line-height-body-2 line-height-body-5 text-light">
+        {!isDone ? description : t('sendFeedback.done.willReview')}
+      </div>
+    </>
+  );
+};
+
+/** Submit button form ui with a a general form error message  */
+export const HelpFormSubmitFooter = ({ submit }: { submit: string }) => {
+  const { t } = useTranslation('help');
+  const { isSubmitting, errors, submitCount } = useFormikContext<any>();
+  return (
+    <div className="margin-top-4 margin-bottom-9">
+      <Button
+        type="submit"
+        inverse
+        disabled={isSubmitting}
+        className="margin-bottom-1 tablet:margin-bottom-0"
+      >
+        {submit}
+      </Button>
+      {Object.keys(errors).length > 0 && submitCount > 0 && (
+        <TrussErrorMessage className="padding-top-1">
+          {t('sendFeedback.errorMessage.form')}
+        </TrussErrorMessage>
+      )}
+    </div>
+  );
+};
+
+/**
  * This formik form uses type `SendFeedbackEmailForm`, which is an extension
  * of the original backend type `SendFeedbackEmailInput`.
  * When the form successfully completes the user can choose to start over again.
@@ -305,32 +439,24 @@ export async function parseForm(
 const SendFeedback = () => {
   const { t } = useTranslation('help');
   const [isDone, setIsDone] = useState<boolean>(false);
-  const history = useHistory();
 
   const [send] = useMutation<SendFeedbackEmail, SendFeedbackEmailVariables>(
     SendFeedbackEmailQuery
   );
 
   const onSubmit = async (values: SendFeedbackEmailForm) => {
-    const input = await parseForm(values);
+    const input = await parseFeedbackForm(values);
     await send({ variables: { input } });
     setIsDone(true);
   };
 
   return (
     <MainContent className="grid-container help-send-feedback">
-      <HelpBreadcrumb
-        type="Close tab"
-        text={!isDone ? t('sendFeedback.closeTab') : undefined}
+      <HelpFormHeading
+        title={t('sendFeedback.title')}
+        description={t('sendFeedback.description')}
+        isDone={isDone}
       />
-      <h1 className="margin-top-2 margin-bottom-1">
-        {t(!isDone ? 'sendFeedback.title' : 'sendFeedback.done.thankYou')}
-      </h1>
-      <div className="font-body-lg line-height-body-2 line-height-body-5 text-light">
-        {t(
-          !isDone ? 'sendFeedback.description' : 'sendFeedback.done.willReview'
-        )}
-      </div>
       <Formik
         initialValues={
           (sendFeedbackEmailFormSchema.getDefaultFromShape() as unknown) as SendFeedbackEmailForm
@@ -340,10 +466,7 @@ const SendFeedback = () => {
         validateOnChange={false}
         onSubmit={onSubmit}
       >
-        {({ errors, isSubmitting, resetForm, submitCount, values }) => {
-          // console.log('errors', JSON.stringify(errors, null, 2));
-          // console.log('form values', JSON.stringify(values, null, 2));
-          // console.log('submitting', isSubmitting, submitCount);
+        {({ values }) => {
           if (!isDone) {
             return (
               <Grid row>
@@ -364,6 +487,7 @@ const SendFeedback = () => {
                         <Field
                           as={Radio}
                           id="isAnonymous-yes"
+                          data-testid="isAnonymous-yes"
                           name="isAnonymous"
                           label={t('sendFeedback.options.yes')}
                           value
@@ -372,6 +496,7 @@ const SendFeedback = () => {
                         <Field
                           as={Radio}
                           id="isAnonymous-no"
+                          data-testid="isAnonymous-no"
                           name="isAnonymous"
                           label={t('sendFeedback.options.no')}
                           value={false}
@@ -380,7 +505,11 @@ const SendFeedback = () => {
                       </Fieldset>
                     </FormGroup>
                     <CanBeContactedField />
-                    <EasiServicesUsedField mode="sendFeedback" />
+                    <EasiServicesUsedField
+                      label={t('sendFeedback.labels.easiServicesUsed')}
+                      name="easiServicesUsed"
+                      as={Checkbox}
+                    />
                     <FormGroup>
                       <Label htmlFor="cmsRole">
                         {t('sendFeedback.labels.cmsRole')}
@@ -390,35 +519,80 @@ const SendFeedback = () => {
                     </FormGroup>
                     <RadioOptionGroupWithAdditionalText
                       name="systemEasyToUse"
-                      options={sendFeedbackOptionFields.systemEasyToUse}
-                      optionForTextInput={
+                      fieldsetLegend={t('sendFeedback.labels.systemEasyToUse')}
+                      options={sendFeedbackOptionFields.systemEasyToUse.map(
+                        key => ({
+                          key,
+                          value: sendFeedbackOptions[key],
+                          text: t(`sendFeedback.options.${key}`)
+                        })
+                      )}
+                      optionKeyForTextInput={
                         sendFeedbackOptionFieldsForTextInput.systemEasyToUse
                       }
+                      textInputLabel={t('sendFeedback.labels.pleaseExplain')}
                     />
                     <RadioOptionGroupWithAdditionalText
                       name="didntNeedHelpAnswering"
-                      options={sendFeedbackOptionFields.didntNeedHelpAnswering}
-                      optionForTextInput={
+                      fieldsetLegend={t(
+                        'sendFeedback.labels.didntNeedHelpAnswering'
+                      )}
+                      options={sendFeedbackOptionFields.didntNeedHelpAnswering.map(
+                        key => ({
+                          key,
+                          value: sendFeedbackOptions[key],
+                          text: t(`sendFeedback.options.${key}`)
+                        })
+                      )}
+                      optionKeyForTextInput={
                         sendFeedbackOptionFieldsForTextInput.didntNeedHelpAnswering
                       }
+                      textInputLabel={t('sendFeedback.labels.pleaseExplain')}
                     />
                     <RadioOptionGroupWithAdditionalText
                       name="questionsWereRelevant"
-                      options={sendFeedbackOptionFields.questionsWereRelevant}
-                      optionForTextInput={
+                      fieldsetLegend={t(
+                        'sendFeedback.labels.questionsWereRelevant'
+                      )}
+                      options={sendFeedbackOptionFields.questionsWereRelevant.map(
+                        key => ({
+                          key,
+                          value: sendFeedbackOptions[key],
+                          text: t(`sendFeedback.options.${key}`)
+                        })
+                      )}
+                      optionKeyForTextInput={
                         sendFeedbackOptionFieldsForTextInput.questionsWereRelevant
                       }
+                      textInputLabel={t('sendFeedback.labels.pleaseExplain')}
                     />
                     <RadioOptionGroupWithAdditionalText
                       name="hadAccessToInformation"
-                      options={sendFeedbackOptionFields.hadAccessToInformation}
-                      optionForTextInput={
+                      fieldsetLegend={t(
+                        'sendFeedback.labels.hadAccessToInformation'
+                      )}
+                      options={sendFeedbackOptionFields.hadAccessToInformation.map(
+                        key => ({
+                          key,
+                          value: sendFeedbackOptions[key],
+                          text: t(`sendFeedback.options.${key}`)
+                        })
+                      )}
+                      optionKeyForTextInput={
                         sendFeedbackOptionFieldsForTextInput.hadAccessToInformation
                       }
+                      textInputLabel={t('sendFeedback.labels.pleaseExplain')}
                     />
                     <RadioOptionGroupWithAdditionalText
                       name="howSatisfied"
-                      options={sendFeedbackOptionFields.howSatisfied}
+                      fieldsetLegend={t('sendFeedback.labels.howSatisfied')}
+                      options={sendFeedbackOptionFields.howSatisfied.map(
+                        key => ({
+                          key,
+                          value: sendFeedbackOptions[key],
+                          text: t(`sendFeedback.options.${key}`)
+                        })
+                      )}
                     />
                     <FormGroup>
                       <Label htmlFor="howCanWeImprove">
@@ -432,21 +606,7 @@ const SendFeedback = () => {
                         name="howCanWeImprove"
                       />
                     </FormGroup>
-                    <div className="margin-top-4 margin-bottom-9">
-                      <Button
-                        type="submit"
-                        inverse
-                        disabled={isSubmitting}
-                        className="margin-bottom-1 tablet:margin-bottom-0"
-                      >
-                        {t('sendFeedback.submit')}
-                      </Button>
-                      {Object.keys(errors).length > 0 && submitCount > 0 && (
-                        <TrussErrorMessage className="padding-top-1">
-                          {t('sendFeedback.errorMessage.form')}
-                        </TrussErrorMessage>
-                      )}
-                    </div>
+                    <HelpFormSubmitFooter submit={t('sendFeedback.submit')} />
                   </Form>
                 </Grid>
               </Grid>
@@ -454,42 +614,7 @@ const SendFeedback = () => {
           }
 
           // Form submisson complete
-          return (
-            <div className="margin-top-3 height-card-lg">
-              <Button type="button" onClick={window.close}>
-                {t('sendFeedback.done.closeTab')}
-              </Button>
-              <div className="margin-top-5">
-                <div className="text-bold">
-                  {t('sendFeedback.done.sendAnother')}
-                </div>
-                <div className="margin-top-1">
-                  <Button
-                    type="button"
-                    unstyled
-                    onClick={() => {
-                      history.push('/help/report-a-problem');
-                    }}
-                  >
-                    {t('sendFeedback.done.reportProblem')}
-                  </Button>
-                </div>
-                <div className="margin-top-05">
-                  <Button
-                    type="button"
-                    unstyled
-                    onClick={() => {
-                      // Restart this form
-                      resetForm();
-                      setIsDone(false);
-                    }}
-                  >
-                    {t('sendFeedback.done.sendFeedback')}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          );
+          return <HelpFormDone setIsDone={setIsDone} />;
         }}
       </Formik>
     </MainContent>
