@@ -3,7 +3,7 @@ import { Button, IconArrowDropDown } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 type TruncatedContentProps = {
-  children: React.ReactChild[];
+  children: React.ReactNodeArray;
   initialCount: number;
   labelMore?: string;
   labelLess?: string;
@@ -18,8 +18,8 @@ export default function TruncatedContent({
   buttonClassName
 }: TruncatedContentProps) {
   const [expanded, setExpanded] = useState(false);
-  const defaultContent = children.slice(0, initialCount);
-  const expandedContent = children.slice(initialCount);
+  const defaultContent = children.flat().slice(0, initialCount);
+  const expandedContent = children.flat().slice(initialCount);
   return (
     <>
       {defaultContent}
@@ -28,12 +28,14 @@ export default function TruncatedContent({
         unstyled
         onClick={() => setExpanded(!expanded)}
         className={classNames(
+          'truncated-content-button',
           'display-flex',
           'flex-align-center',
           buttonClassName
         )}
       >
-        <IconArrowDropDown /> {expanded ? labelLess : labelMore}
+        <IconArrowDropDown className="margin-x-05" />{' '}
+        {expanded ? labelLess : labelMore}
       </Button>
       {expanded && expandedContent}
     </>

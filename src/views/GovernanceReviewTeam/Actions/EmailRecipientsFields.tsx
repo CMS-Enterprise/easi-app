@@ -123,36 +123,37 @@ export default ({
         </Alert>
       )}
       {/* {flags.notifyMultipleRecipients && ( */}
-      <ul className="usa-list--unstyled margin-bottom-2">
+      <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
         <TruncatedContent
           initialCount={isLCID ? 3 : 2}
-          labelMore={`Show ${contacts.length - (isLCID ? 3 : 2)} more`}
-          labelLess={`Show ${contacts.length - (isLCID ? 3 : 2)} less`}
+          labelMore={`Show ${
+            contacts.length - (isLCID ? 3 : 2)
+          } more recipients`}
+          labelLess={`Show ${
+            contacts.length - (isLCID ? 3 : 2)
+          } fewer recipients`}
           buttonClassName="margin-top-105"
         >
           {contacts.map(contact => (
-            <li key={contact.label}>
-              <CheckboxField
-                id={`contact-${contact.label}`}
-                name={`contact-${contact.label}`}
-                label={contact.label}
-                value={contact.label}
-                onChange={() => null}
-                onBlur={() => null}
-                checked={contact.defaultChecked}
-              />
-            </li>
+            <CheckboxField
+              id={`contact-${contact.label}`}
+              name={`contact-${contact.label}`}
+              label={contact.label}
+              value={contact.label}
+              onChange={() => null}
+              onBlur={() => null}
+              checked={contact.defaultChecked}
+            />
           ))}
+          <AdditionalContacts
+            systemIntakeId={systemIntakeId}
+            activeContact={activeContact}
+            setActiveContact={setActiveContact}
+            type="recipient"
+            className="margin-top-2"
+          />
         </TruncatedContent>
-      </ul>
-      <AdditionalContacts
-        systemIntakeId={systemIntakeId}
-        activeContact={activeContact}
-        setActiveContact={setActiveContact}
-        type="recipient"
-        className="margin-bottom-4"
-      />
-      {/* )} */}
+      </div>
     </div>
   );
 };
