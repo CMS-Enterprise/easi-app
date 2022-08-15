@@ -99,11 +99,8 @@ describe('Submit Action', () => {
             isPresent: true,
             name: 'ISSO Name'
           },
-          fundingSource: {
-            fundingNumber: '123456',
-            isFunded: true,
-            source: 'Research'
-          },
+          existingFunding: true,
+          fundingSources: [{ fundingNumber: '123456', source: 'Research' }],
           lcid: null,
           lcidExpiresAt: null,
           lcidScope: null,

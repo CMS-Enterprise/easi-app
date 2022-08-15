@@ -46,11 +46,8 @@ describe('The GRT intake review view', () => {
       isPresent: false,
       teams: null
     },
-    fundingSource: {
-      isFunded: false,
-      fundingNumber: '',
-      source: ''
-    },
+    existingFunding: false,
+    fundingSources: [],
     costs: {
       expectedIncreaseAmount: '',
       isExpectingIncrease: 'NO'

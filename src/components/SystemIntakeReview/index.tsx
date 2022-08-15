@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ReviewRow from 'components/ReviewRow';
 import {
@@ -12,32 +13,64 @@ import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetS
 import { SystemIntakeStatus } from 'types/graphql-global-types';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDate } from 'utils/date';
+import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntake;
+};
+
+type FundingSourcesObject = {
+  [number: string]: {
+    fundingNumber: string | null;
+    sources: (string | null)[];
+  };
 };
 
 export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
   const { contract, status, submittedAt } = systemIntake;
+  const { t } = useTranslation('intake');
 
   const fundingDefinition = () => {
-    const {
-      fundingSource: { isFunded, fundingNumber, source }
-    } = systemIntake;
-    const isFundedText = convertBoolToYesNo(isFunded);
+    const { existingFunding, fundingSources } = systemIntake;
 
-    if (isFunded) {
-      if (source === 'Unknown') {
-        // Unknown funding sources have an optional number
-        return fundingNumber === null || ''
-          ? `${isFundedText}, but funding source and number are unknown`
-          : `${isFundedText}, ${fundingNumber}, but funding source is unknown`;
-      }
-      return `${isFundedText}, ${source}, ${fundingNumber}`;
-    }
-    return isFundedText;
+    // Format funding sources object
+    const fundingSourcesObject = fundingSources.reduce<FundingSourcesObject>(
+      (acc, { fundingNumber, source }) => {
+        const sourcesArray = acc[fundingNumber!]
+          ? [...acc[fundingNumber!].sources, source]
+          : [source];
+        // Return formatted object of funding sources
+        return {
+          ...acc,
+          [fundingNumber!]: {
+            fundingNumber,
+            sources: sourcesArray
+          }
+        };
+      },
+      {}
+    );
+
+    // If no funding sources, return no
+    if (!existingFunding) return 'N/A';
+
+    return (
+      <ul className="usa-list--unstyled">
+        {Object.values(fundingSourcesObject).map(
+          ({ fundingNumber, sources }) => {
+            return (
+              <FundingSourcesListItem
+                key={fundingNumber}
+                fundingNumber={fundingNumber!}
+                sources={sources}
+              />
+            );
+          }
+        )}
+      </ul>
+    );
   };
   const issoDefinition = () => {
     const hasIsso = convertBoolToYesNo(systemIntake.isso.isPresent);
@@ -49,7 +82,7 @@ export const SystemIntakeReview = ({
 
   const getSubmissionDate = () => {
     if (status === SystemIntakeStatus.INTAKE_DRAFT) {
-      return 'Not yet submitted';
+      return t('review.notSubmitted');
     }
 
     if (submittedAt) {
@@ -61,10 +94,10 @@ export const SystemIntakeReview = ({
 
   return (
     <div>
-      <DescriptionList title="System Request">
+      <DescriptionList title={t('review.systemRequest')}>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Submission Date" />
+            <DescriptionTerm term={t('review.submissionDate')} />
             <DescriptionDefinition definition={getSubmissionDate()} />
           </div>
         </ReviewRow>
@@ -73,14 +106,14 @@ export const SystemIntakeReview = ({
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contact Details</h2>
 
-      <DescriptionList title="Contact Details">
+      <DescriptionList title={t('review.contactDetails')}>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Requester" />
+            <DescriptionTerm term={t('fields.requester')} />
             <DescriptionDefinition definition={systemIntake.requester.name} />
           </div>
           <div>
-            <DescriptionTerm term="Requester Component" />
+            <DescriptionTerm term={t('review.requesterComponent')} />
             <DescriptionDefinition
               definition={systemIntake.requester.component}
             />
@@ -88,13 +121,13 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="CMS Business Owner's Name" />
+            <DescriptionTerm term={t('review.cmsBusinessOwnerName')} />
             <DescriptionDefinition
               definition={systemIntake.businessOwner.name}
             />
           </div>
           <div>
-            <DescriptionTerm term="CMS Business Owner Component" />
+            <DescriptionTerm term={t('review.cmsBusinessOwnerComponent')} />
             <DescriptionDefinition
               definition={systemIntake.businessOwner.component}
             />
@@ -102,13 +135,13 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="CMS Project/Product Manager or lead" />
+            <DescriptionTerm term={t('review.cmsProjectManagerName')} />
             <DescriptionDefinition
               definition={systemIntake.productManager.name}
             />
           </div>
           <div>
-            <DescriptionTerm term="CMS Project/Product manager or lead Component" />
+            <DescriptionTerm term={t('review.cmsProjectManagerComponent')} />
             <DescriptionDefinition
               definition={systemIntake.productManager.component}
             />
@@ -116,11 +149,11 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Does your project have an Information System Security Officer (ISSO)?" />
+            <DescriptionTerm term={t('review.isso')} />
             <DescriptionDefinition definition={issoDefinition()} />
           </div>
           <div>
-            <DescriptionTerm term="I have started collaborating with" />
+            <DescriptionTerm term={t('review.collaborating')} />
             {systemIntake.governanceTeams.isPresent ? (
               (systemIntake.governanceTeams.teams || []).map(team => (
                 <DescriptionDefinition
@@ -136,18 +169,18 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Request Details</h2>
+      <h2 className="font-heading-xl">{t('review.requestDetails')}</h2>
 
-      <DescriptionList title="Request Details">
+      <DescriptionList title={t('review.requestDetails')}>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Project Name" />
+            <DescriptionTerm term={t('review.projectName')} />
             <DescriptionDefinition definition={systemIntake.requestName} />
           </div>
         </ReviewRow>
         <div className="margin-bottom-205 line-height-body-3">
           <div>
-            <DescriptionTerm term="What is your business need?" />
+            <DescriptionTerm term={t('review.businessNeed')} />
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake.businessNeed}
@@ -156,7 +189,7 @@ export const SystemIntakeReview = ({
         </div>
         <div className="margin-bottom-205 line-height-body-3">
           <div>
-            <DescriptionTerm term="How are you thinking of solving it?" />
+            <DescriptionTerm term={t('review.solving')} />
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake.businessSolution}
@@ -165,13 +198,13 @@ export const SystemIntakeReview = ({
         </div>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Where are you in the process?" />
+            <DescriptionTerm term={t('review.process')} />
             <DescriptionDefinition definition={systemIntake.currentStage} />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Do you need Enterprise Architecture (EA) support?" />
+            <DescriptionTerm term={t('review.eaSupport')} />
             <DescriptionDefinition
               definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
             />
@@ -182,16 +215,16 @@ export const SystemIntakeReview = ({
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contract Details</h2>
 
-      <DescriptionList title="Contract Details">
+      <DescriptionList title={t('review.contractDetails')}>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Will this project be funded out of an existing funding source?" />
+            <DescriptionTerm term={t('contractDetails.fundingSources.label')} />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Do the costs for this request exceed what you are currently spending to meet your business need?" />
+            <DescriptionTerm term={t('review.costs')} />
             <DescriptionDefinition
               definition={
                 systemIntake.costs.isExpectingIncrease &&
@@ -201,7 +234,7 @@ export const SystemIntakeReview = ({
           </div>
           {systemIntake.costs.isExpectingIncrease === 'YES' && (
             <div>
-              <DescriptionTerm term="Approximately how much do you expect the cost to increase?" />
+              <DescriptionTerm term={t('review.increase')} />
               <DescriptionDefinition
                 definition={systemIntake.costs.expectedIncreaseAmount}
               />
@@ -210,7 +243,7 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Do you already have a contract in place to support this effort?" />
+            <DescriptionTerm term={t('review.contract')} />
             <DescriptionDefinition
               definition={
                 contractStatus[`${systemIntake.contract.hasContract}`]
@@ -224,21 +257,21 @@ export const SystemIntakeReview = ({
           <>
             <ReviewRow>
               <div>
-                <DescriptionTerm term="Contractor(s)" />
+                <DescriptionTerm term={t('review.contractors')} />
                 <DescriptionDefinition definition={contract.contractor} />
               </div>
               <div>
-                <DescriptionTerm term="Contract vehicle" />
+                <DescriptionTerm term={t('review.contractVehicle')} />
                 <DescriptionDefinition definition={contract.vehicle} />
               </div>
             </ReviewRow>
             <ReviewRow>
               <div>
-                <DescriptionTerm term="Period of performance" />
+                <DescriptionTerm term={t('review.performance')} />
                 <DescriptionDefinition
-                  definition={`${formatContractDate(
-                    contract.startDate
-                  )} to ${formatContractDate(contract.endDate)}`}
+                  definition={`${formatContractDate(contract.startDate)} ${t(
+                    'to'
+                  )} ${formatContractDate(contract.endDate)}`}
                 />
               </div>
             </ReviewRow>

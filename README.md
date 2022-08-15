@@ -11,7 +11,7 @@ This application has the following main components:
 ## Documentation
 
 - [Development environment setup](./docs/dev_environment_setup.md)
-- [Architecture Decision Records (ADRs)](./docs/adr/index.md)
+- [Architecture Decision Records (ADRs)](./docs/adr)
 - [Frontend docs](./src/README.md)
 - [Backend docs](./pkg/README.md)
 - [Running development tasks with `scripts/dev`](./docs/dev_script_usage.md) - includes instructions on running the application locally

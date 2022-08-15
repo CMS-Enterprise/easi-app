@@ -72,11 +72,10 @@ export interface GetSystemIntake_systemIntake_isso {
   name: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_fundingSource {
+export interface GetSystemIntake_systemIntake_fundingSources {
   __typename: "SystemIntakeFundingSource";
-  fundingNumber: string | null;
-  isFunded: boolean | null;
   source: string | null;
+  fundingNumber: string | null;
 }
 
 export interface GetSystemIntake_systemIntake_productManager {
@@ -114,7 +113,8 @@ export interface GetSystemIntake_systemIntake {
   grtFeedbacks: GetSystemIntake_systemIntake_grtFeedbacks[];
   governanceTeams: GetSystemIntake_systemIntake_governanceTeams;
   isso: GetSystemIntake_systemIntake_isso;
-  fundingSource: GetSystemIntake_systemIntake_fundingSource;
+  existingFunding: boolean | null;
+  fundingSources: GetSystemIntake_systemIntake_fundingSources[];
   lcid: string | null;
   lcidExpiresAt: Time | null;
   lcidScope: string | null;

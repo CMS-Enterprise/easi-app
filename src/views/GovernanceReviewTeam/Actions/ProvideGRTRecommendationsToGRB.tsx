@@ -18,6 +18,7 @@ import {
   AddGRTFeedbackVariables
 } from 'queries/types/AddGRTFeedback';
 import { ProvideGRTFeedbackForm } from 'types/action';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import { provideGRTFeedbackSchema } from 'validations/actionSchema';
 
@@ -32,6 +33,10 @@ const ProvideGRTRecommendationsToGRB = () => {
     MarkReadyForGRBQuery
   );
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -140,7 +145,11 @@ const ProvideGRTRecommendationsToGRB = () => {
                   error={!!flatErrors.emailBody}
                   className="margin-top-5"
                 >
-                  <EmailRecipientsFields />
+                  <EmailRecipientsFields
+                    systemIntakeId={systemId}
+                    activeContact={activeContact}
+                    setActiveContact={setActiveContact}
+                  />
                   <Label
                     htmlFor="ProvideGRTFeedbackForm-EmailBody"
                     className="margin-top-0 line-height-body-2 text-normal"
@@ -165,12 +174,14 @@ const ProvideGRTRecommendationsToGRB = () => {
                       setShouldSendEmail(true);
                       setFieldValue('skipEmail', false);
                     }}
+                    disabled={!!activeContact}
                   >
                     {t('submitAction.submit')}
                   </Button>
                 </div>
                 <div>
                   <CompleteWithoutEmailButton
+                    disabled={!!activeContact}
                     onClick={() => {
                       setErrors({});
                       setShouldSendEmail(false);

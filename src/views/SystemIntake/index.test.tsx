@@ -84,11 +84,8 @@ describe('The System Intake page', () => {
             isPresent: false,
             name: null
           },
-          fundingSource: {
-            fundingNumber: null,
-            isFunded: null,
-            source: null
-          },
+          existingFunding: null,
+          fundingSources: [],
           lcid: null,
           lcidExpiresAt: null,
           lcidScope: null,

@@ -1593,17 +1593,30 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 		return nil, err
 	}
 
-	if input.FundingSource != nil {
-		if null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
-			intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
-			intake.FundingSource = null.StringFromPtr(input.FundingSource.Source)
-			intake.FundingNumber = null.StringFromPtr(input.FundingSource.FundingNumber)
-		}
+	if input.FundingSources != nil && input.FundingSources.FundingSources != nil {
+		intake.ExistingFunding = null.BoolFromPtr(input.FundingSources.ExistingFunding)
+		if intake.ExistingFunding.ValueOrZero() {
+			fundingSources := make([]*models.SystemIntakeFundingSource, 0, len(input.FundingSources.FundingSources))
+			for _, fundingSourceInput := range input.FundingSources.FundingSources {
+				fundingSources = append(fundingSources, &models.SystemIntakeFundingSource{
+					SystemIntakeID: intake.ID,
+					Source:         null.StringFromPtr(fundingSourceInput.Source),
+					FundingNumber:  null.StringFromPtr(fundingSourceInput.FundingNumber),
+				})
+			}
 
-		if !null.BoolFromPtr(input.FundingSource.IsFunded).ValueOrZero() {
-			intake.ExistingFunding = null.BoolFromPtr(input.FundingSource.IsFunded)
-			intake.FundingSource = null.StringFromPtr(nil)
-			intake.FundingNumber = null.StringFromPtr(nil)
+			_, err = r.store.UpdateSystemIntakeFundingSources(ctx, input.ID, fundingSources)
+
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			// Delete existing funding source records
+			_, err = r.store.UpdateSystemIntakeFundingSources(ctx, input.ID, nil)
+
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -2311,13 +2324,9 @@ func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.System
 	return obj.EUAUserID.String, nil
 }
 
-// FundingSource is the resolver for the fundingSource field.
-func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeFundingSource, error) {
-	return &model.SystemIntakeFundingSource{
-		IsFunded:      obj.ExistingFunding.Ptr(),
-		FundingNumber: obj.FundingNumber.Ptr(),
-		Source:        obj.FundingSource.Ptr(),
-	}, nil
+// ExistingFunding is the resolver for the existingFunding field.
+func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.ExistingFunding.Ptr(), nil
 }
 
 // GovernanceTeams is the resolver for the governanceTeams field.
@@ -2468,9 +2477,32 @@ func (r *systemIntakeResolver) RequestName(ctx context.Context, obj *models.Syst
 
 // Requester is the resolver for the requester field.
 func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error) {
+	requesterWithoutEmail := &model.SystemIntakeRequester{
+		Component: obj.Component.Ptr(),
+		Email:     nil,
+		Name:      obj.Requester,
+	}
+
+	// if the EUA doesn't exist (Sharepoint imports), don't bother calling CEDAR LDAP
+	if !obj.EUAUserID.Valid {
+		return requesterWithoutEmail, nil
+	}
+
+	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
+	if err != nil {
+		// check if the EUA ID is just invalid in CEDAR LDAP (i.e. the requester no longer has an active EUA account)
+		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
+			return requesterWithoutEmail, nil
+		}
+
+		// error we can't handle, like being unable to communicate with CEDAR
+		return nil, err
+	}
+
+	email := user.Email.String()
 	return &model.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
-		Email:     obj.RequesterEmailAddress.Ptr(),
+		Email:     &email,
 		Name:      obj.Requester,
 	}, nil
 }
@@ -2501,6 +2533,16 @@ func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.Sy
 // CedarSystemID is the resolver for the cedarSystemId field.
 func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.CedarSystemID.Ptr(), nil
+}
+
+// FundingNumber is the resolver for the fundingNumber field.
+func (r *systemIntakeFundingSourceResolver) FundingNumber(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
+	return obj.FundingNumber.Ptr(), nil
+}
+
+// Source is the resolver for the source field.
+func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
+	return obj.Source.Ptr(), nil
 }
 
 // Email is the resolver for the email field.
@@ -2569,6 +2611,11 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
+// SystemIntakeFundingSource returns generated.SystemIntakeFundingSourceResolver implementation.
+func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSourceResolver {
+	return &systemIntakeFundingSourceResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2587,4 +2634,5 @@ type cedarThreatResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+type systemIntakeFundingSourceResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

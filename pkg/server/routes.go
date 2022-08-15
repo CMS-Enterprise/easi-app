@@ -111,6 +111,7 @@ func (s *Server) routes(
 		appcontext.WithLogger(context.Background(), s.logger),
 		s.Config.GetString(appconfig.CEDARAPIURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
+		s.Config.GetDuration(appconfig.CEDARCacheIntervalKey),
 		ldClient,
 	)
 

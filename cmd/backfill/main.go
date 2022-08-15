@@ -167,18 +167,14 @@ const (
 	colCreatedBy  = 12 // M
 	colProjectMgr = 13 // N
 	colBizOwn     = 14 // O
-	colPrjNum     = 15 // P
+	colContractor = 15 // S
+	colVehicle    = 16 // T
+	colPeriod     = 17 // U
 
-	colFundSrc    = 16 // Q
-	colCostFree   = 17 // R
-	colContractor = 18 // S
-	colVehicle    = 19 // T
-	colPeriod     = 20 // U
-
-	colCStartM = 21 // V
-	colCStartY = 22 // W
-	colCEndM   = 23 // X
-	colCEndY   = 24 // Y
+	colCStartM = 18 // V
+	colCStartY = 19 // W
+	colCEndM   = 20 // X
+	colCEndY   = 21 // Y
 )
 
 type entry struct {
@@ -265,16 +261,7 @@ func convert(row []string) (*entry, error) {
 	// is "#435" representative of their "component?"
 	data.Intake.BusinessOwner = null.StringFrom(row[colBizOwn])
 
-	// TODO - labelled "Project #" - what does this map to?
-	// usually: "000120"; occaisonally: "001595, 000102, 002014", "FY20-000792,  FY-2021: 000787 and 000924"
-	data.Intake.FundingNumber = null.StringFrom(row[colPrjNum])
-	data.Intake.FundingSource = null.StringFrom(row[colFundSrc])
-	if row[colPrjNum] != "" || row[colFundSrc] != "" {
-		data.Intake.ExistingFunding = null.BoolFrom(true)
-	} else {
-		data.Intake.ExistingFunding = null.BoolFrom(false)
-	}
-
+	data.Intake.ExistingFunding = null.BoolFrom(false)
 	data.Intake.Contractor = null.StringFrom(row[colContractor])
 	data.Intake.ContractVehicle = null.StringFrom(row[colVehicle])
 	data.Intake.ContractStartMonth = null.StringFrom(row[colCStartM])
@@ -302,13 +289,6 @@ func convert(row []string) (*entry, error) {
 	if row[colPeriod] != "" {
 		data.Notes = append(data.Notes, models.Note{
 			Content:    null.StringFrom(fmt.Sprintf("Period of Performance - %s", row[colPeriod])),
-			AuthorName: null.StringFrom(row[colAdminLead]),
-		})
-	}
-
-	if row[colCostFree] != "" {
-		data.Notes = append(data.Notes, models.Note{
-			Content:    null.StringFrom(fmt.Sprintf("Anticipated Cost Increase - %s", row[colCostFree])),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}

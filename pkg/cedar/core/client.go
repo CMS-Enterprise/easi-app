@@ -19,12 +19,13 @@ import (
 )
 
 const (
-	cedarCoreEnabledKey     = "cedarCoreEnabled"
-	cedarCoreEnabledDefault = false
+	cedarCoreEnabledKey           = "cedarCoreEnabled"
+	cedarCoreEnabledDefault       = false
+	cedarCoreCacheDurationDefault = time.Hour * 6
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
-func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Client {
+func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheRefreshTime time.Duration, ldClient *ld.LDClient) *Client {
 	fnEmit := func(ctx context.Context) bool {
 		lduser := flags.Principal(ctx)
 		result, err := ldClient.BoolVariation(cedarCoreEnabledKey, lduser, cedarCoreEnabledDefault)
@@ -63,8 +64,15 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, ldClie
 		cache: c,
 	}
 
-	// Start cache refresh for systems
-	client.startCacheRefresh(ctx, time.Minute*5, client.populateSystemSummaryCache)
+	if cacheRefreshTime <= 0 {
+		appcontext.ZLogger(ctx).Error(
+			"CEDAR cacheRefreshTime is not a valid value, falling back to default",
+			zap.Duration("cacheRefreshTime", cacheRefreshTime),
+			zap.Duration("defaultDuration", cedarCoreCacheDurationDefault),
+		)
+		cacheRefreshTime = cedarCoreCacheDurationDefault
+	}
+	client.startCacheRefresh(ctx, cacheRefreshTime, client.populateSystemSummaryCache)
 
 	return client
 }
@@ -78,8 +86,9 @@ type Client struct {
 	cache            *cache.Cache
 }
 
-// startCacheRefresh starts a goroutine that will run `populateCache` based on cacheRefreshTime
-// This function returns no errors, and only logs when something goes wrong
+// startCacheRefresh starts a goroutine that will run `populateCache` based on cacheRefreshTime.
+// startCacheRefresh returns no errors, and only logs when something goes wrong.
+// Upon being called, startCacheRefresh will populate the cache once immediately, then again at an interval specificed by cacheRefreshTime.
 func (c *Client) startCacheRefresh(ctx context.Context, cacheRefreshTime time.Duration, populateCache func(context.Context) error) {
 	ticker := time.NewTicker(cacheRefreshTime)
 	go func(ctx context.Context) {

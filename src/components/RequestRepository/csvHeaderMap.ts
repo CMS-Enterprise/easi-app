@@ -42,7 +42,7 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.projectName')
   },
   {
-    key: 'fundingSource.isFunded',
+    key: 'existingFunding',
     label: t('intake:csvHeadings.existingFunding')
   },
   {

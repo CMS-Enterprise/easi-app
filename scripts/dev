@@ -353,6 +353,7 @@ namespace :db do
   desc "Deletes all rows from all tables"
   task :clean do
     tables = %w{
+      cedar_system_bookmarks
       accessibility_request_status_records
       accessibility_request_notes
       accessibility_request_documents
@@ -363,6 +364,8 @@ namespace :db do
       estimated_lifecycle_costs
       business_cases
       grt_feedback
+      system_intake_contacts
+      system_intake_funding_sources
       system_intakes
     }
     sql = tables.map { |table| "DELETE FROM #{table};" }.join
