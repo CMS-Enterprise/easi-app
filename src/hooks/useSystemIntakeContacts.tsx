@@ -39,6 +39,7 @@ function useSystemIntakeContacts(
   const { data, refetch } = useQuery<GetSystemIntakeContacts>(
     GetSystemIntakeContactsQuery,
     {
+      fetchPolicy: 'cache-first',
       variables: { id: systemIntakeId }
     }
   );

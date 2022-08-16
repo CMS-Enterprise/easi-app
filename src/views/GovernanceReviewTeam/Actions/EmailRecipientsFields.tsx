@@ -9,12 +9,14 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import AdditionalContacts from 'components/AdditionalContacts';
 import CheckboxField from 'components/shared/CheckboxField';
 import TruncatedContent from 'components/shared/TruncatedContent';
+import useSystemIntake from 'hooks/useSystemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
+import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 
 type EmailRecipientsFieldsProps = {
@@ -25,6 +27,8 @@ type EmailRecipientsFieldsProps = {
   systemIntakeId: string;
   activeContact: SystemIntakeContactProps | null;
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  recipients: EmailNotificationRecipients;
+  setRecipients: (recipients: EmailNotificationRecipients) => void;
 };
 
 export default ({
@@ -34,67 +38,66 @@ export default ({
   alertClassName,
   systemIntakeId,
   activeContact,
-  setActiveContact
+  setActiveContact,
+  recipients,
+  setRecipients
 }: EmailRecipientsFieldsProps) => {
   const { pathname } = useLocation();
   const { t } = useTranslation('action');
   // const flags = useFlags();
   const [initialContacts] = useSystemIntakeContacts(systemIntakeId);
-  const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
-    GetSystemIntakeQuery,
-    {
-      nextFetchPolicy: 'cache-first',
-      variables: {
-        id: systemIntakeId
-      }
-    }
-  );
+  const { systemIntake } = useSystemIntake(systemIntakeId);
+  const { requester } = { ...systemIntake };
   const isLCID = useMemo(() => pathname.endsWith('/issue-lcid'), [pathname]);
 
   const contacts: {
     label: string;
-    email: string | null;
-    defaultChecked: boolean;
+    value: string | null;
+    checked: boolean;
   }[] = useMemo(() => {
-    if (!initialContacts || !data?.systemIntake) return [];
-
-    const requester = data?.systemIntake.requester;
+    if (!initialContacts) return [];
 
     const { businessOwner, productManager } = initialContacts;
 
     const contactsArray = [
       {
-        label: `${requester.name}, ${requester.component} (Requester)`,
-        email: requester.email,
-        defaultChecked: true
+        label: `${requester?.name}, ${requester?.component} (Requester)`,
+        value: requester?.email!,
+        checked: recipients.regularRecipientEmails.includes(requester?.email!)
       },
       {
         label: 'IT Governance Mailbox',
-        email: 'IT_Investments@cms.hhs.gov',
-        defaultChecked: true
+        value: 'shouldNotifyITGovernance',
+        checked: recipients.shouldNotifyITGovernance
       },
       {
         label: 'IT Investment Mailbox',
-        email: 'IT_Investments@cms.hhs.gov',
-        defaultChecked: isLCID
+        value: 'shouldNotifyITInvestment',
+        checked: recipients.shouldNotifyITInvestment
       },
       {
         label: `${businessOwner.commonName}, ${businessOwner.component} (${businessOwner.role})`,
-        email: businessOwner.email,
-        defaultChecked: false
+        value: businessOwner.email,
+        checked: recipients.regularRecipientEmails.includes(
+          businessOwner.email!
+        )
       },
       {
         label: `${productManager.commonName}, ${productManager.component} (${productManager.role})`,
-        email: productManager.email,
-        defaultChecked: false
+        value: productManager.email,
+        checked: recipients.regularRecipientEmails.includes(
+          productManager.email!
+        )
       }
     ];
 
     if (initialContacts.isso.id) {
       contactsArray.push({
         label: `${initialContacts.isso.commonName}, ${initialContacts.isso.component} (${initialContacts.isso.role})`,
-        email: initialContacts.isso.email,
-        defaultChecked: false
+        value: initialContacts.isso.email,
+        checked: recipients.regularRecipientEmails.includes(
+          initialContacts.isso.email!
+        )
       });
     }
 
@@ -102,15 +105,41 @@ export default ({
       const additionalContacts = initialContacts.additionalContacts.map(
         contact => ({
           label: `${contact.commonName}, ${contact.component} (${contact.role})`,
-          email: contact.email,
-          defaultChecked: false
+          value: contact.email,
+          checked: recipients.regularRecipientEmails.includes(contact.email!)
         })
       );
       contactsArray.push(...additionalContacts);
     }
 
     return contactsArray;
-  }, [data?.systemIntake, initialContacts, isLCID]);
+  }, [initialContacts, recipients, requester]);
+
+  const updateRecipients = (value: string) => {
+    const { regularRecipientEmails } = recipients;
+    // Update recipients
+    if (
+      value === 'shouldNotifyITInvestment' ||
+      value === 'shouldNotifyITGovernance'
+    ) {
+      // If IT Investment or IT Governance mailbox, set boolean
+      setRecipients({ ...recipients, [value]: !recipients[value] });
+    } else if (regularRecipientEmails.includes(value)) {
+      // If recipient already exists, remove email from array
+      setRecipients({
+        ...recipients,
+        regularRecipientEmails: regularRecipientEmails.filter(
+          email => email !== value
+        )
+      });
+    } else {
+      // Add email to recipients array
+      setRecipients({
+        ...recipients,
+        regularRecipientEmails: [...regularRecipientEmails, value]
+      });
+    }
+  };
 
   return (
     <div className={classnames(className)}>
@@ -136,13 +165,14 @@ export default ({
         >
           {contacts.map(contact => (
             <CheckboxField
+              key={contact.label}
               id={`contact-${contact.label}`}
               name={`contact-${contact.label}`}
               label={contact.label}
-              value={contact.label}
-              onChange={() => null}
+              value={contact.value!}
+              onChange={e => updateRecipients(e.target.value)}
               onBlur={() => null}
-              checked={contact.defaultChecked}
+              checked={contact.checked}
             />
           ))}
           <AdditionalContacts

@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon';
 
+import { EmailNotificationRecipients } from './graphql-global-types';
+
 // When adding a new ActionType, please add its description in i18n/governanceReviewTeam/notes
 export type ActionType =
   | 'SUBMIT_INTAKE'
@@ -53,6 +55,7 @@ export type ActionState = {
 
 export type ActionForm = {
   feedback: string;
+  notificationRecipients: EmailNotificationRecipients;
 };
 
 export type SubmitLifecycleIdForm = {
