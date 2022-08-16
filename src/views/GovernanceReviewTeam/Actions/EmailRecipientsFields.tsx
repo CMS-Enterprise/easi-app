@@ -136,6 +136,10 @@ export default ({
     ];
   }, [initialContacts, recipients, systemIntake]);
 
+  // Number of selected recipients
+  const selectedCount = formattedRecipients.filter(({ checked }) => checked)
+    .length;
+
   /** Update email recipients in system intake */
   const updateRecipients = (value: string) => {
     const { regularRecipientEmails } = recipients;
@@ -170,10 +174,15 @@ export default ({
       </h3>
       {!optional && (
         <Alert type="info" slim className={classnames(alertClassName)}>
-          This contact has an invalid email. You can’t add them as a recipient.
+          {t('emailRecipients.emailRequired')}
         </Alert>
       )}
       {/* {flags.notifyMultipleRecipients && ( */}
+      <h4 className="margin-bottom-0 margin-top-2">Choose recipients</h4>
+      <p className="margin-top-05">
+        <strong>{selectedCount}</strong>
+        {t(selectedCount > 1 ? ' recipients selected' : ' recipient selected')}
+      </p>
       <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
         <TruncatedContent
           initialCount={defaultITInvestment ? 3 : 2}
@@ -202,11 +211,7 @@ export default ({
                 <Alert
                   type="warning"
                   slim
-                  className={classnames(
-                    'margin-left-4',
-                    'margin-top-0',
-                    alertClassName
-                  )}
+                  className="margin-left-4 margin-top-05"
                 >
                   This contact has an invalid email. You can’t add them as a
                   recipient.
