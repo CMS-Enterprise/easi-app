@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { DocumentNode, useMutation } from '@apollo/client';
@@ -38,7 +38,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { systemIntake } = useSystemIntake(systemId);
   const { t } = useTranslation('action');
   const history = useHistory();
-  const { pathname } = useLocation();
+
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
   const [
     activeContact,
@@ -46,6 +46,12 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   ] = useState<SystemIntakeContactProps | null>(null);
 
   const [mutate, mutationResult] = useMutation<ActionInput>(query);
+
+  const { pathname } = useLocation();
+  const defaultITInvestment =
+    pathname.endsWith('issue-lcid') ||
+    pathname.endsWith('extend-lcid') ||
+    pathname.endsWith('no-governance');
 
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
@@ -70,7 +76,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
     notificationRecipients: {
       regularRecipientEmails: [systemIntake?.requester?.email!],
       shouldNotifyITGovernance: true,
-      shouldNotifyITInvestment: pathname.endsWith('/issue-lcid')
+      shouldNotifyITInvestment: defaultITInvestment
     }
   };
 

@@ -42,14 +42,22 @@ export default ({
   recipients,
   setRecipients
 }: EmailRecipientsFieldsProps) => {
-  const { pathname } = useLocation();
   const { t } = useTranslation('action');
   // const flags = useFlags();
   const [initialContacts] = useSystemIntakeContacts(systemIntakeId);
   const { systemIntake } = useSystemIntake(systemIntakeId);
-  const { requester } = { ...systemIntake };
-  const isLCID = useMemo(() => pathname.endsWith('/issue-lcid'), [pathname]);
 
+  // Get action type from path
+  const { pathname } = useLocation();
+  const defaultITInvestment = useMemo(() => {
+    return (
+      pathname.endsWith('issue-lcid') ||
+      pathname.endsWith('extend-lcid') ||
+      pathname.endsWith('no-governance')
+    );
+  }, [pathname]);
+
+  /** Formatted contacts array for display as email recipients */
   const contacts: {
     label: string;
     value: string | null;
@@ -57,12 +65,41 @@ export default ({
   }[] = useMemo(() => {
     if (!initialContacts) return [];
 
-    const { businessOwner, productManager } = initialContacts;
+    // Get requester from system intake
+    const { requester } = { ...systemIntake };
 
+    // Legacy intake business owner, product manager, and isso come from intake vs contacts query
+    const businessOwner = {
+      commonName:
+        initialContacts.businessOwner.commonName ||
+        systemIntake?.businessOwner.name,
+      component:
+        initialContacts.businessOwner.component ||
+        systemIntake?.businessOwner.component,
+      email: initialContacts.businessOwner.email!
+    };
+
+    const productManager = {
+      commonName:
+        initialContacts.productManager.commonName ||
+        systemIntake?.productManager.name,
+      component:
+        initialContacts.productManager.component ||
+        systemIntake?.productManager.component,
+      email: initialContacts.productManager.email!
+    };
+
+    const isso = {
+      commonName: initialContacts.isso.commonName || systemIntake?.isso.name,
+      component: initialContacts.isso.component!,
+      email: initialContacts.isso.email!
+    };
+
+    // Format array of contact objects for display
     const contactsArray = [
       {
         label: `${requester?.name}, ${requester?.component} (Requester)`,
-        value: requester?.email!,
+        value: requester?.email || '',
         checked: recipients.regularRecipientEmails.includes(requester?.email!)
       },
       {
@@ -76,45 +113,43 @@ export default ({
         checked: recipients.shouldNotifyITInvestment
       },
       {
-        label: `${businessOwner.commonName}, ${businessOwner.component} (${businessOwner.role})`,
+        label: `${businessOwner.commonName}, ${businessOwner.component} (Business owner)`,
         value: businessOwner.email,
+        checked: recipients.regularRecipientEmails.includes(businessOwner.email)
+      },
+      {
+        label: `${productManager.commonName}, ${productManager.component} (Product manager)`,
+        value: productManager.email,
         checked: recipients.regularRecipientEmails.includes(
-          businessOwner.email!
+          productManager.email
         )
       },
       {
-        label: `${productManager.commonName}, ${productManager.component} (${productManager.role})`,
-        value: productManager.email,
-        checked: recipients.regularRecipientEmails.includes(
-          productManager.email!
-        )
+        label: `${isso.commonName}${
+          isso.component ? `, ${isso.component}` : ''
+        } (ISSO)`,
+        value: isso.email,
+        checked: recipients.regularRecipientEmails.includes(isso.email)
       }
     ];
 
-    if (initialContacts.isso.id) {
-      contactsArray.push({
-        label: `${initialContacts.isso.commonName}, ${initialContacts.isso.component} (${initialContacts.isso.role})`,
-        value: initialContacts.isso.email,
-        checked: recipients.regularRecipientEmails.includes(
-          initialContacts.isso.email!
-        )
-      });
-    }
-
+    // If additional contacts, add to array
     if (initialContacts?.additionalContacts.length > 0) {
       const additionalContacts = initialContacts.additionalContacts.map(
         contact => ({
           label: `${contact.commonName}, ${contact.component} (${contact.role})`,
-          value: contact.email,
+          value: contact.email!,
           checked: recipients.regularRecipientEmails.includes(contact.email!)
         })
       );
       contactsArray.push(...additionalContacts);
     }
 
+    // Return contacts array
     return contactsArray;
-  }, [initialContacts, recipients, requester]);
+  }, [initialContacts, recipients, systemIntake]);
 
+  /** Update notification recipients in system intake */
   const updateRecipients = (value: string) => {
     const { regularRecipientEmails } = recipients;
     // Update recipients
@@ -154,12 +189,12 @@ export default ({
       {/* {flags.notifyMultipleRecipients && ( */}
       <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
         <TruncatedContent
-          initialCount={isLCID ? 3 : 2}
+          initialCount={defaultITInvestment ? 3 : 2}
           labelMore={`Show ${
-            contacts.length - (isLCID ? 3 : 2)
+            contacts.length - (defaultITInvestment ? 3 : 2)
           } more recipients`}
           labelLess={`Show ${
-            contacts.length - (isLCID ? 3 : 2)
+            contacts.length - (defaultITInvestment ? 3 : 2)
           } fewer recipients`}
           buttonClassName="margin-top-105"
         >
