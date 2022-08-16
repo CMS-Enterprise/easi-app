@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 
 import { EmailNotificationRecipients } from './graphql-global-types';
+import { SystemIntakeContactProps } from './systemIntake';
 
 // When adding a new ActionType, please add its description in i18n/governanceReviewTeam/notes
 export type ActionType =
@@ -90,4 +91,30 @@ export type RejectIntakeForm = {
 export type ProvideGRTFeedbackForm = {
   grtFeedback: string;
   emailBody: string;
+};
+
+export type EmailRecipientsFieldsProps = {
+  optional?: boolean;
+  className?: string;
+  headerClassName?: string;
+  alertClassName?: string;
+  systemIntakeId: string;
+  activeContact: SystemIntakeContactProps | null;
+  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  recipients: EmailNotificationRecipients;
+  setRecipients: (recipients: EmailNotificationRecipients) => void;
+};
+
+/** Formatted contact for display as notification recipient */
+export type RecipientObject = {
+  label: string;
+  value: string;
+  checked: boolean;
+};
+
+export type FormatRecipientProps = {
+  commonName: string;
+  component: string;
+  email: string;
+  role: string;
 };

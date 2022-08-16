@@ -1,5 +1,3 @@
-/** Custom hook for creating, updating, and deleting system intake contacts */
-
 import { useMemo } from 'react';
 import { ApolloQueryResult, useMutation, useQuery } from '@apollo/client';
 
@@ -32,6 +30,7 @@ const rolesMap = {
 } as const;
 type Role = keyof typeof rolesMap;
 
+/** Custom hook for creating, updating, and deleting system intake contacts */
 function useSystemIntakeContacts(
   systemIntakeId: string
 ): UseSystemIntakeContactsType {
