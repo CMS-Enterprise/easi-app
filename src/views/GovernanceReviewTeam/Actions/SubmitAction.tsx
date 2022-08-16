@@ -185,7 +185,6 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                   <Button
                     className="margin-top-2"
                     type="submit"
-                    // disabled={isSubmitting}
                     onClick={() => {
                       setErrors({});
                       setShouldSendEmail(true);

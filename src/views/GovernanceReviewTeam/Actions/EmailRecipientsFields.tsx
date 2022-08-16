@@ -178,7 +178,9 @@ export default ({
         </Alert>
       )}
       {/* {flags.notifyMultipleRecipients && ( */}
-      <h4 className="margin-bottom-0 margin-top-2">Choose recipients</h4>
+      <h4 className="margin-bottom-0 margin-top-2">
+        {t('emailRecipients.chooseRecipients')}
+      </h4>
       <p className="margin-top-05">
         <strong>{selectedCount}</strong>
         {t(selectedCount > 1 ? ' recipients selected' : ' recipient selected')}
@@ -186,12 +188,16 @@ export default ({
       <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
         <TruncatedContent
           initialCount={defaultITInvestment ? 3 : 2}
-          labelMore={`Show ${
-            formattedRecipients.length - (defaultITInvestment ? 3 : 2)
-          } more recipients`}
-          labelLess={`Show ${
-            formattedRecipients.length - (defaultITInvestment ? 3 : 2)
-          } fewer recipients`}
+          labelMore={t(
+            `Show ${
+              formattedRecipients.length - (defaultITInvestment ? 3 : 2)
+            } more recipients`
+          )}
+          labelLess={t(
+            `Show ${
+              formattedRecipients.length - (defaultITInvestment ? 3 : 2)
+            } fewer recipients`
+          )}
           buttonClassName="margin-top-105"
         >
           {formattedRecipients.map(contact => (
@@ -213,8 +219,7 @@ export default ({
                   slim
                   className="margin-left-4 margin-top-05"
                 >
-                  This contact has an invalid email. You can’t add them as a
-                  recipient.
+                  {t('emailRecipients.invalidEmail')}
                 </Alert>
               )}
             </div>

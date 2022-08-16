@@ -109,7 +109,10 @@ const action = {
     email: 'Email',
     optional: '(optional)',
     emailRequired:
-      'An email to the Requester is required when closing, approving, or denying the request.'
+      'An email to the Requester is required when closing, approving, or denying the request.',
+    chooseRecipients: 'Choose recipients',
+    invalidEmail:
+      "This contact has an invalid email. You can't add them as a recipient."
   },
   submitAction: {
     backLink: 'Change',
