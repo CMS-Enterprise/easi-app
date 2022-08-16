@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { IconNavigateBefore } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
 import { ImproveEasiSurvey } from 'components/Survey';
@@ -14,6 +15,7 @@ const Confirmation = ({
 }) => {
   const { businessCaseId } = useParams<{ businessCaseId: string }>();
   const { t } = useTranslation();
+  const flags = useFlags();
 
   return (
     <div className="grid-container margin-bottom-7">
@@ -26,7 +28,7 @@ const Confirmation = ({
             referenceId: businessCaseId
           })}
         </h2>
-        <ImproveEasiSurvey />
+        {flags.legacySupport && <ImproveEasiSurvey />}
         <div>
           <Link
             to={`/governance-task-list/${businessCase.systemIntakeId}`}

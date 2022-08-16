@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 
 import AlternativeAnalysisReview from 'components/BusinessCaseReview/AlternativeAnalysisReview';
@@ -24,6 +25,7 @@ const BusinessCaseReview = ({
 }: BusinessCaseReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `Business case for ${businessCase.requestName}.pdf`;
+  const flags = useFlags();
 
   if (!businessCase.id) {
     return (
@@ -96,7 +98,7 @@ const BusinessCaseReview = ({
       >
         Take an action
       </UswdsReactLink>
-      <AnythingWrongSurvey />
+      {flags.legacySupport && <AnythingWrongSurvey />}
     </div>
   );
 };

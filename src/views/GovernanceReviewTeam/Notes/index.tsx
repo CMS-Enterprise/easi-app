@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 
 import {
@@ -67,6 +68,7 @@ const Notes = () => {
     }
   });
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
 
   // Character limit for length of free text (LCID Scope, Next Steps, and Cost Baseline),
   // any text longer then this limit will be displayed with a button to allow users
@@ -307,7 +309,7 @@ const Notes = () => {
                   {interleavedList}
                 </NotesList>
               )}
-              <AnythingWrongSurvey />
+              {flags.legacySupport && <AnythingWrongSurvey />}
             </div>
           );
         }}
