@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Button, IconArrowDropDown } from '@trussworks/react-uswds';
+import {
+  Button,
+  IconArrowDropDown,
+  IconArrowDropUp
+} from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 type TruncatedContentProps = {
@@ -20,6 +24,7 @@ export default function TruncatedContent({
   const [expanded, setExpanded] = useState(false);
   const defaultContent = children.flat().slice(0, initialCount);
   const expandedContent = children.flat().slice(initialCount);
+  const Icon = expanded ? IconArrowDropUp : IconArrowDropDown;
   return (
     <>
       {defaultContent}
@@ -34,8 +39,7 @@ export default function TruncatedContent({
           buttonClassName
         )}
       >
-        <IconArrowDropDown className="margin-x-05" />{' '}
-        {expanded ? labelLess : labelMore}
+        <Icon className="margin-x-05" /> {expanded ? labelLess : labelMore}
       </Button>
       {expanded && expandedContent}
     </>
