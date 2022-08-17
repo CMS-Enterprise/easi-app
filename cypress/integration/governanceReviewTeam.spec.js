@@ -212,7 +212,7 @@ describe('Governance Review Team', () => {
 
   // depends on the "notifyMultipleRecipients" feature flag being set;
   // we currently can't guarantee this when running tests in CI
-  it.skip('can take an action', () => {
+  it.skip('can select action email recipients', () => {
     cy.contains('a', 'Ready for business case').should('be.visible').click();
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
@@ -220,9 +220,11 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'Continue').click();
 
+    cy.contains('button', 'more recipients').click();
+
     cy.contains('button', 'Add another recipient').click();
 
-    // Fill contact form
+    // Add additional contact
     cy.get('#IntakeForm-ContactCommonName input')
       .type('Jerry')
       .wait(1000)
@@ -239,8 +241,10 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'Add recipient').click();
 
-    // TODO: Update tests when select contact functionality is completed
-    cy.contains('p', 'SF13');
+    // Select contact
+    cy.get('input[value="SF13@local.fake"]')
+      .check({ force: true })
+      .should('be.checked');
   });
 
   it('can extend a Lifecycle ID', () => {
