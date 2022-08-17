@@ -35,7 +35,7 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
       >
         Take an action
       </UswdsReactLink>
-      {flags.legacySupport && <AnythingWrongSurvey />}
+      {!flags.helpFooter && <AnythingWrongSurvey />}
     </div>
   );
 };

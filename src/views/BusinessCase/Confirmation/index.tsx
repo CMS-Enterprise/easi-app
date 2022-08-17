@@ -28,7 +28,7 @@ const Confirmation = ({
             referenceId: businessCaseId
           })}
         </h2>
-        {flags.legacySupport && <ImproveEasiSurvey />}
+        {!flags.helpFooter && <ImproveEasiSurvey />}
         <div>
           <Link
             to={`/governance-task-list/${businessCase.systemIntakeId}`}

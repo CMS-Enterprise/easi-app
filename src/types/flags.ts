@@ -8,7 +8,6 @@ export type Flags = {
   helpFooter: boolean;
   cedar508Requests: boolean;
   notifyMultipleRecipients: boolean;
-  legacySupport: boolean;
 };
 
 export type FlagsState = {

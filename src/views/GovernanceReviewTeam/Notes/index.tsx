@@ -309,7 +309,7 @@ const Notes = () => {
                   {interleavedList}
                 </NotesList>
               )}
-              {flags.legacySupport && <AnythingWrongSurvey />}
+              {!flags.helpFooter && <AnythingWrongSurvey />}
             </div>
           );
         }}

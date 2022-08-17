@@ -268,7 +268,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                   {t('governanceReviewTeam:dates.submit')}
                 </Button>
               </Form>
-              {flags.legacySupport && <AnythingWrongSurvey />}
+              {!flags.helpFooter && <AnythingWrongSurvey />}
             </div>
           </>
         );

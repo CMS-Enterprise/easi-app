@@ -287,7 +287,7 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
           {t('submitAction.continue')}
         </Button>
       </form>
-      {flags.legacySupport && <AnythingWrongSurvey />}
+      {!flags.helpFooter && <AnythingWrongSurvey />}
     </>
   );
 };

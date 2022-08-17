@@ -176,7 +176,7 @@ const PageTemplate = ({
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
-      {flags.legacySupport && <ReportProblemLinkArea url={surveyUrl} />}
+      {!flags.helpFooter && <ReportProblemLinkArea url={surveyUrl} />}
     </>
   );
 };

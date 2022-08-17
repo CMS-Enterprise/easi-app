@@ -374,7 +374,7 @@ const GovernanceTaskList = () => {
           </div>
         </div>
       )}
-      {flags.legacySupport && <ImproveEasiSurvey />}
+      {!flags.helpFooter && <ImproveEasiSurvey />}
     </MainContent>
   );
 };
