@@ -195,6 +195,11 @@ const RejectIntake = () => {
                     setRecipients={recipients =>
                       setFieldValue('notificationRecipients', recipients)
                     }
+                    error={
+                      flatErrors[
+                        'notificationRecipients.regularRecipientEmails'
+                      ]
+                    }
                   />
                   <Label
                     htmlFor="RejectIntakeForm-Feedback"

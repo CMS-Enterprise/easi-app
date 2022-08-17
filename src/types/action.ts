@@ -106,6 +106,7 @@ export type EmailRecipientsFieldsProps = {
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
   recipients: EmailNotificationRecipients;
   setRecipients: (recipients: EmailNotificationRecipients) => void;
+  error: string;
 };
 
 /** Formatted contact for display as notification recipient */

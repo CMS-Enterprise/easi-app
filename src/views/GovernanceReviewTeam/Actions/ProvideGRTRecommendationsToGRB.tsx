@@ -162,6 +162,11 @@ const ProvideGRTRecommendationsToGRB = () => {
                     setRecipients={recipients =>
                       setFieldValue('notificationRecipients', recipients)
                     }
+                    error={
+                      flatErrors[
+                        'notificationRecipients.regularRecipientEmails'
+                      ]
+                    }
                   />
                   <Label
                     htmlFor="ProvideGRTFeedbackForm-EmailBody"

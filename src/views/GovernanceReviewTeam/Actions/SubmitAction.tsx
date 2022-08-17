@@ -47,14 +47,14 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { pathname } = useLocation();
 
   const dispatchSave = (values: ActionForm) => {
-    const { feedback } = values;
+    const { feedback, notificationRecipients } = values;
     mutate({
       variables: {
         input: {
           intakeId: systemId,
           feedback,
           shouldSendEmail,
-          EmailRecipientsFields
+          notificationRecipients
         }
       }
     }).then(response => {
@@ -152,6 +152,9 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                   recipients={values.notificationRecipients}
                   setRecipients={recipients =>
                     setFieldValue('notificationRecipients', recipients)
+                  }
+                  error={
+                    flatErrors['notificationRecipients.regularRecipientEmails']
                   }
                 />
                 <FieldGroup

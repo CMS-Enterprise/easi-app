@@ -376,6 +376,9 @@ const ExtendLifecycleId = ({
                   setRecipients={recipients =>
                     setFieldValue('notificationRecipients', recipients)
                   }
+                  error={
+                    flatErrors['notificationRecipients.regularRecipientEmails']
+                  }
                 />
                 <p className="margin-top-3 margin-bottom-0 line-height-body-5 text-base">
                   {t('extendLcid.submissionInfo')}

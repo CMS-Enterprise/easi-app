@@ -392,6 +392,11 @@ const IssueLifecycleId = () => {
                     setRecipients={recipients =>
                       setFieldValue('notificationRecipients', recipients)
                     }
+                    error={
+                      flatErrors[
+                        'notificationRecipients.regularRecipientEmails'
+                      ]
+                    }
                   />
                   <Label
                     htmlFor="IssueLifecycleIdForm-Feedback"
