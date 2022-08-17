@@ -69,6 +69,7 @@ export type SubmitLifecycleIdForm = {
   nextSteps?: string;
   costBaseline?: string;
   feedback: string;
+  notificationRecipients: EmailNotificationRecipients;
 };
 
 // TODO: look into combining the submit and extend LCID?
@@ -86,11 +87,13 @@ export type RejectIntakeForm = {
   feedback: string;
   nextSteps: string;
   reason: string;
+  notificationRecipients: EmailNotificationRecipients;
 };
 
 export type ProvideGRTFeedbackForm = {
   grtFeedback: string;
   emailBody: string;
+  notificationRecipients: EmailNotificationRecipients;
 };
 
 export type EmailRecipientsFieldsProps = {

@@ -13,10 +13,7 @@ import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import useSystemIntake from 'hooks/useSystemIntake';
 import { ActionForm } from 'types/action';
-import {
-  BasicActionInput,
-  EmailNotificationRecipients
-} from 'types/graphql-global-types';
+import { BasicActionInput } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import { actionSchema } from 'validations/actionSchema';
@@ -48,10 +45,6 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const [mutate, mutationResult] = useMutation<ActionInput>(query);
 
   const { pathname } = useLocation();
-  const defaultITInvestment =
-    pathname.endsWith('issue-lcid') ||
-    pathname.endsWith('extend-lcid') ||
-    pathname.endsWith('no-governance');
 
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
@@ -76,7 +69,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
     notificationRecipients: {
       regularRecipientEmails: [systemIntake?.requester?.email!],
       shouldNotifyITGovernance: true,
-      shouldNotifyITInvestment: defaultITInvestment
+      shouldNotifyITInvestment: pathname.endsWith('no-governance')
     }
   };
 
@@ -157,7 +150,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                   activeContact={activeContact}
                   setActiveContact={setActiveContact}
                   recipients={values.notificationRecipients}
-                  setRecipients={(recipients: EmailNotificationRecipients) =>
+                  setRecipients={recipients =>
                     setFieldValue('notificationRecipients', recipients)
                   }
                 />

@@ -23,7 +23,7 @@ const Recipient = ({
   updateRecipients: (value: string) => void;
 }) => {
   const { t } = useTranslation('action');
-  const { commonName, role, component, email } = { ...contact };
+  const { commonName, euaUserId, role, component, email } = { ...contact };
   if (!commonName) return null;
   return (
     <>
@@ -31,11 +31,12 @@ const Recipient = ({
         id={`${commonName}-${role}`}
         name={`${commonName}-${role}`}
         label={`${commonName}, ${component} (${role})`}
-        value={email}
+        value={email || ''}
         onChange={e => updateRecipients(e.target.value)}
         onBlur={() => null}
         checked={email ? checked : false}
         disabled={!email}
+        data-testid={`contact-${euaUserId}`}
       />
       {!email && (
         <Alert type="warning" slim className="margin-left-4 margin-top-05">
@@ -90,7 +91,8 @@ export default ({
     euaUserId: systemIntake?.euaUserId,
     commonName: systemIntake?.requester.name!,
     component: systemIntake?.requester.component!,
-    email: systemIntake?.requester.email!
+    email: systemIntake?.requester.email!,
+    role: 'Requester'
   };
 
   // Number of recipients

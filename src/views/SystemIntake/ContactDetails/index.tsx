@@ -156,8 +156,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             id,
             requester: {
               name: values.requester.name,
-              component: values.requester.component,
-              email: values.requester.email
+              component: values.requester.component
             },
             businessOwner: {
               name: values.businessOwner.commonName,
