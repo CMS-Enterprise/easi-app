@@ -23,6 +23,8 @@ import {
   UseSystemIntakeContactsType
 } from 'types/systemIntake';
 
+import useSystemIntake from './useSystemIntake';
+
 const rolesMap = {
   'Business Owner': 'businessOwner',
   'Product Manager': 'productManager',
@@ -43,14 +45,36 @@ function useSystemIntakeContacts(
     }
   );
 
-  // Reformats contacts object for use in intake form
+  // Get system intake from Apollo cache
+  const { systemIntake } = useSystemIntake(systemIntakeId);
+
+  /** Formatted system intake contacts object */
   const contacts = useMemo<FormattedContacts | null>(() => {
     // Get systemIntakeContacts
     const systemIntakeContacts: AugmentedSystemIntakeContact[] | undefined =
       data?.systemIntakeContacts?.systemIntakeContacts;
 
     // Return null if no systemIntakeContacts
-    if (!systemIntakeContacts) return null;
+    if (!systemIntakeContacts || !systemIntake) return null;
+
+    // Merge initial contacts object with possible legacy data from system intake
+    const mergedContactsObject = {
+      ...initialContactsObject,
+      businessOwner: {
+        ...initialContactsObject.businessOwner,
+        commonName: systemIntake.businessOwner.name!,
+        component: systemIntake.businessOwner.component!
+      },
+      productManager: {
+        ...initialContactsObject.productManager,
+        commonName: systemIntake.productManager.name!,
+        component: systemIntake.productManager.component!
+      },
+      isso: {
+        ...initialContactsObject.isso,
+        commonName: systemIntake.isso.name!
+      }
+    };
 
     // Return formatted contacts
     return systemIntakeContacts.reduce<FormattedContacts>(
@@ -66,9 +90,9 @@ function useSystemIntakeContacts(
           additionalContacts: [...contactsObject.additionalContacts, contact]
         };
       },
-      initialContactsObject
+      mergedContactsObject
     );
-  }, [data?.systemIntakeContacts?.systemIntakeContacts]);
+  }, [data?.systemIntakeContacts?.systemIntakeContacts, systemIntake]);
 
   const [
     createSystemIntakeContact

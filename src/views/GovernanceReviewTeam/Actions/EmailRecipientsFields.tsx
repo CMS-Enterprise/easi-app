@@ -10,11 +10,41 @@ import CheckboxField from 'components/shared/CheckboxField';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import useSystemIntake from 'hooks/useSystemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import {
-  EmailRecipientsFieldsProps,
-  FormatRecipientProps,
-  RecipientObject
-} from 'types/action';
+import { EmailRecipientsFieldsProps } from 'types/action';
+import { SystemIntakeContactProps } from 'types/systemIntake';
+
+const Recipient = ({
+  contact,
+  checked,
+  updateRecipients
+}: {
+  contact: SystemIntakeContactProps;
+  checked: boolean;
+  updateRecipients: (value: string) => void;
+}) => {
+  const { t } = useTranslation('action');
+  const { commonName, role, component, email } = { ...contact };
+  if (!commonName) return null;
+  return (
+    <>
+      <CheckboxField
+        id={`${commonName}-${role}`}
+        name={`${commonName}-${role}`}
+        label={`${commonName}, ${component} (${role})`}
+        value={email}
+        onChange={e => updateRecipients(e.target.value)}
+        onBlur={() => null}
+        checked={email ? checked : false}
+        disabled={!email}
+      />
+      {!email && (
+        <Alert type="warning" slim className="margin-left-4 margin-top-05">
+          {t('emailRecipients.invalidEmail')}
+        </Alert>
+      )}
+    </>
+  );
+};
 
 export default ({
   optional = true,
@@ -45,126 +75,52 @@ export default ({
     );
   }, [pathname]);
 
-  /** Formatted contacts array for display as email recipients */
-  const formattedRecipients: RecipientObject[] = useMemo(() => {
-    // If no contacts or intake, return empty array
-    if (!initialContacts || !systemIntake) return [];
+  /** Formatted array of contacts in order of display */
+  const contacts = initialContacts
+    ? [
+        initialContacts.businessOwner,
+        initialContacts.productManager,
+        initialContacts.isso,
+        initialContacts.additionalContacts
+      ].flat()
+    : [];
 
-    /** Function to return formatted recipient object for display */
-    const formatRecipient = ({
-      commonName,
-      component,
-      email,
-      role
-    }: FormatRecipientProps): RecipientObject => {
-      return {
-        label: `${commonName}, ${component} (${role})`,
-        value: email!,
-        checked: email
-          ? recipients.regularRecipientEmails.includes(email)
-          : false
-      };
-    };
+  // Get requester from system intake
+  const requester = {
+    euaUserId: systemIntake?.euaUserId,
+    commonName: systemIntake?.requester.name!,
+    component: systemIntake?.requester.component!,
+    email: systemIntake?.requester.email!
+  };
 
-    // Get requester from system intake
-    const requester = formatRecipient({
-      commonName: systemIntake.requester.name!,
-      component: systemIntake.requester.component!,
-      email: systemIntake.requester.email || '',
-      role: 'Requester'
-    });
-
-    // Format contacts for display
-    // Legacy intake business owner, product manager, and isso come from intake vs contacts query
-    const businessOwner = formatRecipient({
-      commonName:
-        initialContacts.businessOwner.commonName! ||
-        systemIntake.businessOwner.name!,
-      component:
-        initialContacts.businessOwner.component! ||
-        systemIntake.businessOwner.component!,
-      email: initialContacts.businessOwner.email!,
-      role: 'Business Owner'
-    });
-
-    const productManager = formatRecipient({
-      commonName:
-        initialContacts.productManager.commonName! ||
-        systemIntake.productManager.name!,
-      component:
-        initialContacts.productManager.component! ||
-        systemIntake.productManager.component!,
-      email: initialContacts.productManager.email!,
-      role: 'Product Manager'
-    });
-
-    const isso = formatRecipient({
-      commonName: initialContacts.isso.commonName! || systemIntake?.isso.name!,
-      component: initialContacts.isso.component!,
-      email: initialContacts.isso.email!,
-      role: 'ISSO'
-    });
-
-    // Check for additional contacts
-    const additionalContacts = initialContacts?.additionalContacts.map(
-      ({ commonName, component, role, email }) =>
-        formatRecipient({
-          commonName: commonName!,
-          component,
-          role,
-          email: email!
-        })
-    );
-
-    // Return formatted contact objects
-    return [
-      requester,
-      {
-        label: 'IT Governance Mailbox',
-        value: 'shouldNotifyITGovernance',
-        checked: recipients.shouldNotifyITGovernance
-      },
-      {
-        label: 'IT Investment Mailbox',
-        value: 'shouldNotifyITInvestment',
-        checked: recipients.shouldNotifyITInvestment
-      },
-      businessOwner,
-      productManager,
-      ...(systemIntake.isso.isPresent ? [isso] : []),
-      ...additionalContacts
-    ];
-  }, [initialContacts, recipients, systemIntake]);
-
-  // Number of selected recipients
-  const selectedCount = formattedRecipients.filter(({ checked }) => checked)
-    .length;
+  // Number of recipients
+  const contactsCount = contacts.length + 3;
+  // Number of selected contacts (including mailboxes)
+  const selectedCount =
+    recipients.regularRecipientEmails.length +
+    (recipients.shouldNotifyITGovernance ? 1 : 0) +
+    (recipients.shouldNotifyITInvestment ? 1 : 0);
 
   /** Update email recipients in system intake */
   const updateRecipients = (value: string) => {
     const { regularRecipientEmails } = recipients;
+    let updatedRecipients = [];
+
     // Update recipients
-    if (
-      value === 'shouldNotifyITInvestment' ||
-      value === 'shouldNotifyITGovernance'
-    ) {
-      // If IT Investment or IT Governance mailbox, set boolean
-      setRecipients({ ...recipients, [value]: !recipients[value] });
-    } else if (regularRecipientEmails.includes(value)) {
+    if (regularRecipientEmails.includes(value)) {
       // If recipient already exists, remove email from array
-      setRecipients({
-        ...recipients,
-        regularRecipientEmails: regularRecipientEmails.filter(
-          email => email !== value
-        )
-      });
+      updatedRecipients = regularRecipientEmails.filter(
+        email => email !== value
+      );
     } else {
       // Add email to recipients array
-      setRecipients({
-        ...recipients,
-        regularRecipientEmails: [...regularRecipientEmails, value]
-      });
+      updatedRecipients = [...regularRecipientEmails, value];
     }
+
+    setRecipients({
+      ...recipients,
+      regularRecipientEmails: updatedRecipients
+    });
   };
 
   return (
@@ -190,39 +146,61 @@ export default ({
           initialCount={defaultITInvestment ? 3 : 2}
           labelMore={t(
             `Show ${
-              formattedRecipients.length - (defaultITInvestment ? 3 : 2)
+              contactsCount - (defaultITInvestment ? 3 : 2)
             } more recipients`
           )}
           labelLess={t(
             `Show ${
-              formattedRecipients.length - (defaultITInvestment ? 3 : 2)
+              contactsCount - (defaultITInvestment ? 3 : 2)
             } fewer recipients`
           )}
           buttonClassName="margin-top-105"
         >
-          {formattedRecipients.map(contact => (
-            <div key={contact.label}>
-              <CheckboxField
-                key={contact.label}
-                id={`contact-${contact.label}`}
-                name={`contact-${contact.label}`}
-                label={contact.label}
-                value={contact.value!}
-                onChange={e => updateRecipients(e.target.value)}
-                onBlur={() => null}
-                checked={contact.value ? contact.checked : false}
-                disabled={!contact.value}
-              />
-              {!contact.value && (
-                <Alert
-                  type="warning"
-                  slim
-                  className="margin-left-4 margin-top-05"
-                >
-                  {t('emailRecipients.invalidEmail')}
-                </Alert>
+          <Recipient
+            contact={requester as SystemIntakeContactProps}
+            checked={recipients.regularRecipientEmails.includes(
+              requester?.email!
+            )}
+            updateRecipients={updateRecipients}
+          />
+          <CheckboxField
+            label="IT Governance Mailbox"
+            checked={recipients.shouldNotifyITGovernance}
+            name="contact-itGovernanceMailbox"
+            id="contact-itGovernanceMailbox"
+            value="shouldNotifyITGovernance"
+            onChange={e =>
+              setRecipients({
+                ...recipients,
+                shouldNotifyITGovernance: e.target.checked
+              })
+            }
+            onBlur={() => null}
+          />
+          <CheckboxField
+            label="IT Investment Mailbox"
+            checked={recipients.shouldNotifyITInvestment}
+            name="contact-itInvestmentMailbox"
+            id="contact-itInvestmentMailbox"
+            value="shouldNotifyITInvestment"
+            onChange={e =>
+              setRecipients({
+                ...recipients,
+                shouldNotifyITInvestment: e.target.checked
+              })
+            }
+            onBlur={() => null}
+          />
+          {contacts.map((contact, index) => (
+            <Recipient
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              contact={contact as SystemIntakeContactProps}
+              checked={recipients.regularRecipientEmails.includes(
+                contact?.email!
               )}
-            </div>
+              updateRecipients={updateRecipients}
+            />
           ))}
           <AdditionalContacts
             systemIntakeId={systemIntakeId}

@@ -20,8 +20,8 @@ export default function useSystemIntake(id: string) {
   });
 
   const systemIntake = useMemo(() => {
-    if (!data?.systemIntake) return undefined;
-    return data?.systemIntake;
+    if (!data?.systemIntake) return null;
+    return data.systemIntake;
   }, [data?.systemIntake]);
 
   return {

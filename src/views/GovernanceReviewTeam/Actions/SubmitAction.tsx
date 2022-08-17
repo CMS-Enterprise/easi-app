@@ -60,8 +60,8 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
         input: {
           intakeId: systemId,
           feedback,
-          shouldSendEmail
-          // TODO: Add recipients here
+          shouldSendEmail,
+          EmailRecipientsFields
         }
       }
     }).then(response => {
