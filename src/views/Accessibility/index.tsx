@@ -170,12 +170,13 @@ const PageTemplate = ({
   children: React.ReactNode;
   surveyUrl: string;
 }) => {
+  const flags = useFlags();
   return (
     <>
       <MainContent className="margin-bottom-5">
         <Switch>{children}</Switch>
       </MainContent>
-      <ReportProblemLinkArea url={surveyUrl} />
+      {!flags.helpFooter && <ReportProblemLinkArea url={surveyUrl} />}
     </>
   );
 };

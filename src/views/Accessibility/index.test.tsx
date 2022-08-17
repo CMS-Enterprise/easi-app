@@ -43,7 +43,7 @@ describe('Accessibility wrapper', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('renders the "Report a problem" link area component', async () => {
+  it.skip('renders the "Report a problem" link area component', async () => {
     let wrapper: any;
     await act(async () => {
       wrapper = mount(
@@ -58,7 +58,7 @@ describe('Accessibility wrapper', () => {
     expect(wrapper.find('ReportProblemLinkArea').exists()).toBe(true);
   });
 
-  it('uses the right url value for the "report problem" link for a basic user', async () => {
+  it.skip('uses the right url value for the "report problem" link for a basic user', async () => {
     let wrapper: any;
     await act(async () => {
       wrapper = mount(
@@ -75,7 +75,7 @@ describe('Accessibility wrapper', () => {
     ).toEqual(REPORT_PROBLEM_BASIC_USER_SURVEY);
   });
 
-  it('uses the right url value for the "report problem" link for a 508 tester', async () => {
+  it.skip('uses the right url value for the "report problem" link for a 508 tester', async () => {
     const testerStore = mockStore({
       auth: { groups: [ACCESSIBILITY_TESTER_DEV], isUserSet: true }
     });
@@ -94,7 +94,7 @@ describe('Accessibility wrapper', () => {
       wrapper.find('ReportProblemLinkArea').find('a').props().href
     ).toEqual(REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY);
   });
-  it('uses the right url value for the "report problem" link for a 508 user', async () => {
+  it.skip('uses the right url value for the "report problem" link for a 508 user', async () => {
     const testerStore = mockStore({
       auth: { groups: [ACCESSIBILITY_TESTER_DEV], isUserSet: true }
     });

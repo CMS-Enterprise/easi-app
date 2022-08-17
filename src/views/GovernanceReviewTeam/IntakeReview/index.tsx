@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -14,6 +15,7 @@ type IntakeReviewProps = {
 
 const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
   const filename = `System intake for ${systemIntake.requestName}.pdf`;
 
   return (
@@ -33,7 +35,7 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
       >
         Take an action
       </UswdsReactLink>
-      <AnythingWrongSurvey />
+      {!flags.helpFooter && <AnythingWrongSurvey />}
     </div>
   );
 };

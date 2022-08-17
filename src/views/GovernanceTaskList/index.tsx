@@ -9,6 +9,7 @@ import {
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -56,6 +57,7 @@ const GovernanceTaskList = () => {
   const history = useHistory();
   const { showMessageOnNextPage } = useMessage();
   const { t } = useTranslation('taskList');
+  const flags = useFlags();
 
   const { data: grtFeedbackData } = useQuery<
     GetGRTFeedback,
@@ -372,7 +374,7 @@ const GovernanceTaskList = () => {
           </div>
         </div>
       )}
-      <ImproveEasiSurvey />
+      {!flags.helpFooter && <ImproveEasiSurvey />}
     </MainContent>
   );
 };
