@@ -62,17 +62,17 @@ function useSystemIntakeContacts(
       ...initialContactsObject,
       businessOwner: {
         ...initialContactsObject.businessOwner,
-        commonName: systemIntake.businessOwner.name!,
-        component: systemIntake.businessOwner.component!
+        commonName: systemIntake.businessOwner.name || '',
+        component: systemIntake.businessOwner.component || ''
       },
       productManager: {
         ...initialContactsObject.productManager,
-        commonName: systemIntake.productManager.name!,
-        component: systemIntake.productManager.component!
+        commonName: systemIntake.productManager.name || '',
+        component: systemIntake.productManager.component || ''
       },
       isso: {
         ...initialContactsObject.isso,
-        commonName: systemIntake.isso.name!
+        commonName: systemIntake.isso.name || ''
       }
     };
 

@@ -26,7 +26,6 @@ const Recipient = ({
 }) => {
   const { t } = useTranslation('action');
   const { commonName, euaUserId, role, component, email } = { ...contact };
-  if (!commonName) return null;
   return (
     <>
       <CheckboxField
@@ -89,12 +88,11 @@ export default ({
       ].flat()
     : [];
 
-  // Get requester from system intake
   const requester = {
-    euaUserId: systemIntake?.euaUserId,
-    commonName: systemIntake?.requester.name!,
-    component: systemIntake?.requester.component!,
-    email: systemIntake?.requester.email!,
+    euaUserId: systemIntake!.euaUserId,
+    commonName: systemIntake!.requester.name,
+    component: systemIntake!.requester.component!,
+    email: systemIntake!.requester.email || '',
     role: 'Requester'
   };
 
@@ -168,7 +166,7 @@ export default ({
               <Recipient
                 contact={requester as SystemIntakeContactProps}
                 checked={recipients.regularRecipientEmails.includes(
-                  requester?.email!
+                  requester?.email
                 )}
                 updateRecipients={updateRecipients}
               />
@@ -200,17 +198,24 @@ export default ({
                 }
                 onBlur={() => null}
               />
-              {contacts.map((contact, index) => (
-                <Recipient
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
-                  contact={contact as SystemIntakeContactProps}
-                  checked={recipients.regularRecipientEmails.includes(
-                    contact?.email!
-                  )}
-                  updateRecipients={updateRecipients}
-                />
-              ))}
+              {contacts
+                .filter(({ commonName }) => commonName) // Filter out isso if not set
+                .map((contact, index) => {
+                  return (
+                    <Recipient
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={index}
+                      contact={contact as SystemIntakeContactProps}
+                      checked={
+                        !!contact.email &&
+                        recipients.regularRecipientEmails.includes(
+                          contact.email
+                        )
+                      }
+                      updateRecipients={updateRecipients}
+                    />
+                  );
+                })}
               <AdditionalContacts
                 systemIntakeId={systemIntakeId}
                 activeContact={activeContact}
