@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1742,6 +1743,41 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	}, nil
 }
 
+// UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
+func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input model.UpdateSystemIntakeLinkedCedarSystemInput) (*model.UpdateSystemIntakePayload, error) {
+	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
+	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
+		_, err := r.cedarCoreClient.GetSystem(ctx, *input.CedarSystemID)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	intake, err := r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, null.StringFromPtr(input.CedarSystemID))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
+}
+
+// UpdateSystemIntakeLinkedContract is the resolver for the updateSystemIntakeLinkedContract field.
+func (r *mutationResolver) UpdateSystemIntakeLinkedContract(ctx context.Context, input model.UpdateSystemIntakeLinkedContractInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.UpdateSystemIntakeLinkedContract(ctx, input.ID, null.StringFromPtr(input.ContractNumber))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
+}
+
 // SendFeedbackEmail is the resolver for the sendFeedbackEmail field.
 func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.SendFeedbackEmailInput) (*string, error) {
 	var reporterName, reporterEmail string
@@ -2533,6 +2569,11 @@ func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.Sy
 // CedarSystemID is the resolver for the cedarSystemId field.
 func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.CedarSystemID.Ptr(), nil
+}
+
+// ContractNumber is the resolver for the contractNumber field.
+func (r *systemIntakeResolver) ContractNumber(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // FundingNumber is the resolver for the fundingNumber field.

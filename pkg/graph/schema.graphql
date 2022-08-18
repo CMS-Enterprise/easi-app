@@ -978,6 +978,7 @@ type SystemIntake {
   businessCaseId: UUID
   lastAdminNote: LastAdminNote!
   cedarSystemId: String
+  contractNumber: String
 }
 
 """
@@ -1123,6 +1124,22 @@ input UpdateSystemIntakeContractDetailsInput {
   fundingSources: SystemIntakeFundingSourcesInput
   costs: SystemIntakeCostsInput
   contract: SystemIntakeContractInput
+}
+
+"""
+Input data for updating a system intake's relationship to a CEDAR system
+"""
+input UpdateSystemIntakeLinkedCedarSystemInput {
+  id: UUID!
+  cedarSystemId: String
+}
+
+"""
+Input data for updating a system intake's relationship to a contract
+"""
+input UpdateSystemIntakeLinkedContractInput {
+  id: UUID!
+  contractNumber: String
 }
 
 """
@@ -1559,6 +1576,8 @@ type Mutation {
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
+  updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
+  updateSystemIntakeLinkedContract(input: UpdateSystemIntakeLinkedContractInput!): UpdateSystemIntakePayload
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String

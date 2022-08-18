@@ -632,6 +632,18 @@ type UpdateSystemIntakeContractDetailsInput struct {
 	Contract       *SystemIntakeContractInput       `json:"contract"`
 }
 
+// Input data for updating a system intake's relationship to a CEDAR system
+type UpdateSystemIntakeLinkedCedarSystemInput struct {
+	ID            uuid.UUID `json:"id"`
+	CedarSystemID *string   `json:"cedarSystemId"`
+}
+
+// Input data for updating a system intake's relationship to a contract
+type UpdateSystemIntakeLinkedContractInput struct {
+	ID             uuid.UUID `json:"id"`
+	ContractNumber *string   `json:"contractNumber"`
+}
+
 // The payload for updating a system's IT governance request
 type UpdateSystemIntakePayload struct {
 	SystemIntake *models.SystemIntake `json:"systemIntake"`
