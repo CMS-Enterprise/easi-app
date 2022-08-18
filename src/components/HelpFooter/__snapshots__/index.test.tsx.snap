@@ -35,24 +35,13 @@ exports[`Help Footer renders 1`] = `
               Report a problem
             </a>
           </div>
-          <div
-            class="margin-right-6"
-          >
+          <div>
             <a
               class="usa-link usa-link--external font-body-3xs text-white text-no-underline"
               href="/help/send-feedback"
               target="_blank"
             >
               Send feedback
-            </a>
-          </div>
-          <div>
-            <a
-              class="usa-link usa-link--external font-body-3xs text-white text-no-underline"
-              href="https://cmsgov.slack.com/archives/C038D4UJ6KC"
-              target="_blank"
-            >
-              Chat with us on Slack
             </a>
           </div>
         </div>
