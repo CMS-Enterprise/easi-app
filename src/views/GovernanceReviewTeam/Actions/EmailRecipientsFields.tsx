@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Alert } from '@trussworks/react-uswds';
@@ -35,7 +35,7 @@ const Recipient = ({
         value={email || ''}
         onChange={e => updateRecipients(e.target.value)}
         onBlur={() => null}
-        checked={email ? checked : false}
+        checked={checked}
         disabled={!email}
         data-testid={`contact-${euaUserId}`}
       />
@@ -69,24 +69,9 @@ export default ({
   const { systemIntake } = useSystemIntake(systemIntakeId);
 
   // Get action type from path
-  const { pathname } = useLocation();
-  const defaultITInvestment = useMemo(() => {
-    return (
-      pathname.endsWith('issue-lcid') ||
-      pathname.endsWith('extend-lcid') ||
-      pathname.endsWith('no-governance')
-    );
-  }, [pathname]);
-
-  /** Formatted array of contacts in order of display */
-  const contacts = initialContacts
-    ? [
-        initialContacts.businessOwner,
-        initialContacts.productManager,
-        initialContacts.isso,
-        initialContacts.additionalContacts
-      ].flat()
-    : [];
+  const defaultRecipientsCount = useRef(
+    recipients.shouldNotifyITInvestment ? 3 : 2
+  ).current;
 
   const requester = {
     euaUserId: systemIntake!.euaUserId,
@@ -96,13 +81,27 @@ export default ({
     role: 'Requester'
   };
 
-  // Number of recipients
-  const contactsCount = contacts.length + 3;
-  // Number of selected contacts (including mailboxes)
+  /** Formatted array of contacts in order of display */
+  const contacts = initialContacts
+    ? [
+        requester,
+        initialContacts.businessOwner,
+        initialContacts.productManager,
+        ...(initialContacts.isso.commonName ? [initialContacts.isso] : []), // Only include ISSO if present
+        initialContacts.additionalContacts
+      ].flat()
+    : [];
+
+  // Number of possible recipients
+  const contactsCount = contacts.length + 2;
+  // Number of selected contacts
+  const selectedContacts = contacts.filter(({ email }) =>
+    recipients.regularRecipientEmails.includes(email!)
+  ).length;
   const selectedCount =
-    recipients.regularRecipientEmails.length +
-    (recipients.shouldNotifyITGovernance ? 1 : 0) +
-    (recipients.shouldNotifyITInvestment ? 1 : 0);
+    selectedContacts +
+    Number(recipients.shouldNotifyITGovernance) +
+    Number(recipients.shouldNotifyITInvestment);
 
   /** Update email recipients in system intake */
   const updateRecipients = (value: string) => {
@@ -136,97 +135,89 @@ export default ({
           {t('emailRecipients.emailRequired')}
         </Alert>
       )}
-      {flags.notifyMultipleRecipients && (
-        <FieldGroup error={!!error}>
-          <h4 className="margin-bottom-0 margin-top-2">
-            {t('emailRecipients.chooseRecipients')}
-          </h4>
-          <p className="margin-top-05">
-            <strong>{selectedCount}</strong>
-            {t(
-              selectedCount > 1 ? ' recipients selected' : ' recipient selected'
+      {/* {flags.notifyMultipleRecipients && ( */}
+      <FieldGroup error={!!error}>
+        <h4 className="margin-bottom-0 margin-top-2">
+          {t('emailRecipients.chooseRecipients')}
+        </h4>
+        <p className="margin-top-05">
+          <strong>{selectedCount}</strong>
+          {t(
+            selectedCount > 1 ? ' recipients selected' : ' recipient selected'
+          )}
+        </p>
+        <FieldErrorMsg>{error}</FieldErrorMsg>
+        <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
+          <TruncatedContent
+            initialCount={defaultRecipientsCount}
+            labelMore={t(
+              `Show ${contactsCount - defaultRecipientsCount} more recipients`
             )}
-          </p>
-          <FieldErrorMsg>{error}</FieldErrorMsg>
-          <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
-            <TruncatedContent
-              initialCount={defaultITInvestment ? 3 : 2}
-              labelMore={t(
-                `Show ${
-                  contactsCount - (defaultITInvestment ? 3 : 2)
-                } more recipients`
+            labelLess={t(
+              `Show ${contactsCount - defaultRecipientsCount} fewer recipients`
+            )}
+            buttonClassName="margin-top-105"
+          >
+            <Recipient
+              contact={requester as SystemIntakeContactProps}
+              checked={recipients.regularRecipientEmails.includes(
+                requester.email
               )}
-              labelLess={t(
-                `Show ${
-                  contactsCount - (defaultITInvestment ? 3 : 2)
-                } fewer recipients`
-              )}
-              buttonClassName="margin-top-105"
-            >
-              <Recipient
-                contact={requester as SystemIntakeContactProps}
-                checked={recipients.regularRecipientEmails.includes(
-                  requester?.email
-                )}
-                updateRecipients={updateRecipients}
-              />
-              <CheckboxField
-                label="IT Governance Mailbox"
-                checked={recipients.shouldNotifyITGovernance}
-                name="contact-itGovernanceMailbox"
-                id="contact-itGovernanceMailbox"
-                value="shouldNotifyITGovernance"
-                onChange={e =>
-                  setRecipients({
-                    ...recipients,
-                    shouldNotifyITGovernance: e.target.checked
-                  })
-                }
-                onBlur={() => null}
-              />
-              <CheckboxField
-                label="IT Investment Mailbox"
-                checked={recipients.shouldNotifyITInvestment}
-                name="contact-itInvestmentMailbox"
-                id="contact-itInvestmentMailbox"
-                value="shouldNotifyITInvestment"
-                onChange={e =>
-                  setRecipients({
-                    ...recipients,
-                    shouldNotifyITInvestment: e.target.checked
-                  })
-                }
-                onBlur={() => null}
-              />
-              {contacts
-                .filter(({ commonName }) => commonName) // Filter out isso if not set
-                .map((contact, index) => {
-                  return (
-                    <Recipient
-                      // eslint-disable-next-line react/no-array-index-key
-                      key={index}
-                      contact={contact as SystemIntakeContactProps}
-                      checked={
-                        !!contact.email &&
-                        recipients.regularRecipientEmails.includes(
-                          contact.email
-                        )
-                      }
-                      updateRecipients={updateRecipients}
-                    />
-                  );
-                })}
-              <AdditionalContacts
-                systemIntakeId={systemIntakeId}
-                activeContact={activeContact}
-                setActiveContact={setActiveContact}
-                type="recipient"
-                className="margin-top-2"
-              />
-            </TruncatedContent>
-          </div>
-        </FieldGroup>
-      )}
+              updateRecipients={updateRecipients}
+            />
+            <CheckboxField
+              label="IT Governance Mailbox"
+              checked={recipients.shouldNotifyITGovernance}
+              name="contact-itGovernanceMailbox"
+              id="contact-itGovernanceMailbox"
+              value="shouldNotifyITGovernance"
+              onChange={e =>
+                setRecipients({
+                  ...recipients,
+                  shouldNotifyITGovernance: e.target.checked
+                })
+              }
+              onBlur={() => null}
+            />
+            <CheckboxField
+              label="IT Investment Mailbox"
+              checked={recipients.shouldNotifyITInvestment}
+              name="contact-itInvestmentMailbox"
+              id="contact-itInvestmentMailbox"
+              value="shouldNotifyITInvestment"
+              onChange={e =>
+                setRecipients({
+                  ...recipients,
+                  shouldNotifyITInvestment: e.target.checked
+                })
+              }
+              onBlur={() => null}
+            />
+            {contacts.slice(1).map((contact, index) => {
+              return (
+                <Recipient
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={index}
+                  contact={contact as SystemIntakeContactProps}
+                  checked={
+                    !!contact.email &&
+                    recipients.regularRecipientEmails.includes(contact.email)
+                  }
+                  updateRecipients={updateRecipients}
+                />
+              );
+            })}
+            <AdditionalContacts
+              systemIntakeId={systemIntakeId}
+              activeContact={activeContact}
+              setActiveContact={setActiveContact}
+              type="recipient"
+              className="margin-top-2"
+            />
+          </TruncatedContent>
+        </div>
+      </FieldGroup>
+      {/* )} */}
     </div>
   );
 };
