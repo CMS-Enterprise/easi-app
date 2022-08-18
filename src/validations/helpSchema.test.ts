@@ -2,23 +2,27 @@ import { cloneDeep } from 'lodash';
 
 import {
   ADDITIONAL_TEXT_INPUT_SUFFIX,
+  ReportOptionFieldForTextInputKey,
+  reportOptionFieldsForTextInput,
+  SendFeedbackEmailForm,
+  SendFeedbackOptionFieldForTextInputKey,
   sendFeedbackOptionFieldsForTextInput,
   SendFeedbackOptionKey,
-  sendFeedbackOptions
+  sendFeedbackOptions,
+  SendReportAProblemEmailForm
 } from 'constants/helpFeedback';
 import helpText from 'i18n/en-US/help';
-import {
-  SendFeedbackEmailForm,
-  SendFeedbackOptionFieldForTextInputKey
-} from 'types/helpFeedback';
-import { parseForm } from 'views/Help/SendFeedback';
+import { parseFeedbackForm } from 'views/Help/SendFeedback';
+import { parseReportForm } from 'views/Help/SendFeedback/ReportAProblem';
 
 import {
   sendFeedbackEmailFormSchema,
-  sendFeedbackEmailInputSchema
+  sendFeedbackEmailInputSchema,
+  sendReportAProblemEmailFormSchema,
+  sendReportAProblemEmailInputSchema
 } from './helpSchema';
 
-describe('Help forms schema validation', () => {
+describe('Help / Send Feedback schema validation', () => {
   const minimumRequiredForm = {
     canBeContacted: true,
     cmsRole: 'Mascot #2',
@@ -41,6 +45,26 @@ describe('Help forms schema validation', () => {
 
   it(`errors on an empty form`, async () => {
     await expect(sendFeedbackEmailInputSchema.validate({})).rejects.toThrow();
+  });
+
+  it.each([
+    'easiServicesUsed',
+    'systemEasyToUse',
+    'didntNeedHelpAnswering',
+    'questionsWereRelevant',
+    'hadAccessToInformation',
+    'howSatisfied'
+  ])(`errors on other values in enum text field: %s`, async inputKey => {
+    await expect(() => {
+      let optionVal: any = 'buz';
+      // `easiServicesUsed` option value is in a list
+      if (inputKey === 'easiServicesUsed') {
+        optionVal = [optionVal];
+      }
+      return sendFeedbackEmailFormSchema.fields[
+        inputKey as keyof SendFeedbackEmailForm
+      ].validate(optionVal);
+    }).rejects.toThrow();
   });
 
   it.each(Object.keys(sendFeedbackOptionFieldsForTextInput))(
@@ -101,6 +125,83 @@ describe('Help forms schema validation', () => {
       questionsWereRelevant: 'Disagree',
       systemEasyToUse: 'I’m not sure: We need to talk'
     };
-    expect(await parseForm(input)).toEqual(expected);
+    expect(await parseFeedbackForm(input)).toEqual(expected);
+  });
+});
+
+describe('Help / Report A Problem schema validation', () => {
+  const minimumRequiredForm = {
+    isAnonymous: true,
+    canBeContacted: false,
+    easiService: 'Help',
+    whatWereYouDoing: 'For a much less spectacular failure',
+    whatWentWrong: 'Those tools have evolved',
+    howSevereWasTheProblem: 'It prevented me from completing my task'
+  };
+
+  it('passes backend input validation', async () => {
+    await expect(
+      sendReportAProblemEmailInputSchema.validate(minimumRequiredForm)
+    ).resolves.toBeDefined();
+  });
+
+  it(`errors on an empty form`, async () => {
+    await expect(
+      sendReportAProblemEmailInputSchema.validate({})
+    ).rejects.toThrow();
+  });
+
+  it.each(['easiService', 'howSevereWasTheProblem'])(
+    `errors on other values in enum text field: %s`,
+    async inputKey => {
+      await expect(() => {
+        return sendReportAProblemEmailFormSchema.fields[
+          inputKey as keyof SendReportAProblemEmailForm
+        ].validate('foo');
+      }).rejects.toThrow();
+    }
+  );
+
+  it.each(Object.keys(reportOptionFieldsForTextInput))(
+    'errors on empty additional text field: %s',
+    async inputKey => {
+      const optionVal: any =
+        sendFeedbackOptions[
+          reportOptionFieldsForTextInput[
+            inputKey as ReportOptionFieldForTextInputKey
+          ] as SendFeedbackOptionKey
+        ];
+
+      await expect(() => {
+        const form = {
+          ...cloneDeep(minimumRequiredForm),
+          [inputKey]: optionVal,
+          [`${inputKey}${ADDITIONAL_TEXT_INPUT_SUFFIX}`]: ''
+        };
+        return sendReportAProblemEmailFormSchema.validate(form);
+      }).rejects.toThrow(helpText.sendFeedback.errorMessage.explain);
+    }
+  );
+
+  it('parses form fields to be ready for submission', async () => {
+    const input: SendReportAProblemEmailForm = {
+      isAnonymous: true,
+      canBeContacted: false,
+      easiService: 'Other',
+      easiServiceAdditionalText: 'Free space',
+      whatWereYouDoing: 'For a much less spectacular failure',
+      whatWentWrong: 'Those tools have evolved',
+      howSevereWasTheProblem: 'Other',
+      howSevereWasTheProblemAdditionalText: 'Hot water'
+    };
+    const expected = {
+      isAnonymous: true,
+      canBeContacted: false,
+      easiService: 'Other: Free space',
+      whatWereYouDoing: 'For a much less spectacular failure',
+      whatWentWrong: 'Those tools have evolved',
+      howSevereWasTheProblem: 'Other: Hot water'
+    };
+    expect(await parseReportForm(input)).toEqual(expected);
   });
 });

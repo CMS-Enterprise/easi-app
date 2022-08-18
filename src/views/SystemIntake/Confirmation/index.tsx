@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { IconNavigateBefore } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
 import { ImproveEasiSurvey } from 'components/Survey';
@@ -9,6 +10,7 @@ import { ImproveEasiSurvey } from 'components/Survey';
 const Confirmation = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('intake');
+  const flags = useFlags();
 
   return (
     <div className="grid-container margin-bottom-7">
@@ -19,7 +21,7 @@ const Confirmation = () => {
             referenceId: systemId
           })}
         </h2>
-        <ImproveEasiSurvey />
+        {!flags.helpFooter && <ImproveEasiSurvey />}
         <div>
           <Link
             to={`/governance-task-list/${systemId}`}
