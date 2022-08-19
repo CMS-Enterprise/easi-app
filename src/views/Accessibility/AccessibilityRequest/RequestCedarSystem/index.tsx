@@ -12,7 +12,6 @@ import {
   Button,
   ComboBox,
   IconArrowBack,
-  IconLaunch,
   Link
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -80,19 +79,9 @@ const CreateRequestWrapper = (props: RequestWrapperProps) => {
         const uuid =
           response.data.createAccessibilityRequest.accessibilityRequest.id;
         showMessageOnNextPage(
-          <>
-            <AlertText className="margin-bottom-2">
-              {t('newRequestForm.confirmation')}
-            </AlertText>
-            <Link
-              href="https://www.surveymonkey.com/r/3R6MXSW"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t('newRequestForm.surveyLink')}
-              <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
-            </Link>
-          </>
+          <AlertText className="margin-bottom-2">
+            {t('newRequestForm.confirmation')}
+          </AlertText>
         );
         history.push(`/508/requests/${uuid}/documents`);
       }

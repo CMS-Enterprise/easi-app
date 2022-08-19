@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -36,16 +35,6 @@ const Rejected = ({ intake }: RejectedProps) => {
           {t('navigation.returnToTaskList')}
         </UswdsReactLink>
       </div>
-
-      <h3>{t('general:feedback.improvement')}</h3>
-      <UswdsLink
-        href="https://www.surveymonkey.com/r/JNYSMZP"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Open EASi survey in a new tab"
-      >
-        {t('general:feedback.whatYouThink')}
-      </UswdsLink>
     </>
   );
 };
