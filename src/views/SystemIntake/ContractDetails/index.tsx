@@ -123,7 +123,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       },
       costs: values.costs,
       contract: {
-        ...values.contract,
+        // ...values.contract,
+        hasContract: values.contract.hasContract,
+        contractor: values.contract.contractor,
+        number: values.contract.vehicle, // TODO - EASI-1977 - horrible hack to get this working with updated GQL schema
         startDate,
         endDate
       }
