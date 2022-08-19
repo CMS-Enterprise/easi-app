@@ -206,7 +206,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 
 		ContractStartDate: date(2021, 1, 1),
 		ContractEndDate:   date(2023, 12, 31),
-		ContractVehicle:   null.StringFrom("Sole source"),
+		ContractNumber:    null.StringFrom("123456-7890"),
 		Contractor:        null.StringFrom("Contractor Name"),
 	}
 
