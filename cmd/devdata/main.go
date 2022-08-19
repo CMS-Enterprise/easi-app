@@ -125,6 +125,18 @@ func main() {
 		i.ID = uuid.MustParse("20cbcfbf-6459-4c96-943b-e76b83122dbf")
 	})
 
+	makeSystemIntake("Intake with no contract vehicle or number", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("38e46d77-e474-4d15-a7c0-f6411221e2a4")
+		i.ContractVehicle = null.StringFromPtr(nil)
+		i.ContractNumber = null.StringFromPtr(nil)
+	})
+
+	makeSystemIntake("Intake with legacy Contract Vehicle", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("2ed89f9f-7fd9-4e92-89d2-cee170a44d0d")
+		i.ContractVehicle = null.StringFrom("Honda")
+		i.ContractNumber = null.StringFromPtr(nil)
+	})
+
 	intake := makeSystemIntake("Draft Business Case", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusBIZCASEDRAFT
 	})
