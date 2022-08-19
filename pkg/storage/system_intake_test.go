@@ -926,3 +926,76 @@ func (s StoreTestSuite) TestUpdateReviewDates() {
 		s.Equal(updatedIntake.GRTDate.Format("2006-01-02"), "2022-01-02")
 	})
 }
+
+func (s StoreTestSuite) TestUpdateSystemIntakeLinkedContract() {
+	// TODO: Uncomment these tests once the ContractNumber property is in available in the database
+	// ctx := context.Background()
+
+	// s.Run("update linked contract number", func() {
+	// 	intake := testhelpers.NewSystemIntake()
+
+	// 	tx := s.db.MustBegin()
+	// 	_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+	// 	s.NoError(err)
+	// 	err = tx.Commit()
+	// 	s.NoError(err)
+
+	// 	contractNumber := null.StringFrom("555-55-5")
+	// 	updatedIntake, err := s.store.UpdateSystemIntakeLinkedContract(ctx, intake.ID, contractNumber)
+
+	// 	s.NoError(err)
+	// 	s.Equal(updatedIntake.ContractNumber, contractNumber)
+	// })
+
+	// s.Run("update linked contract number to null", func() {
+	// 	intake := testhelpers.NewSystemIntake()
+
+	// 	tx := s.db.MustBegin()
+	// 	_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+	// 	s.NoError(err)
+	// 	err = tx.Commit()
+	// 	s.NoError(err)
+
+	// 	var contractNumber *string
+	// 	updatedIntake, err := s.store.UpdateSystemIntakeLinkedContract(ctx, intake.ID, null.StringFromPtr(contractNumber))
+
+	// 	s.NoError(err)
+	// 	s.False(updatedIntake.ContractNumber.Valid)
+	// })
+}
+
+func (s StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
+	ctx := context.Background()
+
+	s.Run("update linked CEDAR system ID", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		cedarSystemID := null.StringFrom("555-55-5")
+		updatedIntake, err := s.store.UpdateSystemIntakeLinkedCedarSystem(ctx, intake.ID, cedarSystemID)
+
+		s.NoError(err)
+		s.Equal(updatedIntake.CedarSystemID, cedarSystemID)
+	})
+
+	s.Run("update linked CEDAR system ID to null", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		var cedarSystemID *string
+		updatedIntake, err := s.store.UpdateSystemIntakeLinkedCedarSystem(ctx, intake.ID, null.StringFromPtr(cedarSystemID))
+
+		s.NoError(err)
+		s.False(updatedIntake.CedarSystemID.Valid)
+	})
+}

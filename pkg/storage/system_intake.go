@@ -603,13 +603,13 @@ func (s *Store) UpdateSystemIntakeLinkedContract(ctx context.Context, id uuid.UU
 // UpdateSystemIntakeLinkedCedarSystem updates the CEDAR system ID that is linked to a system intake
 func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid.UUID, cedarSystemID null.String) (*models.SystemIntake, error) {
 	intake := struct {
-		id            uuid.UUID
-		cedarSystemID null.String `db:"cedar_system_id"`
-		updatedAt     time.Time   `db:"updated_at"`
+		ID            uuid.UUID
+		CedarSystemID null.String `db:"cedar_system_id"`
+		UpdatedAt     time.Time   `db:"updated_at"`
 	}{
-		id:            id,
-		cedarSystemID: cedarSystemID,
-		updatedAt:     time.Now(),
+		ID:            id,
+		CedarSystemID: cedarSystemID,
+		UpdatedAt:     time.Now(),
 	}
 
 	const updateSystemIntakeSQL = `
