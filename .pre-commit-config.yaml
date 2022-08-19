@@ -3,12 +3,12 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
     hooks:
-      - id: no-commit-to-branch
-        args: [
-          '--pattern', '^(?!((EASI-\d{1,5}|NOREF|dependabot|feat\/EASI-\d{1,5})\/[a-zA-Z0-9\-\._/]+)$).*',
-        ]
-        name: Enforce branch naming pattern
-        description: Enforces branch naming policy. Allowed branch patterns are 'EASI-#', 'EASI-#/*', 'feature/EASI-#/*', 'NOREF/*', and 'dependabot/*'.
+      # - id: no-commit-to-branch
+      #   args: [
+      #     '--pattern', '^(?!((EASI-\d{1,5}|NOREF|dependabot|feat\/EASI-\d{1,5})\/[a-zA-Z0-9\-\._/]+)$).*',
+      #   ]
+      #   name: Enforce branch naming pattern
+      #   description: Enforces branch naming policy. Allowed branch patterns are 'EASI-#', 'EASI-#/*', 'feature/EASI-#/*', 'NOREF/*', and 'dependabot/*'.
       - id: check-yaml
         name: Check YAML formatting
       - id: detect-private-key
