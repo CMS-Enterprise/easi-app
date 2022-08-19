@@ -5,7 +5,13 @@ import {
   IconErrorOutline
 } from '@trussworks/react-uswds';
 
-export default ({ scorePct, date }: { scorePct: number; date: string }) => {
+const RequestCardTestScore = ({
+  scorePct,
+  date
+}: {
+  scorePct: number;
+  date: string;
+}) => {
   const { t } = useTranslation('systemProfile');
 
   let colorClass;
@@ -35,3 +41,5 @@ export default ({ scorePct, date }: { scorePct: number; date: string }) => {
     </div>
   );
 };
+
+export default RequestCardTestScore;
