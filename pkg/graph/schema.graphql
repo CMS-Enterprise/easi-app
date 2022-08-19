@@ -1113,7 +1113,7 @@ input SystemIntakeContractInput {
   endDate: Time
   hasContract: String
   startDate: Time
-  vehicle: String
+  number: String
 }
 
 """

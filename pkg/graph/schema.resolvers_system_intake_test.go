@@ -12,6 +12,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
+func date(year, month, day int) *time.Time {
+	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	return &date
+}
+
 func (s GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 	var resp struct {
 		CreateSystemIntake struct {
@@ -654,11 +659,6 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 
 }
 
-func date(year, month, day int) *time.Time {
-	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
-	return &date
-}
-
 func (s GraphQLTestSuite) TestUpdateContactDetails() {
 	ctx := context.Background()
 
@@ -1297,7 +1297,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.False(respIntake.NeedsEaSupport)
 }
 
-func (s GraphQLTestSuite) TestUpdateContractDetails() {
+func (s GraphQLTestSuite) TestUpdateContractDetailsAfterIntakeCreation() {
 
 	ctx := context.Background()
 
@@ -1334,7 +1334,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 						Month string
 						Year  string
 					}
-					Vehicle string
+					Number string
 				}
 			}
 		}
@@ -1362,7 +1362,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 					endDate: "2022-02-03T00:00:00Z"
 					hasContract: "HAVE_CONTRACT"
 					startDate: "2021-11-12T00:00:00Z"
-					vehicle: "Toyota Prius"
+					number: "123456-7890"
 				}
 			}) {
 				systemIntake {
@@ -1389,7 +1389,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 							month
 							year
 						}
-						vehicle
+						number
 					}
 				}
 			}
@@ -1411,7 +1411,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 	contract := respIntake.Contract
 	s.Equal(contract.HasContract, "HAVE_CONTRACT")
 	s.Equal(contract.Contractor, "Best Contractor Evar")
-	s.Equal(contract.Vehicle, "Toyota Prius")
+	s.Equal(contract.Number, "123456-7890")
 
 	startDate := contract.StartDate
 	s.Equal(startDate.Day, "12")
@@ -1574,6 +1574,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 						Year  *string
 					}
 					Vehicle *string
+					Number  *string
 				}
 			}
 		}
@@ -1588,7 +1589,6 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 					startDate: null
 					hasContract: "NOT_STARTED"
 					endDate: null
-					vehicle: ""
 				}
 			}) {
 				systemIntake {
@@ -1607,6 +1607,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 							year
 						}
 						vehicle
+						number
 					}
 				}
 			}
@@ -1619,6 +1620,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	s.Equal(contract.HasContract, "NOT_STARTED")
 	s.Nil(contract.Contractor)
 	s.Nil(contract.Vehicle)
+	s.Nil(contract.Number)
 
 	startDate := contract.StartDate
 	s.Nil(startDate.Day)

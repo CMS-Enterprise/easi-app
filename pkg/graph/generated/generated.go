@@ -5968,7 +5968,7 @@ input SystemIntakeContractInput {
   endDate: Time
   hasContract: String
   startDate: Time
-  vehicle: String
+  number: String
 }
 
 """
@@ -34368,7 +34368,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeContractInput(ctx context.
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"contractor", "endDate", "hasContract", "startDate", "vehicle"}
+	fieldsInOrder := [...]string{"contractor", "endDate", "hasContract", "startDate", "number"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -34407,11 +34407,11 @@ func (ec *executionContext) unmarshalInputSystemIntakeContractInput(ctx context.
 			if err != nil {
 				return it, err
 			}
-		case "vehicle":
+		case "number":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("vehicle"))
-			it.Vehicle, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("number"))
+			it.Number, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
