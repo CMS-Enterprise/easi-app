@@ -1297,7 +1297,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.False(respIntake.NeedsEaSupport)
 }
 
-func (s GraphQLTestSuite) TestUpdateContractDetailsAfterIntakeCreation() {
+func (s GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreation() {
 
 	ctx := context.Background()
 
@@ -1422,6 +1422,90 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsAfterIntakeCreation() {
 	s.Equal(endDate.Day, "3")
 	s.Equal(endDate.Month, "2")
 	s.Equal(endDate.Year, "2022")
+}
+
+// make sure that for system intakes that haven't had their contract vehicles updated to contract numbers (see EASI-1977),
+// we still return the contract vehicle
+func (s GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
+	ctx := context.Background()
+
+	contractVehicle := "Ford"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		EUAUserID:       null.StringFrom("TEST"),
+		Status:          models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:     models.SystemIntakeRequestTypeNEW,
+		ContractVehicle: null.StringFrom(contractVehicle),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		SystemIntake struct {
+			Contract struct {
+				Vehicle *string
+				Number  *string
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				contract {
+					vehicle
+					number
+				}
+			}
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+
+	s.Equal(contractVehicle, *resp.SystemIntake.Contract.Vehicle)
+	s.Nil(resp.SystemIntake.Contract.Number)
+}
+
+// when a system intake has a contract vehicle stored but no contract number, updating the contract number should clear the contract vehicle (see EASI-1977)
+func (s GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithContractNumber() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		EUAUserID:       null.StringFrom("TEST"),
+		Status:          models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:     models.SystemIntakeRequestTypeNEW,
+		ContractVehicle: null.StringFrom("Toyota"),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				Contract struct {
+					Vehicle *string
+					Number  *string
+				}
+			}
+		}
+	}
+
+	contractNumber := "123456-7890"
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				contract: {
+					number: "%s"
+				}
+			}) {
+				systemIntake {
+					contract {
+						vehicle
+						number
+					}
+				}
+			}
+		}`, intake.ID, contractNumber), &resp)
+
+	s.Equal(contractNumber, *resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Number)
+	s.Nil(resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Vehicle)
 }
 
 func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
