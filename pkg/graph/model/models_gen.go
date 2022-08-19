@@ -452,6 +452,7 @@ type SystemIntakeContract struct {
 	HasContract *string       `json:"hasContract"`
 	StartDate   *ContractDate `json:"startDate"`
 	Vehicle     *string       `json:"vehicle"`
+	Number      *string       `json:"number"`
 }
 
 // Input data containing information about a contract related to a system request

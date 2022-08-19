@@ -2288,6 +2288,7 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 		HasContract: obj.ExistingContract.Ptr(),
 		StartDate:   &contractStart,
 		Vehicle:     obj.ContractVehicle.Ptr(),
+		Number:      obj.ContractNumber.Ptr(),
 	}, nil
 }
 

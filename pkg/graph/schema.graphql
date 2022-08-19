@@ -853,6 +853,7 @@ type SystemIntakeContract {
   hasContract: String
   startDate: ContractDate!
   vehicle: String
+  number: String
 }
 
 """

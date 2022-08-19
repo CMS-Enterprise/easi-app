@@ -677,6 +677,7 @@ type ComplexityRoot struct {
 		Contractor  func(childComplexity int) int
 		EndDate     func(childComplexity int) int
 		HasContract func(childComplexity int) int
+		Number      func(childComplexity int) int
 		StartDate   func(childComplexity int) int
 		Vehicle     func(childComplexity int) int
 	}
@@ -4384,6 +4385,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeContract.HasContract(childComplexity), true
 
+	case "SystemIntakeContract.number":
+		if e.complexity.SystemIntakeContract.Number == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContract.Number(childComplexity), true
+
 	case "SystemIntakeContract.startDate":
 		if e.complexity.SystemIntakeContract.StartDate == nil {
 			break
@@ -5700,6 +5708,7 @@ type SystemIntakeContract {
   hasContract: String
   startDate: ContractDate!
   vehicle: String
+  number: String
 }
 
 """
@@ -26000,6 +26009,8 @@ func (ec *executionContext) fieldContext_SystemIntake_contract(ctx context.Conte
 				return ec.fieldContext_SystemIntakeContract_startDate(ctx, field)
 			case "vehicle":
 				return ec.fieldContext_SystemIntakeContract_vehicle(ctx, field)
+			case "number":
+				return ec.fieldContext_SystemIntakeContract_number(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContract", field.Name)
 		},
@@ -29065,6 +29076,47 @@ func (ec *executionContext) _SystemIntakeContract_vehicle(ctx context.Context, f
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContract_vehicle(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContract",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContract_number(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContract_number(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Number, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContract_number(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContract",
 		Field:      field,
@@ -40691,6 +40743,10 @@ func (ec *executionContext) _SystemIntakeContract(ctx context.Context, sel ast.S
 		case "vehicle":
 
 			out.Values[i] = ec._SystemIntakeContract_vehicle(ctx, field, obj)
+
+		case "number":
+
+			out.Values[i] = ec._SystemIntakeContract_number(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
