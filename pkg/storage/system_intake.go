@@ -574,13 +574,13 @@ func (s *Store) UpdateSystemIntakeStatus(ctx context.Context, id uuid.UUID, newS
 // UpdateSystemIntakeLinkedContract updates the contract number that is linked to a system intake
 func (s *Store) UpdateSystemIntakeLinkedContract(ctx context.Context, id uuid.UUID, contractNumber null.String) (*models.SystemIntake, error) {
 	intake := struct {
-		id             uuid.UUID
-		contractNumber null.String `db:"contract_number"`
-		updatedAt      time.Time   `db:"updated_at"`
+		ID             uuid.UUID
+		ContractNumber null.String `db:"contract_number"`
+		UpdatedAt      time.Time   `db:"updated_at"`
 	}{
-		id:             id,
-		contractNumber: contractNumber,
-		updatedAt:      time.Now(),
+		ID:             id,
+		ContractNumber: contractNumber,
+		UpdatedAt:      time.Now(),
 	}
 
 	const updateSystemIntakeSQL = `

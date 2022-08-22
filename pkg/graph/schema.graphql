@@ -979,7 +979,6 @@ type SystemIntake {
   businessCaseId: UUID
   lastAdminNote: LastAdminNote!
   cedarSystemId: String
-  contractNumber: String
 }
 
 """
