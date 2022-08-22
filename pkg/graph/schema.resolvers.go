@@ -1640,7 +1640,9 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 		// set the fields to the values we receive
 		intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
 		intake.Contractor = null.StringFromPtr(input.Contract.Contractor)
-		intake.ContractVehicle = null.StringFromPtr(input.Contract.Vehicle)
+		intake.ContractNumber = null.StringFromPtr(input.Contract.Number)
+		intake.ContractVehicle = null.StringFromPtr(nil) // blank this out in favor of the newer ContractNumber field (see EASI-1977)
+
 		if input.Contract.StartDate != nil {
 			intake.ContractStartDate = input.Contract.StartDate
 		}
@@ -1653,6 +1655,7 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 			if *input.Contract.HasContract == "NOT_STARTED" || *input.Contract.HasContract == "NOT_NEEDED" {
 				intake.Contractor = null.StringFromPtr(nil)
 				intake.ContractVehicle = null.StringFromPtr(nil)
+				intake.ContractNumber = null.StringFromPtr(nil)
 				intake.ContractStartDate = nil
 				intake.ContractEndDate = nil
 			}
@@ -2288,6 +2291,7 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 		HasContract: obj.ExistingContract.Ptr(),
 		StartDate:   &contractStart,
 		Vehicle:     obj.ContractVehicle.Ptr(),
+		Number:      obj.ContractNumber.Ptr(),
 	}, nil
 }
 
