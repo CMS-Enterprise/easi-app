@@ -8,9 +8,6 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/hashicorp/go-multierror"
-
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -56,7 +53,7 @@ type templates struct {
 
 // sender is an interface for swapping out email provider implementations
 type sender interface {
-	Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error
+	Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error
 }
 
 // Client is an EASi SES client wrapper
@@ -233,11 +230,12 @@ func (c Client) urlFromPath(path string) string {
 // SendTestEmail sends an email to a no-reply address
 func (c Client) SendTestEmail(ctx context.Context) error {
 	testToAddress := models.NewEmailAddress("success@simulator.amazonses.com")
-	return c.sender.Send(ctx, testToAddress, nil, "test", "test")
+	return c.sender.Send(ctx, []models.EmailAddress{testToAddress}, nil, "test", "test")
 }
 
-// helper method to consolidate logic/error handling for sending emails to multiple recipients
-func (c Client) sendEmailToMultipleRecipients(ctx context.Context, recipients models.EmailNotificationRecipients, subject string, body string) error {
+// helper method to get a list of all addresses from a models.EmailNotificationRecipients value
+// TODO - better name? "collect" or "gather" or something?
+func (c Client) allRecipients(recipients models.EmailNotificationRecipients) []models.EmailAddress {
 	allRecipients := recipients.RegularRecipientEmails
 	if recipients.ShouldNotifyITGovernance {
 		allRecipients = append(allRecipients, c.config.GRTEmail)
@@ -247,27 +245,5 @@ func (c Client) sendEmailToMultipleRecipients(ctx context.Context, recipients mo
 		allRecipients = append(allRecipients, c.config.ITInvestmentEmail)
 	}
 
-	errorGroup := multierror.Group{}
-	for _, recipient := range allRecipients {
-		// make a copy of recipient for the closure passed in to errorGroup.Go(); this copy won't change as we iterate over allRecipients
-		// see https://go.dev/doc/faq#closures_and_goroutines
-		recipient := recipient
-
-		errorGroup.Go(func() error {
-			// make sure to use := here to create a new (local) err, instead of reusing the same err across goroutines
-			err := c.sender.Send(
-				ctx,
-				recipient,
-				nil,
-				subject,
-				body,
-			)
-			if err != nil {
-				return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-			}
-			return nil
-		})
-	}
-
-	return errorGroup.Wait().ErrorOrNil()
+	return allRecipients
 }

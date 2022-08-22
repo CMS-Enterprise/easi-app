@@ -3,6 +3,8 @@ package email
 import (
 	"context"
 	"fmt"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendCantFindSomethingEmail() {
@@ -30,7 +32,7 @@ func (s *EmailTestSuite) TestSendCantFindSomethingEmail() {
 
 		err = client.SendCantFindSomethingEmail(ctx, input)
 		s.NoError(err)
-		s.Equal(s.config.EASIHelpEmail, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.EASIHelpEmail})
 		s.Equal(expectedBody, sender.body)
 	})
 }

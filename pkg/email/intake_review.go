@@ -44,8 +44,8 @@ func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText strin
 	}
 	err = c.sender.Send(
 		ctx,
-		recipientAddress,
-		&c.config.GRTEmail,
+		[]models.EmailAddress{recipientAddress},
+		[]models.EmailAddress{c.config.GRTEmail},
 		subject,
 		body,
 	)
@@ -70,5 +70,15 @@ func (c Client) SendSystemIntakeReviewEmailToMultipleRecipients(
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	return c.sendEmailToMultipleRecipients(ctx, recipients, subject, body)
+	err = c.sender.Send(
+		ctx,
+		c.allRecipients(recipients),
+		nil,
+		subject,
+		body,
+	)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+	return nil
 }

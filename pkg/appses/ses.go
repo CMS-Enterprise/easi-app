@@ -39,21 +39,15 @@ func NewSender(config Config) Sender {
 // Send sends an email
 func (s Sender) Send(
 	ctx context.Context,
-	toAddress models.EmailAddress,
-	ccAddress *models.EmailAddress,
+	toAddresses []models.EmailAddress,
+	ccAddresses []models.EmailAddress,
 	subject string,
 	body string,
 ) error {
-	ccAddresses := []*string{}
-	if ccAddress != nil {
-		ccAddresses = append(ccAddresses, aws.String(ccAddress.String()))
-	}
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
-			ToAddresses: []*string{
-				aws.String(toAddress.String()),
-			},
-			CcAddresses: ccAddresses,
+			ToAddresses: models.EmailAddressesToStringPtrs(toAddresses),
+			CcAddresses: models.EmailAddressesToStringPtrs(ccAddresses),
 		},
 		Message: &ses.Message{
 			Subject: &ses.Content{
@@ -73,7 +67,8 @@ func (s Sender) Send(
 	_, err := s.client.SendEmail(input)
 	if err == nil {
 		appcontext.ZLogger(ctx).Info("Sending email with SES",
-			zap.String("To", toAddress.String()),
+			zap.Strings("To", models.EmailAddressesToStrings(toAddresses)),
+			zap.Strings("CC", models.EmailAddressesToStrings(ccAddresses)),
 			zap.String("Subject", subject),
 		)
 	}

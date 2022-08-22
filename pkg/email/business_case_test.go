@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
@@ -32,7 +33,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 		err = client.SendBusinessCaseSubmissionEmail(ctx, testName, businessCaseID)
 
 		s.NoError(err)
-		s.Equal(s.config.GRTEmail, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.GRTEmail})
 		s.Equal(fmt.Sprintf("New Business Case: %s", testName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})

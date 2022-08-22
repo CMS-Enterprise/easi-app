@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type systemIntakeSubmission struct {
@@ -43,7 +44,7 @@ func (c Client) SendSystemIntakeSubmissionEmail(ctx context.Context, requestName
 	}
 	err = c.sender.Send(
 		ctx,
-		c.config.GRTEmail,
+		[]models.EmailAddress{c.config.GRTEmail},
 		nil,
 		subject,
 		body,

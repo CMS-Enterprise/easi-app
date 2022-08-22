@@ -59,8 +59,8 @@ func (c Client) SendIssueLCIDEmail(
 
 	err = c.sender.Send(
 		ctx,
-		recipient,
-		&c.config.GRTEmail,
+		[]models.EmailAddress{recipient},
+		[]models.EmailAddress{c.config.GRTEmail},
 		subject,
 		body,
 	)
@@ -89,5 +89,15 @@ func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	return c.sendEmailToMultipleRecipients(ctx, recipients, subject, body)
+	err = c.sender.Send(
+		ctx,
+		c.allRecipients(recipients),
+		nil,
+		subject,
+		body,
+	)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+	return nil
 }
