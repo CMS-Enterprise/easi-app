@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2573,11 +2572,6 @@ func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.Sy
 // CedarSystemID is the resolver for the cedarSystemId field.
 func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.CedarSystemID.Ptr(), nil
-}
-
-// ContractNumber is the resolver for the contractNumber field.
-func (r *systemIntakeResolver) ContractNumber(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
 }
 
 // FundingNumber is the resolver for the fundingNumber field.

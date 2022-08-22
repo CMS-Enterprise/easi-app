@@ -595,7 +595,6 @@ type ComplexityRoot struct {
 		BusinessSolution            func(childComplexity int) int
 		CedarSystemID               func(childComplexity int) int
 		Contract                    func(childComplexity int) int
-		ContractNumber              func(childComplexity int) int
 		Costs                       func(childComplexity int) int
 		CreatedAt                   func(childComplexity int) int
 		CurrentStage                func(childComplexity int) int
@@ -1029,7 +1028,6 @@ type SystemIntakeResolver interface {
 
 	LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error)
 	CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ContractNumber(ctx context.Context, obj *models.SystemIntake) (*string, error)
 }
 type SystemIntakeFundingSourceResolver interface {
 	FundingNumber(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error)
@@ -3974,13 +3972,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.Contract(childComplexity), true
 
-	case "SystemIntake.contractNumber":
-		if e.complexity.SystemIntake.ContractNumber == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ContractNumber(childComplexity), true
-
 	case "SystemIntake.costs":
 		if e.complexity.SystemIntake.Costs == nil {
 			break
@@ -5873,7 +5864,6 @@ type SystemIntake {
   businessCaseId: UUID
   lastAdminNote: LastAdminNote!
   cedarSystemId: String
-  contractNumber: String
 }
 
 """
@@ -10468,8 +10458,6 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
-			case "contractNumber":
-				return ec.fieldContext_SystemIntake_contractNumber(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -19143,8 +19131,6 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
-			case "contractNumber":
-				return ec.fieldContext_SystemIntake_contractNumber(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -22077,8 +22063,6 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
-			case "contractNumber":
-				return ec.fieldContext_SystemIntake_contractNumber(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -23911,8 +23895,6 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
-			case "contractNumber":
-				return ec.fieldContext_SystemIntake_contractNumber(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -27937,47 +27919,6 @@ func (ec *executionContext) fieldContext_SystemIntake_cedarSystemId(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_contractNumber(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_contractNumber(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ContractNumber(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntake_contractNumber(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAction_id(ctx, field)
 	if err != nil {
@@ -28155,8 +28096,6 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
-			case "contractNumber":
-				return ec.fieldContext_SystemIntake_contractNumber(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -31215,8 +31154,6 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
-			case "contractNumber":
-				return ec.fieldContext_SystemIntake_contractNumber(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -40756,23 +40693,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_cedarSystemId(ctx, field, obj)
-				return res
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
-		case "contractNumber":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_contractNumber(ctx, field, obj)
 				return res
 			}
 
