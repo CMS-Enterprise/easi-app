@@ -38,8 +38,7 @@ export const FundingSourcesListItem = ({
       key={fundingNumber}
       className={className}
     >
-      {/* TODO: Fix this with proper styling & header changes */}
-      <h3 style={{ fontSize: '1rem' }} className="margin-bottom-0">
+      <h3 className="margin-bottom-0 font-body-sm">
         {t('contractDetails.fundingSources.fundingSource')}
       </h3>
       <p className="margin-y-1">
