@@ -113,9 +113,9 @@ const SystemIntakeValidationSchema: any = {
           .trim()
           .required('Tell us whether you have selected a contractor(s)')
       }),
-      vehicle: Yup.string().when('hasContract', {
+      number: Yup.string().when('hasContract', {
         is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
-        then: Yup.string().trim().required('Tell us about the contract vehicle')
+        then: Yup.string().trim().required('Tell us about the contract number')
       }),
       startDate: Yup.mixed().when('hasContract', {
         is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),

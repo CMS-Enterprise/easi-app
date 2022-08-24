@@ -80,7 +80,8 @@ describe('Submit Action', () => {
               month: '1',
               year: '2021'
             },
-            vehicle: 'Sole source'
+            vehicle: 'Sole source',
+            number: '123456-7890'
           },
           costs: {
             isExpectingIncrease: 'YES',
