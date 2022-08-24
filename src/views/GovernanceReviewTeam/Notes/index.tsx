@@ -21,7 +21,6 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import TruncatedText from 'components/shared/TruncatedText';
-import { AnythingWrongSurvey } from 'components/Survey';
 import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 import {
@@ -307,7 +306,6 @@ const Notes = () => {
                   {interleavedList}
                 </NotesList>
               )}
-              <AnythingWrongSurvey />
             </div>
           );
         }}

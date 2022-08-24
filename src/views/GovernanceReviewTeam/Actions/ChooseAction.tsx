@@ -7,7 +7,6 @@ import { kebabCase } from 'lodash';
 import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
-import { AnythingWrongSurvey } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeStatus } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
@@ -285,7 +284,6 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
           {t('submitAction.continue')}
         </Button>
       </form>
-      <AnythingWrongSurvey />
     </>
   );
 };

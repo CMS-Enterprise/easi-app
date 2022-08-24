@@ -3,6 +3,7 @@ package cedarcore
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
@@ -32,7 +33,7 @@ func (s SystemSummaryTestSuite) TestGetSystemSummary() {
 	s.NoError(err)
 
 	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
-		c := NewClient(ctx, "fake", "fake", ldClient)
+		c := NewClient(ctx, "fake", "fake", time.Minute, ldClient)
 		resp, err := c.GetSystemSummary(ctx, false)
 		s.NoError(err)
 
@@ -47,7 +48,7 @@ func (s SystemSummaryTestSuite) TestGetSystem() {
 	s.NoError(err)
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
-		c := NewClient(ctx, "fake", "fake", ldClient)
+		c := NewClient(ctx, "fake", "fake", time.Minute, ldClient)
 		resp, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
 

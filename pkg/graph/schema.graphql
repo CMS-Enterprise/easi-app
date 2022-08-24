@@ -701,7 +701,7 @@ type BusinessCaseSolution {
 }
 
 """
-The cost phase of a 
+The cost phase of a
 """
 enum LifecycleCostPhase {
   DEVELOPMENT
@@ -751,7 +751,7 @@ enum BusinessCaseStatus {
 }
 
 """
-A business case associated with an system IT governence request; contains 
+A business case associated with an system IT governence request; contains
 equester's justification for their system request
 """
 type BusinessCase {
@@ -864,15 +864,6 @@ type SystemIntakeCosts {
 }
 
 """
-Represents the source of funding for a system
-"""
-type SystemIntakeFundingSource {
-  fundingNumber: String
-  isFunded: Boolean
-  source: String
-}
-
-"""
 Represents a contact in OIT who is collaborating with the user
 creating a system IT governance request
 """
@@ -955,7 +946,8 @@ type SystemIntake {
   eaCollaborator: String
   eaCollaboratorName: String
   euaUserId: String!
-  fundingSource: SystemIntakeFundingSource!
+  existingFunding: Boolean
+  fundingSources: [SystemIntakeFundingSource!]!
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
@@ -1080,12 +1072,28 @@ input UpdateSystemIntakeRequestDetailsInput {
 }
 
 """
-Input data detailing how a system is funded
+Represents the source of funding for a system
+"""
+type SystemIntakeFundingSource {
+  id: UUID!
+  fundingNumber: String
+  source: String
+}
+
+"""
+Represents the source of funding for a system
 """
 input SystemIntakeFundingSourceInput {
   fundingNumber: String
-  isFunded: Boolean
   source: String
+}
+
+"""
+The input required to specify the funding source(s) for a system intake
+"""
+input SystemIntakeFundingSourcesInput {
+  existingFunding: Boolean
+  fundingSources: [SystemIntakeFundingSourceInput!]!
 }
 
 """
@@ -1112,7 +1120,7 @@ Input data for updating contract details related to a system request
 """
 input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
-  fundingSource: SystemIntakeFundingSourceInput
+  fundingSources: SystemIntakeFundingSourcesInput
   costs: SystemIntakeCostsInput
   contract: SystemIntakeContractInput
 }
@@ -1127,6 +1135,7 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1207,6 +1216,7 @@ input AddGRTFeedbackInput {
   feedback: String!
   intakeID: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1230,6 +1240,7 @@ input IssueLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1241,6 +1252,7 @@ input RejectIntakeInput {
   nextSteps: String
   reason: String!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1311,10 +1323,11 @@ input BasicActionInput {
   feedback: String!
   intakeId: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
-Input to submit an intake for review 
+Input to submit an intake for review
 """
 input SubmitIntakeInput {
   id: UUID!
@@ -1399,6 +1412,12 @@ The payload when deleting a system intake contact
 """
 type DeleteSystemIntakeContactPayload {
   systemIntakeContact: SystemIntakeContact
+}
+
+input EmailNotificationRecipients {
+  regularRecipientEmails: [EmailAddress!]!
+  shouldNotifyITGovernance: Boolean!
+  shouldNotifyITInvestment: Boolean!
 }
 
 """
@@ -1563,7 +1582,7 @@ type Query {
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
+  cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   exchanges(cedarSystemId: String!): [CedarExchange!]!
@@ -1581,6 +1600,11 @@ scalar UUID
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
 """
 scalar Time
+
+"""
+Email addresses are represented as strings
+"""
+scalar EmailAddress
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
 

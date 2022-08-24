@@ -55,10 +55,6 @@ describe('The System Intake Form', () => {
 
     // Contract Details
 
-    cy.get('#IntakeForm-HasFundingSourceNo')
-      .check({ force: true })
-      .should('be.checked');
-
     cy.get('#IntakeForm-CostsExpectingIncreaseNo')
       .check({ force: true })
       .should('be.checked');
@@ -149,23 +145,12 @@ describe('The System Intake Form', () => {
 
     // Contract Details
 
-    cy.get('#IntakeForm-HasFundingSourceYes')
-      .check({ force: true })
-      .should('be.checked');
-
-    cy.get('#IntakeForm-FundingSource')
-      .select('Unknown')
-      .should('have.value', 'Unknown');
-
-    cy.get('#IntakeForm-FundingNumber')
-      .type('111111')
-      .should('have.value', '111111');
-
-    cy.get('#IntakeForm-FundingSource')
-      .select('CLIA')
-      .should('have.value', 'CLIA');
-
-    cy.get('#IntakeForm-FundingNumber').should('have.value', '111111');
+    cy.systemIntake.contractDetails.addFundingSource({
+      fundingNumber: '123456',
+      sources: ['Fed Admin', 'Research'],
+      restart: true
+    });
+    cy.get('#fundingNumber-123456');
 
     cy.get('#IntakeForm-CostsExpectingIncreaseYes')
       .check({ force: true })
@@ -294,10 +279,10 @@ describe('The System Intake Form', () => {
 
     cy.contains(
       '.easi-review-row dt',
-      'Will this project be funded out of an existing funding source?'
+      'Which existing funding sources will fund this project?'
     )
       .siblings('dd')
-      .contains('Yes, CLIA, 111111');
+      .get('li#fundingNumber-111111');
   });
 
   it('displays contact details error messages', () => {
@@ -322,6 +307,41 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     cy.get('[data-testid="request-details-errors"]');
+  });
+
+  it('displays funding source error messages', () => {
+    cy.systemIntake.contactDetails.fillNonBranchingFields();
+    cy.contains('button', 'Next').click();
+    cy.systemIntake.requestDetails.fillNonBranchingFields();
+    cy.get('#IntakeForm-CurrentStage')
+      .select('Just an idea')
+      .should('have.value', 'Just an idea');
+    cy.contains('button', 'Next').click();
+
+    // Check empty funding number and funding sources
+    cy.systemIntake.contractDetails.addFundingSource({ restart: true });
+    cy.contains('span', 'Funding number must be exactly 6 digits');
+    cy.contains('span', 'Select a funding source');
+
+    // Check funding source is numeric
+    cy.systemIntake.contractDetails.addFundingSource({
+      fundingNumber: 'abcdef',
+      sources: ['Fed Admin', 'Research']
+    });
+    cy.contains('span', 'Funding number can only contain digits');
+
+    // Add valid funding source
+    cy.systemIntake.contractDetails.addFundingSource({
+      fundingNumber: '123456'
+    });
+
+    // Check funding number is unique
+    cy.systemIntake.contractDetails.addFundingSource({
+      fundingNumber: '123456',
+      sources: ['Fed Admin', 'Research'],
+      restart: true
+    });
+    cy.contains('span', 'Funding number must be unique');
   });
 
   it('saves on back click', () => {

@@ -10,15 +10,18 @@ import (
 
 	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
+	"gopkg.in/launchdarkly/go-server-sdk.v5/ldfiledata"
+	"gopkg.in/launchdarkly/go-server-sdk.v5/ldfilewatch"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 )
 
 // Config has all the parts for creating a new LD Client
 type Config struct {
-	Source  appconfig.FlagSourceOption
-	Key     string
-	Timeout time.Duration
+	Source         appconfig.FlagSourceOption
+	Key            string
+	Timeout        time.Duration
+	FlagValuesFile string
 }
 
 // NewLaunchDarklyClient returns a client backed by Launch Darkly
@@ -27,8 +30,17 @@ func NewLaunchDarklyClient(config Config) (*ld.LDClient, error) {
 		return ld.MakeClient(config.Key, config.Timeout)
 	}
 
+	defaultTimeout := 5 * time.Second
+
+	if config.Source == appconfig.FlagSourceFile {
+		ldConfig := ld.Config{
+			DataSource: ldfiledata.DataSource().FilePaths(config.FlagValuesFile).Reloader(ldfilewatch.WatchFiles),
+		}
+		return ld.MakeCustomClient("fake_key", ldConfig, defaultTimeout)
+	}
+
 	// we default to an OFFLINE client for non-deployed environments
-	return ld.MakeCustomClient("fake_offline_key", ld.Config{Offline: true}, 5*time.Second)
+	return ld.MakeCustomClient("fake_offline_key", ld.Config{Offline: true}, defaultTimeout)
 }
 
 // Principal builds the LaunchDarkly user object for the

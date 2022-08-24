@@ -40,27 +40,27 @@ func (s *EmailTestSuite) TestSendFeedbackEmail() {
 </ul>
 
 <p><strong>Role</strong></p>
-<p>Supreme Leader</p> 
+<p>Supreme Leader</p>
 
 
 <p><strong>The system was easy to use.</strong></p>
-<p>Agree</p> 
+<p>Agree</p>
 
 
 <p><strong>I didn’t need help answering any questions.</strong></p>
-<p>Disagree</p> 
+<p>Disagree</p>
 
 
 <p><strong>All the questions on the form were relevant to my use case.</strong></p>
-<p>I&#39;m not sure: I have no idea what I&#39;m doing</p> 
+<p>I&#39;m not sure: I have no idea what I&#39;m doing</p>
 
 
 <p><strong>I had access to all the information the form asked for.</strong></p>
-<p>Agree</p> 
+<p>Agree</p>
 
 
 <p><strong>Overall, how satisfied were you with the service?</strong></p>
-<p>Very Satisfied</p> 
+<p>Very Satisfied</p>
 
 
 <p><strong>How can we improve EASi?</strong></p>

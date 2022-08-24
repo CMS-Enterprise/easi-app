@@ -51,7 +51,9 @@ func (s Server) NewDBConfig() storage.DBConfig {
 // NewEmailConfig returns a new email.Config and checks required fields
 func (s Server) NewEmailConfig() email.Config {
 	s.checkRequiredConfig(appconfig.GRTEmailKey)
+	s.checkRequiredConfig(appconfig.ITInvestmentEmailKey)
 	s.checkRequiredConfig(appconfig.AccessibilityTeamEmailKey)
+	s.checkRequiredConfig(appconfig.EASIHelpEmailKey)
 	s.checkRequiredConfig(appconfig.ClientHostKey)
 	s.checkRequiredConfig(appconfig.ClientProtocolKey)
 	s.checkRequiredConfig(appconfig.EmailTemplateDirectoryKey)
@@ -94,6 +96,7 @@ func (s Server) NewS3Config() upload.Config {
 func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIURL)
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
+	s.checkRequiredConfig(appconfig.CEDARCacheIntervalKey)
 }
 
 // OktaClientConfig is the okta client configuration
@@ -145,6 +148,7 @@ func (s Server) NewFlagConfig() flags.Config {
 
 	var timeout time.Duration
 	var key string
+	var flagValuesFile string
 
 	switch flagSource {
 	case appconfig.FlagSourceLocal:
@@ -155,14 +159,22 @@ func (s Server) NewFlagConfig() flags.Config {
 		s.checkRequiredConfig(appconfig.LDTimeout)
 		timeout = time.Duration(s.Config.GetInt(appconfig.LDTimeout)) * time.Second
 		key = s.Config.GetString(appconfig.LDKey)
+	case appconfig.FlagSourceFile:
+		s.checkRequiredConfig(appconfig.FlagValuesFileKey)
+		flagValuesFile = s.Config.GetString(appconfig.FlagValuesFileKey)
 	default:
-		opts := []appconfig.FlagSourceOption{appconfig.FlagSourceLocal, appconfig.FlagSourceLaunchDarkly}
+		opts := []appconfig.FlagSourceOption{
+			appconfig.FlagSourceLocal,
+			appconfig.FlagSourceLaunchDarkly,
+			appconfig.FlagSourceFile,
+		}
 		s.logger.Fatal(fmt.Sprintf("%s must be set to one of %v", appconfig.FlagSourceKey, opts))
 	}
 
 	return flags.Config{
-		Source:  flagSource,
-		Key:     key,
-		Timeout: timeout,
+		Source:         flagSource,
+		Key:            key,
+		Timeout:        timeout,
+		FlagValuesFile: flagValuesFile,
 	}
 }

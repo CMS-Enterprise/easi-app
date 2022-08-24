@@ -1,4 +1,4 @@
-// Custom hook for creating, updating, and deleting system intake contacts
+/** Custom hook for creating, updating, and deleting system intake contacts */
 
 import { useMemo } from 'react';
 import { ApolloQueryResult, useMutation, useQuery } from '@apollo/client';

@@ -19,7 +19,6 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
-import { AnythingWrongSurvey } from 'components/Survey';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   UpdateSystemIntakeReviewDates,
@@ -266,7 +265,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                   {t('governanceReviewTeam:dates.submit')}
                 </Button>
               </Form>
-              <AnythingWrongSurvey />
             </div>
           </>
         );

@@ -9,10 +9,12 @@ import PrepareForGRT from './ITGovernance/PrepareForGRT';
 import SampleBusinessCase from './ITGovernance/SampleBusinessCase';
 import StepsInvolved from './Section508/StepsInvolved';
 import TestingTemplates from './Section508/TestingTemplate';
+import ReportAProblem from './SendFeedback/ReportAProblem';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
 import Section508 from './Section508';
+import SendFeedback from './SendFeedback';
 
 const Help = () => {
   return (
@@ -52,6 +54,10 @@ const Help = () => {
         path="/help/section-508/templates-for-508-testing"
         render={() => <TestingTemplates />}
       />
+
+      {/* Help feedback forms */}
+      <Route path="/help/send-feedback" render={() => <SendFeedback />} />
+      <Route path="/help/report-a-problem" render={() => <ReportAProblem />} />
 
       {/* 404 */}
       <Route path="*" render={() => <NotFound />} />

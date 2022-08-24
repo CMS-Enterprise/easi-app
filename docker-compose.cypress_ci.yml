@@ -23,7 +23,10 @@ services:
       - SERVER_CERT
       - SERVER_KEY
       - LOCAL_AUTH_ENABLED=true
-      - FLAG_SOURCE=LOCAL
+      - FLAG_SOURCE=FILE
+      - FLAGDATA_FILE=/cypress/fixtures/flagdata.json
+    volumes:
+      - ./cypress:/cypress # Mounted so that the backend container can access the file with LaunchDarkly flag values
   easi_client:
     build:
       context: .
@@ -41,6 +44,7 @@ services:
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET
       - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
+      - REACT_APP_GRAPHQL_ADDRESS=http://easi:8080/api/graph/query
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_HOST=minio:9000
@@ -51,6 +55,8 @@ services:
       - PGPASS=mysecretpassword
       - PGSSLMODE=disable
       - DB_MAX_CONNECTIONS=20
+      - CYPRESS_MAILCATCHER_API_ADDRESS=http://email:1080
+      - CYPRESS_GRT_EMAIL=success@simulator.amazonses.com # should be the same value as GRT_EMAIL in docker-compose.yml
     network_mode: 'service:easi_client'
     depends_on:
       - easi_client

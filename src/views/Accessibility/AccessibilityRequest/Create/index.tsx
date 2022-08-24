@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -54,18 +53,9 @@ const Create = () => {
         const uuid =
           response.data.createAccessibilityRequest.accessibilityRequest.id;
         showMessageOnNextPage(
-          <>
-            <AlertText className="margin-bottom-2">
-              {t('newRequestForm.confirmation')}
-            </AlertText>
-            <Link
-              href="https://www.surveymonkey.com/r/3R6MXSW"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t('newRequestForm.surveyLink')}
-            </Link>
-          </>
+          <AlertText className="margin-bottom-2">
+            {t('newRequestForm.confirmation')}
+          </AlertText>
         );
         history.push(`/508/requests/${uuid}/documents`);
       }

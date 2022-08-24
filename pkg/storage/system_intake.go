@@ -134,6 +134,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 // UpdateSystemIntake does an upsert for a system intake
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
+
 	const updateSystemIntakeSQL = `
 		UPDATE system_intakes
 		SET
@@ -192,6 +193,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 		updateSystemIntakeSQL,
 		intake,
 	)
+
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update system intake %s", err),
@@ -242,6 +244,37 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     id,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	sources := []*models.SystemIntakeFundingSource{}
+
+	// TODO: Rather than two separate queries/round-trips to the database, the funding sources should be
+	// queried via a single query that includes a left join on system_intake_funding_sources. This code
+	// works and can unblock frontend work that relies on this function, but should be revisited. I was
+	// hoping to find a clean way to be able to get the system intake properties out of a query that
+	// includes a join on the funding sources table, but the only way I figured out how to do that
+	// required explicitly specifying all of the system intake columns, which seemed less than ideal
+	// given that any changes made to the models.SystemIntake struct would require also code changes to
+	// the code that would handle the joined query result.
+	err = s.db.SelectContext(ctx, &sources, `
+		SELECT *
+		FROM system_intake_funding_sources
+		WHERE system_intake_id=$1
+	`, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	intake.FundingSources = sources
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts", zap.Error(err), zap.String("id", id.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.SystemIntakeContact{},
 			Operation: apperrors.QueryFetch,
 		}
 	}

@@ -9,7 +9,6 @@ import GRTFeedbackView from 'components/GRTFeedbackView';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
-import { AnythingWrongSurvey } from 'components/Survey';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
@@ -96,7 +95,6 @@ const BusinessCaseReview = ({
       >
         Take an action
       </UswdsReactLink>
-      <AnythingWrongSurvey />
     </div>
   );
 };

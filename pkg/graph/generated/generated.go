@@ -54,6 +54,7 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
+	SystemIntakeFundingSource() SystemIntakeFundingSourceResolver
 	UserInfo() UserInfoResolver
 }
 
@@ -600,7 +601,8 @@ type ComplexityRoot struct {
 		EaCollaborator              func(childComplexity int) int
 		EaCollaboratorName          func(childComplexity int) int
 		EuaUserID                   func(childComplexity int) int
-		FundingSource               func(childComplexity int) int
+		ExistingFunding             func(childComplexity int) int
+		FundingSources              func(childComplexity int) int
 		GRBDate                     func(childComplexity int) int
 		GRTDate                     func(childComplexity int) int
 		GovernanceTeams             func(childComplexity int) int
@@ -686,7 +688,7 @@ type ComplexityRoot struct {
 
 	SystemIntakeFundingSource struct {
 		FundingNumber func(childComplexity int) int
-		IsFunded      func(childComplexity int) int
+		ID            func(childComplexity int) int
 		Source        func(childComplexity int) int
 	}
 
@@ -992,7 +994,8 @@ type SystemIntakeResolver interface {
 	EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EaCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error)
-	FundingSource(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeFundingSource, error)
+	ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error)
+
 	GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error)
 
 	GrtFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GRTFeedback, error)
@@ -1020,6 +1023,10 @@ type SystemIntakeResolver interface {
 
 	LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error)
 	CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error)
+}
+type SystemIntakeFundingSourceResolver interface {
+	FundingNumber(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error)
+	Source(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error)
 }
 type UserInfoResolver interface {
 	Email(ctx context.Context, obj *models.UserInfo) (string, error)
@@ -3992,12 +3999,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.EuaUserID(childComplexity), true
 
-	case "SystemIntake.fundingSource":
-		if e.complexity.SystemIntake.FundingSource == nil {
+	case "SystemIntake.existingFunding":
+		if e.complexity.SystemIntake.ExistingFunding == nil {
 			break
 		}
 
-		return e.complexity.SystemIntake.FundingSource(childComplexity), true
+		return e.complexity.SystemIntake.ExistingFunding(childComplexity), true
+
+	case "SystemIntake.fundingSources":
+		if e.complexity.SystemIntake.FundingSources == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.FundingSources(childComplexity), true
 
 	case "SystemIntake.grbDate":
 		if e.complexity.SystemIntake.GRBDate == nil {
@@ -4405,12 +4419,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeFundingSource.FundingNumber(childComplexity), true
 
-	case "SystemIntakeFundingSource.isFunded":
-		if e.complexity.SystemIntakeFundingSource.IsFunded == nil {
+	case "SystemIntakeFundingSource.id":
+		if e.complexity.SystemIntakeFundingSource.ID == nil {
 			break
 		}
 
-		return e.complexity.SystemIntakeFundingSource.IsFunded(childComplexity), true
+		return e.complexity.SystemIntakeFundingSource.ID(childComplexity), true
 
 	case "SystemIntakeFundingSource.source":
 		if e.complexity.SystemIntakeFundingSource.Source == nil {
@@ -4743,6 +4757,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputDeleteAccessibilityRequestInput,
 		ec.unmarshalInputDeleteSystemIntakeContactInput,
 		ec.unmarshalInputDeleteTestDateInput,
+		ec.unmarshalInputEmailNotificationRecipients,
 		ec.unmarshalInputGeneratePresignedUploadURLInput,
 		ec.unmarshalInputIssueLifecycleIdInput,
 		ec.unmarshalInputRejectIntakeInput,
@@ -4755,6 +4770,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeContractInput,
 		ec.unmarshalInputSystemIntakeCostsInput,
 		ec.unmarshalInputSystemIntakeFundingSourceInput,
+		ec.unmarshalInputSystemIntakeFundingSourcesInput,
 		ec.unmarshalInputSystemIntakeGovernanceTeamInput,
 		ec.unmarshalInputSystemIntakeISSOInput,
 		ec.unmarshalInputSystemIntakeProductManagerInput,
@@ -5532,7 +5548,7 @@ type BusinessCaseSolution {
 }
 
 """
-The cost phase of a 
+The cost phase of a
 """
 enum LifecycleCostPhase {
   DEVELOPMENT
@@ -5582,7 +5598,7 @@ enum BusinessCaseStatus {
 }
 
 """
-A business case associated with an system IT governence request; contains 
+A business case associated with an system IT governence request; contains
 equester's justification for their system request
 """
 type BusinessCase {
@@ -5695,15 +5711,6 @@ type SystemIntakeCosts {
 }
 
 """
-Represents the source of funding for a system
-"""
-type SystemIntakeFundingSource {
-  fundingNumber: String
-  isFunded: Boolean
-  source: String
-}
-
-"""
 Represents a contact in OIT who is collaborating with the user
 creating a system IT governance request
 """
@@ -5786,7 +5793,8 @@ type SystemIntake {
   eaCollaborator: String
   eaCollaboratorName: String
   euaUserId: String!
-  fundingSource: SystemIntakeFundingSource!
+  existingFunding: Boolean
+  fundingSources: [SystemIntakeFundingSource!]!
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
@@ -5911,12 +5919,28 @@ input UpdateSystemIntakeRequestDetailsInput {
 }
 
 """
-Input data detailing how a system is funded
+Represents the source of funding for a system
+"""
+type SystemIntakeFundingSource {
+  id: UUID!
+  fundingNumber: String
+  source: String
+}
+
+"""
+Represents the source of funding for a system
 """
 input SystemIntakeFundingSourceInput {
   fundingNumber: String
-  isFunded: Boolean
   source: String
+}
+
+"""
+The input required to specify the funding source(s) for a system intake
+"""
+input SystemIntakeFundingSourcesInput {
+  existingFunding: Boolean
+  fundingSources: [SystemIntakeFundingSourceInput!]!
 }
 
 """
@@ -5943,7 +5967,7 @@ Input data for updating contract details related to a system request
 """
 input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
-  fundingSource: SystemIntakeFundingSourceInput
+  fundingSources: SystemIntakeFundingSourcesInput
   costs: SystemIntakeCostsInput
   contract: SystemIntakeContractInput
 }
@@ -5958,6 +5982,7 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -6038,6 +6063,7 @@ input AddGRTFeedbackInput {
   feedback: String!
   intakeID: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -6061,6 +6087,7 @@ input IssueLifecycleIdInput {
   scope: String!
   costBaseline: String
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -6072,6 +6099,7 @@ input RejectIntakeInput {
   nextSteps: String
   reason: String!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -6142,10 +6170,11 @@ input BasicActionInput {
   feedback: String!
   intakeId: UUID!
   shouldSendEmail: Boolean! = true
+  notificationRecipients: EmailNotificationRecipients
 }
 
 """
-Input to submit an intake for review 
+Input to submit an intake for review
 """
 input SubmitIntakeInput {
   id: UUID!
@@ -6230,6 +6259,12 @@ The payload when deleting a system intake contact
 """
 type DeleteSystemIntakeContactPayload {
   systemIntakeContact: SystemIntakeContact
+}
+
+input EmailNotificationRecipients {
+  regularRecipientEmails: [EmailAddress!]!
+  shouldNotifyITGovernance: Boolean!
+  shouldNotifyITInvestment: Boolean!
 }
 
 """
@@ -6394,7 +6429,7 @@ type Query {
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: String!): [CedarThreat!]! 
+  cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   exchanges(cedarSystemId: String!): [CedarExchange!]!
@@ -6412,6 +6447,11 @@ scalar UUID
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
 """
 scalar Time
+
+"""
+Email addresses are represented as strings
+"""
+scalar EmailAddress
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
 
@@ -10267,8 +10307,10 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_eaCollaboratorName(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_SystemIntake_euaUserId(ctx, field)
-			case "fundingSource":
-				return ec.fieldContext_SystemIntake_fundingSource(ctx, field)
+			case "existingFunding":
+				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
+			case "fundingSources":
+				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -18938,8 +18980,10 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_eaCollaboratorName(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_SystemIntake_euaUserId(ctx, field)
-			case "fundingSource":
-				return ec.fieldContext_SystemIntake_fundingSource(ctx, field)
+			case "existingFunding":
+				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
+			case "fundingSources":
+				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -21868,8 +21912,10 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_eaCollaboratorName(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_SystemIntake_euaUserId(ctx, field)
-			case "fundingSource":
-				return ec.fieldContext_SystemIntake_fundingSource(ctx, field)
+			case "existingFunding":
+				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
+			case "fundingSources":
+				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -23582,8 +23628,10 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_eaCollaboratorName(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_SystemIntake_euaUserId(ctx, field)
-			case "fundingSource":
-				return ec.fieldContext_SystemIntake_fundingSource(ctx, field)
+			case "existingFunding":
+				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
+			case "fundingSources":
+				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -26261,8 +26309,8 @@ func (ec *executionContext) fieldContext_SystemIntake_euaUserId(ctx context.Cont
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_fundingSource(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_fundingSource(ctx, field)
+func (ec *executionContext) _SystemIntake_existingFunding(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -26275,7 +26323,48 @@ func (ec *executionContext) _SystemIntake_fundingSource(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().FundingSource(rctx, obj)
+		return ec.resolvers.SystemIntake().ExistingFunding(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_existingFunding(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_fundingSources(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FundingSources, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -26287,23 +26376,23 @@ func (ec *executionContext) _SystemIntake_fundingSource(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.SystemIntakeFundingSource)
+	res := resTmp.([]*models.SystemIntakeFundingSource)
 	fc.Result = res
-	return ec.marshalNSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeFundingSource2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSourceᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntake_fundingSource(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntake_fundingSources(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeFundingSource_id(ctx, field)
 			case "fundingNumber":
 				return ec.fieldContext_SystemIntakeFundingSource_fundingNumber(ctx, field)
-			case "isFunded":
-				return ec.fieldContext_SystemIntakeFundingSource_isFunded(ctx, field)
 			case "source":
 				return ec.fieldContext_SystemIntakeFundingSource_source(ctx, field)
 			}
@@ -27738,8 +27827,10 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_eaCollaboratorName(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_SystemIntake_euaUserId(ctx, field)
-			case "fundingSource":
-				return ec.fieldContext_SystemIntake_fundingSource(ctx, field)
+			case "existingFunding":
+				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
+			case "fundingSources":
+				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -29068,7 +29159,51 @@ func (ec *executionContext) fieldContext_SystemIntakeCosts_isExpectingIncrease(c
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeFundingSource_fundingNumber(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+func (ec *executionContext) _SystemIntakeFundingSource_id(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeFundingSource_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeFundingSource_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeFundingSource",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeFundingSource_fundingNumber(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeFundingSource) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeFundingSource_fundingNumber(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -29082,7 +29217,7 @@ func (ec *executionContext) _SystemIntakeFundingSource_fundingNumber(ctx context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.FundingNumber, nil
+		return ec.resolvers.SystemIntakeFundingSource().FundingNumber(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -29100,8 +29235,8 @@ func (ec *executionContext) fieldContext_SystemIntakeFundingSource_fundingNumber
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeFundingSource",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -29109,48 +29244,7 @@ func (ec *executionContext) fieldContext_SystemIntakeFundingSource_fundingNumber
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeFundingSource_isFunded(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeFundingSource) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeFundingSource_isFunded(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.IsFunded, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeFundingSource_isFunded(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeFundingSource",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Boolean does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeFundingSource_source(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+func (ec *executionContext) _SystemIntakeFundingSource_source(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeFundingSource) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeFundingSource_source(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -29164,7 +29258,7 @@ func (ec *executionContext) _SystemIntakeFundingSource_source(ctx context.Contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Source, nil
+		return ec.resolvers.SystemIntakeFundingSource().Source(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -29182,8 +29276,8 @@ func (ec *executionContext) fieldContext_SystemIntakeFundingSource_source(ctx co
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeFundingSource",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -30750,8 +30844,10 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_eaCollaboratorName(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_SystemIntake_euaUserId(ctx, field)
-			case "fundingSource":
-				return ec.fieldContext_SystemIntake_fundingSource(ctx, field)
+			case "existingFunding":
+				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
+			case "fundingSources":
+				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -32968,7 +33064,7 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"emailBody", "feedback", "intakeID", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"emailBody", "feedback", "intakeID", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33007,6 +33103,14 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 			if err != nil {
 				return it, err
 			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -33024,7 +33128,7 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"feedback", "intakeId", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"feedback", "intakeId", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33052,6 +33156,14 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
 			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -33264,7 +33376,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"id", "expirationDate", "nextSteps", "scope", "costBaseline", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"id", "expirationDate", "nextSteps", "scope", "costBaseline", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33316,6 +33428,14 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
 			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -33629,6 +33749,50 @@ func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputEmailNotificationRecipients(ctx context.Context, obj interface{}) (models.EmailNotificationRecipients, error) {
+	var it models.EmailNotificationRecipients
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"regularRecipientEmails", "shouldNotifyITGovernance", "shouldNotifyITInvestment"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "regularRecipientEmails":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("regularRecipientEmails"))
+			it.RegularRecipientEmails, err = ec.unmarshalNEmailAddress2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddressᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldNotifyITGovernance":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldNotifyITGovernance"))
+			it.ShouldNotifyITGovernance, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shouldNotifyITInvestment":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldNotifyITInvestment"))
+			it.ShouldNotifyITInvestment, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	var it model.GeneratePresignedUploadURLInput
 	asMap := map[string]interface{}{}
@@ -33684,7 +33848,7 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"expiresAt", "feedback", "intakeId", "lcid", "nextSteps", "scope", "costBaseline", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"expiresAt", "feedback", "intakeId", "lcid", "nextSteps", "scope", "costBaseline", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33755,6 +33919,14 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			if err != nil {
 				return it, err
 			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -33772,7 +33944,7 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 		asMap["shouldSendEmail"] = true
 	}
 
-	fieldsInOrder := [...]string{"feedback", "intakeId", "nextSteps", "reason", "shouldSendEmail"}
+	fieldsInOrder := [...]string{"feedback", "intakeId", "nextSteps", "reason", "shouldSendEmail", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33816,6 +33988,14 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
 			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -34232,7 +34412,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeFundingSourceInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"fundingNumber", "isFunded", "source"}
+	fieldsInOrder := [...]string{"fundingNumber", "source"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -34247,19 +34427,47 @@ func (ec *executionContext) unmarshalInputSystemIntakeFundingSourceInput(ctx con
 			if err != nil {
 				return it, err
 			}
-		case "isFunded":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isFunded"))
-			it.IsFunded, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "source":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("source"))
 			it.Source, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeFundingSourcesInput(ctx context.Context, obj interface{}) (model.SystemIntakeFundingSourcesInput, error) {
+	var it model.SystemIntakeFundingSourcesInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"existingFunding", "fundingSources"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "existingFunding":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("existingFunding"))
+			it.ExistingFunding, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "fundingSources":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fundingSources"))
+			it.FundingSources, err = ec.unmarshalNSystemIntakeFundingSourceInput2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourceInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -34684,7 +34892,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "fundingSource", "costs", "contract"}
+	fieldsInOrder := [...]string{"id", "fundingSources", "costs", "contract"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -34699,11 +34907,11 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput
 			if err != nil {
 				return it, err
 			}
-		case "fundingSource":
+		case "fundingSources":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fundingSource"))
-			it.FundingSource, err = ec.unmarshalOSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourceInput(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fundingSources"))
+			it.FundingSources, err = ec.unmarshalOSystemIntakeFundingSourcesInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourcesInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -39728,7 +39936,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
-		case "fundingSource":
+		case "existingFunding":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -39737,10 +39945,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_fundingSource(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
+				res = ec._SystemIntake_existingFunding(ctx, field, obj)
 				return res
 			}
 
@@ -39748,6 +39953,13 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
+		case "fundingSources":
+
+			out.Values[i] = ec._SystemIntake_fundingSources(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "governanceTeams":
 			field := field
 
@@ -40522,7 +40734,7 @@ func (ec *executionContext) _SystemIntakeCosts(ctx context.Context, sel ast.Sele
 
 var systemIntakeFundingSourceImplementors = []string{"SystemIntakeFundingSource"}
 
-func (ec *executionContext) _SystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeFundingSource) graphql.Marshaler {
+func (ec *executionContext) _SystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeFundingSource) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeFundingSourceImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -40530,18 +40742,47 @@ func (ec *executionContext) _SystemIntakeFundingSource(ctx context.Context, sel 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("SystemIntakeFundingSource")
+		case "id":
+
+			out.Values[i] = ec._SystemIntakeFundingSource_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "fundingNumber":
+			field := field
 
-			out.Values[i] = ec._SystemIntakeFundingSource_fundingNumber(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeFundingSource_fundingNumber(ctx, field, obj)
+				return res
+			}
 
-		case "isFunded":
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			out.Values[i] = ec._SystemIntakeFundingSource_isFunded(ctx, field, obj)
-
+			})
 		case "source":
+			field := field
 
-			out.Values[i] = ec._SystemIntakeFundingSource_source(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeFundingSource_source(ctx, field, obj)
+				return res
+			}
 
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -42318,6 +42559,54 @@ func (ec *executionContext) unmarshalNDeleteTestDateInput2githubᚗcomᚋcmsgov�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNEmailAddress2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, v interface{}) (models.EmailAddress, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.EmailAddress(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNEmailAddress2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, sel ast.SelectionSet, v models.EmailAddress) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNEmailAddress2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddressᚄ(ctx context.Context, v interface{}) ([]models.EmailAddress, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]models.EmailAddress, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNEmailAddress2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNEmailAddress2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddressᚄ(ctx context.Context, sel ast.SelectionSet, v []models.EmailAddress) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNEmailAddress2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v *models.EstimatedLifecycleCost) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -42810,11 +43099,51 @@ func (ec *executionContext) marshalNSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgov�
 	return ec._SystemIntakeCosts(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNSystemIntakeFundingSource2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeFundingSource) graphql.Marshaler {
-	return ec._SystemIntakeFundingSource(ctx, sel, &v)
+func (ec *executionContext) marshalNSystemIntakeFundingSource2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSourceᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeFundingSource) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSource(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
-func (ec *executionContext) marshalNSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeFundingSource) graphql.Marshaler {
+func (ec *executionContext) marshalNSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeFundingSource) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -42822,6 +43151,28 @@ func (ec *executionContext) marshalNSystemIntakeFundingSource2ᚖgithubᚗcomᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeFundingSource(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourceInputᚄ(ctx context.Context, v interface{}) ([]*model.SystemIntakeFundingSourceInput, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*model.SystemIntakeFundingSourceInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourceInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourceInput(ctx context.Context, v interface{}) (*model.SystemIntakeFundingSourceInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeFundingSourceInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNSystemIntakeGovernanceTeam2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeam(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeGovernanceTeam) graphql.Marshaler {
@@ -43719,6 +44070,14 @@ func (ec *executionContext) marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsg
 	return ec._DeleteTestDatePayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx context.Context, v interface{}) (*models.EmailNotificationRecipients, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputEmailNotificationRecipients(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -44018,11 +44377,11 @@ func (ec *executionContext) unmarshalOSystemIntakeCostsInput2ᚖgithubᚗcomᚋc
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourceInput(ctx context.Context, v interface{}) (*model.SystemIntakeFundingSourceInput, error) {
+func (ec *executionContext) unmarshalOSystemIntakeFundingSourcesInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourcesInput(ctx context.Context, v interface{}) (*model.SystemIntakeFundingSourcesInput, error) {
 	if v == nil {
 		return nil, nil
 	}
-	res, err := ec.unmarshalInputSystemIntakeFundingSourceInput(ctx, v)
+	res, err := ec.unmarshalInputSystemIntakeFundingSourcesInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

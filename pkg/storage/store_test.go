@@ -45,6 +45,7 @@ func (s StoreTestSuite) emptyDatabaseTables() error {
 	DELETE FROM business_cases;
 	DELETE FROM grt_feedback;
 	DELETE FROM system_intake_contacts;
+	DELETE FROM system_intake_funding_sources;
 	DELETE FROM system_intakes;
 `
 	_, err := s.db.Exec(statement)

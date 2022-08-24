@@ -30,10 +30,11 @@ type AccessibilityRequestsConnection struct {
 // Feedback intended for a business owner before they proceed to writing a
 // business case for a system request
 type AddGRTFeedbackInput struct {
-	EmailBody       string    `json:"emailBody"`
-	Feedback        string    `json:"feedback"`
-	IntakeID        uuid.UUID `json:"intakeID"`
-	ShouldSendEmail bool      `json:"shouldSendEmail"`
+	EmailBody              string                              `json:"emailBody"`
+	Feedback               string                              `json:"feedback"`
+	IntakeID               uuid.UUID                           `json:"intakeID"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // Payload for adding GRT feedback to a system request (contains the system
@@ -44,9 +45,10 @@ type AddGRTFeedbackPayload struct {
 
 // Input to add feedback to a system request
 type BasicActionInput struct {
-	Feedback        string    `json:"feedback"`
-	IntakeID        uuid.UUID `json:"intakeId"`
-	ShouldSendEmail bool      `json:"shouldSendEmail"`
+	Feedback               string                              `json:"feedback"`
+	IntakeID               uuid.UUID                           `json:"intakeId"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // A solution proposal within a business case
@@ -173,12 +175,13 @@ type CreateCedarSystemBookmarkPayload struct {
 
 // Input data for extending a system request's lifecycle ID
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
-	ID              uuid.UUID  `json:"id"`
-	ExpirationDate  *time.Time `json:"expirationDate"`
-	NextSteps       *string    `json:"nextSteps"`
-	Scope           string     `json:"scope"`
-	CostBaseline    *string    `json:"costBaseline"`
-	ShouldSendEmail bool       `json:"shouldSendEmail"`
+	ID                     uuid.UUID                           `json:"id"`
+	ExpirationDate         *time.Time                          `json:"expirationDate"`
+	NextSteps              *string                             `json:"nextSteps"`
+	Scope                  string                              `json:"scope"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // Payload data for extending a system request's lifecycle ID
@@ -297,14 +300,15 @@ type GeneratePresignedUploadURLPayload struct {
 // The input data required to issue a lifecycle ID for a system's IT governance
 // request
 type IssueLifecycleIDInput struct {
-	ExpiresAt       time.Time `json:"expiresAt"`
-	Feedback        string    `json:"feedback"`
-	IntakeID        uuid.UUID `json:"intakeId"`
-	Lcid            *string   `json:"lcid"`
-	NextSteps       *string   `json:"nextSteps"`
-	Scope           string    `json:"scope"`
-	CostBaseline    *string   `json:"costBaseline"`
-	ShouldSendEmail bool      `json:"shouldSendEmail"`
+	ExpiresAt              time.Time                           `json:"expiresAt"`
+	Feedback               string                              `json:"feedback"`
+	IntakeID               uuid.UUID                           `json:"intakeId"`
+	Lcid                   *string                             `json:"lcid"`
+	NextSteps              *string                             `json:"nextSteps"`
+	Scope                  string                              `json:"scope"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // The most recent note added by an admin to a system request
@@ -321,11 +325,12 @@ type LaunchDarklySettings struct {
 
 // Input data for rejection of a system's IT governance request
 type RejectIntakeInput struct {
-	Feedback        string    `json:"feedback"`
-	IntakeID        uuid.UUID `json:"intakeId"`
-	NextSteps       *string   `json:"nextSteps"`
-	Reason          string    `json:"reason"`
-	ShouldSendEmail bool      `json:"shouldSendEmail"`
+	Feedback               string                              `json:"feedback"`
+	IntakeID               uuid.UUID                           `json:"intakeId"`
+	NextSteps              *string                             `json:"nextSteps"`
+	Reason                 string                              `json:"reason"`
+	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // Represents a request being made with the EASi system
@@ -471,17 +476,15 @@ type SystemIntakeCostsInput struct {
 }
 
 // Represents the source of funding for a system
-type SystemIntakeFundingSource struct {
+type SystemIntakeFundingSourceInput struct {
 	FundingNumber *string `json:"fundingNumber"`
-	IsFunded      *bool   `json:"isFunded"`
 	Source        *string `json:"source"`
 }
 
-// Input data detailing how a system is funded
-type SystemIntakeFundingSourceInput struct {
-	FundingNumber *string `json:"fundingNumber"`
-	IsFunded      *bool   `json:"isFunded"`
-	Source        *string `json:"source"`
+// The input required to specify the funding source(s) for a system intake
+type SystemIntakeFundingSourcesInput struct {
+	ExistingFunding *bool                             `json:"existingFunding"`
+	FundingSources  []*SystemIntakeFundingSourceInput `json:"fundingSources"`
 }
 
 // Contains multiple system request collaborators, if any
@@ -623,10 +626,10 @@ type UpdateSystemIntakeContactInput struct {
 
 // Input data for updating contract details related to a system request
 type UpdateSystemIntakeContractDetailsInput struct {
-	ID            uuid.UUID                       `json:"id"`
-	FundingSource *SystemIntakeFundingSourceInput `json:"fundingSource"`
-	Costs         *SystemIntakeCostsInput         `json:"costs"`
-	Contract      *SystemIntakeContractInput      `json:"contract"`
+	ID             uuid.UUID                        `json:"id"`
+	FundingSources *SystemIntakeFundingSourcesInput `json:"fundingSources"`
+	Costs          *SystemIntakeCostsInput          `json:"costs"`
+	Contract       *SystemIntakeContractInput       `json:"contract"`
 }
 
 // The payload for updating a system's IT governance request

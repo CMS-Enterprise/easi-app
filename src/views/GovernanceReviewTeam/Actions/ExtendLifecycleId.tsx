@@ -25,6 +25,7 @@ import {
   CreateSystemIntakeActionExtendLifecycleIdVariables
 } from 'queries/types/CreateSystemIntakeActionExtendLifecycleId';
 import { GetSystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import { sharedLifecycleIdSchema } from 'validations/actionSchema';
@@ -88,6 +89,11 @@ const ExtendLifecycleId = ({
   >(CreateSystemIntakeActionExtendLifecycleIdQuery);
 
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
+
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
 
   const handleSubmit = (values: ExtendLCIDForm) => {
     const {
@@ -344,7 +350,12 @@ const ExtendLifecycleId = ({
                     name="newCostBaseline"
                   />
                 </FieldGroup>
-                <EmailRecipientsFields className="margin-top-5" />
+                <EmailRecipientsFields
+                  className="margin-top-5"
+                  systemIntakeId={systemId}
+                  activeContact={activeContact}
+                  setActiveContact={setActiveContact}
+                />
                 <p className="margin-top-3 margin-bottom-0 line-height-body-5 text-base">
                   {t('extendLcid.submissionInfo')}
                 </p>
@@ -356,7 +367,9 @@ const ExtendLifecycleId = ({
                       setErrors({});
                       setShouldSendEmail(true);
                     }}
-                    disabled={extendLifecycleIDStatus.loading}
+                    disabled={
+                      extendLifecycleIDStatus.loading || !!activeContact
+                    }
                   >
                     {t('submitAction.submit')}
                   </Button>
@@ -368,6 +381,7 @@ const ExtendLifecycleId = ({
                       setShouldSendEmail(false);
                       setTimeout(submitForm);
                     }}
+                    disabled={!!activeContact}
                   />
                 </div>
               </Form>

@@ -4,7 +4,6 @@ import { Link, useParams } from 'react-router-dom';
 import { IconNavigateBefore } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
-import { ImproveEasiSurvey } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
 
 const Confirmation = ({
@@ -26,7 +25,6 @@ const Confirmation = ({
             referenceId: businessCaseId
           })}
         </h2>
-        <ImproveEasiSurvey />
         <div>
           <Link
             to={`/governance-task-list/${businessCase.systemIntakeId}`}

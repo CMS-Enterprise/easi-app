@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
-import { AnythingWrongSurvey } from 'components/Survey';
 import SystemIntakeReview from 'components/SystemIntakeReview';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
@@ -33,7 +32,6 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
       >
         Take an action
       </UswdsReactLink>
-      <AnythingWrongSurvey />
     </div>
   );
 };

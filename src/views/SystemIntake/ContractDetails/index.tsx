@@ -1,12 +1,11 @@
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
-  Dropdown,
   IconNavigateBefore,
   Label,
-  Link,
   Radio,
   Textarea,
   TextInput
@@ -28,7 +27,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import fundingSources from 'constants/enums/fundingSources';
+import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import { yesNoMap } from 'data/common';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -41,6 +40,8 @@ import { ContractDetailsForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
+import FundingSources from './FundingSources';
+
 type ContractDetailsProps = {
   systemIntake: SystemIntake;
 };
@@ -48,14 +49,12 @@ type ContractDetailsProps = {
 const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
   const formikRef = useRef<FormikProps<ContractDetailsForm>>(null);
+  const { t } = useTranslation('intake');
 
-  const { id, fundingSource, costs, contract } = systemIntake;
+  const { id, fundingSources, costs, contract, existingFunding } = systemIntake;
   const initialValues: ContractDetailsForm = {
-    fundingSource: {
-      isFunded: fundingSource.isFunded,
-      fundingNumber: fundingSource.fundingNumber || '',
-      source: fundingSource.source || ''
-    },
+    existingFunding,
+    fundingSources,
     costs: {
       expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
       isExpectingIncrease: costs.isExpectingIncrease || ''
@@ -118,7 +117,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
     return {
       id,
-      ...values,
+      fundingSources: {
+        existingFunding: !!(values.fundingSources.length > 0),
+        fundingSources: values.fundingSources
+      },
+      costs: values.costs,
       contract: {
         ...values.contract,
         startDate,
@@ -176,124 +179,23 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               </div>
               <Form>
                 <FieldGroup
-                  scrollElement="fundingSource.isFunded"
-                  error={!!flatErrors['fundingSource.isFunded']}
+                  scrollElement="fundingSources"
+                  error={!!flatErrors.fundingSources}
                 >
-                  <fieldset
-                    className="usa-fieldset margin-top-4"
-                    data-testid="funding-source-fieldset"
-                  >
-                    <legend className="usa-label margin-bottom-1">
-                      Will this project be funded out of an existing funding
-                      source?
-                    </legend>
-                    <HelpText id="Intake-Form-ExistingFundingHelp">
-                      If you are unsure, please get in touch with your
-                      Contracting Officer Representative
-                    </HelpText>
-                    <FieldErrorMsg>
-                      {flatErrors['fundingSource.isFunded']}
-                    </FieldErrorMsg>
-                    <Field
-                      as={Radio}
-                      checked={values.fundingSource.isFunded === true}
-                      id="IntakeForm-HasFundingSourceYes"
-                      name="fundingSource.isFunded"
-                      label="Yes"
-                      onChange={() => {
-                        setFieldValue('fundingSource.isFunded', true);
-                      }}
-                      aria-describedby="Intake-Form-ExistingFundingHelp"
-                      aria-expanded={values.fundingSource.isFunded === true}
-                      aria-controls="funding-source-container"
-                      value
-                    />
-                    {values.fundingSource.isFunded && (
-                      <div
-                        id="funding-source-container"
-                        className="margin-top-neg-2 margin-left-4 margin-bottom-1"
-                      >
-                        <FieldGroup
-                          scrollElement="fundingSource.source"
-                          error={!!flatErrors['fundingSource.source']}
-                        >
-                          <Label htmlFor="IntakeForm-FundingSource">
-                            Funding Source
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['fundingSource.source']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={Dropdown}
-                            id="IntakeForm-FundingSource"
-                            name="fundingSource.source"
-                          >
-                            <option value="" disabled>
-                              Select an option
-                            </option>
-                            {fundingSources.map(source => (
-                              <option
-                                key={source.split(' ').join('-')}
-                                value={source}
-                              >
-                                {source}
-                              </option>
-                            ))}
-                          </Field>
-                        </FieldGroup>
-                        <FieldGroup
-                          scrollElement="fundingSource.fundingNumber"
-                          error={!!flatErrors['fundingSource.fundingNumber']}
-                        >
-                          <Label htmlFor="IntakeForm-FundingNumber">
-                            Funding Number
-                          </Label>
-                          <HelpText id="IntakeForm-FundingNumberRestrictions">
-                            Funding number must be 6 digits long
-                          </HelpText>
-                          <FieldErrorMsg>
-                            {flatErrors['fundingSource.fundingNumber']}
-                          </FieldErrorMsg>
-                          <Field
-                            className="width-card-lg"
-                            as={TextInput}
-                            error={!!flatErrors['fundingSource.fundingNumber']}
-                            id="IntakeForm-FundingNumber"
-                            maxLength={6}
-                            name="fundingSource.fundingNumber"
-                            aria-describedby="IntakeForm-FundingNumberRestrictions IntakeForm-FundingNumberHelp"
-                          />
-                          <HelpText
-                            id="IntakeForm-FundingNumberHelp"
-                            className="margin-y-1"
-                          >
-                            <Link
-                              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              variant="external"
-                            >
-                              You can find your funding number in the CMS
-                              Operating Plan page (opens in a new tab)
-                            </Link>
-                          </HelpText>
-                        </FieldGroup>
-                      </div>
-                    )}
-                    <Field
-                      as={Radio}
-                      checked={values.fundingSource.isFunded === false}
-                      id="IntakeForm-HasFundingSourceNo"
-                      name="fundingSource.isFunded"
-                      label="No"
-                      onChange={() => {
-                        setFieldValue('fundingSource.isFunded', false);
-                        setFieldValue('fundingSource.fundingNumber', '');
-                        setFieldValue('fundingSource.source', '');
-                      }}
-                      value={false}
-                    />
-                  </fieldset>
+                  <legend className="usa-label margin-bottom-1">
+                    {t('contractDetails.fundingSources.label')}
+                  </legend>
+                  <HelpText id="Intake-Form-ExistingFundingHelp">
+                    {t('contractDetails.fundingSources.helpText')}
+                  </HelpText>
+                  <Field
+                    as={FundingSources}
+                    id="IntakeForm-FundingSources"
+                    name="fundingSources"
+                    initialValues={values.fundingSources}
+                    setFieldValue={setFieldValue}
+                    fundingSourceOptions={intakeFundingSources}
+                  />
                 </FieldGroup>
 
                 <FieldGroup

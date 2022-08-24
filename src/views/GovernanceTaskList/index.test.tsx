@@ -107,11 +107,8 @@ describe('The Goveranance Task List', () => {
               isPresent: null,
               name: null
             },
-            fundingSource: {
-              fundingNumber: null,
-              isFunded: null,
-              source: null
-            },
+            existingFunding: null,
+            fundingSources: [],
             lcid: null,
             lcidExpiresAt: null,
             lcidScope: null,

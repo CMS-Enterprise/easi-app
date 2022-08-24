@@ -27,11 +27,8 @@ describe('The system intake data modifiers', () => {
           name: ''
         },
         requestName: '',
-        fundingSource: {
-          isFunded: null,
-          source: '',
-          fundingNumber: ''
-        },
+        existingFunding: null,
+        fundingSources: [],
         businessNeed: '',
         businessSolution: '',
         currentStage: '',
@@ -108,11 +105,8 @@ describe('The system intake data modifiers', () => {
             }
           ]
         },
-        fundingSource: {
-          isFunded: true,
-          source: 'CLIA',
-          fundingNumber: '123456'
-        },
+        existingFunding: true,
+        fundingSources: [{ fundingNumber: '123456', source: 'CLIA' }],
         costs: {
           isExpectingIncrease: 'YES',
           expectedIncreaseAmount: 'One million'
@@ -195,10 +189,13 @@ describe('The system intake data modifiers', () => {
         trbCollaborator: 'Chris TRB',
         oitCollaborator: 'Sam OIT Security',
         eaCollaborator: 'Todd EA',
-        fundingSource: {
-          source: 'CLIA',
-          fundingNumber: '123456'
-        },
+        existingFunding: true,
+        fundingSources: [
+          {
+            source: 'CLIA',
+            fundingNumber: '123456'
+          }
+        ],
         costs: {
           isExpectingIncrease: 'YES',
           expectedIncreaseAmount: 'One million'

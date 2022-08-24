@@ -1,15 +1,9 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { IconLaunch, Link } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
-import {
-  REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY,
-  REPORT_PROBLEM_BASIC_USER_SURVEY
-} from 'constants/externalUrls';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
@@ -146,37 +140,11 @@ const NotFound = () => (
 
 const Default = <Route path="*" key="508-not-found" component={NotFound} />;
 
-const ReportProblemLinkArea = ({ url }: { url: string }) => {
-  const { t } = useTranslation('accessibility');
+const PageTemplate = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="grid-container width-full padding-bottom-4 report-problem-link-area">
-      <Link
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="line-height-body-4"
-      >
-        {t('reportProblem')}
-        <IconLaunch className="margin-left-05 margin-bottom-2px text-tbottom" />
-      </Link>
-    </div>
-  );
-};
-
-const PageTemplate = ({
-  children,
-  surveyUrl
-}: {
-  children: React.ReactNode;
-  surveyUrl: string;
-}) => {
-  return (
-    <>
-      <MainContent className="margin-bottom-5">
-        <Switch>{children}</Switch>
-      </MainContent>
-      <ReportProblemLinkArea url={surveyUrl} />
-    </>
+    <MainContent className="margin-bottom-5">
+      <Switch>{children}</Switch>
+    </MainContent>
   );
 };
 
@@ -188,7 +156,7 @@ const Accessibility = () => {
   if (isUserSet) {
     if (user.isAccessibilityTeam(userGroups, flags)) {
       return (
-        <PageTemplate surveyUrl={REPORT_PROBLEM_ACCESSIBILITY_TEAM_SURVEY}>
+        <PageTemplate>
           {[
             flags.cedar508Requests ? NewRequestCedarSystem : NewRequest,
             AllRequests,
@@ -208,7 +176,7 @@ const Accessibility = () => {
       );
     }
     return (
-      <PageTemplate surveyUrl={REPORT_PROBLEM_BASIC_USER_SURVEY}>
+      <PageTemplate>
         {[
           flags.cedar508Requests ? NewRequestCedarSystem : NewRequest,
           AccessibilityTestingOverview,
