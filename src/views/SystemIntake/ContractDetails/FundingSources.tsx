@@ -38,9 +38,10 @@ export const FundingSourcesListItem = ({
       key={fundingNumber}
       className={className}
     >
-      <h4 className="margin-bottom-0">
+      {/* TODO: Fix this with proper styling & header changes */}
+      <h3 style={{ fontSize: '1rem' }} className="margin-bottom-0">
         {t('contractDetails.fundingSources.fundingSource')}
-      </h4>
+      </h3>
       <p className="margin-y-1">
         {`${t(
           'contractDetails.fundingSources.fundingNumber'

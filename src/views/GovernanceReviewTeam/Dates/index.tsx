@@ -4,7 +4,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
@@ -20,7 +19,6 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
-import { AnythingWrongSurvey } from 'components/Survey';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   UpdateSystemIntakeReviewDates,
@@ -36,7 +34,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation();
-  const flags = useFlags();
   const [mutate, mutationResult] = useMutation<
     UpdateSystemIntakeReviewDates,
     UpdateSystemIntakeReviewDatesVariables
@@ -268,7 +265,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                   {t('governanceReviewTeam:dates.submit')}
                 </Button>
               </Form>
-              {!flags.helpFooter && <AnythingWrongSurvey />}
             </div>
           </>
         );
