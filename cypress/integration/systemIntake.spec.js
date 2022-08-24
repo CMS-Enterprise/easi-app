@@ -144,13 +144,14 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract Details
+    const fundingNumber = '123456';
 
     cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber: '123456',
+      fundingNumber,
       sources: ['Fed Admin', 'Research'],
       restart: true
     });
-    cy.get('#fundingNumber-123456');
+    cy.get(`#fundingNumber-${fundingNumber}`);
 
     cy.get('#IntakeForm-CostsExpectingIncreaseYes')
       .check({ force: true })
@@ -282,7 +283,7 @@ describe('The System Intake Form', () => {
       'Which existing funding sources will fund this project?'
     )
       .siblings('dd')
-      .get('li#fundingNumber-111111');
+      .get(`li#fundingNumber-${fundingNumber}`);
   });
 
   it('displays contact details error messages', () => {
