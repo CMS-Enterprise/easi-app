@@ -112,16 +112,6 @@ const LcidInfo = () => {
                 {t('navigation.returnToTaskList')}
               </UswdsReactLink>
             </div>
-
-            <h2>{t('general:feedback.improvement')}</h2>
-            <UswdsLink
-              href="https://www.surveymonkey.com/r/JNYSMZP"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open EASi survey in a new tab"
-            >
-              {t('general:feedback.whatYouThink')}
-            </UswdsLink>
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">
