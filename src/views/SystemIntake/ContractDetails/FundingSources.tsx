@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Label, Link } from '@trussworks/react-uswds';
+import { Button, Fieldset, Label, Link } from '@trussworks/react-uswds';
 
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -32,25 +32,19 @@ export const FundingSourcesListItem = ({
   className
 }: FundingSourcesListItemProps) => {
   const { t } = useTranslation('intake');
+  const fundingNumberText = `${t(
+    'contractDetails.fundingSources.fundingNumber'
+  )}: ${fundingNumber}`;
+  const fundingSourceText = `${t(
+    'contractDetails.fundingSources.fundingSources'
+  )}: ${sources.join(', ')}`;
   return (
-    <li
-      id={`fundingNumber-${fundingNumber}`}
-      key={fundingNumber}
-      className={className}
-    >
-      <h3 className="margin-bottom-0 font-body-sm">
+    <li className={className} id={`fundingNumber-${fundingNumber}`}>
+      <p className="text-bold margin-y-1">
         {t('contractDetails.fundingSources.fundingSource')}
-      </h3>
-      <p className="margin-y-1">
-        {`${t(
-          'contractDetails.fundingSources.fundingNumber'
-        )}: ${fundingNumber}`}
       </p>
-      <p className="margin-y-1">
-        {`${t('contractDetails.fundingSources.fundingSources')}: ${sources.join(
-          ', '
-        )}`}
-      </p>
+      <p className="margin-y-1">{fundingNumberText}</p>
+      <p className="margin-y-1">{fundingSourceText}</p>
       {handleEdit && (
         <Button
           unstyled
@@ -164,71 +158,75 @@ const FundingSourceForm = ({
     }
   };
   return (
-    <>
-      <h4 className="margin-bottom-1">{t(`${action} funding source`)}</h4>
-      <FieldGroup
-        className="margin-top-2"
-        scrollElement="fundingSource.fundingNumber"
-        error={!!errors.fundingNumber}
-      >
-        <Label htmlFor="fundingNumber" className="text-normal">
-          {t('contractDetails.fundingSources.fundingNumber')}
-        </Label>
-        <HelpText
-          id="IntakeForm-FundingNumberRestrictions"
-          className="margin-top-1"
+    <li>
+      <Fieldset>
+        <legend className="usa-legend text-bold">
+          {t(`${action} funding source`)}
+        </legend>
+        <FieldGroup
+          className="margin-top-2"
+          scrollElement="fundingSource.fundingNumber"
+          error={!!errors.fundingNumber}
         >
-          {t('contractDetails.fundingSources.fundingNumberHelpText')}
-        </HelpText>
-        <FieldErrorMsg>{errors.fundingNumber}</FieldErrorMsg>
-        <input
-          maxLength={6}
-          type="text"
-          className="usa-input"
-          id="IntakeForm-FundingNumber"
-          name="fundingNumber"
-          value={fundingNumber}
-          onChange={e =>
-            setActiveFundingSource({
-              action,
-              data: { ...activeFundingSource, fundingNumber: e.target.value }
-            })
-          }
-        />
-        <HelpText id="IntakeForm-FundingNumberHelp" className="margin-top-1">
-          <Link
-            href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="external"
+          <Label htmlFor="fundingNumber" className="text-normal">
+            {t('contractDetails.fundingSources.fundingNumber')}
+          </Label>
+          <HelpText
+            id="IntakeForm-FundingNumberRestrictions"
+            className="margin-top-1"
           >
-            {t('contractDetails.fundingSources.fundingNumberLink')}
-          </Link>
-        </HelpText>
-      </FieldGroup>
-      <FieldGroup error={!!errors.sources} className="margin-y-2">
-        <Label htmlFor="fundingSources" className="text-normal">
-          {t('contractDetails.fundingSources.fundingSource')}
-        </Label>
-        <FieldErrorMsg>{errors.sources}</FieldErrorMsg>
-        <MultiSelect
-          id="IntakeForm-FundingSources"
-          name="fundingSources"
-          selectedLabel={t('Funding sources')}
-          className="margin-top-1"
-          options={fundingSourceOptions.map(option => ({
-            value: option,
-            label: t(option)
-          }))}
-          onChange={(values: string[]) =>
-            setActiveFundingSource({
-              action,
-              data: { ...activeFundingSource, sources: values }
-            })
-          }
-          initialValues={activeFundingSource.sources}
-        />
-      </FieldGroup>
+            {t('contractDetails.fundingSources.fundingNumberHelpText')}
+          </HelpText>
+          <FieldErrorMsg>{errors.fundingNumber}</FieldErrorMsg>
+          <input
+            maxLength={6}
+            type="text"
+            className="usa-input"
+            id="IntakeForm-FundingNumber"
+            name="fundingNumber"
+            value={fundingNumber}
+            onChange={e =>
+              setActiveFundingSource({
+                action,
+                data: { ...activeFundingSource, fundingNumber: e.target.value }
+              })
+            }
+          />
+          <HelpText id="IntakeForm-FundingNumberHelp" className="margin-top-1">
+            <Link
+              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="external"
+            >
+              {t('contractDetails.fundingSources.fundingNumberLink')}
+            </Link>
+          </HelpText>
+        </FieldGroup>
+        <FieldGroup error={!!errors.sources} className="margin-y-2">
+          <Label htmlFor="fundingSources" className="text-normal">
+            {t('contractDetails.fundingSources.fundingSource')}
+          </Label>
+          <FieldErrorMsg>{errors.sources}</FieldErrorMsg>
+          <MultiSelect
+            id="IntakeForm-FundingSources"
+            name="fundingSources"
+            selectedLabel={t('Funding sources')}
+            className="margin-top-1"
+            options={fundingSourceOptions.map(option => ({
+              value: option,
+              label: t(option)
+            }))}
+            onChange={(values: string[]) =>
+              setActiveFundingSource({
+                action,
+                data: { ...activeFundingSource, sources: values }
+              })
+            }
+            initialValues={activeFundingSource.sources}
+          />
+        </FieldGroup>
+      </Fieldset>
       <Button
         type="button"
         onClick={() =>
@@ -250,7 +248,7 @@ const FundingSourceForm = ({
       >
         {t(`Save`)}
       </Button>
-    </>
+    </li>
   );
 };
 
@@ -282,7 +280,10 @@ const FundingSources = ({
   return (
     <>
       {Object.keys(fundingSources).length > 0 && (
-        <ul className="usa-list--unstyled margin-bottom-4">
+        <ul
+          id="Intake-Form-ExistingFundingSources"
+          className="usa-list--unstyled margin-bottom-4 margin-top-3"
+        >
           {Object.values(fundingSources).map(fundingSource => {
             const { fundingNumber, sources } = fundingSource;
             return editFundingSourceNumber.current === fundingNumber &&
@@ -299,6 +300,7 @@ const FundingSources = ({
             ) : (
               <FundingSourcesListItem
                 key={fundingNumber}
+                className="margin-y-205"
                 fundingNumber={fundingNumber!}
                 sources={sources}
                 handleDelete={() =>
