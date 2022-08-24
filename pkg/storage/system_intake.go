@@ -634,3 +634,33 @@ func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid
 
 	return s.FetchSystemIntakeByID(ctx, id)
 }
+
+// FetchRelatedSystemIntakes retrieves System Intakes that share a CEDAR system ID and/or a contract
+// number with a given System Intake
+func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]uuid.UUID, error) {
+	intakes := []uuid.UUID{}
+
+	intake, err := s.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if intake.CedarSystemID.IsZero() && intake.ContractNumber.IsZero() {
+		return intakes, nil
+	}
+
+	query := `
+		SELECT id
+		FROM system_intakes
+		WHERE
+			(cedar_system_id = $1 AND cedar_system_id IS NOT NULL)
+		OR
+			(contract_number = $2 AND contract_number IS NOT NULL);
+	`
+
+	err = s.db.SelectContext(ctx, &intakes, query, intake.CedarSystemID, intake.ContractNumber)
+	if err != nil {
+		return nil, err
+	}
+	return intakes, nil
+}

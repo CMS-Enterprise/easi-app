@@ -1608,6 +1608,7 @@ type Query {
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
+  relatedSystemIntakes(id: UUID!): [UUID!]!
 }
 
 """
