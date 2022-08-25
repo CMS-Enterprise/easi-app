@@ -40,7 +40,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure go cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
         with:
           path: |
             ~/go/pkg/mod
@@ -129,7 +129,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Configure yarn cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -210,7 +210,7 @@ jobs:
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
       - name: Configure go cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
         with:
           path: |
             ~/go/pkg/mod
@@ -221,7 +221,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Configure yarn cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -261,7 +261,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Configure yarn cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -291,7 +291,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Configure yarn cache
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # v2.1.6
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # v2.1.6
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
