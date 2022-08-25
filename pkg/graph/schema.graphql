@@ -1127,6 +1127,22 @@ input UpdateSystemIntakeContractDetailsInput {
 }
 
 """
+Input data for updating a system intake's relationship to a CEDAR system
+"""
+input UpdateSystemIntakeLinkedCedarSystemInput {
+  id: UUID!
+  cedarSystemId: String
+}
+
+"""
+Input data for updating a system intake's relationship to a contract
+"""
+input UpdateSystemIntakeLinkedContractInput {
+  id: UUID!
+  contractNumber: String
+}
+
+"""
 Input data for extending a system request's lifecycle ID
 """
 input CreateSystemIntakeActionExtendLifecycleIdInput {
@@ -1560,6 +1576,8 @@ type Mutation {
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
+  updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
+  updateSystemIntakeLinkedContract(input: UpdateSystemIntakeLinkedContractInput!): UpdateSystemIntakePayload
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String

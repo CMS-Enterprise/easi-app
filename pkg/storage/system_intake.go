@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
@@ -385,14 +386,15 @@ func generateLifecyclePrefix(t time.Time, loc *time.Location) string {
 }
 
 // GenerateLifecycleID returns what the next LCID is expected to be for the current date
-// 		The expected format is a 6-digit number in the form of "YYdddP" where
-// 			YY - the 2-digit YEAR
-// 			ddd - the 3-digit ORDINAL DATE, e.g. the number of days elapsed in the given year
-// 			P - the 1-digit count of how many LCIDs already generated for the given day
-// 		This routine assumes the LCIDs are being generated in Eastern Time Zone
-// 		(FYI - the "YYddd" construct is referred to as the "Julian Day" in mainframe
-// 		programmer circles, though this term seems to be a misappropriation of what
-// 		astronomers use to mean a count of days since 24 Nov in the year 4714 BC.)
+//
+//	The expected format is a 6-digit number in the form of "YYdddP" where
+//		YY - the 2-digit YEAR
+//		ddd - the 3-digit ORDINAL DATE, e.g. the number of days elapsed in the given year
+//		P - the 1-digit count of how many LCIDs already generated for the given day
+//	This routine assumes the LCIDs are being generated in Eastern Time Zone
+//	(FYI - the "YYddd" construct is referred to as the "Julian Day" in mainframe
+//	programmer circles, though this term seems to be a misappropriation of what
+//	astronomers use to mean a count of days since 24 Nov in the year 4714 BC.)
 func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
 	prefix := generateLifecyclePrefix(s.clock.Now(), s.easternTZ)
 
@@ -567,4 +569,68 @@ func (s *Store) UpdateSystemIntakeStatus(ctx context.Context, id uuid.UUID, newS
 	}
 
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
+}
+
+// UpdateSystemIntakeLinkedContract updates the contract number that is linked to a system intake
+func (s *Store) UpdateSystemIntakeLinkedContract(ctx context.Context, id uuid.UUID, contractNumber null.String) (*models.SystemIntake, error) {
+	intake := struct {
+		ID             uuid.UUID
+		ContractNumber null.String `db:"contract_number"`
+		UpdatedAt      time.Time   `db:"updated_at"`
+	}{
+		ID:             id,
+		ContractNumber: contractNumber,
+		UpdatedAt:      time.Now(),
+	}
+
+	const updateSystemIntakeSQL = `
+		UPDATE system_intakes
+		SET
+			updated_at = :updated_at,
+			contract_number = :contract_number
+		WHERE system_intakes.id = :id
+	`
+
+	_, err := s.db.NamedExec(
+		updateSystemIntakeSQL,
+		intake,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.FetchSystemIntakeByID(ctx, id)
+}
+
+// UpdateSystemIntakeLinkedCedarSystem updates the CEDAR system ID that is linked to a system intake
+func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid.UUID, cedarSystemID null.String) (*models.SystemIntake, error) {
+	intake := struct {
+		ID            uuid.UUID
+		CedarSystemID null.String `db:"cedar_system_id"`
+		UpdatedAt     time.Time   `db:"updated_at"`
+	}{
+		ID:            id,
+		CedarSystemID: cedarSystemID,
+		UpdatedAt:     time.Now(),
+	}
+
+	const updateSystemIntakeSQL = `
+		UPDATE system_intakes
+		SET
+			updated_at = :updated_at,
+			cedar_system_id = :cedar_system_id
+		WHERE system_intakes.id = :id
+	`
+
+	_, err := s.db.NamedExec(
+		updateSystemIntakeSQL,
+		intake,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.FetchSystemIntakeByID(ctx, id)
 }
