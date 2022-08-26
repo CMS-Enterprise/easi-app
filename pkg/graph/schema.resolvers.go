@@ -1745,6 +1745,41 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	}, nil
 }
 
+// UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
+func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input model.UpdateSystemIntakeLinkedCedarSystemInput) (*model.UpdateSystemIntakePayload, error) {
+	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
+	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
+		_, err := r.cedarCoreClient.GetSystem(ctx, *input.CedarSystemID)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	intake, err := r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, null.StringFromPtr(input.CedarSystemID))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
+}
+
+// UpdateSystemIntakeLinkedContract is the resolver for the updateSystemIntakeLinkedContract field.
+func (r *mutationResolver) UpdateSystemIntakeLinkedContract(ctx context.Context, input model.UpdateSystemIntakeLinkedContractInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.UpdateSystemIntakeLinkedContract(ctx, input.ID, null.StringFromPtr(input.ContractNumber))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
+}
+
 // SendFeedbackEmail is the resolver for the sendFeedbackEmail field.
 func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.SendFeedbackEmailInput) (*string, error) {
 	var reporterName, reporterEmail string
