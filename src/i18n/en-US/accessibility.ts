@@ -1,7 +1,6 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
-  reportProblem: 'Report a problem',
   requestStatus: {
     open: 'Open',
     remediation: 'In remediation',
@@ -164,7 +163,6 @@ const accessibility = {
     submitBtn: 'Send 508 testing request',
     confirmation:
       '508 testing request created. We have sent you a confirmation email.',
-    surveyLink: 'Tell us what you think of this service',
     helpAndGuidance: {
       lifecycleIdAccordion: {
         header: 'What if I cannot find my application or Lifecycle ID?',

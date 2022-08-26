@@ -2,13 +2,11 @@ import React, { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import { kebabCase } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
-import { AnythingWrongSurvey } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeStatus } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
@@ -65,7 +63,6 @@ type ChooseActionProps = {
 const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
-  const flags = useFlags();
 
   const businessCaseExists = !!businessCase.id;
   const [actionRoute, setActionRoute] = useState('');
@@ -287,7 +284,6 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
           {t('submitAction.continue')}
         </Button>
       </form>
-      {!flags.helpFooter && <AnythingWrongSurvey />}
     </>
   );
 };
