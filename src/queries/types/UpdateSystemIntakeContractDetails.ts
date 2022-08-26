@@ -41,7 +41,7 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
   endDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_endDate;
   hasContract: string | null;
   startDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_startDate;
-  vehicle: string | null;
+  number: string | null;
 }
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake {

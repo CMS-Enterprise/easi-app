@@ -17,7 +17,8 @@ const intake = {
     fundingNumber: 'Funding number',
     businessOwner: 'Business Owner',
     lcidExpirationDate: 'LCID Expiration Date',
-    lastAdminNote: 'Last Admin Note'
+    lastAdminNote: 'Last Admin Note',
+    contractNumber: 'Contract number'
   },
   submission: {
     confirmation: {
@@ -254,7 +255,9 @@ const intake = {
     contract: 'Do you already have a contract in place to support this effort?',
     contractors: 'Contractors',
     contractVehicle: 'Contract vehicle',
-    performance: 'Period of performance'
+    contractNumber: 'Contract number',
+    performance: 'Period of performance',
+    notEntered: 'Not Entered'
   }
 };
 
