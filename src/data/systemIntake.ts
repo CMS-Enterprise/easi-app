@@ -330,7 +330,7 @@ export const isIntakeStarted = (intake: SystemIntake | SystemIntakeForm) => {
     intake.costs.expectedIncreaseAmount ||
     intake.contract.hasContract ||
     intake.contract.contractor ||
-    intake.contract.vehicle ||
+    intake.contract.number ||
     intake.contract.startDate.month ||
     intake.contract.startDate.year ||
     intake.contract.endDate.month ||

@@ -89,7 +89,7 @@ describe('The Goveranance Task List', () => {
                 year: null
               },
               vehicle: null,
-              number: '123456-7890'
+              number: null
             },
             costs: {
               isExpectingIncrease: null,
