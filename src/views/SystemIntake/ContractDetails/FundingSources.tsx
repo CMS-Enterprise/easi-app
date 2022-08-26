@@ -32,6 +32,11 @@ export const FundingSourcesListItem = ({
   className
 }: FundingSourcesListItemProps) => {
   const { t } = useTranslation('intake');
+
+  // Line spacing depends on if action buttons are present
+  const spacingClass =
+    handleEdit || handleDelete ? 'margin-y-1' : 'margin-y-05';
+
   const fundingNumberText = `${t(
     'contractDetails.fundingSources.fundingNumber'
   )}: ${fundingNumber}`;
@@ -40,11 +45,11 @@ export const FundingSourcesListItem = ({
   )}: ${sources.join(', ')}`;
   return (
     <li className={className} id={`fundingNumber-${fundingNumber}`}>
-      <p className="text-bold margin-y-1">
+      <p className={`text-bold font-body-sm ${spacingClass}`}>
         {t('contractDetails.fundingSources.fundingSource')}
       </p>
-      <p className="margin-y-1">{fundingNumberText}</p>
-      <p className="margin-y-1">{fundingSourceText}</p>
+      <p className={spacingClass}>{fundingNumberText}</p>
+      <p className={spacingClass}>{fundingSourceText}</p>
       {handleEdit && (
         <Button
           unstyled
@@ -158,7 +163,7 @@ const FundingSourceForm = ({
     }
   };
   return (
-    <li>
+    <>
       <Fieldset>
         <legend className="usa-legend text-bold">
           {t(`${action} funding source`)}
@@ -248,7 +253,7 @@ const FundingSourceForm = ({
       >
         {t(`Save`)}
       </Button>
-    </li>
+    </>
   );
 };
 
@@ -288,15 +293,16 @@ const FundingSources = ({
             const { fundingNumber, sources } = fundingSource;
             return editFundingSourceNumber.current === fundingNumber &&
               action === 'Edit' ? (
-              <FundingSourceForm
-                key={fundingNumber}
-                activeFundingSource={activeFundingSource}
-                setActiveFundingSource={setActiveFundingSource}
-                fundingSources={fundingSources}
-                setFundingSources={setFundingSources}
-                fundingSourceOptions={fundingSourceOptions}
-                action={action}
-              />
+              <li key={fundingNumber}>
+                <FundingSourceForm
+                  activeFundingSource={activeFundingSource}
+                  setActiveFundingSource={setActiveFundingSource}
+                  fundingSources={fundingSources}
+                  setFundingSources={setFundingSources}
+                  fundingSourceOptions={fundingSourceOptions}
+                  action={action}
+                />
+              </li>
             ) : (
               <FundingSourcesListItem
                 key={fundingNumber}

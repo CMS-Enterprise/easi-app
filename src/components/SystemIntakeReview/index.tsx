@@ -62,6 +62,7 @@ export const SystemIntakeReview = ({
           ({ fundingNumber, sources }) => {
             return (
               <FundingSourcesListItem
+                className="margin-top-205"
                 key={fundingNumber}
                 fundingNumber={fundingNumber!}
                 sources={sources}
