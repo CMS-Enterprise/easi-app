@@ -328,12 +328,12 @@ Array [
               <dt
                 className="text-bold margin-bottom-05"
               >
-                Contract vehicle
+                Contract number
               </dt>
               <dd
                 className="description-definition margin-0"
               >
-                Sole Source
+                123456-7890
               </dd>
             </div>
           </div>

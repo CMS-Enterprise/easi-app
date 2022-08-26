@@ -45,7 +45,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   contract: {
     hasContract: '',
     contractor: '',
-    vehicle: '',
+    number: '',
     startDate: {
       month: '',
       day: '',
@@ -119,7 +119,7 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     costIncrease: systemIntake.costs.isExpectingIncrease,
     costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
     contractor: systemIntake.contract.contractor,
-    contractVehicle: systemIntake.contract.vehicle,
+    contractNumber: systemIntake.contract.number,
     contractStartDate: DateTime.fromObject({
       day: Number(systemIntake.contract.startDate.day),
       month: Number(systemIntake.contract.startDate.month),
@@ -193,7 +193,7 @@ export const prepareSystemIntakeForApp = (
     contract: {
       hasContract: systemIntake.existingContract || '',
       contractor: systemIntake.contractor || '',
-      vehicle: systemIntake.contractVehicle || '',
+      number: systemIntake.contractNumber || '',
       startDate: {
         month: contractStartDate.month
           ? contractStartDate.month.toString()
@@ -330,7 +330,7 @@ export const isIntakeStarted = (intake: SystemIntake | SystemIntakeForm) => {
     intake.costs.expectedIncreaseAmount ||
     intake.contract.hasContract ||
     intake.contract.contractor ||
-    intake.contract.vehicle ||
+    intake.contract.number ||
     intake.contract.startDate.month ||
     intake.contract.startDate.year ||
     intake.contract.endDate.month ||

@@ -25,6 +25,7 @@ export default gql`
           year
         }
         vehicle
+        number
       }
       costs {
         isExpectingIncrease

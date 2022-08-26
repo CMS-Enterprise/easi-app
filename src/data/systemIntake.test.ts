@@ -40,7 +40,7 @@ describe('The system intake data modifiers', () => {
         contract: {
           hasContract: '',
           contractor: '',
-          vehicle: ''
+          number: ''
         },
         contractStartDate: '',
         contractEndDate: '',

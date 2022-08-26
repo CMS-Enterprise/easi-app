@@ -56,6 +56,7 @@ describe('The GRT intake review view', () => {
       hasContract: 'IN_PROGRESS',
       contractor: 'TrussWorks, Inc.',
       vehicle: 'Sole Source',
+      number: '123456-7890',
       startDate: {
         month: '1',
         day: '',
