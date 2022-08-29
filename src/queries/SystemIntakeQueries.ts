@@ -43,7 +43,7 @@ export const UpdateSystemIntakeContractDetails = gql`
             month
             year
           }
-          vehicle
+          number
         }
       }
     }

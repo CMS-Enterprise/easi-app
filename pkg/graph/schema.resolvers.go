@@ -1640,7 +1640,9 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 		// set the fields to the values we receive
 		intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
 		intake.Contractor = null.StringFromPtr(input.Contract.Contractor)
-		intake.ContractVehicle = null.StringFromPtr(input.Contract.Vehicle)
+		intake.ContractNumber = null.StringFromPtr(input.Contract.Number)
+		intake.ContractVehicle = null.StringFromPtr(nil) // blank this out in favor of the newer ContractNumber field (see EASI-1977)
+
 		if input.Contract.StartDate != nil {
 			intake.ContractStartDate = input.Contract.StartDate
 		}
@@ -1653,6 +1655,7 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 			if *input.Contract.HasContract == "NOT_STARTED" || *input.Contract.HasContract == "NOT_NEEDED" {
 				intake.Contractor = null.StringFromPtr(nil)
 				intake.ContractVehicle = null.StringFromPtr(nil)
+				intake.ContractNumber = null.StringFromPtr(nil)
 				intake.ContractStartDate = nil
 				intake.ContractEndDate = nil
 			}
@@ -1739,6 +1742,41 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	}
 	return &model.DeleteSystemIntakeContactPayload{
 		SystemIntakeContact: contact,
+	}, nil
+}
+
+// UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
+func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input model.UpdateSystemIntakeLinkedCedarSystemInput) (*model.UpdateSystemIntakePayload, error) {
+	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
+	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
+		_, err := r.cedarCoreClient.GetSystem(ctx, *input.CedarSystemID)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	intake, err := r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, null.StringFromPtr(input.CedarSystemID))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
+}
+
+// UpdateSystemIntakeLinkedContract is the resolver for the updateSystemIntakeLinkedContract field.
+func (r *mutationResolver) UpdateSystemIntakeLinkedContract(ctx context.Context, input model.UpdateSystemIntakeLinkedContractInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.UpdateSystemIntakeLinkedContract(ctx, input.ID, null.StringFromPtr(input.ContractNumber))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
 	}, nil
 }
 
@@ -2288,6 +2326,7 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 		HasContract: obj.ExistingContract.Ptr(),
 		StartDate:   &contractStart,
 		Vehicle:     obj.ContractVehicle.Ptr(),
+		Number:      obj.ContractNumber.Ptr(),
 	}, nil
 }
 

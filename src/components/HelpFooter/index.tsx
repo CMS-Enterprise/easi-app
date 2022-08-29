@@ -6,7 +6,7 @@ import {
   Link
 } from '@trussworks/react-uswds';
 
-import { SLACK_OIT_DEV_FEEDBACK } from 'constants/externalUrls';
+// import { SLACK_OIT_DEV_FEEDBACK } from 'constants/externalUrls';
 
 const NewWindowLink = ({
   href,
@@ -42,16 +42,19 @@ export default () => {
                 {t('footer.reportProblem')}
               </NewWindowLink>
             </div>
-            <div className="margin-right-6">
+            {/* <div className="margin-right-6"> */}
+            <div>
               <NewWindowLink href="/help/send-feedback">
                 {t('footer.sendFeedback')}
               </NewWindowLink>
             </div>
+            {/* Temp hide slack chat link
             <div>
               <NewWindowLink href={SLACK_OIT_DEV_FEEDBACK}>
                 {t('footer.chatOnSlack')}
               </NewWindowLink>
             </div>
+            */}
           </div>
         </div>
         <div className="flex-auto">

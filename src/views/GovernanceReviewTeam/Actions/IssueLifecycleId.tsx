@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
@@ -438,14 +438,6 @@ const IssueLifecycleId = () => {
                   />
                 </div>
               </Form>
-              <UswdsLink
-                href="https://www.surveymonkey.com/r/DF3Q9L2"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Open EASi survey in a new tab"
-              >
-                {t('general:feedback.whatYouThink')}
-              </UswdsLink>
             </div>
           </>
         );

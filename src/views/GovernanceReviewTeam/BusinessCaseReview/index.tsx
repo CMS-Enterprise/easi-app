@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 
 import AlternativeAnalysisReview from 'components/BusinessCaseReview/AlternativeAnalysisReview';
@@ -10,7 +9,6 @@ import GRTFeedbackView from 'components/GRTFeedbackView';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
-import { AnythingWrongSurvey } from 'components/Survey';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
@@ -25,7 +23,6 @@ const BusinessCaseReview = ({
 }: BusinessCaseReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `Business case for ${businessCase.requestName}.pdf`;
-  const flags = useFlags();
 
   if (!businessCase.id) {
     return (
@@ -98,7 +95,6 @@ const BusinessCaseReview = ({
       >
         Take an action
       </UswdsReactLink>
-      {!flags.helpFooter && <AnythingWrongSurvey />}
     </div>
   );
 };
