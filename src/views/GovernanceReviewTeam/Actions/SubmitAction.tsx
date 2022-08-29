@@ -69,7 +69,9 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
     notificationRecipients: {
       regularRecipientEmails: [systemIntake?.requester?.email!],
       shouldNotifyITGovernance: true,
-      shouldNotifyITInvestment: pathname.endsWith('no-governance')
+      shouldNotifyITInvestment:
+        pathname.endsWith('no-governance') ||
+        pathname.endsWith('not-it-request')
     }
   };
 
