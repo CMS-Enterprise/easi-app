@@ -29,6 +29,7 @@ export default function TruncatedContent({
     <>
       {defaultContent}
       <Button
+        data-testid="truncatedContentButton"
         type="button"
         unstyled
         onClick={() => setExpanded(!expanded)}

@@ -11,7 +11,7 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
     </li>
     <button
       class="usa-button usa-button--unstyled truncated-content-button display-flex flex-align-center"
-      data-testid="button"
+      data-testid="truncatedContentButton"
       type="button"
     >
       <svg
