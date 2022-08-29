@@ -88,7 +88,8 @@ describe('The Goveranance Task List', () => {
                 month: null,
                 year: null
               },
-              vehicle: null
+              vehicle: null,
+              number: null
             },
             costs: {
               isExpectingIncrease: null,

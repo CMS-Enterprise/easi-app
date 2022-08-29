@@ -261,10 +261,32 @@ export const SystemIntakeReview = ({
                 <DescriptionTerm term={t('review.contractors')} />
                 <DescriptionDefinition definition={contract.contractor} />
               </div>
-              <div>
-                <DescriptionTerm term={t('review.contractVehicle')} />
-                <DescriptionDefinition definition={contract.vehicle} />
-              </div>
+              {/*
+                If the intake has a "contract number", render it, and only it
+                If the intake has a "contract vehicle", render it and "Not Entered" for "contract number"
+                  (since this intake was before we introduced contract numbers)
+              */}
+              {contract.number !== null ? (
+                <div>
+                  <DescriptionTerm term={t('review.contractNumber')} />
+                  <DescriptionDefinition definition={contract.number} />
+                </div>
+              ) : (
+                contract.vehicle !== null && (
+                  <>
+                    <div>
+                      <DescriptionTerm term={t('review.contractVehicle')} />
+                      <DescriptionDefinition definition={contract.vehicle} />
+                    </div>
+                    <div>
+                      <DescriptionTerm term={t('review.contractNumber')} />
+                      <DescriptionDefinition
+                        definition={t('review.notEntered')}
+                      />
+                    </div>
+                  </>
+                )
+              )}
             </ReviewRow>
             <ReviewRow>
               <div>
