@@ -225,7 +225,7 @@ describe('Submit Action', () => {
               notificationRecipients: {
                 regularRecipientEmails: ['abcd@local.fake'],
                 shouldNotifyITGovernance: true,
-                shouldNotifyITInvestment: false
+                shouldNotifyITInvestment: true
               },
               feedback: 'Test email',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
@@ -270,7 +270,7 @@ describe('Submit Action', () => {
               notificationRecipients: {
                 regularRecipientEmails: ['abcd@local.fake'],
                 shouldNotifyITGovernance: true,
-                shouldNotifyITInvestment: false
+                shouldNotifyITInvestment: true
               },
               feedback: '',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
