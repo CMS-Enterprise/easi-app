@@ -640,25 +640,18 @@ func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid
 func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]uuid.UUID, error) {
 	intakes := []uuid.UUID{}
 
-	intake, err := s.FetchSystemIntakeByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	if intake.CedarSystemID.IsZero() && intake.ContractNumber.IsZero() {
-		return intakes, nil
-	}
-
 	query := `
-		SELECT id
-		FROM system_intakes
-		WHERE (
-			(cedar_system_id = $1 AND cedar_system_id IS NOT NULL)
-			OR (contract_number = $2 AND contract_number IS NOT NULL)
-		) AND id != $3;
+		SELECT intake_b.id
+		FROM system_intakes as intake_a
+		JOIN system_intakes as intake_b
+		ON
+			((intake_a.cedar_system_id = intake_b.cedar_system_id AND intake_a.cedar_system_id IS NOT NULL)
+			OR (intake_a.contract_number = intake_b.contract_number AND intake_a.contract_number IS NOT NULL))
+		WHERE
+			intake_a.id = $1 AND intake_b.id != $1;
 	`
 
-	err = s.db.SelectContext(ctx, &intakes, query, intake.CedarSystemID, intake.ContractNumber, intake.ID)
+	err := s.db.SelectContext(ctx, &intakes, query, id)
 	if err != nil {
 		return nil, err
 	}
