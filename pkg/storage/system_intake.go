@@ -652,13 +652,13 @@ func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]
 	query := `
 		SELECT id
 		FROM system_intakes
-		WHERE
+		WHERE (
 			(cedar_system_id = $1 AND cedar_system_id IS NOT NULL)
-		OR
-			(contract_number = $2 AND contract_number IS NOT NULL);
+			OR (contract_number = $2 AND contract_number IS NOT NULL)
+		) AND id != $3;
 	`
 
-	err = s.db.SelectContext(ctx, &intakes, query, intake.CedarSystemID, intake.ContractNumber)
+	err = s.db.SelectContext(ctx, &intakes, query, intake.CedarSystemID, intake.ContractNumber, intake.ID)
 	if err != nil {
 		return nil, err
 	}

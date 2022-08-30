@@ -17,7 +17,9 @@ import (
 
 const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
 const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, status, requester, system_intake)
-		VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
+	VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
+const insertIntakeWithCedarSystemAndContractSQL = `INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester, cedar_system_id, contract_number)
+	VALUES (:id, :eua_user_id, :status, :request_type, :requester, :cedar_system_id, :contract_number)`
 
 func (s StoreTestSuite) TestCreateSystemIntake() {
 	ctx := context.Background()
@@ -701,6 +703,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByFilter() {
 		}
 	})
 }
+
 func mustParseTime(value string) *time.Time {
 	parsed, err := time.Parse("2006-01-02", value)
 	if err != nil {
@@ -996,5 +999,41 @@ func (s StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 
 		s.NoError(err)
 		s.False(updatedIntake.CedarSystemID.Valid)
+	})
+}
+
+func (s StoreTestSuite) TestFetchRelatedSystemIntakes() {
+	ctx := context.Background()
+
+	s.Run("fetch related system intakes", func() {
+		cedarSystemID := null.StringFrom("555-55-6")
+		contractNumber := null.StringFrom("444-55-5")
+
+		intake := testhelpers.NewSystemIntake()
+		relatedIntake1 := testhelpers.NewSystemIntake()
+		relatedIntake2 := testhelpers.NewSystemIntake()
+		relatedIntake3 := testhelpers.NewSystemIntake()
+
+		intake.CedarSystemID = cedarSystemID
+		intake.ContractNumber = contractNumber
+
+		relatedIntake1.CedarSystemID = cedarSystemID
+		relatedIntake2.CedarSystemID = cedarSystemID
+		relatedIntake3.ContractNumber = contractNumber
+
+		tx := s.db.MustBegin()
+		intakesToCreate := []models.SystemIntake{intake, relatedIntake1, relatedIntake2, relatedIntake3}
+		for i := range intakesToCreate {
+			_, err := tx.NamedExec(insertIntakeWithCedarSystemAndContractSQL, &intakesToCreate[i])
+			s.NoError(err)
+		}
+
+		err := tx.Commit()
+		s.NoError(err)
+
+		relatedIntakes, err := s.store.FetchRelatedSystemIntakes(ctx, intake.ID)
+		s.NoError(err)
+
+		s.Equal(len(relatedIntakes), 3)
 	})
 }
