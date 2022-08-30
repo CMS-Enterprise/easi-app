@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Fieldset, Label, Link } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -33,10 +34,6 @@ export const FundingSourcesListItem = ({
 }: FundingSourcesListItemProps) => {
   const { t } = useTranslation('intake');
 
-  // Line spacing depends on if action buttons are present
-  const spacingClass =
-    handleEdit || handleDelete ? 'margin-y-1' : 'margin-y-05';
-
   const fundingNumberText = `${t(
     'contractDetails.fundingSources.fundingNumber'
   )}: ${fundingNumber}`;
@@ -44,12 +41,15 @@ export const FundingSourcesListItem = ({
     'contractDetails.fundingSources.fundingSources'
   )}: ${sources.join(', ')}`;
   return (
-    <li className={className} id={`fundingNumber-${fundingNumber}`}>
-      <p className={`text-bold font-body-sm ${spacingClass}`}>
+    <li
+      className={classNames('funding-source', className)}
+      id={`fundingNumber-${fundingNumber}`}
+    >
+      <p className="text-bold font-body-sm">
         {t('contractDetails.fundingSources.fundingSource')}
       </p>
-      <p className={spacingClass}>{fundingNumberText}</p>
-      <p className={spacingClass}>{fundingSourceText}</p>
+      <p>{fundingNumberText}</p>
+      <p>{fundingSourceText}</p>
       {handleEdit && (
         <Button
           unstyled
@@ -164,7 +164,7 @@ const FundingSourceForm = ({
   };
   return (
     <>
-      <Fieldset>
+      <Fieldset className="margin-top-3">
         <legend className="usa-legend text-bold">
           {t(`${action} funding source`)}
         </legend>
