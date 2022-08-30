@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from '@trussworks/react-uswds';
+import { Alert, Button, IconWarning } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
+// import { useFlags } from 'launchdarkly-react-client-sdk';
 import AdditionalContacts from 'components/AdditionalContacts';
 import CheckboxField from 'components/shared/CheckboxField';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -38,9 +38,15 @@ const Recipient = ({
         disabled={!email}
       />
       {!email && (
-        <Alert type="warning" slim className="margin-left-4 margin-top-05">
-          {t('emailRecipients.invalidEmail')}
-        </Alert>
+        <div className="margin-left-4 margin-top-1 margin-bottom-2">
+          <p className="text-base display-flex flex-align-center margin-y-1">
+            <IconWarning className="text-warning margin-right-1" />
+            {t('emailRecipients.unverifiedRecipient')}
+          </p>
+          <Button type="button" unstyled>
+            {t('emailRecipients.verifyRecipient')}
+          </Button>
+        </div>
       )}
     </>
   );
@@ -59,14 +65,13 @@ export default ({
   error
 }: EmailRecipientsFieldsProps) => {
   const { t } = useTranslation('action');
-  const flags = useFlags();
+  // const flags = useFlags();
 
   // Contacts query
   const { contacts } = useSystemIntakeContacts(systemIntakeId);
   // Get system intake from Apollo cache
   const { systemIntake } = useSystemIntake(systemIntakeId);
 
-  // Get action type from path
   const defaultRecipientsCount = useRef(
     recipients.shouldNotifyITInvestment ? 3 : 2
   ).current;
@@ -133,90 +138,91 @@ export default ({
           {t('emailRecipients.emailRequired')}
         </Alert>
       )}
-      {flags.notifyMultipleRecipients && (
-        <FieldGroup error={!!error}>
-          <h4 className="margin-bottom-0 margin-top-2">
-            {t('emailRecipients.chooseRecipients')}
-          </h4>
-          <p className="margin-top-05">
-            <strong>{selectedCount}</strong>
-            {t(
-              selectedCount > 1 ? ' recipients selected' : ' recipient selected'
+      <Alert type="warning" slim>
+        {t('emailRecipients.unverifiedRecipientsWarning')}
+      </Alert>
+      {/* {flags.notifyMultipleRecipients && ( */}
+      <FieldGroup error={!!error}>
+        <h4 className="margin-bottom-0 margin-top-2">
+          {t('emailRecipients.chooseRecipients')}
+        </h4>
+        <p className="margin-top-05">
+          <strong>{selectedCount}</strong>
+          {t(
+            selectedCount > 1 ? ' recipients selected' : ' recipient selected'
+          )}
+        </p>
+        <FieldErrorMsg>{error}</FieldErrorMsg>
+        <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
+          <TruncatedContent
+            initialCount={defaultRecipientsCount}
+            labelMore={t(
+              `Show ${contactsCount - defaultRecipientsCount} more recipients`
             )}
-          </p>
-          <FieldErrorMsg>{error}</FieldErrorMsg>
-          <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
-            <TruncatedContent
-              initialCount={defaultRecipientsCount}
-              labelMore={t(
-                `Show ${contactsCount - defaultRecipientsCount} more recipients`
+            labelLess={t(
+              `Show ${contactsCount - defaultRecipientsCount} fewer recipients`
+            )}
+            buttonClassName="margin-top-105"
+          >
+            <Recipient
+              contact={requester as SystemIntakeContactProps}
+              checked={recipients.regularRecipientEmails.includes(
+                requester.email
               )}
-              labelLess={t(
-                `Show ${
-                  contactsCount - defaultRecipientsCount
-                } fewer recipients`
-              )}
-              buttonClassName="margin-top-105"
-            >
-              <Recipient
-                contact={requester as SystemIntakeContactProps}
-                checked={recipients.regularRecipientEmails.includes(
-                  requester.email
-                )}
-                updateRecipients={updateRecipients}
-              />
-              <CheckboxField
-                label="IT Governance Mailbox"
-                checked={recipients.shouldNotifyITGovernance}
-                name="contact-itGovernanceMailbox"
-                id="contact-itGovernanceMailbox"
-                value="shouldNotifyITGovernance"
-                onChange={e =>
-                  setRecipients({
-                    ...recipients,
-                    shouldNotifyITGovernance: e.target.checked
-                  })
-                }
-                onBlur={() => null}
-              />
-              <CheckboxField
-                label="IT Investment Mailbox"
-                checked={recipients.shouldNotifyITInvestment}
-                name="contact-itInvestmentMailbox"
-                id="contact-itInvestmentMailbox"
-                value="shouldNotifyITInvestment"
-                onChange={e =>
-                  setRecipients({
-                    ...recipients,
-                    shouldNotifyITInvestment: e.target.checked
-                  })
-                }
-                onBlur={() => null}
-              />
-              {contactsObject.slice(1).map((contact, index) => {
-                return (
-                  <Recipient
-                    key={index} // eslint-disable-line react/no-array-index-key
-                    contact={contact as SystemIntakeContactProps}
-                    checked={
-                      !!contact.email &&
-                      recipients.regularRecipientEmails.includes(contact.email)
-                    }
-                    updateRecipients={updateRecipients}
-                  />
-                );
-              })}
-              <AdditionalContacts
-                systemIntakeId={systemIntakeId}
-                activeContact={activeContact}
-                setActiveContact={setActiveContact}
-                type="recipient"
-                className="margin-top-3"
-              />
-            </TruncatedContent>
-          </div>
-        </FieldGroup>
-      )}
+              updateRecipients={updateRecipients}
+            />
+            <CheckboxField
+              label="IT Governance Mailbox"
+              checked={recipients.shouldNotifyITGovernance}
+              name="contact-itGovernanceMailbox"
+              id="contact-itGovernanceMailbox"
+              value="shouldNotifyITGovernance"
+              onChange={e =>
+                setRecipients({
+                  ...recipients,
+                  shouldNotifyITGovernance: e.target.checked
+                })
+              }
+              onBlur={() => null}
+            />
+            <CheckboxField
+              label="IT Investment Mailbox"
+              checked={recipients.shouldNotifyITInvestment}
+              name="contact-itInvestmentMailbox"
+              id="contact-itInvestmentMailbox"
+              value="shouldNotifyITInvestment"
+              onChange={e =>
+                setRecipients({
+                  ...recipients,
+                  shouldNotifyITInvestment: e.target.checked
+                })
+              }
+              onBlur={() => null}
+            />
+            {contacts.slice(1).map((contact, index) => {
+              return (
+                <Recipient
+                  key={index} // eslint-disable-line react/no-array-index-key
+                  contact={contact as SystemIntakeContactProps}
+                  checked={
+                    !!contact.email &&
+                    recipients.regularRecipientEmails.includes(contact.email)
+                  }
+                  updateRecipients={updateRecipients}
+                />
+              );
+            })}
+            <AdditionalContacts
+              systemIntakeId={systemIntakeId}
+              activeContact={activeContact}
+              setActiveContact={setActiveContact}
+              type="recipient"
+              className="margin-top-3"
+            />
+          </TruncatedContent>
+        </div>
+      </FieldGroup>
+      {/* )} */}
     </div>
   );
 };

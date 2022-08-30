@@ -111,8 +111,11 @@ const action = {
     emailRequired:
       'An email to the Requester is required when closing, approving, or denying the request.',
     chooseRecipients: 'Choose recipients',
-    invalidEmail:
-      "This contact has an invalid email. You can't add them as a recipient."
+    unverifiedRecipient:
+      'Unverified recipient. Use the link below to find this individual in EUA.',
+    unverifiedRecipientsWarning:
+      'There are multiple contacts for this request that have not been associated with a name and email address in EUA. In order to send an email to these recipients, you must first verify them with EUA.',
+    verifyRecipient: 'Verify recipient'
   },
   submitAction: {
     backLink: 'Change',
