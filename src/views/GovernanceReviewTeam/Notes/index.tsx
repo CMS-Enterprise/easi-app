@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 
 import {
@@ -22,7 +21,6 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import TruncatedText from 'components/shared/TruncatedText';
-import { AnythingWrongSurvey } from 'components/Survey';
 import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 import {
@@ -68,7 +66,6 @@ const Notes = () => {
     }
   });
   const { t } = useTranslation('governanceReviewTeam');
-  const flags = useFlags();
 
   // Character limit for length of free text (LCID Scope, Next Steps, and Cost Baseline),
   // any text longer then this limit will be displayed with a button to allow users
@@ -309,7 +306,6 @@ const Notes = () => {
                   {interleavedList}
                 </NotesList>
               )}
-              {!flags.helpFooter && <AnythingWrongSurvey />}
             </div>
           );
         }}

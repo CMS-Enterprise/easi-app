@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useOktaAuth } from '@okta/okta-react';
 import { Footer as UswdsFooter, FooterNav } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import HelpFooter from 'components/HelpFooter';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -12,7 +12,7 @@ import './index.scss';
 
 const Footer = () => {
   const { t } = useTranslation('footer');
-  const flags = useFlags();
+  const { authState } = useOktaAuth();
   const footerNavLinks = [
     {
       label: t('labels.privacy'),
@@ -36,7 +36,7 @@ const Footer = () => {
       size="slim"
       primary={
         <>
-          {flags.helpFooter && <HelpFooter />}
+          {authState?.isAuthenticated && <HelpFooter />}
           <div className="usa-footer__primary-container grid-row">
             <div className="mobile-lg:grid-col-8">
               <FooterNav

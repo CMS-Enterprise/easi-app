@@ -80,7 +80,8 @@ describe('Submit Action', () => {
               month: '1',
               year: '2021'
             },
-            vehicle: 'Sole source'
+            vehicle: 'Sole source',
+            number: '123456-7890'
           },
           costs: {
             isExpectingIncrease: 'YES',
@@ -113,7 +114,7 @@ describe('Submit Action', () => {
           rejectionReason: null,
           requester: {
             component: 'Center for Medicaid and CHIP Services',
-            email: null,
+            email: 'abcd@local.fake',
             name: 'User ABCD'
           },
           requestName: 'TACO',
@@ -222,6 +223,11 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionNotItRequest,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: true
+              },
               feedback: 'Test email',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
               shouldSendEmail: true
@@ -262,6 +268,11 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionNotItRequest,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: true
+              },
               feedback: '',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
               shouldSendEmail: false
@@ -293,6 +304,11 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionBusinessCaseNeeded,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: false
+              },
               feedback: 'Test email',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
               shouldSendEmail: true
@@ -333,6 +349,11 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionReadyForGRT,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: false
+              },
               feedback: 'Test email',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
               shouldSendEmail: true
@@ -371,6 +392,11 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionBusinessCaseNeedsChanges,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: false
+              },
               feedback: 'Test email',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
               shouldSendEmail: true
@@ -416,6 +442,11 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionNoGovernanceNeeded,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: true
+              },
               feedback: 'Test email',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
               shouldSendEmail: true
@@ -455,6 +486,11 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionSendEmail,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: false
+              },
               feedback: 'Test email',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
               shouldSendEmail: true
@@ -491,6 +527,11 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionGuideReceievedClose,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: false
+              },
               feedback: 'Test email',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
               shouldSendEmail: true
@@ -534,6 +575,11 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionNotRespondingClose,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: false
+              },
               feedback: 'Test email',
               intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
               shouldSendEmail: true

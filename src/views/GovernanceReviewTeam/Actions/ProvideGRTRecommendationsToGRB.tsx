@@ -12,6 +12,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import useSystemIntake from 'hooks/useSystemIntake';
 import MarkReadyForGRBQuery from 'queries/MarkReadyForGRBQuery';
 import {
   AddGRTFeedback,
@@ -27,6 +28,7 @@ import EmailRecipientsFields from './EmailRecipientsFields';
 
 const ProvideGRTRecommendationsToGRB = () => {
   const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntake } = useSystemIntake(systemId);
   const history = useHistory();
   const { t } = useTranslation('action');
   const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(
@@ -42,18 +44,24 @@ const ProvideGRTRecommendationsToGRB = () => {
 
   const initialValues: ProvideGRTFeedbackForm = {
     grtFeedback: '',
-    emailBody: ''
+    emailBody: '',
+    notificationRecipients: {
+      regularRecipientEmails: [systemIntake?.requester?.email!],
+      shouldNotifyITGovernance: true,
+      shouldNotifyITInvestment: false
+    }
   };
 
   const onSubmit = (values: ProvideGRTFeedbackForm) => {
-    const { grtFeedback, emailBody } = values;
+    const { grtFeedback, emailBody, notificationRecipients } = values;
     mutate({
       variables: {
         input: {
           emailBody,
           feedback: grtFeedback,
           intakeID: systemId,
-          shouldSendEmail
+          shouldSendEmail,
+          notificationRecipients
         }
       }
     }).then(() => {
@@ -76,7 +84,8 @@ const ProvideGRTRecommendationsToGRB = () => {
           setErrors,
           handleSubmit,
           submitForm,
-          setFieldValue
+          setFieldValue,
+          values
         } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
@@ -149,6 +158,15 @@ const ProvideGRTRecommendationsToGRB = () => {
                     systemIntakeId={systemId}
                     activeContact={activeContact}
                     setActiveContact={setActiveContact}
+                    recipients={values.notificationRecipients}
+                    setRecipients={recipients =>
+                      setFieldValue('notificationRecipients', recipients)
+                    }
+                    error={
+                      flatErrors[
+                        'notificationRecipients.regularRecipientEmails'
+                      ]
+                    }
                   />
                   <Label
                     htmlFor="ProvideGRTFeedbackForm-EmailBody"

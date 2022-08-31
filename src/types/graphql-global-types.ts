@@ -378,7 +378,7 @@ export interface SystemIntakeContractInput {
   endDate?: Time | null;
   hasContract?: string | null;
   startDate?: Time | null;
-  vehicle?: string | null;
+  number?: string | null;
 }
 
 /**

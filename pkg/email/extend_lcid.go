@@ -75,7 +75,8 @@ func (c Client) SendExtendLCIDEmail(
 }
 
 // SendExtendLCIDEmailToMultipleRecipients sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for extending an LCID
-//  TODO - EASI-2021 - rename to SendExtendLCIDEmails
+//
+//	TODO - EASI-2021 - rename to SendExtendLCIDEmails
 func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
