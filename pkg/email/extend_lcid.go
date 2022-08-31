@@ -94,7 +94,7 @@ func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 
 	err = c.sender.Send(
 		ctx,
-		c.allRecipients(recipients),
+		c.listAllRecipients(recipients),
 		nil,
 		subject,
 		body,

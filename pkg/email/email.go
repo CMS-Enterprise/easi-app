@@ -234,8 +234,7 @@ func (c Client) SendTestEmail(ctx context.Context) error {
 }
 
 // helper method to get a list of all addresses from a models.EmailNotificationRecipients value
-// TODO - better name? "collect" or "gather" or something?
-func (c Client) allRecipients(recipients models.EmailNotificationRecipients) []models.EmailAddress {
+func (c Client) listAllRecipients(recipients models.EmailNotificationRecipients) []models.EmailAddress {
 	allRecipients := recipients.RegularRecipientEmails
 	if recipients.ShouldNotifyITGovernance {
 		allRecipients = append(allRecipients, c.config.GRTEmail)

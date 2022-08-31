@@ -64,7 +64,7 @@ func (c Client) SendRejectRequestEmailToMultipleRecipients(ctx context.Context, 
 
 	err = c.sender.Send(
 		ctx,
-		c.allRecipients(recipients),
+		c.listAllRecipients(recipients),
 		nil,
 		subject,
 		body,
