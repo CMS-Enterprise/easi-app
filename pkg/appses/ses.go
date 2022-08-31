@@ -36,7 +36,7 @@ func NewSender(config Config) Sender {
 	}
 }
 
-// Send sends an email
+// Send sends an email. It will only return an error if there's an error connecting to SES; an invalid address/bounced email will *not* return an error.
 func (s Sender) Send(
 	ctx context.Context,
 	toAddresses []models.EmailAddress,

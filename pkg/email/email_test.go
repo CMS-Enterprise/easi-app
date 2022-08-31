@@ -100,31 +100,27 @@ func TestEmailTestSuite(t *testing.T) {
 	suite.Run(t, sesTestSuite)
 }
 
-// TODO
 // helper method - call this from test cases for individual email methods
 func (s *EmailTestSuite) runMultipleRecipientsTestAgainstAllTestCases(methodUnderTest func(client Client, recipients models.EmailNotificationRecipients) error) {
-	/*
-		for _, testCase := range s.multipleRecipientsTestCases {
-			s.Run("Emails are only sent to the specified recipients", func() {
-				sender := mockSender{}
-				client, err := NewClient(s.config, &sender)
-				s.NoError(err)
+	for _, testCase := range s.multipleRecipientsTestCases {
+		s.Run("Each email is only sent to the specified recipients", func() {
+			sender := mockSender{}
+			client, err := NewClient(s.config, &sender)
+			s.NoError(err)
 
-				expectedRecipients := []models.EmailAddress{}
-				expectedRecipients = append(expectedRecipients, testCase.recipients.RegularRecipientEmails...)
-				if testCase.recipients.ShouldNotifyITGovernance {
-					expectedRecipients = append(expectedRecipients, s.config.GRTEmail)
-				}
-				if testCase.recipients.ShouldNotifyITInvestment {
-					expectedRecipients = append(expectedRecipients, s.config.ITInvestmentEmail)
-				}
+			expectedRecipients := []models.EmailAddress{}
+			expectedRecipients = append(expectedRecipients, testCase.recipients.RegularRecipientEmails...)
+			if testCase.recipients.ShouldNotifyITGovernance {
+				expectedRecipients = append(expectedRecipients, s.config.GRTEmail)
+			}
+			if testCase.recipients.ShouldNotifyITInvestment {
+				expectedRecipients = append(expectedRecipients, s.config.ITInvestmentEmail)
+			}
 
-				err = methodUnderTest(client, testCase.recipients)
-				s.NoError(err)
+			err = methodUnderTest(client, testCase.recipients)
+			s.NoError(err)
 
-					actualRecipients := sender.AllToRecipients()
-					s.ElementsMatch(expectedRecipients, actualRecipients)
-			})
-		}
-	*/
+			s.ElementsMatch(expectedRecipients, sender.toAddresses)
+		})
+	}
 }
