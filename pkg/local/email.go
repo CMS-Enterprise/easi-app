@@ -20,15 +20,10 @@ type Sender struct {
 }
 
 // Send logs an email
-func (s Sender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
-	ccAddresses := ""
-	if ccAddress != nil {
-		ccAddresses = ccAddress.String()
-	}
-
+func (s Sender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
 	appcontext.ZLogger(ctx).Info("Mock sending email",
-		zap.String("To", toAddress.String()),
-		zap.String("CC", ccAddresses),
+		zap.Strings("To", models.EmailAddressesToStrings(toAddresses)),
+		zap.Strings("CC", models.EmailAddressesToStrings(ccAddresses)),
 		zap.String("Subject", subject),
 		zap.String("Body", body),
 	)
@@ -48,23 +43,18 @@ func NewSMTPSender(serverAddress string) SMTPSender {
 }
 
 // Send sends and logs an email
-func (sender SMTPSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
-	ccAddresses := ""
-
+func (sender SMTPSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
 	e := email.Email{
 		From:    "testsender@oddball.dev",
-		To:      []string{toAddress.String()},
+		To:      models.EmailAddressesToStrings(toAddresses),
+		Cc:      models.EmailAddressesToStrings(ccAddresses),
 		Subject: subject,
 		HTML:    []byte(body),
 	}
-	if ccAddress != nil {
-		e.Cc = []string{ccAddress.String()}
-		ccAddresses = ccAddress.String()
-	}
 
 	appcontext.ZLogger(ctx).Info("Sending email using SMTP server",
-		zap.String("To", toAddress.String()),
-		zap.String("CC", ccAddresses),
+		zap.Strings("To", models.EmailAddressesToStrings(toAddresses)),
+		zap.Strings("CC", models.EmailAddressesToStrings(ccAddresses)),
 		zap.String("Subject", subject),
 		zap.String("Body", body),
 	)
