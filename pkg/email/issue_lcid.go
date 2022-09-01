@@ -11,6 +11,9 @@ import (
 )
 
 type issueLCID struct {
+	RequestName           string
+	GRTEmail              string
+	Requester             string
 	LifecycleID           string
 	ExpiresAt             string
 	Scope                 string
@@ -19,8 +22,20 @@ type issueLCID struct {
 	Feedback              string
 }
 
-func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, lifecycleCostBaseline string, nextSteps string, feedback string) (string, error) {
+func (c Client) issueLCIDBody(
+	requestName string,
+	requester string,
+	lcid string,
+	expiresAt *time.Time,
+	scope string,
+	lifecycleCostBaseline string,
+	nextSteps string,
+	feedback string,
+) (string, error) {
 	data := issueLCID{
+		RequestName:           requestName,
+		GRTEmail:              string(c.config.GRTEmail),
+		Requester:             requester,
 		LifecycleID:           lcid,
 		ExpiresAt:             expiresAt.Format("January 2, 2006"),
 		Scope:                 scope,
@@ -43,6 +58,8 @@ func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, l
 // TODO - EASI-2021 - remove
 func (c Client) SendIssueLCIDEmail(
 	ctx context.Context,
+	requestName string,
+	requester string,
 	recipient models.EmailAddress,
 	lcid string,
 	expirationDate *time.Time,
@@ -52,7 +69,7 @@ func (c Client) SendIssueLCIDEmail(
 	feedback string,
 ) error {
 	subject := "Lifecycle ID request approved"
-	body, err := c.issueLCIDBody(lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
+	body, err := c.issueLCIDBody(requestName, requester, lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
@@ -76,6 +93,8 @@ func (c Client) SendIssueLCIDEmail(
 func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
+	requestName string,
+	requester string,
 	lcid string,
 	expirationDate *time.Time,
 	scope string,
@@ -84,7 +103,7 @@ func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 	feedback string,
 ) error {
 	subject := "Lifecycle ID request approved"
-	body, err := c.issueLCIDBody(lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
+	body, err := c.issueLCIDBody(requestName, requester, lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

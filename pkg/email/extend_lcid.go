@@ -15,6 +15,8 @@ import (
 
 type extendLCID struct {
 	RequestName     string
+	GRTEmail        string
+	Requester       string
 	NewExpiresAt    string
 	NewScope        string
 	NewNextSteps    string
@@ -22,10 +24,12 @@ type extendLCID struct {
 	DecisionLink    string
 }
 
-func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) (string, error) {
+func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requester string, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) (string, error) {
 	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := extendLCID{
 		RequestName:     requestName,
+		GRTEmail:        string(c.config.GRTEmail),
+		Requester:       requester,
 		NewExpiresAt:    newExpiresAt.Format("January 2, 2006"),
 		NewScope:        newScope,
 		NewNextSteps:    newNextSteps,
@@ -50,6 +54,7 @@ func (c Client) SendExtendLCIDEmail(
 	ctx context.Context,
 	recipient models.EmailAddress,
 	systemIntakeID uuid.UUID,
+	requester string,
 	requestName string,
 	newExpiresAt *time.Time,
 	newScope string,
@@ -57,7 +62,7 @@ func (c Client) SendExtendLCIDEmail(
 	newCostBaseline string,
 ) error {
 	subject := "Lifecycle ID extended"
-	body, err := c.extendLCIDBody(systemIntakeID, requestName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
+	body, err := c.extendLCIDBody(systemIntakeID, requestName, requester, newExpiresAt, newScope, newNextSteps, newCostBaseline)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
@@ -81,6 +86,7 @@ func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
+	requester string,
 	requestName string,
 	newExpiresAt *time.Time,
 	newScope string,
@@ -88,7 +94,7 @@ func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 	newCostBaseline string,
 ) error {
 	subject := "Lifecycle ID extended"
-	body, err := c.extendLCIDBody(systemIntakeID, requestName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
+	body, err := c.extendLCIDBody(systemIntakeID, requester, requestName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
