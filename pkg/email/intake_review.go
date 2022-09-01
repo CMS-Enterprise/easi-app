@@ -36,7 +36,7 @@ func (c Client) systemIntakeReviewBody(emailText string, taskListPath string) (s
 // SendSystemIntakeReviewEmail sends an email for a submitted system intake
 // TODO - EASI-2021 - remove
 func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
-	subject := "Feedback on your intake request"
+	subject := "Feedback for request in EASi"
 	taskListPath := path.Join("governance-task-list", intakeID.String())
 	body, err := c.systemIntakeReviewBody(emailText, taskListPath)
 	if err != nil {
@@ -63,7 +63,7 @@ func (c Client) SendSystemIntakeReviewEmailToMultipleRecipients(
 	recipients models.EmailNotificationRecipients,
 	intakeID uuid.UUID,
 ) error {
-	subject := "Feedback on your intake request"
+	subject := "Feedback for request in EASi"
 	taskListPath := path.Join("governance-task-list", intakeID.String())
 	body, err := c.systemIntakeReviewBody(emailText, taskListPath)
 	if err != nil {

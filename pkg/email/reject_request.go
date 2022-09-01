@@ -35,7 +35,7 @@ func (c Client) rejectRequestBody(reason string, nextSteps string, feedback stri
 // SendRejectRequestEmail sends an email for rejecting a request
 // TODO - EASI-2021 - remove
 func (c Client) SendRejectRequestEmail(ctx context.Context, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error {
-	subject := "Your request has not been approved"
+	subject := "Request in EASi not approved"
 	body, err := c.rejectRequestBody(reason, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
@@ -56,7 +56,7 @@ func (c Client) SendRejectRequestEmail(ctx context.Context, recipient models.Ema
 // SendRejectRequestEmailToMultipleRecipients sends emails to multiple recipients (possibly including the IT Governance and IT Investment teams) for rejecting a request
 // TODO - EASI-2021 - rename to SendRejectRequestEmails
 func (c Client) SendRejectRequestEmailToMultipleRecipients(ctx context.Context, recipients models.EmailNotificationRecipients, reason string, nextSteps string, feedback string) error {
-	subject := "Your request has not been approved"
+	subject := "Request in EASi not approved"
 	body, err := c.rejectRequestBody(reason, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
