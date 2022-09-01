@@ -56,7 +56,7 @@ func (c Client) SendExtendLCIDEmail(
 	newNextSteps string,
 	newCostBaseline string,
 ) error {
-	subject := "Lifecycle ID Extended"
+	subject := "Lifecycle ID extended"
 	body, err := c.extendLCIDBody(systemIntakeID, requestName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
@@ -87,7 +87,7 @@ func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 	newNextSteps string,
 	newCostBaseline string,
 ) error {
-	subject := "Lifecycle ID Extended"
+	subject := "Lifecycle ID extended"
 	body, err := c.extendLCIDBody(systemIntakeID, requestName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}

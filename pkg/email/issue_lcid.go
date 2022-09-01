@@ -51,7 +51,7 @@ func (c Client) SendIssueLCIDEmail(
 	nextSteps string,
 	feedback string,
 ) error {
-	subject := "Your request has been approved"
+	subject := "Lifecycle ID request approved"
 	body, err := c.issueLCIDBody(lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
@@ -83,7 +83,7 @@ func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 	nextSteps string,
 	feedback string,
 ) error {
-	subject := "Your request has been approved"
+	subject := "Lifecycle ID request approved"
 	body, err := c.issueLCIDBody(lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
