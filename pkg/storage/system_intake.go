@@ -641,7 +641,7 @@ func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]
 	intakes := []*models.SystemIntake{}
 
 	query := `
-		SELECT intakes_a.*
+		SELECT intakes_b.*
 		FROM system_intakes as intakes_a
 		JOIN system_intakes as intakes_b
 		ON
