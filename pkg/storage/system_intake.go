@@ -637,18 +637,18 @@ func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid
 
 // FetchRelatedSystemIntakes retrieves System Intakes that share a CEDAR system ID and/or a contract
 // number with a given System Intake
-func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]uuid.UUID, error) {
-	intakes := []uuid.UUID{}
+func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error) {
+	intakes := []*models.SystemIntake{}
 
 	query := `
-		SELECT intake_b.id
-		FROM system_intakes as intake_a
-		JOIN system_intakes as intake_b
+		SELECT intakes_a.*
+		FROM system_intakes as intakes_a
+		JOIN system_intakes as intakes_b
 		ON
-			((intake_a.cedar_system_id = intake_b.cedar_system_id AND intake_a.cedar_system_id IS NOT NULL)
-			OR (intake_a.contract_number = intake_b.contract_number AND intake_a.contract_number IS NOT NULL))
+			((intakes_a.cedar_system_id = intakes_b.cedar_system_id AND intakes_a.cedar_system_id IS NOT NULL)
+			OR (intakes_a.contract_number = intakes_b.contract_number AND intakes_a.contract_number IS NOT NULL))
 		WHERE
-			intake_a.id = $1 AND intake_b.id != $1;
+			intakes_a.id = $1 AND intakes_b.id != $1;
 	`
 
 	err := s.db.SelectContext(ctx, &intakes, query, id)

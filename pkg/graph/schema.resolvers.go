@@ -2207,7 +2207,7 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 }
 
 // RelatedSystemIntakes is the resolver for the relatedSystemIntakes field.
-func (r *queryResolver) RelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]uuid.UUID, error) {
+func (r *queryResolver) RelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error) {
 	intakes, err := r.store.FetchRelatedSystemIntakes(ctx, id)
 
 	if err != nil {
