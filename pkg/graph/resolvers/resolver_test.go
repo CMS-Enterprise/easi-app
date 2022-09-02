@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,6 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -43,6 +45,7 @@ type TestConfigs struct {
 	UserInfo  *models.UserInfo
 	Store     *storage.Store
 	Principal *authentication.EUAPrincipal
+	Context   context.Context
 }
 
 // GetDefaultTestConfigs returns a TestConfigs struct with all the dependencies needed to run a test
@@ -56,6 +59,7 @@ func GetDefaultTestConfigs() *TestConfigs {
 func (tc *TestConfigs) GetDefaults() {
 	config, ldClient, logger, userInfo, princ := getTestDependencies()
 	store, _ := storage.NewStore(logger, config, ldClient)
+
 	tc.DBConfig = config
 	tc.LDClient = ldClient
 	tc.Logger = logger
@@ -63,6 +67,10 @@ func (tc *TestConfigs) GetDefaults() {
 	tc.Store = store
 
 	tc.Principal = princ
+	ctx := appcontext.WithLogger(context.Background(), logger)
+	ctx = appcontext.WithPrincipal(ctx, tc.Principal)
+	tc.Context = ctx
+
 }
 
 // NewDBConfig returns a DBConfig struct with values from appconfig
