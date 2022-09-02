@@ -12,6 +12,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import useSystemIntake from 'hooks/useSystemIntake';
 import RejectIntakeQuery from 'queries/RejectIntakeQuery';
 import {
   RejectIntake as RejectIntakeType,
@@ -27,6 +28,7 @@ import EmailRecipientsFields from './EmailRecipientsFields';
 
 const RejectIntake = () => {
   const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntake } = useSystemIntake(systemId);
   const history = useHistory();
   const { t } = useTranslation('action');
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
@@ -48,18 +50,24 @@ const RejectIntake = () => {
   const initialValues: RejectIntakeForm = {
     feedback: '',
     nextSteps: '',
-    reason: ''
+    reason: '',
+    notificationRecipients: {
+      regularRecipientEmails: [systemIntake?.requester?.email!],
+      shouldNotifyITGovernance: true,
+      shouldNotifyITInvestment: false
+    }
   };
 
   const onSubmit = (values: RejectIntakeForm) => {
-    const { feedback, nextSteps, reason } = values;
+    const { feedback, nextSteps, reason, notificationRecipients } = values;
 
     const input = {
       feedback,
       intakeId: systemId,
       nextSteps,
       reason,
-      shouldSendEmail
+      shouldSendEmail,
+      notificationRecipients
     };
 
     mutate({
@@ -86,7 +94,8 @@ const RejectIntake = () => {
           setErrors,
           handleSubmit,
           submitForm,
-          setFieldValue
+          setFieldValue,
+          values
         } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
@@ -182,6 +191,15 @@ const RejectIntake = () => {
                     systemIntakeId={systemId}
                     activeContact={activeContact}
                     setActiveContact={setActiveContact}
+                    recipients={values.notificationRecipients}
+                    setRecipients={recipients =>
+                      setFieldValue('notificationRecipients', recipients)
+                    }
+                    error={
+                      flatErrors[
+                        'notificationRecipients.regularRecipientEmails'
+                      ]
+                    }
                   />
                   <Label
                     htmlFor="RejectIntakeForm-Feedback"

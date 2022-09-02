@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"io"
-	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -23,59 +22,23 @@ type EmailTestSuite struct {
 }
 
 type mockSender struct {
-	toAddress models.EmailAddress
-	subject   string
-	body      string
+	toAddresses []models.EmailAddress
+	ccAddresses []models.EmailAddress
+	subject     string
+	body        string
 }
 
-func (s *mockSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
-	s.toAddress = toAddress
+func (s *mockSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
+	s.toAddresses = toAddresses
+	s.ccAddresses = ccAddresses
 	s.subject = subject
 	s.body = body
 	return nil
 }
 
-type sentEmail struct {
-	ToRecipients []models.EmailAddress
-	CCRecipients []models.EmailAddress
-	Subject      string
-	Body         string
-}
-
-type mockMultipleRecipientsSender struct {
-	SentEmails      []sentEmail
-	sentEmailsMutex sync.Mutex // needed to guard access to sentEmails when client methods send emails concurrently
-}
-
-func (s *mockMultipleRecipientsSender) AllToRecipients() []models.EmailAddress {
-	allToRecipients := []models.EmailAddress{}
-	for _, sentEmail := range s.SentEmails {
-		allToRecipients = append(allToRecipients, sentEmail.ToRecipients...)
-	}
-	return allToRecipients
-}
-
-func (s *mockMultipleRecipientsSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
-	email := sentEmail{
-		ToRecipients: []models.EmailAddress{toAddress},
-		Subject:      subject,
-		Body:         body,
-	}
-
-	if ccAddress != nil {
-		email.CCRecipients = []models.EmailAddress{*ccAddress}
-	}
-
-	s.sentEmailsMutex.Lock()
-	s.SentEmails = append(s.SentEmails, email)
-	s.sentEmailsMutex.Unlock()
-
-	return nil
-}
-
 type mockFailedSender struct{}
 
-func (s *mockFailedSender) Send(ctx context.Context, toAddress models.EmailAddress, ccAddress *models.EmailAddress, subject string, body string) error {
+func (s *mockFailedSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
 	return errors.New("sender had an error")
 }
 
@@ -140,8 +103,8 @@ func TestEmailTestSuite(t *testing.T) {
 // helper method - call this from test cases for individual email methods
 func (s *EmailTestSuite) runMultipleRecipientsTestAgainstAllTestCases(methodUnderTest func(client Client, recipients models.EmailNotificationRecipients) error) {
 	for _, testCase := range s.multipleRecipientsTestCases {
-		s.Run("Emails are only sent to the specified recipients", func() {
-			sender := mockMultipleRecipientsSender{}
+		s.Run("Each email is only sent to the specified recipients", func() {
+			sender := mockSender{}
 			client, err := NewClient(s.config, &sender)
 			s.NoError(err)
 
@@ -157,8 +120,7 @@ func (s *EmailTestSuite) runMultipleRecipientsTestAgainstAllTestCases(methodUnde
 			err = methodUnderTest(client, testCase.recipients)
 			s.NoError(err)
 
-			actualRecipients := sender.AllToRecipients()
-			s.ElementsMatch(expectedRecipients, actualRecipients)
+			s.ElementsMatch(expectedRecipients, sender.toAddresses)
 		})
 	}
 }

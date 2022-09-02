@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // SendReportAProblemEmailInput contains the data submitted by the user to the "report a problem" help form
@@ -30,7 +31,7 @@ func (c Client) SendReportAProblemEmail(ctx context.Context, input SendReportAPr
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	err = c.sender.Send(ctx, c.config.EASIHelpEmail, nil, subject, b.String())
+	err = c.sender.Send(ctx, []models.EmailAddress{c.config.EASIHelpEmail}, nil, subject, b.String())
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
