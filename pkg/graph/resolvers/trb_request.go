@@ -15,6 +15,7 @@ func TRBRequestCreate(ctx context.Context, requestType models.TRBRequestType, st
 	princ := appcontext.Principal(ctx)
 	trb := models.NewTRBRequest(princ.ID())
 	trb.Type = requestType
+	trb.Status = models.TRBSOpen
 	//TODO make sure this is wired up appropriately
 
 	createdTRB, err := store.TRBRequestCreate(appcontext.ZLogger(ctx), trb)
@@ -53,5 +54,26 @@ func TRBRequestUpdate(ctx context.Context, id uuid.UUID, changes map[string]inte
 	}
 
 	return retTRB, err
+
+}
+
+//TRBRequestGetByID returns a TRB request by it's ID
+func TRBRequestGetByID(ctx context.Context, id uuid.UUID, store *storage.Store) (*models.TRBRequest, error) {
+
+	trb, err := store.TRBRequestGetByID(appcontext.ZLogger(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+	return trb, err
+}
+
+//TRBRequestCollectionGet returns all TRB Requests
+func TRBRequestCollectionGet(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
+
+	TRBRequests, err := store.TRBRequestCollectionGet(appcontext.ZLogger(ctx), archived)
+	if err != nil {
+		return nil, err
+	}
+	return TRBRequests, err
 
 }

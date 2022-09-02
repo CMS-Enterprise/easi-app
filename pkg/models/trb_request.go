@@ -12,6 +12,7 @@ type TRBRequest struct {
 //NewTRBRequest returns a new trb request object
 func NewTRBRequest(createdBy string) *TRBRequest {
 	return &TRBRequest{
+		Name:       "Draft",
 		baseStruct: NewBaseStruct(createdBy),
 	}
 

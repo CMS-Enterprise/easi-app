@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2220,7 +2219,12 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 
 // TrbRequest is the resolver for the trbRequest field.
 func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
-	panic(fmt.Errorf("not implemented"))
+	return resolvers.TRBRequestGetByID(ctx, id, r.store)
+}
+
+// TrbRequestCollection is the resolver for the trbRequestCollection field.
+func (r *queryResolver) TrbRequestCollection(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
+	return resolvers.TRBRequestCollectionGet(ctx, archived, r.store)
 }
 
 // Actions is the resolver for the actions field.

@@ -1638,6 +1638,7 @@ type Query {
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
   trbRequest(id: UUID!): TRBRequest!
+  trbRequestCollection(archived: Boolean! = false): [TRBRequest!]!
 }
 enum TRBRequestType {
   NEED_HELP

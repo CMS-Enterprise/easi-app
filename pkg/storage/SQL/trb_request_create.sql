@@ -5,7 +5,7 @@ INSERT INTO trb_request(
         type,
         status,
         created_by,
-        modified_by,
+        modified_by
     )
 VALUES (
         :id,
@@ -14,7 +14,7 @@ VALUES (
         :type,
         :status,
         :created_by,
-        :modified_by,
+        :modified_by
     )
 RETURNING
     id,

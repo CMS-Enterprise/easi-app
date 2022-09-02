@@ -8,4 +8,4 @@ SELECT id,
     modified_by,
     modified_dts
     FROM trb_request
-WHERE trb_request.id = :id
+    WHERE archived = :archived
