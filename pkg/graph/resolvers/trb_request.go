@@ -36,17 +36,14 @@ func TRBRequestUpdate(ctx context.Context, id uuid.UUID, changes map[string]inte
 	if err != nil {
 		return nil, err
 	}
+	logger := appcontext.ZLogger(ctx)
+	princ := appcontext.Principal(ctx)
 
-	//TODO maybe add a base struct pre-update resovler here instead
-	err = ApplyChanges(changes, existing)
+	//apply changes here
+	err = BaseStructPreUpdate(logger, existing, changes, princ, store, true)
 	if err != nil {
 		return nil, err
 	}
-
-	princ := appcontext.Principal(ctx)
-	modified := princ.ID()
-
-	existing.ModifiedBy = &modified
 
 	retTRB, err := store.TRBRequestUpdate(appcontext.ZLogger(ctx), existing)
 	if err != nil {
