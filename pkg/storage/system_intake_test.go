@@ -1034,6 +1034,13 @@ func (s StoreTestSuite) TestFetchRelatedSystemIntakes() {
 		relatedIntakes, err := s.store.FetchRelatedSystemIntakes(ctx, intake.ID)
 		s.NoError(err)
 
+		ids := make(map[uuid.UUID]bool)
+		for _, ri := range relatedIntakes {
+			ids[ri.ID] = true
+		}
+		s.True(ids[relatedIntake1.ID])
+		s.True(ids[relatedIntake2.ID])
+		s.True(ids[relatedIntake3.ID])
 		s.Equal(len(relatedIntakes), 3)
 	})
 }
