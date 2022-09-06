@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type newAccessibilityRequestNote struct {
@@ -50,7 +51,7 @@ func (c Client) SendNewAccessibilityRequestNoteEmail(
 	}
 	err = c.sender.Send(
 		ctx,
-		c.config.AccessibilityTeamEmail,
+		[]models.EmailAddress{c.config.AccessibilityTeamEmail},
 		nil,
 		subject,
 		body,

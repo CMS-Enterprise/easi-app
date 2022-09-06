@@ -6,8 +6,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
-
-	"github.com/hashicorp/go-multierror"
 )
 
 // TODO - EASI-2021 - remove this suite
@@ -34,7 +32,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.NoError(err)
-		s.Equal(recipient, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})
 		s.Equal("Your request has been approved", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
@@ -49,7 +47,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
 
 		s.NoError(err)
-		s.Equal(recipient, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})
 		s.Equal("Your request has been approved", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
@@ -126,7 +124,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.NoError(err)
-		s.Equal(recipient, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})
 		s.Equal("Your request has been approved", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
@@ -141,7 +139,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
 
 		s.NoError(err)
-		s.Equal(recipient, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})
 		s.Equal("Your request has been approved", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
@@ -182,13 +180,8 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 
 		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 		s.Error(err)
-		multiErr := err.(*multierror.Error)
-		s.Error(multiErr)
-		unwrappedErr := multiErr.Unwrap()
-
-		s.Error(unwrappedErr)
-		s.IsType(&apperrors.NotificationError{}, unwrappedErr)
-		e := unwrappedErr.(*apperrors.NotificationError)
+		s.IsType(&apperrors.NotificationError{}, err)
+		e := err.(*apperrors.NotificationError)
 		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
 		s.Equal("sender had an error", e.Err.Error())
 	})

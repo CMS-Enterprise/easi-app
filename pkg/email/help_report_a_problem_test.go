@@ -2,6 +2,8 @@ package email
 
 import (
 	"context"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestReportAProblemEmail() {
@@ -45,7 +47,7 @@ func (s *EmailTestSuite) TestReportAProblemEmail() {
 
 		err = client.SendReportAProblemEmail(ctx, input)
 		s.NoError(err)
-		s.Equal(s.config.EASIHelpEmail, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.EASIHelpEmail})
 		s.Equal(expectedBody, sender.body)
 	})
 }

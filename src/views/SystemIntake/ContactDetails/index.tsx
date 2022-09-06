@@ -417,25 +417,23 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   </Field>
                 </FieldGroup>
                 {/* Business Owner Email */}
-                {!flags.notifyMultipleRecipients && (
-                  <FieldGroup
-                    scrollElement="businessOwner.email"
-                    error={!!flatErrors['businessOwner.email']}
-                  >
-                    <Label htmlFor="IntakeForm-BusinessOwnerEmail">
-                      {t('contactDetails.businessOwner.email')}
-                    </Label>
-                    <FieldErrorMsg>
-                      {flatErrors['businessOwner.email']}
-                    </FieldErrorMsg>
-                    <Field
-                      disabled
-                      as={TextInput}
-                      id="IntakeForm-BusinessOwnerEmail"
-                      name="businessOwner.email"
-                    />
-                  </FieldGroup>
-                )}
+                <FieldGroup
+                  scrollElement="businessOwner.email"
+                  error={!!flatErrors['businessOwner.email']}
+                >
+                  <Label htmlFor="IntakeForm-BusinessOwnerEmail">
+                    {t('contactDetails.businessOwner.email')}
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors['businessOwner.email']}
+                  </FieldErrorMsg>
+                  <Field
+                    disabled
+                    as={TextInput}
+                    id="IntakeForm-BusinessOwnerEmail"
+                    name="businessOwner.email"
+                  />
+                </FieldGroup>
                 {/* Product Manager Name */}
                 <FieldGroup
                   scrollElement="productManager.commonName"
@@ -511,34 +509,29 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   </Field>
                 </FieldGroup>
                 {/* Product Manager Email */}
-                {!flags.notifyMultipleRecipients && (
-                  <FieldGroup
-                    scrollElement="productManager.email"
-                    error={!!flatErrors['productManager.email']}
-                  >
-                    <Label htmlFor="IntakeForm-ProductManagerEmail">
-                      {t('contactDetails.productManager.email')}
-                    </Label>
-                    <FieldErrorMsg>
-                      {flatErrors['productManager.email']}
-                    </FieldErrorMsg>
-                    <Field
-                      disabled
-                      as={TextInput}
-                      id="IntakeForm-ProductManagerEmail"
-                      name="productManager.email"
-                    />
-                  </FieldGroup>
-                )}
+                <FieldGroup
+                  scrollElement="productManager.email"
+                  error={!!flatErrors['productManager.email']}
+                >
+                  <Label htmlFor="IntakeForm-ProductManagerEmail">
+                    {t('contactDetails.productManager.email')}
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors['productManager.email']}
+                  </FieldErrorMsg>
+                  <Field
+                    disabled
+                    as={TextInput}
+                    id="IntakeForm-ProductManagerEmail"
+                    name="productManager.email"
+                  />
+                </FieldGroup>
                 {/* ISSO */}
                 <FieldGroup
                   scrollElement="isso.isPresent"
                   error={!!flatErrors['isso.isPresent']}
                 >
-                  <fieldset
-                    data-testid="isso-fieldset"
-                    className="usa-fieldset margin-top-3"
-                  >
+                  <fieldset className="usa-fieldset margin-top-3">
                     <legend className="usa-label margin-bottom-1">
                       {t('contactDetails.isso.label')}
                     </legend>
@@ -619,25 +612,23 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           </Field>
                         </FieldGroup>
                         {/* ISSO Email */}
-                        {!flags.notifyMultipleRecipients && (
-                          <FieldGroup
-                            scrollElement="isso.email"
-                            error={!!flatErrors['isso.email']}
-                          >
-                            <Label htmlFor="IntakeForm-IssoEmail">
-                              {t('contactDetails.isso.email')}
-                            </Label>
-                            <FieldErrorMsg>
-                              {flatErrors['isso.email']}
-                            </FieldErrorMsg>
-                            <Field
-                              disabled
-                              as={TextInput}
-                              id="IntakeForm-IssoEmail"
-                              name="isso.email"
-                            />
-                          </FieldGroup>
-                        )}
+                        <FieldGroup
+                          scrollElement="isso.email"
+                          error={!!flatErrors['isso.email']}
+                        >
+                          <Label htmlFor="IntakeForm-IssoEmail">
+                            {t('contactDetails.isso.email')}
+                          </Label>
+                          <FieldErrorMsg>
+                            {flatErrors['isso.email']}
+                          </FieldErrorMsg>
+                          <Field
+                            disabled
+                            as={TextInput}
+                            id="IntakeForm-IssoEmail"
+                            name="isso.email"
+                          />
+                        </FieldGroup>
                       </div>
                     )}
                     <Field

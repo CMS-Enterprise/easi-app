@@ -21,6 +21,7 @@ import './seed';
 import '@cypress/code-coverage/support';
 import './login';
 import './systemIntake';
+import './emailNotifications';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
