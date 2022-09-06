@@ -255,10 +255,10 @@ export type SystemIntakeContactProps = {
 
 /** Formatted system intake contacts */
 export type FormattedContacts = {
-  businessOwner: AugmentedSystemIntakeContact;
-  productManager: AugmentedSystemIntakeContact;
-  isso: AugmentedSystemIntakeContact;
-  additionalContacts: AugmentedSystemIntakeContact[];
+  businessOwner: SystemIntakeContactProps;
+  productManager: SystemIntakeContactProps;
+  isso: SystemIntakeContactProps;
+  additionalContacts: SystemIntakeContactProps[];
 };
 
 /** Function to create system intake contact */

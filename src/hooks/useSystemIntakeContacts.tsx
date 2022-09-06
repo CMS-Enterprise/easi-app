@@ -8,10 +8,7 @@ import {
   GetSystemIntakeContactsQuery,
   UpdateSystemIntakeContact
 } from 'queries/SystemIntakeContactsQueries';
-import {
-  GetSystemIntakeContacts,
-  GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact
-} from 'queries/types/GetSystemIntakeContacts';
+import { GetSystemIntakeContacts } from 'queries/types/GetSystemIntakeContacts';
 import {
   CreateSystemIntakeContactInput,
   DeleteSystemIntakeContactInput,
@@ -49,13 +46,13 @@ function useSystemIntakeContacts(
   const { systemIntake } = useSystemIntake(systemIntakeId);
 
   /** Formatted system intake contacts object */
-  const contacts = useMemo<FormattedContacts | null>(() => {
+  const contacts = useMemo<FormattedContacts>(() => {
     // Get systemIntakeContacts
-    const systemIntakeContacts: AugmentedSystemIntakeContact[] | undefined =
-      data?.systemIntakeContacts?.systemIntakeContacts;
+    const systemIntakeContacts = data?.systemIntakeContacts
+      ?.systemIntakeContacts as SystemIntakeContactProps[];
 
     // Return null if no systemIntakeContacts
-    if (!systemIntakeContacts || !systemIntake) return null;
+    if (!systemIntakeContacts || !systemIntake) return initialContactsObject;
 
     // Merge initial contacts object with possible legacy data from system intake
     const mergedContactsObject = {
