@@ -1,13 +1,21 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button, IconWarning } from '@trussworks/react-uswds';
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  IconWarning,
+  Label
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 // import { useFlags } from 'launchdarkly-react-client-sdk';
 import AdditionalContacts from 'components/AdditionalContacts';
+import CedarContactSelect from 'components/CedarContactSelect';
 import CheckboxField from 'components/shared/CheckboxField';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import useSystemIntake from 'hooks/useSystemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
@@ -17,36 +25,80 @@ import { SystemIntakeContactProps } from 'types/systemIntake';
 const Recipient = ({
   contact,
   checked,
-  updateRecipients
+  updateRecipients,
+  activeContact,
+  setActiveContact
 }: {
   contact: SystemIntakeContactProps;
   checked: boolean;
   updateRecipients: (value: string) => void;
+  activeContact: SystemIntakeContactProps | null;
+  setActiveContact: (value: SystemIntakeContactProps | null) => void;
 }) => {
   const { t } = useTranslation('action');
-  const { commonName, euaUserId, role, component, email } = { ...contact };
+  const [isActive, setActive] = useState(false);
+  const { commonName, euaUserId, role, component, email, id } = { ...contact };
+
   return (
     <>
       <CheckboxField
-        id={`${euaUserId}-${role.replaceAll(' ', '')}`}
+        id={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
         name={`${euaUserId}-${role.replaceAll(' ', '')}`}
         label={`${commonName}, ${component} (${role})`}
         value={email || ''}
         onChange={e => updateRecipients(e.target.value)}
         onBlur={() => null}
         checked={checked}
-        disabled={!email}
+        disabled={!id}
       />
-      {!email && (
+      {!id && !isActive && (
         <div className="margin-left-4 margin-top-1 margin-bottom-2">
           <p className="text-base display-flex flex-align-center margin-y-1">
             <IconWarning className="text-warning margin-right-1" />
             {t('emailRecipients.unverifiedRecipient')}
           </p>
-          <Button type="button" unstyled>
+          <Button
+            type="button"
+            unstyled
+            onClick={() => {
+              setActiveContact(contact);
+              setActive(true);
+            }}
+          >
             {t('emailRecipients.verifyRecipient')}
           </Button>
         </div>
+      )}
+      {!id && isActive && (
+        <FieldGroup className="margin-left-4 margin-top-1 margin-bottom-2">
+          <h4 className="margin-bottom-05 margin-top-2">Verify Recipient</h4>
+          <Label htmlFor="test" className="text-normal margin-y-05">
+            Recipient Name
+          </Label>
+          <HelpText>
+            Click in the field below to confirm this EUA contact
+          </HelpText>
+          <CedarContactSelect
+            id="IntakeForm-ContactCommonName"
+            name="systemIntakeContact.commonName"
+            value={activeContact!}
+            onChange={cedarContact =>
+              setActiveContact({
+                ...activeContact!,
+                ...cedarContact
+              })
+            }
+            autoSearch
+          />
+          <ButtonGroup className="margin-top-2">
+            <Button type="button" disabled={!activeContact?.euaUserId}>
+              Save
+            </Button>
+            <Button type="button" outline>
+              Cancel
+            </Button>
+          </ButtonGroup>
+        </FieldGroup>
       )}
     </>
   );
@@ -72,22 +124,20 @@ export default ({
   // Get system intake from Apollo cache
   const { systemIntake } = useSystemIntake(systemIntakeId);
 
-  const defaultRecipientsCount = useRef(
-    recipients.shouldNotifyITInvestment ? 3 : 2
-  ).current;
+  const defaultRecipients = useRef(recipients).current;
 
-  const requester = {
+  const requester: SystemIntakeContactProps = {
     euaUserId: systemIntake!.euaUserId,
     commonName: systemIntake!.requester.name,
     component: systemIntake!.requester.component!,
     email: systemIntake!.requester.email || '',
+    systemIntakeId: systemIntake!.id,
     role: 'Requester'
   };
 
   /** Formatted array of contacts in order of display */
-  const contactsObject = contacts
+  const contactsArray = contacts
     ? [
-        requester,
         contacts.businessOwner,
         contacts.productManager,
         ...(contacts.isso.commonName ? [contacts.isso] : []), // Only include ISSO if present
@@ -95,10 +145,16 @@ export default ({
       ].flat()
     : [];
 
+  const unverifiedRecipients = contactsArray.filter(({ id }) => !id);
+
+  const defaultRecipientsCount =
+    (defaultRecipients.shouldNotifyITInvestment ? 3 : 2) +
+    unverifiedRecipients.length;
+
   // Number of possible recipients
-  const contactsCount = contactsObject.length + 2;
+  const contactsCount = contactsArray.length + 3;
   // Number of selected contacts
-  const selectedContacts = contactsObject.filter(({ email }) =>
+  const selectedContacts = [...contactsArray, requester].filter(({ email }) =>
     recipients.regularRecipientEmails.includes(email!)
   ).length;
   const selectedCount =
@@ -127,6 +183,9 @@ export default ({
       regularRecipientEmails: updatedRecipients
     });
   };
+
+  // Check if contacts have loaded
+  if (!contactsArray) return null;
 
   return (
     <div className={classnames(className)}>
@@ -170,6 +229,8 @@ export default ({
                 requester.email
               )}
               updateRecipients={updateRecipients}
+              activeContact={activeContact}
+              setActiveContact={setActiveContact}
             />
             <CheckboxField
               label="IT Governance Mailbox"
@@ -185,33 +246,68 @@ export default ({
               }
               onBlur={() => null}
             />
-            <CheckboxField
-              label="IT Investment Mailbox"
-              checked={recipients.shouldNotifyITInvestment}
-              name="contact-itInvestmentMailbox"
-              id="contact-itInvestmentMailbox"
-              value="shouldNotifyITInvestment"
-              onChange={e =>
-                setRecipients({
-                  ...recipients,
-                  shouldNotifyITInvestment: e.target.checked
-                })
-              }
-              onBlur={() => null}
-            />
-            {contacts.slice(1).map((contact, index) => {
-              return (
+            {defaultRecipients.shouldNotifyITInvestment && (
+              <CheckboxField
+                label="IT Investment Mailbox"
+                checked={recipients.shouldNotifyITInvestment}
+                name="contact-itInvestmentMailbox"
+                id="contact-itInvestmentMailbox"
+                value="shouldNotifyITInvestment"
+                onChange={e =>
+                  setRecipients({
+                    ...recipients,
+                    shouldNotifyITInvestment: e.target.checked
+                  })
+                }
+                onBlur={() => null}
+              />
+            )}
+            {unverifiedRecipients.length > 0 &&
+              unverifiedRecipients.map((contact, index) => (
                 <Recipient
-                  key={index} // eslint-disable-line react/no-array-index-key
+                  key={`unverified-${index}`} // eslint-disable-line react/no-array-index-key
                   contact={contact as SystemIntakeContactProps}
                   checked={
                     !!contact.email &&
                     recipients.regularRecipientEmails.includes(contact.email)
                   }
                   updateRecipients={updateRecipients}
+                  activeContact={activeContact}
+                  // activeContact={unverifiedRecipients[0]} // TEST DATA
+                  setActiveContact={setActiveContact}
                 />
-              );
-            })}
+              ))}
+            {!defaultRecipients.shouldNotifyITInvestment && (
+              <CheckboxField
+                label="IT Investment Mailbox"
+                checked={recipients.shouldNotifyITInvestment}
+                name="contact-itInvestmentMailbox"
+                id="contact-itInvestmentMailbox"
+                value="shouldNotifyITInvestment"
+                onChange={e =>
+                  setRecipients({
+                    ...recipients,
+                    shouldNotifyITInvestment: e.target.checked
+                  })
+                }
+                onBlur={() => null}
+              />
+            )}
+            {contactsArray
+              .filter(({ id }) => id) // filter out unverified recipients
+              .map((contact, index) => (
+                <Recipient
+                  key={`verified-${index}`} // eslint-disable-line react/no-array-index-key
+                  contact={contact as SystemIntakeContactProps}
+                  checked={
+                    !!contact.email &&
+                    recipients.regularRecipientEmails.includes(contact.email)
+                  }
+                  updateRecipients={updateRecipients}
+                  activeContact={activeContact}
+                  setActiveContact={setActiveContact}
+                />
+              ))}
             <AdditionalContacts
               systemIntakeId={systemIntakeId}
               activeContact={activeContact}
