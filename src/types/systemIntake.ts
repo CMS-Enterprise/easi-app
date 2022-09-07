@@ -278,7 +278,7 @@ export type DeleteContactType = (
 
 /** useSystemIntakeContacts custom hook return type */
 export type UseSystemIntakeContactsType = {
-  contacts: { data: FormattedContacts; loading: boolean };
+  contacts: FormattedContacts | null;
   createContact: CreateContactType;
   updateContact: UpdateContactType;
   deleteContact: DeleteContactType;

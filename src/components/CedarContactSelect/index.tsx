@@ -171,6 +171,10 @@ export default function CedarContactSelect2({
     noOptionsMessage: provided => ({
       ...provided,
       textAlign: 'left'
+    }),
+    input: provided => ({
+      ...provided,
+      visibility: 'visible'
     })
   };
 
@@ -215,6 +219,9 @@ export default function CedarContactSelect2({
       onBlur={() => {
         // Automatically select on blur if search returns single result
         if (autoSearch && contacts.length === 1) updateContact(contacts[0]);
+      }}
+      onMenuOpen={() => {
+        if (!searchTerm && formattedContact) setSearchTerm(formattedContact);
       }}
       onInputChange={(newValue, { action }) => {
         if (action !== 'input-blur' && action !== 'menu-close')

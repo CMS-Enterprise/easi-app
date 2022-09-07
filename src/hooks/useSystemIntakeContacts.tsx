@@ -34,7 +34,7 @@ function useSystemIntakeContacts(
   systemIntakeId: string
 ): UseSystemIntakeContactsType {
   // GQL query to get intake contacts
-  const { data, refetch, loading } = useQuery<GetSystemIntakeContacts>(
+  const { data, refetch } = useQuery<GetSystemIntakeContacts>(
     GetSystemIntakeContactsQuery,
     {
       fetchPolicy: 'cache-first',
@@ -46,13 +46,13 @@ function useSystemIntakeContacts(
   const { systemIntake } = useSystemIntake(systemIntakeId);
 
   /** Formatted system intake contacts object */
-  const contacts = useMemo<FormattedContacts>(() => {
+  const contacts = useMemo<FormattedContacts | null>(() => {
     // Get systemIntakeContacts
     const systemIntakeContacts = data?.systemIntakeContacts
       ?.systemIntakeContacts as SystemIntakeContactProps[];
 
     // Return null if no systemIntakeContacts
-    if (!systemIntakeContacts || !systemIntake) return initialContactsObject;
+    if (!systemIntakeContacts || !systemIntake) return null;
 
     // Merge initial contacts object with possible legacy data from system intake
     const mergedContactsObject = {
@@ -101,7 +101,7 @@ function useSystemIntakeContacts(
     deleteSystemIntakeContact
   ] = useMutation<DeleteSystemIntakeContactInput>(DeleteSystemIntakeContact);
 
-  // Create system intake contact
+  /** Create system intake contact in database */
   const createContact = async (contact: SystemIntakeContactProps) => {
     const { euaUserId, component, role } = contact;
     return createSystemIntakeContact({
@@ -122,7 +122,7 @@ function useSystemIntakeContacts(
       );
   };
 
-  // Update system intake contact
+  /** Update system intake contact in database */
   const updateContact = async (contact: SystemIntakeContactProps) => {
     const { id, euaUserId, component, role } = contact;
     return updateSystemIntakeContact({
@@ -143,7 +143,7 @@ function useSystemIntakeContacts(
       );
   };
 
-  // Delete system intake contact
+  /** Delete system intake contact from database */
   const deleteContact = async (id: string) => {
     return deleteSystemIntakeContact({
       variables: {
@@ -160,7 +160,7 @@ function useSystemIntakeContacts(
   };
 
   return {
-    contacts: { data: contacts, loading },
+    contacts,
     createContact,
     updateContact,
     deleteContact
