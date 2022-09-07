@@ -1482,9 +1482,9 @@ type TRBRequest {
     status: TRBRequestStatus!
 
     createdBy: String!
-    createdDts: Time!
+    createdAt: Time!
     modifiedBy: String
-    modifiedDts: Time
+    modifiedAt: Time
 }
 
 """

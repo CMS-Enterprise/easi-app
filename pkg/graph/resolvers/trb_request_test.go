@@ -17,9 +17,9 @@ func (suite *ResolverSuite) TestTRBRequestCreate() {
 	suite.EqualValues(trb.Status, models.TRBSOpen)
 	suite.EqualValues(trb.CreatedBy, suite.testConfigs.Principal.EUAID)
 	suite.NotNil(trb.ID)
-	suite.NotNil(trb.CreatedDts)
+	suite.NotNil(trb.CreatedAt)
 	suite.Nil(trb.ModifiedBy)
-	suite.Nil(trb.ModifiedDts)
+	suite.Nil(trb.ModifiedAt)
 
 }
 
@@ -44,7 +44,7 @@ func (suite *ResolverSuite) TestTRBRequestUpdate() {
 	suite.EqualValues(updated.Status, models.TRBSClosed)
 	suite.EqualValues(updated.Archived, false)
 	suite.EqualValues(updated.ModifiedBy, &princ)
-	suite.NotNil(updated.ModifiedDts)
+	suite.NotNil(updated.ModifiedAt)
 
 }
 

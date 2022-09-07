@@ -23,6 +23,6 @@ RETURNING
     type,
     status,
     created_by,
-    created_dts,
+    created_at,
     modified_by,
-    modified_dts;
+    modified_at;

@@ -16,11 +16,11 @@ type IBaseStruct interface {
 
 // baseStruct represents the shared data in common betwen all models
 type baseStruct struct {
-	ID          uuid.UUID  `json:"id" db:"id"`
-	CreatedBy   string     `json:"createdBy" db:"created_by"`
-	CreatedDts  time.Time  `json:"createdDts" db:"created_dts"`
-	ModifiedBy  *string    `json:"modifiedBy" db:"modified_by"`
-	ModifiedDts *time.Time `json:"modifiedDts" db:"modified_dts"`
+	ID         uuid.UUID  `json:"id" db:"id"`
+	CreatedBy  string     `json:"createdBy" db:"created_by"`
+	CreatedAt  time.Time  `json:"createdAt" db:"created_at"`
+	ModifiedBy *string    `json:"modifiedBy" db:"modified_by"`
+	ModifiedAt *time.Time `json:"modifiedAt" db:"modified_at"`
 }
 
 // NewBaseStruct returns a base struct object

@@ -5,7 +5,7 @@ SET id = :id,
     type = :type,
     status = :status,
     modified_by = :modified_by,
-    modified_dts = CURRENT_TIMESTAMP
+    modified_at = CURRENT_TIMESTAMP
 WHERE trb_request.id = :id
 RETURNING
     id,
@@ -14,6 +14,6 @@ RETURNING
     type,
     status,
     created_by,
-    created_dts,
+    created_at,
     modified_by,
-    modified_dts;
+    modified_at;

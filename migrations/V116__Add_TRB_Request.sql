@@ -17,7 +17,7 @@ CREATE TABLE trb_request (
     type TRB_REQUEST_TYPE NOT NULL, 
     status TRB_REQUEST_STATUS NOT NULL DEFAULT 'OPEN',
     created_by TEXT NOT NULL CHECK (created_by ~ '^[A-Z0-9]{4}$'),
-    created_dts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_by TEXT CHECK (modified_by ~ '^[A-Z0-9]{4}$'),
-    modified_dts TIMESTAMP WITH TIME ZONE
+    modified_at TIMESTAMP WITH TIME ZONE
 );

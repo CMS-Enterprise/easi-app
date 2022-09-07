@@ -4,8 +4,8 @@ SELECT id,
     type,
     status,
     created_by,
-    created_dts,
+    created_at,
     modified_by,
-    modified_dts
+    modified_at
     FROM trb_request
 WHERE trb_request.id = :id

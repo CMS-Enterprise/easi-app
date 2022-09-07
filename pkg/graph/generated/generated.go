@@ -744,15 +744,15 @@ type ComplexityRoot struct {
 	}
 
 	TRBRequest struct {
-		Archived    func(childComplexity int) int
-		CreatedBy   func(childComplexity int) int
-		CreatedDts  func(childComplexity int) int
-		ID          func(childComplexity int) int
-		ModifiedBy  func(childComplexity int) int
-		ModifiedDts func(childComplexity int) int
-		Name        func(childComplexity int) int
-		Status      func(childComplexity int) int
-		Type        func(childComplexity int) int
+		Archived   func(childComplexity int) int
+		CreatedAt  func(childComplexity int) int
+		CreatedBy  func(childComplexity int) int
+		ID         func(childComplexity int) int
+		ModifiedAt func(childComplexity int) int
+		ModifiedBy func(childComplexity int) int
+		Name       func(childComplexity int) int
+		Status     func(childComplexity int) int
+		Type       func(childComplexity int) int
 	}
 
 	TestDate struct {
@@ -4705,19 +4705,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.Archived(childComplexity), true
 
+	case "TRBRequest.createdAt":
+		if e.complexity.TRBRequest.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.CreatedAt(childComplexity), true
+
 	case "TRBRequest.createdBy":
 		if e.complexity.TRBRequest.CreatedBy == nil {
 			break
 		}
 
 		return e.complexity.TRBRequest.CreatedBy(childComplexity), true
-
-	case "TRBRequest.createdDts":
-		if e.complexity.TRBRequest.CreatedDts == nil {
-			break
-		}
-
-		return e.complexity.TRBRequest.CreatedDts(childComplexity), true
 
 	case "TRBRequest.id":
 		if e.complexity.TRBRequest.ID == nil {
@@ -4726,19 +4726,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.ID(childComplexity), true
 
+	case "TRBRequest.modifiedAt":
+		if e.complexity.TRBRequest.ModifiedAt == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.ModifiedAt(childComplexity), true
+
 	case "TRBRequest.modifiedBy":
 		if e.complexity.TRBRequest.ModifiedBy == nil {
 			break
 		}
 
 		return e.complexity.TRBRequest.ModifiedBy(childComplexity), true
-
-	case "TRBRequest.modifiedDts":
-		if e.complexity.TRBRequest.ModifiedDts == nil {
-			break
-		}
-
-		return e.complexity.TRBRequest.ModifiedDts(childComplexity), true
 
 	case "TRBRequest.name":
 		if e.complexity.TRBRequest.Name == nil {
@@ -6498,9 +6498,9 @@ type TRBRequest {
     status: TRBRequestStatus!
 
     createdBy: String!
-    createdDts: Time!
+    createdAt: Time!
     modifiedBy: String
-    modifiedDts: Time
+    modifiedAt: Time
 }
 
 """
@@ -23876,12 +23876,12 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
-			case "createdDts":
-				return ec.fieldContext_TRBRequest_createdDts(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
-			case "modifiedDts":
-				return ec.fieldContext_TRBRequest_modifiedDts(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequest", field.Name)
 		},
@@ -23951,12 +23951,12 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
-			case "createdDts":
-				return ec.fieldContext_TRBRequest_createdDts(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
-			case "modifiedDts":
-				return ec.fieldContext_TRBRequest_modifiedDts(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequest", field.Name)
 		},
@@ -25388,12 +25388,12 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
-			case "createdDts":
-				return ec.fieldContext_TRBRequest_createdDts(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
-			case "modifiedDts":
-				return ec.fieldContext_TRBRequest_modifiedDts(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequest", field.Name)
 		},
@@ -25463,12 +25463,12 @@ func (ec *executionContext) fieldContext_Query_trbRequestCollection(ctx context.
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
-			case "createdDts":
-				return ec.fieldContext_TRBRequest_createdDts(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
-			case "modifiedDts":
-				return ec.fieldContext_TRBRequest_modifiedDts(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequest", field.Name)
 		},
@@ -31331,8 +31331,8 @@ func (ec *executionContext) fieldContext_TRBRequest_createdBy(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBRequest_createdDts(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequest_createdDts(ctx, field)
+func (ec *executionContext) _TRBRequest_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_createdAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -31345,7 +31345,7 @@ func (ec *executionContext) _TRBRequest_createdDts(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedDts, nil
+		return obj.CreatedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -31362,7 +31362,7 @@ func (ec *executionContext) _TRBRequest_createdDts(ctx context.Context, field gr
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBRequest_createdDts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBRequest_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "TRBRequest",
 		Field:      field,
@@ -31416,8 +31416,8 @@ func (ec *executionContext) fieldContext_TRBRequest_modifiedBy(ctx context.Conte
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBRequest_modifiedDts(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequest_modifiedDts(ctx, field)
+func (ec *executionContext) _TRBRequest_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -31430,7 +31430,7 @@ func (ec *executionContext) _TRBRequest_modifiedDts(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ModifiedDts, nil
+		return obj.ModifiedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -31444,7 +31444,7 @@ func (ec *executionContext) _TRBRequest_modifiedDts(ctx context.Context, field g
 	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBRequest_modifiedDts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBRequest_modifiedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "TRBRequest",
 		Field:      field,
@@ -42448,9 +42448,9 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "createdDts":
+		case "createdAt":
 
-			out.Values[i] = ec._TRBRequest_createdDts(ctx, field, obj)
+			out.Values[i] = ec._TRBRequest_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -42459,9 +42459,9 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 
 			out.Values[i] = ec._TRBRequest_modifiedBy(ctx, field, obj)
 
-		case "modifiedDts":
+		case "modifiedAt":
 
-			out.Values[i] = ec._TRBRequest_modifiedDts(ctx, field, obj)
+			out.Values[i] = ec._TRBRequest_modifiedAt(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
