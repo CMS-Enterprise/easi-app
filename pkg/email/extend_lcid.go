@@ -68,7 +68,7 @@ func (c Client) SendExtendLCIDEmail(
 	}
 	err = c.sender.Send(
 		ctx,
-		recipient,
+		[]models.EmailAddress{recipient},
 		nil,
 		subject,
 		body,
@@ -99,5 +99,15 @@ func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	return c.sendEmailToMultipleRecipients(ctx, recipients, subject, body)
+	err = c.sender.Send(
+		ctx,
+		c.listAllRecipients(recipients),
+		nil,
+		subject,
+		body,
+	)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+	return nil
 }

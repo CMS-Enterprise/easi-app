@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 
 	"github.com/google/uuid"
 	"golang.org/x/net/context"
@@ -47,7 +48,7 @@ func (c Client) SendIntakeInvalidEUAIDEmail(ctx context.Context, projectName str
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	err = c.sender.Send(ctx, c.config.GRTEmail, nil, subject, body)
+	err = c.sender.Send(ctx, []models.EmailAddress{c.config.GRTEmail}, nil, subject, body)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

@@ -32,8 +32,8 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress, intakeID)
 
 		s.NoError(err)
-		s.Equal(recipientAddress, sender.toAddress)
 		s.Equal("Feedback for request in EASi", sender.subject)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipientAddress})
 		s.Equal(expectedEmail, sender.body)
 	})
 

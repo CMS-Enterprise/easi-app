@@ -3,8 +3,6 @@ package email
 import (
 	"context"
 
-	"github.com/hashicorp/go-multierror"
-
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -25,8 +23,8 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		err = client.SendRejectRequestEmail(ctx, recipient, reason, nextSteps, feedback)
 
 		s.NoError(err)
-		s.Equal(recipient, sender.toAddress)
 		s.Equal("Request in EASi not approved", sender.subject)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -38,8 +36,8 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		err = client.SendRejectRequestEmail(ctx, recipient, reason, "", feedback)
 
 		s.NoError(err)
-		s.Equal(recipient, sender.toAddress)
 		s.Equal("Request in EASi not approved", sender.subject)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -168,12 +166,8 @@ func (s *EmailTestSuite) TestSendRejectRequestEmailToMultipleRecipients() {
 		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, recipients, reason, nextSteps, feedback)
 
 		s.Error(err)
-		multiErr := err.(*multierror.Error)
-		s.Error(multiErr)
-		unwrappedErr := multiErr.Unwrap()
-
-		s.IsType(&apperrors.NotificationError{}, unwrappedErr)
-		e := unwrappedErr.(*apperrors.NotificationError)
+		s.IsType(&apperrors.NotificationError{}, err)
+		e := err.(*apperrors.NotificationError)
 		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
 		s.Equal("sender had an error", e.Err.Error())
 	})

@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
@@ -33,7 +34,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 		err = client.SendSystemIntakeSubmissionEmail(ctx, testName, intakeID)
 
 		s.NoError(err)
-		s.Equal(s.config.GRTEmail, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.GRTEmail})
 		s.Equal(fmt.Sprintf("New intake request: %s", testName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})

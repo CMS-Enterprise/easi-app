@@ -42,8 +42,8 @@ func (c Client) SendRejectRequestEmail(ctx context.Context, recipient models.Ema
 	}
 	err = c.sender.Send(
 		ctx,
-		recipient,
-		&c.config.GRTEmail,
+		[]models.EmailAddress{recipient},
+		[]models.EmailAddress{c.config.GRTEmail},
 		subject,
 		body,
 	)
@@ -62,5 +62,15 @@ func (c Client) SendRejectRequestEmailToMultipleRecipients(ctx context.Context, 
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	return c.sendEmailToMultipleRecipients(ctx, recipients, subject, body)
+	err = c.sender.Send(
+		ctx,
+		c.listAllRecipients(recipients),
+		nil,
+		subject,
+		body,
+	)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+	return nil
 }
