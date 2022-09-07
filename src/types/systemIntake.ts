@@ -277,14 +277,12 @@ export type DeleteContactType = (
 ) => Promise<AugmentedSystemIntakeContact[] | undefined>;
 
 /** useSystemIntakeContacts custom hook return type */
-export type UseSystemIntakeContactsType = [
-  FormattedContacts | null,
-  {
-    createContact: CreateContactType;
-    updateContact: UpdateContactType;
-    deleteContact: DeleteContactType;
-  }
-];
+export type UseSystemIntakeContactsType = {
+  contacts: { data: FormattedContacts; loading: boolean };
+  createContact: CreateContactType;
+  updateContact: UpdateContactType;
+  deleteContact: DeleteContactType;
+};
 
 /** System intake contact role keys */
 export type SystemIntakeRoleKeys = 'businessOwner' | 'productManager' | 'isso';

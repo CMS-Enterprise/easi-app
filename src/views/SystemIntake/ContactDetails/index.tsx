@@ -78,21 +78,24 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setActiveContact
   ] = useState<SystemIntakeContactProps | null>(null);
 
-  const [
+  const {
     contacts,
-    { createContact, updateContact, deleteContact }
-  ] = useSystemIntakeContacts(id);
+    createContact,
+    updateContact,
+    deleteContact
+  } = useSystemIntakeContacts(id);
+  const { businessOwner, productManager, isso } = contacts.data;
 
   const initialValues = {
     requester: {
       name: requester.name || '',
       component: requester.component || ''
     },
-    businessOwner: contacts?.businessOwner,
-    productManager: contacts?.productManager,
+    businessOwner,
+    productManager,
     isso: {
-      isPresent: !!contacts?.isso?.euaUserId,
-      ...contacts?.isso
+      isPresent: !!isso?.euaUserId,
+      ...isso
     },
     governanceTeams: {
       isPresent: governanceTeams.isPresent,
@@ -192,21 +195,21 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   useEffect(() => {
     if (
       !checkboxDefaultsSet.current &&
-      contacts?.businessOwner &&
+      businessOwner &&
       intakeRequester.euaUserId
     ) {
-      if (intakeRequester.euaUserId === contacts?.businessOwner.euaUserId) {
+      if (intakeRequester.euaUserId === businessOwner.euaUserId) {
         setReqAndBusOwnerSame(true);
       }
-      if (intakeRequester.euaUserId === contacts?.productManager.euaUserId) {
+      if (intakeRequester.euaUserId === productManager.euaUserId) {
         setReqAndProductManagerSame(true);
       }
       checkboxDefaultsSet.current = true;
     }
-  }, [contacts, intakeRequester]);
+  }, [businessOwner, productManager, intakeRequester]);
 
   // Wait until contacts are loaded to return form
-  if (!contacts) return null;
+  if (contacts.loading) return null;
 
   return (
     <Formik

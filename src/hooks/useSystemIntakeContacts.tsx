@@ -34,7 +34,7 @@ function useSystemIntakeContacts(
   systemIntakeId: string
 ): UseSystemIntakeContactsType {
   // GQL query to get intake contacts
-  const { data, refetch } = useQuery<GetSystemIntakeContacts>(
+  const { data, refetch, loading } = useQuery<GetSystemIntakeContacts>(
     GetSystemIntakeContactsQuery,
     {
       fetchPolicy: 'cache-first',
@@ -159,7 +159,12 @@ function useSystemIntakeContacts(
       );
   };
 
-  return [contacts, { createContact, updateContact, deleteContact }];
+  return {
+    contacts: { data: contacts, loading },
+    createContact,
+    updateContact,
+    deleteContact
+  };
 }
 
 export default useSystemIntakeContacts;
