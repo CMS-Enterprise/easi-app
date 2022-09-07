@@ -219,7 +219,7 @@ export default function AdditionalContacts({
 
   return (
     <div className={classNames('system-intake-contacts', className)}>
-      {contacts.additionalContacts.length > 0 && (
+      {contacts.additionalContacts.length > 0 && type === 'contact' && (
         <>
           <h4>
             {t(

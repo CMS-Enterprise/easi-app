@@ -144,13 +144,14 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract Details
+    const fundingNumber = '123456';
 
     cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber: '123456',
+      fundingNumber,
       sources: ['Fed Admin', 'Research'],
       restart: true
     });
-    cy.get('#fundingNumber-123456');
+    cy.get(`#fundingNumber-${fundingNumber}`);
 
     cy.get('#IntakeForm-CostsExpectingIncreaseYes')
       .check({ force: true })
@@ -168,9 +169,9 @@ describe('The System Intake Form', () => {
       .type('TrussWorks, Inc.')
       .should('have.value', 'TrussWorks, Inc.');
 
-    cy.get('#IntakeForm-Vehicle')
-      .type('Fixed Price Contract')
-      .should('have.value', 'Fixed Price Contract');
+    cy.get('#IntakeForm-Number')
+      .type('123456-7890')
+      .should('have.value', '123456-7890');
 
     cy.get('#IntakeForm-ContractStartMonth')
       .type('1')
@@ -282,7 +283,7 @@ describe('The System Intake Form', () => {
       'Which existing funding sources will fund this project?'
     )
       .siblings('dd')
-      .get('li#fundingNumber-111111');
+      .get(`li#fundingNumber-${fundingNumber}`);
   });
 
   it('displays contact details error messages', () => {

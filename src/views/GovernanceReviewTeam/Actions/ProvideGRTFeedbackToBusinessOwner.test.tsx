@@ -77,7 +77,8 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
               month: '1',
               year: '2021'
             },
-            vehicle: 'Sole source'
+            vehicle: 'Sole source',
+            number: '123456-7890'
           },
           costs: {
             isExpectingIncrease: 'YES',
@@ -110,7 +111,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
           rejectionReason: null,
           requester: {
             component: 'Center for Medicaid and CHIP Services',
-            email: null,
+            email: 'abcd@local.fake',
             name: 'User ABCD'
           },
           requestName: 'TACO',
@@ -223,6 +224,11 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
           query: AddGRTFeedbackRequestBizCaseQuery,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: false
+              },
               emailBody: 'Test email',
               feedback: 'Test feedback',
               intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
@@ -268,6 +274,11 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
           query: AddGRTFeedbackKeepDraftBizCase,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: false
+              },
               emailBody: 'Test email',
               feedback: 'Test feedback',
               intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
@@ -316,6 +327,11 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
           query: AddGRTFeedbackProgressToFinal,
           variables: {
             input: {
+              notificationRecipients: {
+                regularRecipientEmails: ['abcd@local.fake'],
+                shouldNotifyITGovernance: true,
+                shouldNotifyITInvestment: false
+              },
               emailBody: 'Test email',
               feedback: 'Test feedback',
               intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',

@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type namedRequestWithdraw struct {
@@ -60,7 +61,7 @@ func (c Client) SendWithdrawRequestEmail(ctx context.Context, requestName string
 
 	err = c.sender.Send(
 		ctx,
-		c.config.GRTEmail,
+		[]models.EmailAddress{c.config.GRTEmail},
 		nil,
 		subject,
 		body,

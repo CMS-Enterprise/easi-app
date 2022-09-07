@@ -7,7 +7,29 @@ const skippableEmail = Yup.string().when('skipEmail', {
   otherwise: schema => schema.required('Please fill out email')
 });
 
+const notificationRecipients = Yup.object().shape({
+  shouldNotifyITGovernance: Yup.boolean(),
+  shouldNotifyITInvestment: Yup.boolean(),
+  regularRecipientEmails: Yup.array().when(
+    ['shouldNotifyITGovernance', 'shouldNotifyITInvestment', 'skipEmail'],
+    {
+      is: (
+        shouldNotifyITGovernance: boolean,
+        shouldNotifyITInvestment: boolean,
+        skipEmail: boolean
+      ) => {
+        return (
+          !shouldNotifyITGovernance && !shouldNotifyITInvestment && !skipEmail
+        );
+      },
+      then: schema => schema.min(1, 'Please select a recipient'),
+      otherwise: schema => schema.optional()
+    }
+  )
+});
+
 export const actionSchema = Yup.object().shape({
+  notificationRecipients,
   feedback: skippableEmail
 });
 
@@ -80,6 +102,7 @@ export const sharedLifecycleIdSchema = Yup.object().shape({
 });
 
 export const lifecycleIdSchema = sharedLifecycleIdSchema.shape({
+  notificationRecipients,
   feedback: skippableEmail,
   newLifecycleId: Yup.boolean().required(
     'Choose if you need a new Lifecycle ID or if you will use an existing Lifecycle ID'
@@ -99,10 +122,12 @@ export const lifecycleIdSchema = sharedLifecycleIdSchema.shape({
 export const rejectIntakeSchema = Yup.object().shape({
   nextSteps: Yup.string().trim().required('Please include next steps'),
   reason: Yup.string().trim().required('Please include a reason'),
-  feedback: skippableEmail
+  feedback: skippableEmail,
+  notificationRecipients
 });
 
 export const provideGRTFeedbackSchema = Yup.object().shape({
+  notificationRecipients,
   grtFeedback: Yup.string()
     .trim()
     .required('Please include feedback for the business owner'),

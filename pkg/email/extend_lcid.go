@@ -63,7 +63,7 @@ func (c Client) SendExtendLCIDEmail(
 	}
 	err = c.sender.Send(
 		ctx,
-		recipient,
+		[]models.EmailAddress{recipient},
 		nil,
 		subject,
 		body,
@@ -75,7 +75,8 @@ func (c Client) SendExtendLCIDEmail(
 }
 
 // SendExtendLCIDEmailToMultipleRecipients sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for extending an LCID
-//  TODO - EASI-2021 - rename to SendExtendLCIDEmails
+//
+//	TODO - EASI-2021 - rename to SendExtendLCIDEmails
 func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
@@ -92,5 +93,15 @@ func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	return c.sendEmailToMultipleRecipients(ctx, recipients, subject, body)
+	err = c.sender.Send(
+		ctx,
+		c.listAllRecipients(recipients),
+		nil,
+		subject,
+		body,
+	)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+	return nil
 }

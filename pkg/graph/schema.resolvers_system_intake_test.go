@@ -12,6 +12,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
+func date(year, month, day int) *time.Time {
+	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	return &date
+}
+
 func (s GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 	var resp struct {
 		CreateSystemIntake struct {
@@ -654,11 +659,6 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 
 }
 
-func date(year, month, day int) *time.Time {
-	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
-	return &date
-}
-
 func (s GraphQLTestSuite) TestUpdateContactDetails() {
 	ctx := context.Background()
 
@@ -1297,7 +1297,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.False(respIntake.NeedsEaSupport)
 }
 
-func (s GraphQLTestSuite) TestUpdateContractDetails() {
+func (s GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreation() {
 
 	ctx := context.Background()
 
@@ -1334,7 +1334,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 						Month string
 						Year  string
 					}
-					Vehicle string
+					Number string
 				}
 			}
 		}
@@ -1362,7 +1362,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 					endDate: "2022-02-03T00:00:00Z"
 					hasContract: "HAVE_CONTRACT"
 					startDate: "2021-11-12T00:00:00Z"
-					vehicle: "Toyota Prius"
+					number: "123456-7890"
 				}
 			}) {
 				systemIntake {
@@ -1389,7 +1389,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 							month
 							year
 						}
-						vehicle
+						number
 					}
 				}
 			}
@@ -1411,7 +1411,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 	contract := respIntake.Contract
 	s.Equal(contract.HasContract, "HAVE_CONTRACT")
 	s.Equal(contract.Contractor, "Best Contractor Evar")
-	s.Equal(contract.Vehicle, "Toyota Prius")
+	s.Equal(contract.Number, "123456-7890")
 
 	startDate := contract.StartDate
 	s.Equal(startDate.Day, "12")
@@ -1422,6 +1422,90 @@ func (s GraphQLTestSuite) TestUpdateContractDetails() {
 	s.Equal(endDate.Day, "3")
 	s.Equal(endDate.Month, "2")
 	s.Equal(endDate.Year, "2022")
+}
+
+// make sure that for system intakes that haven't had their contract vehicles updated to contract numbers (see EASI-1977),
+// we still return the contract vehicle
+func (s GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
+	ctx := context.Background()
+
+	contractVehicle := "Ford"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		EUAUserID:       null.StringFrom("TEST"),
+		Status:          models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:     models.SystemIntakeRequestTypeNEW,
+		ContractVehicle: null.StringFrom(contractVehicle),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		SystemIntake struct {
+			Contract struct {
+				Vehicle *string
+				Number  *string
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				contract {
+					vehicle
+					number
+				}
+			}
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+
+	s.Equal(contractVehicle, *resp.SystemIntake.Contract.Vehicle)
+	s.Nil(resp.SystemIntake.Contract.Number)
+}
+
+// when a system intake has a contract vehicle stored but no contract number, updating the contract number should clear the contract vehicle (see EASI-1977)
+func (s GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithContractNumber() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		EUAUserID:       null.StringFrom("TEST"),
+		Status:          models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:     models.SystemIntakeRequestTypeNEW,
+		ContractVehicle: null.StringFrom("Toyota"),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeContractDetails struct {
+			SystemIntake struct {
+				Contract struct {
+					Vehicle *string
+					Number  *string
+				}
+			}
+		}
+	}
+
+	contractNumber := "123456-7890"
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeContractDetails(input: {
+				id: "%s",
+				contract: {
+					number: "%s"
+				}
+			}) {
+				systemIntake {
+					contract {
+						vehicle
+						number
+					}
+				}
+			}
+		}`, intake.ID, contractNumber), &resp)
+
+	s.Equal(contractNumber, *resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Number)
+	s.Nil(resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Vehicle)
 }
 
 func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
@@ -1574,6 +1658,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 						Year  *string
 					}
 					Vehicle *string
+					Number  *string
 				}
 			}
 		}
@@ -1588,7 +1673,6 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 					startDate: null
 					hasContract: "NOT_STARTED"
 					endDate: null
-					vehicle: ""
 				}
 			}) {
 				systemIntake {
@@ -1607,6 +1691,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 							year
 						}
 						vehicle
+						number
 					}
 				}
 			}
@@ -1619,6 +1704,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	s.Equal(contract.HasContract, "NOT_STARTED")
 	s.Nil(contract.Contractor)
 	s.Nil(contract.Vehicle)
+	s.Nil(contract.Number)
 
 	startDate := contract.StartDate
 	s.Nil(startDate.Day)
