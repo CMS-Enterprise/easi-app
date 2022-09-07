@@ -37,7 +37,7 @@ func sanitizeChanges(changes map[string]interface{}) {
 	}
 }
 
-// ApplyChanges applies arbitrary changes from a map to a struct
+// ApplyChanges applies arbitrary changes from a map to a struct. Any field not mentioned in the changes object will remain the same
 // Code largely copied from GQLGen's docs on changesets
 // https://gqlgen.com/reference/changesets/
 func ApplyChanges(changes map[string]interface{}, to interface{}) error {
