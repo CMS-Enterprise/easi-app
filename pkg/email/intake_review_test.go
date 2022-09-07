@@ -33,7 +33,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 
 		s.NoError(err)
 		s.Equal(recipientAddress, sender.toAddress)
-		s.Equal("Feedback on your intake request", sender.subject)
+		s.Equal("Feedback for request in EASi", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
 

@@ -26,7 +26,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
-		s.Equal("Your request has not been approved", sender.subject)
+		s.Equal("Request in EASi not approved", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -39,7 +39,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
-		s.Equal("Your request has not been approved", sender.subject)
+		s.Equal("Request in EASi not approved", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -115,7 +115,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmailToMultipleRecipients() {
 		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, recipients, reason, nextSteps, feedback)
 
 		s.NoError(err)
-		s.Equal("Your request has not been approved", sender.subject)
+		s.Equal("Request in EASi not approved", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -127,7 +127,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmailToMultipleRecipients() {
 		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, recipients, reason, "", feedback)
 
 		s.NoError(err)
-		s.Equal("Your request has not been approved", sender.subject)
+		s.Equal("Request in EASi not approved", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
 
