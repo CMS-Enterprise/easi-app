@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // SendCantFindSomethingEmailInput contains the data submitted by the user to the "can't find find
@@ -26,7 +27,7 @@ func (c Client) SendCantFindSomethingEmail(ctx context.Context, input SendCantFi
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	err = c.sender.Send(ctx, c.config.EASIHelpEmail, nil, subject, b.String())
+	err = c.sender.Send(ctx, []models.EmailAddress{c.config.EASIHelpEmail}, nil, subject, b.String())
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

@@ -42,6 +42,8 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 import FundingSources from './FundingSources';
 
+import './index.scss';
+
 type ContractDetailsProps = {
   systemIntake: SystemIntake;
 };

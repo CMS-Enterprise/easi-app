@@ -63,7 +63,7 @@ func (c Client) SendRemovedAccessibilityRequestEmail(
 	}
 	err = c.sender.Send(
 		ctx,
-		c.config.AccessibilityTeamEmail,
+		[]models.EmailAddress{c.config.AccessibilityTeamEmail},
 		nil,
 		subject,
 		body,

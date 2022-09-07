@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
@@ -24,7 +25,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		err = client.SendWithdrawRequestEmail(ctx, requestName)
 
 		s.NoError(err)
-		s.Equal(s.config.GRTEmail, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.GRTEmail})
 		s.Equal(fmt.Sprintf("Request Withdrawn: %s", requestName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
@@ -41,7 +42,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		err = client.SendWithdrawRequestEmail(ctx, "")
 
 		s.NoError(err)
-		s.Equal(s.config.GRTEmail, sender.toAddress)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.GRTEmail})
 		s.Equal("Request Withdrawn", sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})

@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // SendFeedbackEmailInput contains the data submitted by the user to send feedback
@@ -34,7 +35,7 @@ func (c Client) SendFeedbackEmail(ctx context.Context, input SendFeedbackEmailIn
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
-	err = c.sender.Send(ctx, c.config.EASIHelpEmail, nil, subject, b.String())
+	err = c.sender.Send(ctx, []models.EmailAddress{c.config.EASIHelpEmail}, nil, subject, b.String())
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
