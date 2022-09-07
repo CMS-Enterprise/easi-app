@@ -387,8 +387,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     name="businessOwner.commonName"
                     ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
                     onChange={contact => {
-                      if (contact !== null)
+                      if (contact !== null) {
                         setContactFieldsFromName(contact, 'businessOwner');
+                      } else {
+                        clearContact('businessOwner');
+                      }
                     }}
                     value={
                       values.businessOwner?.euaUserId

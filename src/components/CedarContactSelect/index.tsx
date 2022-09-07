@@ -35,6 +35,7 @@ type CedarContactSelectOption = {
 
 // Override React Select input to fix hidden input on select bug
 const Input = (props: InputProps<CedarContactSelectOption, false>) => {
+  // console.log(props.selectProps.isLoading);
   return <components.Input {...props} isHidden={false} />;
 };
 
@@ -102,9 +103,9 @@ export default function CedarContactSelect2({
     : '';
 
   /** Update contact and reset search term */
-  const updateContact = (contact: CedarContactProps) => {
+  const updateContact = (contact: CedarContactProps | null) => {
     onChange(contact);
-    selectedContact.current = contact.euaUserId;
+    selectedContact.current = contact?.euaUserId;
     setSearchTerm(null);
   };
 
@@ -117,6 +118,7 @@ export default function CedarContactSelect2({
   } = {
     control: (provided, state) => ({
       ...provided,
+      minHeight: '40px',
       borderColor: color('base-dark'),
       outline: state.isFocused ? `.25rem solid ${color('blue-vivid-40')}` : '',
       borderRadius: 0,
@@ -128,32 +130,34 @@ export default function CedarContactSelect2({
     }),
     dropdownIndicator: provided => ({
       ...provided,
-      color: color('base'),
+      color: color('base-dark'),
+      padding: '8px 6px',
       '&:hover': {
-        color: color('base'),
+        color: color('base-dark'),
         cursor: 'pointer'
       },
       '> svg': {
-        width: '26px',
-        height: '26px'
+        width: '22px',
+        height: '22px'
       }
     }),
     clearIndicator: provided => ({
       ...provided,
-      color: color('base'),
+      color: color('base-dark'),
+      padding: '8px 6px',
       '&:hover': {
-        color: color('base'),
+        color: color('base-dark'),
         cursor: 'pointer'
       },
       '> svg': {
-        width: '26px',
-        height: '26px'
+        width: '22px',
+        height: '22px'
       }
     }),
     indicatorSeparator: provided => ({
       ...provided,
-      marginTop: '10px',
-      marginBottom: '10px'
+      marginTop: '8px',
+      marginBottom: '8px'
     }),
     menu: provided => ({
       ...provided,
@@ -213,14 +217,13 @@ export default function CedarContactSelect2({
       styles={customStyles}
       value={value ? { value, label: formattedContact } : undefined}
       inputValue={searchTerm ?? formattedContact}
-      onChange={item => {
-        if (item) updateContact(item.value);
-      }}
+      onChange={item => updateContact(item?.value || null)}
       onBlur={() => {
         // Automatically select on blur if search returns single result
         if (autoSearch && contacts.length === 1) updateContact(contacts[0]);
       }}
       onMenuOpen={() => {
+        // If contact is selected, show as option on open
         if (!searchTerm && formattedContact) setSearchTerm(formattedContact);
       }}
       onInputChange={(newValue, { action }) => {
@@ -230,6 +233,7 @@ export default function CedarContactSelect2({
       controlShouldRenderValue={!!searchTerm}
       noOptionsMessage={() => t('No results')}
       isSearchable
+      isClearable
     />
   );
 }
