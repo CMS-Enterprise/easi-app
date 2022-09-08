@@ -122,9 +122,16 @@ const SystemIntakeValidationSchema: any = {
         then: Yup.object().shape({
           month: Yup.string()
             .trim()
+            .matches(/\d{1,2}/, 'Please enter a valid start month')
             .required('Tell us the contract start month'),
-          day: Yup.string().trim().required('Tell us the contract start day'),
-          year: Yup.string().trim().required('Tell us the contract start year'),
+          day: Yup.string()
+            .trim()
+            .matches(/\d{1,2}/, 'Please enter a valid start day')
+            .required('Tell us the contract start day'),
+          year: Yup.string()
+            .trim()
+            .matches(/\d{4}/, 'Please enter a valid start year')
+            .required('Tell us the contract start year'),
           validDate: Yup.string().when(['month', 'day', 'year'], {
             is: (month: string, day: string, year: string) => {
               if (
@@ -149,9 +156,18 @@ const SystemIntakeValidationSchema: any = {
       endDate: Yup.mixed().when('hasContract', {
         is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.object().shape({
-          month: Yup.string().trim().required('Tell us the contract end month'),
-          day: Yup.string().trim().required('Tell us the contract end day'),
-          year: Yup.string().trim().required('Tell us the contract end year'),
+          month: Yup.string()
+            .trim()
+            .matches(/\d{1,2}/, 'Please enter a valid end month')
+            .required('Tell us the contract end month'),
+          day: Yup.string()
+            .trim()
+            .matches(/\d{1,2}/, 'Please enter a valid end day')
+            .required('Tell us the contract end day'),
+          year: Yup.string()
+            .trim()
+            .matches(/\d{4}/, 'Please enter a valid end year')
+            .required('Tell us the contract end year'),
           validDate: Yup.string().when(['month', 'day', 'year'], {
             is: (month: string, day: string, year: string) => {
               if (

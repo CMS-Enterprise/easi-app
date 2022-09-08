@@ -25,7 +25,7 @@ func TestContextTestSuite(t *testing.T) {
 	suite.Run(t, contextTestSuite)
 }
 
-func (s ContextTestSuite) TestWithLogger() {
+func (s *ContextTestSuite) TestWithLogger() {
 	ctx := context.Background()
 	expectedLogger := zap.NewNop()
 
@@ -35,7 +35,7 @@ func (s ContextTestSuite) TestWithLogger() {
 	s.Equal(expectedLogger, logger)
 }
 
-func (s ContextTestSuite) TestLogger() {
+func (s *ContextTestSuite) TestLogger() {
 	ctx := context.Background()
 	expectedLogger := zap.NewNop()
 	ctx = context.WithValue(ctx, loggerKey, expectedLogger)
@@ -58,7 +58,7 @@ func TestZLogger(t *testing.T) {
 	assert.Equal(t, expectedLogger, logger)
 }
 
-func (s ContextTestSuite) TestWithTrace() {
+func (s *ContextTestSuite) TestWithTrace() {
 	ctx, tID := WithTrace(context.Background())
 	traceID := ctx.Value(traceKey).(uuid.UUID)
 
@@ -66,7 +66,7 @@ func (s ContextTestSuite) TestWithTrace() {
 	s.Equal(tID, traceID)
 }
 
-func (s ContextTestSuite) TestTrace() {
+func (s *ContextTestSuite) TestTrace() {
 	ctx := context.Background()
 	expectedID := uuid.New()
 	ctx = context.WithValue(ctx, traceKey, expectedID)

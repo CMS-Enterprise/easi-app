@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s StoreTestSuite) TestListSystems() {
+func (s *StoreTestSuite) TestListSystems() {
 	// random-based signatures, just so multiple runs of this test don't collide
 	now := time.Now()
 	later := now.AddDate(0, 1, 0)

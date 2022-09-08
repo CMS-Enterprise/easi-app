@@ -8,7 +8,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s StoreTestSuite) TestFetchAccessibilityMetrics() {
+func (s *StoreTestSuite) TestFetchAccessibilityMetrics() {
 	s.NoError(s.emptyDatabaseTables())
 
 	ctx := context.Background()

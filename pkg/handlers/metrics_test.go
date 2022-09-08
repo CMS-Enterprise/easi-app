@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s HandlerTestSuite) TestMetricsHandler() {
+func (s *HandlerTestSuite) TestMetricsHandler() {
 
 	expectedMetrics := models.MetricsDigest{
 		SystemIntakeMetrics: models.SystemIntakeMetrics{
@@ -169,7 +169,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 	})
 }
 
-func (s HandlerTestSuite) TestAccessibilityMetricsHandler() {
+func (s *HandlerTestSuite) TestAccessibilityMetricsHandler() {
 
 	fetchMetrics := func() ([][]string, error) {
 		return [][]string{{"Column 1", "Column 2"}, {"Field 1", "Field 2"}, {"Field 1", "Field 2"}}, nil

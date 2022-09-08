@@ -8,7 +8,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s StoreTestSuite) TestUpdateTestDate() {
+func (s *StoreTestSuite) TestUpdateTestDate() {
 	ctx := context.Background()
 
 	s.Run("create a new test date", func() {

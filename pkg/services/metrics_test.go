@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s ServicesTestSuite) TestNewFetchMetrics() {
+func (s *ServicesTestSuite) TestNewFetchMetrics() {
 	serviceClock := clock.NewMock()
 	serviceConfig := NewConfig(zap.NewNop(), nil)
 	serviceConfig.clock = serviceClock
@@ -71,7 +71,7 @@ func (s ServicesTestSuite) TestNewFetchMetrics() {
 
 }
 
-func (s ServicesTestSuite) TestNewFetchAccessibilityMetrics() {
+func (s *ServicesTestSuite) TestNewFetchAccessibilityMetrics() {
 	fetchMetrics := func() ([]models.AccessibilityMetricsLine, error) {
 		janFifth := time.Date(2020, 01, 05, 0, 0, 0, 0, time.UTC)
 		aprilTenth := time.Date(2021, 04, 10, 0, 0, 0, 0, time.UTC)

@@ -21,7 +21,7 @@ const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, st
 const insertIntakeWithCedarSystemAndContractSQL = `INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester, cedar_system_id, contract_number)
 	VALUES (:id, :eua_user_id, :status, :request_type, :requester, :cedar_system_id, :contract_number)`
 
-func (s StoreTestSuite) TestCreateSystemIntake() {
+func (s *StoreTestSuite) TestCreateSystemIntake() {
 	ctx := context.Background()
 
 	s.Run("create a new system intake", func() {
@@ -80,7 +80,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 	})
 }
 
-func (s StoreTestSuite) TestUpdateSystemIntake() {
+func (s *StoreTestSuite) TestUpdateSystemIntake() {
 	ctx := context.Background()
 
 	s.Run("update an existing system intake", func() {
@@ -385,7 +385,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 	})
 }
 
-func (s StoreTestSuite) TestLifecyclePrefixBoundaries() {
+func (s *StoreTestSuite) TestLifecyclePrefixBoundaries() {
 	easternTZ, err := time.LoadLocation("America/New_York")
 	if err != nil {
 		s.Fail("couldn't load EST: %v\n", err)
@@ -421,7 +421,7 @@ func (s StoreTestSuite) TestLifecyclePrefixBoundaries() {
 	}
 }
 
-func (s StoreTestSuite) TestFetchSystemIntakeByID() {
+func (s *StoreTestSuite) TestFetchSystemIntakeByID() {
 	ctx := context.Background()
 
 	s.Run("golden path to fetch a system intake", func() {
@@ -471,7 +471,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 	})
 }
 
-func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
+func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	ctx := context.Background()
 
 	s.Run("golden path to fetch system intakes", func() {
@@ -565,7 +565,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	})
 }
 
-func (s StoreTestSuite) TestFetchSystemIntakes() {
+func (s *StoreTestSuite) TestFetchSystemIntakes() {
 	s.Run("fetches all intakes", func() {
 		ctx := context.Background()
 
@@ -593,7 +593,7 @@ func (s StoreTestSuite) TestFetchSystemIntakes() {
 	})
 }
 
-func (s StoreTestSuite) TestFetchSystemIntakesByFilter() {
+func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
 	s.Run("ensure positive and negative cases", func() {
 		ctx := context.Background()
 
@@ -712,7 +712,7 @@ func mustParseTime(value string) *time.Time {
 	return &parsed
 }
 
-func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
+func (s *StoreTestSuite) TestFetchSystemIntakeMetrics() {
 	ctx := context.Background()
 
 	mockClock := clock.NewMock()
@@ -850,7 +850,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 	}
 }
 
-func (s StoreTestSuite) TestUpdateAdminLead() {
+func (s *StoreTestSuite) TestUpdateAdminLead() {
 	ctx := context.Background()
 
 	s.Run("golden path to update admin lead", func() {
@@ -872,7 +872,7 @@ func (s StoreTestSuite) TestUpdateAdminLead() {
 	})
 }
 
-func (s StoreTestSuite) TestUpdateReviewDates() {
+func (s *StoreTestSuite) TestUpdateReviewDates() {
 	ctx := context.Background()
 
 	s.Run("update both dates", func() {
@@ -930,7 +930,7 @@ func (s StoreTestSuite) TestUpdateReviewDates() {
 	})
 }
 
-func (s StoreTestSuite) TestUpdateSystemIntakeLinkedContract() {
+func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedContract() {
 	ctx := context.Background()
 
 	s.Run("update linked contract number", func() {
@@ -966,7 +966,7 @@ func (s StoreTestSuite) TestUpdateSystemIntakeLinkedContract() {
 	})
 }
 
-func (s StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
+func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 	ctx := context.Background()
 
 	s.Run("update linked CEDAR system ID", func() {
