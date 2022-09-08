@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
+func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -68,7 +68,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	s.Nil(respBusinessCase.LifecycleCostLines[0].Phase)
 }
 
-func (s GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery() {
+func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -165,7 +165,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery
 	s.Equal(respAlternativeA.Title, "Title")
 }
 
-func (s GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery() {
+func (s *GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{

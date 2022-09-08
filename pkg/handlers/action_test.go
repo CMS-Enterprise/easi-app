@@ -23,7 +23,7 @@ func newMockCreateAction(err error) createAction {
 	}
 }
 
-func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
+func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithPrincipal(requestContext, &authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
 	id, _ := uuid.NewUUID()

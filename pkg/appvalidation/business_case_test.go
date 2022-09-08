@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
+func (s *AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
 	s.Run("returns empty strings when the lifecycle costs are valid", func() {
 		preferred := models.LifecycleCostSolutionPREFERRED
 		elc1 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
@@ -39,7 +39,7 @@ func (s AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
 	})
 }
 
-func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
+func (s *AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 	s.Run("returns empty strings when intake is submitted", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
 		submittedIntake.Status = models.SystemIntakeStatusINTAKESUBMITTED
@@ -55,7 +55,7 @@ func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 	})
 }
 
-func (s AppValidateTestSuite) TestBusinessCaseForCreation() {
+func (s *AppValidateTestSuite) TestBusinessCaseForCreation() {
 	s.Run("golden path", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
 		submittedIntake.Status = models.SystemIntakeStatusINTAKESUBMITTED
@@ -105,7 +105,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForCreation() {
 	//})
 }
 
-func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
+func (s *AppValidateTestSuite) TestBusinessCaseForUpdate() {
 	elc1 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
 
 	s.Run("golden path", func() {
@@ -137,7 +137,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
 	})
 }
 
-func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
+func (s *AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 	businessCase := testhelpers.NewBusinessCase()
 	dev := models.LifecycleCostPhaseDEVELOPMENT
 	cost := 300
@@ -234,7 +234,7 @@ func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 	})
 }
 
-func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
+func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 	s.Run("golden path", func() {
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.Status = models.BusinessCaseStatusOPEN

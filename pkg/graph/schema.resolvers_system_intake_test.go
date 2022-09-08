@@ -17,7 +17,7 @@ func date(year, month, day int) *time.Time {
 	return &date
 }
 
-func (s GraphQLTestSuite) TestCreateSystemIntakeMutation() {
+func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 	var resp struct {
 		CreateSystemIntake struct {
 			ID          string
@@ -54,7 +54,7 @@ func (s GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 	s.Equal("NEW", resp.CreateSystemIntake.RequestType)
 }
 
-func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
+func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 	ctx := context.Background()
 	projectName := "Big Project"
 	businessOwner := "Firstname Lastname"
@@ -113,7 +113,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 	s.Nil(resp.SystemIntake.BusinessCase)
 }
 
-func (s GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
+func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 	ctx := context.Background()
 	projectName := "Big Project"
 	businessOwner := "Firstname Lastname"
@@ -199,7 +199,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 	s.NotEmpty(respNote1.CreatedAt)
 }
 
-func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
+func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
 	ctx := context.Background()
 	contracStartMonth := "10"
 	contractStartYear := "2002"
@@ -271,7 +271,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
 	s.Equal(contractEndYear, endDate.Year)
 }
 
-func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
+func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 	ctx := context.Background()
 	projectName := "My cool project"
 	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
@@ -339,7 +339,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 	s.Equal("2020", endDate.Year)
 }
 
-func (s GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
+func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 	ctx := context.Background()
 	projectName := "My cool project"
 
@@ -394,7 +394,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 	s.Nil(resp.SystemIntake.GovernanceTeams.Teams)
 }
 
-func (s GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
+func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 	ctx := context.Background()
 	projectName := "My cool project"
 	eaName := "My EA Rep"
@@ -454,7 +454,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 	s.Equal(eaName, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
 }
 
-func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
+func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -540,7 +540,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 	s.Equal("first.actor@example.com", respAction1.Actor.Email)
 }
 
-func (s GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
+func (s *GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
 	ctx := context.Background()
 	projectName := "My cool project"
 
@@ -599,7 +599,7 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
 	s.Equal(respIntake.LcidCostBaseline, "Your cost baseline")
 }
 
-func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
+func (s *GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 	ctx := context.Background()
 	projectName := "My cool project"
 
@@ -659,7 +659,7 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 
 }
 
-func (s GraphQLTestSuite) TestUpdateContactDetails() {
+func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -774,7 +774,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetails() {
 	s.False(respIntake.GovernanceTeams.IsPresent)
 }
 
-func (s GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
+func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -889,7 +889,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 	s.False(respIntake.GovernanceTeams.IsPresent)
 }
 
-func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
+func (s *GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1009,7 +1009,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 	s.Equal("enterpriseArchitecture", teams[2].Key)
 }
 
-func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
+func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1120,7 +1120,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
 	s.False(respIntake.GovernanceTeams.IsPresent)
 }
 
-func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
+func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1241,7 +1241,7 @@ func (s GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	s.Equal("securityPrivacy", teams[1].Key)
 }
 
-func (s GraphQLTestSuite) TestUpdateRequestDetails() {
+func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1297,7 +1297,7 @@ func (s GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.False(respIntake.NeedsEaSupport)
 }
 
-func (s GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreation() {
+func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreation() {
 
 	ctx := context.Background()
 
@@ -1426,7 +1426,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreatio
 
 // make sure that for system intakes that haven't had their contract vehicles updated to contract numbers (see EASI-1977),
 // we still return the contract vehicle
-func (s GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
+func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 	ctx := context.Background()
 
 	contractVehicle := "Ford"
@@ -1463,7 +1463,7 @@ func (s GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 }
 
 // when a system intake has a contract vehicle stored but no contract number, updating the contract number should clear the contract vehicle (see EASI-1977)
-func (s GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithContractNumber() {
+func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithContractNumber() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1508,7 +1508,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithCo
 	s.Nil(resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Vehicle)
 }
 
-func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
+func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 
 	ctx := context.Background()
 
@@ -1570,7 +1570,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 	s.True(len(fundingSources) == 0)
 }
 
-func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
+func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1621,7 +1621,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
 	s.Equal(costs.IsExpectingIncrease, "No")
 }
 
-func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
+func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	ctx := context.Background()
 
 	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
@@ -1717,7 +1717,7 @@ func (s GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	s.Nil(endDate.Year)
 }
 
-func (s GraphQLTestSuite) TestSubmitIntake() {
+func (s *GraphQLTestSuite) TestSubmitIntake() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1753,7 +1753,7 @@ func (s GraphQLTestSuite) TestSubmitIntake() {
 	s.Equal(string(models.SystemIntakeStatusINTAKESUBMITTED), respIntake.Status)
 }
 
-func (s GraphQLTestSuite) TestExtendLifecycleId() {
+func (s *GraphQLTestSuite) TestExtendLifecycleId() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1880,7 +1880,7 @@ func (s GraphQLTestSuite) TestExtendLifecycleId() {
 	// TODO verify that email was sent
 }
 
-func (s GraphQLTestSuite) TestExtendLifecycleIdRequiresExpirationDate() {
+func (s *GraphQLTestSuite) TestExtendLifecycleIdRequiresExpirationDate() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -1935,7 +1935,7 @@ func (s GraphQLTestSuite) TestExtendLifecycleIdRequiresExpirationDate() {
 	s.Equal(userErrors{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}}, resp.CreateSystemIntakeActionExtendLifecycleID.UserErrors)
 }
 
-func (s GraphQLTestSuite) TestExtendLifecycleIdRequiresScope() {
+func (s *GraphQLTestSuite) TestExtendLifecycleIdRequiresScope() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
