@@ -40,7 +40,7 @@ func TRBRequestUpdate(ctx context.Context, id uuid.UUID, changes map[string]inte
 	princ := appcontext.Principal(ctx)
 
 	//apply changes here
-	err = BaseStructPreUpdate(logger, existing, changes, princ, store, true)
+	err = ApplyChangesAndMetaData(logger, existing, changes, princ, store)
 	if err != nil {
 		return nil, err
 	}
