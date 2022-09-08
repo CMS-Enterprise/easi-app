@@ -1002,7 +1002,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 	})
 }
 
-func (s StoreTestSuite) TestFetchRelatedSystemIntakes() {
+func (s *StoreTestSuite) TestFetchRelatedSystemIntakes() {
 	ctx := context.Background()
 
 	s.Run("fetch related system intakes", func() {
