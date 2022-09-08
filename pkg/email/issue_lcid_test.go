@@ -2,7 +2,10 @@ package email
 
 import (
 	"context"
+	"fmt"
 	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -12,6 +15,7 @@ import (
 func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
+	intakeID := uuid.MustParse("0df3f380-e352-4750-abb6-cb2114b41b66")
 	projectName := "Test Request"
 	requester := "Jane Doe"
 	recipient := models.NewEmailAddress("fake@fake.com")
@@ -26,6 +30,13 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
+		decisionPathOpeningTag := fmt.Sprintf(
+			"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
+			s.config.URLScheme,
+			s.config.URLHost,
+			intakeID.String(),
+		)
+
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" +
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
 			"If you have any questions, please contact the IT Governance team at " + string(s.config.GRTEmail) +
@@ -35,8 +46,11 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
 			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + nextSteps + "</pre></p>\n" +
-			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>"
-		err = client.SendIssueLCIDEmail(ctx, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>\n" +
+			"<p>If you are the original author of this request, you may use this link to " +
+			decisionPathOpeningTag +
+			"view the request in EASi.</a></p>"
+		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.NoError(err)
 		s.Equal("Lifecycle ID request approved", sender.subject)
@@ -48,6 +62,13 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
+		decisionPathOpeningTag := fmt.Sprintf(
+			"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
+			s.config.URLScheme,
+			s.config.URLHost,
+			intakeID.String(),
+		)
+
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" +
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
 			"If you have any questions, please contact the IT Governance team at " + string(s.config.GRTEmail) +
@@ -57,8 +78,11 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
 			"\n" +
-			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>"
-		err = client.SendIssueLCIDEmail(ctx, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
+			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>\n" +
+			"<p>If you are the original author of this request, you may use this link to " +
+			decisionPathOpeningTag +
+			"view the request in EASi.</a></p>"
+		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
 
 		s.NoError(err)
 		s.Equal("Lifecycle ID request approved", sender.subject)
@@ -71,7 +95,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendIssueLCIDEmail(ctx, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -85,7 +109,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates.issueLCIDTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendIssueLCIDEmail(ctx, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -100,7 +124,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendIssueLCIDEmail(ctx, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -113,6 +137,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 	sender := mockSender{}
 	ctx := context.Background()
+	intakeID := uuid.MustParse("19b916b7-0d18-493d-b08d-c726cff6c3df")
 	projectName := "Test Request"
 	requester := "Jane Doe"
 	recipient := models.NewEmailAddress("fake@fake.com")
@@ -132,6 +157,13 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
+		decisionPathOpeningTag := fmt.Sprintf(
+			"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
+			s.config.URLScheme,
+			s.config.URLHost,
+			intakeID.String(),
+		)
+
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" +
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
 			"If you have any questions, please contact the IT Governance team at " + string(s.config.GRTEmail) +
@@ -141,8 +173,11 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
 			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + nextSteps + "</pre></p>\n" +
-			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>"
-		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>\n" +
+			"<p>If you are the original author of this request, you may use this link to " +
+			decisionPathOpeningTag +
+			"view the request in EASi.</a></p>"
+		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.NoError(err)
 		s.Equal("Lifecycle ID request approved", sender.subject)
@@ -154,6 +189,13 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
+		decisionPathOpeningTag := fmt.Sprintf(
+			"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
+			s.config.URLScheme,
+			s.config.URLHost,
+			intakeID.String(),
+		)
+
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" +
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
 			"If you have any questions, please contact the IT Governance team at " + string(s.config.GRTEmail) +
@@ -163,8 +205,11 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
 			"\n" +
-			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>"
-		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
+			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>\n" +
+			"<p>If you are the original author of this request, you may use this link to " +
+			decisionPathOpeningTag +
+			"view the request in EASi.</a></p>"
+		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
 
 		s.NoError(err)
 		s.Equal("Lifecycle ID request approved", sender.subject)
@@ -177,7 +222,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -191,7 +236,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 		s.NoError(err)
 		client.templates.issueLCIDTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -206,7 +251,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 		s.Error(err)
 		s.IsType(&apperrors.NotificationError{}, err)
 		e := err.(*apperrors.NotificationError)
@@ -216,7 +261,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 
 	s.Run("successful call sends to the correct recipients", func() {
 		s.runMultipleRecipientsTestAgainstAllTestCases(func(client Client, recipients models.EmailNotificationRecipients) error {
-			return client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+			return client.SendIssueLCIDEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 		})
 	})
 }

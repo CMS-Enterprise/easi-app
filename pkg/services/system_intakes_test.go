@@ -367,14 +367,14 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	feedbackForEmailText := ""
 
 	singleReviewEmailSent := false
-	fnSendLCIDEmail := func(_ context.Context, _ string, _ string, recipients models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
+	fnSendLCIDEmail := func(_ context.Context, _ uuid.UUID, _ string, _ string, recipients models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
 		singleReviewEmailSent = true
 		return nil
 	}
 
 	multipleReviewEmailsSent := false
-	fnSendLCIDEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, emailText string) error {
+	fnSendLCIDEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, emailText string) error {
 		feedbackForEmailText = emailText
 		multipleReviewEmailsSent = true
 		return nil
@@ -619,10 +619,10 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendLCIDEmailErr := func(_ context.Context, _ string, _ string, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
+	fnSendLCIDEmailErr := func(_ context.Context, _ uuid.UUID, _ string, _ string, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
 		return errors.New("send email error")
 	}
-	fnSendLCIDEmailToMultipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
+	fnSendLCIDEmailToMultipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
 		return errors.New("error sending to multiple recipients")
 	}
 	fnSendIntakeInvalidEUAIDEmailErr := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {

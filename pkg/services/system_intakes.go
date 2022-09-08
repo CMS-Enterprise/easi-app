@@ -234,8 +234,8 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendIssueLCIDEmail func(context.Context, string, string, models.EmailAddress, string, *time.Time, string, string, string, string) error,
-	sendIssueLCIDEmailToMultipleRecipients func(context.Context, models.EmailNotificationRecipients, string, string, string, *time.Time, string, string, string, string) error,
+	sendIssueLCIDEmail func(context.Context, uuid.UUID, string, string, models.EmailAddress, string, *time.Time, string, string, string, string) error,
+	sendIssueLCIDEmailToMultipleRecipients func(context.Context, models.EmailNotificationRecipients, uuid.UUID, string, string, string, *time.Time, string, string, string, string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	generateLCID func(context.Context) (string, error),
@@ -360,6 +360,7 @@ func NewUpdateLifecycleFields(
 			err = sendIssueLCIDEmailToMultipleRecipients(
 				ctx,
 				*recipients,
+				updated.ID,
 				updated.ProjectName.String,
 				updated.Requester,
 				updated.LifecycleID.String,
@@ -377,6 +378,7 @@ func NewUpdateLifecycleFields(
 			if shouldSendEmail && requesterHasValidEUAID {
 				err = sendIssueLCIDEmail(
 					ctx,
+					updated.ID,
 					updated.ProjectName.String,
 					updated.Requester,
 					requesterInfo.Email,
@@ -385,7 +387,8 @@ func NewUpdateLifecycleFields(
 					updated.LifecycleScope.String,
 					updated.LifecycleCostBaseline.String,
 					updated.DecisionNextSteps.String,
-					action.Feedback.String)
+					action.Feedback.String,
+				)
 				if err != nil {
 					return nil, err
 				}
