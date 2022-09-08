@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
+func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -153,7 +153,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	s.Equal("I am a knot note, not a naughty note", responseNote.Note)
 }
 
-func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
+func (s *GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -231,7 +231,7 @@ func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 	s.Equal("UNAVAILABLE", responseDocument.Status)
 }
 
-func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
+func (s *GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
 	var resp struct {
 		GeneratePresignedUploadURL struct {
 			URL        string
@@ -257,7 +257,7 @@ func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
 	s.Equal(0, len(resp.GeneratePresignedUploadURL.UserErrors))
 }
 
-func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
+func (s *GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -340,7 +340,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 	s.Equal("https://signed.example.com/signed/get/123", document.URL)
 }
 
-func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
+func (s *GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -404,7 +404,7 @@ func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 	s.Equal(models.AccessibilityRequestStatusDeleted, latestStatusRecord.Status)
 }
 
-func (s GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
+func (s *GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 	// Setup
 	euaID := testhelpers.RandomEUAID()
 	principal := authentication.EUAPrincipal{EUAID: euaID, JobCodeEASi: true, JobCode508User: true}

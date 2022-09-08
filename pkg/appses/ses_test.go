@@ -62,7 +62,7 @@ func TestSESTestSuite(t *testing.T) {
 	suite.Run(t, sesTestSuite)
 }
 
-func (s SESTestSuite) TestSend() {
+func (s *SESTestSuite) TestSend() {
 	s.Run("Sends successfully", func() {
 		err := s.sender.Send(
 			context.Background(),

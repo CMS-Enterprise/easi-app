@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 )
 
-func (s HandlerTestSuite) TestCatchAllHandler() {
+func (s *HandlerTestSuite) TestCatchAllHandler() {
 	s.Run("catch all handler always returns 404", func() {
 		rr := httptest.NewRecorder()
 		req, err := http.NewRequest("GET", "/notAURL", bytes.NewBufferString(""))

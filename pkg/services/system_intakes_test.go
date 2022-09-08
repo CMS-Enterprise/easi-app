@@ -20,7 +20,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s ServicesTestSuite) TestFetchSystemIntakes() {
+func (s *ServicesTestSuite) TestFetchSystemIntakes() {
 	requesterID := "REQ"
 	requester := &authentication.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
 	reviewerID := "GRT"
@@ -125,7 +125,7 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 	}
 }
 
-func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
+func (s *ServicesTestSuite) TestNewUpdateSystemIntake() {
 	nilIntake := (*models.SystemIntake)(nil)
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger, nil)
@@ -195,7 +195,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	})
 }
 
-func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
+func (s *ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger, nil)
@@ -228,7 +228,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	})
 }
 
-func (s ServicesTestSuite) TestSystemIntakeArchiver() {
+func (s *ServicesTestSuite) TestSystemIntakeArchiver() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
 	businessCaseID := uuid.New()
@@ -311,7 +311,7 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 	})
 }
 
-func (s ServicesTestSuite) TestUpdateLifecycleFields() {
+func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	lifecycleID := null.StringFrom("010010")
 	today := time.Now()
 	expiresAt := &today
@@ -709,7 +709,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 }
 
-func (s ServicesTestSuite) TestUpdateRejectionFields() {
+func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	today := time.Now()
 	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
 	reason := null.StringFrom(fmt.Sprintf("reason %s", today))
@@ -1087,7 +1087,7 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	}
 }
 
-func (s ServicesTestSuite) TestProvideGRTFeedback() {
+func (s *ServicesTestSuite) TestProvideGRTFeedback() {
 	testDataSource := ldtestdata.DataSource()
 	serviceConfig := newTestServicesConfig(testDataSource)
 	ctx := context.Background()

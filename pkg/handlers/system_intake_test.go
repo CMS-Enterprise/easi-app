@@ -40,7 +40,7 @@ func newMockArchiveSystemIntake(err error) archiveSystemIntake {
 	}
 }
 
-func (s HandlerTestSuite) TestSystemIntakeHandler() {
+func (s *HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithPrincipal(requestContext, &authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
 	id, err := uuid.NewUUID()

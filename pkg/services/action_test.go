@@ -15,7 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s ServicesTestSuite) TestNewTakeAction() {
+func (s *ServicesTestSuite) TestNewTakeAction() {
 	ctx := context.Background()
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{ID: id}, nil
@@ -62,7 +62,7 @@ func (s ServicesTestSuite) TestNewTakeAction() {
 	})
 }
 
-func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
+func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger, nil)
 	ctx := context.Background()
@@ -182,7 +182,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 }
 
-func (s ServicesTestSuite) TestNewSubmitBizCase() {
+func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger, nil)
 	ctx := context.Background()
@@ -352,7 +352,7 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 	})
 }
 
-func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
+func (s *ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	logger := zap.NewNop()
 
 	requester := "Test Requester"
@@ -594,7 +594,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	})
 }
 
-func (s ServicesTestSuite) TestNewSaveAction() {
+func (s *ServicesTestSuite) TestNewSaveAction() {
 	createAction := func(_ context.Context, action *models.Action) (*models.Action, error) {
 		return action, nil
 	}
@@ -650,7 +650,7 @@ func (s ServicesTestSuite) TestNewSaveAction() {
 	}
 }
 
-func (s ServicesTestSuite) TestCreateActionUpdateStatus() {
+func (s *ServicesTestSuite) TestCreateActionUpdateStatus() {
 	testDataSource := ldtestdata.DataSource()
 	serviceConfig := newTestServicesConfig(testDataSource)
 	ctx := context.Background()

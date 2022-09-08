@@ -25,7 +25,7 @@ func TestClientTestSuite(t *testing.T) {
 	suite.Run(t, tests)
 }
 
-func (s ClientTestSuite) TestClient() {
+func (s *ClientTestSuite) TestClient() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
 	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
