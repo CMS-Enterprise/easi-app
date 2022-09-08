@@ -645,8 +645,8 @@ func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]
 		FROM system_intakes as intakes_a
 		JOIN system_intakes as intakes_b
 		ON
-			((intakes_a.cedar_system_id = intakes_b.cedar_system_id AND intakes_a.cedar_system_id IS NOT NULL)
-			OR (intakes_a.contract_number = intakes_b.contract_number AND intakes_a.contract_number IS NOT NULL))
+			(intakes_a.cedar_system_id = intakes_b.cedar_system_id
+			OR intakes_a.contract_number = intakes_b.contract_number)
 		WHERE
 			intakes_a.id = $1 AND intakes_b.id != $1;
 	`
