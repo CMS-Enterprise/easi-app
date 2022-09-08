@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s StoreTestSuite) TestNoteRoundtrip() {
+func (s *StoreTestSuite) TestNoteRoundtrip() {
 	ctx := context.Background()
 	euaID := "ZZZZ"
 

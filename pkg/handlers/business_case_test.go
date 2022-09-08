@@ -42,7 +42,7 @@ func newMockUpdateBusinessCase(err error) func(context context.Context, business
 	}
 }
 
-func (s HandlerTestSuite) TestBusinessCaseHandler() {
+func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithPrincipal(requestContext, &authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
 	id, err := uuid.NewUUID()

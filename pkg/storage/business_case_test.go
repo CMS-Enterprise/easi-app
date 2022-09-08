@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s StoreTestSuite) TestFetchBusinessCaseByID() {
+func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 	ctx := context.Background()
 
 	s.Run("golden path to fetch a business case", func() {
@@ -58,7 +58,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 	})
 }
 
-func (s StoreTestSuite) TestCreateBusinessCase() {
+func (s *StoreTestSuite) TestCreateBusinessCase() {
 	ctx := context.Background()
 
 	s.Run("golden path to create a business case", func() {
@@ -140,7 +140,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 	})
 }
 
-func (s StoreTestSuite) TestUpdateBusinessCase() {
+func (s *StoreTestSuite) TestUpdateBusinessCase() {
 	ctx := context.Background()
 
 	intake := testhelpers.NewSystemIntake()

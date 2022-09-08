@@ -6,7 +6,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s StoreTestSuite) TestDeleteAccessibilityRequestDocument() {
+func (s *StoreTestSuite) TestDeleteAccessibilityRequestDocument() {
 	ctx := context.Background()
 
 	s.Run("happy path for deleting document", func() {
