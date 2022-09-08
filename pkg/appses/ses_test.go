@@ -62,11 +62,11 @@ func TestSESTestSuite(t *testing.T) {
 	suite.Run(t, sesTestSuite)
 }
 
-func (s SESTestSuite) TestSend() {
+func (s *SESTestSuite) TestSend() {
 	s.Run("Sends successfully", func() {
 		err := s.sender.Send(
 			context.Background(),
-			models.NewEmailAddress("success@simulator.amazonses.com"),
+			[]models.EmailAddress{"success@simulator.amazonses.com"},
 			nil,
 			"Test Subject",
 			"Test Body",

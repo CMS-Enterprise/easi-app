@@ -9,7 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s ValidateTestSuite) TestRequireNullBool() {
+func (s *ValidateTestSuite) TestRequireNullBool() {
 	s.Run("nullBool is invalid", func() {
 		s.True(RequireNullBool(null.Bool{}))
 	})
@@ -18,7 +18,7 @@ func (s ValidateTestSuite) TestRequireNullBool() {
 	})
 }
 
-func (s ValidateTestSuite) TestRequireNullString() {
+func (s *ValidateTestSuite) TestRequireNullString() {
 	s.Run("nullString is invalid", func() {
 		s.True(RequireNullString(null.String{}))
 	})
@@ -27,7 +27,7 @@ func (s ValidateTestSuite) TestRequireNullString() {
 	})
 }
 
-func (s ValidateTestSuite) TestRequireString() {
+func (s *ValidateTestSuite) TestRequireString() {
 	s.Run("string is invalid", func() {
 		s.True(RequireString(""))
 	})
@@ -36,7 +36,7 @@ func (s ValidateTestSuite) TestRequireString() {
 	})
 }
 
-func (s ValidateTestSuite) TestRequireTime() {
+func (s *ValidateTestSuite) TestRequireTime() {
 	s.Run("time is a zero time", func() {
 		s.True(RequireTime(time.Time{}))
 	})
@@ -45,7 +45,7 @@ func (s ValidateTestSuite) TestRequireTime() {
 	})
 }
 
-func (s ValidateTestSuite) TestRequireUUID() {
+func (s *ValidateTestSuite) TestRequireUUID() {
 	s.Run("uuid is nil", func() {
 		s.True(RequireUUID(uuid.UUID{}))
 	})
@@ -54,7 +54,7 @@ func (s ValidateTestSuite) TestRequireUUID() {
 	})
 }
 
-func (s ValidateTestSuite) TestRequireInt() {
+func (s *ValidateTestSuite) TestRequireInt() {
 	s.Run("int pointer is nil", func() {
 		var x *int
 		s.True(RequireInt(x))
@@ -65,7 +65,7 @@ func (s ValidateTestSuite) TestRequireInt() {
 	})
 }
 
-func (s ValidateTestSuite) TestFundingNumberInvalid() {
+func (s *ValidateTestSuite) TestFundingNumberInvalid() {
 	s.Run("funding number has letters", func() {
 		s.True(FundingNumberInvalid("AAAAAA"))
 	})
@@ -80,7 +80,7 @@ func (s ValidateTestSuite) TestFundingNumberInvalid() {
 	})
 }
 
-func (s ValidateTestSuite) TestRequireCostPhase() {
+func (s *ValidateTestSuite) TestRequireCostPhase() {
 	s.Run("cost phase pointer is nil", func() {
 		var p *models.LifecycleCostPhase
 		s.True(RequireCostPhase(p))

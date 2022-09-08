@@ -7,7 +7,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s StoreTestSuite) TestCreateSystemIntakeContact() {
+func (s *StoreTestSuite) TestCreateSystemIntakeContact() {
 	ctx := context.Background()
 	intake := testhelpers.NewSystemIntake()
 	_, err := s.store.CreateSystemIntake(ctx, &intake)

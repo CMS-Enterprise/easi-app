@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
+func (s *ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 	authorizeSaveSystemIntake := AuthorizeUserIsIntakeRequester
 
 	s.Run("No EASi job code fails auth", func() {
@@ -53,7 +53,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 	})
 }
 
-func (s ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
+func (s *ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
 	authorizeSaveBizCase := AuthorizeUserIsBusinessCaseRequester
 
 	s.Run("No EASi job code fails auth", func() {
@@ -95,7 +95,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
 	})
 }
 
-func (s ServicesTestSuite) TestHasRole() {
+func (s *ServicesTestSuite) TestHasRole() {
 	fnAuth := HasRole
 	nonGRT := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
 	yesGRT := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
@@ -127,7 +127,7 @@ func (s ServicesTestSuite) TestHasRole() {
 	}
 }
 
-func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequesterOrHasGRTJobCode() {
+func (s *ServicesTestSuite) TestAuthorizeUserIsIntakeRequesterOrHasGRTJobCode() {
 	fnAuth := AuthorizeUserIsIntakeRequesterOrHasGRTJobCode
 	nonEASI := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: false, JobCodeGRT: false}
 	nonGRT := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
@@ -174,7 +174,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequesterOrHasGRTJobCode() {
 	}
 }
 
-func (s ServicesTestSuite) TestAuthorizeUserIsRequestOwnerOr508Team() {
+func (s *ServicesTestSuite) TestAuthorizeUserIsRequestOwnerOr508Team() {
 	fnAuth := AuthorizeUserIsRequestOwnerOr508Team
 	nonEASI := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: false, JobCodeGRT: false}
 	non508 := authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCode508Tester: false, JobCode508User: false}

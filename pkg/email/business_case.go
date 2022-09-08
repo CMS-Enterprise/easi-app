@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type businessCaseSubmission struct {
@@ -45,7 +46,7 @@ func (c Client) SendBusinessCaseSubmissionEmail(ctx context.Context, requestName
 	}
 	err = c.sender.Send(
 		ctx,
-		c.config.GRTEmail,
+		[]models.EmailAddress{c.config.GRTEmail},
 		nil,
 		subject,
 		body,

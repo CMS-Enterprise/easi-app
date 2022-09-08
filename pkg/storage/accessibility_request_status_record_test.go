@@ -8,7 +8,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s StoreTestSuite) TestCreateAccessibilityRequestStatusRecord() {
+func (s *StoreTestSuite) TestCreateAccessibilityRequestStatusRecord() {
 	ctx := context.Background()
 	intake := testhelpers.NewSystemIntake()
 	_, err := s.store.CreateSystemIntake(ctx, &intake)
@@ -50,7 +50,7 @@ func (s StoreTestSuite) TestCreateAccessibilityRequestStatusRecord() {
 	})
 }
 
-func (s StoreTestSuite) TestFetchLatestAccessibilityRequestStatusRecordByRequestID() {
+func (s *StoreTestSuite) TestFetchLatestAccessibilityRequestStatusRecordByRequestID() {
 	ctx := context.Background()
 
 	intake := testhelpers.NewSystemIntake()

@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s StoreTestSuite) TestCreateAction() {
+func (s *StoreTestSuite) TestCreateAction() {
 	ctx := context.Background()
 
 	s.Run("create a new action", func() {
@@ -73,7 +73,7 @@ func (s StoreTestSuite) TestCreateAction() {
 	})
 }
 
-func (s StoreTestSuite) TestFetchActionsByRequestID() {
+func (s *StoreTestSuite) TestFetchActionsByRequestID() {
 	ctx := context.Background()
 
 	intake := testhelpers.NewSystemIntake()

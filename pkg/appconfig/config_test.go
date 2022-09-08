@@ -18,7 +18,7 @@ func TestConfigTestSuite(t *testing.T) {
 	suite.Run(t, configTestSuite)
 }
 
-func (s ConfigTestSuite) TestNewEnvironment() {
+func (s *ConfigTestSuite) TestNewEnvironment() {
 	var envTests = []struct {
 		env string
 	}{
@@ -45,37 +45,37 @@ func (s ConfigTestSuite) TestNewEnvironment() {
 	})
 }
 
-func (s ConfigTestSuite) TestLocal() {
+func (s *ConfigTestSuite) TestLocal() {
 	env, _ := NewEnvironment("local")
 
 	s.True(env.Local())
 }
 
-func (s ConfigTestSuite) TestTest() {
+func (s *ConfigTestSuite) TestTest() {
 	env, _ := NewEnvironment("test")
 
 	s.True(env.Test())
 }
 
-func (s ConfigTestSuite) TestDev() {
+func (s *ConfigTestSuite) TestDev() {
 	env, _ := NewEnvironment("dev")
 
 	s.True(env.Dev())
 }
 
-func (s ConfigTestSuite) TestImpl() {
+func (s *ConfigTestSuite) TestImpl() {
 	env, _ := NewEnvironment("impl")
 
 	s.True(env.Impl())
 }
 
-func (s ConfigTestSuite) TestProd() {
+func (s *ConfigTestSuite) TestProd() {
 	env, _ := NewEnvironment("prod")
 
 	s.True(env.Prod())
 }
 
-func (s ConfigTestSuite) TestDeployed() {
+func (s *ConfigTestSuite) TestDeployed() {
 	s.Run("local isn't deployed environment", func() {
 		s.False(localEnv.Deployed())
 	})
