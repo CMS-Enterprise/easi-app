@@ -232,6 +232,9 @@ export default function CedarContactSelect2({
       }}
       controlShouldRenderValue={!!searchTerm}
       noOptionsMessage={() => t('No results')}
+      classNamePrefix="cedar-contact-select"
+      instanceId={id}
+      placeholder={false}
       isSearchable
       isClearable
     />

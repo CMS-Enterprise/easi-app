@@ -375,7 +375,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   />
                   <Label
                     className="margin-bottom-1"
-                    htmlFor="IntakeForm-BusinessOwner"
+                    htmlFor="IntakeForm-BusinessOwnerName"
                   >
                     {t('contactDetails.businessOwner.nameField')}
                   </Label>
@@ -383,7 +383,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['businessOwner.commonName']}
                   </FieldErrorMsg>
                   <CedarContactSelect
-                    id="IntakeForm-BusinessOwner"
+                    id="IntakeForm-BusinessOwnerName"
                     name="businessOwner.commonName"
                     ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
                     onChange={contact => {
@@ -469,7 +469,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   />
                   <Label
                     className="margin-bottom-1"
-                    htmlFor="IntakeForm-ProductManager"
+                    htmlFor="IntakeForm-ProductManagerName"
                   >
                     {t('contactDetails.productManager.nameField')}
                   </Label>
@@ -477,7 +477,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['productManager.commonName']}
                   </FieldErrorMsg>
                   <CedarContactSelect
-                    id="IntakeForm-ProductManager"
+                    id="IntakeForm-ProductManagerName"
                     name="productManager.commonName"
                     ariaDescribedBy="IntakeForm-ProductManagerHelp"
                     onChange={contact => {
@@ -572,14 +572,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           error={!!flatErrors['isso.commonName']}
                           className="margin-top-2"
                         >
-                          <Label htmlFor="IntakeForm-IssoCommonName">
+                          <Label htmlFor="IntakeForm-IssoName">
                             {t('contactDetails.isso.name')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['isso.commonName']}
                           </FieldErrorMsg>
                           <CedarContactSelect
-                            id="IntakeForm-IssoCommonName"
+                            id="IntakeForm-IssoName"
                             name="isso.commonName"
                             onChange={contact =>
                               setContactFieldsFromName(contact, 'isso')
