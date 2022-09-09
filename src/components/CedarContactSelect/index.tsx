@@ -179,6 +179,10 @@ export default function CedarContactSelect2({
     input: provided => ({
       ...provided,
       visibility: 'visible'
+    }),
+    option: provided => ({
+      ...provided,
+      backgroundColor: 'transparent'
     })
   };
 
