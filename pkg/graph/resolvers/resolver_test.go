@@ -57,17 +57,25 @@ func GetDefaultTestConfigs() *TestConfigs {
 
 // GetDefaults sets the dependencies for the TestConfigs struct
 func (tc *TestConfigs) GetDefaults() {
-	config, ldClient, logger, userInfo, princ := getTestDependencies()
-	store, _ := storage.NewStore(logger, config, ldClient)
 
-	tc.DBConfig = config
-	tc.LDClient = ldClient
-	tc.Logger = logger
-	tc.UserInfo = userInfo
-	tc.Store = store
+	tc.DBConfig = NewDBConfig()
+	tc.LDClient, _ = ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	tc.Logger = zap.NewNop()
+	tc.UserInfo = &models.UserInfo{
+		CommonName: "Test User",
+		Email:      "testuser@test.com",
+		EuaUserID:  "TEST",
+	}
+	tc.Store, _ = storage.NewStore(tc.Logger, tc.DBConfig, tc.LDClient)
 
-	tc.Principal = princ
-	ctx := appcontext.WithLogger(context.Background(), logger)
+	tc.Principal = &authentication.EUAPrincipal{
+		EUAID:            tc.UserInfo.EuaUserID,
+		JobCodeEASi:      true,
+		JobCodeGRT:       true,
+		JobCode508User:   true,
+		JobCode508Tester: true,
+	}
+	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
 	ctx = appcontext.WithPrincipal(ctx, tc.Principal)
 	tc.Context = ctx
 
@@ -86,26 +94,4 @@ func NewDBConfig() storage.DBConfig {
 		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
 		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
 	}
-}
-
-func getTestDependencies() (storage.DBConfig, *ld.LDClient, *zap.Logger, *models.UserInfo, *authentication.EUAPrincipal) {
-	config := NewDBConfig()
-	ldClient, _ := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
-	logger := zap.NewNop()
-	userInfo := &models.UserInfo{
-		CommonName: "Test User",
-		Email:      "testuser@test.com",
-		EuaUserID:  "TEST",
-	}
-
-	princ := &authentication.EUAPrincipal{
-		EUAID:            userInfo.EuaUserID,
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-	}
-
-	return config, ldClient, logger, userInfo, princ
-
 }

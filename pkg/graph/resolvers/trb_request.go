@@ -36,11 +36,11 @@ func TRBRequestUpdate(ctx context.Context, id uuid.UUID, changes map[string]inte
 	if err != nil {
 		return nil, err
 	}
-	logger := appcontext.ZLogger(ctx)
+
 	princ := appcontext.Principal(ctx)
 
 	//apply changes here
-	err = ApplyChangesAndMetaData(logger, existing, changes, princ, store)
+	err = ApplyChangesAndMetaData(changes, existing, princ)
 	if err != nil {
 		return nil, err
 	}
