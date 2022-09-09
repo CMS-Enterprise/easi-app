@@ -2217,6 +2217,16 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 	}, nil
 }
 
+// RelatedSystemIntakes is the resolver for the relatedSystemIntakes field.
+func (r *queryResolver) RelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error) {
+	intakes, err := r.store.FetchRelatedSystemIntakes(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+	return intakes, nil
+}
+
 // TrbRequest is the resolver for the trbRequest field.
 func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
 	return resolvers.TRBRequestGetByID(ctx, id, r.store)
