@@ -14,7 +14,6 @@ import useCedarContactLookup from 'hooks/useCedarContactLookup';
 import { CedarContactProps } from 'types/systemIntake';
 import color from 'utils/uswdsColor';
 
-import '@reach/combobox/styles.css';
 import './index.scss';
 
 type CedarContactSelectProps = {
