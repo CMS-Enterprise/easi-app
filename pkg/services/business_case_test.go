@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
+func (s *ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger, nil)
@@ -47,7 +47,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	})
 }
 
-func (s ServicesTestSuite) TestBusinessCaseCreator() {
+func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 	ctx := context.Background()
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger, nil)
@@ -183,7 +183,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	//})
 }
 
-func (s ServicesTestSuite) TestBusinessCaseUpdater() {
+func (s *ServicesTestSuite) TestBusinessCaseUpdater() {
 	ctx := context.Background()
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger, nil)
@@ -242,7 +242,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	//})
 }
 
-func (s ServicesTestSuite) TestBusinessCaseCloser() {
+func (s *ServicesTestSuite) TestBusinessCaseCloser() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger, nil)

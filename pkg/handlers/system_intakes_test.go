@@ -20,7 +20,7 @@ func newMockFetchSystemIntakes(systemIntakes models.SystemIntakes, err error) fe
 	}
 }
 
-func (s HandlerTestSuite) TestSystemIntakesHandler() {
+func (s *HandlerTestSuite) TestSystemIntakesHandler() {
 	s.Run("golden path FETCH passes", func() {
 		rr := httptest.NewRecorder()
 		requestContext := context.Background()

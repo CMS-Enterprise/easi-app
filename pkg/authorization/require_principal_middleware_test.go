@@ -29,7 +29,7 @@ func TestAuthorizationTestSuite(t *testing.T) {
 	}
 }
 
-func (s AuthorizationTestSuite) TestAllowsAuthenticatedRequests() {
+func (s *AuthorizationTestSuite) TestAllowsAuthenticatedRequests() {
 	principal := authentication.EUAPrincipal{EUAID: "QQQQ"}
 	req := httptest.NewRequest("GET", "/", nil)
 	req = req.WithContext(appcontext.WithPrincipal(req.Context(), &principal))
@@ -46,7 +46,7 @@ func (s AuthorizationTestSuite) TestAllowsAuthenticatedRequests() {
 	s.True(handlerRun)
 }
 
-func (s AuthorizationTestSuite) TestRejectsAnonymousRequests() {
+func (s *AuthorizationTestSuite) TestRejectsAnonymousRequests() {
 	req := httptest.NewRequest("GET", "/", nil)
 
 	rr := httptest.NewRecorder()

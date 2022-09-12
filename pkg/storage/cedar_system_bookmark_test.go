@@ -10,7 +10,7 @@ import (
 	"github.com/facebookgo/clock"
 )
 
-func (s StoreTestSuite) TestCreateCedarSystemBookmark() {
+func (s *StoreTestSuite) TestCreateCedarSystemBookmark() {
 	ctx := context.Background()
 
 	s.Run("create a new cedar system bookmark", func() {
@@ -30,7 +30,7 @@ func (s StoreTestSuite) TestCreateCedarSystemBookmark() {
 	})
 }
 
-func (s StoreTestSuite) TestDuplicateCedarSystemBookmark() {
+func (s *StoreTestSuite) TestDuplicateCedarSystemBookmark() {
 	ctx := context.Background()
 
 	mockClock := clock.NewMock()
