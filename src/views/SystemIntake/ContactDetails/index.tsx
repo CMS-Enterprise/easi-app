@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { useOktaAuth } from '@okta/okta-react';
 import {
   Button,
   Checkbox,
@@ -52,18 +51,19 @@ type ContactDetailsProps = {
 };
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
-  const { id, requestType, requester, governanceTeams } = systemIntake;
+  const {
+    id,
+    requestType,
+    requester,
+    governanceTeams,
+    euaUserId
+  } = systemIntake;
   const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
-  const { authState, oktaAuth } = useOktaAuth();
-  const [intakeRequester, setIntakeRequester] = useState<CedarContactProps>({
-    commonName: '',
-    euaUserId: '',
-    email: ''
-  });
   const flags = useFlags();
 
+  // Checkbox values
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState<boolean>(
     false
   );
@@ -78,21 +78,25 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setActiveContact
   ] = useState<SystemIntakeContactProps | null>(null);
 
-  const [
+  // Intake contacts
+  const {
     contacts,
-    { createContact, updateContact, deleteContact }
-  ] = useSystemIntakeContacts(id);
+    createContact,
+    updateContact,
+    deleteContact
+  } = useSystemIntakeContacts(id);
+  const { businessOwner, productManager, isso } = contacts || {};
 
   const initialValues = {
     requester: {
       name: requester.name || '',
       component: requester.component || ''
     },
-    businessOwner: contacts?.businessOwner,
-    productManager: contacts?.productManager,
+    businessOwner,
+    productManager,
     isso: {
-      isPresent: !!contacts?.isso?.euaUserId,
-      ...contacts?.isso
+      isPresent: !!isso?.euaUserId,
+      ...isso
     },
     governanceTeams: {
       isPresent: governanceTeams.isPresent,
@@ -133,6 +137,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     values: ContactDetailsForm,
     { setFieldValue }: FormikHelpers<ContactDetailsForm>
   ) => {
+    /** Create or update contact in database */
     const updateSystemIntakeContact = async (type: SystemIntakeRoleKeys) => {
       if (values[type].euaUserId && values[type].component) {
         if (values?.[type].id) {
@@ -145,6 +150,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       return null;
     };
 
+    // Update contacts and system intake form
     return Promise.all([
       updateSystemIntakeContact('businessOwner'),
       updateSystemIntakeContact('productManager'),
@@ -177,35 +183,21 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     );
   };
 
+  // Set checkbox default values
   useEffect(() => {
-    if (authState?.isAuthenticated && !intakeRequester.euaUserId) {
-      oktaAuth.getUser().then((info: any) => {
-        setIntakeRequester({
-          commonName: info.name,
-          euaUserId: systemIntake.euaUserId,
-          email: info?.email
-        });
-      });
-    }
-  }, [authState, oktaAuth, systemIntake.euaUserId, intakeRequester]);
-
-  useEffect(() => {
-    if (
-      !checkboxDefaultsSet.current &&
-      contacts?.businessOwner &&
-      intakeRequester.euaUserId
-    ) {
-      if (intakeRequester.euaUserId === contacts?.businessOwner.euaUserId) {
+    // Wait until contacts are loaded
+    if (!checkboxDefaultsSet.current && businessOwner && euaUserId) {
+      if (euaUserId === businessOwner.euaUserId) {
         setReqAndBusOwnerSame(true);
       }
-      if (intakeRequester.euaUserId === contacts?.productManager.euaUserId) {
+      if (euaUserId === productManager?.euaUserId) {
         setReqAndProductManagerSame(true);
       }
       checkboxDefaultsSet.current = true;
     }
-  }, [contacts, intakeRequester]);
+  }, [businessOwner, productManager, euaUserId]);
 
-  // Wait until contacts are loaded to return form
+  // Wait for contacts to load before returning form
   if (!contacts) return null;
 
   return (
@@ -222,6 +214,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         const { values, setFieldValue, errors } = formikProps;
         const flatErrors = flattenErrors(errors);
 
+        /** Set commonName, euaUserId, and email values from contact lookup */
         const setContactFieldsFromName = (
           contact: CedarContactProps | null,
           role: SystemIntakeRoleKeys
@@ -231,6 +224,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           setFieldValue(`${role}.email`, contact?.email || '');
         };
 
+        /** Clear contact values and delete from database */
         const clearContact = (role: SystemIntakeRoleKeys) => {
           setFieldValue(role, {
             ...values[role],
@@ -239,17 +233,28 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             component: '',
             email: ''
           });
+          if (role === 'isso') {
+            setFieldValue('isso.isPresent', false);
+          }
           if (values[role].id) {
             deleteContact(values[role].id!);
           }
         };
 
+        /** Set contacts same as requester if checkbox is checked */
         const setContactFromCheckbox = (
           role: 'businessOwner' | 'productManager',
           sameAsRequester: boolean
         ) => {
           if (sameAsRequester) {
-            setContactFieldsFromName(intakeRequester, role);
+            setContactFieldsFromName(
+              {
+                euaUserId,
+                commonName: requester.name,
+                email: requester.email || ''
+              },
+              role
+            );
             setFieldValue(`${role}.component`, values.requester.component);
           } else {
             clearContact(role);
@@ -370,7 +375,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   />
                   <Label
                     className="margin-bottom-1"
-                    htmlFor="IntakeForm-BusinessOwner"
+                    htmlFor="IntakeForm-BusinessOwnerName"
                   >
                     {t('contactDetails.businessOwner.nameField')}
                   </Label>
@@ -378,12 +383,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['businessOwner.commonName']}
                   </FieldErrorMsg>
                   <CedarContactSelect
-                    id="IntakeForm-BusinessOwner"
+                    id="IntakeForm-BusinessOwnerName"
                     name="businessOwner.commonName"
                     ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
                     onChange={contact => {
-                      if (contact !== null)
+                      if (contact !== null) {
                         setContactFieldsFromName(contact, 'businessOwner');
+                      } else {
+                        clearContact('businessOwner');
+                      }
                     }}
                     value={
                       values.businessOwner?.euaUserId
@@ -461,7 +469,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   />
                   <Label
                     className="margin-bottom-1"
-                    htmlFor="IntakeForm-ProductManager"
+                    htmlFor="IntakeForm-ProductManagerName"
                   >
                     {t('contactDetails.productManager.nameField')}
                   </Label>
@@ -469,7 +477,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     {flatErrors['productManager.commonName']}
                   </FieldErrorMsg>
                   <CedarContactSelect
-                    id="IntakeForm-ProductManager"
+                    id="IntakeForm-ProductManagerName"
                     name="productManager.commonName"
                     ariaDescribedBy="IntakeForm-ProductManagerHelp"
                     onChange={contact => {
@@ -544,14 +552,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
                     <Field
                       as={Radio}
-                      checked={values.isso.isPresent === true}
                       id="IntakeForm-HasIssoYes"
                       name="isso.isPresent"
                       label="Yes"
-                      onChange={() => {
-                        setFieldValue('isso.isPresent', true);
-                      }}
                       value
+                      checked={values.isso.isPresent}
+                      onChange={() => setFieldValue('isso.isPresent', true)}
                       aria-describedby="IntakeForm-ISSOHelp"
                       aria-expanded={values.isso.isPresent === true}
                       aria-controls="isso-name-container"
@@ -566,14 +572,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           error={!!flatErrors['isso.commonName']}
                           className="margin-top-2"
                         >
-                          <Label htmlFor="IntakeForm-IssoCommonName">
+                          <Label htmlFor="IntakeForm-IssoName">
                             {t('contactDetails.isso.name')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['isso.commonName']}
                           </FieldErrorMsg>
                           <CedarContactSelect
-                            id="IntakeForm-IssoCommonName"
+                            id="IntakeForm-IssoName"
                             name="isso.commonName"
                             onChange={contact =>
                               setContactFieldsFromName(contact, 'isso')
@@ -633,15 +639,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     )}
                     <Field
                       as={Radio}
-                      checked={values.isso.isPresent === false}
+                      value={false}
+                      checked={!values.isso.isPresent}
                       id="IntakeForm-HasIssoNo"
                       name="isso.isPresent"
                       label="No"
-                      onChange={() => {
-                        setFieldValue('isso.isPresent', false);
-                        clearContact('isso');
-                      }}
-                      value={false}
+                      onChange={() => clearContact('isso')}
                     />
                   </fieldset>
                 </FieldGroup>
