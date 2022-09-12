@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
@@ -82,14 +81,11 @@ func (s *ClientTestSuite) TestTranslation() {
 	})
 
 	s.Run("system intake", func() {
-		newIntake := testhelpers.NewSystemIntake()
-		newIntake.ContractNumber = null.StringFrom("44554489")
-		si := translation.TranslatableSystemIntake(newIntake)
+		si := translation.TranslatableSystemIntake(testhelpers.NewSystemIntake())
 		si.CreatedAt = si.ContractStartDate
 		si.UpdatedAt = si.ContractStartDate
 
 		ii, err := si.CreateIntakeModel()
-		// s.True(null.StringFromPtr(ii.ContractNumber) == newIntake.ContractNumber)
 		s.NoError(err)
 		s.NotNil(ii)
 	})
