@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 
 import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
 
@@ -9,7 +9,7 @@ import TechnicalAssistance from '.';
 
 describe('Technical Assistance (TRB) homepage', () => {
   it('renders the homepage with a list of trb requests', async () => {
-    const { asFragment } = render(
+    const { asFragment, getByTestId } = render(
       <MemoryRouter initialEntries={['/trb']}>
         <Route path="/trb">
           <MockedProvider
@@ -44,6 +44,8 @@ describe('Technical Assistance (TRB) homepage', () => {
         </Route>
       </MemoryRouter>
     );
+
+    await waitForElementToBeRemoved(() => getByTestId('page-loading'));
 
     expect(asFragment()).toMatchSnapshot();
   });
