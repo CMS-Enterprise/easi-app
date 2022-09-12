@@ -16,7 +16,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
+func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	apiURL, err := url.Parse(s.server.URL)
 	s.NoError(err, "failed to parse URL")
 	apiURL.Path = path.Join(apiURL.Path, "/api/v1")

@@ -1474,6 +1474,31 @@ input SendReportAProblemEmailInput {
   howSevereWasTheProblem: String!
 }
 
+type TRBRequest {
+    id: UUID!
+    name: String!
+    archived: Boolean!
+    type: TRBRequestType!
+    status: TRBRequestStatus!
+
+    createdBy: String!
+    createdAt: Time!
+    modifiedBy: String
+    modifiedAt: Time
+}
+
+"""
+TRBRequestChanges represents the possible changes you can make to a trb request when updating it.
+Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
+https://gqlgen.com/reference/changesets/
+"""
+input TRBRequestChanges @goModel(model: "map[string]interface{}") {
+    name: String
+    archived: Boolean
+    type: TRBRequestType
+    status: TRBRequestStatus 
+}
+
 """
 Defines the mutations for the schema
 """
@@ -1581,6 +1606,10 @@ type Mutation {
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
+  
+  createTRBRequest(requestType: TRBRequestType!): TRBRequest!
+  
+  updateTRBRequest(id: UUID!, changes: TRBRequestChanges): TRBRequest!
 }
 
 """
@@ -1608,8 +1637,21 @@ type Query {
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
+  relatedSystemIntakes(id: UUID!): [SystemIntake!]!
+  trbRequest(id: UUID!): TRBRequest!
+  trbRequestCollection(archived: Boolean! = false): [TRBRequest!]!
+}
+enum TRBRequestType {
+  NEED_HELP
+  BRAINSTORM
+  FOLLOWUP
+  FORMAL_REVIEW
 }
 
+enum TRBRequestStatus {
+  OPEN
+  CLOSED
+}
 """
 UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
 """
@@ -1626,6 +1668,13 @@ Email addresses are represented as strings
 scalar EmailAddress
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
+
+# https://gqlgen.com/config/#inline-config-with-directives
+directive @goModel(
+  model: String
+  models: [String!]
+) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+
 
 """
 A user role associated with a job code

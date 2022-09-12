@@ -22,7 +22,7 @@ func TestRoleTestSuite(t *testing.T) {
 	suite.Run(t, tests)
 }
 
-func (s RoleTestSuite) TestDecodeAssigneeType() {
+func (s *RoleTestSuite) TestDecodeAssigneeType() {
 	s.Run("\"person\" decodes to correct role assignee type", func() {
 		assigneeType, isValid := decodeAssigneeType("person")
 		s.True(isValid)

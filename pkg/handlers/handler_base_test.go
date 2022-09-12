@@ -32,7 +32,7 @@ func (w *failWriter) Header() http.Header {
 	return w.realWriter.Header()
 }
 
-func (s HandlerTestSuite) TestWriteErrorResponse() {
+func (s *HandlerTestSuite) TestWriteErrorResponse() {
 	ctx, traceID := appcontext.WithTrace(context.Background())
 
 	var responseTests = []struct {

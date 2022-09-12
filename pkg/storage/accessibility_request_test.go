@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s StoreTestSuite) TestFetchAccessibilityRequestMetrics() {
+func (s *StoreTestSuite) TestFetchAccessibilityRequestMetrics() {
 	ctx := context.Background()
 
 	mockClock := clock.NewMock()
@@ -58,7 +58,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestMetrics() {
 	}
 }
 
-func (s StoreTestSuite) TestFetchAccessibilityRequestByID() {
+func (s *StoreTestSuite) TestFetchAccessibilityRequestByID() {
 	ctx := context.Background()
 	intake := testhelpers.NewSystemIntake()
 	_, err := s.store.CreateSystemIntake(ctx, &intake)
@@ -99,7 +99,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByID() {
 	})
 }
 
-func (s StoreTestSuite) TestFetchAccessibilityRequestByIDIncludingDeleted() {
+func (s *StoreTestSuite) TestFetchAccessibilityRequestByIDIncludingDeleted() {
 	ctx := context.Background()
 	intake := testhelpers.NewSystemIntake()
 	_, err := s.store.CreateSystemIntake(ctx, &intake)
@@ -124,7 +124,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequestByIDIncludingDeleted() {
 	s.Equal(deletedAccessibilityRequest.ID, returnedAccessibilityRequest.ID)
 }
 
-func (s StoreTestSuite) TestFetchAccessibilityRequests() {
+func (s *StoreTestSuite) TestFetchAccessibilityRequests() {
 	ctx := context.Background()
 	intake := testhelpers.NewSystemIntake()
 	_, err := s.store.CreateSystemIntake(ctx, &intake)
@@ -162,7 +162,7 @@ func (s StoreTestSuite) TestFetchAccessibilityRequests() {
 	})
 }
 
-func (s StoreTestSuite) TestUpdateAccessibilityRequestCedarSystem() {
+func (s *StoreTestSuite) TestUpdateAccessibilityRequestCedarSystem() {
 	ctx := context.Background()
 	intake := testhelpers.NewSystemIntake()
 	createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
