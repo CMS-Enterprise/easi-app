@@ -60,6 +60,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		CostIncreaseAmount:          si.CostIncreaseAmount.Ptr(),
 		Contractor:                  si.Contractor.Ptr(),
 		ContractVehicle:             si.ContractVehicle.Ptr(),
+		ContractNumber:              si.ContractNumber.Ptr(),
 		RequesterEmailAddress:       si.RequesterEmailAddress.Ptr(),
 		LifecycleID:                 si.LifecycleID.Ptr(),
 		LifecycleScope:              si.LifecycleScope.Ptr(),
