@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func (s HandlerTestSuite) TestHealthcheckHandler() {
+func (s *HandlerTestSuite) TestHealthcheckHandler() {
 	rr := httptest.NewRecorder()
 
 	mockViper := viper.New()

@@ -9,7 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
-func (s ServerTestSuite) TestTraceMiddleware() {
+func (s *ServerTestSuite) TestTraceMiddleware() {
 	traceValue := ""
 	// this is the actual test, since the context is cancelled post request
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

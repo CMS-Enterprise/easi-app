@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s StoreTestSuite) TestMyRequests() {
+func (s *StoreTestSuite) TestMyRequests() {
 	notRequesterID := "NOPE"
 	requesterID := "BZOW"
 	requester := &authentication.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}

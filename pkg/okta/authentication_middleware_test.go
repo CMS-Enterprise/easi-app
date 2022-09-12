@@ -55,7 +55,7 @@ func (tjv TestJwtVerifier) VerifyAccessToken(jwt string) (*jwtverifier.Jwt, erro
 	return tjv.verify(jwt)
 }
 
-func (s AuthenticationMiddlewareTestSuite) buildMiddleware(verify func(jwt string) (*jwtverifier.Jwt, error)) func(http.Handler) http.Handler {
+func (s *AuthenticationMiddlewareTestSuite) buildMiddleware(verify func(jwt string) (*jwtverifier.Jwt, error)) func(http.Handler) http.Handler {
 	verifier := TestJwtVerifier{
 		verify: verify,
 	}
@@ -68,7 +68,7 @@ func (s AuthenticationMiddlewareTestSuite) buildMiddleware(verify func(jwt strin
 
 }
 
-func (s AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
+func (s *AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
 
 	s.Run("a valid token sets the principal", func() {
 		authMiddleware := s.buildMiddleware(func(jwt string) (*jwtverifier.Jwt, error) {

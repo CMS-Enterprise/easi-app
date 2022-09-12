@@ -26,7 +26,7 @@ func TestSystemSummaryTestSuite(t *testing.T) {
 	suite.Run(t, tests)
 }
 
-func (s SystemSummaryTestSuite) TestGetSystemSummary() {
+func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
 	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
@@ -41,7 +41,7 @@ func (s SystemSummaryTestSuite) TestGetSystemSummary() {
 		s.Equal(resp, blankSummary)
 	})
 }
-func (s SystemSummaryTestSuite) TestGetSystem() {
+func (s *SystemSummaryTestSuite) TestGetSystem() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
 	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
