@@ -17,6 +17,7 @@ type EASIIntake struct {
 	ContractEndDate             *string              `json:"contractEndDate,omitempty" jsonschema:"description=The contract's end date,example=2026-10-20"`
 	ContractStartDate           *string              `json:"contractStartDate,omitempty" jsonschema:"description=The contract's start date,example=2022-10-20"`
 	ContractVehicle             *string              `json:"contractVehicle,omitempty" jsonschema:"description=Contract vehicle for this effort,example=8(a)"`
+	ContractNumber              *string              `json:"contractNumber,omitempty" jsonschema:"description=Contract number for this effort,example=8(a)"`
 	Contractor                  *string              `json:"contractor,omitempty" jsonschema:"description=Contractor who will perform the work detailed in this request,example=Oddball"`
 	CostIncrease                string               `json:"costIncrease" jsonschema:"description=Is there a cost increase associated with this request,example=YES,example=NOT_SURE"`
 	CostIncreaseAmount          *string              `json:"costIncreaseAmount,omitempty" jsonschema:"description=How much is the cost increase,example=Over two million dollars"`
