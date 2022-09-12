@@ -1,5 +1,3 @@
-/** Custom hook for retrieving contacts from Cedar by common name */
-
 import { useMemo, useState } from 'react';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
 
@@ -17,6 +15,7 @@ function useCedarContactLookup(
   euaUserId: string
 ): CedarContactProps | undefined;
 
+/** Custom hook for retrieving contacts from Cedar by common name */
 function useCedarContactLookup(
   query?: string,
   euaUserId?: string

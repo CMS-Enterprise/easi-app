@@ -255,10 +255,10 @@ export type SystemIntakeContactProps = {
 
 /** Formatted system intake contacts */
 export type FormattedContacts = {
-  businessOwner: AugmentedSystemIntakeContact;
-  productManager: AugmentedSystemIntakeContact;
-  isso: AugmentedSystemIntakeContact;
-  additionalContacts: AugmentedSystemIntakeContact[];
+  businessOwner: SystemIntakeContactProps;
+  productManager: SystemIntakeContactProps;
+  isso: SystemIntakeContactProps;
+  additionalContacts: SystemIntakeContactProps[];
 };
 
 /** Function to create system intake contact */
@@ -277,14 +277,12 @@ export type DeleteContactType = (
 ) => Promise<AugmentedSystemIntakeContact[] | undefined>;
 
 /** useSystemIntakeContacts custom hook return type */
-export type UseSystemIntakeContactsType = [
-  FormattedContacts | null,
-  {
-    createContact: CreateContactType;
-    updateContact: UpdateContactType;
-    deleteContact: DeleteContactType;
-  }
-];
+export type UseSystemIntakeContactsType = {
+  contacts: FormattedContacts | null;
+  createContact: CreateContactType;
+  updateContact: UpdateContactType;
+  deleteContact: DeleteContactType;
+};
 
 /** System intake contact role keys */
 export type SystemIntakeRoleKeys = 'businessOwner' | 'productManager' | 'isso';

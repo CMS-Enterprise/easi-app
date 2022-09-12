@@ -78,6 +78,8 @@ const ContactForm = ({
     component: '',
     role: ''
   });
+
+  /** Error handling and save contact */
   const handleSubmit = () => {
     const submitErrors = {
       commonName: activeContact.commonName
@@ -210,11 +212,14 @@ export default function AdditionalContacts({
   className?: string;
 }) {
   const { t } = useTranslation('intake');
-  const [
+  const {
     contacts,
-    { createContact, updateContact, deleteContact }
-  ] = useSystemIntakeContacts(systemIntakeId);
+    createContact,
+    updateContact,
+    deleteContact
+  } = useSystemIntakeContacts(systemIntakeId);
 
+  // Wait for contacts to load
   if (!contacts?.additionalContacts) return null;
 
   return (
