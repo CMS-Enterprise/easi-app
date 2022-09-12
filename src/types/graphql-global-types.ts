@@ -131,6 +131,11 @@ export enum SystemIntakeStatus {
   WITHDRAWN = "WITHDRAWN",
 }
 
+export enum TRBRequestStatus {
+  CLOSED = "CLOSED",
+  OPEN = "OPEN",
+}
+
 /**
  * The type of test added to a 508/accessibility request
  */

@@ -14,34 +14,42 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
+import { useQuery } from '@apollo/client';
 import { Button, Link, Table } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
+import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
+import {
+  GetTrbRequests,
+  // eslint-disable-next-line camelcase
+  GetTrbRequests_trbRequestCollection
+} from 'queries/types/GetTrbRequests';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
   getHeaderSortIcon
 } from 'utils/tableSort';
+import NotFound from 'views/NotFound';
+import { formatDate } from 'views/SystemProfile';
 
-interface TrbDataTodo {
-  name: string;
-  createdDts: string;
-  status: string;
-}
-
-type TechnicalAssistanceProps = {};
-
-// eslint-disable-next-line no-empty-pattern
-function TechnicalAssistance({}: TechnicalAssistanceProps) {
+function TechnicalAssistance() {
   const { t } = useTranslation('technicalAssistance');
   const { url } = useRouteMatch();
 
-  const columns = useMemo<Column<TrbDataTodo>[]>(() => {
+  const { loading, error, data } = useQuery<GetTrbRequests>(
+    GetTrbRequestsQuery
+  );
+
+  const trbRequests = data?.trbRequestCollection || [];
+
+  // eslint-disable-next-line camelcase
+  const columns = useMemo<Column<GetTrbRequests_trbRequestCollection>[]>(() => {
     return [
       {
         Header: t<string>('table.header.requestName'),
@@ -49,7 +57,8 @@ function TechnicalAssistance({}: TechnicalAssistanceProps) {
       },
       {
         Header: t<string>('table.header.submissionDate'),
-        accessor: 'createdDts'
+        accessor: 'createdAt',
+        Cell: ({ value }) => formatDate(value)
       },
       {
         Header: t<string>('table.header.status'),
@@ -57,26 +66,6 @@ function TechnicalAssistance({}: TechnicalAssistanceProps) {
       }
     ];
   }, [t]);
-
-  const data = useMemo<TrbDataTodo[]>(() => {
-    return [
-      {
-        name: 'foo',
-        createdDts: '2011-10-05T14:48:00.000Z',
-        status: 'OPEN'
-      },
-      {
-        name: 'bar',
-        createdDts: '2012-10-05T14:48:00.000Z',
-        status: 'OPEN'
-      },
-      {
-        name: 'baz',
-        createdDts: '2013-10-05T14:48:00.000Z',
-        status: 'CLOSED'
-      }
-    ];
-  }, []);
 
   const {
     canNextPage,
@@ -97,7 +86,7 @@ function TechnicalAssistance({}: TechnicalAssistanceProps) {
   } = useTable(
     {
       columns,
-      data,
+      data: trbRequests,
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
@@ -111,6 +100,14 @@ function TechnicalAssistance({}: TechnicalAssistanceProps) {
     useSortBy,
     usePagination
   );
+
+  if (loading) {
+    return <PageLoading />;
+  }
+
+  if (error) {
+    return <NotFound />;
+  }
 
   return (
     <MainContent className="technical-assistance grid-container">
@@ -136,7 +133,7 @@ function TechnicalAssistance({}: TechnicalAssistanceProps) {
           pageIndex={state.pageIndex}
           pageSize={state.pageSize}
           filteredRowLength={rows.length}
-          rowLength={data.length}
+          rowLength={trbRequests.length}
           className="margin-bottom-4"
         />
 

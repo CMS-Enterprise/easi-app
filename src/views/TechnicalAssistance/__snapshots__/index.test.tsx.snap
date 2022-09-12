@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Technical Assistance (TRB) homepage renders a list of trb requests 1`] = `
+<DocumentFragment>
+  <div
+    class="margin-y-10"
+    data-testid="page-loading"
+  >
+    <div
+      class="text-center"
+    >
+      <span
+        aria-busy="true"
+        aria-valuetext="Loading the page"
+        class="easi-spinner easi-spinner--xl"
+        role="progressbar"
+      />
+    </div>
+    <h1
+      class="margin-top-6 text-center"
+    >
+      Loading the page
+    </h1>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Technical Assistance (TRB) homepage renders the homepage and a list of trb requests 1`] = `
+<DocumentFragment>
+  <div
+    class="margin-y-10"
+    data-testid="page-loading"
+  >
+    <div
+      class="text-center"
+    >
+      <span
+        aria-busy="true"
+        aria-valuetext="Loading the page"
+        class="easi-spinner easi-spinner--xl"
+        role="progressbar"
+      />
+    </div>
+    <h1
+      class="margin-top-6 text-center"
+    >
+      Loading the page
+    </h1>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Technical Assistance (TRB) homepage renders the homepage with a list of trb requests 1`] = `
+<DocumentFragment>
+  <div
+    class="margin-y-10"
+    data-testid="page-loading"
+  >
+    <div
+      class="text-center"
+    >
+      <span
+        aria-busy="true"
+        aria-valuetext="Loading the page"
+        class="easi-spinner easi-spinner--xl"
+        role="progressbar"
+      />
+    </div>
+    <h1
+      class="margin-top-6 text-center"
+    >
+      Loading the page
+    </h1>
+  </div>
+</DocumentFragment>
+`;
