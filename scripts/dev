@@ -367,6 +367,7 @@ namespace :db do
       system_intake_contacts
       system_intake_funding_sources
       system_intakes
+      trb_request
     }
     sql = tables.map { |table| "DELETE FROM #{table};" }.join
     puts "Cleaning database..."
