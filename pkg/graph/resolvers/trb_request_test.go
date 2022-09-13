@@ -4,7 +4,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-//TRBRequestCreate makes a new TRB request
+// TRBRequestCreate makes a new TRB request
 func (suite *ResolverSuite) TestTRBRequestCreate() {
 
 	//TODO get the context in the test configs
@@ -23,7 +23,7 @@ func (suite *ResolverSuite) TestTRBRequestCreate() {
 
 }
 
-//TRBRequestUpdate updates a TRB request
+// TRBRequestUpdate updates a TRB request
 func (suite *ResolverSuite) TestTRBRequestUpdate() {
 
 	trb, err := TRBRequestCreate(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
@@ -48,7 +48,7 @@ func (suite *ResolverSuite) TestTRBRequestUpdate() {
 
 }
 
-//TRBRequestGetByID returns a TRB request by it's ID
+// TRBRequestGetByID returns a TRB request by it's ID
 func (suite *ResolverSuite) TestTRBRequestGetByID() {
 	trb, err := TRBRequestCreate(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
 	suite.NoError(err)
@@ -60,7 +60,7 @@ func (suite *ResolverSuite) TestTRBRequestGetByID() {
 
 }
 
-//TRBRequestCollectionGet returns all TRB Requests
+// TRBRequestCollectionGet returns all TRB Requests
 func (suite *ResolverSuite) TestTRBRequestCollectionGet() {
 
 	trb, err := TRBRequestCreate(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)

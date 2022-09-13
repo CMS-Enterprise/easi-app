@@ -216,6 +216,14 @@ type CreateSystemIntakeNoteInput struct {
 	IntakeID   uuid.UUID `json:"intakeId"`
 }
 
+// The data needed add a TRB request attendee to a TRB request
+type CreateTRBRequestAttendeeInput struct {
+	EuaUserID    string    `json:"euaUserId"`
+	TrbRequestID uuid.UUID `json:"trbRequestId"`
+	Component    string    `json:"component"`
+	Role         string    `json:"role"`
+}
+
 // The input required to add a test date/score to a 508/accessibility request
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
@@ -271,6 +279,16 @@ type DeleteSystemIntakeContactInput struct {
 // The payload when deleting a system intake contact
 type DeleteSystemIntakeContactPayload struct {
 	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
+}
+
+// The data needed to delete a TRB request attendee
+type DeleteTRBRequestAttendeeInput struct {
+	ID uuid.UUID `json:"id"`
+}
+
+// The payload returned when deleting a TRB request attendee
+type DeleteTRBRequestAttendeePayload struct {
+	ID uuid.UUID `json:"id"`
 }
 
 // The input required to delete a test date/score
@@ -571,6 +589,11 @@ type SystemIntakeRequesterWithComponentInput struct {
 	Component string `json:"component"`
 }
 
+// The payload returned when creating/updating a TRB request attendee
+type TRBRequestAttendeePayload struct {
+	TrbRequestAttendee *models.TRBRequestAttendee `json:"trbRequestAttendee"`
+}
+
 // Parameters for updating a 508/accessibility request's associated CEDAR system
 type UpdateAccessibilityRequestCedarSystemInput struct {
 	ID            uuid.UUID `json:"id"`
@@ -667,6 +690,15 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	GrbDate *time.Time `json:"grbDate"`
 	GrtDate *time.Time `json:"grtDate"`
 	ID      uuid.UUID  `json:"id"`
+}
+
+// Represents an EUA user who is included as an attendee for a TRB request
+type UpdateTRBRequestAttendeeInput struct {
+	ID           uuid.UUID `json:"id"`
+	EuaUserID    string    `json:"euaUserId"`
+	TrbRequestID uuid.UUID `json:"trbRequestId"`
+	Component    string    `json:"component"`
+	Role         string    `json:"role"`
 }
 
 // The input required to update a test date/score

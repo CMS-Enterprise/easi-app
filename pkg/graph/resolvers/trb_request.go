@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-//TRBRequestCreate makes a new TRB request
+// TRBRequestCreate makes a new TRB request
 func TRBRequestCreate(ctx context.Context, requestType models.TRBRequestType, store *storage.Store) (*models.TRBRequest, error) {
 	princ := appcontext.Principal(ctx)
 	trb := models.NewTRBRequest(princ.ID())
@@ -29,7 +29,7 @@ func TRBRequestCreate(ctx context.Context, requestType models.TRBRequestType, st
 
 }
 
-//TRBRequestUpdate updates a TRB request
+// TRBRequestUpdate updates a TRB request
 func TRBRequestUpdate(ctx context.Context, id uuid.UUID, changes map[string]interface{}, store *storage.Store) (*models.TRBRequest, error) {
 
 	existing, err := store.TRBRequestGetByID(appcontext.ZLogger(ctx), id)
@@ -54,7 +54,7 @@ func TRBRequestUpdate(ctx context.Context, id uuid.UUID, changes map[string]inte
 
 }
 
-//TRBRequestGetByID returns a TRB request by it's ID
+// TRBRequestGetByID returns a TRB request by it's ID
 func TRBRequestGetByID(ctx context.Context, id uuid.UUID, store *storage.Store) (*models.TRBRequest, error) {
 
 	trb, err := store.TRBRequestGetByID(appcontext.ZLogger(ctx), id)
@@ -64,7 +64,7 @@ func TRBRequestGetByID(ctx context.Context, id uuid.UUID, store *storage.Store) 
 	return trb, err
 }
 
-//TRBRequestCollectionGet returns all TRB Requests
+// TRBRequestCollectionGet returns all TRB Requests
 func TRBRequestCollectionGet(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
 
 	TRBRequests, err := store.TRBRequestCollectionGet(appcontext.ZLogger(ctx), archived)

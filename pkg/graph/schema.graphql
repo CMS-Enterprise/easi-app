@@ -1474,6 +1474,9 @@ input SendReportAProblemEmailInput {
   howSevereWasTheProblem: String!
 }
 
+"""
+Represents a request for support from the Technical Review Board (TRB)
+"""
 type TRBRequest {
     id: UUID!
     name: String!
@@ -1488,7 +1491,7 @@ type TRBRequest {
 }
 
 """
-TRBRequestChanges represents the possible changes you can make to a trb request when updating it.
+TRBRequestChanges represents the possible changes you can make to a TRB request when updating it.
 Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
 https://gqlgen.com/reference/changesets/
 """
@@ -1497,6 +1500,59 @@ input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     archived: Boolean
     type: TRBRequestType
     status: TRBRequestStatus 
+}
+
+"""
+Represents an EUA user who is included as an attendee for a TRB request
+"""
+type TRBRequestAttendee {
+  id: UUID!
+  euaUserId: String!
+  trbRequestId: UUID!
+  component: String!
+  role: String!
+}
+
+"""
+The data needed add a TRB request attendee to a TRB request
+"""
+input CreateTRBRequestAttendeeInput {
+  euaUserId: String!
+  trbRequestId: UUID!
+  component: String!
+  role: String!
+}
+
+"""
+Represents an EUA user who is included as an attendee for a TRB request
+"""
+input UpdateTRBRequestAttendeeInput {
+  id: UUID!
+  euaUserId: String!
+  trbRequestId: UUID!
+  component: String!
+  role: String!
+}
+
+"""
+The payload returned when creating/updating a TRB request attendee
+"""
+type TRBRequestAttendeePayload {
+ trbRequestAttendee: TRBRequestAttendee
+}
+
+"""
+The data needed to delete a TRB request attendee
+"""
+input DeleteTRBRequestAttendeeInput {
+  id: UUID!
+}
+
+"""
+The payload returned when deleting a TRB request attendee
+"""
+type DeleteTRBRequestAttendeePayload {
+  id: UUID!
 }
 
 """
@@ -1606,10 +1662,11 @@ type Mutation {
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
-  
   createTRBRequest(requestType: TRBRequestType!): TRBRequest!
-  
   updateTRBRequest(id: UUID!, changes: TRBRequestChanges): TRBRequest!
+  createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendeePayload
+  updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendeePayload
+  deleteTRBRequestAttendee(input: DeleteTRBRequestAttendeeInput!): DeleteTRBRequestAttendeePayload
 }
 
 """
