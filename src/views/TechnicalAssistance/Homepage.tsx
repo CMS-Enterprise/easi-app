@@ -15,8 +15,9 @@ import {
   useTable
 } from 'react-table';
 import { useQuery } from '@apollo/client';
-import { Button, Link, Table } from '@trussworks/react-uswds';
+import { Button, Table } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -113,13 +114,13 @@ function Homepage() {
     <MainContent className="technical-assistance grid-container">
       <PageHeading>{t('heading')}</PageHeading>
 
-      <Link
-        href={`${url}/request-type`}
+      <UswdsReactLink
+        to={`${url}/request-type`}
         className="usa-button"
         variant="unstyled"
       >
         {t('nextStep')}
-      </Link>
+      </UswdsReactLink>
 
       <div>
         <GlobalClientFilter
