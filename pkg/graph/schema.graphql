@@ -1556,6 +1556,13 @@ type DeleteTRBRequestAttendeePayload {
 }
 
 """
+The payload when retrieving system intake contacts
+"""
+type TRBRequestAttendeesPayload {
+  trbRequestAttendees: [TRBRequestAttendee!]!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -1697,7 +1704,9 @@ type Query {
   relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequestCollection(archived: Boolean! = false): [TRBRequest!]!
+  trbRequestAttendees(id: UUID!): TRBRequestAttendeesPayload!
 }
+
 enum TRBRequestType {
   NEED_HELP
   BRAINSTORM
@@ -1709,6 +1718,7 @@ enum TRBRequestStatus {
   OPEN
   CLOSED
 }
+
 """
 UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
 """
@@ -1731,7 +1741,6 @@ directive @goModel(
   model: String
   models: [String!]
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
-
 
 """
 A user role associated with a job code

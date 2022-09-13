@@ -594,6 +594,11 @@ type TRBRequestAttendeePayload struct {
 	TrbRequestAttendee *models.TRBRequestAttendee `json:"trbRequestAttendee"`
 }
 
+// The payload when retrieving system intake contacts
+type TRBRequestAttendeesPayload struct {
+	TrbRequestAttendees []*models.TRBRequestAttendee `json:"trbRequestAttendees"`
+}
+
 // Parameters for updating a 508/accessibility request's associated CEDAR system
 type UpdateAccessibilityRequestCedarSystemInput struct {
 	ID            uuid.UUID `json:"id"`

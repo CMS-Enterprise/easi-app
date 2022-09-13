@@ -2291,6 +2291,18 @@ func (r *queryResolver) TrbRequestCollection(ctx context.Context, archived bool)
 	return resolvers.TRBRequestCollectionGet(ctx, archived, r.store)
 }
 
+// TrbRequestAttendees is the resolver for the trbRequestAttendees field.
+func (r *queryResolver) TrbRequestAttendees(ctx context.Context, id uuid.UUID) (*model.TRBRequestAttendeesPayload, error) {
+	attendees, err := r.store.FetchTRBRequestAttendeesByTRBRequestID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.TRBRequestAttendeesPayload{
+		TrbRequestAttendees: attendees,
+	}, nil
+}
+
 // Actions is the resolver for the actions field.
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
 	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
