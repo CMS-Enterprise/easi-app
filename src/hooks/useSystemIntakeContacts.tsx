@@ -8,10 +8,7 @@ import {
   GetSystemIntakeContactsQuery,
   UpdateSystemIntakeContact
 } from 'queries/SystemIntakeContactsQueries';
-import {
-  GetSystemIntakeContacts,
-  GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact
-} from 'queries/types/GetSystemIntakeContacts';
+import { GetSystemIntakeContacts } from 'queries/types/GetSystemIntakeContacts';
 import {
   CreateSystemIntakeContactInput,
   DeleteSystemIntakeContactInput,
@@ -51,8 +48,8 @@ function useSystemIntakeContacts(
   /** Formatted system intake contacts object */
   const contacts = useMemo<FormattedContacts | null>(() => {
     // Get systemIntakeContacts
-    const systemIntakeContacts: AugmentedSystemIntakeContact[] | undefined =
-      data?.systemIntakeContacts?.systemIntakeContacts;
+    const systemIntakeContacts = data?.systemIntakeContacts
+      ?.systemIntakeContacts as SystemIntakeContactProps[];
 
     // Return null if no systemIntakeContacts
     if (!systemIntakeContacts || !systemIntake) return null;
@@ -104,7 +101,7 @@ function useSystemIntakeContacts(
     deleteSystemIntakeContact
   ] = useMutation<DeleteSystemIntakeContactInput>(DeleteSystemIntakeContact);
 
-  // Create system intake contact
+  /** Create system intake contact in database */
   const createContact = async (contact: SystemIntakeContactProps) => {
     const { euaUserId, component, role } = contact;
     return createSystemIntakeContact({
@@ -125,7 +122,7 @@ function useSystemIntakeContacts(
       );
   };
 
-  // Update system intake contact
+  /** Update system intake contact in database */
   const updateContact = async (contact: SystemIntakeContactProps) => {
     const { id, euaUserId, component, role } = contact;
     return updateSystemIntakeContact({
@@ -146,7 +143,7 @@ function useSystemIntakeContacts(
       );
   };
 
-  // Delete system intake contact
+  /** Delete system intake contact from database */
   const deleteContact = async (id: string) => {
     return deleteSystemIntakeContact({
       variables: {
@@ -162,7 +159,12 @@ function useSystemIntakeContacts(
       );
   };
 
-  return [contacts, { createContact, updateContact, deleteContact }];
+  return {
+    contacts,
+    createContact,
+    updateContact,
+    deleteContact
+  };
 }
 
 export default useSystemIntakeContacts;

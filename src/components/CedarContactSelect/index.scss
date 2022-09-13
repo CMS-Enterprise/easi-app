@@ -1,6 +1,8 @@
-[data-reach-combobox-option] [data-user-value] {
-  font-weight: bold;
-}
-[data-reach-combobox-option] [data-suggested-value] {
-  font-weight: normal;
+.usa-combo-box__list-option {
+  &--focused {
+  }
+
+  label {
+    margin-top: 0;
+  }
 }

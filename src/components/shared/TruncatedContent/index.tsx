@@ -28,20 +28,22 @@ export default function TruncatedContent({
   return (
     <>
       {defaultContent}
-      <Button
-        data-testid="truncatedContentButton"
-        type="button"
-        unstyled
-        onClick={() => setExpanded(!expanded)}
-        className={classNames(
-          'truncated-content-button',
-          'display-flex',
-          'flex-align-center',
-          buttonClassName
-        )}
-      >
-        <Icon className="margin-x-05" /> {expanded ? labelLess : labelMore}
-      </Button>
+      {expandedContent.length > 0 && (
+        <Button
+          data-testid="truncatedContentButton"
+          type="button"
+          unstyled
+          onClick={() => setExpanded(!expanded)}
+          className={classNames(
+            'truncated-content-button',
+            'display-flex',
+            'flex-align-center',
+            buttonClassName
+          )}
+        >
+          <Icon className="margin-x-05" /> {expanded ? labelLess : labelMore}
+        </Button>
+      )}
       {expanded && expandedContent}
     </>
   );
