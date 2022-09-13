@@ -20,20 +20,25 @@ import TruncatedContent from 'components/shared/TruncatedContent';
 import useSystemIntake from 'hooks/useSystemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailRecipientsFieldsProps } from 'types/action';
-import { SystemIntakeContactProps } from 'types/systemIntake';
+import {
+  CreateContactType,
+  SystemIntakeContactProps
+} from 'types/systemIntake';
 
 const Recipient = ({
   contact,
   checked,
   updateRecipients,
   activeContact,
-  setActiveContact
+  setActiveContact,
+  createContact
 }: {
   contact: SystemIntakeContactProps;
   checked: boolean;
   updateRecipients: (value: string) => void;
   activeContact: SystemIntakeContactProps | null;
   setActiveContact: (value: SystemIntakeContactProps | null) => void;
+  createContact: CreateContactType;
 }) => {
   const { t } = useTranslation('action');
   const [isActive, setActive] = useState(false);
@@ -90,7 +95,15 @@ const Recipient = ({
             autoSearch
           />
           <ButtonGroup className="margin-top-2">
-            <Button type="button" disabled={!activeContact?.euaUserId}>
+            <Button
+              type="button"
+              disabled={!(activeContact?.euaUserId && activeContact?.email)}
+              onClick={() => {
+                createContact(activeContact!);
+                setActive(false);
+                setActiveContact(null);
+              }}
+            >
               Save
             </Button>
             <Button
@@ -126,24 +139,17 @@ export default ({
   // const flags = useFlags();
 
   // Contacts query
-  const { contacts } = useSystemIntakeContacts(systemIntakeId);
+  const { contacts, createContact } = useSystemIntakeContacts(systemIntakeId);
   // Get system intake from Apollo cache
   const { systemIntake } = useSystemIntake(systemIntakeId);
+  const { requester } = systemIntake || {};
 
   const defaultRecipients = useRef(recipients).current;
-
-  const requester: SystemIntakeContactProps = {
-    euaUserId: systemIntake!.euaUserId,
-    commonName: systemIntake!.requester.name,
-    component: systemIntake!.requester.component!,
-    email: systemIntake!.requester.email || '',
-    systemIntakeId: systemIntake!.id,
-    role: 'Requester'
-  };
 
   /** Formatted array of contacts in order of display */
   const contactsArray = contacts
     ? [
+        contacts.businessOwner,
         contacts.productManager,
         ...(contacts.isso.commonName ? [contacts.isso] : []), // Only include ISSO if present
         contacts.additionalContacts
@@ -159,11 +165,12 @@ export default ({
   // Number of possible recipients
   const contactsCount = contactsArray.length + 3;
   // Number of selected contacts
-  const selectedContacts = [...contactsArray, requester].filter(({ email }) =>
+  const selectedContacts = contactsArray.filter(({ email }) =>
     recipients.regularRecipientEmails.includes(email!)
   ).length;
   const selectedCount =
     selectedContacts +
+    Number(recipients.regularRecipientEmails.includes(requester?.email!)) +
     Number(recipients.shouldNotifyITGovernance) +
     Number(recipients.shouldNotifyITInvestment);
 
@@ -228,14 +235,16 @@ export default ({
             )}
             buttonClassName="margin-top-105"
           >
-            <Recipient
-              contact={requester as SystemIntakeContactProps}
+            <CheckboxField
+              label={`${requester?.name}, ${requester?.component} (Requester)`}
               checked={recipients.regularRecipientEmails.includes(
-                requester.email
+                requester?.email!
               )}
-              updateRecipients={updateRecipients}
-              activeContact={activeContact}
-              setActiveContact={setActiveContact}
+              name="contact-requester"
+              id="contact-requester"
+              value={requester?.email!}
+              onChange={() => updateRecipients(requester?.email!)}
+              onBlur={() => null}
             />
             <CheckboxField
               label="IT Governance Mailbox"
@@ -278,8 +287,8 @@ export default ({
                   }
                   updateRecipients={updateRecipients}
                   activeContact={activeContact}
-                  // activeContact={unverifiedRecipients[0]} // TEST DATA
                   setActiveContact={setActiveContact}
+                  createContact={createContact}
                 />
               ))}
             {!defaultRecipients.shouldNotifyITInvestment && (
@@ -311,6 +320,7 @@ export default ({
                   updateRecipients={updateRecipients}
                   activeContact={activeContact}
                   setActiveContact={setActiveContact}
+                  createContact={createContact}
                 />
               ))}
             <AdditionalContacts
