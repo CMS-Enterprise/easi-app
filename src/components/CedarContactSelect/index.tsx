@@ -1,6 +1,7 @@
 import React, { CSSProperties, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Select, {
+  ClearIndicatorProps,
   components,
   IndicatorsContainerProps,
   InputProps,
@@ -57,6 +58,17 @@ const Menu = (props: MenuProps<CedarContactSelectOption, false>) => {
   } = props;
   if (inputValue.length < 2) return null;
   return <components.Menu {...props} />;
+};
+
+const ClearIndicator = (
+  props: ClearIndicatorProps<CedarContactSelectOption, false>
+) => {
+  const {
+    selectProps: { inputValue }
+  } = props;
+  // Fix bug in 'same as requester' checkboxes where clear indicator shows with no input value
+  if (!inputValue) return null;
+  return <components.ClearIndicator {...props} />;
 };
 
 const IndicatorsContainer = (
@@ -118,8 +130,8 @@ export default function CedarContactSelect({
   const showWarning = autoSearch && !value?.euaUserId && contacts.length !== 1;
 
   /** Update contact and reset search term */
-  const updateContact = (contact: CedarContactProps | null) => {
-    onChange(contact);
+  const updateContact = (contact?: CedarContactProps | null) => {
+    onChange(contact || null);
     selectedContact.current = contact?.euaUserId;
     setSearchTerm(contact ? formatLabel(contact) : '');
   };
@@ -210,7 +222,7 @@ export default function CedarContactSelect({
   // Update contact when value changes
   // Fix for 'same as requester' checkboxes in system intake form
   useEffect(() => {
-    if (value && value?.euaUserId !== selectedContact.current && !autoSearch) {
+    if (!autoSearch) {
       updateContact(value);
     }
   }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -231,7 +243,7 @@ export default function CedarContactSelect({
       aria-describedby={ariaDescribedBy}
       aria-disabled={disabled}
       aria-label="Cedar-Users"
-      components={{ Input, IndicatorsContainer, Option, Menu }}
+      components={{ Input, IndicatorsContainer, ClearIndicator, Option, Menu }}
       options={contacts.map(contact => ({
         label: `${contact.commonName}, ${contact.euaUserId}`,
         value: contact

@@ -144,8 +144,6 @@ export default ({
   /** Formatted array of contacts in order of display */
   const contactsArray = contacts
     ? [
-        { ...contacts.businessOwner, commonName: 'Ashley' },
-        // contacts.businessOwner, // TODO: TEST DATA
         contacts.productManager,
         ...(contacts.isso.commonName ? [contacts.isso] : []), // Only include ISSO if present
         contacts.additionalContacts
