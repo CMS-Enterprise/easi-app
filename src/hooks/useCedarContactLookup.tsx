@@ -5,10 +5,13 @@ import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import { GetCedarContacts } from 'queries/types/GetCedarContacts';
 import { CedarContactProps } from 'types/systemIntake';
 
-function useCedarContactLookup(): [
-  CedarContactProps[],
-  (commonName: string) => void
-];
+function useCedarContactLookup(
+  query?: string | null
+): {
+  contacts: CedarContactProps[];
+  queryCedarContacts: (commonName: string) => void;
+  loading: boolean;
+};
 
 function useCedarContactLookup(
   query: string,
@@ -17,16 +20,23 @@ function useCedarContactLookup(
 
 /** Custom hook for retrieving contacts from Cedar by common name */
 function useCedarContactLookup(
-  query?: string,
+  query?: string | null,
   euaUserId?: string
 ):
-  | [CedarContactProps[], (commonName: string) => void]
+  | {
+      contacts: CedarContactProps[];
+      queryCedarContacts: (commonName: string) => void;
+      loading: boolean;
+    }
   | CedarContactProps
   | undefined {
-  const { data, refetch } = useQuery<GetCedarContacts>(GetCedarContactsQuery, {
-    variables: { commonName: query },
-    skip: !query
-  });
+  const { data, refetch, loading } = useQuery<GetCedarContacts>(
+    GetCedarContactsQuery,
+    {
+      variables: { commonName: query },
+      skip: !query
+    }
+  );
   const [contacts, setContacts] = useState<CedarContactProps[]>(
     data?.cedarPersonsByCommonName || []
   );
@@ -58,7 +68,9 @@ function useCedarContactLookup(
     }
   };
 
-  return euaUserId ? contactByEuaUserId : [contacts, queryCedarContacts];
+  return euaUserId
+    ? contactByEuaUserId
+    : { contacts, queryCedarContacts, loading };
 }
 
 const sortCedarContacts = (

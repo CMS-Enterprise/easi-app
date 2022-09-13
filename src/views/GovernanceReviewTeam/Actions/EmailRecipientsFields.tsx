@@ -81,20 +81,26 @@ const Recipient = ({
           <CedarContactSelect
             id="IntakeForm-ContactCommonName"
             name="systemIntakeContact.commonName"
-            value={activeContact!}
-            onChange={cedarContact =>
-              setActiveContact({
-                ...activeContact!,
-                ...cedarContact
-              })
-            }
+            value={activeContact}
+            onChange={cedarContact => {
+              setActiveContact(
+                cedarContact ? { ...activeContact!, ...cedarContact } : null
+              );
+            }}
             autoSearch
           />
           <ButtonGroup className="margin-top-2">
             <Button type="button" disabled={!activeContact?.euaUserId}>
               Save
             </Button>
-            <Button type="button" outline>
+            <Button
+              type="button"
+              outline
+              onClick={() => {
+                setActiveContact(null);
+                setActive(false);
+              }}
+            >
               Cancel
             </Button>
           </ButtonGroup>
@@ -138,7 +144,8 @@ export default ({
   /** Formatted array of contacts in order of display */
   const contactsArray = contacts
     ? [
-        contacts.businessOwner,
+        { ...contacts.businessOwner, commonName: 'Ashley' },
+        // contacts.businessOwner, // TODO: TEST DATA
         contacts.productManager,
         ...(contacts.isso.commonName ? [contacts.isso] : []), // Only include ISSO if present
         contacts.additionalContacts

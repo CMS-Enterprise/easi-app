@@ -10,6 +10,7 @@ import Select, {
 import { IconWarning } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import Spinner from 'components/Spinner';
 import useCedarContactLookup from 'hooks/useCedarContactLookup';
 import { CedarContactProps } from 'types/systemIntake';
 import color from 'utils/uswdsColor';
@@ -21,7 +22,7 @@ type CedarContactSelectProps = {
   id: string;
   name: string;
   ariaDescribedBy?: string;
-  value?: CedarContactProps;
+  value?: CedarContactProps | null;
   onChange: (contact: CedarContactProps | null) => void;
   disabled?: boolean;
   autoSearch?: boolean;
@@ -34,7 +35,6 @@ type CedarContactSelectOption = {
 
 // Override React Select input to fix hidden input on select bug
 const Input = (props: InputProps<CedarContactSelectOption, false>) => {
-  // console.log(props.selectProps.isLoading);
   return <components.Input {...props} isHidden={false} />;
 };
 
@@ -64,19 +64,34 @@ const IndicatorsContainer = (
 ) => {
   const {
     children,
-    selectProps: { className }
+    selectProps: { className },
+    hasValue
   } = props;
+
+  // Whether to show spinner based on className
+  const loading = className!
+    .split(' ')
+    .includes('cedar-contact-select__loading');
+  // Whether to show warning icon based in className
+  const resultsWarning =
+    hasValue && className!.split(' ').includes('cedar-contact-select__warning');
+
   return (
     <components.IndicatorsContainer {...props}>
-      {className!.split(' ').includes('cedar-contact-select__warning') && (
-        <IconWarning className="text-warning margin-right-105" size={3} />
+      {!loading && resultsWarning && (
+        <IconWarning className="text-warning" size={3} />
       )}
+      {loading && <Spinner size="small" />}
       {children}
     </components.IndicatorsContainer>
   );
 };
 
-export default function CedarContactSelect2({
+/** Returns formatted contact label */
+const formatLabel = (contact: CedarContactProps) =>
+  `${contact?.commonName}${contact?.euaUserId && `, ${contact.euaUserId}`}`;
+
+export default function CedarContactSelect({
   className,
   id,
   name,
@@ -87,25 +102,26 @@ export default function CedarContactSelect2({
   autoSearch
 }: CedarContactSelectProps) {
   const { t } = useTranslation();
-  const [searchTerm, setSearchTerm] = useState<string | null>(
-    autoSearch ? value?.commonName! : null
+  // If autoSearch, set name as initial search term
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(
+    value ? formatLabel(value) : undefined
   );
-  const [contacts, getCedarContacts] = useCedarContactLookup();
+  // If autoSearch, run initial query from name
+  const { contacts, queryCedarContacts, loading } = useCedarContactLookup(
+    searchTerm
+  );
+
+  // Selected contact
   const selectedContact = useRef(value?.euaUserId);
 
-  // Whether to show warning icon in input
+  // Show warning if autosearch returns multiple or no results
   const showWarning = autoSearch && !value?.euaUserId && contacts.length !== 1;
-
-  /** Formatted contact label */
-  const formattedContact = value
-    ? `${value?.commonName}${value?.euaUserId && `, ${value?.euaUserId}`}`
-    : '';
 
   /** Update contact and reset search term */
   const updateContact = (contact: CedarContactProps | null) => {
     onChange(contact);
     selectedContact.current = contact?.euaUserId;
-    setSearchTerm(null);
+    setSearchTerm(contact ? formatLabel(contact) : '');
   };
 
   // React Select styles object
@@ -179,20 +195,22 @@ export default function CedarContactSelect2({
       ...provided,
       visibility: 'visible'
     }),
-    option: provided => ({
+    option: (provided, { isFocused }) => ({
       ...provided,
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
+      color: 'inherit'
     })
   };
 
   // Update contacts when search term changes
   useEffect(() => {
-    if (searchTerm) getCedarContacts(searchTerm);
+    if (searchTerm) queryCedarContacts(searchTerm.split(',')[0]);
   }, [searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update contact when value changes
+  // Fix for 'same as requester' checkboxes in system intake form
   useEffect(() => {
-    if (value && value?.euaUserId !== selectedContact.current) {
+    if (value && value?.euaUserId !== selectedContact.current && !autoSearch) {
       updateContact(value);
     }
   }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -205,6 +223,7 @@ export default function CedarContactSelect2({
         'cedar-contact-select',
         'usa-combo-box',
         { 'cedar-contact-select__warning': showWarning },
+        { 'cedar-contact-select__loading': loading },
         { 'opacity-70': disabled },
         className
       )}
@@ -218,26 +237,37 @@ export default function CedarContactSelect2({
         value: contact
       }))}
       styles={customStyles}
-      value={value ? { value, label: formattedContact } : undefined}
-      inputValue={searchTerm ?? formattedContact}
+      defaultValue={
+        value
+          ? {
+              value,
+              label: `${value?.commonName}${
+                value?.euaUserId && `, ${value?.euaUserId}`
+              }`
+            }
+          : undefined
+      }
+      value={value ? { value, label: formatLabel(value) } : undefined}
       onChange={item => updateContact(item?.value || null)}
-      onBlur={() => {
+      onBlur={e => {
         // Automatically select on blur if search returns single result
-        if (autoSearch && contacts.length === 1) updateContact(contacts[0]);
-      }}
-      onMenuOpen={() => {
-        // If contact is selected, show as option on open
-        if (!searchTerm && formattedContact) setSearchTerm(formattedContact);
+        if (autoSearch && contacts.length === 1) {
+          updateContact(contacts[0]);
+        }
       }}
       onInputChange={(newValue, { action }) => {
-        if (action !== 'input-blur' && action !== 'menu-close')
+        if (action !== 'input-blur' && action !== 'menu-close') {
           setSearchTerm(newValue);
+        }
       }}
-      controlShouldRenderValue={!!searchTerm}
+      defaultInputValue={searchTerm}
+      inputValue={searchTerm}
       noOptionsMessage={() => t('No results')}
       classNamePrefix="cedar-contact-select"
       instanceId={id}
       placeholder={false}
+      backspaceRemovesValue={false}
+      controlShouldRenderValue={false}
       isSearchable
       isClearable
     />
