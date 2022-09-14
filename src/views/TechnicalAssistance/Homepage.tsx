@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
 import {
   Column,
+  Row,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -68,6 +69,59 @@ function Homepage() {
     ];
   }, [t]);
 
+  // Override the global filter so that matches are against rendered Cell values
+  const globalFilter = useMemo(() => {
+    return (
+      // eslint-disable-next-line camelcase
+      rows: Row<GetTrbRequests_trbRequestCollection>[],
+      columnIds: string[],
+      filterValue: string
+    ) => {
+      const filterValueLower = filterValue.toLowerCase();
+      return rows.filter(row =>
+        row.cells.some(cell => {
+          const renderer = cell.column.Cell as Function;
+          let renderedValue: string;
+          if (renderer && renderer.name !== 'defaultRenderer') {
+            renderedValue = renderer(cell);
+          } else {
+            renderedValue = cell.value;
+          }
+          return renderedValue.toLowerCase().includes(filterValueLower);
+        })
+      );
+    };
+  }, []);
+
+  // Override the global filter to match against the `createdAt` field after
+  // the cell is transformed to its display value
+  /*
+  const globalFilter = useMemo(() => {
+    return (
+      // eslint-disable-next-line camelcase
+      rows: Row<GetTrbRequests_trbRequestCollection>[],
+      columnIds: string[],
+      filterValue: string
+    ) => {
+      const filterValueLower = filterValue.toLowerCase();
+      return rows.filter(row =>
+        Object.keys(row.values).some(key => {
+          // eslint-disable-next-line camelcase
+          const colKey = key as keyof GetTrbRequests_trbRequestCollection;
+          const value: string = row.values[colKey];
+          let displayValue: string;
+          if (colKey === 'createdAt') {
+            displayValue = formatDate(value);
+          } else {
+            displayValue = value;
+          }
+          return displayValue.toLowerCase().includes(filterValueLower);
+        })
+      );
+    };
+  }, []);
+  */
+
   const {
     canNextPage,
     canPreviousPage,
@@ -87,6 +141,7 @@ function Homepage() {
   } = useTable(
     {
       columns,
+      globalFilter,
       data: trbRequests,
       autoResetSortBy: false,
       autoResetPage: false,
