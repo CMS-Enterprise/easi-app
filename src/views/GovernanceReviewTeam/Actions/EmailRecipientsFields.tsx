@@ -76,13 +76,13 @@ const Recipient = ({
       )}
       {!id && isActive && (
         <FieldGroup className="margin-left-4 margin-top-1 margin-bottom-2">
-          <h4 className="margin-bottom-05 margin-top-2">Verify Recipient</h4>
+          <h4 className="margin-bottom-05 margin-top-2">
+            {t('emailRecipients.verifyRecipient')}
+          </h4>
           <Label htmlFor="test" className="text-normal margin-y-05">
             Recipient Name
           </Label>
-          <HelpText>
-            Click in the field below to confirm this EUA contact
-          </HelpText>
+          <HelpText>{t('emailRecipients.verifyHelpText')}</HelpText>
           <CedarContactSelect
             id="IntakeForm-ContactCommonName"
             name="systemIntakeContact.commonName"
