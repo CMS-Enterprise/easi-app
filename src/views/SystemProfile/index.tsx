@@ -311,16 +311,19 @@ export function showVal(
   return val;
 }
 
-const SystemProfile = () => {
+const SystemProfile = ({ id }: { id?: string }) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
 
-  const { systemId, subinfo, top } = useParams<{
+  const params = useParams<{
     subinfo: SubpageKey;
     systemId: string;
     top: string;
   }>();
+
+  const { subinfo, top } = params;
+  const systemId = id || params.systemId;
 
   // Scroll to top if redirect
   useLayoutEffect(() => {

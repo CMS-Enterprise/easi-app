@@ -9,6 +9,10 @@
     z-index: 400;
   }
 
+  &__has-title svg {
+    color: color('primary');
+  }
+
   &__content {
     position: absolute;
     width: 100%;
@@ -33,8 +37,6 @@
     padding: 0;
     background: none;
     border: 0;
-    font-size: 1.5rem;
-    line-height: 1.5rem;
     color: color('black');
 
     &:hover {

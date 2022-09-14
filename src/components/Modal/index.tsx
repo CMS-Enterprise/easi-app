@@ -1,18 +1,26 @@
 import React, { ReactNode, ReactNodeArray } from 'react';
 import ReactModal from 'react-modal';
 import { IconClose } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import noScroll from 'no-scroll';
 
 import './index.scss';
 
 type ModalProps = {
+  title?: string;
   children: ReactNode | ReactNodeArray;
   isOpen: boolean;
   openModal?: () => void;
   closeModal: () => void;
 };
 
-const Modal = ({ children, isOpen, openModal, closeModal }: ModalProps) => {
+const Modal = ({
+  title,
+  children,
+  isOpen,
+  openModal,
+  closeModal
+}: ModalProps) => {
   const handleOpenModal = () => {
     noScroll.on();
     if (openModal) {
@@ -23,7 +31,9 @@ const Modal = ({ children, isOpen, openModal, closeModal }: ModalProps) => {
   return (
     <ReactModal
       isOpen={isOpen}
-      overlayClassName="easi-modal__overlay"
+      overlayClassName={classNames('easi-modal__overlay', {
+        'easi-modal__has-title': !!title
+      })}
       className="easi-modal__content"
       onAfterOpen={handleOpenModal}
       onAfterClose={noScroll.off}
@@ -37,7 +47,8 @@ const Modal = ({ children, isOpen, openModal, closeModal }: ModalProps) => {
         aria-label="Close Modal"
         onClick={closeModal}
       >
-        <IconClose />
+        <IconClose size={3} />
+        <h4 className="text-base margin-0 margin-left-1">{title}</h4>
       </button>
       <div className="easi-modal__body">{children}</div>
     </ReactModal>
