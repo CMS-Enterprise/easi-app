@@ -21,7 +21,7 @@ COPY package.json /
 RUN npm install --dev --silent
 
 COPY cypress /cypress
-COPY cypress.json /
+COPY cypress.config.ts /
 COPY tsconfig.json /
 COPY src /src
 COPY scripts/tag_minio_file /scripts/tag_minio_file

@@ -11,7 +11,6 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 const cypressOTP = require('cypress-otp');
-// const cypressCodeCovTask = require('@cypress/code-coverage/task');
 const wp = require('@cypress/webpack-preprocessor');
 
 module.exports = (on, config) => {
@@ -20,7 +19,6 @@ module.exports = (on, config) => {
   on('task', {
     generateOTP: cypressOTP
   });
-  // cypressCodeCovTask(on, config);
 
   const options = {
     webpackOptions: {
