@@ -22,6 +22,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 )
@@ -1872,6 +1873,16 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 	return &msg, nil
 }
 
+// CreateTRBRequest is the resolver for the createTRBRequest field.
+func (r *mutationResolver) CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType) (*models.TRBRequest, error) {
+	return resolvers.TRBRequestCreate(ctx, requestType, r.store)
+}
+
+// UpdateTRBRequest is the resolver for the updateTRBRequest field.
+func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]interface{}) (*models.TRBRequest, error) {
+	return resolvers.TRBRequestUpdate(ctx, id, changes, r.store)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2204,6 +2215,26 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 		SystemIntakeContacts: augmentedContacts,
 		InvalidEUAIDs:        invalidEUAIDs,
 	}, nil
+}
+
+// RelatedSystemIntakes is the resolver for the relatedSystemIntakes field.
+func (r *queryResolver) RelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error) {
+	intakes, err := r.store.FetchRelatedSystemIntakes(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+	return intakes, nil
+}
+
+// TrbRequest is the resolver for the trbRequest field.
+func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
+	return resolvers.TRBRequestGetByID(ctx, id, r.store)
+}
+
+// TrbRequestCollection is the resolver for the trbRequestCollection field.
+func (r *queryResolver) TrbRequestCollection(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
+	return resolvers.TRBRequestCollectionGet(ctx, archived, r.store)
 }
 
 // Actions is the resolver for the actions field.

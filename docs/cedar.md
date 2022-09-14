@@ -56,7 +56,7 @@ CEDAR LDAP is similar, just in the `pkg/cedar/cedarldap` directory:
 swagger generate client -f swagger-impl.json -c ./gen/client -m ./gen/models
 ```
 
-The CEDAR Intake Swagger file requires a bit of preprocessing before code generation. When the Swagger file is updated, put it in `pkg/cedar/intake/cedar_intake.json`, then run `scripts/generate_cedar_intake_client` to preprocess it and regenerate code. See [the intake folder's README](/pkg/cedar/intake/README.md) for more information.
+The CEDAR Intake Swagger file requires a bit of preprocessing before code generation. When the Swagger file is updated, put it in `pkg/cedar/intake/cedar_intake.json`, then run `scripts/generate_cedar_clients` to preprocess it and regenerate code. See [the intake folder's README](/pkg/cedar/intake/README.md) for more information.
 
 ### Connecting to CEDAR when running locally
 

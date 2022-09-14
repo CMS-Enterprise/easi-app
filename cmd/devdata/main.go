@@ -171,6 +171,22 @@ func main() {
 	makeBusinessCase("With LCID Issued", logger, store, intake, func(c *models.BusinessCase) {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
+
+	makeTRBRequest(models.TRBTNeedHelp, logger, store, func(t *models.TRBRequest) {
+		t.ID = uuid.MustParse("1afc9242-f244-47a3-9f91-4d6fedd8eb91")
+		t.Name = "My excellent question"
+	})
+
+	makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
+		t.ID = uuid.MustParse("9841c768-bdcd-4856-bae2-62cfdaffacf6")
+		t.Name = "TACO Review"
+		t.CreatedBy = "TACO"
+	})
+	makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
+		t.ID = uuid.MustParse("21f175b9-bcbe-41c1-9c07-9844869bc1ce")
+		t.Name = "Archived Request"
+		t.Archived = true
+	})
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -373,4 +389,15 @@ func must(_ interface{}, err error) {
 func date(year, month, day int) *time.Time {
 	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 	return &date
+}
+
+func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
+	trb := models.NewTRBRequest("EASI")
+	trb.Type = rType
+	trb.Status = models.TRBSOpen
+	for _, cb := range callbacks {
+		cb(trb)
+	}
+	ret, _ := store.TRBRequestCreate(logger, trb)
+	return ret
 }

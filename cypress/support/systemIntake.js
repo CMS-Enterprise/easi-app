@@ -5,7 +5,7 @@ cy.systemIntake = {
         .select('Center for Medicare')
         .should('have.value', 'Center for Medicare');
 
-      cy.get('#IntakeForm-BusinessOwner input')
+      cy.get('#react-select-IntakeForm-BusinessOwnerName-input')
         .type('Jerry Seinfeld, SF13')
         .type('{downarrow}{enter}')
         .should('have.value', 'Jerry Seinfeld, SF13');
@@ -14,7 +14,7 @@ cy.systemIntake = {
         .select('Center for Medicare')
         .should('have.value', 'Center for Medicare');
 
-      cy.get('#IntakeForm-ProductManager input')
+      cy.get('#react-select-IntakeForm-ProductManagerName-input')
         .type('Jerry Seinfeld, SF13')
         .type('{downArrow}{enter}')
         .should('have.value', 'Jerry Seinfeld, SF13');
