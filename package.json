@@ -76,7 +76,7 @@
     "yup": "^0.32.8"
   },
   "scripts": {
-    "start": "craco -r @cypress/instrument-cra start",
+    "start": "craco start",
     "build": "CI=true craco build",
     "build:ts": "tsc",
     "test": "craco test",
