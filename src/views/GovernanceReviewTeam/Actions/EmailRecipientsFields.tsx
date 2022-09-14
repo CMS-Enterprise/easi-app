@@ -45,7 +45,7 @@ const Recipient = ({
   const { commonName, euaUserId, role, component, email, id } = { ...contact };
 
   return (
-    <>
+    <div className="recipient-container" data-testid={`recipient-${euaUserId}`}>
       <CheckboxField
         id={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
         name={`${euaUserId}-${role.replaceAll(' ', '')}`}
@@ -64,6 +64,7 @@ const Recipient = ({
           </p>
           <Button
             type="button"
+            data-testid="button_verify-recipient"
             unstyled
             onClick={() => {
               setActiveContact(contact);
@@ -80,7 +81,7 @@ const Recipient = ({
             {t('emailRecipients.verifyRecipient')}
           </h4>
           <Label htmlFor="test" className="text-normal margin-y-05">
-            Recipient Name
+            {t('emailRecipients.recipientName')}
           </Label>
           <HelpText>{t('emailRecipients.verifyHelpText')}</HelpText>
           <CedarContactSelect
@@ -104,7 +105,7 @@ const Recipient = ({
                 setActiveContact(null);
               }}
             >
-              Save
+              {t('Save')}
             </Button>
             <Button
               type="button"
@@ -114,12 +115,12 @@ const Recipient = ({
                 setActive(false);
               }}
             >
-              Cancel
+              {t('Cancel')}
             </Button>
           </ButtonGroup>
         </FieldGroup>
       )}
-    </>
+    </div>
   );
 };
 
@@ -209,10 +210,13 @@ export default ({
           {t('emailRecipients.emailRequired')}
         </Alert>
       )}
-      <Alert type="warning" slim>
-        {t('emailRecipients.unverifiedRecipientsWarning')}
-      </Alert>
+
       {/* {flags.notifyMultipleRecipients && ( */}
+      {unverifiedRecipients.length > 0 && (
+        <Alert type="warning" slim data-testid="alert_unverified-recipients">
+          {t('emailRecipients.unverifiedRecipientsWarning')}
+        </Alert>
+      )}
       <FieldGroup error={!!error}>
         <h4 className="margin-bottom-0 margin-top-2">
           {t('emailRecipients.chooseRecipients')}
@@ -242,7 +246,7 @@ export default ({
               )}
               name="contact-requester"
               id="contact-requester"
-              value={requester?.email!}
+              value={requester?.email || ''}
               onChange={() => updateRecipients(requester?.email!)}
               onBlur={() => null}
             />

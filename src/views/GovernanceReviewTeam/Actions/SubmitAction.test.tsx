@@ -55,7 +55,7 @@ const productManager = {
   commonName: 'Jane Doe',
   component: 'Center for Program Integrity',
   email: 'abcd@local.fake',
-  id: '25b3c345-8896-4373-91ec-1b0dfbf69673'
+  id: '' // Leave out ID so contact shows as unverified
 };
 
 const isso = {
@@ -297,8 +297,20 @@ describe('Submit Action', () => {
           </MockedProvider>
         </MemoryRouter>
       );
+
       await waitForPageLoad();
       screen.getByTestId('truncatedContentButton').click();
+
+      // Unverified recipients alert
+      expect(
+        screen.getByTestId('alert_unverified-recipients')
+      ).toBeInTheDocument();
+
+      screen.getByTestId('button_verify-recipient').click();
+      expect(screen.getByRole('combobox', { name: 'Cedar-Users' })).toHaveValue(
+        `${productManager.commonName}, ${productManager.euaUserId}`
+      );
+
       expect(asFragment()).toMatchSnapshot();
     });
 

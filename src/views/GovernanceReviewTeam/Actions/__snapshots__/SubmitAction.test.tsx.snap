@@ -364,7 +364,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
               </h3>
               <div
                 class="usa-alert usa-alert--warning usa-alert--slim"
-                data-testid="alert"
+                data-testid="alert-unverified"
               >
                 <div
                   class="usa-alert__body"
@@ -450,6 +450,57 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                       IT Investment Mailbox
                     </label>
                   </div>
+                  <div
+                    class="easi-checkbox usa-checkbox easy-checkbox--disabled"
+                  >
+                    <input
+                      class="usa-checkbox__input"
+                      disabled=""
+                      id="ABCD-ProductManager"
+                      name="ABCD-ProductManager"
+                      type="checkbox"
+                      value="abcd@local.fake"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="ABCD-ProductManager"
+                    >
+                      Jane Doe, Center for Program Integrity (Product Manager)
+                    </label>
+                  </div>
+                  <div
+                    class="margin-left-4 margin-top-1 margin-bottom-2"
+                  >
+                    <p
+                      class="text-base display-flex flex-align-center margin-y-1"
+                    >
+                      <svg
+                        class="usa-icon text-warning margin-right-1"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+                        />
+                      </svg>
+                      Unverified recipient. Use the link below to find this individual in EUA.
+                    </p>
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button_verify-recipient"
+                      type="button"
+                    >
+                      Verify recipient
+                    </button>
+                  </div>
                   <button
                     class="usa-button usa-button--unstyled truncated-content-button display-flex flex-align-center margin-top-105"
                     data-testid="truncatedContentButton"
@@ -472,7 +523,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                         d="m7 14 5-5 5 5z"
                       />
                     </svg>
-                     Show 3 fewer recipients
+                     Show 2 fewer recipients
                   </button>
                   <div
                     class="easi-checkbox usa-checkbox"
@@ -490,23 +541,6 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                       for="SF13-BusinessOwner"
                     >
                       Jerry Seinfeld, Center for Medicaid and CHIP Services (Business Owner)
-                    </label>
-                  </div>
-                  <div
-                    class="easi-checkbox usa-checkbox"
-                  >
-                    <input
-                      class="usa-checkbox__input"
-                      id="ABCD-ProductManager"
-                      name="ABCD-ProductManager"
-                      type="checkbox"
-                      value="abcd@local.fake"
-                    />
-                    <label
-                      class="usa-checkbox__label"
-                      for="ABCD-ProductManager"
-                    >
-                      Jane Doe, Center for Program Integrity (Product Manager)
                     </label>
                   </div>
                   <div

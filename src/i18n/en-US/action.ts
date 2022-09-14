@@ -115,7 +115,9 @@ const action = {
       'Unverified recipient. Use the link below to find this individual in EUA.',
     unverifiedRecipientsWarning:
       'There are multiple contacts for this request that have not been associated with a name and email address in EUA. In order to send an email to these recipients, you must first verify them with EUA.',
-    verifyRecipient: 'Verify recipient'
+    verifyRecipient: 'Verify recipient',
+    verifyHelpText: 'Click in the field below to confirm this EUA contact',
+    recipientName: 'Recipient Name'
   },
   submitAction: {
     backLink: 'Change',
