@@ -1,0 +1,601 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Submit Action actions renders additional contacts 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content easi-grt"
+    data-testid="grt-request-overview"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <section
+      class="easi-grt__request-summary"
+    >
+      <div
+        class="grid-container padding-bottom-2"
+      >
+        <nav
+          aria-label="Breadcrumbs"
+          class="usa-breadcrumb usa-breadcrumb--wrap bg-transparent text-white"
+        >
+          <ol
+            class="usa-breadcrumb__list"
+          >
+            <li
+              class="usa-breadcrumb__list-item"
+            >
+              <a
+                class="usa-breadcrumb__link"
+                href="/"
+              >
+                <span
+                  class="text-white"
+                >
+                  Home
+                </span>
+              </a>
+            </li>
+            <li
+              aria-current="page"
+              class="usa-breadcrumb__list-item usa-current"
+            >
+              TACO
+            </li>
+          </ol>
+        </nav>
+        <dl
+          class="easi-grt__request-info"
+        >
+          <div>
+            <dt>
+              Project name
+            </dt>
+            <dd>
+              TACO
+            </dd>
+          </div>
+          <div
+            class="easi-grt__request-info-col"
+          >
+            <div
+              class="easi-grt__description-group"
+            >
+              <dt>
+                Requester
+              </dt>
+              <dd>
+                Jerry Seinfeld, CMCS
+              </dd>
+            </div>
+            <div
+              class="easi-grt__description-group"
+            >
+              <dt>
+                Submission date
+              </dt>
+              <dd>
+                N/A
+              </dd>
+            </div>
+            <div
+              class="easi-grt__description-group"
+            >
+              <dt>
+                Request for
+              </dt>
+              <dd>
+                Add a new system
+              </dd>
+            </div>
+          </div>
+        </dl>
+      </div>
+      <div
+        class="easi-grt__status--open"
+      >
+        <div
+          class="grid-container overflow-auto"
+        >
+          <dl
+            class="easi-grt__status-group"
+          >
+            <div
+              class="easi-grt__status-info text-gray-90"
+            >
+              <dt
+                class="text-bold"
+              >
+                Status
+              </dt>
+               
+              <dd
+                class="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                data-testid="grt-status"
+              >
+                Open
+              </dd>
+              <dt
+                data-testid="grt-current-status"
+              >
+                Intake request received
+              </dt>
+            </div>
+            <div
+              class="display-flex text-gray-90"
+            >
+              <span
+                class="text-bold"
+              >
+                Admin Lead
+              </span>
+              <span
+                class="margin-x-1"
+                data-testid="admin-lead"
+              >
+                <div
+                  class="display-flex flex-align-center"
+                >
+                  <svg
+                    class="usa-icon text-secondary margin-right-05"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                    />
+                  </svg>
+                  Not Assigned
+                </div>
+              </span>
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                Change
+              </button>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+    <div
+      class="easi-grt__subNav-accordion"
+    >
+      <button
+        aria-controls="easi-grt__subNav"
+        aria-expanded="false"
+        class="usa-menu-btn easi-header__basic width-full"
+        type="button"
+      >
+        <h3
+          class="padding-left-1"
+        >
+          Intake Request
+        </h3>
+        <svg
+          class="usa-icon usa-icon--size-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+          />
+        </svg>
+      </button>
+    </div>
+    <section
+      class="grid-container grid-row margin-y-5 "
+    >
+      <nav
+        class="desktop:grid-col-2 desktop:display-block display-none margin-right-2"
+      >
+        <ul
+          class="easi-grt__nav-list"
+        >
+          <li>
+            <a
+              class="display-flex flex-align-center"
+              href="/"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-1"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+                />
+              </svg>
+              Back to all requests
+            </a>
+          </li>
+          <li
+            class=""
+          >
+            <a
+              aria-label="Open intake request"
+              class="easi-grt__nav-link"
+              data-testid="grt-nav-general:intake-link"
+              href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/intake-request"
+            >
+              Intake Request
+            </a>
+          </li>
+          <li
+            class=""
+          >
+            <a
+              aria-label="Open business case"
+              class="easi-grt__nav-link"
+              data-testid="grt-nav-general:businessCase-link"
+              href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/business-case"
+            >
+              Business Case
+            </a>
+          </li>
+          <li
+            class=""
+          >
+            <a
+              aria-label="Open decision"
+              class="easi-grt__nav-link"
+              data-testid="grt-nav-decision.title-link"
+              href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/decision"
+            >
+              Decision
+            </a>
+          </li>
+          <li
+            class="easi-grt__nav-link--border"
+          >
+            <a
+              aria-label="Open LCID"
+              class="easi-grt__nav-link"
+              data-testid="grt-nav-lifecycleID.title-link"
+              href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/lcid"
+            >
+              Lifecycle ID
+            </a>
+          </li>
+          <li
+            class=""
+          >
+            <a
+              class="easi-grt__nav-link"
+              data-testid="grt-nav-actions-link"
+              href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
+            >
+              Actions
+            </a>
+          </li>
+          <li
+            class=""
+          >
+            <a
+              class="easi-grt__nav-link"
+              data-testid="grt-nav-notes.heading-link"
+              href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/notes"
+            >
+              Admin team notes
+            </a>
+          </li>
+          <li
+            class=""
+          >
+            <a
+              class="easi-grt__nav-link"
+              data-testid="grt-nav-dates.heading-link"
+              href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/dates"
+            >
+              Dates
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <section
+        class="desktop:grid-col-9"
+      >
+        <h1
+          aria-live="polite"
+          class="easi-h1 margin-top-0 margin-bottom-3"
+          data-testid="grt-submit-action-view"
+          tabindex="-1"
+        >
+          Actions on request
+        </h1>
+        <h3
+          class="margin-top-3 margin-bottom-2"
+        >
+          How to proceed?
+        </h3>
+        <div
+          class="margin-bottom-05 text-bold line-height-body-2"
+        >
+          Selected action
+        </div>
+        <div>
+          Not an IT governance request 
+          <a
+            href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
+          >
+            Change
+          </a>
+        </div>
+        <div
+          class="margin-bottom-7"
+        >
+          <form
+            action="#"
+          >
+            <div
+              class="margin-top-3"
+            >
+              <h3
+                class="margin-y-2"
+              >
+                Email (optional)
+              </h3>
+              <div
+                class="usa-alert usa-alert--warning usa-alert--slim"
+                data-testid="alert"
+              >
+                <div
+                  class="usa-alert__body"
+                >
+                  <p
+                    class="usa-alert__text"
+                  >
+                    There are multiple contacts for this request that have not been associated with a name and email address in EUA. In order to send an email to these recipients, you must first verify them with EUA.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="usa-form-group"
+              >
+                <h4
+                  class="margin-bottom-0 margin-top-2"
+                >
+                  Choose recipients
+                </h4>
+                <p
+                  class="margin-top-05"
+                >
+                  <strong>
+                    4
+                  </strong>
+                   recipients selected
+                </p>
+                <div
+                  class="margin-bottom-4"
+                  id="EmailRecipients-ContactsList"
+                >
+                  <div
+                    class="easi-checkbox usa-checkbox"
+                  >
+                    <input
+                      checked=""
+                      class="usa-checkbox__input"
+                      id="contact-requester"
+                      name="contact-requester"
+                      type="checkbox"
+                      value="sf13@local.fake"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="contact-requester"
+                    >
+                      Jerry Seinfeld, Center for Medicaid and CHIP Services (Requester)
+                    </label>
+                  </div>
+                  <div
+                    class="easi-checkbox usa-checkbox"
+                  >
+                    <input
+                      checked=""
+                      class="usa-checkbox__input"
+                      id="contact-itGovernanceMailbox"
+                      name="contact-itGovernanceMailbox"
+                      type="checkbox"
+                      value="shouldNotifyITGovernance"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="contact-itGovernanceMailbox"
+                    >
+                      IT Governance Mailbox
+                    </label>
+                  </div>
+                  <div
+                    class="easi-checkbox usa-checkbox"
+                  >
+                    <input
+                      checked=""
+                      class="usa-checkbox__input"
+                      id="contact-itInvestmentMailbox"
+                      name="contact-itInvestmentMailbox"
+                      type="checkbox"
+                      value="shouldNotifyITInvestment"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="contact-itInvestmentMailbox"
+                    >
+                      IT Investment Mailbox
+                    </label>
+                  </div>
+                  <button
+                    class="usa-button usa-button--unstyled truncated-content-button display-flex flex-align-center margin-top-105"
+                    data-testid="truncatedContentButton"
+                    type="button"
+                  >
+                    <svg
+                      class="usa-icon margin-x-05"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="m7 14 5-5 5 5z"
+                      />
+                    </svg>
+                     Show 3 fewer recipients
+                  </button>
+                  <div
+                    class="easi-checkbox usa-checkbox"
+                  >
+                    <input
+                      checked=""
+                      class="usa-checkbox__input"
+                      id="SF13-BusinessOwner"
+                      name="SF13-BusinessOwner"
+                      type="checkbox"
+                      value="sf13@local.fake"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="SF13-BusinessOwner"
+                    >
+                      Jerry Seinfeld, Center for Medicaid and CHIP Services (Business Owner)
+                    </label>
+                  </div>
+                  <div
+                    class="easi-checkbox usa-checkbox"
+                  >
+                    <input
+                      class="usa-checkbox__input"
+                      id="ABCD-ProductManager"
+                      name="ABCD-ProductManager"
+                      type="checkbox"
+                      value="abcd@local.fake"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="ABCD-ProductManager"
+                    >
+                      Jane Doe, Center for Program Integrity (Product Manager)
+                    </label>
+                  </div>
+                  <div
+                    class="easi-checkbox usa-checkbox"
+                  >
+                    <input
+                      class="usa-checkbox__input"
+                      id="WXYZ-ISSO"
+                      name="WXYZ-ISSO"
+                      type="checkbox"
+                      value="wxyz@local.fake"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="WXYZ-ISSO"
+                    >
+                      John Smith, CMS Wide (ISSO)
+                    </label>
+                  </div>
+                  <div
+                    class="system-intake-contacts margin-top-3"
+                  >
+                    <button
+                      class="usa-button usa-button--outline"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Add another recipient
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="usa-form-group margin-top-2"
+              data-scroll="feedback"
+            >
+              <label
+                class="usa-label line-height-body-2 text-normal"
+                for="SubmitActionForm-Feedback"
+              >
+                This email will be sent to recipients
+              </label>
+              <textarea
+                class="usa-textarea"
+                id="SubmitActionForm-Feedback"
+                maxlength="3000"
+                name="feedback"
+              />
+            </div>
+            <div>
+              <button
+                class="usa-button margin-top-2"
+                data-testid="button"
+                type="submit"
+              >
+                Complete action and send email
+              </button>
+            </div>
+            <div>
+              <button
+                class="usa-button usa-button--unstyled margin-top-2 line-height-body-5"
+                data-testid="button"
+                type="button"
+              >
+                Complete action without sending an email
+                <svg
+                  class="usa-icon margin-left-05 margin-bottom-2px text-tbottom"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </section>
+  </main>
+</DocumentFragment>
+`;
