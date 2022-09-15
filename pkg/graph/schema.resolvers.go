@@ -1884,57 +1884,27 @@ func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, c
 }
 
 // CreateTRBRequestAttendee is the resolver for the createTRBRequestAttendee field.
-func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input model.CreateTRBRequestAttendeeInput) (*model.TRBRequestAttendeePayload, error) {
-	attendee := &models.TRBRequestAttendee{
+func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input model.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
+	return resolvers.CreateTRBRequestAttendee(ctx, r.store, &models.TRBRequestAttendee{
 		TRBRequestID: input.TrbRequestID,
 		EUAUserID:    input.EuaUserID,
 		Component:    input.Component,
 		Role:         input.Role,
-		CreatedBy:    appcontext.Principal(ctx).ID(),
-	}
-	createdAttendee, err := r.store.CreateTRBRequestAttendee(ctx, attendee)
-	if err != nil {
-		return nil, err
-	}
-	return &model.TRBRequestAttendeePayload{
-		TrbRequestAttendee: createdAttendee,
-	}, nil
+	})
 }
 
 // UpdateTRBRequestAttendee is the resolver for the updateTRBRequestAttendee field.
-func (r *mutationResolver) UpdateTRBRequestAttendee(ctx context.Context, input model.UpdateTRBRequestAttendeeInput) (*model.TRBRequestAttendeePayload, error) {
-	modifiedByEUA := appcontext.Principal(ctx).ID()
-	attendee := &models.TRBRequestAttendee{
-		ID:           input.ID,
-		TRBRequestID: input.TrbRequestID,
-		EUAUserID:    input.EuaUserID,
-		Component:    input.Component,
-		Role:         input.Role,
-		ModifiedBy:   &modifiedByEUA,
-	}
-
-	updatedAttendee, err := r.store.UpdateTRBRequestAttendee(ctx, attendee)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.TRBRequestAttendeePayload{
-		TrbRequestAttendee: updatedAttendee,
-	}, nil
+func (r *mutationResolver) UpdateTRBRequestAttendee(ctx context.Context, input model.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
+	return resolvers.UpdateTRBRequestAttendee(ctx, r.store, &models.TRBRequestAttendee{
+		ID:        input.ID,
+		Component: input.Component,
+		Role:      input.Role,
+	})
 }
 
 // DeleteTRBRequestAttendee is the resolver for the deleteTRBRequestAttendee field.
-func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, input model.DeleteTRBRequestAttendeeInput) (*model.DeleteTRBRequestAttendeePayload, error) {
-	attendee := &models.TRBRequestAttendee{
-		ID: input.ID,
-	}
-	_, err := r.store.DeleteTRBRequestAttendee(ctx, attendee)
-	if err != nil {
-		return nil, err
-	}
-	return &model.DeleteTRBRequestAttendeePayload{
-		ID: attendee.ID,
-	}, nil
+func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error) {
+	return resolvers.DeleteTRBRequestAttendee(ctx, r.store, id)
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.

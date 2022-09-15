@@ -47,3 +47,28 @@ const (
 	// IntakeInputSchemaEASINoteVersion captures the current schema version for Notes
 	IntakeInputSchemaEASINoteVersion SchemaVersion = "EASINoteV01"
 )
+
+// PersonRole is an enumeration of values representing the role of a person (currently in use for
+// TRBRequestAttendee and potentially SystemIntakeContact)
+type PersonRole string
+
+const (
+	// PersonRoleProductOwner is a person with the "Product Owner" role
+	PersonRoleProductOwner PersonRole = "PRODUCTOWNER"
+	// PersonRoleSystemOwner is a person with the "System Owner" role
+	PersonRoleSystemOwner PersonRole = "SYSTEMOWNER"
+	// PersonRoleSystemMaintainer is a person with the "System Maintainer" role
+	PersonRoleSystemMaintainer PersonRole = "SYSTEMMAINTAINER"
+	// PersonRoleContractOfficersRepresentative is a person with the "ContractOfficersRepresentative" role
+	PersonRoleContractOfficersRepresentative PersonRole = "CONTRACTOFFICERSREPRESENTATIVE"
+	// PersonRoleCloudNavigator is a person with the "Cloud Navigator" role
+	PersonRoleCloudNavigator PersonRole = "CLOUDNAVIGATOR"
+	// PersonRolePrivacyAdvisor is a person with the "Privacy Advisor" role
+	PersonRolePrivacyAdvisor PersonRole = "PRIVACYADVISOR"
+	// PersonRoleCRA is a person with the "CRA" role
+	PersonRoleCRA PersonRole = "CRA"
+	// PersonRoleOther is a person with the "Other" role
+	PersonRoleOther PersonRole = "OTHER"
+	// PersonRoleUnknown is a person with an "Unknown" role
+	PersonRoleUnknown PersonRole = "UNKNOWN"
+)

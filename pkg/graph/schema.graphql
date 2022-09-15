@@ -1511,6 +1511,10 @@ type TRBRequestAttendee {
   trbRequestId: UUID!
   component: String!
   role: String!
+    createdBy: String!
+    createdAt: Time!
+    modifiedBy: String
+    modifiedAt: Time
 }
 
 """
@@ -1528,31 +1532,8 @@ Represents an EUA user who is included as an attendee for a TRB request
 """
 input UpdateTRBRequestAttendeeInput {
   id: UUID!
-  euaUserId: String!
-  trbRequestId: UUID!
   component: String!
   role: String!
-}
-
-"""
-The payload returned when creating/updating a TRB request attendee
-"""
-type TRBRequestAttendeePayload {
- trbRequestAttendee: TRBRequestAttendee
-}
-
-"""
-The data needed to delete a TRB request attendee
-"""
-input DeleteTRBRequestAttendeeInput {
-  id: UUID!
-}
-
-"""
-The payload returned when deleting a TRB request attendee
-"""
-type DeleteTRBRequestAttendeePayload {
-  id: UUID!
 }
 
 """
@@ -1671,9 +1652,9 @@ type Mutation {
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
   createTRBRequest(requestType: TRBRequestType!): TRBRequest!
   updateTRBRequest(id: UUID!, changes: TRBRequestChanges): TRBRequest!
-  createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendeePayload
-  updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendeePayload
-  deleteTRBRequestAttendee(input: DeleteTRBRequestAttendeeInput!): DeleteTRBRequestAttendeePayload
+  createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendee!
+  updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
+  deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
 }
 
 """

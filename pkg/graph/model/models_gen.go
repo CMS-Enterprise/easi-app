@@ -281,16 +281,6 @@ type DeleteSystemIntakeContactPayload struct {
 	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
 }
 
-// The data needed to delete a TRB request attendee
-type DeleteTRBRequestAttendeeInput struct {
-	ID uuid.UUID `json:"id"`
-}
-
-// The payload returned when deleting a TRB request attendee
-type DeleteTRBRequestAttendeePayload struct {
-	ID uuid.UUID `json:"id"`
-}
-
 // The input required to delete a test date/score
 type DeleteTestDateInput struct {
 	ID uuid.UUID `json:"id"`
@@ -589,11 +579,6 @@ type SystemIntakeRequesterWithComponentInput struct {
 	Component string `json:"component"`
 }
 
-// The payload returned when creating/updating a TRB request attendee
-type TRBRequestAttendeePayload struct {
-	TrbRequestAttendee *models.TRBRequestAttendee `json:"trbRequestAttendee"`
-}
-
 // The payload when retrieving system intake contacts
 type TRBRequestAttendeesPayload struct {
 	TrbRequestAttendees []*models.TRBRequestAttendee `json:"trbRequestAttendees"`
@@ -699,11 +684,9 @@ type UpdateSystemIntakeReviewDatesInput struct {
 
 // Represents an EUA user who is included as an attendee for a TRB request
 type UpdateTRBRequestAttendeeInput struct {
-	ID           uuid.UUID `json:"id"`
-	EuaUserID    string    `json:"euaUserId"`
-	TrbRequestID uuid.UUID `json:"trbRequestId"`
-	Component    string    `json:"component"`
-	Role         string    `json:"role"`
+	ID        uuid.UUID `json:"id"`
+	Component string    `json:"component"`
+	Role      string    `json:"role"`
 }
 
 // The input required to update a test date/score

@@ -53,8 +53,6 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 	const sql = `
 		UPDATE trb_request_attendees
 		SET
-			eua_user_id = :eua_user_id,
-			trb_request_id = :trb_request_id,
 			role = :role,
 			component = :component,
 			modified_by = :modified_by,
@@ -90,17 +88,17 @@ func (s *Store) FetchTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbR
 }
 
 // DeleteTRBRequestAttendee deletes an existing TRB request attendee record in the database
-func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
+func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) error {
 	const deleteTRBRequestAttendeeSQL = `
 		DELETE FROM trb_request_attendees
 		WHERE id = $1;`
 
-	_, err := s.db.Exec(deleteTRBRequestAttendeeSQL, attendee.ID)
+	_, err := s.db.Exec(deleteTRBRequestAttendeeSQL, id)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete TRB request attendee with error %s", zap.Error(err))
-		return nil, err
+		return err
 	}
 
-	return attendee, nil
+	return nil
 }
