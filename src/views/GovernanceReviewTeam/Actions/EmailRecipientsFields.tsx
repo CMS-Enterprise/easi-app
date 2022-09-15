@@ -17,7 +17,6 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
-import useSystemIntake from 'hooks/useSystemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailRecipientsFieldsProps } from 'types/action';
 import {
@@ -141,37 +140,39 @@ export default ({
 
   // Contacts query
   const { contacts, createContact } = useSystemIntakeContacts(systemIntakeId);
-  // Get system intake from Apollo cache
-  const { systemIntake } = useSystemIntake(systemIntakeId);
-  const { requester } = systemIntake || {};
+  const {
+    requester,
+    businessOwner,
+    productManager,
+    isso,
+    additionalContacts
+  } = contacts.data;
 
   const defaultRecipients = useRef(recipients).current;
 
   /** Formatted array of contacts in order of display */
-  const contactsArray = contacts
-    ? [
-        contacts.businessOwner,
-        contacts.productManager,
-        ...(contacts.isso.commonName ? [contacts.isso] : []), // Only include ISSO if present
-        contacts.additionalContacts
-      ].flat()
-    : [];
+  const contactsArray = [
+    requester,
+    businessOwner,
+    productManager,
+    ...(isso.commonName ? [isso] : []), // Only include ISSO if present
+    additionalContacts
+  ].flat();
 
   const unverifiedRecipients = contactsArray.filter(({ id }) => !id);
 
   const defaultRecipientsCount =
     (defaultRecipients.shouldNotifyITInvestment ? 3 : 2) +
-    unverifiedRecipients.length;
+    unverifiedRecipients.filter(({ role }) => role !== 'Requester').length;
 
   // Number of possible recipients
-  const contactsCount = contactsArray.length + 3;
+  const contactsCount = contactsArray.length + 2;
   // Number of selected contacts
   const selectedContacts = contactsArray.filter(({ email }) =>
     recipients.regularRecipientEmails.includes(email!)
   ).length;
   const selectedCount =
     selectedContacts +
-    Number(recipients.regularRecipientEmails.includes(requester?.email!)) +
     Number(recipients.shouldNotifyITGovernance) +
     Number(recipients.shouldNotifyITInvestment);
 
@@ -239,8 +240,8 @@ export default ({
             )}
             buttonClassName="margin-top-105"
           >
-            <CheckboxField
-              label={`${requester?.name}, ${requester?.component} (Requester)`}
+            {/* <CheckboxField
+              label={`${requester?.commonName}, ${requester?.component} (Requester)`}
               checked={recipients.regularRecipientEmails.includes(
                 requester?.email!
               )}
@@ -249,7 +250,17 @@ export default ({
               value={requester?.email || ''}
               onChange={() => updateRecipients(requester?.email!)}
               onBlur={() => null}
+            /> */}
+
+            <Recipient
+              contact={requester}
+              checked={!!requester.id}
+              updateRecipients={updateRecipients}
+              activeContact={activeContact}
+              setActiveContact={setActiveContact}
+              createContact={createContact}
             />
+
             <CheckboxField
               label="IT Governance Mailbox"
               checked={recipients.shouldNotifyITGovernance}
@@ -281,20 +292,22 @@ export default ({
               />
             )}
             {unverifiedRecipients.length > 0 &&
-              unverifiedRecipients.map((contact, index) => (
-                <Recipient
-                  key={`unverified-${index}`} // eslint-disable-line react/no-array-index-key
-                  contact={contact as SystemIntakeContactProps}
-                  checked={
-                    !!contact.email &&
-                    recipients.regularRecipientEmails.includes(contact.email)
-                  }
-                  updateRecipients={updateRecipients}
-                  activeContact={activeContact}
-                  setActiveContact={setActiveContact}
-                  createContact={createContact}
-                />
-              ))}
+              unverifiedRecipients
+                .filter(({ role }) => role !== 'Requester') // filter out requester
+                .map((contact, index) => (
+                  <Recipient
+                    key={`unverified-${index}`} // eslint-disable-line react/no-array-index-key
+                    contact={contact as SystemIntakeContactProps}
+                    checked={
+                      !!contact.email &&
+                      recipients.regularRecipientEmails.includes(contact.email)
+                    }
+                    updateRecipients={updateRecipients}
+                    activeContact={activeContact}
+                    setActiveContact={setActiveContact}
+                    createContact={createContact}
+                  />
+                ))}
             {!defaultRecipients.shouldNotifyITInvestment && (
               <CheckboxField
                 label="IT Investment Mailbox"
@@ -312,7 +325,7 @@ export default ({
               />
             )}
             {contactsArray
-              .filter(({ id }) => id) // filter out unverified recipients
+              .filter(({ id, role }) => id && role !== 'Requester') // filter out requester & unverified recipients
               .map((contact, index) => (
                 <Recipient
                   key={`verified-${index}`} // eslint-disable-line react/no-array-index-key

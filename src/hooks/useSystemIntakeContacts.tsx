@@ -23,18 +23,21 @@ import {
 import useSystemIntake from './useSystemIntake';
 
 const rolesMap = {
+  Requester: 'requester',
   'Business Owner': 'businessOwner',
   'Product Manager': 'productManager',
   ISSO: 'isso'
 } as const;
 type Role = keyof typeof rolesMap;
 
-/** Custom hook for creating, updating, and deleting system intake contacts */
+/**
+ * Custom hook for creating, updating, and deleting system intake contacts
+ * */
 function useSystemIntakeContacts(
   systemIntakeId: string
 ): UseSystemIntakeContactsType {
   // GQL query to get intake contacts
-  const { data, refetch } = useQuery<GetSystemIntakeContacts>(
+  const { data, refetch, loading } = useQuery<GetSystemIntakeContacts>(
     GetSystemIntakeContactsQuery,
     {
       fetchPolicy: 'cache-first',
@@ -45,31 +48,44 @@ function useSystemIntakeContacts(
   // Get system intake from Apollo cache
   const { systemIntake } = useSystemIntake(systemIntakeId);
 
-  /** Formatted system intake contacts object */
-  const contacts = useMemo<FormattedContacts | null>(() => {
+  /**
+   * Formatted system intake contacts object
+   * */
+  const contacts = useMemo<FormattedContacts>(() => {
     // Get systemIntakeContacts
     const systemIntakeContacts = data?.systemIntakeContacts
       ?.systemIntakeContacts as SystemIntakeContactProps[];
 
     // Return null if no systemIntakeContacts
-    if (!systemIntakeContacts || !systemIntake) return null;
+    if (!systemIntakeContacts || !systemIntake) return initialContactsObject;
 
     // Merge initial contacts object with possible legacy data from system intake
     const mergedContactsObject = {
       ...initialContactsObject,
+      requester: {
+        ...initialContactsObject.requester,
+        euaUserId: systemIntake.euaUserId,
+        commonName: systemIntake.requester.name,
+        component: systemIntake.requester.component || '',
+        email: systemIntake.requester.email || '',
+        systemIntakeId
+      },
       businessOwner: {
         ...initialContactsObject.businessOwner,
         commonName: systemIntake.businessOwner.name || '',
-        component: systemIntake.businessOwner.component || ''
+        component: systemIntake.businessOwner.component || '',
+        systemIntakeId
       },
       productManager: {
         ...initialContactsObject.productManager,
         commonName: systemIntake.productManager.name || '',
-        component: systemIntake.productManager.component || ''
+        component: systemIntake.productManager.component || '',
+        systemIntakeId
       },
       isso: {
         ...initialContactsObject.isso,
-        commonName: systemIntake.isso.name || ''
+        commonName: systemIntake.isso.name || '',
+        systemIntakeId
       }
     };
 
@@ -84,12 +100,19 @@ function useSystemIntakeContacts(
         }
         return {
           ...contactsObject,
-          additionalContacts: [...contactsObject.additionalContacts, contact]
+          additionalContacts: [
+            ...contactsObject.additionalContacts,
+            { ...contact, systemIntakeId }
+          ]
         };
       },
       mergedContactsObject
     );
-  }, [data?.systemIntakeContacts?.systemIntakeContacts, systemIntake]);
+  }, [
+    data?.systemIntakeContacts?.systemIntakeContacts,
+    systemIntake,
+    systemIntakeId
+  ]);
 
   const [
     createSystemIntakeContact
@@ -101,7 +124,9 @@ function useSystemIntakeContacts(
     deleteSystemIntakeContact
   ] = useMutation<DeleteSystemIntakeContactInput>(DeleteSystemIntakeContact);
 
-  /** Create system intake contact in database */
+  /**
+   * Create system intake contact in database
+   * */
   const createContact = async (contact: SystemIntakeContactProps) => {
     const { euaUserId, component, role } = contact;
     return createSystemIntakeContact({
@@ -122,7 +147,9 @@ function useSystemIntakeContacts(
       );
   };
 
-  /** Update system intake contact in database */
+  /**
+   * Update system intake contact in database
+   * */
   const updateContact = async (contact: SystemIntakeContactProps) => {
     const { id, euaUserId, component, role } = contact;
     return updateSystemIntakeContact({
@@ -143,7 +170,9 @@ function useSystemIntakeContacts(
       );
   };
 
-  /** Delete system intake contact from database */
+  /**
+   * Delete system intake contact from database
+   * */
   const deleteContact = async (id: string) => {
     return deleteSystemIntakeContact({
       variables: {
@@ -160,7 +189,7 @@ function useSystemIntakeContacts(
   };
 
   return {
-    contacts,
+    contacts: { data: contacts, loading },
     createContact,
     updateContact,
     deleteContact

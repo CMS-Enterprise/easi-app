@@ -11,7 +11,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import useSystemIntake from 'hooks/useSystemIntake';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { ActionForm } from 'types/action';
 import { BasicActionInput } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
@@ -32,9 +32,13 @@ type SubmitActionProps = {
 
 const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { systemId } = useParams<{ systemId: string }>();
-  const { systemIntake } = useSystemIntake(systemId);
   const { t } = useTranslation('action');
   const history = useHistory();
+  const {
+    contacts: {
+      data: { requester }
+    }
+  } = useSystemIntakeContacts(systemId);
 
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
   const [
@@ -67,7 +71,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const initialValues: ActionForm = {
     feedback: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!],
+      regularRecipientEmails: [requester.email],
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment:
         pathname.endsWith('no-governance') ||
