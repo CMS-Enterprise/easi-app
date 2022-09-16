@@ -36,7 +36,8 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const history = useHistory();
   const {
     contacts: {
-      data: { requester }
+      data: { requester },
+      loading
     }
   } = useSystemIntakeContacts(systemId);
 
@@ -80,6 +81,9 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   };
 
   const backLink = `/governance-review-team/${systemId}/actions`;
+
+  // Wait for contacts to load before returning form
+  if (loading) return null;
 
   return (
     <Formik

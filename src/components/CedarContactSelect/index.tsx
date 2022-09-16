@@ -216,13 +216,15 @@ export default function CedarContactSelect({
 
   // Update contacts when search term changes
   useEffect(() => {
-    if (searchTerm) queryCedarContacts(searchTerm.split(',')[0]);
+    if (searchTerm && searchTerm.length > 1) {
+      queryCedarContacts(searchTerm.split(',')[0]);
+    }
   }, [searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update contact when value changes
   // Fix for 'same as requester' checkboxes in system intake form
   useEffect(() => {
-    if (!autoSearch) {
+    if (!autoSearch && value?.euaUserId !== selectedContact.current) {
       updateContact(value);
     }
   }, [value]); // eslint-disable-line react-hooks/exhaustive-deps

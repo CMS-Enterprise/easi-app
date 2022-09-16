@@ -213,18 +213,21 @@ export default function AdditionalContacts({
 }) {
   const { t } = useTranslation('intake');
   const {
-    contacts,
+    contacts: {
+      data: { additionalContacts },
+      loading
+    },
     createContact,
     updateContact,
     deleteContact
   } = useSystemIntakeContacts(systemIntakeId);
 
   // Wait for contacts to load
-  if (!contacts?.additionalContacts) return null;
+  if (loading) return null;
 
   return (
     <div className={classNames('system-intake-contacts', className)}>
-      {contacts.additionalContacts.length > 0 && type === 'contact' && (
+      {type === 'contact' && (
         <>
           <h4>
             {t(
@@ -234,7 +237,7 @@ export default function AdditionalContacts({
             )}
           </h4>
           <div className="system-intake-contacts__contacts-list">
-            {contacts.additionalContacts.map(contact => {
+            {additionalContacts.map(contact => {
               // Show form if editing contact
               if (activeContact && activeContact?.id === contact.id) {
                 return (
