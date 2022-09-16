@@ -26,16 +26,16 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	nextSteps := "nextSteps"
 	feedback := "feedback"
 
+	decisionPathOpeningTag := fmt.Sprintf(
+		"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
+		s.config.URLScheme,
+		s.config.URLHost,
+		intakeID.String(),
+	)
+
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-
-		decisionPathOpeningTag := fmt.Sprintf(
-			"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
-			s.config.URLScheme,
-			s.config.URLHost,
-			intakeID.String(),
-		)
 
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" +
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
@@ -61,13 +61,6 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	s.Run("successful call has the right content with no next steps", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-
-		decisionPathOpeningTag := fmt.Sprintf(
-			"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
-			s.config.URLScheme,
-			s.config.URLHost,
-			intakeID.String(),
-		)
 
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" +
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
@@ -153,16 +146,16 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 	nextSteps := "nextSteps"
 	feedback := "feedback"
 
+	decisionPathOpeningTag := fmt.Sprintf(
+		"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
+		s.config.URLScheme,
+		s.config.URLHost,
+		intakeID.String(),
+	)
+
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-
-		decisionPathOpeningTag := fmt.Sprintf(
-			"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
-			s.config.URLScheme,
-			s.config.URLHost,
-			intakeID.String(),
-		)
 
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" +
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
@@ -188,13 +181,6 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmailToMultipleRecipients() {
 	s.Run("successful call has the right content with no next steps", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-
-		decisionPathOpeningTag := fmt.Sprintf(
-			"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
-			s.config.URLScheme,
-			s.config.URLHost,
-			intakeID.String(),
-		)
 
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" +
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
