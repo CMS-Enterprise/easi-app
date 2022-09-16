@@ -146,7 +146,7 @@ function Homepage() {
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'name', desc: false }], []),
+        sortBy: useMemo(() => [{ id: 'createdAt', desc: true }], []),
         pageIndex: 0,
         pageSize: 10
       }
