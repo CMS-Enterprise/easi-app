@@ -3,13 +3,11 @@ package storage
 import (
 	"context"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *StoreTestSuite) TestCreateTRBRequestAttendee() {
 	ctx := context.Background()
-	logger := appcontext.ZLogger(ctx)
 	anonEua := "ANON"
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
@@ -38,7 +36,7 @@ func (s *StoreTestSuite) TestCreateTRBRequestAttendee() {
 	})
 
 	s.Run("fetches TRB request attendees", func() {
-		fetched, err := s.store.GetTRBRequestAttendeesByTRBRequestID(logger, trbRequest.ID)
+		fetched, err := s.store.GetTRBRequestAttendeesByTRBRequestID(ctx, trbRequest.ID)
 		s.NoError(err)
 		s.True(len(fetched) > 0)
 	})

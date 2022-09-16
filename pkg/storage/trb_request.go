@@ -77,25 +77,6 @@ func (s *Store) GetTRBRequestByID(logger *zap.Logger, id uuid.UUID) (*models.TRB
 			Operation: apperrors.QueryFetch,
 		}
 	}
-
-	// This could be more efficient by using a join with one single query, and writing logic to
-	// parse out the rows and populate the slice of attendees, but this is a lot simpler
-	attendees, err := s.GetTRBRequestAttendeesByTRBRequestID(logger, id)
-
-	if err != nil {
-		logger.Error(
-			"Failed to fetch TRB request attendees",
-			zap.Error(err),
-			zap.String("id", id.String()),
-		)
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     trb,
-			Operation: apperrors.QueryFetch,
-		}
-	}
-
-	trb.Attendees = attendees
 	return &trb, err
 }
 
