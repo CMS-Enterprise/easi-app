@@ -1118,11 +1118,11 @@ func (s *ServicesTestSuite) TestProvideGRTFeedback() {
 			}
 		}
 
-		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+		sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
-		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
@@ -1180,11 +1180,11 @@ func (s *ServicesTestSuite) TestProvideGRTFeedback() {
 			}
 		}
 
-		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+		sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
-		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
@@ -1240,11 +1240,11 @@ func (s *ServicesTestSuite) TestProvideGRTFeedback() {
 			return &models.UserInfo{}, nil
 		}
 
-		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+		sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
-		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
@@ -1300,11 +1300,11 @@ func (s *ServicesTestSuite) TestProvideGRTFeedback() {
 			return &models.UserInfo{}, nil
 		}
 
-		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+		sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
-		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 

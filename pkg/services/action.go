@@ -313,8 +313,8 @@ func NewCreateActionUpdateStatus(
 	updateStatus func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
-	sendReviewEmailToMultipleRecipients func(ctx context.Context, emailText string, recipients models.EmailNotificationRecipients, intakeID uuid.UUID) error,
+	sendReviewEmail func(ctx context.Context, recipient models.EmailAddress, intakeID uuid.UUID, emailText string, projectName string, requester string) error,
+	sendReviewEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, emailText string, projectName string, requester string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
@@ -367,7 +367,14 @@ func NewCreateActionUpdateStatus(
 
 		// TODO - EASI-2021 - remove notifyMultipleRecipients check (but *not* recipients != nil check)
 		if notifyMultipleRecipients && recipients != nil {
-			err = sendReviewEmailToMultipleRecipients(ctx, action.Feedback.String, *recipients, intake.ID)
+			err = sendReviewEmailToMultipleRecipients(
+				ctx,
+				*recipients,
+				intake.ID,
+				action.Feedback.String,
+				intake.ProjectName.String,
+				intake.Requester,
+			)
 			if err != nil {
 				return nil, err
 			}
@@ -416,7 +423,14 @@ func NewCreateActionUpdateStatus(
 			}
 
 			if requesterHasValidEUAID {
-				err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+				err = sendReviewEmail(
+					ctx,
+					requesterInfo.Email,
+					intake.ID,
+					action.Feedback.String,
+					intake.ProjectName.String,
+					intake.Requester,
+				)
 				if err != nil {
 					return nil, err
 				}

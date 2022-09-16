@@ -13,27 +13,36 @@ import (
 func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
-	recipientAddress := models.NewEmailAddress("sample@test.com")
-	emailBody := "Test Text\n\nTest"
-	intakeID := uuid.New()
+	intakeID := uuid.MustParse("99ec6414-320a-4f04-a40c-416c0070cc5f")
+	projectName := "Reviewable Request"
+	requester := "Joe Schmoe"
+	recipient := models.NewEmailAddress("sample@test.com")
+	emailText := "Test Text\n\nTest"
+
+	taskListPathOpeningTag := fmt.Sprintf(
+		"<a href=\"%s://%s/governance-task-list/%s\">",
+		s.config.URLScheme,
+		s.config.URLHost,
+		intakeID.String(),
+	)
 
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Test Text\n\nTest</pre></p>\n<p>" +
-			fmt.Sprintf(
-				"<a href=\"%s://%s/governance-task-list/%s\">",
-				s.config.URLScheme,
-				s.config.URLHost,
-				intakeID.String(),
-			) +
-			"See the most recent status of your request</a></p>\n"
 
-		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress, intakeID)
+		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" +
+			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
+			"If you have any questions, please contact the IT Governance team at " + string(s.config.GRTEmail) +
+			" or contact this request's original author, " + requester + ".</pre></p>\n" +
+			"<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + emailText + "</pre></p>\n" +
+			"<p>If you are the original author of this request, you may use this link to " +
+			taskListPathOpeningTag +
+			"view the request in EASi.</a></p>"
+		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, emailText, projectName, requester)
 
 		s.NoError(err)
 		s.Equal("Feedback for request in EASi", sender.subject)
-		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipientAddress})
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -42,7 +51,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress, intakeID)
+		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, emailText, projectName, requester)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -56,7 +65,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.NoError(err)
 		client.templates.intakeReviewTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress, intakeID)
+		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, emailText, projectName, requester)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -71,7 +80,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress, intakeID)
+		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, emailText, projectName, requester)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -83,12 +92,14 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 
 func (s *EmailTestSuite) TestSendIntakeReviewEmailToMultipleRecipients() {
 	ctx := context.Background()
-	emailBody := "Test Text\n\nTest"
-	intakeID := uuid.New()
+	intakeID := uuid.MustParse("accf1f18-5680-4454-8b0e-2d6275339967")
+	projectName := "Reviewable Request"
+	requester := "Joe Schmoe"
+	emailText := "Test Text\n\nTest"
 
 	s.Run("successful call sends to the correct recipients", func() {
 		s.runMultipleRecipientsTestAgainstAllTestCases(func(client Client, recipients models.EmailNotificationRecipients) error {
-			return client.SendSystemIntakeReviewEmailToMultipleRecipients(ctx, emailBody, recipients, intakeID)
+			return client.SendSystemIntakeReviewEmailToMultipleRecipients(ctx, recipients, intakeID, emailText, projectName, requester)
 		})
 	})
 }
