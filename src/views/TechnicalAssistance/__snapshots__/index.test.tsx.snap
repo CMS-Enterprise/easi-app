@@ -89,7 +89,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
               role="row"
             >
               <th
-                aria-sort="ascending"
+                aria-sort="none"
                 class="border-bottom-2px"
                 colspan="1"
                 role="columnheader"
@@ -114,7 +114,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                   >
                     <svg
                       class="usa-icon margin-left-05 position-absolute"
-                      data-testid="caret--up"
+                      data-testid="caret--sort"
                       focusable="false"
                       height="1em"
                       role="img"
@@ -127,14 +127,14 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                         fill="none"
                       />
                       <path
-                        d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
                       />
                     </svg>
                   </div>
                 </button>
               </th>
               <th
-                aria-sort="none"
+                aria-sort="descending"
                 class="border-bottom-2px"
                 colspan="1"
                 role="columnheader"
@@ -159,7 +159,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                   >
                     <svg
                       class="usa-icon margin-left-05 position-absolute"
-                      data-testid="caret--sort"
+                      data-testid="caret--down"
                       focusable="false"
                       height="1em"
                       role="img"
@@ -172,7 +172,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                         fill="none"
                       />
                       <path
-                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                        d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
                       />
                     </svg>
                   </div>
@@ -335,7 +335,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
         aria-live="polite"
         class="usa-sr-only usa-table__announcement-region"
       >
-        Requests table sorted by Request Name ascending
+        Requests table sorted by Submission date descending
       </div>
     </div>
   </main>
