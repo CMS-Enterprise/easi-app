@@ -51,9 +51,9 @@ func (c Client) SendSystemIntakeReviewEmail(
 	ctx context.Context,
 	recipient models.EmailAddress,
 	systemIntakeID uuid.UUID,
-	emailText string,
 	projectName string,
 	requester string,
+	emailText string,
 ) error {
 	subject := "Feedback for request in EASi"
 	body, err := c.systemIntakeReviewBody(systemIntakeID, projectName, requester, emailText)
@@ -79,9 +79,9 @@ func (c Client) SendSystemIntakeReviewEmailToMultipleRecipients(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
-	emailText string,
 	projectName string,
 	requester string,
+	emailText string,
 ) error {
 	subject := "Feedback for request in EASi"
 	body, err := c.systemIntakeReviewBody(systemIntakeID, projectName, requester, emailText)

@@ -50,7 +50,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 			"<p>If you are the original author of this request, you may use this link to " +
 			decisionPathOpeningTag +
 			"view the request in EASi.</a></p>"
-		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.NoError(err)
 		s.Equal("Lifecycle ID request approved", sender.subject)
@@ -75,7 +75,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 			"<p>If you are the original author of this request, you may use this link to " +
 			decisionPathOpeningTag +
 			"view the request in EASi.</a></p>"
-		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
 
 		s.NoError(err)
 		s.Equal("Lifecycle ID request approved", sender.subject)
@@ -88,7 +88,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -102,7 +102,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates.issueLCIDTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -117,7 +117,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendIssueLCIDEmail(ctx, intakeID, projectName, requester, recipient, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})

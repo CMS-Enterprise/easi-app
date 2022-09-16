@@ -42,7 +42,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 			"<p>If you are the original author of this request, you may use this link to " +
 			decisionPathOpeningTag +
 			"view the request in EASi.</a></p>"
-		err = client.SendRejectRequestEmail(ctx, intakeID, projectName, requester, recipient, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, intakeID, projectName, requester, reason, nextSteps, feedback)
 
 		s.NoError(err)
 		s.Equal("Request in EASi not approved", sender.subject)
@@ -64,7 +64,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 			"<p>If you are the original author of this request, you may use this link to " +
 			decisionPathOpeningTag +
 			"view the request in EASi.</a></p>"
-		err = client.SendRejectRequestEmail(ctx, intakeID, projectName, requester, recipient, reason, "", feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, intakeID, projectName, requester, reason, "", feedback)
 
 		s.NoError(err)
 		s.Equal("Request in EASi not approved", sender.subject)
@@ -77,7 +77,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendRejectRequestEmail(ctx, intakeID, projectName, requester, recipient, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, intakeID, projectName, requester, reason, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -91,7 +91,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		s.NoError(err)
 		client.templates.rejectRequestTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendRejectRequestEmail(ctx, intakeID, projectName, requester, recipient, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, intakeID, projectName, requester, reason, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -106,7 +106,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendRejectRequestEmail(ctx, intakeID, projectName, requester, recipient, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, intakeID, projectName, requester, reason, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -134,7 +134,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmailToMultipleRecipients() {
 
 	s.Run("successful call sends to the correct recipients", func() {
 		s.runMultipleRecipientsTestAgainstAllTestCases(func(client Client, recipients models.EmailNotificationRecipients) error {
-			return client.SendRejectRequestEmailToMultipleRecipients(ctx, intakeID, projectName, requester, recipients, reason, nextSteps, feedback)
+			return client.SendRejectRequestEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, reason, nextSteps, feedback)
 		})
 	})
 
@@ -160,7 +160,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmailToMultipleRecipients() {
 			"<p>If you are the original author of this request, you may use this link to " +
 			decisionPathOpeningTag +
 			"view the request in EASi.</a></p>"
-		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, intakeID, projectName, requester, recipients, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, reason, nextSteps, feedback)
 
 		s.NoError(err)
 		s.Equal("Request in EASi not approved", sender.subject)
@@ -181,7 +181,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmailToMultipleRecipients() {
 			"<p>If you are the original author of this request, you may use this link to " +
 			decisionPathOpeningTag +
 			"view the request in EASi.</a></p>"
-		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, intakeID, projectName, requester, recipients, reason, "", feedback)
+		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, reason, "", feedback)
 
 		s.NoError(err)
 		s.Equal("Request in EASi not approved", sender.subject)
@@ -193,7 +193,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmailToMultipleRecipients() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, intakeID, projectName, requester, recipients, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, reason, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -207,7 +207,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmailToMultipleRecipients() {
 		s.NoError(err)
 		client.templates.rejectRequestTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, intakeID, projectName, requester, recipients, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, reason, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -222,7 +222,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmailToMultipleRecipients() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, intakeID, projectName, requester, recipients, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, reason, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(&apperrors.NotificationError{}, err)

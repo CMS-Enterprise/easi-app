@@ -65,10 +65,10 @@ func (c Client) issueLCIDBody(
 // TODO - EASI-2021 - remove
 func (c Client) SendIssueLCIDEmail(
 	ctx context.Context,
+	recipient models.EmailAddress,
 	systemIntakeID uuid.UUID,
 	projectName string,
 	requester string,
-	recipient models.EmailAddress,
 	lcid string,
 	expirationDate *time.Time,
 	scope string,

@@ -234,7 +234,7 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendIssueLCIDEmail func(context.Context, uuid.UUID, string, string, models.EmailAddress, string, *time.Time, string, string, string, string) error,
+	sendIssueLCIDEmail func(context.Context, models.EmailAddress, uuid.UUID, string, string, string, *time.Time, string, string, string, string) error,
 	sendIssueLCIDEmailToMultipleRecipients func(context.Context, models.EmailNotificationRecipients, uuid.UUID, string, string, string, *time.Time, string, string, string, string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
@@ -378,10 +378,10 @@ func NewUpdateLifecycleFields(
 			if shouldSendEmail && requesterHasValidEUAID {
 				err = sendIssueLCIDEmail(
 					ctx,
+					requesterInfo.Email,
 					updated.ID,
 					updated.ProjectName.String,
 					updated.Requester,
-					requesterInfo.Email,
 					updated.LifecycleID.String,
 					updated.LifecycleExpiresAt,
 					updated.LifecycleScope.String,
@@ -408,8 +408,8 @@ func NewUpdateRejectionFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendRejectRequestEmail func(ctx context.Context, systemIntakeID uuid.UUID, projectName string, requester string, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
-	sendRejectRequestEmailToMultipleRecipients func(ctx context.Context, systemIntakeID uuid.UUID, projectName string, requester string, recipients models.EmailNotificationRecipients, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmail func(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, projectName string, requester string, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, reason string, nextSteps string, feedback string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 ) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
@@ -502,10 +502,10 @@ func NewUpdateRejectionFields(
 		if notifyMultipleRecipients && recipients != nil {
 			err = sendRejectRequestEmailToMultipleRecipients(
 				ctx,
+				*recipients,
 				existing.ID,
 				existing.ProjectName.String,
 				existing.Requester,
-				*recipients,
 				existing.RejectionReason.String,
 				existing.DecisionNextSteps.String,
 				action.Feedback.String,
@@ -516,10 +516,10 @@ func NewUpdateRejectionFields(
 		} else if shouldSendEmail && requesterHasValidEUAID { // TODO - EASI-2021 - remove this block
 			err = sendRejectRequestEmail(
 				ctx,
+				requesterInfo.Email,
 				existing.ID,
 				existing.ProjectName.String,
 				existing.Requester,
-				requesterInfo.Email,
 				existing.RejectionReason.String,
 				existing.DecisionNextSteps.String,
 				action.Feedback.String,
@@ -541,8 +541,8 @@ func NewProvideGRTFeedback(
 	saveAction func(context.Context, *models.Action) error,
 	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, recipient models.EmailAddress, intakeID uuid.UUID, emailText string, projectName string, requester string) error,
-	sendReviewEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, emailText string, projectName string, requester string) error,
+	sendReviewEmail func(ctx context.Context, recipient models.EmailAddress, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
+	sendReviewEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 ) func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.GRTFeedback, error) {
@@ -627,9 +627,9 @@ func NewProvideGRTFeedback(
 				ctx,
 				*recipients,
 				intake.ID,
-				action.Feedback.String,
 				intake.ProjectName.String,
 				intake.Requester,
+				action.Feedback.String,
 			)
 			if err != nil {
 				return nil, err
@@ -639,9 +639,9 @@ func NewProvideGRTFeedback(
 				ctx,
 				requesterInfo.Email,
 				intake.ID,
-				action.Feedback.String,
 				intake.ProjectName.String,
 				intake.Requester,
+				action.Feedback.String,
 			)
 			if err != nil {
 				return nil, err

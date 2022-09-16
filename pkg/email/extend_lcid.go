@@ -24,7 +24,7 @@ type extendLCID struct {
 	DecisionLink    string
 }
 
-func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requester string, projectName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) (string, error) {
+func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) (string, error) {
 	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := extendLCID{
 		ProjectName:     projectName,
@@ -54,8 +54,8 @@ func (c Client) SendExtendLCIDEmail(
 	ctx context.Context,
 	recipient models.EmailAddress,
 	systemIntakeID uuid.UUID,
-	requester string,
 	projectName string,
+	requester string,
 	newExpiresAt *time.Time,
 	newScope string,
 	newNextSteps string,
@@ -86,15 +86,15 @@ func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
-	requester string,
 	projectName string,
+	requester string,
 	newExpiresAt *time.Time,
 	newScope string,
 	newNextSteps string,
 	newCostBaseline string,
 ) error {
 	subject := "Lifecycle ID extended"
-	body, err := c.extendLCIDBody(systemIntakeID, requester, projectName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
+	body, err := c.extendLCIDBody(systemIntakeID, projectName, requester, newExpiresAt, newScope, newNextSteps, newCostBaseline)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

@@ -55,10 +55,10 @@ func (c Client) rejectRequestBody(
 // TODO - EASI-2021 - remove
 func (c Client) SendRejectRequestEmail(
 	ctx context.Context,
+	recipient models.EmailAddress,
 	systemIntakeID uuid.UUID,
 	projectName string,
 	requester string,
-	recipient models.EmailAddress,
 	reason string,
 	nextSteps string,
 	feedback string,
@@ -85,10 +85,10 @@ func (c Client) SendRejectRequestEmail(
 // TODO - EASI-2021 - rename to SendRejectRequestEmails
 func (c Client) SendRejectRequestEmailToMultipleRecipients(
 	ctx context.Context,
+	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
 	projectName string,
 	requester string,
-	recipients models.EmailNotificationRecipients,
 	reason string,
 	nextSteps string,
 	feedback string,

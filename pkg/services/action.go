@@ -313,8 +313,8 @@ func NewCreateActionUpdateStatus(
 	updateStatus func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, recipient models.EmailAddress, intakeID uuid.UUID, emailText string, projectName string, requester string) error,
-	sendReviewEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, emailText string, projectName string, requester string) error,
+	sendReviewEmail func(ctx context.Context, recipient models.EmailAddress, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
+	sendReviewEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
@@ -371,9 +371,9 @@ func NewCreateActionUpdateStatus(
 				ctx,
 				*recipients,
 				intake.ID,
-				action.Feedback.String,
 				intake.ProjectName.String,
 				intake.Requester,
+				action.Feedback.String,
 			)
 			if err != nil {
 				return nil, err
@@ -427,9 +427,9 @@ func NewCreateActionUpdateStatus(
 					ctx,
 					requesterInfo.Email,
 					intake.ID,
-					action.Feedback.String,
 					intake.ProjectName.String,
 					intake.Requester,
+					action.Feedback.String,
 				)
 				if err != nil {
 					return nil, err

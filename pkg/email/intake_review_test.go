@@ -38,7 +38,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 			"<p>If you are the original author of this request, you may use this link to " +
 			taskListPathOpeningTag +
 			"view the request in EASi.</a></p>"
-		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, emailText, projectName, requester)
+		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, projectName, requester, emailText)
 
 		s.NoError(err)
 		s.Equal("Feedback for request in EASi", sender.subject)
@@ -51,7 +51,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, emailText, projectName, requester)
+		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, projectName, requester, emailText)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -65,7 +65,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.NoError(err)
 		client.templates.intakeReviewTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, emailText, projectName, requester)
+		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, projectName, requester, emailText)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -80,7 +80,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, emailText, projectName, requester)
+		err = client.SendSystemIntakeReviewEmail(ctx, recipient, intakeID, projectName, requester, emailText)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -99,7 +99,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmailToMultipleRecipients() {
 
 	s.Run("successful call sends to the correct recipients", func() {
 		s.runMultipleRecipientsTestAgainstAllTestCases(func(client Client, recipients models.EmailNotificationRecipients) error {
-			return client.SendSystemIntakeReviewEmailToMultipleRecipients(ctx, recipients, intakeID, emailText, projectName, requester)
+			return client.SendSystemIntakeReviewEmailToMultipleRecipients(ctx, recipients, intakeID, projectName, requester, emailText)
 		})
 	})
 }
