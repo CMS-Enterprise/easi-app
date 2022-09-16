@@ -24,8 +24,8 @@ var trbRequestGetByIDSQL string
 //go:embed SQL/trb_request_update.sql
 var trbRequestUpdateSQL string
 
-// TRBRequestCreate creates a new TRBRequest record
-func (s *Store) TRBRequestCreate(logger *zap.Logger, trb *models.TRBRequest) (*models.TRBRequest, error) {
+// CreateTRBRequest creates a new TRBRequest record
+func (s *Store) CreateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*models.TRBRequest, error) {
 
 	if trb.ID == uuid.Nil {
 		trb.ID = uuid.New()
@@ -54,8 +54,8 @@ func (s *Store) TRBRequestCreate(logger *zap.Logger, trb *models.TRBRequest) (*m
 	return &retTRB, nil
 }
 
-// TRBRequestGetByID returns an TRBRequest from the db  for a given id
-func (s *Store) TRBRequestGetByID(logger *zap.Logger, id uuid.UUID) (*models.TRBRequest, error) {
+// GetTRBRequestByID returns an TRBRequest from the db  for a given id
+func (s *Store) GetTRBRequestByID(logger *zap.Logger, id uuid.UUID) (*models.TRBRequest, error) {
 
 	trb := models.TRBRequest{}
 	stmt, err := s.db.PrepareNamed(trbRequestGetByIDSQL)
@@ -77,11 +77,30 @@ func (s *Store) TRBRequestGetByID(logger *zap.Logger, id uuid.UUID) (*models.TRB
 			Operation: apperrors.QueryFetch,
 		}
 	}
+
+	// This could be more efficient by using a join with one single query, and writing logic to
+	// parse out the rows and populate the slice of attendees, but this is a lot simpler
+	attendees, err := s.GetTRBRequestAttendeesByTRBRequestID(logger, id)
+
+	if err != nil {
+		logger.Error(
+			"Failed to fetch TRB request attendees",
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     trb,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	trb.Attendees = attendees
 	return &trb, err
 }
 
-// TRBRequestUpdate returns an TRBRequest from the db for a given id
-func (s *Store) TRBRequestUpdate(logger *zap.Logger, trb *models.TRBRequest) (*models.TRBRequest, error) {
+// UpdateTRBRequest returns an TRBRequest from the db for a given id
+func (s *Store) UpdateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*models.TRBRequest, error) {
 	stmt, err := s.db.PrepareNamed(trbRequestUpdateSQL)
 	if err != nil {
 		logger.Error(
@@ -108,8 +127,8 @@ func (s *Store) TRBRequestUpdate(logger *zap.Logger, trb *models.TRBRequest) (*m
 	return &retTRB, err
 }
 
-// TRBRequestCollectionGet returns the collection of models
-func (s *Store) TRBRequestCollectionGet(logger *zap.Logger, archived bool) ([]*models.TRBRequest, error) {
+// GetTRBRequests returns the collection of models
+func (s *Store) GetTRBRequests(logger *zap.Logger, archived bool) ([]*models.TRBRequest, error) {
 	trbRequests := []*models.TRBRequest{}
 
 	stmt, err := s.db.PrepareNamed(trbRequestCollectionGetSQL)

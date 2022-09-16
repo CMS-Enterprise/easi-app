@@ -39,7 +39,7 @@ func DeleteTRBRequestAttendee(ctx context.Context, store *storage.Store, id uuid
 	if err != nil {
 		return nil, err
 	}
-	return &models.TRBRequestAttendee{
-		ID: id,
-	}, nil
+	attendee := &models.TRBRequestAttendee{}
+	attendee.ID = id
+	return attendee, nil
 }

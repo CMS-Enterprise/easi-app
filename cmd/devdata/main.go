@@ -398,6 +398,6 @@ func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *stor
 	for _, cb := range callbacks {
 		cb(trb)
 	}
-	ret, _ := store.TRBRequestCreate(logger, trb)
+	ret, _ := store.CreateTRBRequest(logger, trb)
 	return ret
 }

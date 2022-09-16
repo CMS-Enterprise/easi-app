@@ -8,7 +8,7 @@ import (
 func (suite *ResolverSuite) TestTRBRequestCreate() {
 
 	//TODO get the context in the test configs
-	trb, err := TRBRequestCreate(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
+	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(trb)
 
@@ -26,7 +26,7 @@ func (suite *ResolverSuite) TestTRBRequestCreate() {
 // TRBRequestUpdate updates a TRB request
 func (suite *ResolverSuite) TestTRBRequestUpdate() {
 
-	trb, err := TRBRequestCreate(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
+	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(trb)
 
@@ -37,7 +37,7 @@ func (suite *ResolverSuite) TestTRBRequestUpdate() {
 	}
 	princ := suite.testConfigs.Principal.ID()
 
-	updated, err := TRBRequestUpdate(suite.testConfigs.Context, trb.ID, changes, suite.testConfigs.Store)
+	updated, err := UpdateTRBRequest(suite.testConfigs.Context, trb.ID, changes, suite.testConfigs.Store)
 	suite.NotNil(updated)
 	suite.NoError(err)
 	suite.EqualValues(updated.Name, "Testing")
@@ -50,11 +50,11 @@ func (suite *ResolverSuite) TestTRBRequestUpdate() {
 
 // TRBRequestGetByID returns a TRB request by it's ID
 func (suite *ResolverSuite) TestTRBRequestGetByID() {
-	trb, err := TRBRequestCreate(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
+	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(trb)
 
-	ret, err := TRBRequestGetByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
+	ret, err := GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(ret)
 
@@ -63,20 +63,20 @@ func (suite *ResolverSuite) TestTRBRequestGetByID() {
 // TRBRequestCollectionGet returns all TRB Requests
 func (suite *ResolverSuite) TestTRBRequestCollectionGet() {
 
-	trb, err := TRBRequestCreate(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
+	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(trb)
 	//Check we return 1 value
-	col, err := TRBRequestCollectionGet(suite.testConfigs.Context, false, suite.testConfigs.Store)
+	col, err := GetTRBRequests(suite.testConfigs.Context, false, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.Len(col, 1)
 	suite.EqualValues(trb, col[0])
 
-	trb2, err := TRBRequestCreate(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
+	trb2, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(trb2)
 	//Check for 2 request
-	col, err = TRBRequestCollectionGet(suite.testConfigs.Context, false, suite.testConfigs.Store)
+	col, err = GetTRBRequests(suite.testConfigs.Context, false, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.Len(col, 2)
 
@@ -86,11 +86,11 @@ func (suite *ResolverSuite) TestTRBRequestCollectionGet() {
 	}
 
 	//archive
-	trbUpdate, err := TRBRequestUpdate(suite.testConfigs.Context, trb2.ID, changes, suite.testConfigs.Store)
+	trbUpdate, err := UpdateTRBRequest(suite.testConfigs.Context, trb2.ID, changes, suite.testConfigs.Store)
 	suite.NoError(err)
 
 	//GET archived collection
-	col, err = TRBRequestCollectionGet(suite.testConfigs.Context, true, suite.testConfigs.Store)
+	col, err = GetTRBRequests(suite.testConfigs.Context, true, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.Len(col, 1)
 	suite.EqualValues(trbUpdate, col[0])

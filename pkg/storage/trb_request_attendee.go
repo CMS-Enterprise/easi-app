@@ -69,15 +69,15 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 	return attendee, nil
 }
 
-// FetchTRBRequestAttendeesByTRBRequestID queries the DB for all the TRB request attendee records
+// GetTRBRequestAttendeesByTRBRequestID queries the DB for all the TRB request attendee records
 // matching the given TRB request ID
-func (s *Store) FetchTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestAttendee, error) {
+func (s *Store) GetTRBRequestAttendeesByTRBRequestID(logger *zap.Logger, trbRequestID uuid.UUID) ([]*models.TRBRequestAttendee, error) {
 	results := []*models.TRBRequestAttendee{}
 
-	err := s.db.SelectContext(ctx, &results, `SELECT * FROM trb_request_attendees WHERE trb_request_id=$1`, trbRequestID)
+	err := s.db.Select(&results, `SELECT * FROM trb_request_attendees WHERE trb_request_id=$1`, trbRequestID)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request attendees", zap.Error(err), zap.String("id", trbRequestID.String()))
+		logger.Error("Failed to fetch TRB request attendees", zap.Error(err), zap.String("id", trbRequestID.String()))
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     models.TRBRequestAttendee{},

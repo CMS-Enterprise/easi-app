@@ -1478,16 +1478,16 @@ input SendReportAProblemEmailInput {
 Represents a request for support from the Technical Review Board (TRB)
 """
 type TRBRequest {
-    id: UUID!
-    name: String!
-    archived: Boolean!
-    type: TRBRequestType!
-    status: TRBRequestStatus!
-
-    createdBy: String!
-    createdAt: Time!
-    modifiedBy: String
-    modifiedAt: Time
+  id: UUID!
+  name: String!
+  archived: Boolean!
+  type: TRBRequestType!
+  status: TRBRequestStatus!
+  attendees: [TRBRequestAttendee!]!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
 }
 
 """
@@ -1534,13 +1534,6 @@ input UpdateTRBRequestAttendeeInput {
   id: UUID!
   component: String!
   role: String!
-}
-
-"""
-The payload when retrieving system intake contacts
-"""
-type TRBRequestAttendeesPayload {
-  trbRequestAttendees: [TRBRequestAttendee!]!
 }
 
 """
@@ -1684,8 +1677,7 @@ type Query {
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
   relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
-  trbRequestCollection(archived: Boolean! = false): [TRBRequest!]!
-  trbRequestAttendees(id: UUID!): TRBRequestAttendeesPayload!
+  trbRequests(archived: Boolean! = false): [TRBRequest!]!
 }
 
 enum TRBRequestType {

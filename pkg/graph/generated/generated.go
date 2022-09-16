@@ -554,8 +554,7 @@ type ComplexityRoot struct {
 		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
 		Systems                  func(childComplexity int, after *string, first int) int
 		TrbRequest               func(childComplexity int, id uuid.UUID) int
-		TrbRequestAttendees      func(childComplexity int, id uuid.UUID) int
-		TrbRequestCollection     func(childComplexity int, archived bool) int
+		TrbRequests              func(childComplexity int, archived bool) int
 		Urls                     func(childComplexity int, cedarSystemID string) int
 	}
 
@@ -750,6 +749,7 @@ type ComplexityRoot struct {
 
 	TRBRequest struct {
 		Archived   func(childComplexity int) int
+		Attendees  func(childComplexity int) int
 		CreatedAt  func(childComplexity int) int
 		CreatedBy  func(childComplexity int) int
 		ID         func(childComplexity int) int
@@ -770,10 +770,6 @@ type ComplexityRoot struct {
 		ModifiedBy   func(childComplexity int) int
 		Role         func(childComplexity int) int
 		TRBRequestID func(childComplexity int) int
-	}
-
-	TRBRequestAttendeesPayload struct {
-		TrbRequestAttendees func(childComplexity int) int
 	}
 
 	TestDate struct {
@@ -1026,8 +1022,7 @@ type QueryResolver interface {
 	SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*model.SystemIntakeContactsPayload, error)
 	RelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error)
 	TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error)
-	TrbRequestCollection(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
-	TrbRequestAttendees(ctx context.Context, id uuid.UUID) (*model.TRBRequestAttendeesPayload, error)
+	TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error)
@@ -3908,29 +3903,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.TrbRequest(childComplexity, args["id"].(uuid.UUID)), true
 
-	case "Query.trbRequestAttendees":
-		if e.complexity.Query.TrbRequestAttendees == nil {
+	case "Query.trbRequests":
+		if e.complexity.Query.TrbRequests == nil {
 			break
 		}
 
-		args, err := ec.field_Query_trbRequestAttendees_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_trbRequests_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.TrbRequestAttendees(childComplexity, args["id"].(uuid.UUID)), true
-
-	case "Query.trbRequestCollection":
-		if e.complexity.Query.TrbRequestCollection == nil {
-			break
-		}
-
-		args, err := ec.field_Query_trbRequestCollection_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.TrbRequestCollection(childComplexity, args["archived"].(bool)), true
+		return e.complexity.Query.TrbRequests(childComplexity, args["archived"].(bool)), true
 
 	case "Query.urls":
 		if e.complexity.Query.Urls == nil {
@@ -4791,6 +4774,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.Archived(childComplexity), true
 
+	case "TRBRequest.attendees":
+		if e.complexity.TRBRequest.Attendees == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.Attendees(childComplexity), true
+
 	case "TRBRequest.createdAt":
 		if e.complexity.TRBRequest.CreatedAt == nil {
 			break
@@ -4909,13 +4899,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequestAttendee.TRBRequestID(childComplexity), true
-
-	case "TRBRequestAttendeesPayload.trbRequestAttendees":
-		if e.complexity.TRBRequestAttendeesPayload.TrbRequestAttendees == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestAttendeesPayload.TrbRequestAttendees(childComplexity), true
 
 	case "TestDate.date":
 		if e.complexity.TestDate.Date == nil {
@@ -6652,16 +6635,16 @@ input SendReportAProblemEmailInput {
 Represents a request for support from the Technical Review Board (TRB)
 """
 type TRBRequest {
-    id: UUID!
-    name: String!
-    archived: Boolean!
-    type: TRBRequestType!
-    status: TRBRequestStatus!
-
-    createdBy: String!
-    createdAt: Time!
-    modifiedBy: String
-    modifiedAt: Time
+  id: UUID!
+  name: String!
+  archived: Boolean!
+  type: TRBRequestType!
+  status: TRBRequestStatus!
+  attendees: [TRBRequestAttendee!]!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
 }
 
 """
@@ -6708,13 +6691,6 @@ input UpdateTRBRequestAttendeeInput {
   id: UUID!
   component: String!
   role: String!
-}
-
-"""
-The payload when retrieving system intake contacts
-"""
-type TRBRequestAttendeesPayload {
-  trbRequestAttendees: [TRBRequestAttendee!]!
 }
 
 """
@@ -6858,8 +6834,7 @@ type Query {
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
   relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
-  trbRequestCollection(archived: Boolean! = false): [TRBRequest!]!
-  trbRequestAttendees(id: UUID!): TRBRequestAttendeesPayload!
+  trbRequests(archived: Boolean! = false): [TRBRequest!]!
 }
 
 enum TRBRequestType {
@@ -7996,36 +7971,6 @@ func (ec *executionContext) field_Query_systems_args(ctx context.Context, rawArg
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_trbRequestAttendees_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 uuid.UUID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_trbRequestCollection_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 bool
-	if tmp, ok := rawArgs["archived"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("archived"))
-		arg0, err = ec.unmarshalNBoolean2bool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["archived"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Query_trbRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -8038,6 +7983,21 @@ func (ec *executionContext) field_Query_trbRequest_args(ctx context.Context, raw
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_trbRequests_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 bool
+	if tmp, ok := rawArgs["archived"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("archived"))
+		arg0, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["archived"] = arg0
 	return args, nil
 }
 
@@ -24155,6 +24115,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_type(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
+			case "attendees":
+				return ec.fieldContext_TRBRequest_attendees(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -24230,6 +24192,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_type(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
+			case "attendees":
+				return ec.fieldContext_TRBRequest_attendees(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -26043,6 +26007,8 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_type(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
+			case "attendees":
+				return ec.fieldContext_TRBRequest_attendees(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -26069,8 +26035,8 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_trbRequestCollection(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_trbRequestCollection(ctx, field)
+func (ec *executionContext) _Query_trbRequests(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_trbRequests(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -26083,7 +26049,7 @@ func (ec *executionContext) _Query_trbRequestCollection(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().TrbRequestCollection(rctx, fc.Args["archived"].(bool))
+		return ec.resolvers.Query().TrbRequests(rctx, fc.Args["archived"].(bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -26100,7 +26066,7 @@ func (ec *executionContext) _Query_trbRequestCollection(ctx context.Context, fie
 	return ec.marshalNTRBRequest2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_trbRequestCollection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -26118,6 +26084,8 @@ func (ec *executionContext) fieldContext_Query_trbRequestCollection(ctx context.
 				return ec.fieldContext_TRBRequest_type(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
+			case "attendees":
+				return ec.fieldContext_TRBRequest_attendees(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -26137,66 +26105,7 @@ func (ec *executionContext) fieldContext_Query_trbRequestCollection(ctx context.
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_trbRequestCollection_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Query_trbRequestAttendees(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_trbRequestAttendees(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().TrbRequestAttendees(rctx, fc.Args["id"].(uuid.UUID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.TRBRequestAttendeesPayload)
-	fc.Result = res
-	return ec.marshalNTRBRequestAttendeesPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestAttendeesPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_trbRequestAttendees(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "trbRequestAttendees":
-				return ec.fieldContext_TRBRequestAttendeesPayload_trbRequestAttendees(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBRequestAttendeesPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_trbRequestAttendees_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_trbRequests_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -32003,6 +31912,70 @@ func (ec *executionContext) fieldContext_TRBRequest_status(ctx context.Context, 
 	return fc, nil
 }
 
+func (ec *executionContext) _TRBRequest_attendees(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_attendees(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Attendees, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.TRBRequestAttendee)
+	fc.Result = res
+	return ec.marshalNTRBRequestAttendee2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestAttendeeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequest_attendees(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequest",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TRBRequestAttendee_id(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_TRBRequestAttendee_euaUserId(ctx, field)
+			case "trbRequestId":
+				return ec.fieldContext_TRBRequestAttendee_trbRequestId(ctx, field)
+			case "component":
+				return ec.fieldContext_TRBRequestAttendee_component(ctx, field)
+			case "role":
+				return ec.fieldContext_TRBRequestAttendee_role(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_TRBRequestAttendee_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBRequestAttendee_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_TRBRequestAttendee_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBRequestAttendee_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBRequestAttendee", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TRBRequest_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBRequest_createdBy(ctx, field)
 	if err != nil {
@@ -32558,70 +32531,6 @@ func (ec *executionContext) fieldContext_TRBRequestAttendee_modifiedAt(ctx conte
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestAttendeesPayload_trbRequestAttendees(ctx context.Context, field graphql.CollectedField, obj *model.TRBRequestAttendeesPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestAttendeesPayload_trbRequestAttendees(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TrbRequestAttendees, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.TRBRequestAttendee)
-	fc.Result = res
-	return ec.marshalNTRBRequestAttendee2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestAttendeeᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestAttendeesPayload_trbRequestAttendees(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestAttendeesPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_TRBRequestAttendee_id(ctx, field)
-			case "euaUserId":
-				return ec.fieldContext_TRBRequestAttendee_euaUserId(ctx, field)
-			case "trbRequestId":
-				return ec.fieldContext_TRBRequestAttendee_trbRequestId(ctx, field)
-			case "component":
-				return ec.fieldContext_TRBRequestAttendee_component(ctx, field)
-			case "role":
-				return ec.fieldContext_TRBRequestAttendee_role(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_TRBRequestAttendee_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_TRBRequestAttendee_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_TRBRequestAttendee_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_TRBRequestAttendee_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBRequestAttendee", field.Name)
 		},
 	}
 	return fc, nil
@@ -42058,7 +41967,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "trbRequestCollection":
+		case "trbRequests":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -42067,30 +41976,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_trbRequestCollection(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return rrm(innerCtx)
-			})
-		case "trbRequestAttendees":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_trbRequestAttendees(ctx, field)
+				res = ec._Query_trbRequests(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -43780,6 +43666,13 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "attendees":
+
+			out.Values[i] = ec._TRBRequest_attendees(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequest_createdBy(ctx, field, obj)
@@ -43880,34 +43773,6 @@ func (ec *executionContext) _TRBRequestAttendee(ctx context.Context, sel ast.Sel
 
 			out.Values[i] = ec._TRBRequestAttendee_modifiedAt(ctx, field, obj)
 
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var tRBRequestAttendeesPayloadImplementors = []string{"TRBRequestAttendeesPayload"}
-
-func (ec *executionContext) _TRBRequestAttendeesPayload(ctx context.Context, sel ast.SelectionSet, obj *model.TRBRequestAttendeesPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBRequestAttendeesPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBRequestAttendeesPayload")
-		case "trbRequestAttendees":
-
-			out.Values[i] = ec._TRBRequestAttendeesPayload_trbRequestAttendees(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -46374,20 +46239,6 @@ func (ec *executionContext) marshalNTRBRequestAttendee2ᚖgithubᚗcomᚋcmsgov�
 		return graphql.Null
 	}
 	return ec._TRBRequestAttendee(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNTRBRequestAttendeesPayload2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestAttendeesPayload(ctx context.Context, sel ast.SelectionSet, v model.TRBRequestAttendeesPayload) graphql.Marshaler {
-	return ec._TRBRequestAttendeesPayload(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNTRBRequestAttendeesPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestAttendeesPayload(ctx context.Context, sel ast.SelectionSet, v *model.TRBRequestAttendeesPayload) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._TRBRequestAttendeesPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNTRBRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestStatus(ctx context.Context, v interface{}) (models.TRBRequestStatus, error) {
