@@ -13,8 +13,7 @@ function getJsxText(node: JSX.Element): string | undefined {
 }
 
 /**
- * A react table global filter used to match against text values
- * returned from `Column.Cell`.
+ * A react table global filter used to match against text values returned from `Column.Cell`.
  */
 /*
 Note: This generic version is commented out because instantiation expressions aren't working at the moment
@@ -22,7 +21,6 @@ https://github.com/microsoft/TypeScript/pull/47607
 https://github.com/microsoft/TypeScript/issues/50161
 
   export default function globalFilterCellText<T extends object>(
-    // eslint-disable-next-line camelcase
     rows: Row<T>[],
     columnIds: string[],
     filterValue: string
@@ -32,7 +30,6 @@ https://github.com/microsoft/TypeScript/issues/50161
   ...
 */
 export default function globalFilterCellText(
-  // eslint-disable-next-line camelcase
   rows: Row<any>[],
   columnIds: string[],
   filterValue: string
