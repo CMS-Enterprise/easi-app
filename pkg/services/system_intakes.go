@@ -408,8 +408,8 @@ func NewUpdateRejectionFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendRejectRequestEmail func(ctx context.Context, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
-	sendRejectRequestEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmail func(ctx context.Context, systemIntakeID uuid.UUID, requestName string, requester string, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmailToMultipleRecipients func(ctx context.Context, systemIntakeID uuid.UUID, requestName string, requester string, recipients models.EmailNotificationRecipients, reason string, nextSteps string, feedback string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 ) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
@@ -502,6 +502,9 @@ func NewUpdateRejectionFields(
 		if notifyMultipleRecipients && recipients != nil {
 			err = sendRejectRequestEmailToMultipleRecipients(
 				ctx,
+				existing.ID,
+				existing.ProjectName.String,
+				existing.Requester,
 				*recipients,
 				existing.RejectionReason.String,
 				existing.DecisionNextSteps.String,
@@ -513,6 +516,9 @@ func NewUpdateRejectionFields(
 		} else if shouldSendEmail && requesterHasValidEUAID { // TODO - EASI-2021 - remove this block
 			err = sendRejectRequestEmail(
 				ctx,
+				existing.ID,
+				existing.ProjectName.String,
+				existing.Requester,
 				requesterInfo.Email,
 				existing.RejectionReason.String,
 				existing.DecisionNextSteps.String,
