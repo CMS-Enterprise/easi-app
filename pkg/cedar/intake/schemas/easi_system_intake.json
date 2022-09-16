@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIIntake",
-  "title": "EASIIntakeV05",
+  "title": "EASIIntakeV06",
   "definitions": {
     "EASIFundingSource": {
       "required": [
@@ -120,6 +120,13 @@
         "contractVehicle": {
           "type": "string",
           "description": "Contract vehicle for this effort",
+          "examples": [
+            "8(a)"
+          ]
+        },
+        "contractNumber": {
+          "type": "string",
+          "description": "Contract number for this effort",
           "examples": [
             "8(a)"
           ]

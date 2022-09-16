@@ -62,7 +62,7 @@ export default ({
   const flags = useFlags();
 
   // Contacts query
-  const [initialContacts] = useSystemIntakeContacts(systemIntakeId);
+  const { contacts } = useSystemIntakeContacts(systemIntakeId);
   // Get system intake from Apollo cache
   const { systemIntake } = useSystemIntake(systemIntakeId);
 
@@ -80,20 +80,20 @@ export default ({
   };
 
   /** Formatted array of contacts in order of display */
-  const contacts = initialContacts
+  const contactsObject = contacts
     ? [
         requester,
-        initialContacts.businessOwner,
-        initialContacts.productManager,
-        ...(initialContacts.isso.commonName ? [initialContacts.isso] : []), // Only include ISSO if present
-        initialContacts.additionalContacts
+        contacts.businessOwner,
+        contacts.productManager,
+        ...(contacts.isso.commonName ? [contacts.isso] : []), // Only include ISSO if present
+        contacts.additionalContacts
       ].flat()
     : [];
 
   // Number of possible recipients
-  const contactsCount = contacts.length + 2;
+  const contactsCount = contactsObject.length + 2;
   // Number of selected contacts
-  const selectedContacts = contacts.filter(({ email }) =>
+  const selectedContacts = contactsObject.filter(({ email }) =>
     recipients.regularRecipientEmails.includes(email!)
   ).length;
   const selectedCount =
@@ -193,7 +193,7 @@ export default ({
                 }
                 onBlur={() => null}
               />
-              {contacts.slice(1).map((contact, index) => {
+              {contactsObject.slice(1).map((contact, index) => {
                 return (
                   <Recipient
                     key={index} // eslint-disable-line react/no-array-index-key
