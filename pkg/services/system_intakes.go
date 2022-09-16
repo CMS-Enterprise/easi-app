@@ -408,8 +408,8 @@ func NewUpdateRejectionFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendRejectRequestEmail func(ctx context.Context, systemIntakeID uuid.UUID, requestName string, requester string, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
-	sendRejectRequestEmailToMultipleRecipients func(ctx context.Context, systemIntakeID uuid.UUID, requestName string, requester string, recipients models.EmailNotificationRecipients, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmail func(ctx context.Context, systemIntakeID uuid.UUID, projectName string, requester string, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmailToMultipleRecipients func(ctx context.Context, systemIntakeID uuid.UUID, projectName string, requester string, recipients models.EmailNotificationRecipients, reason string, nextSteps string, feedback string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 ) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {

@@ -449,8 +449,8 @@ func NewCreateActionExtendLifecycleID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	sendExtendLCIDEmail func(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, requester string, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
-	sendExtendLCIDEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, requester string, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
+	sendExtendLCIDEmail func(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, requester string, projectName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
+	sendExtendLCIDEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, requester string, projectName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 ) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {

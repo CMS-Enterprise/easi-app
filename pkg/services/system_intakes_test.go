@@ -251,7 +251,7 @@ func (s *ServicesTestSuite) TestSystemIntakeArchiver() {
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
-	sendWithdrawEmail := func(ctx context.Context, requestName string) error {
+	sendWithdrawEmail := func(_ context.Context, _ string) error {
 		return nil
 	}
 

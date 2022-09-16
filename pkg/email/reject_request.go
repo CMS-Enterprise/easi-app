@@ -13,7 +13,7 @@ import (
 )
 
 type rejectRequest struct {
-	RequestName  string
+	ProjectName  string
 	GRTEmail     string
 	Requester    string
 	Reason       string
@@ -24,7 +24,7 @@ type rejectRequest struct {
 
 func (c Client) rejectRequestBody(
 	systemIntakeID uuid.UUID,
-	requestName string,
+	projectName string,
 	requester string,
 	reason string,
 	nextSteps string,
@@ -32,7 +32,7 @@ func (c Client) rejectRequestBody(
 ) (string, error) {
 	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := rejectRequest{
-		RequestName:  requestName,
+		ProjectName:  projectName,
 		GRTEmail:     string(c.config.GRTEmail),
 		Requester:    requester,
 		Reason:       reason,
@@ -56,7 +56,7 @@ func (c Client) rejectRequestBody(
 func (c Client) SendRejectRequestEmail(
 	ctx context.Context,
 	systemIntakeID uuid.UUID,
-	requestName string,
+	projectName string,
 	requester string,
 	recipient models.EmailAddress,
 	reason string,
@@ -64,7 +64,7 @@ func (c Client) SendRejectRequestEmail(
 	feedback string,
 ) error {
 	subject := "Request in EASi not approved"
-	body, err := c.rejectRequestBody(systemIntakeID, requestName, requester, reason, nextSteps, feedback)
+	body, err := c.rejectRequestBody(systemIntakeID, projectName, requester, reason, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
@@ -86,7 +86,7 @@ func (c Client) SendRejectRequestEmail(
 func (c Client) SendRejectRequestEmailToMultipleRecipients(
 	ctx context.Context,
 	systemIntakeID uuid.UUID,
-	requestName string,
+	projectName string,
 	requester string,
 	recipients models.EmailNotificationRecipients,
 	reason string,
@@ -94,7 +94,7 @@ func (c Client) SendRejectRequestEmailToMultipleRecipients(
 	feedback string,
 ) error {
 	subject := "Request in EASi not approved"
-	body, err := c.rejectRequestBody(systemIntakeID, requestName, requester, reason, nextSteps, feedback)
+	body, err := c.rejectRequestBody(systemIntakeID, projectName, requester, reason, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

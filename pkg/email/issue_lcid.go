@@ -14,7 +14,7 @@ import (
 )
 
 type issueLCID struct {
-	RequestName           string
+	ProjectName           string
 	GRTEmail              string
 	Requester             string
 	LifecycleID           string
@@ -28,7 +28,7 @@ type issueLCID struct {
 
 func (c Client) issueLCIDBody(
 	systemIntakeID uuid.UUID,
-	requestName string,
+	projectName string,
 	requester string,
 	lcid string,
 	expiresAt *time.Time,
@@ -39,7 +39,7 @@ func (c Client) issueLCIDBody(
 ) (string, error) {
 	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := issueLCID{
-		RequestName:           requestName,
+		ProjectName:           projectName,
 		GRTEmail:              string(c.config.GRTEmail),
 		Requester:             requester,
 		LifecycleID:           lcid,
@@ -66,7 +66,7 @@ func (c Client) issueLCIDBody(
 func (c Client) SendIssueLCIDEmail(
 	ctx context.Context,
 	systemIntakeID uuid.UUID,
-	requestName string,
+	projectName string,
 	requester string,
 	recipient models.EmailAddress,
 	lcid string,
@@ -77,7 +77,7 @@ func (c Client) SendIssueLCIDEmail(
 	feedback string,
 ) error {
 	subject := "Lifecycle ID request approved"
-	body, err := c.issueLCIDBody(systemIntakeID, requestName, requester, lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
+	body, err := c.issueLCIDBody(systemIntakeID, projectName, requester, lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
@@ -102,7 +102,7 @@ func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
-	requestName string,
+	projectName string,
 	requester string,
 	lcid string,
 	expirationDate *time.Time,
@@ -112,7 +112,7 @@ func (c Client) SendIssueLCIDEmailToMultipleRecipients(
 	feedback string,
 ) error {
 	subject := "Lifecycle ID request approved"
-	body, err := c.issueLCIDBody(systemIntakeID, requestName, requester, lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
+	body, err := c.issueLCIDBody(systemIntakeID, projectName, requester, lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

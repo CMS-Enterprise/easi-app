@@ -14,7 +14,7 @@ import (
 )
 
 type extendLCID struct {
-	RequestName     string
+	ProjectName     string
 	GRTEmail        string
 	Requester       string
 	NewExpiresAt    string
@@ -24,10 +24,10 @@ type extendLCID struct {
 	DecisionLink    string
 }
 
-func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requester string, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) (string, error) {
+func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, requester string, projectName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) (string, error) {
 	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := extendLCID{
-		RequestName:     requestName,
+		ProjectName:     projectName,
 		GRTEmail:        string(c.config.GRTEmail),
 		Requester:       requester,
 		NewExpiresAt:    newExpiresAt.Format("January 2, 2006"),
@@ -55,14 +55,14 @@ func (c Client) SendExtendLCIDEmail(
 	recipient models.EmailAddress,
 	systemIntakeID uuid.UUID,
 	requester string,
-	requestName string,
+	projectName string,
 	newExpiresAt *time.Time,
 	newScope string,
 	newNextSteps string,
 	newCostBaseline string,
 ) error {
 	subject := "Lifecycle ID extended"
-	body, err := c.extendLCIDBody(systemIntakeID, requestName, requester, newExpiresAt, newScope, newNextSteps, newCostBaseline)
+	body, err := c.extendLCIDBody(systemIntakeID, projectName, requester, newExpiresAt, newScope, newNextSteps, newCostBaseline)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
@@ -87,14 +87,14 @@ func (c Client) SendExtendLCIDEmailToMultipleRecipients(
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
 	requester string,
-	requestName string,
+	projectName string,
 	newExpiresAt *time.Time,
 	newScope string,
 	newNextSteps string,
 	newCostBaseline string,
 ) error {
 	subject := "Lifecycle ID extended"
-	body, err := c.extendLCIDBody(systemIntakeID, requester, requestName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
+	body, err := c.extendLCIDBody(systemIntakeID, requester, projectName, newExpiresAt, newScope, newNextSteps, newCostBaseline)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
