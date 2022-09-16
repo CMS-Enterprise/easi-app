@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 
@@ -76,6 +77,7 @@ func (s *Store) GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbReq
 
 	err := s.db.Select(&results, `SELECT * FROM trb_request_attendees WHERE trb_request_id=$1`, trbRequestID)
 
+	fmt.Println("Number of results for attendees: ", len(results))
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request attendees", zap.Error(err), zap.String("id", trbRequestID.String()))
 		return nil, &apperrors.QueryError{
