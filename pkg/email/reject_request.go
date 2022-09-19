@@ -4,22 +4,41 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"path"
+
+	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type rejectRequest struct {
-	Reason    string
-	NextSteps string
-	Feedback  string
+	ProjectName  string
+	GRTEmail     string
+	Requester    string
+	Reason       string
+	NextSteps    string
+	Feedback     string
+	DecisionLink string
 }
 
-func (c Client) rejectRequestBody(reason string, nextSteps string, feedback string) (string, error) {
+func (c Client) rejectRequestBody(
+	systemIntakeID uuid.UUID,
+	projectName string,
+	requester string,
+	reason string,
+	nextSteps string,
+	feedback string,
+) (string, error) {
+	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := rejectRequest{
-		Reason:    reason,
-		NextSteps: nextSteps,
-		Feedback:  feedback,
+		ProjectName:  projectName,
+		GRTEmail:     string(c.config.GRTEmail),
+		Requester:    requester,
+		Reason:       reason,
+		NextSteps:    nextSteps,
+		Feedback:     feedback,
+		DecisionLink: c.urlFromPath(decisionPath),
 	}
 	var b bytes.Buffer
 	if c.templates.rejectRequestTemplate == nil {
@@ -34,9 +53,18 @@ func (c Client) rejectRequestBody(reason string, nextSteps string, feedback stri
 
 // SendRejectRequestEmail sends an email for rejecting a request
 // TODO - EASI-2021 - remove
-func (c Client) SendRejectRequestEmail(ctx context.Context, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error {
-	subject := "Your request has not been approved"
-	body, err := c.rejectRequestBody(reason, nextSteps, feedback)
+func (c Client) SendRejectRequestEmail(
+	ctx context.Context,
+	recipient models.EmailAddress,
+	systemIntakeID uuid.UUID,
+	projectName string,
+	requester string,
+	reason string,
+	nextSteps string,
+	feedback string,
+) error {
+	subject := "Request in EASi not approved"
+	body, err := c.rejectRequestBody(systemIntakeID, projectName, requester, reason, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
@@ -55,9 +83,18 @@ func (c Client) SendRejectRequestEmail(ctx context.Context, recipient models.Ema
 
 // SendRejectRequestEmailToMultipleRecipients sends emails to multiple recipients (possibly including the IT Governance and IT Investment teams) for rejecting a request
 // TODO - EASI-2021 - rename to SendRejectRequestEmails
-func (c Client) SendRejectRequestEmailToMultipleRecipients(ctx context.Context, recipients models.EmailNotificationRecipients, reason string, nextSteps string, feedback string) error {
-	subject := "Your request has not been approved"
-	body, err := c.rejectRequestBody(reason, nextSteps, feedback)
+func (c Client) SendRejectRequestEmailToMultipleRecipients(
+	ctx context.Context,
+	recipients models.EmailNotificationRecipients,
+	systemIntakeID uuid.UUID,
+	projectName string,
+	requester string,
+	reason string,
+	nextSteps string,
+	feedback string,
+) error {
+	subject := "Request in EASi not approved"
+	body, err := c.rejectRequestBody(systemIntakeID, projectName, requester, reason, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

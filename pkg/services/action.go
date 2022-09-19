@@ -313,8 +313,8 @@ func NewCreateActionUpdateStatus(
 	updateStatus func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
-	sendReviewEmailToMultipleRecipients func(ctx context.Context, emailText string, recipients models.EmailNotificationRecipients, intakeID uuid.UUID) error,
+	sendReviewEmail func(ctx context.Context, recipient models.EmailAddress, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
+	sendReviewEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
@@ -367,7 +367,14 @@ func NewCreateActionUpdateStatus(
 
 		// TODO - EASI-2021 - remove notifyMultipleRecipients check (but *not* recipients != nil check)
 		if notifyMultipleRecipients && recipients != nil {
-			err = sendReviewEmailToMultipleRecipients(ctx, action.Feedback.String, *recipients, intake.ID)
+			err = sendReviewEmailToMultipleRecipients(
+				ctx,
+				*recipients,
+				intake.ID,
+				intake.ProjectName.String,
+				intake.Requester,
+				action.Feedback.String,
+			)
 			if err != nil {
 				return nil, err
 			}
@@ -416,7 +423,14 @@ func NewCreateActionUpdateStatus(
 			}
 
 			if requesterHasValidEUAID {
-				err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+				err = sendReviewEmail(
+					ctx,
+					requesterInfo.Email,
+					intake.ID,
+					intake.ProjectName.String,
+					intake.Requester,
+					action.Feedback.String,
+				)
 				if err != nil {
 					return nil, err
 				}
@@ -435,8 +449,8 @@ func NewCreateActionExtendLifecycleID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	sendExtendLCIDEmail func(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
-	sendExtendLCIDEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, requestName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
+	sendExtendLCIDEmail func(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, requester string, projectName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
+	sendExtendLCIDEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, requester string, projectName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 ) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
@@ -493,6 +507,7 @@ func NewCreateActionExtendLifecycleID(
 				ctx,
 				*recipients,
 				id,
+				intake.Requester,
 				intake.ProjectName.ValueOrZero(),
 				expirationDate,
 				intake.LifecycleScope.ValueOrZero(),
@@ -556,6 +571,7 @@ func NewCreateActionExtendLifecycleID(
 					ctx,
 					requesterInfo.Email,
 					id,
+					intake.Requester,
 					intake.ProjectName.String,
 					expirationDate,
 					scope,
