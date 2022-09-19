@@ -39,6 +39,7 @@ import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import SystemList from 'views/SystemList';
 import SystemProfile from 'views/SystemProfile';
+import TechnicalAssistance from 'views/TechnicalAssistance';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
@@ -157,6 +158,10 @@ const AppRoutes = () => {
         path="/business/:businessCaseId/:formPage"
         component={BusinessCase}
       />
+
+      {flags.technicalAssistance && (
+        <SecureRoute path="/trb" component={TechnicalAssistance} />
+      )}
 
       <SecureRoute path="/help" component={Help} />
 

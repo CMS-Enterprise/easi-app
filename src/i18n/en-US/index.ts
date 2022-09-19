@@ -24,6 +24,7 @@ import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
 import systemProfile from './systemProfile';
 import tableAndPagination from './tableAndPagination';
+import technicalAssistance from './technicalAssistance';
 import termsAndConditions from './termsAndConditions';
 
 const enUS = {
@@ -52,6 +53,7 @@ const enUS = {
   systemProfile,
   tableAndPagination,
   taskList,
+  technicalAssistance,
   termsAndConditions
 };
 
