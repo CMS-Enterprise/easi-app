@@ -15,7 +15,6 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
-import SystemProfileModal from 'components/SystemProfileModal';
 import {
   attendGrbMeetingTag,
   businessCaseTag,
@@ -141,7 +140,6 @@ const GovernanceTaskList = () => {
       className="governance-task-list grid-container margin-bottom-7"
       data-testid="governance-task-list"
     >
-      <SystemProfileModal id="408-626-0" />
       <div className="grid-row">
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>

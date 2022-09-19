@@ -21,6 +21,7 @@ import { startCase } from 'lodash';
 import { DateTime } from 'luxon';
 
 import MainContent from 'components/MainContent';
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -311,10 +312,18 @@ export function showVal(
   return val;
 }
 
-const SystemProfile = ({ id, modal }: { id?: string; modal?: boolean }) => {
+type ModalPropsType = {
+  id: string;
+  isOpen: boolean;
+  closeModal: () => void;
+};
+
+const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
+
+  const { id, isOpen, closeModal } = modalProps || {};
 
   const params = useParams<{
     subinfo: SubpageKey;
@@ -400,7 +409,7 @@ const SystemProfile = ({ id, modal }: { id?: string; modal?: boolean }) => {
   // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(subComponents).map(
     (key: string) => {
-      if (modal)
+      if (modalProps)
         return (
           <Button
             key={key}
@@ -434,7 +443,7 @@ const SystemProfile = ({ id, modal }: { id?: string; modal?: boolean }) => {
 
   const subComponent = subComponents[subpageKey];
 
-  return (
+  const SystemProfileView = () => (
     <MainContent>
       <div id="system-profile">
         <SummaryBox
@@ -443,9 +452,11 @@ const SystemProfile = ({ id, modal }: { id?: string; modal?: boolean }) => {
         >
           <div className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full">
             <Grid
-              className={classnames('grid-container', { 'maxw-none': modal })}
+              className={classnames('grid-container', {
+                'maxw-none': !!modalProps
+              })}
             >
-              {!modal && (
+              {!modalProps && (
                 <BreadcrumbBar
                   variant="wrap"
                   className="bg-transparent padding-0"
@@ -591,13 +602,12 @@ const SystemProfile = ({ id, modal }: { id?: string; modal?: boolean }) => {
           subinfo={subpageKey}
           system={systemProfileData}
           systemProfileHiddenFields={flags.systemProfileHiddenFields}
-          modal={modal}
-          modalSubpage={modalSubpage}
+          modal={!!modalProps}
           setModalSubpage={setModalSubpage}
         />
 
         <SectionWrapper className="margin-top-5 margin-bottom-5">
-          <GridContainer className={classnames({ 'maxw-none': modal })}>
+          <GridContainer className={classnames({ 'maxw-none': !!modalProps })}>
             <Grid row gap>
               {!isMobile && (
                 <Grid
@@ -607,7 +617,7 @@ const SystemProfile = ({ id, modal }: { id?: string; modal?: boolean }) => {
                   {/* Side navigation for single system */}
                   <SideNav items={subNavigationLinks} />
                   {/* Setting a ref here to reference the grid width for the fixed side nav */}
-                  {modal && (
+                  {modalProps && (
                     <>
                       <div className="top-divider margin-top-4" />
                       <PointsOfContactSidebar
@@ -625,12 +635,12 @@ const SystemProfile = ({ id, modal }: { id?: string; modal?: boolean }) => {
                   <GridContainer className="padding-left-0 padding-right-0">
                     <Grid row gap>
                       {/* Central component */}
-                      <Grid desktop={{ col: modal ? 12 : 8 }}>
+                      <Grid desktop={{ col: modalProps ? 12 : 8 }}>
                         {subComponent.component}
                       </Grid>
 
                       {/* Contact info sidebar */}
-                      {!modal && (
+                      {!modalProps && (
                         <Grid
                           desktop={{ col: 4 }}
                           className={classnames({
@@ -657,6 +667,14 @@ const SystemProfile = ({ id, modal }: { id?: string; modal?: boolean }) => {
         </SectionWrapper>
       </div>
     </MainContent>
+  );
+
+  return modalProps ? (
+    <Modal title={t('System Profile')} isOpen={isOpen} closeModal={closeModal}>
+      <SystemProfileView />
+    </Modal>
+  ) : (
+    <SystemProfileView />
   );
 };
 
