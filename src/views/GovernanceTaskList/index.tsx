@@ -141,7 +141,7 @@ const GovernanceTaskList = () => {
       className="governance-task-list grid-container margin-bottom-7"
       data-testid="governance-task-list"
     >
-      <SystemProfileModal />
+      <SystemProfileModal id="408-626-0" />
       <div className="grid-row">
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
