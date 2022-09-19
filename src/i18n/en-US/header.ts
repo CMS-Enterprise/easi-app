@@ -8,7 +8,8 @@ const header = {
   signIn: 'Sign In',
   signOut: 'Sign Out',
   systems: 'Systems',
-  sandbox: 'Sandbox'
+  sandbox: 'Sandbox',
+  technicalAssistance: 'Technical Assistance'
 };
 
 export default header;
