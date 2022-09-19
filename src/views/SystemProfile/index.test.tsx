@@ -172,3 +172,25 @@ describe('System Profile Points of Contact by subpage', () => {
     expect(getByTestId('alert')).toBeDefined();
   });
 });
+
+describe('System Profile modal', () => {
+  it('matches snapshot', async () => {
+    const { asFragment, getByTestId } = render(
+      <MemoryRouter initialEntries={['/systems/000-100-0/home']}>
+        <Route path="/systems/:systemId/:subinfo">
+          <MockedProvider mocks={[query]} addTypename={false}>
+            <SystemProfile
+              modalProps={{
+                id: '408-626-0',
+                isOpen: true,
+                closeModal: () => null
+              }}
+            />
+          </MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
+    await waitForElementToBeRemoved(() => getByTestId('page-loading'));
+    expect(asFragment()).toMatchSnapshot();
+  });
+});
