@@ -72,7 +72,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const initialValues: ActionForm = {
     feedback: '',
     notificationRecipients: {
-      regularRecipientEmails: [requester.email],
+      regularRecipientEmails: requester.id ? [requester.email] : [],
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment:
         pathname.endsWith('no-governance') ||
