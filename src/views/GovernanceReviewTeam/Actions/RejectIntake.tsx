@@ -129,7 +129,7 @@ const RejectIntake = () => {
               {t('rejectIntake.heading')}
             </PageHeading>
             <h3>{t('rejectIntake.subheading')}</h3>
-            <p>
+            <p data-testid="grtSelectedAction">
               {t('rejectIntake.actionDescription')}{' '}
               <Link to={backLink}>{t('rejectIntake.backLink')}</Link>
             </p>

@@ -163,7 +163,7 @@ const IssueLifecycleId = () => {
               {t('issueLCID.heading')}
             </PageHeading>
             <h3>{t('issueLCID.subheading')}</h3>
-            <p>
+            <p data-testid="grtSelectedAction">
               Approve request and issue Lifecycle ID{' '}
               <Link to={backLink}>Change</Link>
             </p>

@@ -187,7 +187,7 @@ const ExtendLifecycleId = ({
             <div className="margin-bottom-05 text-bold line-height-body-2">
               {t('extendLcid.selectedAction')}
             </div>
-            <div>
+            <div data-testid="grtSelectedAction">
               {t('extendLcid.action')}{' '}
               <Link to={`/governance-review-team/${systemId}/actions`}>
                 {t('extendLcid.back')}

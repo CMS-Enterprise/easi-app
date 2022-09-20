@@ -143,7 +143,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
             <div className="margin-bottom-05 text-bold line-height-body-2">
               {t('extendLcid.selectedAction')}
             </div>
-            <div>
+            <div data-testid="grtSelectedAction">
               {actionName}&nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </div>

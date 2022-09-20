@@ -2,11 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved
-} from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
@@ -38,8 +34,10 @@ window.matchMedia = (): any => ({
   removeListener: () => {}
 });
 
-const waitForPageLoad = async () => {
-  await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+const waitForPageLoad = async (view: string) => {
+  await waitFor(() => {
+    expect(screen.getByTestId(view)).toBeInTheDocument();
+  });
 };
 
 describe('Governance Review Team', () => {
@@ -238,7 +236,7 @@ describe('Governance Review Team', () => {
         </MockedProvider>
       </MemoryRouter>
     );
-    await waitForPageLoad();
+    await waitForPageLoad('intake-review');
 
     expect(screen.getByTestId('grt-request-overview')).toBeInTheDocument();
     expect(screen.getByTestId('intake-review')).toBeInTheDocument();
@@ -260,9 +258,7 @@ describe('Governance Review Team', () => {
         </MockedProvider>
       </MemoryRouter>
     );
-    await waitForPageLoad();
-
-    expect(screen.getByTestId('business-case-review')).toBeInTheDocument();
+    await waitForPageLoad('business-case-review');
   });
 
   it('renders GRT notes view', async () => {
@@ -285,9 +281,7 @@ describe('Governance Review Team', () => {
         </MockedProvider>
       </MemoryRouter>
     );
-    await waitForPageLoad();
-
-    expect(screen.getByTestId('grt-notes-view')).toBeInTheDocument();
+    await waitForPageLoad('grt-notes-view');
   });
 
   it('renders GRT dates view', async () => {
@@ -306,9 +300,7 @@ describe('Governance Review Team', () => {
         </MockedProvider>
       </MemoryRouter>
     );
-    await waitForPageLoad();
-
-    expect(screen.getByTestId('grt-dates-view')).toBeInTheDocument();
+    await waitForPageLoad('grt-dates-view');
   });
 
   it('renders GRT dates view', async () => {
@@ -327,9 +319,7 @@ describe('Governance Review Team', () => {
         </MockedProvider>
       </MemoryRouter>
     );
-    await waitForPageLoad();
-
-    expect(screen.getByTestId('grt-decision-view')).toBeInTheDocument();
+    await waitForPageLoad('grt-decision-view');
   });
 
   it('renders GRT actions view', async () => {
@@ -348,9 +338,7 @@ describe('Governance Review Team', () => {
         </MockedProvider>
       </MemoryRouter>
     );
-    await waitForPageLoad();
-
-    expect(screen.getByTestId('grt-actions-view')).toBeInTheDocument();
+    await waitForPageLoad('grt-actions-view');
   });
 
   describe('actions', () => {
@@ -373,106 +361,142 @@ describe('Governance Review Team', () => {
     };
     it('renders not IT request action', async () => {
       renderPage('not-it-request');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('grt-submit-action-view')).toBeInTheDocument();
+      await waitForPageLoad('grt-submit-action-view');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(/Not an IT governance request/i)
+      ).toBeInTheDocument();
     });
 
     it('renders GRT need business case action', async () => {
       renderPage('need-biz-case');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('grt-submit-action-view')).toBeInTheDocument();
+      await waitForPageLoad('grt-submit-action-view');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(/Request a draft business case/i)
+      ).toBeInTheDocument();
     });
 
     it('renders GRT feedback and need business case action', async () => {
       renderPage('provide-feedback-need-biz-case');
-      await waitForPageLoad();
-
+      await waitForPageLoad('provide-feedback-biz-case');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
       expect(
-        screen.getByTestId('provide-feedback-biz-case')
+        within(selectedAction).getByText(
+          /Provide GRT Feedback and progress to business case/i
+        )
       ).toBeInTheDocument();
     });
 
     it('renders GRT draft business case feedback action', async () => {
       renderPage('provide-feedback-keep-draft');
-      await waitForPageLoad();
-
+      await waitForPageLoad('provide-feedback-biz-case');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
       expect(
-        screen.getByTestId('provide-feedback-biz-case')
+        within(selectedAction).getByText(
+          /Provide GRT feedback and keep working on draft business case/i
+        )
       ).toBeInTheDocument();
     });
 
     it('renders GRT final business case feedback action', async () => {
       renderPage('provide-feedback-need-final');
-      await waitForPageLoad();
-
+      await waitForPageLoad('provide-feedback-biz-case');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
       expect(
-        screen.getByTestId('provide-feedback-biz-case')
+        within(selectedAction).getByText(
+          /Provide GRT feedback and request final business case for GRB/i
+        )
       ).toBeInTheDocument();
     });
 
     it('renders ready for GRT action', async () => {
       renderPage('ready-for-grt');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('grt-submit-action-view')).toBeInTheDocument();
+      await waitForPageLoad('grt-submit-action-view');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(/Mark as ready for GRT/i)
+      ).toBeInTheDocument();
     });
 
     it('renders ready for GRB action', async () => {
       renderPage('ready-for-grb');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('ready-for-grb')).toBeInTheDocument();
+      await waitForPageLoad('ready-for-grb');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(/Mark as ready for GRB/i)
+      ).toBeInTheDocument();
     });
 
     it('renders business case not ready for GRT action', async () => {
       renderPage('biz-case-needs-changes');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('grt-submit-action-view')).toBeInTheDocument();
+      await waitForPageLoad('grt-submit-action-view');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(
+          /Business case needs changes and is not ready for GRT/i
+        )
+      ).toBeInTheDocument();
     });
 
     it('renders no governance action', async () => {
       renderPage('no-governance');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('grt-submit-action-view')).toBeInTheDocument();
+      await waitForPageLoad('grt-submit-action-view');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(/Close project/i)
+      ).toBeInTheDocument();
     });
 
     it('renders send email action', async () => {
       renderPage('send-email');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('grt-submit-action-view')).toBeInTheDocument();
+      await waitForPageLoad('grt-submit-action-view');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(/Send email/i)
+      ).toBeInTheDocument();
     });
 
     it('renders guide received close action', async () => {
       renderPage('guide-received-close');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('grt-submit-action-view')).toBeInTheDocument();
+      await waitForPageLoad('grt-submit-action-view');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(
+          /Decomission guide received. Close the request/i
+        )
+      ).toBeInTheDocument();
     });
 
     it('renders not responding close action', async () => {
       renderPage('not-responding-close');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('grt-submit-action-view')).toBeInTheDocument();
+      await waitForPageLoad('grt-submit-action-view');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(
+          /Project team not responding. Close the request/i
+        )
+      ).toBeInTheDocument();
     });
 
     it('renders not issue lcid action', async () => {
       renderPage('issue-lcid');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('issue-lcid')).toBeInTheDocument();
+      await waitForPageLoad('issue-lcid');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(
+          /Approve request and issue Lifecycle ID/i
+        )
+      ).toBeInTheDocument();
     });
 
     it('renders not approved action', async () => {
       renderPage('not-approved');
-      await waitForPageLoad();
-
-      expect(screen.getByTestId('not-approved')).toBeInTheDocument();
+      await waitForPageLoad('not-approved');
+      const selectedAction = screen.getByTestId('grtSelectedAction');
+      expect(
+        within(selectedAction).getByText(/Business case not approved/i)
+      ).toBeInTheDocument();
     });
   });
 });

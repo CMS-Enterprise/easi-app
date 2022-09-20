@@ -121,7 +121,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
             <h3 className="margin-top-3 margin-bottom-2">
               {t('submitAction.subheading')}
             </h3>
-            <p>
+            <p data-testid="grtSelectedAction">
               {actionName} &nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
