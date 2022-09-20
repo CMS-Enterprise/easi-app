@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -24,6 +24,15 @@ import {
   SystemIntakeContactProps
 } from 'types/systemIntake';
 
+type RecipientProps = {
+  contact: SystemIntakeContactProps;
+  checked: boolean;
+  updateRecipients: (value: string) => void;
+  activeContact: SystemIntakeContactProps | null;
+  setActiveContact: (value: SystemIntakeContactProps | null) => void;
+  createContact: CreateContactType;
+};
+
 const Recipient = ({
   contact,
   checked,
@@ -31,17 +40,18 @@ const Recipient = ({
   activeContact,
   setActiveContact,
   createContact
-}: {
-  contact: SystemIntakeContactProps;
-  checked: boolean;
-  updateRecipients: (value: string) => void;
-  activeContact: SystemIntakeContactProps | null;
-  setActiveContact: (value: SystemIntakeContactProps | null) => void;
-  createContact: CreateContactType;
-}) => {
+}: RecipientProps) => {
   const { t } = useTranslation('action');
-  const [isActive, setActive] = useState(false);
   const { commonName, euaUserId, role, component, email, id } = { ...contact };
+  const isActive = useMemo(() => {
+    // Unverified contacts do not have unique IDs, so check against all other fields to see if currently being verified
+    return (
+      activeContact?.systemIntakeId &&
+      activeContact?.commonName === commonName &&
+      activeContact?.component === component &&
+      activeContact?.role === role
+    );
+  }, [activeContact, commonName, component, role]);
 
   return (
     <div className="recipient-container" data-testid={`recipient-${euaUserId}`}>
@@ -69,7 +79,6 @@ const Recipient = ({
             unstyled
             onClick={() => {
               setActiveContact(contact);
-              setActive(true);
             }}
           >
             {t('emailRecipients.verifyRecipient')}
@@ -103,7 +112,6 @@ const Recipient = ({
               disabled={!(activeContact?.euaUserId && activeContact?.email)}
               onClick={() => {
                 createContact(activeContact!);
-                setActive(false);
                 setActiveContact(null);
               }}
             >
@@ -114,7 +122,6 @@ const Recipient = ({
               outline
               onClick={() => {
                 setActiveContact(null);
-                setActive(false);
               }}
             >
               {t('Cancel')}

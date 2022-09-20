@@ -241,7 +241,7 @@ export type CedarContactProps = {
 
 /** System intake contact properties */
 export type SystemIntakeContactProps = {
-  id?: string;
+  id?: string | null;
   euaUserId: string;
   systemIntakeId: string;
   component: string;
