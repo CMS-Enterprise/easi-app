@@ -37,6 +37,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		CmsBenefit:             bc.CMSBenefit.Ptr(),
 		PriorityAlignment:      bc.PriorityAlignment.Ptr(),
 		SuccessIndicators:      bc.SuccessIndicators.Ptr(),
+		Status:                 string(bc.Status),
 
 		ArchivedAt: pStr(strDateTime(bc.ArchivedAt)),
 

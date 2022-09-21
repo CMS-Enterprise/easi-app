@@ -21,6 +21,7 @@ type EASIBizCase struct {
 	ProjectName            *string                 `json:"projectName,omitempty" jsonschema:"description=Name of the project,example=Easy Access to System"`
 	Requester              *string                 `json:"requester,omitempty" jsonschema:"description=Name of the requester,example=John Doe"`
 	RequesterPhoneNumber   *string                 `json:"requesterPhoneNumber,omitempty" jsonschema:"description=Phone number of requester,example=410-123-4567,example=4431234567"`
+	Status                 string                  `json:"status" jsonschema:"Current status of the business case within EASi,example=OPEN"`
 	SuccessIndicators      *string                 `json:"successIndicators,omitempty" jsonschema:"description=How this effort will be determined as successful,example=Workflows are streamlined"`
 	UserEUA                string                  `json:"userEUA" jsonschema:"description=EUA id of the requester,example=J8YN"`
 }

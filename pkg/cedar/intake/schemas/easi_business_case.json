@@ -1,11 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIBizCase",
-  "title": "EASIBizCaseV03",
+  "title": "EASIBizCaseV04",
   "definitions": {
     "EASIBizCase": {
       "required": [
         "businessCaseId",
+        "status",
         "userEUA"
       ],
       "properties": {
@@ -93,6 +94,12 @@
           "examples": [
             "410-123-4567",
             "4431234567"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "examples": [
+            "OPEN"
           ]
         },
         "successIndicators": {
