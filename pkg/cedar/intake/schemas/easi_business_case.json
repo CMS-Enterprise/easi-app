@@ -6,6 +6,9 @@
     "EASIBizCase": {
       "required": [
         "businessCaseId",
+        "businessOwner",
+        "projectName",
+        "requester",
         "status",
         "userEUA"
       ],

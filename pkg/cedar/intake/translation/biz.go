@@ -28,10 +28,10 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		UserEUA:                bc.EUAUserID,
 		BusinessCaseID:         bc.ID.String(),
 		IntakeID:               pStr(bc.SystemIntakeID.String()),
-		ProjectName:            bc.ProjectName.Ptr(),
-		Requester:              bc.Requester.Ptr(),
+		ProjectName:            bc.ProjectName.ValueOrZero(), // will always have a value by the time a draft business case is submitted
+		Requester:              bc.Requester.ValueOrZero(),   // will always have a value by the time a draft business case is submitted
 		RequesterPhoneNumber:   bc.RequesterPhoneNumber.Ptr(),
-		BusinessOwner:          bc.BusinessOwner.Ptr(),
+		BusinessOwner:          bc.BusinessOwner.ValueOrZero(), // will always have a value by the time a draft business case is submitted
 		BusinessNeed:           bc.BusinessNeed.Ptr(),
 		CurrentSolutionSummary: bc.CurrentSolutionSummary.Ptr(),
 		CmsBenefit:             bc.CMSBenefit.Ptr(),
