@@ -234,6 +234,11 @@
       "type": "object"
     },
     "EASILifecycleCost": {
+      "required": [
+        "id",
+        "solution",
+        "year"
+      ],
       "properties": {
         "cost": {
           "type": "string",
