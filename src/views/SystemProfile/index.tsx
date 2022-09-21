@@ -323,7 +323,7 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
 
-  const { id, isOpen, closeModal } = modalProps || {};
+  const { id, isOpen = false, closeModal = () => null } = modalProps || {};
 
   const params = useParams<{
     subinfo: SubpageKey;
@@ -670,7 +670,12 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
   );
 
   return modalProps ? (
-    <Modal title={t('System Profile')} isOpen={isOpen} closeModal={closeModal}>
+    <Modal
+      title={t('System Profile')}
+      isOpen={isOpen}
+      closeModal={closeModal}
+      shouldCloseOnOverlayClick
+    >
       <SystemProfileView />
     </Modal>
   ) : (

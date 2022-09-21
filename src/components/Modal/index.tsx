@@ -12,6 +12,7 @@ type ModalProps = {
   isOpen: boolean;
   openModal?: () => void;
   closeModal: () => void;
+  shouldCloseOnOverlayClick?: boolean;
 };
 
 const Modal = ({
@@ -19,7 +20,8 @@ const Modal = ({
   children,
   isOpen,
   openModal,
-  closeModal
+  closeModal,
+  shouldCloseOnOverlayClick = false
 }: ModalProps) => {
   const handleOpenModal = () => {
     noScroll.on();
@@ -38,7 +40,7 @@ const Modal = ({
       onAfterOpen={handleOpenModal}
       onAfterClose={noScroll.off}
       onRequestClose={closeModal}
-      shouldCloseOnOverlayClick={false}
+      shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
       appElement={document.getElementById('root')!}
     >
       <button
