@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
+import grtActions from 'constants/grtActions';
 import { businessCaseInitialData } from 'data/businessCase';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
@@ -34,9 +35,9 @@ window.matchMedia = (): any => ({
   removeListener: () => {}
 });
 
-const waitForPageLoad = async (view: string) => {
+const waitForPageLoad = async (testId: string = 'grt-submit-action-view') => {
   await waitFor(() => {
-    expect(screen.getByTestId(view)).toBeInTheDocument();
+    expect(screen.getByTestId(testId)).toBeInTheDocument();
   });
 };
 
@@ -359,143 +360,31 @@ describe('Governance Review Team', () => {
         </MemoryRouter>
       );
     };
-    it('renders not IT request action', async () => {
-      renderPage('not-it-request');
-      await waitForPageLoad('grt-submit-action-view');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(/Not an IT governance request/i)
-      ).toBeInTheDocument();
-    });
 
-    it('renders GRT need business case action', async () => {
-      renderPage('need-biz-case');
-      await waitForPageLoad('grt-submit-action-view');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(/Request a draft business case/i)
-      ).toBeInTheDocument();
-    });
+    const actionsList = [
+      'not-it-request',
+      'need-biz-case',
+      'provide-feedback-need-biz-case',
+      'provide-feedback-keep-draft',
+      'provide-feedback-need-final',
+      'ready-for-grt',
+      'ready-for-grb',
+      'biz-case-needs-changes',
+      'no-governance',
+      'send-email',
+      'not-responding-close',
+      'issue-lcid',
+      'not-approved'
+    ];
 
-    it('renders GRT feedback and need business case action', async () => {
-      renderPage('provide-feedback-need-biz-case');
-      await waitForPageLoad('provide-feedback-biz-case');
+    test.each(actionsList)('renders action page %j', async action => {
+      renderPage(action);
+      await waitForPageLoad(grtActions[action as keyof typeof grtActions].view);
       const selectedAction = screen.getByTestId('grtSelectedAction');
       expect(
         within(selectedAction).getByText(
-          /Provide GRT Feedback and progress to business case/i
+          grtActions[action as keyof typeof grtActions].heading
         )
-      ).toBeInTheDocument();
-    });
-
-    it('renders GRT draft business case feedback action', async () => {
-      renderPage('provide-feedback-keep-draft');
-      await waitForPageLoad('provide-feedback-biz-case');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(
-          /Provide GRT feedback and keep working on draft business case/i
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('renders GRT final business case feedback action', async () => {
-      renderPage('provide-feedback-need-final');
-      await waitForPageLoad('provide-feedback-biz-case');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(
-          /Provide GRT feedback and request final business case for GRB/i
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('renders ready for GRT action', async () => {
-      renderPage('ready-for-grt');
-      await waitForPageLoad('grt-submit-action-view');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(/Mark as ready for GRT/i)
-      ).toBeInTheDocument();
-    });
-
-    it('renders ready for GRB action', async () => {
-      renderPage('ready-for-grb');
-      await waitForPageLoad('ready-for-grb');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(/Mark as ready for GRB/i)
-      ).toBeInTheDocument();
-    });
-
-    it('renders business case not ready for GRT action', async () => {
-      renderPage('biz-case-needs-changes');
-      await waitForPageLoad('grt-submit-action-view');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(
-          /Business case needs changes and is not ready for GRT/i
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('renders no governance action', async () => {
-      renderPage('no-governance');
-      await waitForPageLoad('grt-submit-action-view');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(/Close project/i)
-      ).toBeInTheDocument();
-    });
-
-    it('renders send email action', async () => {
-      renderPage('send-email');
-      await waitForPageLoad('grt-submit-action-view');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(/Send email/i)
-      ).toBeInTheDocument();
-    });
-
-    it('renders guide received close action', async () => {
-      renderPage('guide-received-close');
-      await waitForPageLoad('grt-submit-action-view');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(
-          /Decomission guide received. Close the request/i
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('renders not responding close action', async () => {
-      renderPage('not-responding-close');
-      await waitForPageLoad('grt-submit-action-view');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(
-          /Project team not responding. Close the request/i
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('renders not issue lcid action', async () => {
-      renderPage('issue-lcid');
-      await waitForPageLoad('issue-lcid');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(
-          /Approve request and issue Lifecycle ID/i
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('renders not approved action', async () => {
-      renderPage('not-approved');
-      await waitForPageLoad('not-approved');
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(/Business case not approved/i)
       ).toBeInTheDocument();
     });
   });

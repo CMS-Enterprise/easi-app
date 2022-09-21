@@ -2,14 +2,11 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
+import grtActions from 'constants/grtActions';
 import { businessCaseInitialData } from 'data/businessCase';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import CreateSystemIntakeActionBusinessCaseNeeded from 'queries/CreateSystemIntakeActionBusinessCaseNeededQuery';
@@ -25,8 +22,10 @@ import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQuerie
 
 import RequestOverview from '../RequestOverview';
 
-const waitForPageLoad = async () => {
-  await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+const waitForPageLoad = async (testId: string = 'grt-submit-action-view') => {
+  await waitFor(() => {
+    expect(screen.getByTestId(testId)).toBeInTheDocument();
+  });
 };
 
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
@@ -248,21 +247,23 @@ describe('Submit Action', () => {
     ).toBeInTheDocument();
   });
 
-  test.each([
-    { action: 'not-it-request' },
-    { action: 'need-biz-case' },
-    { action: 'provide-feedback-need-biz-case' },
-    { action: 'ready-for-grt' },
-    { action: 'ready-for-grb' },
-    { action: 'no-governance' },
-    { action: 'issue-lcid' },
-    { action: 'extend-lcid' }
-  ])(
+  const actionsList = [
+    'not-it-request',
+    'need-biz-case',
+    'provide-feedback-need-biz-case',
+    'ready-for-grt',
+    'ready-for-grb',
+    'no-governance',
+    'issue-lcid',
+    'extend-lcid'
+  ];
+
+  test.each(actionsList)(
     'renders submit action with and without email notification %j',
     // '$action' title sub did not work
-    async ({ action }) => {
+    async action => {
       renderActionPage(action, [intakeQuery]);
-      await waitForPageLoad();
+      await waitForPageLoad(grtActions[action as keyof typeof grtActions].view);
       expect(
         screen.getByRole('button', { name: /send email/i })
       ).toBeInTheDocument();
@@ -273,7 +274,7 @@ describe('Submit Action', () => {
   );
 
   describe('actions', () => {
-    it('renders additional contacts', async () => {
+    it.only('renders additional contacts', async () => {
       const { asFragment } = render(
         <MemoryRouter
           initialEntries={[
@@ -383,7 +384,7 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: [requester.email],
+                regularRecipientEmails: [],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: true
               },

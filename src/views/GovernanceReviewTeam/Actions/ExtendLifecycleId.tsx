@@ -178,7 +178,10 @@ const ExtendLifecycleId = ({
               </ErrorAlert>
             )}
 
-            <PageHeading className="margin-top-0 margin-bottom-3">
+            <PageHeading
+              data-testid="extend-lcid"
+              className="margin-top-0 margin-bottom-3"
+            >
               {t('extendLcid.heading')}
             </PageHeading>
             <h3 className="margin-top-3 margin-bottom-2">
