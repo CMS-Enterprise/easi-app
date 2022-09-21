@@ -677,11 +677,11 @@ func (s *ServicesTestSuite) TestCreateActionUpdateStatus() {
 				}
 			}
 
-			sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+			sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 				return nil
 			}
 
-			sendReviewEmailToMultipleRecipients := func(ctx context.Context, emailText string, recipients models.EmailNotificationRecipients, intakeID uuid.UUID) error {
+			sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 				return nil
 			}
 
@@ -739,11 +739,11 @@ func (s *ServicesTestSuite) TestCreateActionUpdateStatus() {
 				}
 			}
 
-			sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+			sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 				return nil
 			}
 
-			sendReviewEmailToMultipleRecipients := func(ctx context.Context, emailText string, recipients models.EmailNotificationRecipients, intakeID uuid.UUID) error {
+			sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 				return nil
 			}
 
@@ -799,11 +799,11 @@ func (s *ServicesTestSuite) TestCreateActionUpdateStatus() {
 				return &models.UserInfo{}, nil
 			}
 
-			sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+			sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 				return nil
 			}
 
-			sendReviewEmailToMultipleRecipients := func(ctx context.Context, emailText string, recipients models.EmailNotificationRecipients, intakeID uuid.UUID) error {
+			sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 				return nil
 			}
 
@@ -859,11 +859,11 @@ func (s *ServicesTestSuite) TestCreateActionUpdateStatus() {
 				return &models.UserInfo{}, nil
 			}
 
-			sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+			sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 				return nil
 			}
 
-			sendReviewEmailToMultipleRecipients := func(ctx context.Context, emailText string, recipients models.EmailNotificationRecipients, intakeID uuid.UUID) error {
+			sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 				return nil
 			}
 
