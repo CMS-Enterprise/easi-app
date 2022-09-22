@@ -27,11 +27,7 @@ import './index.scss';
 /**
  * Check for `requestType` to be set in location state or else redirect to `/trb/start`.
  */
-function RequestTypeRequired({
-  children
-}: {
-  children: JSX.Element | JSX.Element[];
-}): JSX.Element {
+function RequestTypeRequired({ children }: { children: React.ReactNode }) {
   const { state } = useLocation<{ requestType: string }>();
   const requestType = state?.requestType;
   if (!requestType) return <Redirect to="/trb/start" />;
