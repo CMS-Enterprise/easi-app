@@ -51,7 +51,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
     grtFeedback: '',
     emailBody: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!],
+      regularRecipientEmails: [systemIntake?.requester?.email!].filter(e => e),
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: false
     }
