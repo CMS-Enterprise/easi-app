@@ -67,7 +67,7 @@ const IssueLifecycleId = () => {
     newLifecycleId: undefined,
     feedback: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!],
+      regularRecipientEmails: [systemIntake?.requester?.email!].filter(e => e),
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: true
     }
