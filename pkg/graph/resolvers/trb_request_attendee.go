@@ -43,3 +43,13 @@ func DeleteTRBRequestAttendee(ctx context.Context, store *storage.Store, id uuid
 	attendee.ID = id
 	return attendee, nil
 }
+
+// GetTRBRequestAttendeesByTRBRequestID retrieves a list of attendees associated with a TRB request
+func GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBRequestAttendee, error) {
+	attendees, err := store.GetTRBRequestAttendeesByTRBRequestID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return attendees, err
+}

@@ -1889,7 +1889,7 @@ func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input m
 		TRBRequestID: input.TrbRequestID,
 		EUAUserID:    input.EuaUserID,
 		Component:    input.Component,
-		Role:         input.Role,
+		Role:         models.PersonRole(input.Role),
 	})
 }
 
@@ -1897,7 +1897,7 @@ func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input m
 func (r *mutationResolver) UpdateTRBRequestAttendee(ctx context.Context, input model.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
 	attendee := &models.TRBRequestAttendee{
 		Component: input.Component,
-		Role:      input.Role,
+		Role:      models.PersonRole(input.Role),
 	}
 	attendee.ID = input.ID
 	return resolvers.UpdateTRBRequestAttendee(ctx, r.store, attendee)
@@ -2640,6 +2640,11 @@ func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *mod
 	return obj.Source.Ptr(), nil
 }
 
+// Attendees is the resolver for the attendees field.
+func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
+	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
+}
+
 // Email is the resolver for the email field.
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return string(obj.Email), nil
@@ -2711,6 +2716,9 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 	return &systemIntakeFundingSourceResolver{r}
 }
 
+// TRBRequest returns generated.TRBRequestResolver implementation.
+func (r *Resolver) TRBRequest() generated.TRBRequestResolver { return &tRBRequestResolver{r} }
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2730,4 +2738,5 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
+type tRBRequestResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

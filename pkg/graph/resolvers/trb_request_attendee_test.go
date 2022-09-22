@@ -1,4 +1,4 @@
-package storage
+package resolvers
 
 import (
 	"context"
@@ -6,38 +6,39 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s *StoreTestSuite) TestCreateTRBRequestAttendee() {
+// TestCreateTRBRequestAttendee makes a new TRB request
+func (s *ResolverSuite) TestCreateTRBRequestAttendee() {
 	ctx := context.Background()
 	anonEua := "ANON"
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.Status = models.TRBSOpen
-	_, err := s.store.CreateTRBRequest(s.logger, trbRequest)
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 
 	s.Run("create a TRB request attendee", func() {
 		attendee := models.TRBRequestAttendee{
 			EUAUserID:    anonEua,
 			TRBRequestID: trbRequest.ID,
-			Role:         models.PersonRoleProductOwner,
+			Role:         models.PersonRolePrivacyAdvisor,
 		}
 		attendee.CreatedBy = anonEua
-		createdAttendee, err := s.store.CreateTRBRequestAttendee(ctx, &attendee)
+		createdAttendee, err := s.testConfigs.Store.CreateTRBRequestAttendee(ctx, &attendee)
 		s.NoError(err)
 
 		createdAttendee.Role = models.PersonRoleCloudNavigator
 		createdAttendee.ModifiedBy = &anonEua
-		_, err = s.store.UpdateTRBRequestAttendee(ctx, createdAttendee)
+		_, err = s.testConfigs.Store.UpdateTRBRequestAttendee(ctx, createdAttendee)
 		s.NoError(err)
 
 		createdAttendee.Component = "The Citadel of Ricks"
 		createdAttendee.ModifiedBy = &anonEua
-		_, err = s.store.UpdateTRBRequestAttendee(ctx, createdAttendee)
+		_, err = s.testConfigs.Store.UpdateTRBRequestAttendee(ctx, createdAttendee)
 		s.NoError(err)
 	})
 
 	s.Run("fetches TRB request attendees", func() {
-		fetched, err := s.store.GetTRBRequestAttendeesByTRBRequestID(ctx, trbRequest.ID)
+		fetched, err := s.testConfigs.Store.GetTRBRequestAttendeesByTRBRequestID(ctx, trbRequest.ID)
 		s.NoError(err)
 		s.True(len(fetched) > 0)
 	})

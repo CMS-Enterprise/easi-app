@@ -3,11 +3,10 @@ package models
 // TRBRequest represents a TRB request object
 type TRBRequest struct {
 	baseStruct
-	Name      string                `json:"name" db:"name"`
-	Archived  bool                  `json:"archived" db:"archived"`
-	Type      TRBRequestType        `json:"type" db:"type"`     //TODO should this be a type?
-	Status    TRBRequestStatus      `json:"status" db:"status"` //TODO should this be a type?
-	Attendees []*TRBRequestAttendee `json:"attendees"`
+	Name     string           `json:"name" db:"name"`
+	Archived bool             `json:"archived" db:"archived"`
+	Type     TRBRequestType   `json:"type" db:"type"`     //TODO should this be a type?
+	Status   TRBRequestStatus `json:"status" db:"status"` //TODO should this be a type?
 }
 
 // NewTRBRequest returns a new trb request object

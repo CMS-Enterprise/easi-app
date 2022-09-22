@@ -62,13 +62,6 @@ func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) 
 		return nil, err
 	}
 
-	// This could be more efficient by using a join with one single query, and writing logic to
-	// parse out the rows and populate the slice of attendees, but this is a lot simpler
-	attendees, err := store.GetTRBRequestAttendeesByTRBRequestID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	trb.Attendees = attendees
 	return trb, err
 }
 

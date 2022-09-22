@@ -55,6 +55,7 @@ type ResolverRoot interface {
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
 	SystemIntakeFundingSource() SystemIntakeFundingSourceResolver
+	TRBRequest() TRBRequestResolver
 	UserInfo() UserInfoResolver
 }
 
@@ -1073,6 +1074,9 @@ type SystemIntakeResolver interface {
 type SystemIntakeFundingSourceResolver interface {
 	FundingNumber(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error)
 	Source(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error)
+}
+type TRBRequestResolver interface {
+	Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error)
 }
 type UserInfoResolver interface {
 	Email(ctx context.Context, obj *models.UserInfo) (string, error)
@@ -5173,6 +5177,21 @@ enum RequestType {
 }
 
 """
+PersonRole is an enumeration of values for a person's role
+"""
+enum PersonRole {
+  PRODUCT_OWNER
+  SYSTEM_OWNER
+  SYSTEM_MAINTAINER
+  CONTRACT_OFFICE_RSREPRESENTATIVE
+  CLOUD_NAVIGATOR
+  PRIVACY_ADVISOR
+  CRA
+  OTHER
+  UNKNOWN
+}
+
+"""
 Represents a request being made with the EASi system
 """
 type Request {
@@ -6667,11 +6686,11 @@ type TRBRequestAttendee {
   euaUserId: String!
   trbRequestId: UUID!
   component: String!
-  role: String!
-    createdBy: String!
-    createdAt: Time!
-    modifiedBy: String
-    modifiedAt: Time
+  role: PersonRole!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
 }
 
 """
@@ -31926,7 +31945,7 @@ func (ec *executionContext) _TRBRequest_attendees(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Attendees, nil
+		return ec.resolvers.TRBRequest().Attendees(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -31947,8 +31966,8 @@ func (ec *executionContext) fieldContext_TRBRequest_attendees(ctx context.Contex
 	fc = &graphql.FieldContext{
 		Object:     "TRBRequest",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -32348,9 +32367,9 @@ func (ec *executionContext) _TRBRequestAttendee_role(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.PersonRole)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNPersonRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestAttendee_role(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -32360,7 +32379,7 @@ func (ec *executionContext) fieldContext_TRBRequestAttendee_role(ctx context.Con
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type PersonRole does not have child fields")
 		},
 	}
 	return fc, nil
@@ -43636,56 +43655,69 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 			out.Values[i] = ec._TRBRequest_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "name":
 
 			out.Values[i] = ec._TRBRequest_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "archived":
 
 			out.Values[i] = ec._TRBRequest_archived(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "type":
 
 			out.Values[i] = ec._TRBRequest_type(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "status":
 
 			out.Values[i] = ec._TRBRequest_status(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "attendees":
+			field := field
 
-			out.Values[i] = ec._TRBRequest_attendees(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequest_attendees(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequest_createdBy(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdAt":
 
 			out.Values[i] = ec._TRBRequest_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "modifiedBy":
 
@@ -45447,6 +45479,22 @@ func (ec *executionContext) marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcmsgo
 		return graphql.Null
 	}
 	return ec._LaunchDarklySettings(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNPersonRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx context.Context, v interface{}) (models.PersonRole, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.PersonRole(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNPersonRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx context.Context, sel ast.SelectionSet, v models.PersonRole) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNRejectIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRejectIntakeInput(ctx context.Context, v interface{}) (model.RejectIntakeInput, error) {

@@ -16,6 +16,21 @@ enum RequestType {
 }
 
 """
+PersonRole is an enumeration of values for a person's role
+"""
+enum PersonRole {
+  PRODUCT_OWNER
+  SYSTEM_OWNER
+  SYSTEM_MAINTAINER
+  CONTRACT_OFFICE_RSREPRESENTATIVE
+  CLOUD_NAVIGATOR
+  PRIVACY_ADVISOR
+  CRA
+  OTHER
+  UNKNOWN
+}
+
+"""
 Represents a request being made with the EASi system
 """
 type Request {
@@ -1510,11 +1525,11 @@ type TRBRequestAttendee {
   euaUserId: String!
   trbRequestId: UUID!
   component: String!
-  role: String!
-    createdBy: String!
-    createdAt: Time!
-    modifiedBy: String
-    modifiedAt: Time
+  role: PersonRole!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
 }
 
 """

@@ -4,11 +4,36 @@ import (
 	"github.com/google/uuid"
 )
 
+// PersonRole is an enumeration of values representing the role of a person (currently in use for
+// TRBRequestAttendee and potentially SystemIntakeContact in the future)
+type PersonRole string
+
+const (
+	// PersonRoleProductOwner is a person with the "Product Owner" role
+	PersonRoleProductOwner PersonRole = "PRODUCT_OWNER"
+	// PersonRoleSystemOwner is a person with the "System Owner" role
+	PersonRoleSystemOwner PersonRole = "SYSTEM_OWNER"
+	// PersonRoleSystemMaintainer is a person with the "System Maintainer" role
+	PersonRoleSystemMaintainer PersonRole = "SYSTEM_MAINTAINER"
+	// PersonRoleContractOfficersRepresentative is a person with the "ContractOfficersRepresentative" role
+	PersonRoleContractOfficersRepresentative PersonRole = "CONTRACT_OFFICE_RSREPRESENTATIVE"
+	// PersonRoleCloudNavigator is a person with the "Cloud Navigator" role
+	PersonRoleCloudNavigator PersonRole = "CLOUD_NAVIGATOR"
+	// PersonRolePrivacyAdvisor is a person with the "Privacy Advisor" role
+	PersonRolePrivacyAdvisor PersonRole = "PRIVACY_ADVISOR"
+	// PersonRoleCRA is a person with the "CRA" role
+	PersonRoleCRA PersonRole = "CRA"
+	// PersonRoleOther is a person with the "Other" role
+	PersonRoleOther PersonRole = "OTHER"
+	// PersonRoleUnknown is a person with an "Unknown" role
+	PersonRoleUnknown PersonRole = "UNKNOWN"
+)
+
 // TRBRequestAttendee represents an EUA user who is included as an attendee for a TRB request
 type TRBRequestAttendee struct {
 	baseStruct
-	EUAUserID    string    `json:"euaUserId" db:"eua_user_id"`
-	TRBRequestID uuid.UUID `json:"trbRequestId" db:"trb_request_id"`
-	Component    string    `json:"component" db:"component"`
-	Role         string    `json:"role" db:"role"`
+	EUAUserID    string     `json:"euaUserId" db:"eua_user_id"`
+	TRBRequestID uuid.UUID  `json:"trbRequestId" db:"trb_request_id"`
+	Component    string     `json:"component" db:"component"`
+	Role         PersonRole `json:"role" db:"role"`
 }
