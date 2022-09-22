@@ -86,7 +86,7 @@ const ExtendLifecycleId = ({
     newCostBaseline: '',
     feedback: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!],
+      regularRecipientEmails: [systemIntake?.requester?.email!].filter(e => e),
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: true
     }
