@@ -20,7 +20,7 @@ function StartRequest() {
       <PageHeading className="margin-bottom-0">
         {t('newRequest.heading')}
       </PageHeading>
-      <div className="margin-top-1 font-body-lg line-height-body-2 line-height-body-5 text-light">
+      <div className="margin-top-1 font-body-lg line-height-body-5 text-light">
         {t('newRequest.subhead')}
       </div>
       <div className="margin-top-2">

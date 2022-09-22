@@ -37,7 +37,7 @@ function Steps() {
           </UswdsReactLink>
         </span>
       </div>
-      <div className="margin-top-2 font-body-lg line-height-body-2 line-height-body-5 text-light">
+      <div className="margin-top-2 font-body-lg line-height-body-5 text-light">
         {t('steps.description')}
       </div>
       <div className="margin-top-4 padding-2 bg-gray-5">
