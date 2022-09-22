@@ -518,6 +518,72 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 
 		s.IsType(&apperrors.QueryError{}, err)
 	})
+
+	s.Run("Submits business case data to CEDAR when submitting draft business case", func() {
+		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		submitToCEDARCount := 0
+		submitToCEDARMock := func(ctx context.Context, bc models.BusinessCase) error {
+			submitToCEDARCount++
+			return nil
+		}
+
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
+		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
+		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
+
+		submitBusinessCase := NewSubmitBusinessCase(
+			serviceConfig,
+			authorize,
+			fetchOpenBusinessCase,
+			validateForSubmit,
+			saveAction,
+			updateIntake,
+			updateBusinessCase,
+			sendSubmitEmailStub,
+			submitToCEDARMock,
+			status,
+		)
+		s.Equal(0, submitToCEDARCount)
+
+		err := submitBusinessCase(ctx, &intake, &action)
+
+		s.NoError(err)
+		s.Equal(1, submitToCEDARCount)
+	})
+
+	s.Run("Error submitting business case data to CEDAR when submitting draft business case does not return overall error", func() {
+		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+			return nil
+		}
+
+		failSubmitToCEDAR := func(ctx context.Context, bc models.BusinessCase) error {
+			return errors.New("Could not submit business case to CEDAR")
+		}
+
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
+		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
+		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
+
+		submitBusinessCase := NewSubmitBusinessCase(
+			serviceConfig,
+			authorize,
+			fetchOpenBusinessCase,
+			validateForSubmit,
+			saveAction,
+			updateIntake,
+			updateBusinessCase,
+			sendSubmitEmailStub,
+			failSubmitToCEDAR,
+			status,
+		)
+
+		err := submitBusinessCase(ctx, &intake, &action)
+
+		s.NoError(err)
+	})
 }
 
 func (s *ServicesTestSuite) TestNewTakeActionUpdateStatus() {
