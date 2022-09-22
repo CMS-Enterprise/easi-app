@@ -37,11 +37,11 @@ function RequestTypeRequired({ children }: { children: React.ReactNode }) {
 /**
  * Generate a `BreadcrumbBar` from links.
  */
-function Breadcrumbs({ links }: { links: { text: string; url?: string }[] }) {
+function Breadcrumbs({ items }: { items: { text: string; url?: string }[] }) {
   return (
     <BreadcrumbBar className="padding-bottom-0">
-      {links.map((link, idx) => {
-        if (idx === links.length - 1) {
+      {items.map((link, idx) => {
+        if (idx === items.length - 1) {
           return (
             <Breadcrumb current>
               <span>{link.text}</span>
@@ -74,7 +74,7 @@ function TechnicalAssistance() {
         {/* Start a request */}
         <Route exact path={`${path}/start`}>
           <Breadcrumbs
-            links={[
+            items={[
               { text: t('heading'), url },
               { text: t('breadcrumbs.startTrbRequest') }
             ]}
@@ -86,7 +86,7 @@ function TechnicalAssistance() {
         <Route exact path={`${path}/steps`}>
           <RequestTypeRequired>
             <Breadcrumbs
-              links={[
+              items={[
                 { text: t('heading'), url },
                 { text: t('breadcrumbs.startTrbRequest') }
               ]}
