@@ -136,6 +136,13 @@ export enum TRBRequestStatus {
   OPEN = "OPEN",
 }
 
+export enum TRBRequestType {
+  BRAINSTORM = "BRAINSTORM",
+  FOLLOWUP = "FOLLOWUP",
+  FORMAL_REVIEW = "FORMAL_REVIEW",
+  NEED_HELP = "NEED_HELP",
+}
+
 /**
  * The type of test added to a 508/accessibility request
  */
@@ -448,6 +455,18 @@ export interface SystemIntakeRequesterInput {
 export interface SystemIntakeRequesterWithComponentInput {
   name: string;
   component: string;
+}
+
+/**
+ * TRBRequestChanges represents the possible changes you can make to a trb request when updating it.
+ * Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
+ * https: // gqlgen.com/reference/changesets/
+ */
+export interface TRBRequestChanges {
+  name?: string | null;
+  archived?: boolean | null;
+  type?: TRBRequestType | null;
+  status?: TRBRequestStatus | null;
 }
 
 /**

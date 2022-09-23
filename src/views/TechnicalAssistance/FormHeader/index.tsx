@@ -16,8 +16,8 @@ import Breadcrumbs, { BreadcrumbsProps } from '../Breadcrumbs';
 
 import './index.scss';
 
-interface FormHeaderProps {
-  step: 1 | 2 | 3 | 4 | 5;
+export interface FormHeaderProps {
+  step: number;
   breadcrumbItems?: BreadcrumbsProps['items'];
 }
 
