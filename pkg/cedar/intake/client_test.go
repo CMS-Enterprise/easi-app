@@ -89,17 +89,19 @@ func (s *ClientTestSuite) TestTranslation() {
 
 		ii, err := si.CreateIntakeModel()
 		s.NoError(err)
+		s.NotNil(ii)
 
+		// Unmarshal the body so we can check that fields are being set properly
 		intakeBody := &intakemodels.EASIIntake{}
 		err = json.Unmarshal([]byte(*ii.Body), intakeBody)
 		s.NoError(err)
 
-		// Test that passes that matches what happens now
-		s.EqualValues(si.ID.String(), intakeBody.FundingSources[0].FundingSourceID)
-		// s.EqualValues(si.FundingSources[0].ID.String(), intakeBody.FundingSources[0].FundingSourceID)
+		// Check that the ID of the Intake is Correct
+		s.EqualValues(si.ID.String(), intakeBody.IntakeID)
 
-		s.NoError(err)
-		s.NotNil(ii)
+		// Check that the Funding Source ID is being pulled from the FundingSources array of the Intake
+		s.EqualValues(si.FundingSources[0].ID.String(), intakeBody.FundingSources[0].FundingSourceID)
+
 	})
 
 	s.Run("note", func() {
