@@ -327,13 +327,13 @@ exports[`TRB Subview snapshots matches Steps 1`] = `
       The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.
     </div>
     <div
-      class="margin-top-4 padding-2 bg-gray-5"
+      class="margin-top-4 padding-2 line-height-body-5 bg-gray-5"
     >
       <div>
         Using this process will allow you to:
       </div>
       <ul
-        class="list-style-middot"
+        class="margin-y-1 list-style-middot-inner"
       >
         <li>
           ask for help with a technical problem
@@ -466,7 +466,7 @@ exports[`TRB Subview snapshots matches Steps 1`] = `
       class="margin-top-1"
     >
       <a
-        class="usa-button usa-button--outline"
+        class="usa-button usa-button--outline margin-bottom-1 tablet:margin-bottom-0"
         href="/trb/start"
       >
         Back
