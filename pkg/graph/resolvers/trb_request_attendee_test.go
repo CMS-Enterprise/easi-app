@@ -16,29 +16,33 @@ func (s *ResolverSuite) TestCreateTRBRequestAttendee() {
 	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 
-	s.Run("create a TRB request attendee", func() {
+	s.Run("create/update/fetch TRB request attendees", func() {
 		attendee := models.TRBRequestAttendee{
 			EUAUserID:    anonEua,
 			TRBRequestID: trbRequest.ID,
 			Role:         models.PersonRolePrivacyAdvisor,
 		}
 		attendee.CreatedBy = anonEua
-		createdAttendee, err := s.testConfigs.Store.CreateTRBRequestAttendee(ctx, &attendee)
+		createdAttendee, err := CreateTRBRequestAttendee(ctx, s.testConfigs.Store, &attendee)
 		s.NoError(err)
 
 		createdAttendee.Role = models.PersonRoleCloudNavigator
 		createdAttendee.ModifiedBy = &anonEua
-		_, err = s.testConfigs.Store.UpdateTRBRequestAttendee(ctx, createdAttendee)
+		updatedAttendee, err := UpdateTRBRequestAttendee(ctx, s.testConfigs.Store, &attendee)
 		s.NoError(err)
+		s.EqualValues(updatedAttendee.Role, models.PersonRoleCloudNavigator)
+		s.EqualValues(updatedAttendee.ModifiedBy, &anonEua)
 
 		createdAttendee.Component = "The Citadel of Ricks"
 		createdAttendee.ModifiedBy = &anonEua
-		_, err = s.testConfigs.Store.UpdateTRBRequestAttendee(ctx, createdAttendee)
+		updatedAttendee, err = UpdateTRBRequestAttendee(ctx, s.testConfigs.Store, &attendee)
 		s.NoError(err)
+		s.EqualValues(updatedAttendee.Component, "The Citadel of Ricks")
+		s.EqualValues(updatedAttendee.ModifiedBy, &anonEua)
 	})
 
 	s.Run("fetches TRB request attendees", func() {
-		fetched, err := s.testConfigs.Store.GetTRBRequestAttendeesByTRBRequestID(ctx, trbRequest.ID)
+		fetched, err := GetTRBRequestAttendeesByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
 		s.NoError(err)
 		s.True(len(fetched) > 0)
 	})
