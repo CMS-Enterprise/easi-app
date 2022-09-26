@@ -6,7 +6,7 @@ import classnames from 'classnames';
 type UswdsReactLinkProps = {
   variant?: 'external' | 'unstyled' | 'nav';
   className?: string;
-  to: string;
+  to: string | object;
   target?: '_blank';
   rel?: 'noopener noreferrer';
   'data-testid'?: string;

@@ -8,8 +8,6 @@ import PageHeading from 'components/PageHeading';
 import { ArticleComponentProps } from 'types/articles';
 import NeedHelpBox from 'views/Help/InfoBox/NeedHelpBox';
 
-import './index.scss';
-
 export default ({ helpArticle, className }: ArticleComponentProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   return (
@@ -85,7 +83,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           {t('prepare.whatToBring.title')}
         </h3>
         <div>{t('prepare.whatToBring.subtitle')}</div>
-        <ul className="list-style-none bullet-list line-height-body-5 padding-0">
+        <ul className="list-style-middot-inner line-height-body-5">
           {t<string[]>('prepare.whatToBring.items', {
             returnObjects: true
           }).map(item => (
