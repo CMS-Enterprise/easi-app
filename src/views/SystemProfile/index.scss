@@ -84,8 +84,8 @@
   }
 }
 
-.ReactModal__Content {
-  max-height: 100%;
+.easi-modal_system-profile .ReactModal__Content {
+  height: 100%;
   overflow: scroll;
   font-size: inherit;
   line-height: inherit;
@@ -115,6 +115,11 @@
           outline-offset: 0;
         }
       }
+    }
+
+    .sticky-nav h5 {
+      font-size: inherit !important;
+      margin-bottom: 0.5rem !important;
     }
 
     .system-detail__subNav__list.subNav button.usa-button--unstyled {
@@ -150,9 +155,6 @@
     align-items: center;
   }
 
-  @media screen and (min-width: 640px) {
-    min-width: 75%;
-  }
 }
 
 .top-divider {

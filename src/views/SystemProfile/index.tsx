@@ -397,6 +397,8 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
     }
     return (
       <Modal
+        overlayClassName="easi-modal_system-profile"
+        alignment="right"
         title={t('System Profile')}
         isOpen={isOpen}
         closeModal={closeModal}
@@ -413,6 +415,8 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
     }
     return (
       <Modal
+        overlayClassName="easi-modal_system-profile"
+        alignment="right"
         title={t('System Profile')}
         isOpen={isOpen}
         closeModal={closeModal}
@@ -695,6 +699,8 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
 
   return modalProps ? (
     <Modal
+      overlayClassName="easi-modal_system-profile"
+      alignment="right"
       title={t('System Profile')}
       isOpen={isOpen}
       closeModal={closeModal}

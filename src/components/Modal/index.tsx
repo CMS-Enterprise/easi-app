@@ -7,6 +7,8 @@ import noScroll from 'no-scroll';
 import './index.scss';
 
 type ModalProps = {
+  overlayClassName?: string;
+  alignment?: 'right' | 'left';
   title?: string;
   children: ReactNode | ReactNodeArray;
   isOpen: boolean;
@@ -16,6 +18,8 @@ type ModalProps = {
 };
 
 const Modal = ({
+  overlayClassName,
+  alignment,
   title,
   children,
   isOpen,
@@ -33,10 +37,16 @@ const Modal = ({
   return (
     <ReactModal
       isOpen={isOpen}
-      overlayClassName={classNames('easi-modal__overlay', {
-        'easi-modal__has-title': !!title
+      overlayClassName={classNames(
+        'easi-modal__overlay',
+        {
+          'easi-modal__has-title': !!title
+        },
+        overlayClassName
+      )}
+      className={classNames('easi-modal__content', {
+        [`easi-modal__align-${alignment}`]: !!alignment
       })}
-      className="easi-modal__content"
       onAfterOpen={handleOpenModal}
       onAfterClose={noScroll.off}
       onRequestClose={closeModal}

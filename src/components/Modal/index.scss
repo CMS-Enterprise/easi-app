@@ -31,6 +31,19 @@
     }
   }
 
+  &__align-left {
+    min-width: 75%;
+    left: auto;
+    transform: translate(0, -50%);
+  }
+
+  &__align-right {
+    min-width: 75%;
+    right: 0;
+    left: auto;
+    transform: translate(0, -50%);
+  }
+
   &__x-button {
     display: block;
     margin: 1rem 1rem 1rem auto;
