@@ -109,7 +109,7 @@ function Steps() {
         </UswdsReactLink>
         <UswdsReactLink
           to={{
-            pathname: '/trb/new',
+            pathname: '/trb/requests/new',
             state: { requestType }
           }}
           className="usa-button"
