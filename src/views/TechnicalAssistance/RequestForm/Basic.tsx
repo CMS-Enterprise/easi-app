@@ -5,7 +5,7 @@ import { FormStepComponentProps } from '.';
 
 function Basic({ request, step }: FormStepComponentProps) {
   const [done, setDone] = useState<boolean>(false);
-  console.log(done);
+
   return (
     <>
       {/* <label>Request name</label> */}
@@ -14,15 +14,14 @@ function Basic({ request, step }: FormStepComponentProps) {
         value={request.name}
         onChange={e => {
           setDone(true);
-          console.log(e.target.value);
         }}
       />
 
       <Pager
         next={{
-          url: `/trb/requests/${request.id}/${step + 1}`
+          url: `/trb/requests/${request.id}/${step + 1}`,
+          disabled: !done
         }}
-        nextDisabled={!done}
       />
     </>
   );

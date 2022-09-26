@@ -6,22 +6,19 @@ import cx from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 
 type Props = {
-  back?: { text?: string; url: string; onClick?: Function } | false;
+  back?: { text?: string; url: string; disabled?: boolean } | false;
   next?:
-    | { text?: string; url: string; onClick?: Function; style?: 'outline' }
+    | {
+        text?: string;
+        url: string;
+        disabled?: boolean;
+        style?: 'outline';
+      }
     | false;
-  backDisabled?: boolean;
-  nextDisabled?: boolean;
   saveExitDisabled?: boolean;
 };
 
-export function Pager({
-  back,
-  next,
-  backDisabled,
-  nextDisabled,
-  saveExitDisabled
-}: Props) {
+export function Pager({ back, next, saveExitDisabled }: Props) {
   const { t } = useTranslation('technicalAssistance');
 
   return (
@@ -30,7 +27,9 @@ export function Pager({
         {back && (
           <UswdsReactLink
             variant="unstyled"
-            className="usa-button usa-button--outline"
+            className={cx('usa-button usa-button--outline', {
+              'usa-button--disabled': back.disabled
+            })}
             to={back.url}
           >
             {back.text ?? t('button.back')}
@@ -41,7 +40,7 @@ export function Pager({
             variant="unstyled"
             className={cx('usa-button', {
               'usa-button--outline': next.style === 'outline',
-              'usa-button--disabled': nextDisabled
+              'usa-button--disabled': next.disabled
             })}
             to={next.url}
           >
