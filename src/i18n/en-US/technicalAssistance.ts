@@ -175,7 +175,11 @@ const technicalAssistance = {
   subjectAreas: {},
   attendees: {
     addAnAttendee: 'Add an attendee',
-    continueWithoutAdding: 'Continue without adding attendees'
+    addAttendee: 'Add attendee',
+    remove: 'Remove',
+    cancel: 'Cancel',
+    continueWithoutAdding: 'Continue without adding attendees',
+    dontAddAndReturn: 'Don’t add and return to previous page'
   },
   documents: {
     continueWithoutAdding: 'Continue without adding documents'
