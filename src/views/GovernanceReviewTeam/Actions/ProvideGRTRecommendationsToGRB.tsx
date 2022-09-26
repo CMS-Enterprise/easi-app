@@ -55,7 +55,7 @@ const ProvideGRTRecommendationsToGRB = () => {
     grtFeedback: '',
     emailBody: '',
     notificationRecipients: {
-      regularRecipientEmails: requester.id ? [requester.email] : [],
+      regularRecipientEmails: [requester.email].filter(e => e), // Filter out null emails
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: false
     }
