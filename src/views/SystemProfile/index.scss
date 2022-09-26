@@ -85,8 +85,7 @@
 }
 
 .ReactModal__Content {
-  width: 90%;
-  height: 80%;
+  max-height: 100%;
   overflow: scroll;
   font-size: inherit;
   line-height: inherit;
@@ -149,6 +148,10 @@
     padding: .75rem;
     display: flex;
     align-items: center;
+  }
+
+  @media screen and (min-width: 640px) {
+    min-width: 75%;
   }
 }
 
