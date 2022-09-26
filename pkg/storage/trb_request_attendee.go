@@ -140,7 +140,7 @@ func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*mo
 	err = stmt.Get(&deleted, &toDelete)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update TRB request attendee %s", err),
+			fmt.Sprintf("Failed to delete TRB request attendee %s", err),
 			zap.String("id", id.String()),
 		)
 		return nil, &apperrors.QueryError{
