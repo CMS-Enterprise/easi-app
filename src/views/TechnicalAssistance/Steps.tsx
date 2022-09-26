@@ -40,9 +40,9 @@ function Steps() {
       <div className="margin-top-2 font-body-lg line-height-body-5 text-light">
         {t('steps.description')}
       </div>
-      <div className="margin-top-4 padding-2 bg-gray-5">
+      <div className="margin-top-4 padding-2 line-height-body-5 bg-gray-5">
         <div>{infoText.text[0]}</div>
-        <ul className="list-style-middot">
+        <ul className="margin-y-1 list-style-middot-inner">
           <li>{infoText.list[0]}</li>
           <li>{infoText.list[1]}</li>
           <li>{infoText.list[2]}</li>

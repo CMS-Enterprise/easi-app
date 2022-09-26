@@ -117,6 +117,23 @@ h5 {
   }
 }
 
+// Common list styles
 ul.list-style-none {
   list-style: none;
+}
+ul.list-style-middot {
+  padding-left: 2rem;
+  list-style: none;
+  li::before {
+    position: absolute;
+    margin-left: -1rem;
+    content: '•';
+  }
+}
+ul.list-style-middot-inner {
+  padding-left: 0;
+  list-style: none;
+  li::before {
+    content: '• ';
+  }
 }

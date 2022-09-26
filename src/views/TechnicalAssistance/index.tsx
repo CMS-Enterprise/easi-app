@@ -22,8 +22,6 @@ import Homepage from './Homepage';
 import StartRequest from './StartRequest';
 import Steps from './Steps';
 
-import './index.scss';
-
 /**
  * Check for `requestType` to be set in location state or else redirect to `/trb/start`.
  */
